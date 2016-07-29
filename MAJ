@@ -1,0 +1,285 @@
+------------------------------------- Version 1.9:
+
+ - Les fichiers en-tete extra.h et extra_type.h s'ajoutent a la LibLapin.
+   Avec, un ensemble de mécanismes dont les dependances sont dans dep et include/dep.
+
+ - Dans extra.h sont disponibles un nouvel ensemble de fonctionnalités pour projets
+   particulierement avancés:
+
+ - - Un ordonnanceur reseau TCP basé autour d'un systeme de polling.
+
+ - - Une threadpool accessible via une fonction bunny_thread_foreach.
+
+ - - Un driver pour une carte d'interface PC-Electronique de chez Velleman, la VM110N.
+
+ - Reorganisation des exemples de code. Des demos des fonctionnalités supplementaires ajoutes:
+ - - Demo d'utilisation des shaders.
+ - - Demo du deplacement et redimensionnement de fenetre
+ - - Demo du reseau
+ - - Demo du thread pool
+ - - Demo du driver hardware
+
+ - Verification de l'appel a malloc initial
+
+ - Fonctions bunny_move_window et bunny_resize_window ajoutes.
+
+ - Ajout de la fonction bunny_get_screen_size.
+
+------------------------------------- Version 1.8:
+
+ - La globale DEFAULT_SCOPE n'existait pas... Maintenant elle existe est equivaut à la globale
+   default_scope.
+
+ - Ajout d'un color mask, actif uniquement sur t_bunny_picture, a évidemment recoder sur les
+   pixelarray. Ce masque de couleur permet d'alterer les composantes de l'image lors du blit.
+
+ - Ajout d'un mode TechnoCentre permettant de générer des faux pixelarray pour le serveur de
+   correction.
+
+ - Lorsqu'un morceau de memoire altere est decouvert, il est maintenant affiche sur stderr.
+
+ - Prototype de bunny_save_pixelarray incorrect (const...), faisant que la véritable
+   fonction était décorée et donc innaccessible en C.
+
+ - Fix de la gestion d'erreur INI.
+
+ - Fonction bunny_set_circle ajouté.
+
+ - On renomme les fonctions bunny_ini_first et bunny_ini_next respectivement
+   bunny_ini_first_scope et bunny_ini_next_scope. Des macros dans compat.h sont presence
+   pour qu'aucune adaptation du code existant ne soit neccessaire.
+
+ - Ajout de fonctions de navigations a l'interieur d'un scope dans un fichier INI:
+   - bunny_ini_first_field, bunny_ini_field_name, bunny_ini_next_field
+   - bunny_field_get_value, bunny_field_set_value
+   - LAST_FIELD et t_bunny_ini_field
+
+ - Ajout d'une fonction de recherche et d'obtention directe par nom: bunny_ini_get_scope.
+
+ - La LibLapin est maintenant d'évaluer les fonctions définies dans les pointeurs:
+    gl_bunny_my_clear
+    gl_bunny_my_fill
+    gl_bunny_my_set_pixel
+    gl_bunny_my_set_line
+    gl_bunny_my_set_polygon
+   Cela, a condition de disposer d'une fonction dans gl_bunny_my_blit capable de
+   copier une image dans une autre en respectant le paramètre t_bunny_position* position.
+
+ - Ajout du typedef sur t_bunny_position t_bunny_size.
+
+------------------------------------- Version 1.7:
+
+ - Refonte générale des fichiers en tete. Un fichier "lapin/basic.h" contient la base
+   de la lib lapin (historiquement, l'equivalent de la 1.0 avec quelques fonctions en moins)
+   Les elements autres sont dans lapin/advanced.h
+
+ - Attention, la compatibilité est brisée au niveau du son, mais le fix est rapide. Seul
+   un cast additionnel est requis (ou l'envoit de l'adresse de ->sound) depuis un
+   t_bunny_effect.
+
+ - Il est maintenant possible de générer un son avec son programme et non seulement
+   a partir d'un fichier.
+
+ - Ajout de la gestion du refresh écran via la fonction bunny_set_display_function.
+   Cette fonction fournit la garantie de ne pas refresh inutilement. Evidemment, si
+   vous utilisez cette fonction: n'affichez plus rien dans la fonction passée à
+   bunny_set_loop_main_function !
+
+ - Ajout de la gestion du redimensionnement de la fenetre, du gain et de la perte du focus
+   sur une fenetre, ainsi que d'une fonction bunny_get_window permettant de savoir de quel
+   fenetre provient un evenement.
+
+ - La fonction bunny_loop_mw vient remplacer bunny_loop dans les programme souhaitant etre
+   multi-fenêtre. Celle ci prend effectivement en paramètre un tableau de pointeur sur
+   fenetre au lieu d'un unique pointeur.
+
+ - Une fonction bunny_set_maximum_ram permet de définir au demarrage le nombre d'octet
+   utilisable via les allocateur de la lib lapin. La fonction interne set_max_heap_size
+   va donc disparaitre petit a petit.
+
+ - La fonction bunny_set_memory_check vient remplacer la mise a 1 de la variable memory_check,
+   à la base element interne de la bibliothèque. Cette fonction permet donc de definir
+   si l'on souhaite un résumé d'erreur mémoire en fin de programme.
+
+ - bunny_malloc est maintenant plus sévère quand à sa politique de dépassement. Un seul
+   octet écrit de travers, et ca segfault soit en liberant les ressources soit en
+   quittant le programme.
+
+ - Retrait de l'anti-aliasing par défaut au niveau de la fenêtre et retrait de la configuration
+   du vsync.
+
+ - Ajout d'une gestion pour les evenements resize, gotfocus et lostfocus. Dans un contexte
+   a plusieurs fenetres, l'evenement close est maintenant gerable. Si il n'est pas geré,
+   le fonctionnement reste le meme qu'en simple fenetre: on quitte la boucle.
+
+ - Ajout de la fonction bunny_set_geometry qui permet de dessiner a peu près n'importe
+   quelle forme. Elle est également capable de texturer les quadrilatères.
+
+ - Retrait de l'interface specifique à C++. La lib reste compatible avec le C++, mais
+   il faudra passer par les même fonction qu'en C (c'était vraiment gadget, de toute façon)
+   Elle reviendra peut-être plus tard, mais c'est pas dit.
+
+------------------------------------- Version 1.6.3:
+
+ - Correction d'un conflit entre clic et déplacement de souris dans la gestion d'events
+
+------------------------------------- Version 1.6.2:
+
+ - Ajout de bunny_save_pixelarray, interdite sauf recode, evidemment
+
+ - Correction de bunny_set_mouse_position
+
+ - Correction de bunny_set_mouse_visibility
+
+ - Léger changement dans la gestion du délai dans bunny_loop
+
+ - Correction de bunny_set_context
+
+------------------------------------ Version 1.6:
+
+ - On passe de la version "stable" 2.3.2 de SFML a la derniere version issue du depot
+   pour cause d'instabilite avec l'objet sf::String... Merci à boudon_v pour avoir
+   eu l'idée de mettre en cause SFML.
+
+ - En cas d'absence de la variable DISPLAY, l'erreur lancée par SFML est rattrapée
+   et bunny_start retourne NULL.
+
+ - Fonction bunny_set_mouse_position_window et bunny_set_mouse_position, permettant
+   de placer la souris soit par rapport à l'écran soit par rapport à la fenetre.
+
+ - Fonction bunny_set_mouse_visibility.
+
+ - Fonction bunny_request_focus permettant de récuperer le focus (le système peut refuser)
+
+ - L'ancien t_bunny_transform devient t_accurate_position.
+   /!\ Risque d'incompatibilité des codes utilisant ces champs si des copies ou casts ont été fait
+
+ - t_bunny_transform est un ensemble de valeur correspondant à une transformation utilisable
+   par les mecanique de shaders.
+
+ - Les fonctions de manipulation de shader suivante sont ajoutées:
+    bunny_is_shader_available
+    bunny_blit_shader
+    bunny_new_shader
+    bunny_delete_shader
+    bunny_load_shader
+    bunny_shader_set_variable
+
+  - Correction de bunny_ini_scope_get_field
+
+  - Correction de bunny_blit depuis un picture vers un pixelarray
+
+  - Ajout de bunny_set_key_repeat pour activer/desactiver la repetition des touches.
+
+------------------------------------ Version 1.5.1:
+
+ - Les champs t_bunny_window.name et t_bunny_pixelarray.pixels sont désormais constant.
+   name est constant et pointe sur des octets constant
+   pixels est constant mais ce sur quoi il pointe ne l'est pas
+
+   ainsi, il est impossible de reassigner pixels sans forcer.
+
+----------------------------------- Version 1.5:
+
+ - Ajout des fonctions bunny_set_context et bunny_get_context pour charger et sauvegarder
+   un contexte d'evenements.
+
+ - Ajout des fonctions bunny_ini_first, bunny_ini_scopename, bunny_ini_next, bunny_ini_scope_get_field,
+   bunny_ini_scope_set_field. Cela pour permettre un parcours dans les scopes des
+   fichiers ini.
+
+ - Ajout des fonctions bunny_set_joy_axis_response, bunny_set_joy_button_response,
+   bunny_set_hoy_connect_response, bunny_get_joy_button, bunny_get_joy_axis, bunny_set_wheel_response.
+   Ces fonctions permettant d'utiliser des manettes de jeux avec la LibLapin. L'enumeration
+   t_bunny_axis ajouté pour servir le propos ainsi que la structure t_bunny_joystick
+
+ - Ajout de la fonction bunny_set_wheel_response gerant la molette de la souris
+
+ - Correction de constness ci et la.
+
+ - La boucle principale dort si il y a matière à dormir de manière à limiter
+   les demandes de certains systèmes de tuer le programme et économiser du CPU.
+
+ - Modification du fake_install.sh pour faciliter la reinstallation.
+
+ - Le symbole BKS_SUBSTRACT est renommé BKS_SUBTRACT
+
+ - Les symboles CONNECTED et DISCONNECTED valant respectivement GO_DOWN et GO_UP sont
+   ajouté dans t_bunny_event_state de manière à disposer de macro sémantiquement
+   correcte à l'usage lors de la connection et déconnexion de manette de jeu.
+
+ - Ajout du fichier "font.png" dans le dossier de la bibliothèque, contenant
+   une police de caractère basse résolution.
+
+ - Ajout de la globale gl_vecterfont, contenant une police de caractère au format
+   vectoriel (utilisable via bunny_set_line)
+
+ - Ajout de champs x_origin, y_origin, x_scale, y_scale et rotation dans clipable
+   afin de permettre des redimensionnement et des rotations. Utilisable uniquement
+   sur recode, de la même manière que le reste.
+
+ - Le chargeur de INI prend en charge les commentaires avec le symbole '#'.
+
+ - La fonction bunny_blit, du fait d'un bug, ne permettait pas de blitter des picture
+   sur des pixelarray, c'est maintenant reglé.
+
+ - Ajout d'un logiciel "joystick_panel" permettant d'essayer des manettes de jeu
+
+ - Nouveau template.c
+
+----------------------------------- Version 1.4:
+
+ - Mise à jour de fake_install.sh.
+
+ - Ajout d'un champ "mod" dans le type t_color.
+
+----------------------------------- Version 1.3:
+
+- Ajout de la fonction bunny_start_style permettant de definir plus finement
+le style des fenetres.
+
+- Retrait des entiers non signes dans les tailles des images et autres -> c'est
+inutile et handicapant lors des comparaisons
+
+- Mise à jour de la documentation (Ajout d'instructions pour l'installation)
+
+- Mise à jour de fake_install.sh
+
+----------------------------------- Version 1.2:
+
+- Ajout de la macro M_PI afin de respecter la norme des lapins noirs invectivant
+l'usage de -ansi -pedantic
+
+- Ajout de bunny_malloc, bunny_free, bunny_calloc et bunny_realloc ainsi
+que de fonctions de limitation memoire et de verification de coherence.
+
+- Le flag -DLAPIN_ALLOCATOR_DEACTIVATED permet de supprimer les appels
+aux allocateurs de la lib lapin (sauf ceux qui sont compile dans
+bunny_new_pixelarray, evidemment) en les remplacant par ceux du systeme
+
+- Le flag -DLAPIN_ALLOCATOR_OVERLOAD permet de supprimer les appels
+aux allocateurs du systeme pour ls remplacer par ceux de la lib lapin
+
+- Ajout d'une enumeration pour la gestion des touches.
+
+------------------------------------- Version 1.1:
+
+- Ajout de pointeurs sur fonctions initialement vide
+permettant d'appeler ses propres fonctions en passant
+par les fonctions de dessins predefinies par la lib.
+
+- Correction de bunny_fill dans le cas d'une image
+en memoire graphique
+
+- Les composantes de couleurs sont maintenant correctes
+et identique en acces manuel ou graphique
+
+- Correction de blit dans le cas d'une image manuelle
+
+- Les images manuelles sont remplies de rose par defaut
+
+- Correction de la directive de liaison dans le fichier
+en-tete et details de compilation supplementaires
+
+- Modification des constantes de couleur
+
