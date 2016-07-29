@@ -1,3 +1,6 @@
+
+Retirer les commentaires dans les fichiers .h et remplacer le tout par du Doxygen.
+
 Ajouter un paramètre à bunny_malloc afin de placer un fichier et une ligne
 et permettre de tracer l'alloc. Ajouter une allocation par vague.
 
