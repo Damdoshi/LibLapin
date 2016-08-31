@@ -7,15 +7,7 @@
 
 #include	<string.h>
 #include	"ParsingTools.hpp"
-
-size_t       bunny_strnlen(const char                        *str,
-                            size_t                            max)
-{
-  size_t        i;
-
-  for (i = 0; str[i] && i < max; ++i);
-  return (i);
-}
+#include	"lapin.h"
 
 bpt::string	bpt::ParsingTools::BuildString(const bpt::string	&str) const
 {

@@ -187,6 +187,7 @@ t_bunny_window			*bunny_start(unsigned int			wid,
 void				bunny_display(const t_bunny_window		*win);
 void				bunny_stop(t_bunny_window			*win);
 
+const t_bunny_position		*bunny_get_screen_resolution(void);
 
 /*
 ** *****

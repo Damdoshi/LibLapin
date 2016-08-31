@@ -1,4 +1,10 @@
 
+Projet code block typique pour la LibLapin
+
+Script d'installation .bat
+
+Passer de pthread à std::thread ou sf::thread
+
 Retirer les commentaires dans les fichiers .h et remplacer le tout par du Doxygen.
 
 Ajouter un paramètre à bunny_malloc afin de placer un fichier et une ligne

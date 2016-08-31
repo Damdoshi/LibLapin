@@ -1,3 +1,11 @@
+------------------------------------- Version 1.9.1:
+
+ - Fonction bunny_get_screen_resolution
+ - Fonction bunny_strnlen (Pour Windows)
+ - Ajout d'un projet codeblock pour compiler la LibLapin
+ - Compatibilité dela 1.9 assuré sous Windows.
+ - L'interface de threading ne thread pas sous Windows...
+
 ------------------------------------- Version 1.9:
 
  - Les fichiers en-tete extra.h et extra_type.h s'ajoutent a la LibLapin.
