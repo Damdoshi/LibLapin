@@ -3,7 +3,8 @@
 //
 // HBSL - Threads - Workers
 
-#include		"Threads.hpp"
+#ifndef			__WIN32
+# include		"Threads.hpp"
 
 void			hbs::Workers::SetMessage(hbs::Workers::Message		msg)
 {
@@ -12,3 +13,4 @@ void			hbs::Workers::SetMessage(hbs::Workers::Message		msg)
   pthread_mutex_unlock(&msg_lock);
 }
 
+#endif

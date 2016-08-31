@@ -3,7 +3,8 @@
 //
 // HBSL - Threads - Workers
 
-#include			"Threads.hpp"
+#ifndef				__WIN32
+# include			"Threads.hpp"
 
 void				hbs::Workers::Loop(ThreadInfo		&info)
 {
@@ -43,3 +44,4 @@ void				hbs::Workers::Loop(ThreadInfo		&info)
   info.state = DEAD;
 }
 
+#endif

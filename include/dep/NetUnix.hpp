@@ -5,10 +5,14 @@
 
 #ifndef				__NETUNIX_HPP__
 # define			__NETUNIX_HPP__
-# include			<sys/socket.h>
-# include			<sys/select.h>
-# include			<arpa/inet.h>
-# include			<netdb.h>
+# ifndef			__WIN32
+#  include			<sys/socket.h>
+#  include			<sys/select.h>
+#  include			<arpa/inet.h>
+#  include			<netdb.h>
+# else
+#  include			<ws2tcpip.h>
+# endif
 # include			"ANetAccess.hpp"
 
 namespace			bpt

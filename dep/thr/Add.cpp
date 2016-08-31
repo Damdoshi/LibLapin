@@ -3,7 +3,8 @@
 //
 // HBSL - Threads - Workers
 
-#include		"Threads.hpp"
+#ifndef			__WIN32
+# include		"Threads.hpp"
 
 bool			hbs::Workers::Add(hbs::Work		&work,
 					  hbs::IdTask		ts)
@@ -72,3 +73,6 @@ bool				hbs::Workers::Add(std::list<Task>	&tasks)
       }
   return (true);
 }
+
+#endif
+

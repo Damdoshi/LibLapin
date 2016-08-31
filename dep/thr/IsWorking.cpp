@@ -3,10 +3,12 @@
 //
 // HBSL - Threads - Workers
 
-#include		"Threads.hpp"
+#ifndef			__WIN32
+# include		"Threads.hpp"
 
 bool			hbs::Workers::IsWorking(void) const
 {
   return (GetHowManyTasks() != 0);
 }
 
+#endif

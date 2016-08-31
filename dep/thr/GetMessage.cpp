@@ -3,7 +3,8 @@
 //
 // HBSL - Threads - Workers
 
-#include		"Threads.hpp"
+#ifndef			__WIN32
+# include		"Threads.hpp"
 
 bool			hbs::Workers::GetMessage(hbs::Workers::Message		&msg)
 {
@@ -34,3 +35,4 @@ bool			hbs::Workers::GetMessage(hbs::Workers::Message		&msg)
   return (true);
 }
 
+#endif

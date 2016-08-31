@@ -3,10 +3,13 @@
 //
 // HBSL - Threads - Workers
 
-#include		"Threads.hpp"
+#ifndef			__WIN32
+# include		"Threads.hpp"
 
 size_t			hbs::Workers::GetHowManyWorkers(void) const
 {
   return (nbr_worker);
 }
+
+#endif
 

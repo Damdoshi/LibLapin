@@ -80,6 +80,12 @@ ln -fs ~/.froot/lib/libsfml-audio.so ~/.froot/lib/libsfml-audio.so.2.3 && \
     ln -fs ~/.froot/lib/libsfml-system.so ~/.froot/lib/libsfml-system.so.2.3 && \
     ln -fs ~/.froot/lib/libsfml-window.so ~/.froot/lib/libsfml-window.so.2.3 || \
     get_out "Failed to create symbolic links"
+ln -fs ~/.froot/lib/libsfml-audio.so ~/.froot/lib/libsfml-audio.so.2 && \
+    ln -fs ~/.froot/lib/libsfml-graphics.so ~/.froot/lib/libsfml-graphics.so.2 && \
+    ln -fs ~/.froot/lib/libsfml-network.so ~/.froot/lib/libsfml-network.so.2 && \
+    ln -fs ~/.froot/lib/libsfml-system.so ~/.froot/lib/libsfml-system.so.2 && \
+    ln -fs ~/.froot/lib/libsfml-window.so ~/.froot/lib/libsfml-window.so.2 || \
+    get_out "Failed to create symbolic links"
 
 echo "Adding variables to your shell configuration. Do not forget to restart it after."
 

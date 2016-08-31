@@ -10,6 +10,9 @@
 # define		__LAPIN_PRIVATE_H__
 # include		<SFML/Graphics.hpp>
 # include		<SFML/Audio.hpp>
+# ifdef			__WIN32
+#  pragma		packed
+# endif
 # include		"Ini.hpp"
 # include		"lapin/basic.h"
 # include		"lapin/advanced.h"

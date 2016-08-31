@@ -3,7 +3,8 @@
 //
 // HBSL - Threads - Workers
 
-#include		"Threads.hpp"
+#ifndef			__WIN32
+# include		"Threads.hpp"
 
 hbs::Workers::Load	hbs::Workers::EvaluateTheLoad(void) const
 {
@@ -20,3 +21,4 @@ hbs::Workers::Load	hbs::Workers::EvaluateTheLoad(void) const
   return (load);
 }
 
+#endif

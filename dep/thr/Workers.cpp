@@ -3,9 +3,10 @@
 //
 // HBSL - Threads - Workers
 
-#include		<signal.h>
-#include		<unistd.h>
-#include		"Threads.hpp"
+#ifndef			__WIN32
+# include		<signal.h>
+# include		<unistd.h>
+# include		"Threads.hpp"
 
 hbs::Workers::Workers(size_t		_nbr_thread)
   : nbr_worker(0),
@@ -24,7 +25,7 @@ hbs::Workers::~Workers(void)
 
   for (it = threads.begin(); it != threads.end(); ++it)
     it->state = ASK_TO_DIE;
-  usleep(1e6);  
+  usleep(1e6);
   for (it = threads.begin(); it != threads.end(); )
     if (it->state != DEAD)
       {
@@ -34,4 +35,6 @@ hbs::Workers::~Workers(void)
     else
       ++it;
 }
+
+#endif
 

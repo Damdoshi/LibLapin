@@ -16,6 +16,13 @@
 # define			bunny_ini_next(ini, scope)	\
   bunny_ini_next_scope(ini, scope)
 
+# ifdef				__WIN32
+#  define			kill(a, b)			exit(1)
+# endif
+
+size_t				bunny_strnlen(const char	*str,
+					      size_t		max);
+
 extern int			memory_check;
 void				set_max_heap_size(size_t	s);
 typedef t_bunny_color		t_color;

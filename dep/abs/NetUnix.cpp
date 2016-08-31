@@ -34,8 +34,13 @@ bool			bpt::NetAbs::NetUnix::OpenSocket(Protocol		protocol,
   else
     master_info.ip = htonl(INADDR_ANY);
   type = 1;
+#ifndef             __WIN32
   if (setsockopt(master_info.socket, SOL_SOCKET, SO_REUSEADDR, &type, sizeof(type)) == -1)
     return (false);
+#else
+  if (setsockopt(master_info.socket, SOL_SOCKET, SO_REUSEADDR, (const char*)&type, sizeof(type)) == -1)
+    return (false);
+#endif
   return (true);
 }
 
@@ -119,8 +124,13 @@ unsigned int		bpt::NetAbs::NetUnix::SendTo(const Info			&master_info,
      sockaddr.sin_addr.s_addr = info->ip;
      sockaddr.sin_port = info->port;
     }
+#ifndef             __WIN32
   if ((l = sendto(master_info.socket, buffer, len, MSG_NOSIGNAL, (struct sockaddr*)&sockaddr, (socklen_t)sizeof(sockaddr))) == UINT_MAX)
     return (UMAX);
+#else
+  if ((l = sendto(master_info.socket, buffer, len, 0, (struct sockaddr*)&sockaddr, (socklen_t)sizeof(sockaddr))) == UINT_MAX)
+    return (UMAX);
+#endif
   return (l);
 }
 

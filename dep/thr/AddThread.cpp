@@ -3,7 +3,8 @@
 //
 // HBSL - Threads - Workers
 
-#include		"Threads.hpp"
+#ifndef			__WIN32
+# include		"Threads.hpp"
 
 void			hbs::Workers::RealAddThread(size_t		num)
 {
@@ -48,4 +49,6 @@ bool			hbs::Workers::AddThread(size_t		num)
     }
   return (true);
 }
+
+#endif
 

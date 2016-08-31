@@ -11,6 +11,12 @@
 # include			<stdbool.h>
 # include			<stdint.h>
 # include			<stdlib.h>
+# ifdef				__WIN32
+#  pragma			packed
+#  define			PACKED
+# else
+#  define			PACKED			__attribute__((packed))
+# endif
 # ifdef				__cplusplus
 #  include			"lapin/cpp_guard.hpp"
 # endif
@@ -20,7 +26,7 @@
 #  define			M_PI			3.14159265358979323846
 # endif
 # define			LAPIN_MAJOR_VERSION	1
-# define			LAPIN_MINOR_VERSION	7
+# define			LAPIN_MINOR_VERSION	9
 
 /*
 ** *****
@@ -191,7 +197,7 @@ void				bunny_stop(t_bunny_window			*win);
 ** || bunny_new_pixelarray create a t_bunny_pixelarray structure and
 ** || fill it with defaults values. It return NULL on error. It takes
 ** || its size as parameter.
-** || 
+** ||
 ** || t_bunny_pixelarray is a picture in random access memory that can
 ** || be accessed throught its pointer pixels.
 ** || It contains a t_bunny_clipable (which contains a t_bunny_buffer) that
@@ -236,7 +242,7 @@ typedef struct			s_bunny_clipable
   t_bunny_accurate_position	scale;
   double			rotation;
   t_bunny_color			color_mask;
-}				t_bunny_clipable;
+} PACKED			t_bunny_clipable;
 
 typedef struct			s_bunny_pixelarray
 {

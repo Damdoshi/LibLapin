@@ -3,7 +3,8 @@
 //
 // HBSL - Threads - Workers
 
-#include		"Threads.hpp"
+#ifndef			__WIN32
+# include		"Threads.hpp"
 
 void			hbs::Workers::RemoveThread(size_t		thread)
 {
@@ -30,4 +31,6 @@ void			hbs::Workers::RemoveThread(size_t		thread)
 	  pthread_cond_signal(&it->condvar);
 	}
 }
+
+#endif
 

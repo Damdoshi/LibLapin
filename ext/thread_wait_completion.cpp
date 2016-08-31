@@ -7,6 +7,8 @@
 #include		"Threads.hpp"
 #include		"lapin.h"
 
+#ifndef			__WIN32
+
 std::list<hbs::Work*>	_ToDelete;
 
 void			_ClearWorkers(void)
@@ -28,4 +30,14 @@ void			bunny_thread_wait_completion(t_bunny_threadpool	*pol)
   while (w->GetMessage(msg));
   _ClearWorkers();
 }
+
+#else
+
+void			bunny_thread_wait_completion(t_bunny_threadpool	*pol)
+{
+  (void)pol;
+}
+
+#endif
+
 

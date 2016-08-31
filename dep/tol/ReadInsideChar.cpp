@@ -8,6 +8,7 @@
 #include	<stdlib.h>
 #include	<string.h>
 #include	"ParsingTools.hpp"
+#include    "lapin.h"
 
 bool		bpt::ParsingTools::ReadInsideChar(const bpt::string	&str,
 						  unsigned int		&index,
@@ -17,7 +18,7 @@ bool		bpt::ParsingTools::ReadInsideChar(const bpt::string	&str,
     {
       unsigned int len;
 
-      if ((len = strnlen(&str.c_str()[index], sizeof(out))) > sizeof(out))
+      if ((len = bunny_strnlen(&str.c_str()[index], sizeof(out))) > sizeof(out))
 	len = sizeof(out);
       memcpy(&out, &str.c_str()[index], len);
       if ((str[index] & 0xE0) == 0xC0) // 110x xxxx

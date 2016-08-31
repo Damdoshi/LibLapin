@@ -7,6 +7,8 @@
 #include		"Threads.hpp"
 #include		"lapin.h"
 
+#ifndef			__WIN32
+
 class			_Launcher
   : public hbs::WorkSpec::Work3<_Launcher, t_bunny_function, void*, const void*>
 {
@@ -30,7 +32,10 @@ public:
 };
 
 extern std::list<hbs::Work*>	_ToDelete;
+
 void			_ClearWorkers(void);
+
+#endif
 
 bool			bunny_thread_foreach(t_bunny_threadpool		*pol,
 					     t_bunny_function		func,
@@ -38,6 +43,7 @@ bool			bunny_thread_foreach(t_bunny_threadpool		*pol,
 					     size_t			len,
 					     const void			*add_ptr)
 {
+#ifndef			__WIN32
   hbs::Workers		*work = (hbs::Workers*)pol->_private;
   std::list<hbs::Workers::Task> task;
   size_t		i;
@@ -68,5 +74,13 @@ bool			bunny_thread_foreach(t_bunny_threadpool		*pol,
       return (false);
     }
   return (true);
+  
+#else
+    size_t		i;
+
+    for (i = 0; i < len; ++i)
+        func(data[i], add_ptr);
+  return (true);
+#endif
 }
 

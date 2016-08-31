@@ -5,12 +5,13 @@
 
 #ifndef					__HBSL_THREADS_WORKERS_HPP__
 # define				__HBSL_THREADS_WORKERS_HPP__
-# include				<stdexcept>
-# include				<utility>
-# include				<queue>
-# include				<list>
-# include				<pthread.h>
-# include				"Work.hpp"
+# ifndef				__WIN32
+#  include				<stdexcept>
+#  include				<utility>
+#  include				<queue>
+#  include				<list>
+#  include				<pthread.h>
+#  include				"Work.hpp"
 
 namespace				hbs
 {
@@ -196,4 +197,5 @@ namespace				hbs
   };
 }
 
+# endif
 #endif	//				__HBSL_THREADS_WORKERS_HPP__

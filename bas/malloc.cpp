@@ -52,7 +52,7 @@ void			bunny_set_maximum_ram(size_t	byt)
 
   if (!edited)
     heap_size = byt;
-  edited = 1;  
+  edited = 1;
 }
 
 extern "C" void		set_max_heap_size(size_t	data)
@@ -140,7 +140,7 @@ void			check_memory_state(void)
   if (i)
     {
       kill(getpid(), SIGSEGV);
-      sleep(2);
+      usleep(2e6);
       exit(EXIT_FAILURE);
     }
 }

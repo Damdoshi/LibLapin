@@ -3,7 +3,8 @@
 //
 // HBSL - Threads - Workers
 
-#include		"Threads.hpp"
+#ifndef			__WIN32
+# include		"Threads.hpp"
 
 void			*hbs::Workers::JumpToLoop(void				*data)
 {
@@ -21,4 +22,6 @@ void			*hbs::Workers::JumpToLoop(void				*data)
   info.state = DEAD;
   return (NULL);
 }
+
+#endif
 

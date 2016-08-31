@@ -8,6 +8,15 @@
 #include	<string.h>
 #include	"ParsingTools.hpp"
 
+size_t       bunny_strnlen(const char                        *str,
+                            size_t                            max)
+{
+  size_t        i;
+
+  for (i = 0; str[i] && i < max; ++i);
+  return (i);
+}
+
 bpt::string	bpt::ParsingTools::BuildString(const bpt::string	&str) const
 {
   bpt::stringstream	ss;
@@ -20,7 +29,7 @@ bpt::string	bpt::ParsingTools::BuildString(const bpt::string	&str) const
       {
 	if (str[i] & 0x80)
 	  {
-	    if ((len = strnlen(&str.c_str()[i], sizeof(wchar_t))) > sizeof(wchar_t))
+	    if ((len = bunny_strnlen(&str.c_str()[i], sizeof(wchar_t))) > sizeof(wchar_t))
 	      len = sizeof(wchar_t);
 	    memcpy(&tab, &str.c_str()[i], len);
 	    if ((str[i] & 0xE0) == 0xC0) // 110x xxxx

@@ -113,7 +113,7 @@ static int		clear_test(t_bunny_picture		*pic,
   for (i = 0; i < 3000; ++i)
     {
       color = rand() | BLACK;
-      
+
       pic->clip_width = pix->clipable.clip_width = rand() % (pic->buffer.width - 1) + 1;
       pic->clip_height = pix->clipable.clip_height = rand() % (pic->buffer.height - 1) + 1;
       pic->clip_x_position = pix->clipable.clip_x_position = rand() % (pic->buffer.width - pic->clip_width);
@@ -192,7 +192,7 @@ static int		fill_test(t_bunny_picture		*pic,
       pic->clip_height = pix->clipable.clip_height = rand() % (pic->buffer.height - 1) + 1;
       pic->clip_x_position = pix->clipable.clip_x_position = rand() % (pic->buffer.width - pic->clip_width);
       pic->clip_y_position = pix->clipable.clip_y_position = rand() % (pic->buffer.height - pic->clip_height);
-      
+
       bunny_fill(&pic->buffer, color);
       bunny_fill(&pix->clipable.buffer, color);
     }
@@ -242,7 +242,7 @@ static int		line_test(t_bunny_picture		*pic,
 	bunny_set_line(&pic->buffer, &pos[0], &color[0]);
 	bunny_set_line(&pix->clipable.buffer, &pos[0], &color[0]);
       }
-  
+
   bunny_blit(&out->clipable.buffer, pic, NULL);
   technocore_compare(out, pix, &res);
   if (save_test(out, pix, "bunny_set_line.bmp") == -1)
@@ -260,7 +260,7 @@ static int		polygon_test(t_bunny_picture		*pic,
   int			res;
   int			i;
   int			j;
-  
+
   if (gl_bunny_my_set_polygon == NULL)
     {
       printl("\nNo function given to gl_bunny_my_set_polygon.");
@@ -283,7 +283,7 @@ static int		polygon_test(t_bunny_picture		*pic,
 	  bunny_set_polygon(&pix->clipable.buffer, &pos[0], &color[0]);
 	}
     }
-  
+
   bunny_blit(&out->clipable.buffer, pic, NULL);
   technocore_compare(out, pix, &res);
   if (save_test(out, pix, "bunny_set_polygone.bmp") == -1)
@@ -298,7 +298,7 @@ static bool		do_a_test(const char			*str,
 				  t_bunny_pixelarray		*pix)
 {
   int			i;
-  
+
   printl("]> The TechnoCore is testing: ");
   write(1, str, strlen(str));
   if ((i = test(pic, pix)) == -1)
