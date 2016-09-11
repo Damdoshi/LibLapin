@@ -1,0 +1,13 @@
+
+Projet code block typique pour la LibLapin
+
+Script d'installation .bat
+
+Passer de pthread à std::thread ou sf::thread
+
+Ajouter un paramètre à bunny_malloc afin de placer un fichier et une ligne
+et permettre de tracer l'alloc. Ajouter une allocation par vague.
+
+Ajouter, lorsque bunny_malloc ne trouve pas de blocs en mémoire, casser
+un gros bloc en plusieurs morceaux.
+
