@@ -6,16 +6,19 @@
 #ifndef			__WIN32
 # include		<signal.h>
 # include		<unistd.h>
+# include		<string.h>
 # include		"Threads.hpp"
 
 hbs::Workers::Workers(size_t		_nbr_thread)
   : nbr_worker(0),
     nbr_thread(0),
-    tasks_cnt_lock(PTHREAD_MUTEX_INITIALIZER),
+    //tasks_cnt_lock(PTHREAD_MUTEX_INITIALIZER),
     tasks_stacked(0),
-    threads_working(0),
-    msg_lock(PTHREAD_MUTEX_INITIALIZER)
+    threads_working(0)//,
+    //msg_lock(PTHREAD_MUTEX_INITIALIZER)
 {
+  memset(&tasks_cnt_lock, 0, sizeof(tasks_cnt_lock));
+  memset(&threads_working, 0, sizeof(threads_working));
   RealAddThread(_nbr_thread);
 }
 

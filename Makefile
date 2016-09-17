@@ -63,7 +63,8 @@
 			$(wildcard ./network/*.cpp)				\
 			$(wildcard ./sound/*.cpp)				\
 			$(wildcard ./threads/*.cpp)				\
-			$(wildcard ./window/*.cpp)
+			$(wildcard ./window/*.cpp)				\
+			$(wildcard ./dep/*/*.cpp)
   OBJ		=	$(SRC:.cpp=.o)
 
 #################################################################################

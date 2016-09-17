@@ -5,6 +5,7 @@
  - Documentation de l'integralite de la bibliotheque
  - bunny_get_screen_size passe dans compat.h et donc obsolete
  - Refonte du Makefile
+ - Template de projet simple
 
 ------------------------------------- Version 1.9.1:
 

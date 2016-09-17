@@ -4,6 +4,7 @@
 // HBSL - Threads - Workers
 
 #ifndef			__WIN32
+# include		<string.h>
 # include		"Threads.hpp"
 
 void			hbs::Workers::RealAddThread(size_t		num)
@@ -19,7 +20,8 @@ void			hbs::Workers::RealAddThread(size_t		num)
     {
       it->pool = this;
       it->id = i;
-      it->task_lock = PTHREAD_MUTEX_INITIALIZER;
+      memset(&it->task_lock, 0, sizeof(it->task_lock));
+      // it->task_lock = PTHREAD_MUTEX_INITIALIZER;
       it->tasks_done = 0;
       it->state = ALIVE;
       it->working = false;
