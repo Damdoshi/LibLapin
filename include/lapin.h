@@ -59,6 +59,27 @@
 **             XXXXXXXXXX                                   XXXXXXXXXX
 */
 
+/*!
+** \mainpage
+** Welcome on the Bunny Library (LibLapin) home page.
+**
+** This library is designed to be fast to deploy and use: using callbacks and
+** easy usage graphical and sound elements, the LibLapin is efficient
+** when you wish to create a prototype of a game or any graphic application.
+**
+** CPU and GPU computation are supported thanks to two types (t_bunny_pixelarray and t_bunny_picture)
+** and allow you to choose whatever you need.
+**
+** The LibLapin is designed with holes that are supposed to
+** be filled by users through programming exercises on the website
+** called "La Caverne Aux Lapins Noirs" which is currently unavailable.
+**
+** Today, the LibLapin is used by Hanged Bunny Studio to
+** participate to game jam like Ludum Dare.
+**
+** Join our forum on: http://hangedbunny.forumactif.org/
+*/
+
 #ifndef				__LAPIN_H__
 # define			__LAPIN_H__
 # include			<math.h>
