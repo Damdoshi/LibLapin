@@ -38,13 +38,14 @@ int				main(int		argc,
       bunny_printlerr("Failed to open the window.");
       return (EXIT_FAILURE);
     }
-  if ((project.bunny = bunny_load_picture("bunny.png")) == NULL)
+  if ((project.bunny = bunny_load_picture("lapin_noir.png")) == NULL)
     {
       bunny_printlerr("Failed to load bunny.png");
       bunny_stop(project.window);
       return (EXIT_FAILURE);
     }
 
+  project.bunny->scale.x = project.bunny->scale.y = 16.0;
   project.bunny->origin.x = project.bunny->buffer.width / 2;
   project.bunny->origin.y = project.bunny->buffer.height / 2;
   project.bunny_position.x = project.window->buffer.width / 2;
