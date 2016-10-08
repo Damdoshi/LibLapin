@@ -29,7 +29,11 @@ sleep 0.03
 echo "## ----------------------------------------------------------------------------- ##"
 sleep 0.03
 echo "## ----------------------------------------------------------------------------- ##"
-echo "Targets are ~/.froot/include and ~/.froot/lib"
+
+INCLUDE_DIR=${HOME}/.froot/include
+LIB_DIR=${HOME}/.froot/lib
+
+echo "Targets are ${INCLUDE_DIR} and ${LIB_DIR}"
 
 get_out()
 {
@@ -40,52 +44,64 @@ get_out()
 test_and_add_bash()
 {
     if [ -e $1 ] ; then
-	echo "" >> $1
-	echo "export LD_LIBRARY_PATH=\"${HOME}/.froot/lib/\"" >> $1
-	echo "export C_INCLUDE_PATH=\"${HOME}/.froot/include/\"" >> $1
-	echo "export CPLUS_INCLUDE_PATH=\"${HOME}/.froot/include/\"" >> $1
+	FROOT=`grep "${INCLUDE_DIR}" $1`
+	if [ -z "${FROOT}" ]; then
+	    echo "" >> $1
+	    echo 'export LD_LIBRARY_PATH="${LIB_DIR}"' >> $1
+	    echo 'export C_INCLUDE_PATH=\"${INCLUDE_DIR}"' >> $1
+	    echo 'export CPLUS_INCLUDE_PATH=\"${INCLUDE_DIR}"' >> $1
+	fi
     fi
 }
 
 test_and_add_csh()
 {
     if [ -e $1 ] ; then
-	echo "" >> $1
-	echo "setenv LD_LIBRARY_PATH \"${HOME}/.froot/lib/\"" >> $1
-	echo "setenv C_INCLUDE_PATH \"${HOME}/.froot/include/\"" >> $1
-	echo "setenv CPLUS_INCLUDE_PATH \"${HOME}/.froot/include/\"" >> $1
+	FROOT=`grep "${INCLUDE_DIR}" $1`
+	if [ -z "${FROOT}" ]; then
+	    echo "" >> $1
+	    echo 'setenv LD_LIBRARY_PATH "${LIB_DIR"' >> $1
+	    echo 'setenv C_INCLUDE_PATH "${INCLUDE_DIR}"' >> $1
+	    echo 'setenv CPLUS_INCLUDE_PATH "${INCLUDE_DIR}"' >> $1
+	fi
     fi
 }
 
+mkdir -p ${LIB_DIR} ${INCLUDE_DIR}		|| get_out "Failed to create installation directories."
 
-mkdir -p ~/.froot/lib ~/.froot/include		|| get_out "Failed to create installation directories."
-
-cp -r lib/SFML ~/.froot/include/		|| get_out "Failed to install SFML headers."
-cp lib/*.h ~/.froot/include/			|| get_out "Failed to install libusb header."
-cp -r include/* ~/.froot/include/		|| get_out "Failed to install Lapin headers."
+# Dependancies
+cp -r external/include/* ${INCLUDE_DIR}		|| get_out "Failed to install dependancies headers."
+cp external/lib/* ${LIB_DIR}			|| get_out "Failed to install dependancies binaries."
 
 make						|| get_out "No bunnies were build. Make failed."
 
-cp liblapin.a lib/linux/*.so* ~/.froot/lib	|| get_out "Failed to install SFML & Lapin binaries"
+# Bunnies
+cp -r include/* ${INCLUDE_DIR}		|| get_out "Failed to install Lapin headers."
+cp liblapin.a lib/ ${LIB_DIR}			|| get_out "Failed to install Lapin binaries."
 
-chmod 644 ~/.froot/include/*.h*			|| get_out "Failed to change mode of headers."
-chmod 644 ~/.froot/include/*/*.h*		|| get_out "Failed to change mode of headers."
-chmod 644 ~/.froot/lib/*.a			|| get_out "Failed to change mode of binaries."
-chmod 755 ~/.froot/lib/*.so			|| get_out "Failed to change mode of binaries."
+chmod 644 ${INCLUDE_DIR}*.h*			|| get_out "Failed to change mode of headers."
+chmod 644 ${INCLUDE_DIR}*/*.h*		|| get_out "Failed to change mode of headers."
+chmod 644 ${INCLUDE_DIR}*/*/*.h*		|| get_out "Failed to change mode of headers."
+chmod 644 ${LIB_DIR}/*.a			|| get_out "Failed to change mode of binaries."
+chmod 755 ${LIB_DIR}/*.so			|| get_out "Failed to change mode of binaries."
 
+# "LDCONFIG"
 
-ln -fs ~/.froot/lib/libsfml-audio.so ~/.froot/lib/libsfml-audio.so.2.3 && \
-    ln -fs ~/.froot/lib/libsfml-graphics.so ~/.froot/lib/libsfml-graphics.so.2.3 && \
-    ln -fs ~/.froot/lib/libsfml-network.so ~/.froot/lib/libsfml-network.so.2.3 && \
-    ln -fs ~/.froot/lib/libsfml-system.so ~/.froot/lib/libsfml-system.so.2.3 && \
-    ln -fs ~/.froot/lib/libsfml-window.so ~/.froot/lib/libsfml-window.so.2.3 || \
+ln -fs ${LIB_DIR}/libsfml-audio.so ${LIB_DIR}/libsfml-audio.so.2.3 && \
+    ln -fs ${LIB_DIR}/libsfml-graphics.so ${LIB_DIR}/libsfml-graphics.so.2.3 && \
+    ln -fs ${LIB_DIR}/libsfml-network.so ${LIB_DIR}/libsfml-network.so.2.3 && \
+    ln -fs ${LIB_DIR}/libsfml-system.so ${LIB_DIR}/libsfml-system.so.2.3 && \
+    ln -fs ${LIB_DIR}/libsfml-window.so ${LIB_DIR}/libsfml-window.so.2.3 || \
     get_out "Failed to create symbolic links"
-ln -fs ~/.froot/lib/libsfml-audio.so ~/.froot/lib/libsfml-audio.so.2 && \
-    ln -fs ~/.froot/lib/libsfml-graphics.so ~/.froot/lib/libsfml-graphics.so.2 && \
-    ln -fs ~/.froot/lib/libsfml-network.so ~/.froot/lib/libsfml-network.so.2 && \
-    ln -fs ~/.froot/lib/libsfml-system.so ~/.froot/lib/libsfml-system.so.2 && \
-    ln -fs ~/.froot/lib/libsfml-window.so ~/.froot/lib/libsfml-window.so.2 || \
+
+ln -fs ${LIB_DIR}/libsfml-audio.so ${LIB_DIR}/libsfml-audio.so.2 && \
+    ln -fs ${LIB_DIR}/libsfml-graphics.so ${LIB_DIR}/libsfml-graphics.so.2 && \
+    ln -fs ${LIB_DIR}/libsfml-network.so ${LIB_DIR}/libsfml-network.so.2 && \
+    ln -fs ${LIB_DIR}/libsfml-system.so ${LIB_DIR}/libsfml-system.so.2 && \
+    ln -fs ${LIB_DIR}/libsfml-window.so ${LIB_DIR}/libsfml-window.so.2 || \
     get_out "Failed to create symbolic links"
+
+# Conf
 
 echo "Adding variables to your shell configuration. Do not forget to restart it after."
 

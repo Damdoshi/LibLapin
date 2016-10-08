@@ -15,6 +15,11 @@ Fonctionnalité Lapin:
 - Ajouter, lorsque bunny_malloc ne trouve pas de blocs en mémoire, casser
   un gros bloc en plusieurs morceaux.
 
+- Une fonction pour lancer une unique tache dans un thread.
+
+- Une fonction pour charger tout un fichier d'un coup, depuis l'ordinateur
+ou depuis l'internet.
+
 -----------------------------
 Deployement code block Lapin:
 

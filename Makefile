@@ -33,6 +33,7 @@
 
   CONFIG	=	-W -Wall -Werror -fPIC -std=gnu++03			\
 			-D_GLIBCXX_USE_CXX11_ABI=0 -Wno-unused-result
+
   DEBUG		=	-O0 -g -g3 -ggdb -DBUNNY_ALLOCATOR_DEACTIVATED
   OPTIM		=	-O2
 
@@ -41,8 +42,9 @@
   LOGFILE	=	errors~
   ERRLOG	=	2>> $(LOGFILE)
 
-  HEADER	=	-I./include -I./include/dep/				\
-			-I${HOME}/.froot/include/
+  HEADER	=	-I./include						\
+			-I./include/deps/					\
+			-I./external/include/
 
   DEFAULT	=	"\033[00m"
   PINK		=	"\033[1;35m"
@@ -54,17 +56,17 @@
 ## Source                                                                      ##
 #################################################################################
 
-  SRC		=	$(wildcard ./allocator/*.cpp)				\
-			$(wildcard ./configuration/*.cpp)			\
-			$(wildcard ./events/*.cpp)				\
-			$(wildcard ./graphics/*.cpp)				\
-			$(wildcard ./hardware/*.cpp)				\
-			$(wildcard ./misc/*.cpp)				\
-			$(wildcard ./network/*.cpp)				\
-			$(wildcard ./sound/*.cpp)				\
-			$(wildcard ./threads/*.cpp)				\
-			$(wildcard ./window/*.cpp)				\
-			$(wildcard ./dep/*/*.cpp)
+  SRC		=	$(wildcard ./src/allocator/*.cpp)			\
+			$(wildcard ./src/configuration/*.cpp)			\
+			$(wildcard ./src/events/*.cpp)				\
+			$(wildcard ./src/graphics/*.cpp)			\
+			$(wildcard ./src/hardware/*.cpp)			\
+			$(wildcard ./src/misc/*.cpp)				\
+			$(wildcard ./src/network/*.cpp)				\
+			$(wildcard ./src/sound/*.cpp)				\
+			$(wildcard ./src/threads/*.cpp)				\
+			$(wildcard ./src/window/*.cpp)				\
+			$(wildcard ./src/deps/*/*.cpp)
   OBJ		=	$(SRC:.cpp=.o)
 
 #################################################################################
@@ -89,7 +91,6 @@ $(NAME):		title $(OBJ)
 title:
 			@$(ECHO) $(TEAL) $(TITLE) $(DEFAULT)
 clean:
-			find . -name "*.o" -delete
 			@$(RM) $(OBJ) &&					\
 			 $(ECHO) $(GREEN) "Object file deleted" $(DEFAULT) ||	\
 			 $(ECHO) $(RED) "Error in clean rule!" $(DEFAULT)
