@@ -1,3 +1,22 @@
+------------------------------------- Version 1.11
+
+ - Epuration du dossier racine du projet
+ 
+ - Ajout du module "Bunny Security":
+ - - bunny_cipher/uncipher_file/data permet de chiffrer/dechiffrer des fichiers/buffers.
+ - - Trois algorithmes sont actuellement supportés: XOR, le chiffre de césar et un mélangeage
+     des données
+ - - Le programme ecrit avec la liblapin contient une clef par defaut dont la valeur
+     ne provoque aucun chiffrement. Cette clef peut etre obtenue a l'aide de la
+     fonction bunny_default_key et ecrite (de l'exterieur du programme) a l'aide de la
+     fonction bunny_fill_default_key.
+
+ - Retrait de l'API Bunny INI du module "Bunny Configuration" en vue de la
+   construction d'une API Bunny Configuration plus complete:
+ - - X
+
+
+
 ------------------------------------- Version 1.10
 
  - Eclatement par module des fichiers en tete basic.h, advanced.h et extra.h,

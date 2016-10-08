@@ -1,6 +1,8 @@
 ---------------------
 Fonctionnalité Lapin:
 
+ - bunny_strerror et bunny_perror font leur apparition. bunny_errno est un alias vers errno.
+
  => Peut etre briser la compatibilité INI en vue de faire ceci:
    => Créer un objet "configuration" contenant des informations et dont trois dérivés existerait:
      => hierarchical (Pouvant provenir de INI, Dabsic, JSON, XML), avec une compatibilité de l'API INI vers hierarchical
@@ -19,6 +21,8 @@ Fonctionnalité Lapin:
 
 - Une fonction pour charger tout un fichier d'un coup, depuis l'ordinateur
 ou depuis l'internet.
+
+- Module bunny security
 
 -----------------------------
 Deployement code block Lapin:

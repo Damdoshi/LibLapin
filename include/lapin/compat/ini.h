@@ -100,7 +100,7 @@ extern const char		*DEFAULT_SCOPE;
 ** Use bunny_new_configuration instead.
 */
 t_bunny_ini			*bunny_new_ini(void);
-# define			bunny_new_ini()					bunny_new_configuration(BC_INI, NULL);
+# define			bunny_new_ini()					bunny_new_configuration(BC_INI);
 
 /*!
 ** The bunny_load_ini function open and read a file that is supposed to be a INI file.
