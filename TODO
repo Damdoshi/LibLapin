@@ -1,13 +1,34 @@
+---------------------
+Fonctionnalité Lapin:
 
-Projet code block typique pour la LibLapin
+ => Peut etre briser la compatibilité INI en vue de faire ceci:
+   => Créer un objet "configuration" contenant des informations et dont trois dérivés existerait:
+     => hierarchical (Pouvant provenir de INI, Dabsic, JSON, XML), avec une compatibilité de l'API INI vers hierarchical
+     => Client SQL complet
+     => hierarchical avec back end SQL (et des tables precises...) pour faire une BDD hierarchique
 
-Script d'installation .bat
+- Passer de pthread à std::thread ou sf::thread pour pouvoir threader sous Windows facilement
 
-Passer de pthread à std::thread ou sf::thread
+- Ajouter un paramètre à bunny_malloc afin de placer un fichier et une ligne
+  et permettre de tracer l'alloc. Ajouter une allocation par vague.
 
-Ajouter un paramètre à bunny_malloc afin de placer un fichier et une ligne
-et permettre de tracer l'alloc. Ajouter une allocation par vague.
+- Ajouter, lorsque bunny_malloc ne trouve pas de blocs en mémoire, casser
+  un gros bloc en plusieurs morceaux.
 
-Ajouter, lorsque bunny_malloc ne trouve pas de blocs en mémoire, casser
-un gros bloc en plusieurs morceaux.
+-----------------------------
+Deployement code block Lapin:
 
+- Projet code block de construction de la LibLapin pour la dernière version, mettant à jour le:
+- Projet code block typique pour la LibLapin
+
+------------------------------
+Deployement pseudo Unix Lapin:
+
+- Script d'installation .bat créeant une archi de compilation Unix like sous Windows
+- Systeme de compilation Lapin (BunnyMakefile, au format INI, Dabsic JSON ou XML, vu que tout sera ramené a la meme API etc.)
+
+-----------------------
+Deployement Unix Lapin:
+
+- Créer un package debian pour l'installation de la liblapin via apt-get
+  avec resolution des dependances automatiquement
