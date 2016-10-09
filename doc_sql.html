@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<!-- saved from url=(0029)http://zetcode.com/db/mysqlc/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>MySQL C API programming tutorial</title>
+<link rel="stylesheet" href="./doc_sql_files/format2.css" type="text/css">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="keywords" content="C programming language, MySQL, tutorial, C API, database">
+<meta name="description" content="This is MySQL C API tutorial. This tutorial covers the
+basics of MySQL programming in C language.">
+<meta name="author" content="Jan Bodnar">
+
+<script src="./doc_sql_files/cb=gapi.loaded_1" async=""></script><script src="./doc_sql_files/cb=gapi.loaded_0" async=""></script><script id="facebook-jssdk" src="./doc_sql_files/sdk.js"></script><script id="twitter-wjs" src="./doc_sql_files/widgets.js"></script><script async="" src="./doc_sql_files/analytics.js"></script><script src="./doc_sql_files/platform.js" async="" defer="" gapi_processed="true"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-5536206-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+<script type="text/javascript" charset="utf-8" async="" src="./doc_sql_files/button.c9025956238e7d486d74379e14f50282.js"></script><link rel="stylesheet" type="text/css" href="./doc_sql_files/dark-floating.css"><style type="text/css">.fb_hidden{position:absolute;top:-10000px;z-index:10001}.fb_reposition{overflow:hidden;position:relative}.fb_invisible{display:none}.fb_reset{background:none;border:0;border-spacing:0;color:#000;cursor:auto;direction:ltr;font-family:"lucida grande", tahoma, verdana, arial, sans-serif;font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}.fb_reset>div{overflow:hidden}.fb_link img{border:none}@keyframes fb_transform{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}.fb_animate{animation:fb_transform .3s forwards}
+.fb_dialog{background:rgba(82, 82, 82, .7);position:absolute;top:-10000px;z-index:10001}.fb_reset .fb_dialog_legacy{overflow:visible}.fb_dialog_advanced{padding:10px;-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px}.fb_dialog_content{background:#fff;color:#333}.fb_dialog_close_icon{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 0 transparent;_background-image:url(https://static.xx.fbcdn.net/rsrc.php/v3/yL/r/s816eWC-2sl.gif);cursor:pointer;display:block;height:15px;position:absolute;right:18px;top:17px;width:15px}.fb_dialog_mobile .fb_dialog_close_icon{top:5px;left:5px;right:auto}.fb_dialog_padding{background-color:transparent;position:absolute;width:1px;z-index:-1}.fb_dialog_close_icon:hover{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -15px transparent;_background-image:url(https://static.xx.fbcdn.net/rsrc.php/v3/yL/r/s816eWC-2sl.gif)}.fb_dialog_close_icon:active{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -30px transparent;_background-image:url(https://static.xx.fbcdn.net/rsrc.php/v3/yL/r/s816eWC-2sl.gif)}.fb_dialog_loader{background-color:#f6f7f9;border:1px solid #606060;font-size:24px;padding:20px}.fb_dialog_top_left,.fb_dialog_top_right,.fb_dialog_bottom_left,.fb_dialog_bottom_right{height:10px;width:10px;overflow:hidden;position:absolute}.fb_dialog_top_left{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ye/r/8YeTNIlTZjm.png) no-repeat 0 0;left:-10px;top:-10px}.fb_dialog_top_right{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ye/r/8YeTNIlTZjm.png) no-repeat 0 -10px;right:-10px;top:-10px}.fb_dialog_bottom_left{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ye/r/8YeTNIlTZjm.png) no-repeat 0 -20px;bottom:-10px;left:-10px}.fb_dialog_bottom_right{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ye/r/8YeTNIlTZjm.png) no-repeat 0 -30px;right:-10px;bottom:-10px}.fb_dialog_vert_left,.fb_dialog_vert_right,.fb_dialog_horiz_top,.fb_dialog_horiz_bottom{position:absolute;background:#525252;filter:alpha(opacity=70);opacity:.7}.fb_dialog_vert_left,.fb_dialog_vert_right{width:10px;height:100%}.fb_dialog_vert_left{margin-left:-10px}.fb_dialog_vert_right{right:0;margin-right:-10px}.fb_dialog_horiz_top,.fb_dialog_horiz_bottom{width:100%;height:10px}.fb_dialog_horiz_top{margin-top:-10px}.fb_dialog_horiz_bottom{bottom:0;margin-bottom:-10px}.fb_dialog_iframe{line-height:0}.fb_dialog_content .dialog_title{background:#6d84b4;border:1px solid #365899;color:#fff;font-size:14px;font-weight:bold;margin:0}.fb_dialog_content .dialog_title>span{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yd/r/Cou7n-nqK52.gif) no-repeat 5px 50%;float:left;padding:5px 0 7px 26px}body.fb_hidden{-webkit-transform:none;height:100%;margin:0;overflow:visible;position:absolute;top:-10000px;left:0;width:100%}.fb_dialog.fb_dialog_mobile.loading{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ya/r/3rhSv5V8j3o.gif) white no-repeat 50% 50%;min-height:100%;min-width:100%;overflow:hidden;position:absolute;top:0;z-index:10001}.fb_dialog.fb_dialog_mobile.loading.centered{width:auto;height:auto;min-height:initial;min-width:initial;background:none}.fb_dialog.fb_dialog_mobile.loading.centered #fb_dialog_loader_spinner{width:100%}.fb_dialog.fb_dialog_mobile.loading.centered .fb_dialog_content{background:none}.loading.centered #fb_dialog_loader_close{color:#fff;display:block;padding-top:20px;clear:both;font-size:18px}#fb-root #fb_dialog_ipad_overlay{background:rgba(0, 0, 0, .45);position:absolute;bottom:0;left:0;right:0;top:0;width:100%;min-height:100%;z-index:10000}#fb-root #fb_dialog_ipad_overlay.hidden{display:none}.fb_dialog.fb_dialog_mobile.loading iframe{visibility:hidden}.fb_dialog_content .dialog_header{-webkit-box-shadow:white 0 1px 1px -1px inset;background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#738ABA), to(#2C4987));border-bottom:1px solid;border-color:#1d4088;color:#fff;font:14px Helvetica, sans-serif;font-weight:bold;text-overflow:ellipsis;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0;vertical-align:middle;white-space:nowrap}.fb_dialog_content .dialog_header table{-webkit-font-smoothing:subpixel-antialiased;height:43px;width:100%}.fb_dialog_content .dialog_header td.header_left{font-size:12px;padding-left:5px;vertical-align:middle;width:60px}.fb_dialog_content .dialog_header td.header_right{font-size:12px;padding-right:5px;vertical-align:middle;width:60px}.fb_dialog_content .touchable_button{background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#4966A6), color-stop(.5, #355492), to(#2A4887));border:1px solid #29487d;-webkit-background-clip:padding-box;-webkit-border-radius:3px;-webkit-box-shadow:rgba(0, 0, 0, .117188) 0 1px 1px inset, rgba(255, 255, 255, .167969) 0 1px 0;display:inline-block;margin-top:3px;max-width:85px;line-height:18px;padding:4px 12px;position:relative}.fb_dialog_content .dialog_header .touchable_button input{border:none;background:none;color:#fff;font:12px Helvetica, sans-serif;font-weight:bold;margin:2px -12px;padding:2px 6px 3px 6px;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog_content .dialog_header .header_center{color:#fff;font-size:16px;font-weight:bold;line-height:18px;text-align:center;vertical-align:middle}.fb_dialog_content .dialog_content{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/y9/r/jKEcVPZFk-2.gif) no-repeat 50% 50%;border:1px solid #555;border-bottom:0;border-top:0;height:150px}.fb_dialog_content .dialog_footer{background:#f6f7f9;border:1px solid #555;border-top-color:#ccc;height:40px}#fb_dialog_loader_close{float:left}.fb_dialog.fb_dialog_mobile .fb_dialog_close_button{text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog.fb_dialog_mobile .fb_dialog_close_icon{visibility:hidden}#fb_dialog_loader_spinner{animation:rotateSpinner 1.2s linear infinite;background-color:transparent;background-image:url(https://static.xx.fbcdn.net/rsrc.php/v3/yD/r/t-wz8gw1xG1.png);background-repeat:no-repeat;background-position:50% 50%;height:24px;width:24px}@keyframes rotateSpinner{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.fb_iframe_widget{display:inline-block;position:relative}.fb_iframe_widget span{display:inline-block;position:relative;text-align:justify}.fb_iframe_widget iframe{position:absolute}.fb_iframe_widget_fluid_desktop,.fb_iframe_widget_fluid_desktop span,.fb_iframe_widget_fluid_desktop iframe{max-width:100%}.fb_iframe_widget_fluid_desktop iframe{min-width:220px;position:relative}.fb_iframe_widget_lift{z-index:1}.fb_hide_iframes iframe{position:relative;left:-10000px}.fb_iframe_widget_loader{position:relative;display:inline-block}.fb_iframe_widget_fluid{display:inline}.fb_iframe_widget_fluid span{width:100%}.fb_iframe_widget_loader iframe{min-height:32px;z-index:2;zoom:1}.fb_iframe_widget_loader .FB_Loader{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/y9/r/jKEcVPZFk-2.gif) no-repeat;height:32px;width:32px;margin-left:-16px;position:absolute;left:50%;z-index:4}</style></head>
+
+<body><div class="cc_banner-wrapper "><div class="cc_banner cc_container cc_container--open"><a href="http://zetcode.com/db/mysqlc/#null" data-cc-event="click:dismiss" target="_blank" class="cc_btn cc_btn_accept_all">Got it!</a><p class="cc_message">This website uses cookies to ensure you get the best experience on our website </p><a class="cc_logo" target="_blank" href="http://silktide.com/cookieconsent">Cookie Consent plugin for the EU cookie law</a></div></div>
+
+<div class="container">
+
+<div id="wide_ad" class="ltow">
+<script async="" src="http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 160x600, August 2011 -->
+<ins class="adsbygoogle" style="display:inline-block;width:160px;height:600px" data-ad-client="ca-pub-9706709751191532" data-ad-slot="2484182563"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+
+<div class="content">
+
+<header>
+
+<nav>
+<a href="http://zetcode.com/" title="Home">Home</a>
+<a class="nav_r" title="Subscribe to ZetCode news" href="http://zetcode.us13.list-manage.com/subscribe?u=9def9ccd4c70dbbaf691f90fc&amp;id=6556210f80">Subscribe</a>
+</nav>
+
+</header>
+
+
+<h1>MySQL C API programming tutorial</h1>
+
+<p>
+This is a C programming tutorial for the MySQL database. It covers the basics 
+of MySQL programming with the C API. You may also consider to look at the
+<a href="http://zetcode.com/databases/mysqltutorial/">MySQL tutorial</a> on ZetCode.
+</p>
+
+<div class="large_rec">
+<script async="" src="http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- LargeSquare -->
+<ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-9706709751191532" data-ad-slot="5070696322"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+
+
+<h2>About MySQL database</h2>
+
+
+<p>
+MySQL is a leading open source database management system. It is a multi 
+user, multithreaded database management system. MySQL is especially popular 
+on the web. It is one part of the very popular <em>LAMP</em>
+platform consisting of Linux, Apache, MySQL, and PHP. MySQL currently owned
+by Oracle. MySQL database is available on most important OS
+platforms. It runs on BSD Unix, Linux, Windows, or Mac OS.
+Wikipedia and YouTube use MySQL. These sites manage millions of queries
+each day. MySQL comes in two versions: MySQL server system and MySQL
+embedded system.
+</p>
+
+<pre>$ sudo apt-get install libmysqlclient-dev
+</pre>
+
+<p>
+To be able to compile C examples, we need to install the MySQL C development
+libraries. The above line shows how we can do it on Debian based Linux.
+</p>
+
+
+<h2>C99</h2>
+
+<p>
+This tutorial uses C99. For GNU C compiler, we need to add the -std=c99 option. 
+For Windows users, the Pelles C IDE is highly recommended. (MSVC does not support C99.)
+</p>
+
+<pre>MYSQL *con = mysql_init(NULL);
+</pre>
+
+<p>
+In C99, we can mix declarations with code. In older C programs, we would
+need to separate this line into two lines. 
+</p>
+
+
+<h2>First example</h2>
+
+<p>
+Our first example will test one MySQL function call.
+</p>
+
+
+<pre class="code">#include &lt;my_global.h&gt;
+#include &lt;mysql.h&gt;
+
+int main(int argc, char **argv)
+{
+  printf("MySQL client version: %s\n", mysql_get_client_info());
+
+  exit(0);
+}
+</pre>
+
+<p>
+The <code>mysql_get_client_info()</code> shows the MySQL client version.
+</p>
+
+<pre class="explanation">#include &lt;my_global.h&gt;
+#include &lt;mysql.h&gt;
+</pre>
+
+<p>
+We include necessary header files. The <code>mysql.h</code> is the most important 
+header file for MySQL function calls. The <code>my_global.h</code> includes some 
+global declarations a functions. Among other things, it includes the standard 
+input/output header file.
+</p>
+
+<pre class="explanation">printf("MySQL client version: %s\n", mysql_get_client_info());
+</pre>
+
+<p>
+This code line outputs the version of the MySQL client. For this, we use the 
+<code>mysql_get_client_info()</code>
+function call.
+</p>
+
+<pre class="explanation">exit(0);
+</pre>
+
+<p>
+We exit from the script. 
+</p>
+
+<pre>$ gcc version.c -o version  `mysql_config --cflags --libs`
+</pre>
+
+<p>
+Here is how we compile the code example.
+</p>
+
+<pre>$ ./version 
+MySQL client version: 5.1.67
+</pre>
+
+<p>
+Example output.
+</p>
+
+
+<h2>Creating a database</h2>
+
+<p>
+The next code example will create a database. The code example can be 
+divided into these parts:
+</p>
+
+<ul>
+<li>Initiation of a connection handle structure</li>
+<li>Creation of a connection</li>
+<li>Execution of a query</li>
+<li>Closing of the connection</li>
+</ul>
+
+<pre class="code">#include &lt;my_global.h&gt;
+#include &lt;mysql.h&gt;
+
+int main(int argc, char **argv)
+{  
+  MYSQL *con = mysql_init(NULL);
+
+  if (con == NULL) 
+  {
+      fprintf(stderr, "%s\n", mysql_error(con));
+      exit(1);
+  }
+
+  if (mysql_real_connect(con, "localhost", "root", "root_pswd", 
+          NULL, 0, NULL, 0) == NULL) 
+  {
+      fprintf(stderr, "%s\n", mysql_error(con));
+      mysql_close(con);
+      exit(1);
+  }  
+
+  if (mysql_query(con, "CREATE DATABASE testdb")) 
+  {
+      fprintf(stderr, "%s\n", mysql_error(con));
+      mysql_close(con);
+      exit(1);
+  }
+
+  mysql_close(con);
+  exit(0);
+}
+</pre>
+
+<p>
+The code example connects to the MySQL database system and creates a 
+new database called <code>testdb</code>. 
+</p>
+
+<pre class="explanation">MYSQL *con = mysql_init(NULL);
+</pre>
+
+<p>
+The <code>mysql_init()</code> function allocates or initialises a MYSQL object 
+suitable for <code>mysql_real_connect()</code> function. Remember this is C99.
+</p>
+
+<pre class="explanation">if (con == NULL) 
+{
+    fprintf(stderr, "%s\n", mysql_error(con));
+    exit(1);
+}
+</pre>
+
+<p>
+We check the return value. If the <code>mysql_init()</code> function fails, we print 
+the error message and terminate the application.
+</p>
+
+<pre class="explanation">if (mysql_real_connect(con, "localhost", "root", "root_pswd", 
+        NULL, 0, NULL, 0) == NULL) 
+{
+    fprintf(stderr, "%s\n", mysql_error(con));
+    mysql_close(con);
+    exit(1);
+} 
+</pre>
+
+<p>
+The <code>mysql_real_connect()</code> function establishes a connection 
+to the database. We provide connection handler, host name, user name and 
+password parameters to the function. The other four parameters are the 
+database name, port number, unix socket and finally the client flag.
+We need superuser priviliges to create a new database. 
+</p>
+
+<pre class="explanation">if (mysql_query(con, "CREATE DATABASE testdb")) 
+{
+    fprintf(stderr, "%s\n", mysql_error(con));
+    mysql_close(con);
+    exit(1);
+}
+</pre>
+
+<p>
+The <code>mysql_query()</code> executes the SQL statement. In our case, 
+the statement creates a new database.
+</p>
+
+<pre class="explanation">mysql_close(con);
+</pre>
+
+<p>
+Finally, we close the database connection.
+</p>
+
+<pre>$ gcc createdb.c -o createdb -std=c99  `mysql_config --cflags --libs`
+</pre>
+
+<p>
+The second example already utilizes features from C99 standard. Therefore,
+we need to add the <code>-std=c99</code> option.
+</p>
+
+<pre>mysql&gt; SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| testdb             |
++--------------------+
+3 rows in set (0.00 sec)
+</pre>
+
+<p>
+This is the proof that the database was created.
+</p>
+
+
+<h2>Creating and populating a table</h2>
+
+<p>
+Before we create a new table, we create a user that we will use 
+in the rest of the tutorial.
+</p>
+
+<pre>mysql&gt; CREATE USER user12@localhost IDENTIFIED BY '34klq*';
+</pre>
+
+<p>
+We have created a new user <code>user12</code>. 
+</p>
+
+<pre>mysql&gt; GRANT ALL ON testdb.* to user12@localhost;
+</pre>
+
+<p>
+Here we grant all priviliges to <code>user12</code> on 
+<code>testdb</code> database.
+</p>
+
+<p>
+The next code example will create a table and insert some data into it.
+</p>
+
+<pre class="code">#include &lt;my_global.h&gt;
+#include &lt;mysql.h&gt;
+
+void finish_with_error(MYSQL *con)
+{
+  fprintf(stderr, "%s\n", mysql_error(con));
+  mysql_close(con);
+  exit(1);        
+}
+
+int main(int argc, char **argv)
+{
+  MYSQL *con = mysql_init(NULL);
+  
+  if (con == NULL) 
+  {
+      fprintf(stderr, "%s\n", mysql_error(con));
+      exit(1);
+  }  
+
+  if (mysql_real_connect(con, "localhost", "user12", "34klq*", 
+          "testdb", 0, NULL, 0) == NULL) 
+  {
+      finish_with_error(con);
+  }    
+  
+  if (mysql_query(con, "DROP TABLE IF EXISTS Cars")) {
+      finish_with_error(con);
+  }
+  
+  if (mysql_query(con, "CREATE TABLE Cars(Id INT, Name TEXT, Price INT)")) {      
+      finish_with_error(con);
+  }
+  
+  if (mysql_query(con, "INSERT INTO Cars VALUES(1,'Audi',52642)")) {
+      finish_with_error(con);
+  }
+  
+  if (mysql_query(con, "INSERT INTO Cars VALUES(2,'Mercedes',57127)")) {
+      finish_with_error(con);
+  }
+  
+  if (mysql_query(con, "INSERT INTO Cars VALUES(3,'Skoda',9000)")) {
+      finish_with_error(con);
+  }
+  
+  if (mysql_query(con, "INSERT INTO Cars VALUES(4,'Volvo',29000)")) {
+      finish_with_error(con);
+  }
+  
+  if (mysql_query(con, "INSERT INTO Cars VALUES(5,'Bentley',350000)")) {
+      finish_with_error(con);
+  }
+  
+  if (mysql_query(con, "INSERT INTO Cars VALUES(6,'Citroen',21000)")) {
+      finish_with_error(con);
+  }
+  
+  if (mysql_query(con, "INSERT INTO Cars VALUES(7,'Hummer',41400)")) {
+      finish_with_error(con);
+  }
+  
+  if (mysql_query(con, "INSERT INTO Cars VALUES(8,'Volkswagen',21600)")) {
+      finish_with_error(con);
+  }
+
+  mysql_close(con);
+  exit(0);
+}
+</pre>
+
+<p>
+We don't use any new MySQL function call here. We use <code>mysql_query()</code> 
+function call to both create a table and insert data into it.
+</p>
+
+<pre class="explanation">void finish_with_error(MYSQL *con)
+{
+  fprintf(stderr, "%s\n", mysql_error(con));
+  mysql_close(con);
+  exit(1);        
+}
+</pre>
+
+<p>
+In order to avoid unnecessary repetition, we create a custom 
+<code>finish_with_error()</code> function. 
+</p>
+
+<pre class="explanation">if (mysql_real_connect(con, "localhost", "user12", "34klq*", 
+        "testdb", 0, NULL, 0) == NULL) 
+{
+    finish_with_error(con);
+}   
+</pre>
+
+<p>
+We connect to <code>testdb</code> database. The user name is <code>user12</code> 
+and password is <code>34klq*</code>. The fifth parameter is the database name.
+</p>
+
+<pre class="explanation">if (mysql_query(con, "CREATE TABLE Cars(Id INT, Name TEXT, Price INT)")) {      
+    finish_with_error(con);
+}
+</pre>
+
+<p>
+Here we create a table named <code>Cars</code>. It has three columns.
+</p>
+
+<pre class="explanation">if (mysql_query(con, "INSERT INTO Cars VALUES(1,'Audi',52642)")) {
+    finish_with_error(con);
+}
+</pre>
+
+<p>
+We insert one row into the <code>Cars</code> table.
+</p>
+
+<pre>mysql&gt; USE testdb;
+mysql&gt; SHOW TABLES;
++------------------+
+| Tables_in_testdb |
++------------------+
+| Cars             |
++------------------+
+1 row in set (0.00 sec)
+</pre>
+
+<p>
+We show tables in the database.
+</p>
+
+<pre>mysql&gt; SELECT * FROM Cars;
++------+------------+--------+
+| Id   | Name       | Price  |
++------+------------+--------+
+|    1 | Audi       |  52642 |
+|    2 | Mercedes   |  57127 |
+|    3 | Skoda      |   9000 |
+|    4 | Volvo      |  29000 |
+|    5 | Bentley    | 350000 |
+|    6 | Citroen    |  21000 |
+|    7 | Hummer     |  41400 |
+|    8 | Volkswagen |  21600 |
++------+------------+--------+
+8 rows in set (0.00 sec)
+</pre>
+
+<p>
+We select all data from the table.
+</p>
+
+
+<h2>Retrieving data from the database</h2>
+
+<p>
+In the next example, we will retrieva data from a table.
+</p>
+
+<p>
+We need to do the following steps:
+</p>
+
+<ul>
+<li>Create a connection</li>
+<li>Execute query</li>
+<li>Get the result set</li>
+<li>Fetch all available rows</li>
+<li>Free the result set</li>
+</ul>
+
+
+<pre class="code">#include &lt;my_global.h&gt;
+#include &lt;mysql.h&gt;
+
+void finish_with_error(MYSQL *con)
+{
+  fprintf(stderr, "%s\n", mysql_error(con));
+  mysql_close(con);
+  exit(1);        
+}
+
+int main(int argc, char **argv)
+{      
+  MYSQL *con = mysql_init(NULL);
+  
+  if (con == NULL)
+  {
+      fprintf(stderr, "mysql_init() failed\n");
+      exit(1);
+  }  
+  
+  if (mysql_real_connect(con, "localhost", "user12", "34klq*", 
+          "testdb", 0, NULL, 0) == NULL) 
+  {
+      finish_with_error(con);
+  }    
+  
+  if (mysql_query(con, "SELECT * FROM Cars")) 
+  {
+      finish_with_error(con);
+  }
+  
+  MYSQL_RES *result = mysql_store_result(con);
+  
+  if (result == NULL) 
+  {
+      finish_with_error(con);
+  }
+
+  int num_fields = mysql_num_fields(result);
+
+  MYSQL_ROW row;
+  
+  while ((row = mysql_fetch_row(result))) 
+  { 
+      for(int i = 0; i &lt; num_fields; i++) 
+      { 
+          printf("%s ", row[i] ? row[i] : "NULL"); 
+      } 
+          printf("\n"); 
+  }
+  
+  mysql_free_result(result);
+  mysql_close(con);
+  
+  exit(0);
+}
+</pre>
+
+<p>
+The example prints all columns from the Cars table.
+</p>
+
+<pre class="explanation">if (mysql_query(con, "SELECT * FROM Cars")) 
+{
+    finish_with_error(con);
+}
+</pre>
+
+<p>
+We execute the query that will retrieve all data from the
+Cars table.
+</p>
+
+<pre class="explanation">MYSQL_RES *result = mysql_store_result(con);
+</pre>
+
+<p>
+We get the result set using the <code>mysql_store_result()</code>
+function. The <code>MYSQL_RES</code> is a structure for holding a 
+result set.
+</p>
+
+<pre class="explanation">int num_fields = mysql_num_fields(result);
+</pre>
+
+<p>
+We get the number of fields (columns) in the table.
+</p>
+
+<pre class="explanation">MYSQL_ROW row;
+
+while ((row = mysql_fetch_row(result))) 
+{ 
+    for(int i = 0; i &lt; num_fields; i++) 
+    { 
+        printf("%s ", row[i] ? row[i] : "NULL"); 
+    } 
+        printf("\n"); 
+}
+</pre>
+
+<p>
+We fetch the rows and print them to the screen.
+</p>
+
+<pre class="explanation">mysql_free_result(result);
+mysql_close(con);
+</pre>
+
+<p>
+We free the resources.
+</p>
+
+<pre>$ ./retrieva_data 
+1 Audi 52642 
+2 Mercedes 57127 
+3 Skoda 9000 
+4 Volvo 29000 
+5 Bentley 350000 
+6 Citroen 21000 
+7 Hummer 41400 
+8 Volkswagen 21600 
+</pre>
+
+<p>
+Example output.
+</p>
+
+
+<h2>Last inserted row id</h2>
+
+<p>
+Sometimes, we need to determine the id of the last inserted row. 
+We can determine the last inserted row id by calling the 
+<code>mysql_insert_id()</code> function. The function only works
+if we have defined an <code>AUTO_INCREMENT</code> column in the table. 
+</p>
+
+
+<pre class="code">#include &lt;my_global.h&gt;
+#include &lt;mysql.h&gt;
+
+void finish_with_error(MYSQL *con)
+{
+  fprintf(stderr, "%s\n", mysql_error(con));
+  mysql_close(con);
+  exit(1);        
+}
+
+int main(int argc, char **argv)
+{
+  
+  MYSQL *con = mysql_init(NULL);
+  
+  if (con == NULL)
+  {
+      fprintf(stderr, "mysql_init() failed\n");
+      exit(1);
+  }
+  
+  if (mysql_real_connect(con, "localhost", "user12", "34klq*", 
+          "testdb", 0, NULL, 0) == NULL) 
+  {
+      finish_with_error(con);
+  }   
+  
+  if (mysql_query(con, "DROP TABLE IF EXISTS Writers"))
+  {    
+      finish_with_error(con);    
+  }
+  
+  char *sql = "CREATE TABLE Writers(Id INT PRIMARY KEY AUTO_INCREMENT, Name TEXT)";
+  
+  if (mysql_query(con, sql))
+  {    
+      finish_with_error(con);    
+  }
+  
+  if (mysql_query(con, "INSERT INTO Writers(Name) VALUES('Leo Tolstoy')"))
+  {    
+      finish_with_error(con);    
+  }
+  
+  if (mysql_query(con, "INSERT INTO Writers(Name) VALUES('Jack London')"))
+  {    
+      finish_with_error(con);
+  }
+  
+  if (mysql_query(con, "INSERT INTO Writers(Name) VALUES('Honore de Balzac')"))
+  {    
+      finish_with_error(con);
+  }
+  
+  int id = mysql_insert_id(con);
+  
+  printf("The last inserted row id is: %d\n", id);
+
+  mysql_close(con);
+  exit(0);
+}
+</pre>
+
+<p>
+A new table is created. Three rows are inserted into the table. We determine
+the last inserted row id. 
+</p>
+
+<pre class="explanation">char *sql = "CREATE TABLE Writers(Id INT PRIMARY KEY AUTO_INCREMENT, Name TEXT)";
+</pre>
+
+<p>
+The <code>Id</code> column has an <code>AUTO_INCREMENT</code> type. 
+</p>
+
+<pre class="explanation">int id = mysql_insert_id(con);
+</pre>
+
+<p>
+The <code>mysql_insert_id()</code> function returns the value generated 
+for an <code>AUTO_INCREMENT</code> column by the previous <code>INSERT</code> or 
+<code>UPDATE</code> statement.
+</p>
+
+<pre>$ ./last_row_id 
+The last inserted row id is: 3
+</pre>
+
+<p>
+Output.
+</p>
+
+
+<h2>Column headers</h2>
+
+<p>
+In the next example, we will retrieve data from the table and its 
+column names.
+</p>
+
+
+<pre class="code">#include &lt;my_global.h&gt;
+#include &lt;mysql.h&gt;
+
+void finish_with_error(MYSQL *con)
+{
+  fprintf(stderr, "%s\n", mysql_error(con));
+  mysql_close(con);
+  exit(1);        
+}
+
+int main(int argc, char **argv)
+{
+  MYSQL *con = mysql_init(NULL);
+  
+  if (con == NULL)
+  {
+      fprintf(stderr, "mysql_init() failed\n");
+      exit(1);
+  }  
+  
+  if (mysql_real_connect(con, "localhost", "user12", "34klq*", 
+          "testdb", 0, NULL, 0) == NULL) 
+  {
+      finish_with_error(con);
+  } 
+  
+  if (mysql_query(con, "SELECT * FROM Cars LIMIT 3"))
+  {  
+      finish_with_error(con);
+  }
+  
+  MYSQL_RES *result = mysql_store_result(con);
+
+  if (result == NULL) 
+  {
+      finish_with_error(con);
+  }  
+
+  int num_fields = mysql_num_fields(result);
+
+  MYSQL_ROW row;
+  MYSQL_FIELD *field;
+  
+  while ((row = mysql_fetch_row(result))) 
+  { 
+      for(int i = 0; i &lt; num_fields; i++) 
+      { 
+          if (i == 0) 
+          {              
+             while(field = mysql_fetch_field(result)) 
+             {
+                printf("%s ", field-&gt;name);
+             }
+             
+             printf("\n");           
+          }
+          
+          printf("%s  ", row[i] ? row[i] : "NULL"); 
+      } 
+  }
+  
+  printf("\n");
+  
+  mysql_free_result(result);
+  mysql_close(con);
+  
+  exit(0);
+}
+</pre>
+
+<p>
+We print the first three rows from the <code>Cars</code> table. We also include the
+column headers.
+</p>
+
+<pre class="explanation">MYSQL_FIELD *field;
+</pre>
+
+<p>
+The <code>MYSQL_FIELD</code> structure contains information about a field, such 
+as the field's name, type and size.  Field values are not part of this structure; 
+they are contained in the <code>MYSQL_ROW</code> structure.
+</p>
+
+<pre class="explanation">if (i == 0) 
+{              
+    while(field = mysql_fetch_field(result)) 
+    {
+        printf("%s ", field-&gt;name);
+    }
+    
+    printf("\n");           
+}
+</pre>
+
+<p>
+The first row contains the column headers. The <code>mysql_fetch_field()</code> 
+call returns a <code>MYSQL_FIELD</code> structure. 
+We get the column header names from this structure.
+</p>
+
+<pre>$ ./headers 
+Id Name Price 
+1  Audi  52642  
+2  Mercedes  57127  
+3  Skoda  9000 
+</pre>
+
+<p>
+This is the output of our program.
+</p>
+
+
+<h2>Multiple statements</h2>
+
+<p>
+It is possible to execute multiple SQL statements in one query.
+We must set the <code>CLIENT_MULTI_STATEMENTS</code> flag in the connect method.
+</p>
+
+<pre class="code">#include &lt;my_global.h&gt;
+#include &lt;mysql.h&gt;
+
+void finish_with_error(MYSQL *con)
+{
+  fprintf(stderr, "%s\n", mysql_error(con));
+  mysql_close(con);
+  exit(1);        
+}
+
+int main(int argc, char **argv)
+{ 
+  int status = 0;  
+    
+  MYSQL *con = mysql_init(NULL);  
+  
+  if (con == NULL)
+  {
+      fprintf(stderr, "mysql_init() failed\n");
+      exit(1);
+  }  
+  
+  if (mysql_real_connect(con, "localhost", "user12", "34klq*", 
+          "testdb", 0, NULL, CLIENT_MULTI_STATEMENTS) == NULL) 
+  {
+      finish_with_error(con);
+  }    
+  
+  if (mysql_query(con, "SELECT Name FROM Cars WHERE Id=2;\
+      SELECT Name FROM Cars WHERE Id=3;SELECT Name FROM Cars WHERE Id=6")) 
+  {
+      finish_with_error(con);
+  }
+  
+  do {  
+      MYSQL_RES *result = mysql_store_result(con);
+        
+      if (result == NULL) 
+      {
+          finish_with_error(con);
+      }
+            
+      MYSQL_ROW row = mysql_fetch_row(result);
+      
+      printf("%s\n", row[0]);
+      
+      mysql_free_result(result);
+                 
+      status = mysql_next_result(con); 
+     
+      if (status &gt; 0) {
+          finish_with_error(con);
+      }
+      
+  } while(status == 0);
+    
+  mysql_close(con);  
+  exit(0);
+}
+</pre>
+
+<p>
+In the example, we execute three <code>SELECT</code> statements in one query.
+</p>
+
+<pre class="explanation">if (mysql_real_connect(con, "localhost", "user12", "34klq*", 
+        "testdb", 0, NULL, CLIENT_MULTI_STATEMENTS) == NULL) 
+{
+    finish_with_error(con);
+}
+</pre>
+
+<p>
+The last option of the <code>mysql_real_connect()</code> method 
+is the client flag. It is used to enable certain features. 
+The <code>CLIENT_MULTI_STATEMENTS</code> enables the execution of 
+multiple statements. This is disabled by default. 
+</p>
+
+<pre class="explanation">if (mysql_query(con, "SELECT Name FROM Cars WHERE Id=2;\
+    SELECT Name FROM Cars WHERE Id=3;SELECT Name FROM Cars WHERE Id=6")) 
+{
+    finish_with_error(con);
+}
+</pre>
+
+<p>
+The query consists of three <code>SELECT</code> statements. They are separated 
+by the semicolon <code>;</code> character. The backslash character <code>\</code> 
+is used to separate the string into two lines. It has nothing to do with 
+multiple statements. 
+</p>
+
+<pre class="explanation">do {  
+...    
+} while(status == 0);
+</pre>
+
+<p>
+The code is placed between the do/while statements. The data retrieval 
+is to be done in multiple cycles. We will retrieve data for each 
+<code>SELECT</code> statement separately. 
+</p>
+
+<pre class="explanation">status = mysql_next_result(con); 
+</pre>
+
+<p>
+We expect multiple result sets. Therefore, we call the <code>mysql_next_result()</code> 
+function. It reads the next statement result and returns a status to indicate 
+whether more results exist. The function returns 0 if the execution went OK and 
+there are more results. It returns -1, when it is executed OK and there are no 
+more results. Finally, it returns value greater than zero if an error occurred. 
+</p>
+
+<pre class="explanation">if (status &gt; 0) {
+    finish_with_error(con);
+}
+</pre>
+
+<p>
+We check for error. 
+</p>
+
+<pre>$ ./multiple_statements 
+Mercedes
+Skoda
+Citroen
+</pre>
+
+<p>
+Example output.
+</p>
+
+
+<h2>Inserting images into MySQL database</h2>
+
+<p>
+Some people prefer to put their images into the database, some prefer 
+to keep them on the file system for their applications.
+Technical difficulties arise when we work with lots of images.
+Images are binary data. MySQL database has a special data type to store 
+binary data called <code>BLOB</code> (Binary Large Object).
+</p>
+
+<pre>mysql&gt; CREATE TABLE Images(Id INT PRIMARY KEY, Data MEDIUMBLOB);
+</pre>
+
+<p>
+For our examples, we create a new <code>Images</code> table. The image 
+size can be up to 16 MB. It is determined by the <code>MEDIUMBLOB</code> 
+data type.
+</p>
+
+<pre class="code">#include &lt;my_global.h&gt;
+#include &lt;mysql.h&gt;
+#include &lt;string.h&gt;
+
+void finish_with_error(MYSQL *con)
+{
+  fprintf(stderr, "%s\n", mysql_error(con));
+  mysql_close(con);
+  exit(1);        
+}
+
+int main(int argc, char **argv)
+{
+
+  FILE *fp = fopen("woman.jpg", "rb");
+  
+  if (fp == NULL) 
+  {
+      fprintf(stderr, "cannot open image file\n");    
+      exit(1);
+  }
+      
+  fseek(fp, 0, SEEK_END);
+  
+  if (ferror(fp)) {
+      
+      fprintf(stderr, "fseek() failed\n");
+      int r = fclose(fp);
+
+      if (r == EOF) {
+          fprintf(stderr, "cannot close file handler\n");          
+      }    
+      
+      exit(1);
+  }  
+  
+  int flen = ftell(fp);
+  
+  if (flen == -1) {
+      
+      perror("error occurred");
+      int r = fclose(fp);
+
+      if (r == EOF) {
+          fprintf(stderr, "cannot close file handler\n");
+      }
+      
+      exit(1);      
+  }
+  
+  fseek(fp, 0, SEEK_SET);
+  
+  if (ferror(fp)) {
+      
+      fprintf(stderr, "fseek() failed\n");
+      int r = fclose(fp);
+
+      if (r == EOF) {
+          fprintf(stderr, "cannot close file handler\n");
+      }    
+      
+      exit(1);
+  }
+
+  char data[flen+1];
+
+  int size = fread(data, 1, flen, fp);
+  
+  if (ferror(fp)) {
+      
+      fprintf(stderr, "fread() failed\n");
+      int r = fclose(fp);
+
+      if (r == EOF) {
+          fprintf(stderr, "cannot close file handler\n");
+      }
+      
+      exit(1);      
+  }
+  
+  int r = fclose(fp);
+
+  if (r == EOF) {
+      fprintf(stderr, "cannot close file handler\n");
+  }          
+  
+  MYSQL *con = mysql_init(NULL);
+  
+  if (con == NULL)
+  {
+      fprintf(stderr, "mysql_init() failed\n");
+      exit(1);
+  }  
+    
+  if (mysql_real_connect(con, "localhost", "user12", "34klq*", 
+          "testdb", 0, NULL, 0) == NULL) 
+  {
+      finish_with_error(con);
+  }   
+    
+  char chunk[2*size+1];
+  mysql_real_escape_string(con, chunk, data, size);
+
+  char *st = "INSERT INTO Images(Id, Data) VALUES(1, '%s')";
+  size_t st_len = strlen(st);
+
+  char query[st_len + 2*size+1]; 
+  int len = snprintf(query, st_len + 2*size+1, st, chunk);
+
+  if (mysql_real_query(con, query, len))
+  {
+      finish_with_error(con);
+  }
+  
+  mysql_close(con);
+  exit(0);
+}
+</pre>
+
+<p>
+In this example, we will insert one image into the <code>Images</code> table. 
+</p>
+
+<pre class="explanation">#include &lt;string.h&gt;
+</pre>
+
+<p>
+This include is for the <code>strlen()</code> function.
+</p>
+
+<pre class="explanation">FILE *fp = fopen("woman.jpg", "rb");
+
+if (fp == NULL) 
+{
+    fprintf(stderr, "cannot open image file\n");    
+    exit(1);
+}
+</pre>
+
+<p>
+Here we open the image file. In the current working directory, we should
+have the <code>woman.jpg</code> file. 
+</p>
+
+<pre class="explanation">fseek(fp, 0, SEEK_END);
+
+if (ferror(fp)) {
+    
+    fprintf(stderr, "fseek() failed\n");
+    int r = fclose(fp);
+
+    if (r == EOF) {
+        fprintf(stderr, "cannot close file handler\n");          
+    }    
+    
+    exit(1);
+}  
+</pre>
+
+<p>
+We move the file pointer to the end of the file using the <code>fseek()</code>
+function. We are going to determine the size of the image. If an error occurs, 
+the error indicator is set. We check the indicator using the <code>fseek()</code>
+function. In case of an error, we also close the opened file handler.
+</p>
+
+<pre class="explanation">int flen = ftell(fp);
+
+if (flen == -1) {
+    
+    perror("error occurred");
+    int r = fclose(fp);
+
+    if (r == EOF) {
+        fprintf(stderr, "cannot close file handler\n");
+    }
+    
+    exit(1);      
+}
+</pre>
+
+<p>
+For binary streams, the <code>ftell()</code> function returns the number of bytes 
+from the beginning of the file, e.g. the size of the image file. In case of an 
+error, the function returns -1 and the errno is set. The <code>perrro()</code>
+function interprets the value of errno as an error message, and prints it to the 
+standard error output stream.
+</p>
+
+<pre class="explanation">char data[flen+1];
+</pre>
+
+<p>
+In this array, we are going to store the image data. 
+</p>
+
+<pre class="explanation">int size = fread(data, 1, flen, fp);
+</pre>
+
+<p>
+We read the data from the file pointer and store it in the data
+array. The total number of elements successfully read is returned.
+</p>
+
+
+<pre class="explanation">int r = fclose(fp);
+
+if (r == EOF) {
+    fprintf(stderr, "cannot close file handler\n");
+}
+</pre>
+
+<p>
+After the data is read, we can close the file handler. 
+</p>
+
+<pre class="explanation">char chunk[2*size+1];
+mysql_real_escape_string(con, chunk, data, size);
+</pre>
+
+<p>
+The <code>mysql_real_escape_string()</code> function adds an escape character, 
+the backslash, <code>\</code>, before certain potentially dangerous characters 
+in a string passed in to the function. This can help prevent SQL injection attacks. 
+The new buffer must be at least <code>2*size+1</code> long.
+</p>
+
+<pre class="explanation">char *st = "INSERT INTO Images(Id, Data) VALUES(1, '%s')";
+size_t st_len = strlen(st);
+</pre>
+
+<p>
+Here we start building the SQL statement. We determine the size of the SQL string
+using the <code>strlen()</code> function.
+</p>
+
+<pre class="explanation">char query[st_len + 2*size+1]; 
+int len = snprintf(query, st_len + 2*size+1, st, chunk);
+</pre>
+
+<p>
+The query must take be long enough to contain the size of the SQL string
+statement and the size of the image file. Using the <code>snprintf()</code>
+function, we write the formatted output to query buffer. 
+</p>
+
+<pre class="explanation">if (mysql_real_query(con, query, len))
+{
+    finish_with_error(con);
+};
+</pre>
+
+<p>
+We execute the query using the <code>mysql_real_query()</code> function.
+The <code>mysql_query()</code> cannot be used for statements that contain 
+binary data; we must use the <code>mysql_real_query()</code> instead. 
+</p>
+
+
+<h2>Selecting images from MySQL database</h2>
+
+<p>
+In the previous example, we have inserted an image into the database.
+In the following example, we will select the inserted image back from
+the database.
+</p>
+
+<pre class="code">#include &lt;my_global.h&gt;
+#include &lt;mysql.h&gt;
+
+void finish_with_error(MYSQL *con)
+{
+  fprintf(stderr, "%s\n", mysql_error(con));
+  mysql_close(con);
+  exit(1);        
+}
+
+int main(int argc, char **argv)
+{
+  FILE *fp = fopen("woman2.jpg", "wb");
+  
+  if (fp == NULL) 
+  {
+      fprintf(stderr, "cannot open image file\n");    
+      exit(1);
+  }
+
+  MYSQL *con = mysql_init(NULL);
+  
+  if (con == NULL)
+  {
+      fprintf(stderr, "mysql_init() failed\n");
+      exit(1);
+  }  
+  
+  if (mysql_real_connect(con, "localhost", "user12", "34klq*", 
+          "testdb", 0, NULL, 0) == NULL) 
+  {
+      finish_with_error(con);
+  }
+  
+  if (mysql_query(con, "SELECT Data FROM Images WHERE Id=1"))
+  {
+      finish_with_error(con);
+  }
+  
+  MYSQL_RES *result = mysql_store_result(con);
+  
+  if (result == NULL) 
+  {
+      finish_with_error(con);
+  }  
+
+  MYSQL_ROW row = mysql_fetch_row(result);
+  unsigned long *lengths = mysql_fetch_lengths(result);
+  
+  if (lengths == NULL) {
+      finish_with_error(con);
+  }
+  
+  fwrite(row[0], lengths[0], 1, fp);
+
+  if (ferror(fp)) 
+  {            
+      fprintf(stderr, "fwrite() failed\n");
+      mysql_free_result(result);
+      mysql_close(con);
+
+      exit(1);      
+  }  
+  
+  int r = fclose(fp);
+
+  if (r == EOF) {
+      fprintf(stderr, "cannot close file handler\n");
+  }
+  
+  mysql_free_result(result);
+  mysql_close(con);
+
+  exit(0);
+}
+</pre>
+
+<p>
+In this example, we will create an image file from the database.
+</p>
+
+<pre class="explanation">FILE *fp = fopen("woman2.jpg", "wb");
+
+if (fp == NULL) 
+{
+    fprintf(stderr, "cannot open image file\n");    
+    exit(1);
+}
+</pre>
+
+<p>
+We open a new file handler for writing.
+</p>
+
+<pre class="explanation">if (mysql_query(con, "SELECT Data FROM Images WHERE Id=1"))
+{
+    finish_with_error(con);
+}
+</pre>
+
+<p>
+We select the <code>Data</code> column from the <code>Image</code> 
+table with <code>Id</code> 1.
+</p>
+
+<pre class="explanation">MYSQL_ROW row = mysql_fetch_row(result);
+</pre>
+
+<p>
+The row contains raw data.
+</p>
+
+<pre class="explanation">unsigned long *lengths = mysql_fetch_lengths(result);
+</pre>
+
+<p>
+We get the length of the image.
+</p>
+
+<pre class="explanation">fwrite(row[0], lengths[0], 1, fp);
+
+if (ferror(fp)) 
+{            
+    fprintf(stderr, "fwrite() failed\n");
+    mysql_free_result(result);
+    mysql_close(con);
+
+    exit(1);      
+}  
+</pre>
+
+<p>
+We write the retrieved data to the disk using the 
+<code>fwrite()</code> function call. We check for the error indicator
+with the <code>ferror()</code> function.
+</p>
+
+<pre class="explanation">int r = fclose(fp);
+
+if (r == EOF) {
+    fprintf(stderr, "cannot close file handler\n");
+}
+</pre>
+
+<p>
+After we have written the image data, we close the file handler
+using the <code>fclose()</code> function.
+</p>
+
+<div class="social">
+
+<div class="fb-like fb_iframe_widget" data-href="http://zetcode.com/db/mysqlc/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true" fb-xfbml-state="rendered" fb-iframe-plugin-query="action=like&amp;app_id=&amp;container_width=705&amp;href=http%3A%2F%2Fzetcode.com%2Fdb%2Fmysqlc%2F&amp;layout=button_count&amp;locale=en_US&amp;sdk=joey&amp;share=true&amp;show_faces=false"><span style="vertical-align: bottom; width: 117px; height: 20px;"><iframe name="f19d331645607e" width="1000px" height="1000px" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" title="fb:like Facebook Social Plugin" src="./doc_sql_files/like.html" style="border: none; visibility: visible; width: 117px; height: 20px;" class=""></iframe></span></div>
+
+<div id="___plusone_0" style="text-indent: 0px; margin: 0px; padding: 0px; background: transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; width: 90px; height: 20px;"><iframe frameborder="0" hspace="0" marginheight="0" marginwidth="0" scrolling="no" style="position: static; top: 0px; width: 90px; margin: 0px; border-style: none; left: 0px; visibility: visible; height: 20px;" tabindex="0" vspace="0" width="100%" id="I0_1476005051331" name="I0_1476005051331" src="./doc_sql_files/fastbutton.html" data-gapiattached="true" title="+1"></iframe></div>
+
+<iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" class="twitter-share-button twitter-share-button-rendered twitter-tweet-button" title="Twitter Tweet Button" src="./doc_sql_files/tweet_button.c6def25548e9590b13abaa1b3330b811.en.html" style="position: static; visibility: visible; width: 60px; height: 20px;"></iframe>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id))
+{js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 
+'twitter-wjs');</script>
+
+</div>
+
+<p>
+This was MySQL C API tutorial. You may be also interested in 
+<a href="http://zetcode.com/db/mysqlpython/">MySQL Python tutorial</a>,
+<a href="http://zetcode.com/db/mysqlvb/">MySQL Visual Basic tutorial</a>, 
+or <a href="http://zetcode.com/databases/mysqlphptutorial/">MySQL PHP tutorial</a>, 
+<a href="http://zetcode.com/db/postgresqlc/">PostgreSQL C tutorial</a>, 
+or <a href="http://zetcode.com/db/sqlitec/">SQLite C tutorial</a> on ZetCode.
+</p>
+
+<div class="big_hor">
+<script async="" src="http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- big_horizontal -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-9706709751191532" data-ad-slot="2904953388"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div> 
+
+
+<footer>
+
+<nav>
+<a href="http://zetcode.com/">Home</a>  <a href="http://zetcode.com/db/mysqlc/#">Top of Page</a>
+</nav>
+
+<div class="signature">
+<a href="http://zetcode.com/">ZetCode</a> last modified April 30, 2013  <span class="copyright">© 2007 - 2016 Jan Bodnar</span>
+</div>
+
+</footer>
+
+</div> <!-- content -->
+
+</div> <!-- container -->
+
+<!-- Silktide Cookie -->
+<script>
+    window.cookieconsent_options = {"message":"This website uses cookies to ensure you get the best experience on our website",
+    "dismiss":"Got it!","learnMore":"More info","link":null,"theme":"dark-floating"};
+</script>
+
+<script src="./doc_sql_files/cookieconsent.min.js"></script>
+
+<div id="fb-root" class=" fb_reset"><div style="position: absolute; top: -10000px; height: 0px; width: 0px;"><div><iframe name="fb_xdm_frame_http" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" id="fb_xdm_frame_http" aria-hidden="true" title="Facebook Cross Domain Communication Frame" tabindex="-1" src="./doc_sql_files/P5DLcu0KGJB.html" style="border: none;"></iframe><iframe name="fb_xdm_frame_https" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" id="fb_xdm_frame_https" aria-hidden="true" title="Facebook Cross Domain Communication Frame" tabindex="-1" src="./doc_sql_files/P5DLcu0KGJB(1).html" style="border: none;"></iframe></div></div><div style="position: absolute; top: -10000px; height: 0px; width: 0px;"><div></div></div></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+<iframe name="oauth2relay543231332" id="oauth2relay543231332" src="./doc_sql_files/postmessageRelay.html" tabindex="-1" style="width: 1px; height: 1px; position: absolute; top: -100px;"></iframe><iframe id="rufous-sandbox" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" style="position: absolute; visibility: hidden; display: none; width: 0px; height: 0px; padding: 0px; border: none;" src="./doc_sql_files/saved_resource.html"></iframe></body></html>

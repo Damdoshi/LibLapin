@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<!-- saved from url=(0067)http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html -->
+<html lang="en" class="svg js"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <!--[if IE ]>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MySQL :: MySQL 5.7 Reference Manual :: 25.8.6 C API Function Overview</title>
+    <link rel="stylesheet" media="all" href="./doc_sql2_files/main-20160912.min.css">
+            <link rel="stylesheet" media="all" href="./doc_sql2_files/docs-20160912.min.css">
+    
+    
+    <link rel="stylesheet" media="print" href="./doc_sql2_files/print-20160912.min.css">
+
+    
+    
+    
+            <link rel="contents" href="http://dev.mysql.com/doc/refman/5.7/en/index.html" title="MySQL 5.7 Reference Manual">
+<link rel="start" href="http://dev.mysql.com/doc/refman/5.7/en/index.html" title="MySQL 5.7 Reference Manual">
+<link rel="prev" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-data-structures.html" title="25.8.5 C API Data Structures">
+<link rel="next" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-functions.html?ff=nopfpls" title="25.8.7 C API Function Descriptions">
+<link rel="up" href="http://dev.mysql.com/doc/refman/5.7/en/c-api.html" title="25.8 MySQL C API">
+
+    
+    <link rel="shortcut icon" href="http://dev.mysql.com/common/themes/sakila/favicon.ico">
+    <script>(function(H){ H.className=H.className.replace(/\bno-js\b/,'js') })(document.documentElement)</script>
+    <script src="./doc_sql2_files/site-20160129.min.js"></script>
+
+    
+    
+    
+    <!--[if lt IE 9]>
+        <script src="//www-jp.mysql.com/common/js/polyfills/html5shiv-printshiv-3.7.2.min.js"></script>
+        <script src="//www-jp.mysql.com/common/js/polyfills/respond-1.4.2.min.js"></script>
+    <![endif]-->
+        <!--[if IE 9]>
+        <style>#docs-sidebar-toc { box-sizing: content-box; }</style>
+    <![endif]-->
+    </head>
+
+<body class="no-sidebar full-page dev has-sticky-toc">
+    <header>
+
+                        <a href="http://dev.mysql.com/" title="MySQL" id="l1-home-link"></a>
+        
+        <div id="l1-nav-container">
+            <div>
+                <div id="l1-search-auth">
+                    <div id="l1-auth-links">
+                        <a href="http://www.mysql.com/about/contact/"><strong>Contact MySQL</strong></a>
+                        <span id="l1-contact-separator">&nbsp;|&nbsp;</span>
+                        <span id="l1-contact-separator-br"><br></span>
+                                                     <a href="https://dev.mysql.com/auth/login/?dest=http%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.7%2Fen%2Fc-api-function-overview.html">Login</a> &nbsp;|&nbsp;
+                             <a href="https://dev.mysql.com/auth/register/">Register</a>
+                                            </div>
+                    <div id="l1-search-box">
+                        <form id="l1-search-form" method="get" action="https://search.oracle.com/search/search">
+                        <input type="hidden" name="group" value="MySQL">
+                        <input type="text" id="l1-search-input" name="q">
+                        <button type="submit" class="l1-search-btn" title="Search"><span class="icon-search"></span></button>
+                        </form>
+                    </div>
+                </div>
+                <div class="social-icons">
+                    <a title="Join us on Facebook" href="http://www.facebook.com/mysql"><span class="icon-facebook-square"></span></a>
+                    <a title="Follow us on Twitter" href="https://twitter.com/#!/mysql"><span class="icon-twitter-square"></span></a>
+                    <a title="Join Google+ to follow MySQL" href="https://plus.google.com/+mysql"><span class="icon-google-plus-square"></span></a>
+                    <a title="Visit our YouTube channel" href="http://www.youtube.com/mysqlchannel"><span class="icon-youtube-square"></span></a>
+                </div>
+                <div id="l1-slogan">
+                    The world's most popular open source database
+                </div>
+            </div>
+            <div>
+                <ul id="l1-nav">
+                    <li>
+                        <a href="http://www.mysql.com/"><!-- <span class="icon-sakila"></span>  -->MySQL.com</a>
+                    </li><li>
+                        <a href="http://www.mysql.com/downloads/"><!-- <span class="icon-download-thin"></span>  -->Downloads</a>
+                    </li><li class="active">
+                        <a href="http://dev.mysql.com/doc/"><!-- <span class="icon-books"></span>  -->Documentation</a>
+                    </li><li>
+                        <a href="http://dev.mysql.com/"><!-- <span class="icon-code"></span>  -->Developer Zone</a>
+                    </li>                </ul>
+            </div>
+        </div>
+        <div id="sub-header">
+            <div id="l2-nav-container">
+                <div id="l2-nav-toggle">
+                    <span class="icon-three-bars"></span>
+                </div>
+                                                                                        <a class="button nav-button-3" href="http://dev.mysql.com/"><span class="icon-code"></span> Developer Zone</a>
+                                                                                                                                    <a class="button nav-button-2" href="http://www.mysql.com/downloads/"><span class="icon-download-thin"></span> Downloads</a>
+                                                                                                <a class="button nav-button-1" href="http://www.mysql.com/"><span class="icon-sakila"></span> MySQL.com</a>
+                                                                        <div id="l2-search-toggle">
+                    <span class="icon-search"></span>
+                </div>
+                <div id="l2-site-icon">
+                                                                                                                                                                                                    <span class="icon-books"></span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+                <div id="l1-section-title">
+                    <span id="l1-section-label">
+                        <a href="http://dev.mysql.com/doc/">Documentation</a>
+                    </span>
+                </div>
+                <nav>
+                    
+
+<ul id="l2-nav">
+        	<li class="active"><a class="active " href="http://dev.mysql.com/doc/refman/en/">MySQL Server</a>
+
+			</li>
+	    	<li class=""><a href="http://dev.mysql.com/doc/index-enterprise.html">MySQL Enterprise</a>
+
+			</li>
+	    	<li class=""><a href="http://dev.mysql.com/doc/workbench/en/">Workbench</a>
+
+			</li>
+	    	<li class=""><a href="http://dev.mysql.com/doc/mysql-router/en/">Router</a>
+
+			</li>
+	    	<li class=""><a href="http://dev.mysql.com/doc/index-utils-fabric.html">Utilities/Fabric</a>
+
+			</li>
+	    	<li class=""><a href="http://dev.mysql.com/doc/index-cluster.html">Cluster</a>
+
+			</li>
+	    	<li class=""><a href="http://dev.mysql.com/doc/index-connectors.html">Connectors</a>
+
+			</li>
+	    	<li class=" last"><a href="http://dev.mysql.com/doc/index-other.html">More</a>
+
+			</li>
+	                        <li class="other-section"><a href="http://www.mysql.com/">MySQL.com</a></li>
+                            <li class="other-section"><a href="http://www.mysql.com/downloads/">Downloads</a></li>
+                                        <li class="other-section"><a href="http://dev.mysql.com/">Developer Zone</a></li>
+            </ul>
+                </nav>
+            </div>
+            <div id="l3-search-container"></div>
+            <div id="top-orange"><span id="section-nav">Section Menu: &nbsp; </span></div>
+        </div>
+    </header>
+    <div id="page">
+                        <div role="main" id="main">
+
+            
+                
+            
+<div>
+    <div id="docs-sidebar-toc" class="sticky" style="max-height: 893px; overflow-y: auto;">
+    <div id="docs-toc-inner">
+        <div class="docs-sidebar-header" id="docs-nav-header">
+            <a class="docs-show-hide-nav" id="docs-hide-nav" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html" title="Hide Sidebar"><span class="icon-arrow-small-left"></span></a>
+            <div class="docs-nav-links">
+                                    
+    <a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-data-structures.html" title="Previous: C API Data Structures"><span class="icon-chevron-left"></span></a>
+<a href="http://dev.mysql.com/doc/refman/5.7/en/index.html" title="Start"><span class="icon-book-open"></span></a>
+        <a href="http://dev.mysql.com/doc/refman/5.7/en/c-api.html" title="Up: MySQL C API"><span class="icon-chevron-up"></span></a>
+    <a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-functions.html" title="Next: C API Function Descriptions"><span class="icon-chevron-right"></span></a>
+                            </div>
+        </div>
+                    
+<div id="docs-sidebar-search-container">
+    <div id="docs-sidebar-search-box">
+        <form method="get" action="http://dev.mysql.com/doc/search/">
+            <input type="hidden" name="d" id="d" value="12">
+            <input type="hidden" name="p" id="p" value="1">
+            <input type="text" name="q" id="q" value="Search this Manual" style="color: #bbb;" onfocus="if(this.value == &#39;Search this Manual&#39;) {this.value=&#39;&#39;;this.style.color=&#39;#555&#39;;}" onblur="if(this.value == &#39;&#39;) {this.value=&#39;Search this Manual&#39;;this.style.color=&#39;#bbb&#39;;}">
+
+            <button class="docs-sidebar-search-btn" title="Search" type="submit">
+                <span class="icon-search"></span>
+            </button>
+        </form>
+    </div>
+</div>
+                <div class="docs-sidebar-nav">
+            <a class="docs-icon-home" href="http://dev.mysql.com/doc/"><span class="icon-home"></span>Documentation Home</a><hr>
+            <div class="docs-sidebar-mtitle">MySQL 5.7 Reference Manual</div>
+            <nav class="doctoc" id="doc-12">
+                                    
+    <ul>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/preface.html">Preface and Legal Notices</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/introduction.html">General Information</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/installing.html">Installing and Upgrading MySQL</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/document-store.html">Using MySQL as a Document Store</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/tutorial.html">Tutorial</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/programs.html">MySQL Programs</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/server-administration.html">MySQL Server Administration</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/security.html">Security</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/backup-and-recovery.html">Backup and Recovery</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/optimization.html">Optimization</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/language-structure.html">Language Structure</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/globalization.html">Globalization</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/data-types.html">Data Types</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/functions.html">Functions and Operators</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/sql-syntax.html">SQL Statement Syntax</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/innodb-storage-engine.html">The InnoDB Storage Engine</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/storage-engines.html">Alternative Storage Engines</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/ha-overview.html">High Availability and Scalability</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/replication.html">Replication</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-cluster.html">MySQL Cluster NDB 7.5</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/partitioning.html">Partitioning</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/stored-programs-views.html">Stored Programs and Views</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/information-schema.html">INFORMATION_SCHEMA Tables</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/performance-schema.html">MySQL Performance Schema</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/sys-schema.html">MySQL sys Schema</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable  loaded" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-down"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/connectors-apis.html">Connectors and APIs</a></div></div>                        <div class="docs-submenu">
+                                    
+    <ul>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/connector-odbc-info.html">MySQL Connector/ODBC</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/connector-net-info.html">MySQL Connector/Net</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/connector-j-info.html">MySQL Connector/J</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/connector-cpp-info.html">MySQL Connector/C++</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/connector-c-info.html">MySQL Connector/C</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/connector-python-info.html">MySQL Connector/Python</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable  loaded" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/libmysqld.html">libmysqld, the Embedded MySQL Server Library</a></div></div>                        <div class="docs-submenu hidden">
+                                    
+    <ul>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/libmysqld-compiling.html">Compiling Programs with libmysqld</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/libmysqld-restrictions.html">Restrictions When Using the Embedded MySQL Server</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/libmysqld-options.html">Options with the Embedded Server</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/libmysqld-example.html">Embedded Server Examples</a></div></div>                    </li>
+        </ul>
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable  loaded" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-down"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api.html">MySQL C API</a></div></div>                        <div class="docs-submenu">
+                                    
+    <ul>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-implementations.html">MySQL C API Implementations</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-multiple-installations.html">Simultaneous MySQL Server and Connector/C Installations</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-example-programs.html">Example C API Client Programs</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable  loaded" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-building-running-clients.html">Building and Running C API Client Programs</a></div></div>                        <div class="docs-submenu hidden">
+                                    
+    <ul>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-building-clients.html">Building C API Client Programs</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-building-clients-pkg-config.html">Building C API Client Programs Using pkg-config</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-threaded-clients.html">Writing C API Threaded Client Programs</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-running-clients.html">Running C API Client Programs</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-server-client-versions.html">C API Server and Client Library Versions</a></div></div>                    </li>
+        </ul>
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-data-structures.html">C API Data Structures</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link current"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html">C API Function Overview</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable  loaded" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-functions.html">C API Function Descriptions</a></div></div>                        <div class="docs-submenu hidden">
+                                    
+    <ul>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-affected-rows.html">mysql_affected_rows()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-autocommit.html">mysql_autocommit()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-change-user.html">mysql_change_user()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-character-set-name.html">mysql_character_set_name()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-close.html">mysql_close()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-commit.html">mysql_commit()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-connect.html">mysql_connect()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-create-db.html">mysql_create_db()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-data-seek.html">mysql_data_seek()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-debug.html">mysql_debug()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-drop-db.html">mysql_drop_db()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-dump-debug-info.html">mysql_dump_debug_info()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-eof.html">mysql_eof()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-errno.html">mysql_errno()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-error.html">mysql_error()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-escape-string.html">mysql_escape_string()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-field.html">mysql_fetch_field()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-field-direct.html">mysql_fetch_field_direct()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-fields.html">mysql_fetch_fields()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-lengths.html">mysql_fetch_lengths()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-row.html">mysql_fetch_row()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-field-count.html">mysql_field_count()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-field-seek.html">mysql_field_seek()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-field-tell.html">mysql_field_tell()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-free-result.html">mysql_free_result()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-character-set-info.html">mysql_get_character_set_info()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-client-info.html">mysql_get_client_info()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-client-version.html">mysql_get_client_version()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-host-info.html">mysql_get_host_info()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-option.html">mysql_get_option()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-proto-info.html">mysql_get_proto_info()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-server-info.html">mysql_get_server_info()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-server-version.html">mysql_get_server_version()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-ssl-cipher.html">mysql_get_ssl_cipher()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-hex-string.html">mysql_hex_string()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-info.html">mysql_info()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-init.html">mysql_init()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-insert-id.html">mysql_insert_id()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-kill.html">mysql_kill()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-library-end.html">mysql_library_end()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-library-init.html">mysql_library_init()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-list-dbs.html">mysql_list_dbs()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-list-fields.html">mysql_list_fields()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-list-processes.html">mysql_list_processes()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-list-tables.html">mysql_list_tables()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-more-results.html">mysql_more_results()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-next-result.html">mysql_next_result()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-num-fields.html">mysql_num_fields()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-num-rows.html">mysql_num_rows()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-options.html">mysql_options()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-options4.html">mysql_options4()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-ping.html">mysql_ping()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-query.html">mysql_query()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-connect.html">mysql_real_connect()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-escape-string.html">mysql_real_escape_string()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-escape-string-quote.html">mysql_real_escape_string_quote()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-query.html">mysql_real_query()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-refresh.html">mysql_refresh()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-reload.html">mysql_reload()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-reset-connection.html">mysql_reset_connection()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-rollback.html">mysql_rollback()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-row-seek.html">mysql_row_seek()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-row-tell.html">mysql_row_tell()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-select-db.html">mysql_select_db()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-session-track-get-first.html">mysql_session_track_get_first()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-session-track-get-next.html">mysql_session_track_get_next()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-set-character-set.html">mysql_set_character_set()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-set-local-infile-default.html">mysql_set_local_infile_default()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-set-local-infile-handler.html">mysql_set_local_infile_handler()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-set-server-option.html">mysql_set_server_option()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-shutdown.html">mysql_shutdown()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-sqlstate.html">mysql_sqlstate()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-ssl-set.html">mysql_ssl_set()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stat.html">mysql_stat()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-store-result.html">mysql_store_result()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-thread-id.html">mysql_thread_id()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-use-result.html">mysql_use_result()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-warning-count.html">mysql_warning_count()</a></div></div>                    </li>
+        </ul>
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-prepared-statements.html">C API Prepared Statements</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable  loaded" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-prepared-statement-data-structures.html">C API Prepared Statement Data Structures</a></div></div>                        <div class="docs-submenu hidden">
+                                    
+    <ul>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-prepared-statement-type-codes.html">C API Prepared Statement Type Codes</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-prepared-statement-type-conversions.html">C API Prepared Statement Type Conversions</a></div></div>                    </li>
+        </ul>
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-prepared-statement-function-overview.html">C API Prepared Statement Function Overview</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable  loaded" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-prepared-statement-functions.html">C API Prepared Statement Function Descriptions</a></div></div>                        <div class="docs-submenu hidden">
+                                    
+    <ul>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-affected-rows.html">mysql_stmt_affected_rows()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-attr-get.html">mysql_stmt_attr_get()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-attr-set.html">mysql_stmt_attr_set()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-bind-param.html">mysql_stmt_bind_param()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-bind-result.html">mysql_stmt_bind_result()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-close.html">mysql_stmt_close()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-data-seek.html">mysql_stmt_data_seek()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-errno.html">mysql_stmt_errno()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-error.html">mysql_stmt_error()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-execute.html">mysql_stmt_execute()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-fetch.html">mysql_stmt_fetch()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-fetch-column.html">mysql_stmt_fetch_column()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-field-count.html">mysql_stmt_field_count()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-free-result.html">mysql_stmt_free_result()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-init.html">mysql_stmt_init()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-insert-id.html">mysql_stmt_insert_id()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-next-result.html">mysql_stmt_next_result()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-num-rows.html">mysql_stmt_num_rows()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-param-count.html">mysql_stmt_param_count()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-param-metadata.html">mysql_stmt_param_metadata()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-prepare.html">mysql_stmt_prepare()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-reset.html">mysql_stmt_reset()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-result-metadata.html">mysql_stmt_result_metadata()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-row-seek.html">mysql_stmt_row_seek()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-row-tell.html">mysql_stmt_row_tell()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-send-long-data.html">mysql_stmt_send_long_data()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-sqlstate.html">mysql_stmt_sqlstate()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stmt-store-result.html">mysql_stmt_store_result()</a></div></div>                    </li>
+        </ul>
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable  loaded" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-thread-functions.html">C API Threaded Function Descriptions</a></div></div>                        <div class="docs-submenu hidden">
+                                    
+    <ul>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/my-init.html">my_init()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-thread-end.html">mysql_thread_end()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-thread-init.html">mysql_thread_init()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-thread-safe.html">mysql_thread_safe()</a></div></div>                    </li>
+        </ul>
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable  loaded" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-embedded-server-functions.html">C API Embedded Server Function Descriptions</a></div></div>                        <div class="docs-submenu hidden">
+                                    
+    <ul>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-server-init.html">mysql_server_init()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-server-end.html">mysql_server_end()</a></div></div>                    </li>
+        </ul>
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable  loaded" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-plugin-functions.html">C API Client Plugin Functions</a></div></div>                        <div class="docs-submenu hidden">
+                                    
+    <ul>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-client-find-plugin.html">mysql_client_find_plugin()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-client-register-plugin.html">mysql_client_register_plugin()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-load-plugin.html">mysql_load_plugin()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-load-plugin-v.html">mysql_load_plugin_v()</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-plugin-options.html">mysql_plugin_options()</a></div></div>                    </li>
+        </ul>
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable  loaded" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-problems.html">Common Questions and Problems When Using the C API</a></div></div>                        <div class="docs-submenu hidden">
+                                    
+    <ul>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/null-mysql-store-result.html">Why mysql_store_result() Sometimes Returns NULL After mysql_query()
+Returns Success</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/query-results.html">What Results You Can Get from a Query</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/getting-unique-id.html">How to Get the Unique ID for the Last Inserted Row</a></div></div>                    </li>
+        </ul>
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/auto-reconnect.html">Controlling Automatic Reconnection Behavior</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-multiple-queries.html">C API Support for Multiple Statement Execution</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-prepared-statement-problems.html">C API Prepared Statement Problems</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-prepared-statement-date-handling.html">C API Prepared Statement Handling of Date and Time Values</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-prepared-call-statements.html">C API Support for Prepared CALL Statements</a></div></div>                    </li>
+        </ul>
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/apis-php-info.html">MySQL PHP API</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/apis-perl.html">MySQL Perl API</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/apis-python.html">MySQL Python API</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable  loaded" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/apis-ruby.html">MySQL Ruby APIs</a></div></div>                        <div class="docs-submenu hidden">
+                                    
+    <ul>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/apis-ruby-mysqlruby.html">The MySQL/Ruby API</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/apis-ruby-rubymysql.html">The Ruby/MySQL API</a></div></div>                    </li>
+        </ul>
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/apis-tcl.html">MySQL Tcl API</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/apis-eiffel.html">MySQL Eiffel Wrapper</a></div></div>                    </li>
+        </ul>
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/extending-mysql.html">Extending MySQL</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/mysql-enterprise.html">MySQL Enterprise Edition</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/workbench.html">MySQL Workbench</a></div></div>                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/faqs.html">MySQL 5.7 Frequently Asked Questions</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/error-handling.html">Errors, Error Codes, and Common Problems</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/restrictions.html">Restrictions and Limits</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><a class="expandable " href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-chevron-right"></span></a></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/indexes.html">Indexes</a></div></div>                        <div class="docs-submenu hidden">
+                            </div>
+                    </li>
+            <li>
+            <div><div class="docs-sidebar-nav-icon"><span class="icon-dot"></span></div><div class="docs-sidebar-nav-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/glossary.html">MySQL Glossary</a></div></div>                    </li>
+        </ul>
+                            </nav>
+        </div>
+
+        
+<a class="docs-sidebar-section" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-related"></span>
+    <span class="text">Related Documentation</span></a>
+<div class="docs-sidebar-accordian open">
+    <div class="text">
+        <a href="http://dev.mysql.com/doc/relnotes/mysql/5.7/en/">MySQL 5.7 Release Notes</a><br>
+        </div>
+</div>
+
+    <a class="docs-sidebar-section" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-download-thin"></span>
+        <span class="text">
+            Download
+                            this Manual
+                    </span>
+    </a>
+    <div class="docs-sidebar-accordian open">
+        <div class="text">
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.pdf">PDF (US Ltr)</a>
+            - 35.6Mb<br>
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.a4.pdf">PDF (A4)</a>
+            - 35.6Mb<br>
+                        <a href="http://downloads.mysql.com/docs/mysql-refman-5.7-en-pdf-1-20161009.noarch.rpm">PDF (RPM)</a>
+            - 34.7Mb<br>
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.epub">EPUB</a>
+            - 8.7Mb<br>
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.html-chapter.tar.gz">HTML Download (TGZ)</a>
+            - 8.5Mb<br>
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.html-chapter.zip">HTML Download (Zip)</a>
+            - 8.5Mb<br>
+                        <a href="http://downloads.mysql.com/docs/mysql-refman-5.7-en-html-chapter-1-20161009.noarch.rpm">HTML Download (RPM)</a>
+            - 7.3Mb<br>
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.eclipse.tar.gz">Eclipse Doc Plugin (TGZ)</a>
+            - 9.4Mb<br>
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.eclipse.zip">Eclipse Doc Plugin (Zip)</a>
+            - 11.5Mb<br>
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.man-gpl.tar.gz">Man Pages (TGZ)</a>
+            - 202.2Kb<br>
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.man-gpl.zip">Man Pages (Zip)</a>
+            - 307.6Kb<br>
+                        <a href="http://downloads.mysql.com/docs/mysql-5.7.info.gz">Info (Gzip)</a>
+            - 3.3Mb<br>
+                        <a href="http://downloads.mysql.com/docs/mysql-5.7.info.zip">Info (Zip)</a>
+            - 3.3Mb<br>
+                    </div>
+    </div>
+
+<a class="docs-sidebar-section" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-book"></span>
+    <span class="text">Excerpts from this Manual</span></a>
+<div class="docs-sidebar-accordian">
+    <div class="text">
+                <a href="http://dev.mysql.com/doc/mysql-backup-excerpt/5.7/en/">MySQL Backup and Recovery</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-g11n-excerpt/5.7/en/">MySQL Globalization</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-infoschema-excerpt/5.7/en/">MySQL Information Schema</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/">MySQL Installation Guide</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-linuxunix-excerpt/5.7/en/">MySQL and Linux/Unix</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-osx-excerpt/5.7/en/">MySQL and OS X</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-partitioning-excerpt/5.7/en/">MySQL Partitioning</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-perfschema-excerpt/5.7/en/">MySQL Performance Schema</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-replication-excerpt/5.7/en/">MySQL Replication</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-repo-excerpt/5.7/en/">Using the MySQL Yum Repository</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-reslimits-excerpt/5.7/en/">MySQL Restrictions and Limitations</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-security-excerpt/5.7/en/">Security in MySQL</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-solaris-excerpt/5.7/en/">MySQL and Solaris</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-sourcebuild-excerpt/5.7/en/">Building MySQL from Source</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-startstop-excerpt/5.7/en/">Starting and Stopping MySQL</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-tutorial-excerpt/5.7/en/">MySQL Tutorial</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-windows-excerpt/5.7/en/">MySQL and Windows</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-cluster-excerpt/5.7/en/">MySQL Cluster NDB 7.5</a><br>
+            </div>
+</div>
+
+
+        <br><span id="wkr" style="display: inline-block;"><br></span>
+    </div>
+    </div>
+
+    <div id="docs-main" class="has-toc">
+    <div id="docs-main-inner">
+
+                <div class="right" id="docs-version-nav">
+            <a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html" id="docs-version-nav-toggle">version 5.7
+            <span class="icon-chevron-down"></span></a>
+            <div id="docs-version-list">
+                                                        <a href="http://dev.mysql.com/doc/refman/8.0/en/c-api-function-overview.html">
+                        8.0
+                                            </a><br>
+                                                                                                                <a href="http://dev.mysql.com/doc/refman/5.6/en/c-api-function-overview.html">
+                        5.6
+                                            </a><br>
+                                                                            <a href="http://dev.mysql.com/doc/refman/5.5/en/c-api-function-overview.html">
+                        5.5
+                                            </a><br>
+                                                                        <div id="docs-version-nav-lang">
+                                                                                                                                                    <a href="http://dev.mysql.com/doc/refman/5.6/ja/c-api-function-overview.html">
+                                    5.6&nbsp;
+                                                                            Japanese
+                                                                    </a><br>
+                                                                                            </div>
+                            </div>
+        </div>
+        
+        <div id="docs-show-nav" class="left hidden" style="margin-right: 15px;">
+            <a class="docs-show-hide-nav" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html" title="Show Sidebar"><span class="icon-arrow-small-right"></span></a>
+        </div>
+
+                        <div id="docs-breadcrumbs">
+            <a href="http://dev.mysql.com/doc/refman/5.7/en/">MySQL 5.7 Reference Manual</a> &nbsp;/&nbsp;
+                            <span id="breadcrumbs-link"><a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html" id="show-breadcrumbs">...</a> &nbsp;/&nbsp;</span>
+                <span class="hidden" id="hidden-breadcrumbs">
+                                                        <a href="http://dev.mysql.com/doc/refman/5.7/en/connectors-apis.html">Connectors and APIs</a> &nbsp;/&nbsp;
+                                                            <a href="http://dev.mysql.com/doc/refman/5.7/en/c-api.html">MySQL C API</a> &nbsp;/&nbsp;
+                                                                                        </span>
+                                        C API Function Overview
+                                    </div>
+        
+        <div id="docs-body">
+        
+<div class="section">
+<div class="titlepage">
+<div>
+<div>
+<h3 class="title"><a name="c-api-function-overview"></a>25.8.6&nbsp;C API Function Overview</h3>
+
+</div>
+
+</div>
+
+</div>
+<a class="indexterm" name="idm140034456452672"></a><a class="indexterm" name="idm140034456451184"></a><p>
+      The functions available in the C API are summarized here and
+      described in greater detail in a later section. See
+      <a class="xref" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-functions.html" title="25.8.7 C API Function Descriptions">Section&nbsp;25.8.7, “C API Function Descriptions”</a>.
+</p>
+<div class="table">
+<a name="idm140034456448496"></a><p class="title"><b>Table&nbsp;25.4&nbsp;C API Function Names and Descriptions</b></p>
+<div class="table-contents">
+<table class="table" summary="C API Function Names and Descriptions" border="1"><colgroup><col><col></colgroup><thead><tr><th scope="col">Function</th><th scope="col">Description</th></tr></thead><tbody><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/my-init.html" title="25.8.12.1 my_init()"><code class="literal">my_init()</code></a></td><td>Initialize global variables, and thread handler in thread-safe programs</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-affected-rows.html" title="25.8.7.1 mysql_affected_rows()"><code class="literal">mysql_affected_rows()</code></a></td><td>Returns the number of rows changed/deleted/inserted by the last
+              <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/update.html" title="14.2.11 UPDATE Syntax"><code class="literal">UPDATE</code></a>,
+              <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/delete.html" title="14.2.2 DELETE Syntax"><code class="literal">DELETE</code></a>, or
+              <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/insert.html" title="14.2.5 INSERT Syntax"><code class="literal">INSERT</code></a> query</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-autocommit.html" title="25.8.7.2 mysql_autocommit()"><code class="literal">mysql_autocommit()</code></a></td><td>Toggles autocommit mode on/off</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-change-user.html" title="25.8.7.3 mysql_change_user()"><code class="literal">mysql_change_user()</code></a></td><td>Changes user and database on an open connection</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-character-set-name.html" title="25.8.7.4 mysql_character_set_name()"><code class="literal">mysql_character_set_name()</code></a></td><td>Return default character set name for current connection</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-client-find-plugin.html" title="25.8.14.1 mysql_client_find_plugin()"><code class="literal">mysql_client_find_plugin()</code></a></td><td>Return pointer to plugin</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-client-register-plugin.html" title="25.8.14.2 mysql_client_register_plugin()"><code class="literal">mysql_client_register_plugin()</code></a></td><td>Register a plugin</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-close.html" title="25.8.7.5 mysql_close()"><code class="literal">mysql_close()</code></a></td><td>Closes a server connection</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-commit.html" title="25.8.7.6 mysql_commit()"><code class="literal">mysql_commit()</code></a></td><td>Commits the transaction</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-connect.html" title="25.8.7.7 mysql_connect()"><code class="literal">mysql_connect()</code></a></td><td>Connects to a MySQL server (this function is deprecated; use
+              <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-connect.html" title="25.8.7.54 mysql_real_connect()"><code class="literal">mysql_real_connect()</code></a>
+              instead)</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-create-db.html" title="25.8.7.8 mysql_create_db()"><code class="literal">mysql_create_db()</code></a></td><td>Creates a database (this function is deprecated; use the SQL statement
+              <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/create-database.html" title="14.1.11 CREATE DATABASE Syntax"><code class="literal">CREATE DATABASE</code></a> instead)</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-data-seek.html" title="25.8.7.9 mysql_data_seek()"><code class="literal">mysql_data_seek()</code></a></td><td>Seeks to an arbitrary row number in a query result set</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-debug.html" title="25.8.7.10 mysql_debug()"><code class="literal">mysql_debug()</code></a></td><td>Does a <code class="literal">DBUG_PUSH</code> with the given string</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-drop-db.html" title="25.8.7.11 mysql_drop_db()"><code class="literal">mysql_drop_db()</code></a></td><td>Drops a database (this function is deprecated; use the SQL statement
+              <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/drop-database.html" title="14.1.22 DROP DATABASE Syntax"><code class="literal">DROP DATABASE</code></a> instead)</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-dump-debug-info.html" title="25.8.7.12 mysql_dump_debug_info()"><code class="literal">mysql_dump_debug_info()</code></a></td><td>Makes the server write debug information to the log</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-eof.html" title="25.8.7.13 mysql_eof()"><code class="literal">mysql_eof()</code></a></td><td>Determines whether the last row of a result set has been read (this
+              function is deprecated;
+              <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-errno.html" title="25.8.7.14 mysql_errno()"><code class="literal">mysql_errno()</code></a> or
+              <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-error.html" title="25.8.7.15 mysql_error()"><code class="literal">mysql_error()</code></a> may be used
+              instead)</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-errno.html" title="25.8.7.14 mysql_errno()"><code class="literal">mysql_errno()</code></a></td><td>Returns the error number for the most recently invoked MySQL function</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-error.html" title="25.8.7.15 mysql_error()"><code class="literal">mysql_error()</code></a></td><td>Returns the error message for the most recently invoked MySQL function</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-escape-string.html" title="25.8.7.16 mysql_escape_string()"><code class="literal">mysql_escape_string()</code></a></td><td>Escapes special characters in a string for use in an SQL statement</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-field.html" title="25.8.7.17 mysql_fetch_field()"><code class="literal">mysql_fetch_field()</code></a></td><td>Returns the type of the next table field</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-field-direct.html" title="25.8.7.18 mysql_fetch_field_direct()"><code class="literal">mysql_fetch_field_direct()</code></a></td><td>Returns the type of a table field, given a field number</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-fields.html" title="25.8.7.19 mysql_fetch_fields()"><code class="literal">mysql_fetch_fields()</code></a></td><td>Returns an array of all field structures</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-lengths.html" title="25.8.7.20 mysql_fetch_lengths()"><code class="literal">mysql_fetch_lengths()</code></a></td><td>Returns the lengths of all columns in the current row</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-row.html" title="25.8.7.21 mysql_fetch_row()"><code class="literal">mysql_fetch_row()</code></a></td><td>Fetches the next row from the result set</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-field-count.html" title="25.8.7.22 mysql_field_count()"><code class="literal">mysql_field_count()</code></a></td><td>Returns the number of result columns for the most recent statement</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-field-seek.html" title="25.8.7.23 mysql_field_seek()"><code class="literal">mysql_field_seek()</code></a></td><td>Puts the column cursor on a specified column</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-field-tell.html" title="25.8.7.24 mysql_field_tell()"><code class="literal">mysql_field_tell()</code></a></td><td>Returns the position of the field cursor used for the last
+              <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-field.html" title="25.8.7.17 mysql_fetch_field()"><code class="literal">mysql_fetch_field()</code></a></td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-free-result.html" title="25.8.7.25 mysql_free_result()"><code class="literal">mysql_free_result()</code></a></td><td>Frees memory used by a result set</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-character-set-info.html" title="25.8.7.26 mysql_get_character_set_info()"><code class="literal">mysql_get_character_set_info()</code></a></td><td>Return information about default character set</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-client-info.html" title="25.8.7.27 mysql_get_client_info()"><code class="literal">mysql_get_client_info()</code></a></td><td>Returns client version information as a string</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-client-version.html" title="25.8.7.28 mysql_get_client_version()"><code class="literal">mysql_get_client_version()</code></a></td><td>Returns client version information as an integer</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-host-info.html" title="25.8.7.29 mysql_get_host_info()"><code class="literal">mysql_get_host_info()</code></a></td><td>Returns a string describing the connection</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-option.html" title="25.8.7.30 mysql_get_option()"><code class="literal">mysql_get_option()</code></a></td><td>Returns the value of a <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-options.html" title="25.8.7.50 mysql_options()"><code class="literal">mysql_options()</code></a>
+              option</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-proto-info.html" title="25.8.7.31 mysql_get_proto_info()"><code class="literal">mysql_get_proto_info()</code></a></td><td>Returns the protocol version used by the connection</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-server-info.html" title="25.8.7.32 mysql_get_server_info()"><code class="literal">mysql_get_server_info()</code></a></td><td>Returns the server version number</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-server-version.html" title="25.8.7.33 mysql_get_server_version()"><code class="literal">mysql_get_server_version()</code></a></td><td>Returns version number of server as an integer</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-get-ssl-cipher.html" title="25.8.7.34 mysql_get_ssl_cipher()"><code class="literal">mysql_get_ssl_cipher()</code></a></td><td>Return current SSL cipher</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-hex-string.html" title="25.8.7.35 mysql_hex_string()"><code class="literal">mysql_hex_string()</code></a></td><td>Encode string in hexadecimal format</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-info.html" title="25.8.7.36 mysql_info()"><code class="literal">mysql_info()</code></a></td><td>Returns information about the most recently executed query</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-init.html" title="25.8.7.37 mysql_init()"><code class="literal">mysql_init()</code></a></td><td>Gets or initializes a <code class="literal">MYSQL</code> structure</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-insert-id.html" title="25.8.7.38 mysql_insert_id()"><code class="literal">mysql_insert_id()</code></a></td><td>Returns the ID generated for an <code class="literal">AUTO_INCREMENT</code> column
+              by the previous query</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-kill.html" title="25.8.7.39 mysql_kill()"><code class="literal">mysql_kill()</code></a></td><td>Kills a given thread</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-library-end.html" title="25.8.7.40 mysql_library_end()"><code class="literal">mysql_library_end()</code></a></td><td>Finalize the MySQL C API library</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-library-init.html" title="25.8.7.41 mysql_library_init()"><code class="literal">mysql_library_init()</code></a></td><td>Initialize the MySQL C API library</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-list-dbs.html" title="25.8.7.42 mysql_list_dbs()"><code class="literal">mysql_list_dbs()</code></a></td><td>Returns database names matching a simple regular expression</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-list-fields.html" title="25.8.7.43 mysql_list_fields()"><code class="literal">mysql_list_fields()</code></a></td><td>Returns field names matching a simple regular expression</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-list-processes.html" title="25.8.7.44 mysql_list_processes()"><code class="literal">mysql_list_processes()</code></a></td><td>Returns a list of the current server threads</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-list-tables.html" title="25.8.7.45 mysql_list_tables()"><code class="literal">mysql_list_tables()</code></a></td><td>Returns table names matching a simple regular expression</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-load-plugin.html" title="25.8.14.3 mysql_load_plugin()"><code class="literal">mysql_load_plugin()</code></a></td><td>Load a plugin</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-load-plugin-v.html" title="25.8.14.4 mysql_load_plugin_v()"><code class="literal">mysql_load_plugin_v()</code></a></td><td>Load a plugin</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-more-results.html" title="25.8.7.46 mysql_more_results()"><code class="literal">mysql_more_results()</code></a></td><td>Checks whether any more results exist</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-next-result.html" title="25.8.7.47 mysql_next_result()"><code class="literal">mysql_next_result()</code></a></td><td>Returns/initiates the next result in multiple-result executions</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-num-fields.html" title="25.8.7.48 mysql_num_fields()"><code class="literal">mysql_num_fields()</code></a></td><td>Returns the number of columns in a result set</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-num-rows.html" title="25.8.7.49 mysql_num_rows()"><code class="literal">mysql_num_rows()</code></a></td><td>Returns the number of rows in a result set</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-options.html" title="25.8.7.50 mysql_options()"><code class="literal">mysql_options()</code></a></td><td>Sets connect options for
+              <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-connect.html" title="25.8.7.54 mysql_real_connect()"><code class="literal">mysql_real_connect()</code></a></td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-options4.html" title="25.8.7.51 mysql_options4()"><code class="literal">mysql_options4()</code></a></td><td>Sets connect options for
+              <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-connect.html" title="25.8.7.54 mysql_real_connect()"><code class="literal">mysql_real_connect()</code></a></td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-ping.html" title="25.8.7.52 mysql_ping()"><code class="literal">mysql_ping()</code></a></td><td>Checks whether the connection to the server is working, reconnecting as
+              necessary</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-plugin-options.html" title="25.8.14.5 mysql_plugin_options()"><code class="literal">mysql_plugin_options()</code></a></td><td>Set a plugin option</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-query.html" title="25.8.7.53 mysql_query()"><code class="literal">mysql_query()</code></a></td><td>Executes an SQL query specified as a null-terminated string</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-connect.html" title="25.8.7.54 mysql_real_connect()"><code class="literal">mysql_real_connect()</code></a></td><td>Connects to a MySQL server</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-escape-string.html" title="25.8.7.55 mysql_real_escape_string()"><code class="literal">mysql_real_escape_string()</code></a></td><td>Escapes special characters in a string for use in an SQL statement,
+              taking into account the current character set of the
+              connection</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-escape-string-quote.html" title="25.8.7.56 mysql_real_escape_string_quote()"><code class="literal">mysql_real_escape_string_quote()</code></a></td><td>Escapes special characters in a string for use in an SQL statement,
+              taking into account the current character set of the
+              connection and the quoting context</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-query.html" title="25.8.7.57 mysql_real_query()"><code class="literal">mysql_real_query()</code></a></td><td>Executes an SQL query specified as a counted string</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-refresh.html" title="25.8.7.58 mysql_refresh()"><code class="literal">mysql_refresh()</code></a></td><td>Flush or reset tables and caches</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-reload.html" title="25.8.7.59 mysql_reload()"><code class="literal">mysql_reload()</code></a></td><td>Tells the server to reload the grant tables</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-reset-connection.html" title="25.8.7.60 mysql_reset_connection()"><code class="literal">mysql_reset_connection()</code></a></td><td>Reset connection to clear session state</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-rollback.html" title="25.8.7.61 mysql_rollback()"><code class="literal">mysql_rollback()</code></a></td><td>Rolls back the transaction</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-row-seek.html" title="25.8.7.62 mysql_row_seek()"><code class="literal">mysql_row_seek()</code></a></td><td>Seeks to a row offset in a result set, using value returned from
+              <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-row-tell.html" title="25.8.7.63 mysql_row_tell()"><code class="literal">mysql_row_tell()</code></a></td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-row-tell.html" title="25.8.7.63 mysql_row_tell()"><code class="literal">mysql_row_tell()</code></a></td><td>Returns the row cursor position</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-select-db.html" title="25.8.7.64 mysql_select_db()"><code class="literal">mysql_select_db()</code></a></td><td>Selects a database</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-server-end.html" title="25.8.13.2 mysql_server_end()"><code class="literal">mysql_server_end()</code></a></td><td>Finalize the MySQL C API library</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-server-init.html" title="25.8.13.1 mysql_server_init()"><code class="literal">mysql_server_init()</code></a></td><td>Initialize the MySQL C API library</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-session-track-get-first.html" title="25.8.7.65 mysql_session_track_get_first()"><code class="literal">mysql_session_track_get_first()</code></a></td><td>Get first part of session state-change information</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-session-track-get-next.html" title="25.8.7.66 mysql_session_track_get_next()"><code class="literal">mysql_session_track_get_next()</code></a></td><td>Get next part of session state-change information</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-set-character-set.html" title="25.8.7.67 mysql_set_character_set()"><code class="literal">mysql_set_character_set()</code></a></td><td>Set default character set for current connection</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-set-local-infile-default.html" title="25.8.7.68 mysql_set_local_infile_default()"><code class="literal">mysql_set_local_infile_default()</code></a></td><td>Set the <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/load-data.html" title="14.2.6 LOAD DATA INFILE Syntax"><code class="literal">LOAD DATA LOCAL
+              INFILE</code></a> handler callbacks to their default values</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-set-local-infile-handler.html" title="25.8.7.69 mysql_set_local_infile_handler()"><code class="literal">mysql_set_local_infile_handler()</code></a></td><td>Install application-specific
+              <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/load-data.html" title="14.2.6 LOAD DATA INFILE Syntax"><code class="literal">LOAD DATA LOCAL
+              INFILE</code></a> handler callbacks</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-set-server-option.html" title="25.8.7.70 mysql_set_server_option()"><code class="literal">mysql_set_server_option()</code></a></td><td>Sets an option for the connection (like
+<code class="literal">multi-statements</code>)</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-sqlstate.html" title="25.8.7.72 mysql_sqlstate()"><code class="literal">mysql_sqlstate()</code></a></td><td>Returns the SQLSTATE error code for the last error</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-shutdown.html" title="25.8.7.71 mysql_shutdown()"><code class="literal">mysql_shutdown()</code></a></td><td>Shuts down the database server</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-ssl-set.html" title="25.8.7.73 mysql_ssl_set()"><code class="literal">mysql_ssl_set()</code></a></td><td>Prepare to establish SSL connection to server</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-stat.html" title="25.8.7.74 mysql_stat()"><code class="literal">mysql_stat()</code></a></td><td>Returns the server status as a string</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-store-result.html" title="25.8.7.75 mysql_store_result()"><code class="literal">mysql_store_result()</code></a></td><td>Retrieves a complete result set to the client</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-thread-end.html" title="25.8.12.2 mysql_thread_end()"><code class="literal">mysql_thread_end()</code></a></td><td>Finalize thread handler</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-thread-id.html" title="25.8.7.76 mysql_thread_id()"><code class="literal">mysql_thread_id()</code></a></td><td>Returns the current thread ID</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-thread-init.html" title="25.8.12.3 mysql_thread_init()"><code class="literal">mysql_thread_init()</code></a></td><td>Initialize thread handler</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-thread-safe.html" title="25.8.12.4 mysql_thread_safe()"><code class="literal">mysql_thread_safe()</code></a></td><td>Returns 1 if the clients are compiled as thread-safe</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-use-result.html" title="25.8.7.77 mysql_use_result()"><code class="literal">mysql_use_result()</code></a></td><td>Initiates a row-by-row result set retrieval</td></tr><tr><td scope="row"><a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-warning-count.html" title="25.8.7.78 mysql_warning_count()"><code class="literal">mysql_warning_count()</code></a></td><td>Returns the warning count for the previous SQL statement</td></tr></tbody></table>
+</div><div class="table-contents"><table class="table" cellpadding="0" cellspacing="0" style="position: fixed; top: 0px; display: none; left: 341px; width: 1201px;"><thead><tr><th scope="col" style="width: 261px;">Function</th><th scope="col" style="width: 939px;">Description</th></tr></thead></table></div>
+
+</div>
+<br class="table-break"><p>
+      Application programs should use this general outline for
+      interacting with MySQL:
+</p>
+<div class="orderedlist">
+<ol class="orderedlist" type="1"><li class="listitem"><p>
+          Initialize the MySQL library by calling
+          <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-library-init.html" title="25.8.7.41 mysql_library_init()"><code class="literal">mysql_library_init()</code></a>. This
+          function exists in both the <code class="literal">libmysqlclient</code>
+          C client library and the <code class="literal">libmysqld</code> embedded
+          server library, so it is used whether you build a regular
+          client program by linking with the
+          <code class="option">-libmysqlclient</code> flag, or an embedded server
+          application by linking with the <code class="option">-libmysqld</code>
+          flag.
+        </p></li><li class="listitem"><p>
+          Initialize a connection handler by calling
+          <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-init.html" title="25.8.7.37 mysql_init()"><code class="literal">mysql_init()</code></a> and connect to
+          the server by calling
+          <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-connect.html" title="25.8.7.54 mysql_real_connect()"><code class="literal">mysql_real_connect()</code></a>.
+        </p></li><li class="listitem"><p>
+          Issue SQL statements and process their results. (The following
+          discussion provides more information about how to do this.)
+        </p></li><li class="listitem"><p>
+          Close the connection to the MySQL server by calling
+          <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-close.html" title="25.8.7.5 mysql_close()"><code class="literal">mysql_close()</code></a>.
+        </p></li><li class="listitem"><p>
+          End use of the MySQL library by calling
+          <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-library-end.html" title="25.8.7.40 mysql_library_end()"><code class="literal">mysql_library_end()</code></a>.
+</p></li></ol>
+</div>
+<p>
+      The purpose of calling
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-library-init.html" title="25.8.7.41 mysql_library_init()"><code class="literal">mysql_library_init()</code></a> and
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-library-end.html" title="25.8.7.40 mysql_library_end()"><code class="literal">mysql_library_end()</code></a> is to provide
+      proper initialization and finalization of the MySQL library. For
+      applications that are linked with the client library, they provide
+      improved memory management. If you do not call
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-library-end.html" title="25.8.7.40 mysql_library_end()"><code class="literal">mysql_library_end()</code></a>, a block of
+      memory remains allocated. (This does not increase the amount of
+      memory used by the application, but some memory leak detectors
+      will complain about it.) For applications that are linked with the
+      embedded server, these calls start and stop the server.
+    </p><p>
+      In a nonmulti-threaded environment, the call to
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-library-init.html" title="25.8.7.41 mysql_library_init()"><code class="literal">mysql_library_init()</code></a> may be
+      omitted, because <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-init.html" title="25.8.7.37 mysql_init()"><code class="literal">mysql_init()</code></a> will
+      invoke it automatically as necessary. However,
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-library-init.html" title="25.8.7.41 mysql_library_init()"><code class="literal">mysql_library_init()</code></a> is not
+      thread-safe in a multi-threaded environment, and thus neither is
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-init.html" title="25.8.7.37 mysql_init()"><code class="literal">mysql_init()</code></a>, which calls
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-library-init.html" title="25.8.7.41 mysql_library_init()"><code class="literal">mysql_library_init()</code></a>. You must
+      either call <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-library-init.html" title="25.8.7.41 mysql_library_init()"><code class="literal">mysql_library_init()</code></a>
+      prior to spawning any threads, or else use a mutex to protect the
+      call, whether you invoke
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-library-init.html" title="25.8.7.41 mysql_library_init()"><code class="literal">mysql_library_init()</code></a> or indirectly
+      through <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-init.html" title="25.8.7.37 mysql_init()"><code class="literal">mysql_init()</code></a>. This should
+      be done prior to any other client library call.
+    </p><p>
+      To connect to the server, call
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-init.html" title="25.8.7.37 mysql_init()"><code class="literal">mysql_init()</code></a> to initialize a
+      connection handler, then call
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-connect.html" title="25.8.7.54 mysql_real_connect()"><code class="literal">mysql_real_connect()</code></a> with that
+      handler (along with other information such as the host name, user
+      name, and password). Upon connection,
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-connect.html" title="25.8.7.54 mysql_real_connect()"><code class="literal">mysql_real_connect()</code></a> sets the
+      <code class="literal">reconnect</code> flag (part of the
+      <code class="literal">MYSQL</code> structure) to a value of
+      <code class="literal">1</code> in versions of the API older than 5.0.3, or
+      <code class="literal">0</code> in newer versions. A value of
+      <code class="literal">1</code> for this flag indicates that if a statement
+      cannot be performed because of a lost connection, to try
+      reconnecting to the server before giving up. You can use the
+      <code class="literal">MYSQL_OPT_RECONNECT</code> option to
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-options.html" title="25.8.7.50 mysql_options()"><code class="literal">mysql_options()</code></a> to control
+      reconnection behavior. When you are done with the connection, call
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-close.html" title="25.8.7.5 mysql_close()"><code class="literal">mysql_close()</code></a> to terminate it.
+    </p><p>
+      While a connection is active, the client may send SQL statements
+      to the server using <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-query.html" title="25.8.7.53 mysql_query()"><code class="literal">mysql_query()</code></a>
+      or <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-query.html" title="25.8.7.57 mysql_real_query()"><code class="literal">mysql_real_query()</code></a>. The
+      difference between the two is that
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-query.html" title="25.8.7.53 mysql_query()"><code class="literal">mysql_query()</code></a> expects the query to
+      be specified as a null-terminated string whereas
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-query.html" title="25.8.7.57 mysql_real_query()"><code class="literal">mysql_real_query()</code></a> expects a
+      counted string. If the string contains binary data (which may
+      include null bytes), you must use
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-query.html" title="25.8.7.57 mysql_real_query()"><code class="literal">mysql_real_query()</code></a>.
+    </p><p>
+      For each non-<a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/select.html" title="14.2.9 SELECT Syntax"><code class="literal">SELECT</code></a> query (for
+      example, <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/insert.html" title="14.2.5 INSERT Syntax"><code class="literal">INSERT</code></a>,
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/update.html" title="14.2.11 UPDATE Syntax"><code class="literal">UPDATE</code></a>,
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/delete.html" title="14.2.2 DELETE Syntax"><code class="literal">DELETE</code></a>), you can find out how many
+      rows were changed (affected) by calling
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-affected-rows.html" title="25.8.7.1 mysql_affected_rows()"><code class="literal">mysql_affected_rows()</code></a>.
+    </p><p>
+      For <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/select.html" title="14.2.9 SELECT Syntax"><code class="literal">SELECT</code></a> queries, you retrieve
+      the selected rows as a result set. (Note that some statements are
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/select.html" title="14.2.9 SELECT Syntax"><code class="literal">SELECT</code></a>-like in that they return
+      rows. These include <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/show.html" title="14.7.5 SHOW Syntax"><code class="literal">SHOW</code></a>,
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/describe.html" title="14.8.1 DESCRIBE Syntax"><code class="literal">DESCRIBE</code></a>, and
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/explain.html" title="14.8.2 EXPLAIN Syntax"><code class="literal">EXPLAIN</code></a>. Treat these statements the
+      same way as <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/select.html" title="14.2.9 SELECT Syntax"><code class="literal">SELECT</code></a> statements.)
+    </p><p>
+      There are two ways for a client to process result sets. One way is
+      to retrieve the entire result set all at once by calling
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-store-result.html" title="25.8.7.75 mysql_store_result()"><code class="literal">mysql_store_result()</code></a>. This
+      function acquires from the server all the rows returned by the
+      query and stores them in the client. The second way is for the
+      client to initiate a row-by-row result set retrieval by calling
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-use-result.html" title="25.8.7.77 mysql_use_result()"><code class="literal">mysql_use_result()</code></a>. This function
+      initializes the retrieval, but does not actually get any rows from
+      the server.
+    </p><p>
+      In both cases, you access rows by calling
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-row.html" title="25.8.7.21 mysql_fetch_row()"><code class="literal">mysql_fetch_row()</code></a>. With
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-store-result.html" title="25.8.7.75 mysql_store_result()"><code class="literal">mysql_store_result()</code></a>,
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-row.html" title="25.8.7.21 mysql_fetch_row()"><code class="literal">mysql_fetch_row()</code></a> accesses rows
+      that have previously been fetched from the server. With
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-use-result.html" title="25.8.7.77 mysql_use_result()"><code class="literal">mysql_use_result()</code></a>,
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-row.html" title="25.8.7.21 mysql_fetch_row()"><code class="literal">mysql_fetch_row()</code></a> actually
+      retrieves the row from the server. Information about the size of
+      the data in each row is available by calling
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-lengths.html" title="25.8.7.20 mysql_fetch_lengths()"><code class="literal">mysql_fetch_lengths()</code></a>.
+    </p><p>
+      After you are done with a result set, call
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-free-result.html" title="25.8.7.25 mysql_free_result()"><code class="literal">mysql_free_result()</code></a> to free the
+      memory used for it.
+    </p><p>
+      The two retrieval mechanisms are complementary. Choose the
+      approach that is most appropriate for each client application. In
+      practice, clients tend to use
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-store-result.html" title="25.8.7.75 mysql_store_result()"><code class="literal">mysql_store_result()</code></a> more
+      commonly.
+    </p><p>
+      An advantage of
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-store-result.html" title="25.8.7.75 mysql_store_result()"><code class="literal">mysql_store_result()</code></a> is that
+      because the rows have all been fetched to the client, you not only
+      can access rows sequentially, you can move back and forth in the
+      result set using <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-data-seek.html" title="25.8.7.9 mysql_data_seek()"><code class="literal">mysql_data_seek()</code></a>
+      or <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-row-seek.html" title="25.8.7.62 mysql_row_seek()"><code class="literal">mysql_row_seek()</code></a> to change the
+      current row position within the result set. You can also find out
+      how many rows there are by calling
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-num-rows.html" title="25.8.7.49 mysql_num_rows()"><code class="literal">mysql_num_rows()</code></a>. On the other
+      hand, the memory requirements for
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-store-result.html" title="25.8.7.75 mysql_store_result()"><code class="literal">mysql_store_result()</code></a> may be very
+      high for large result sets and you are more likely to encounter
+      out-of-memory conditions.
+    </p><p>
+      An advantage of <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-use-result.html" title="25.8.7.77 mysql_use_result()"><code class="literal">mysql_use_result()</code></a>
+      is that the client requires less memory for the result set because
+      it maintains only one row at a time (and because there is less
+      allocation overhead,
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-use-result.html" title="25.8.7.77 mysql_use_result()"><code class="literal">mysql_use_result()</code></a> can be faster).
+      Disadvantages are that you must process each row quickly to avoid
+      tying up the server, you do not have random access to rows within
+      the result set (you can only access rows sequentially), and the
+      number of rows in the result set is unknown until you have
+      retrieved them all. Furthermore, you <span class="emphasis"><em>must</em></span>
+      retrieve all the rows even if you determine in mid-retrieval that
+      you've found the information you were looking for.
+    </p><p>
+      The API makes it possible for clients to respond appropriately to
+      statements (retrieving rows only as necessary) without knowing
+      whether the statement is a <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/select.html" title="14.2.9 SELECT Syntax"><code class="literal">SELECT</code></a>.
+      You can do this by calling
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-store-result.html" title="25.8.7.75 mysql_store_result()"><code class="literal">mysql_store_result()</code></a> after each
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-query.html" title="25.8.7.53 mysql_query()"><code class="literal">mysql_query()</code></a> (or
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-real-query.html" title="25.8.7.57 mysql_real_query()"><code class="literal">mysql_real_query()</code></a>). If the result
+      set call succeeds, the statement was a
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/select.html" title="14.2.9 SELECT Syntax"><code class="literal">SELECT</code></a> and you can read the rows.
+      If the result set call fails, call
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-field-count.html" title="25.8.7.22 mysql_field_count()"><code class="literal">mysql_field_count()</code></a> to determine
+      whether a result was actually to be expected. If
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-field-count.html" title="25.8.7.22 mysql_field_count()"><code class="literal">mysql_field_count()</code></a> returns zero,
+      the statement returned no data (indicating that it was an
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/insert.html" title="14.2.5 INSERT Syntax"><code class="literal">INSERT</code></a>,
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/update.html" title="14.2.11 UPDATE Syntax"><code class="literal">UPDATE</code></a>,
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/delete.html" title="14.2.2 DELETE Syntax"><code class="literal">DELETE</code></a>, and so forth), and was not
+      expected to return rows. If
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-field-count.html" title="25.8.7.22 mysql_field_count()"><code class="literal">mysql_field_count()</code></a> is nonzero,
+      the statement should have returned rows, but did not. This
+      indicates that the statement was a
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/select.html" title="14.2.9 SELECT Syntax"><code class="literal">SELECT</code></a> that failed. See the
+      description for
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-field-count.html" title="25.8.7.22 mysql_field_count()"><code class="literal">mysql_field_count()</code></a> for an example
+      of how this can be done.
+    </p><p>
+      Both <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-store-result.html" title="25.8.7.75 mysql_store_result()"><code class="literal">mysql_store_result()</code></a> and
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-use-result.html" title="25.8.7.77 mysql_use_result()"><code class="literal">mysql_use_result()</code></a> enable you to
+      obtain information about the fields that make up the result set
+      (the number of fields, their names and types, and so forth). You
+      can access field information sequentially within the row by
+      calling <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-field.html" title="25.8.7.17 mysql_fetch_field()"><code class="literal">mysql_fetch_field()</code></a>
+      repeatedly, or by field number within the row by calling
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-field-direct.html" title="25.8.7.18 mysql_fetch_field_direct()"><code class="literal">mysql_fetch_field_direct()</code></a>. The
+      current field cursor position may be changed by calling
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-field-seek.html" title="25.8.7.23 mysql_field_seek()"><code class="literal">mysql_field_seek()</code></a>. Setting the
+      field cursor affects subsequent calls to
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-field.html" title="25.8.7.17 mysql_fetch_field()"><code class="literal">mysql_fetch_field()</code></a>. You can also
+      get information for fields all at once by calling
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-fetch-fields.html" title="25.8.7.19 mysql_fetch_fields()"><code class="literal">mysql_fetch_fields()</code></a>.
+    </p><p>
+      For detecting and reporting errors, MySQL provides access to error
+      information by means of the
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-errno.html" title="25.8.7.14 mysql_errno()"><code class="literal">mysql_errno()</code></a> and
+      <a class="link" href="http://dev.mysql.com/doc/refman/5.7/en/mysql-error.html" title="25.8.7.15 mysql_error()"><code class="literal">mysql_error()</code></a> functions. These
+      return the error code or error message for the most recently
+      invoked function that can succeed or fail, enabling you to
+      determine when an error occurred and what it was.
+</p>
+</div>
+<br>
+        </div>
+
+                <div id="docs-in-page-nav-container">
+            <div id="docs-in-page-nav">
+                
+    <a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-data-structures.html" title="Previous: C API Data Structures"><span class="icon-chevron-left"></span> PREV</a> &nbsp;
+<a href="http://dev.mysql.com/doc/refman/5.7/en/index.html" title="Start"> HOME</a> &nbsp;
+        <a href="http://dev.mysql.com/doc/refman/5.7/en/c-api.html" title="Up: MySQL C API"> UP</a> &nbsp;
+    <a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-functions.html" title="Next: C API Function Descriptions">NEXT <span class="icon-chevron-right"></span></a>
+            </div>
+        </div>
+        
+         <div id="docs-body-extra">
+             
+<a class="docs-sidebar-section" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-related"></span>
+    <span class="text">Related Documentation</span></a>
+<div class="docs-sidebar-accordian">
+    <div class="text">
+        <a href="http://dev.mysql.com/doc/relnotes/mysql/5.7/en/">MySQL 5.7 Release Notes</a><br>
+        </div>
+</div>
+
+    <a class="docs-sidebar-section" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-download-thin"></span>
+        <span class="text">
+            Download
+                            this Manual
+                    </span>
+    </a>
+    <div class="docs-sidebar-accordian">
+        <div class="text">
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.pdf">PDF (US Ltr)</a>
+            - 35.6Mb<br>
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.a4.pdf">PDF (A4)</a>
+            - 35.6Mb<br>
+                        <a href="http://downloads.mysql.com/docs/mysql-refman-5.7-en-pdf-1-20161009.noarch.rpm">PDF (RPM)</a>
+            - 34.7Mb<br>
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.epub">EPUB</a>
+            - 8.7Mb<br>
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.html-chapter.tar.gz">HTML Download (TGZ)</a>
+            - 8.5Mb<br>
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.html-chapter.zip">HTML Download (Zip)</a>
+            - 8.5Mb<br>
+                        <a href="http://downloads.mysql.com/docs/mysql-refman-5.7-en-html-chapter-1-20161009.noarch.rpm">HTML Download (RPM)</a>
+            - 7.3Mb<br>
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.eclipse.tar.gz">Eclipse Doc Plugin (TGZ)</a>
+            - 9.4Mb<br>
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.eclipse.zip">Eclipse Doc Plugin (Zip)</a>
+            - 11.5Mb<br>
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.man-gpl.tar.gz">Man Pages (TGZ)</a>
+            - 202.2Kb<br>
+                        <a href="http://downloads.mysql.com/docs/refman-5.7-en.man-gpl.zip">Man Pages (Zip)</a>
+            - 307.6Kb<br>
+                        <a href="http://downloads.mysql.com/docs/mysql-5.7.info.gz">Info (Gzip)</a>
+            - 3.3Mb<br>
+                        <a href="http://downloads.mysql.com/docs/mysql-5.7.info.zip">Info (Zip)</a>
+            - 3.3Mb<br>
+                    </div>
+    </div>
+
+<a class="docs-sidebar-section" href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html"><span class="icon-book"></span>
+    <span class="text">Excerpts from this Manual</span></a>
+<div class="docs-sidebar-accordian">
+    <div class="text">
+                <a href="http://dev.mysql.com/doc/mysql-backup-excerpt/5.7/en/">MySQL Backup and Recovery</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-g11n-excerpt/5.7/en/">MySQL Globalization</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-infoschema-excerpt/5.7/en/">MySQL Information Schema</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/">MySQL Installation Guide</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-linuxunix-excerpt/5.7/en/">MySQL and Linux/Unix</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-osx-excerpt/5.7/en/">MySQL and OS X</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-partitioning-excerpt/5.7/en/">MySQL Partitioning</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-perfschema-excerpt/5.7/en/">MySQL Performance Schema</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-replication-excerpt/5.7/en/">MySQL Replication</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-repo-excerpt/5.7/en/">Using the MySQL Yum Repository</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-reslimits-excerpt/5.7/en/">MySQL Restrictions and Limitations</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-security-excerpt/5.7/en/">Security in MySQL</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-solaris-excerpt/5.7/en/">MySQL and Solaris</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-sourcebuild-excerpt/5.7/en/">Building MySQL from Source</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-startstop-excerpt/5.7/en/">Starting and Stopping MySQL</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-tutorial-excerpt/5.7/en/">MySQL Tutorial</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-windows-excerpt/5.7/en/">MySQL and Windows</a><br>
+                <a href="http://dev.mysql.com/doc/mysql-cluster-excerpt/5.7/en/">MySQL Cluster NDB 7.5</a><br>
+            </div>
+</div>
+
+         </div>
+
+                     
+<div id="docs-comments">
+    <div class="docs-comments-header"><span class="icon-bubbles"></span> User Comments</div>
+
+    <div id="comment-listing">
+    
+    </div>
+
+        <div class="docs-comment-disclaimer">
+        <a href="https://dev.mysql.com/auth/register/?dest=http%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.7%2Fen%2Fc-api-function-overview.html%3Facf%3D1%23add-comment" class="docs-comment-btn right">Sign Up</a>
+        <a href="https://dev.mysql.com/auth/login/?dest=http%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.7%2Fen%2Fc-api-function-overview.html%3Facf%3D1%23add-comment" class="docs-comment-btn right">Login</a>
+        You must be logged in to post a comment.
+    </div>
+    </div>
+              </div>
+     </div>
+
+</div>
+
+<script>
+$(function() {
+    var doc = new $.doc({ 'mobile': $.browser.mobile, 'docId': 1 });
+});
+</script>
+    
+
+            
+        </div>
+    </div>
+
+    <footer class="collapsed">
+        <div id="footer-links">
+
+            <div id="footer-nav"></div>
+
+            <div id="footer-contact">
+                <p><span class="top">Contact Sales</span></p>
+                <p>USA: <span class="nobr">+1-866-221-0634</span><br>
+Canada: <span class="nobr">+1-866-221-0634</span><br><br>
+
+Germany: <span class="nobr">+49 89 143 01280</span><br>
+France: <span class="nobr">+33 1 57 60 83 57</span><br>
+Italy: <span class="nobr">+39 02 249 59 120</span><br>
+UK: <span class="nobr">+44 207 553 8447</span><br><br>
+
+Japan: <span class="nobr">0120-065556</span><br>
+China: <span class="nobr">10800-811-0823</span><br>
+India: <span class="nobr">0008001005870</span><br><br>
+
+<a href="http://www.mysql.com/about/contact/phone/">More Countries&nbsp;»</a><br>
+                <strong><a href="http://www.mysql.com/about/contact/">Contact Us Online&nbsp;»</a></strong>
+                                </p>
+            </div>
+
+            <div class="links">
+                <ul>
+                    <li class="top"><a href="http://www.mysql.com/products/">Products</a></li>
+                    <li><a href="http://www.mysql.com/products/enterprise/">MySQL Enterprise Edition</a></li>
+                    <li><a href="http://www.mysql.com/products/standard/">MySQL Standard Edition</a></li>
+                    <li><a href="http://www.mysql.com/products/classic/">MySQL Classic Edition</a></li>
+                    <li><a href="http://www.mysql.com/products/cluster/">MySQL Cluster CGE</a></li>
+                    <li><a href="http://www.mysql.com/oem/">MySQL Embedded (OEM/ISV)</a></li>
+                </ul>
+                <br>
+                <ul>
+                    <li class="top"><a href="http://www.mysql.com/services/">Services</a></li>
+                    <li><a href="http://www.mysql.com/training/">Training</a></li>
+                    <li><a href="http://www.mysql.com/certification/">Certification</a></li>
+                    <li><a href="http://www.mysql.com/consulting/">Consulting</a></li>
+                    <li><a href="http://www.mysql.com/support/">Support</a></li>
+                </ul>
+            </div>
+
+            <div class="links">
+                <ul>
+                    <li class="top"><a href="http://dev.mysql.com/downloads/">Downloads</a></li>
+                    <li><a href="http://dev.mysql.com/downloads/mysql/">MySQL Community Server</a></li>
+                    <li><a href="http://dev.mysql.com/downloads/cluster/">MySQL Cluster</a></li>
+                    <li><a href="http://dev.mysql.com/downloads/fabric/">MySQL Fabric</a></li>
+                    <li><a href="http://dev.mysql.com/downloads/utilities/">MySQL Utilities</a></li>
+                    <li><a href="http://dev.mysql.com/downloads/workbench/">MySQL Workbench</a></li>
+                </ul>
+                <br>
+                <ul>
+                    <li class="top"><a href="http://www.mysql.com/about/">About MySQL</a></li>
+                    <li><a href="http://www.mysql.com/about/contact/">Contact Us</a></li>
+                                                            <li><a href="http://www.mysql.com/buy-mysql/">How to Buy</a></li>
+                    <li><a href="http://www.mysql.com/partners/">Partners</a></li>
+                    <li><a href="http://www.mysql.com/about/jobs/">Job Opportunities</a></li>
+                    <li><a href="http://www.mysql.com/sitemap.html">Site Map</a></li>
+                </ul>
+            </div>
+
+            <div class="links">
+                <ul>
+                    <li class="top"><a href="http://dev.mysql.com/doc/">Documentation</a></li>
+                    <li><a href="http://dev.mysql.com/doc/">MySQL Reference Manuals</a></li>
+                    <li><a href="http://dev.mysql.com/doc/index-gui.html">MySQL Workbench</a></li>
+                    <li><a href="http://dev.mysql.com/doc/index-expert.html">Expert Guides</a></li>
+                    <li><a href="http://dev.mysql.com/doc/index-topic.html">Topic Guides</a></li>
+                    <li><a href="http://dev.mysql.com/doc/index-cluster.html">MySQL Cluster</a></li>
+                </ul>
+                <br>
+                <ul>
+                    <li class="top"><a href="http://www.mysql.com/about/legal/">Legal</a></li>
+                    <li><a href="http://www.mysql.com/about/legal/">Legal Policies</a></li>
+                    <li><a href="http://www.oracle.com/us/legal/privacy/index.htm">Your Privacy Rights</a></li>
+                    <li><a href="http://www.oracle.com/us/legal/terms/index.html">Terms of Use</a></li>
+                    <li><a href="http://www.oracle.com/us/legal/third-party-trademarks/index.html">Trademark Policy</a></li>
+                    <li><a href="http://www.oracle.com/technetwork/community/oca-486395.html">Contributor Agreement</a></li>
+                    <li><div id="teconsent" consent="2:"><script async="async" type="text/javascript" src="./doc_sql2_files/notice" crossorigin="" id="truste_0.2259389744802931"></script><script async="async" type="text/javascript" crossorigin="" src="./doc_sql2_files/get"></script><a id="icon-id08640691552072399" tabindex="0" role="button" style="cursor: pointer;">Préférences de cookies</a></div></li>
+                </ul>
+            </div>
+        </div>
+        <div id="footer-bottom">
+                                    <div id="footer-collapse">
+                <a href="http://dev.mysql.com/doc/refman/5.7/en/c-api-function-overview.html" id="expand-footer" title="Expand Footer"><span class="icon-chevron-up"></span></a>
+            </div>
+                        <div id="footer-logo">
+                <a href="http://www.oracle.com/"><span id="oracle-logo"></span></a>
+                &nbsp; © 2016, Oracle Corporation and/or its affiliates
+            </div>
+                        <div class="social-icons">
+                <a title="Join us on Facebook" href="http://www.facebook.com/mysql"><span class="icon-facebook-square"></span></a>
+                <a title="Follow us on Twitter" href="https://twitter.com/#!/mysql"><span class="icon-twitter-square"></span></a>
+                <a title="Join Google+ to follow MySQL" href="https://plus.google.com/+mysql"><span class="icon-google-plus-square"></span></a>
+                <a title="Visit our YouTube channel" href="http://www.youtube.com/mysqlchannel"><span class="icon-youtube-square"></span></a>
+            </div>
+            <br class="clear">
+        </div>
+    </footer>
+
+        <script src="./doc_sql2_files/s_code_remote.js"></script><script type="text/javascript" src="./doc_sql2_files/metrics_group1.js"></script>
+
+        
+
+
+</body></html>
