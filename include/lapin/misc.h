@@ -53,5 +53,19 @@ const char			bunny_strerror(int		errorcode);
 */
 void				bunny_perror(const char		*str);
 
+/*
+** Load a file into the space managed by bunny_malloc. The content of
+** the file is returned, the size is written at the sent address.
+** \param file The file to load
+** \param size The address where to save the file size
+** \return The content of the file, NULL on error.
+*/
+char				*bunny_load_file(const char	*file,
+						 size_t		*size);
+
+bool				bunny_save_file(const char	*file,
+						const char	*data,
+						size_t		len);
+
 #endif	/*			__LAPIN_MISC_H__		*/
 

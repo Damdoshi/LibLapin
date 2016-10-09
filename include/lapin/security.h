@@ -20,7 +20,8 @@ typedef enum			e_bunny_ciphering
   {
     BS_XOR,			/* ^ */
     BS_CAESAR,			/* + */
-    BS_SHAKER			/* swap data in the buffer */
+    BS_SHAKER,			/* swap data in the buffer */
+    BS_CUSTOM			/* any >= BS_CUSTOM */
   }				t_bunny_ciphering;
 
 typedef struct			s_bunny_key
@@ -54,5 +55,15 @@ void				bunny_uncipher_data(void		*data,
 						    size_t		data_len,
 						    t_bunny_ciphering	ciphering,
 						    const t_bunny_key	*key);
+
+typedef void			(*t_bunny_my_cipher)(char		*buffer,
+						     size_t		len,
+						     const t_bunny_key	*key);
+t_bunny_my_cipher		gl_bunny_my_cipher;
+
+typedef void			(*t_bunny_my_uncipher)(char		*buffer,
+						       size_t		len,
+						       const t_bunny_key *key);
+t_bunny_my_uncipher		gl_bunny_my_uncipher;
 
 #endif	/*			__LAPIN_SECURITY_H__			*/

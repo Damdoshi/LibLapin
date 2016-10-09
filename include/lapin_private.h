@@ -147,6 +147,18 @@ extern t_bunny_joystick		gl_joystick[LAST_BUNNY_JOYSTICK];
 extern t_bunny_window		*gl_window;
 extern bool			gl_full_blit;
 
+struct				bunny_database
+{
+  
+};
+
+struct				bunny_database_iterator
+{
+  int				index;
+  int				nbr_rows;
+  hbs::Dictionnary<size_t>	*dic;
+};
+
 struct				bunny_configuration
 {
   hbs::Configuration		*config;
@@ -155,5 +167,17 @@ struct				bunny_configuration
   const char			*name;
   const char			*value;
 };
+
+void				__bunny_xor(char			*cnt,
+					    size_t			len,
+					    const t_bunny_key		*key);
+void				__bunny_caesar(char			*cnt,
+					       size_t			len,
+					       const t_bunny_key	*key,
+					       bool			cipher);
+void				__bunny_shaker(char			*cnt,
+					       size_t			len,
+					       const t_bunny_key	*key,
+					       bool			cipher);
 
 #endif	/*			__LAPIN_PRIVATE_H__	*/

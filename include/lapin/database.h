@@ -27,9 +27,10 @@ typedef struct			s_bunny_database
   size_t			response_length;
 }				t_bunny_database;
 
-typedef struct			s_bunny_database_iterator // followed by an hidden hbs::dictionnary
+typedef struct			s_bunny_database_iterator
 {
   const int			index;
+  const int			nbr_rows;
 }				t_bunny_database_iterator;
 
 t_bunny_database		*bunny_new_database(const char				*url,

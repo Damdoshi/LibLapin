@@ -24,6 +24,10 @@ ou depuis l'internet.
 
 - Module bunny security
 
+- Module SQL
+
+- Mettre une option a bunny_malloc pour appeller malloc.
+
 -----------------------------
 Deployement code block Lapin:
 
