@@ -66,6 +66,8 @@
 			$(wildcard ./src/sound/*.cpp)				\
 			$(wildcard ./src/threads/*.cpp)				\
 			$(wildcard ./src/window/*.cpp)				\
+			$(wildcard ./src/security/*.cpp)			\
+			$(wildcard ./src/database/*.cpp)			\
 			$(wildcard ./src/deps/*/*.cpp)
   OBJ		=	$(SRC:.cpp=.o)
 

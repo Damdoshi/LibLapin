@@ -13,7 +13,6 @@
 # ifdef				__WIN32
 #  pragma			packed
 # endif
-# include			"Ini.hpp"
 # include			"lapin.h"
 # include			"Configuration.hpp"
 
@@ -179,5 +178,24 @@ void				__bunny_shaker(char			*cnt,
 					       size_t			len,
 					       const t_bunny_key	*key,
 					       bool			cipher);
+
+struct				bunny_trap
+{
+  struct bunny_trap		*next;
+  struct bunny_trap		*prev;
+  char				already_called;
+  char				remove_it;
+  char				__unused1;
+  char				__unused2;
+  double			start_time;
+  double			duration;
+  t_bunny_trap_function		*func;
+  void				*param;
+};
+
+extern sf::Clock		gl_bunny_current_time;
+struct bunny_trap		*gl_bunny_trap_head[4];
+
+void				__bunny_delete_trap(t_bunny_trap	*_trap);
 
 #endif	/*			__LAPIN_PRIVATE_H__	*/

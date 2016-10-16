@@ -114,6 +114,7 @@
 # include			"lapin/network.h"
 # include			"lapin/threads.h"
 # include			"lapin/hardware.h"
+# include			"lapin/asynclock.h"
 # include			"lapin/self_test.h"
 # include			"lapin/misc.h"
 
