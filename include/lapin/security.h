@@ -7,7 +7,12 @@
 
 /*!
 ** \file security.h
-
+** This module is about weak security by ciphering.
+** It allows you to cipher and uncipher files or buffers with
+** a specified key that can also be an internally stored key.
+**
+** Note that this is not for true security reasons that this
+** module is here: the real purpose is to prevent cheating.
 */
 
 #ifndef				__LAPIN_SECURITY_H__
@@ -16,6 +21,16 @@
 #  error			You cannot include this file directly.
 # endif
 
+/*!
+** t_bunny_ciphering's values are ciphering algorithm.
+** BS_XOR use the '^' operator to cipher.
+** BS_CAESAR use the '+' / '-' operator to cipher / uncipher.
+** BS_SHAKER swap the currently ciphered data chunk with another chunk at
+** a specified offset
+** BS_CUSTOM (and greater values) means that you want to use
+** a custom algorithm, so the system will call the function defined
+** in gl_bunny_my_cipher or gl_bunny_my_uncipher.
+*/
 typedef enum			e_bunny_ciphering
   {
     BS_XOR,			/* ^ */
@@ -24,6 +39,13 @@ typedef enum			e_bunny_ciphering
     BS_CUSTOM			/* any >= BS_CUSTOM */
   }				t_bunny_ciphering;
 
+/*!
+** A t_bunny_key represents a ciphering key. The first field is the length
+** of the second in bytes. The second field is the key iteself.
+** /!\ Thet are NOT characters, that's just bytes. There may be no null
+** terminator, you have to use the length field to browse it if you wish
+** to.
+*/
 typedef struct			s_bunny_key
 {
   const size_t			length;
@@ -34,36 +56,118 @@ typedef struct			s_bunny_key
 # endif
 }				t_bunny_key;
 
+/*!
+** Get the binary-embedded key. Its default value is plain 0 that are supposed
+** to be replaced by a random value thanks to the bunny_fill_default_key function.
+** The ressources you wish to use are supposed to be ciphered with the same key
+** after.
+** \return The binary-embedded key.
+*/
 const t_bunny_key		*bunny_default_key(void);
+
+/*!
+** Erase an unset binary-embedded key (filled with the plain 0 default value)
+** of the sent file with a randomly generated key. By making so, it enables
+** the cipher/unciphering capacity of the bunny security module (because
+** the key used won't be 0 anymore)
+** \param bunny_program A binary file, designed with LibLapin, to modify
+** \return True if every thing went well.
+*/
 bool				bunny_fill_default_key(const char	*bunny_program);
 
+/*!
+** Create a new key of the given size. The key is filled with random values.
+** \param len The size of the key. Should be greater than 0.
+** \return The generated key or NULL on error.
+*/
 t_bunny_key			*bunny_new_key(size_t			len);
+
+/*!
+** Delete the given key.
+** \param key The key to delete.
+*/
 void				bunny_delete_key(t_bunny_key		*key);
 
+/*!
+** Open the given file, load its content, cipher it and save it right after.
+** \param file The file to cipher.
+** \param ciphering The algorithm to use.
+** \param key The key used by the ciphering algorithm
+** \return True if everything went well, false on errror.
+*/
 bool				bunny_cipher_file(const char		*file,
 						  t_bunny_ciphering	ciphering,
 						  const t_bunny_key	*key);
+
+/*!
+** Open the given file, load its content, uncipher it and save it right after.
+** \param file The file to uncipher.
+** \param ciphering The algorithm to use.
+** \param key The key used by the unciphering algorithm
+** \return True if everything went well, false on errror.
+*/
 bool				bunny_uncipher_file(const char		*file,
 						    t_bunny_ciphering	ciphering,
 						    const t_bunny_key	*key);
 
+/*!
+** Cipher the sent buffer.
+** \param data The buffer to cipher
+** \param datalen The length of the buffer to cipher.
+** \param ciphering The algorithm to use.
+** \param key The key used by the ciphering algorithm
+*/
 void				bunny_cipher_data(void			*data,
 						  size_t		datalen,
 						  t_bunny_ciphering	ciphering,
 						  const t_bunny_key	*key);
+
+/*!
+** Uncipher the sent buffer.
+** \param data The buffer to uncipher
+** \param datalen The length of the buffer to uncipher.
+** \param ciphering The algorithm to use.
+** \param key The key used by the unciphering algorithm
+*/
 void				bunny_uncipher_data(void		*data,
 						    size_t		data_len,
 						    t_bunny_ciphering	ciphering,
 						    const t_bunny_key	*key);
 
-typedef void			(*t_bunny_my_cipher)(char		*buffer,
+/*!
+** The type of the gl_bunny_my_cipher function pointer, that may be used
+** if you wish to bring your own ciphering algorithm.
+** The ciphering parameter is the value sent to bunny_cipher_* as ciphering
+** parameter: it should be BS_CUSTOM or any greater value (You choose...)
+*/
+typedef void			(*t_bunny_my_cipher)(t_bunny_ciphering	ciphering,
+						     char		*buffer,
 						     size_t		len,
 						     const t_bunny_key	*key);
-t_bunny_my_cipher		gl_bunny_my_cipher;
 
-typedef void			(*t_bunny_my_uncipher)(char		*buffer,
+/*!
+** A function pointer that contains a function that will be called if 
+** bunny_cipher_* is called with BS_CUSTOM or any greater value as ciphering
+** algorithm.
+*/
+extern t_bunny_my_cipher	gl_bunny_my_cipher;
+
+/*!
+** The type of the gl_bunny_my_uncipher function pointer, that may be used
+** if you wish to bring your own unciphering algorithm.
+** The ciphering parameter is the value sent to bunny_uncipher_* as ciphering
+** parameter: it should be BS_CUSTOM or any greater value (You choose...)
+*/
+typedef void			(*t_bunny_my_uncipher)(t_bunny_ciphering ciphering,
+						       char		*buffer,
 						       size_t		len,
 						       const t_bunny_key *key);
-t_bunny_my_uncipher		gl_bunny_my_uncipher;
+
+/*!
+** A function pointer that contains a function that will be called if 
+** bunny_uncipher_* is called with BS_CUSTOM or any greater value as ciphering
+** algorithm.
+*/
+extern t_bunny_my_uncipher	gl_bunny_my_uncipher;
 
 #endif	/*			__LAPIN_SECURITY_H__			*/

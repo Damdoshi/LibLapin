@@ -183,13 +183,13 @@ struct				bunny_trap
 {
   struct bunny_trap		*next;
   struct bunny_trap		*prev;
-  char				already_called;
   char				remove_it;
   char				__unused1;
   char				__unused2;
+  char				__unused3;
   double			start_time;
   double			duration;
-  t_bunny_trap_function		*func;
+  t_bunny_trap_function		func;
   void				*param;
 };
 

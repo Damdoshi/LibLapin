@@ -9,7 +9,9 @@ t_bunny_key			*bunny_new_key(size_t		len)
 {
   t_bunny_key			*key;
   size_t			i;
-  
+
+  if (len == 0)
+    return (NULL);
   if ((key = bunny_malloc(sizeof(ket->length) + len)) == NULL)
     return (NULL);
   key->length = len;

@@ -264,9 +264,11 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 		      }
 		  }
 	    }
+	  bunny_asynclock(delay, BCO_BEFORE_LOOP_MAIN_FUNCTION);
 	  if (gl_callback.loop != NULL)
 	    if ((rep = gl_callback.loop(data)) != GO_ON)
 	      return (rep);
+	  bunny_asynclock(delay, BCO_AFTER_LOOP_MAIN_FUNCTION);
 	  prev += delay;
 	}
       if (once && gl_callback.display != NULL)

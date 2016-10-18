@@ -30,6 +30,9 @@ ou depuis l'internet.
 
 - Créer un systeme d'ordre avec duree de vie
 
+- Inclure le resolveur d'operations dans la LibLapin, prenant en paramètre
+  l'environnement de valeurs
+
 -----------------------------
 Deployement code block Lapin:
 
