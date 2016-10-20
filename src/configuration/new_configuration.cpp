@@ -2,7 +2,7 @@
 // Hanged Bunny Studio 2014-2016
 //
 // Lapin library
-
+/*
 #include		"lapin_private.h"
 
 t_bunny_configuration	*__bunny_new_configuration(t_bunny_configuration_type		type,
@@ -61,3 +61,4 @@ t_bunny_configuration	*bunny_new_configuration(t_bunny_configuration_type		type,
   return (cnf);
 }
 
+*/

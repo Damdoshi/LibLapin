@@ -5,26 +5,24 @@
 
 #include			"lapin_private.h"
 
-void				bunny_cipher_data(void			*cnt,
-						  size_t		len,
-						  t_bunny_ciphering	cip,
-						  const t_bunny_key	*key)
+void				bunny_cipher_data(void				*cnt,
+						  size_t			len,
+						  t_bunny_ciphering		cip,
+						  const t_bunny_cipher_key	*key)
 {
-  bool				ret;
-
   switch (cip)
     {
     case BS_XOR:
-      __bunny_xor(cnt, len, key);
+      __bunny_xor((char*)cnt, len, key);
       return ;
     case BS_CAESAR:
-      __bunny_caesar(cnt, len, key, true);
+      __bunny_caesar((char*)cnt, len, key, true);
       return ;
     case BS_SHAKER:      
-      __bunny_shaker(cnt, len, key, true);
+      __bunny_shaker((char*)cnt, len, key, true);
       return ;
     default:
-      gl_bunny_my_cipher(cnt, len, key);
+      gl_bunny_my_cipher(cip, (char*)cnt, len, key);
     }
 }
 

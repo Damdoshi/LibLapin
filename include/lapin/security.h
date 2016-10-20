@@ -46,15 +46,15 @@ typedef enum			e_bunny_ciphering
 ** terminator, you have to use the length field to browse it if you wish
 ** to.
 */
-typedef struct			s_bunny_key
+typedef struct			s_bunny_cipher_key
 {
-  const size_t			length;
+  size_t			length;
 # ifndef			__ANSI__
-  const char			key[0];
+  char				key[0];
 # else
-  const char			key[1];
+  char				key[1];
 # endif
-}				t_bunny_key;
+}				t_bunny_cipher_key;
 
 /*!
 ** Get the binary-embedded key. Its default value is plain 0 that are supposed
@@ -63,7 +63,7 @@ typedef struct			s_bunny_key
 ** after.
 ** \return The binary-embedded key.
 */
-const t_bunny_key		*bunny_default_key(void);
+const t_bunny_cipher_key	*bunny_default_key(void);
 
 /*!
 ** Erase an unset binary-embedded key (filled with the plain 0 default value)
@@ -76,17 +76,34 @@ const t_bunny_key		*bunny_default_key(void);
 bool				bunny_fill_default_key(const char	*bunny_program);
 
 /*!
+** The t_bunny_key_twist function type is the type of the function that will be
+** called to generate a cipher key from the inside hardcoded key. The purpose
+** of this is to make more heavy the protection: the key used for ciphering will not
+** be the one which is directly readable inside the program, but a temporary one
+** generated from the key and an algorithm.
+** Of course, you should avoid non deterministic behavior...
+*/
+typedef t_bunny_cipher_key	*(*t_bunny_key_twist)(const t_bunny_cipher_key *inkey,
+						      t_bunny_cipher_key *outkey);
+
+/*!
+** The function that will be called to tweak the hardcoded key.
+** If not set, a default algorithm will be applied.
+*/
+extern t_bunny_key_twist	gl_bunny_my_key_twist;
+
+/*!
 ** Create a new key of the given size. The key is filled with random values.
 ** \param len The size of the key. Should be greater than 0.
 ** \return The generated key or NULL on error.
 */
-t_bunny_key			*bunny_new_key(size_t			len);
+t_bunny_cipher_key		*bunny_new_key(size_t			len);
 
 /*!
 ** Delete the given key.
 ** \param key The key to delete.
 */
-void				bunny_delete_key(t_bunny_key		*key);
+void				bunny_delete_key(t_bunny_cipher_key	*key);
 
 /*!
 ** Open the given file, load its content, cipher it and save it right after.
@@ -97,7 +114,7 @@ void				bunny_delete_key(t_bunny_key		*key);
 */
 bool				bunny_cipher_file(const char		*file,
 						  t_bunny_ciphering	ciphering,
-						  const t_bunny_key	*key);
+						  const t_bunny_cipher_key *key);
 
 /*!
 ** Open the given file, load its content, uncipher it and save it right after.
@@ -108,7 +125,7 @@ bool				bunny_cipher_file(const char		*file,
 */
 bool				bunny_uncipher_file(const char		*file,
 						    t_bunny_ciphering	ciphering,
-						    const t_bunny_key	*key);
+						    const t_bunny_cipher_key *key);
 
 /*!
 ** Cipher the sent buffer.
@@ -120,7 +137,7 @@ bool				bunny_uncipher_file(const char		*file,
 void				bunny_cipher_data(void			*data,
 						  size_t		datalen,
 						  t_bunny_ciphering	ciphering,
-						  const t_bunny_key	*key);
+						  const t_bunny_cipher_key *key);
 
 /*!
 ** Uncipher the sent buffer.
@@ -132,7 +149,7 @@ void				bunny_cipher_data(void			*data,
 void				bunny_uncipher_data(void		*data,
 						    size_t		data_len,
 						    t_bunny_ciphering	ciphering,
-						    const t_bunny_key	*key);
+						    const t_bunny_cipher_key *key);
 
 /*!
 ** The type of the gl_bunny_my_cipher function pointer, that may be used
@@ -143,7 +160,7 @@ void				bunny_uncipher_data(void		*data,
 typedef void			(*t_bunny_my_cipher)(t_bunny_ciphering	ciphering,
 						     char		*buffer,
 						     size_t		len,
-						     const t_bunny_key	*key);
+						     const t_bunny_cipher_key *key);
 
 /*!
 ** A function pointer that contains a function that will be called if 
@@ -161,7 +178,7 @@ extern t_bunny_my_cipher	gl_bunny_my_cipher;
 typedef void			(*t_bunny_my_uncipher)(t_bunny_ciphering ciphering,
 						       char		*buffer,
 						       size_t		len,
-						       const t_bunny_key *key);
+						       const t_bunny_cipher_key *key);
 
 /*!
 ** A function pointer that contains a function that will be called if 

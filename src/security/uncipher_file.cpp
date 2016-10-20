@@ -5,9 +5,9 @@
 
 #include			"lapin_private.h"
 
-bool				bunny_uncipher_file(const char		*file,
-						    t_bunny_ciphering	cip,
-						    const t_bunny_key	*key)
+bool				bunny_uncipher_file(const char			*file,
+						    t_bunny_ciphering		cip,
+						    const t_bunny_cipher_key	*key)
 {
   char				*cnt;
   size_t			len;

@@ -7,10 +7,10 @@
 
 void				__bunny_caesar(char			*cnt,
 					       size_t			len,
-					       const t_bunny_key	*key,
+					       const t_bunny_cipher_key	*key,
 					       bool			cipher)
 {
-  int				i;
+  size_t			i;
 
   if (cipher)
     for (i = 0; i < len; ++i)

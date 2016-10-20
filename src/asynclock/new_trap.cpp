@@ -5,13 +5,13 @@
 
 #include			"lapin_private.h"
 
-t_bunny_trap			*bunny_new_trap(t_bunny_trap_function	*func,
+t_bunny_trap			*bunny_new_trap(t_bunny_trap_function	func,
 						t_bunny_call_order	order,
 						double			start,
 						double			duration,
 						void			*param)
 {
-  struct bunny_trap		*snt;
+  struct bunny_trap		**snt;
   struct bunny_trap		*trap;
 
   if (order == BCO_BEFORE_LOOP_MAIN_FUNCTION)
@@ -19,10 +19,9 @@ t_bunny_trap			*bunny_new_trap(t_bunny_trap_function	*func,
   else
     snt = &gl_bunny_trap_head[2];
   
-  if ((trap = bunny_malloc(sizeof(*trap))) == NULL)
+  if ((trap = (struct bunny_trap*)bunny_malloc(sizeof(*trap))) == NULL)
     return (NULL);
   trap->next = NULL;
-  trap->already_called = false;
   trap->remove_it = false;
   trap->start_time = start;
   trap->duration = duration;

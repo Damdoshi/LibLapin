@@ -31,11 +31,11 @@
   LINKER	?=	ar rcs
   COMPILER	?=	g++
 
-  CONFIG	=	-W -Wall -Werror -fPIC -std=gnu++03			\
+  CONFIG	=	-W -Wall -fPIC -std=gnu++03				\
 			-D_GLIBCXX_USE_CXX11_ABI=0 -Wno-unused-result
 
   DEBUG		=	-O0 -g -g3 -ggdb -DBUNNY_ALLOCATOR_DEACTIVATED
-  OPTIM		=	-O2
+#  OPTIM		=	-O2
 
   RM		=	rm -f
   ECHO		=	/bin/echo -e
@@ -69,6 +69,7 @@
 			$(wildcard ./src/security/*.cpp)			\
 			$(wildcard ./src/asynclock/*.cpp)			\
 			$(wildcard ./src/database/*.cpp)			\
+			$(wildcard ./src/plugin/*.cpp)				\
 			$(wildcard ./src/deps/*/*.cpp)
   OBJ		=	$(SRC:.cpp=.o)
 

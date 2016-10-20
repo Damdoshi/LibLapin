@@ -3,6 +3,7 @@
 //
 // Lapin library
 
+#include			<fcntl.h>
 #include			"lapin_private.h"
 
 char				*bunny_load_file(const char		*file,
@@ -13,18 +14,18 @@ char				*bunny_load_file(const char		*file,
 
   if ((fd = open(file, O_RDONLY)) == -1)
     return (NULL);
-  if ((*size = lseek(fd, 0, SEEK_END)) == -1)
+  if ((*size = lseek(fd, 0, SEEK_END)) == (size_t)-1)
     {
       close(fd);
       return (NULL);
     }
   lseek(fd, 0, SEEK_SET);
-  if ((n = bunny_malloc(*size)) == NULL)
+  if ((n = (char*)bunny_malloc(*size)) == NULL)
     {
       close(fd);
       return (NULL);
     }
-  if (read(fd, n, *size) != *size)
+  if ((size_t)read(fd, n, *size) != *size)
     {
       bunny_free(n);
       close(fd);

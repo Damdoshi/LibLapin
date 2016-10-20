@@ -11,21 +11,22 @@ static void			swap(char				*a,
   char				c;
 
   c = *a;
-  *b = *a:
+  *a = *b;
+  *b = c;
 }
 
 void				__bunny_shaker(char			*cnt,
 					       size_t			len,
-					       const t_bunny_key	*key,
+					       const t_bunny_cipher_key	*key,
 					       bool			cipher)
 {
-  int				i;
+  ssize_t			i;
 
   if (cipher)
-    for (i = 0; i < len; ++i)
-      swap(cnt[i], cnt[(i + key->key[i % key->length]) % len]);
+    for (i = 0; i < (ssize_t)len; ++i)
+      swap(&cnt[i], &cnt[(i + key->key[i % key->length]) % len]);
   else
     for (i = len - 1; i >= 0; --i)
-      swap(cnt[i], cnt[(i + key->key[i % key->length]) % len]);
+      swap(&cnt[i], &cnt[(i + key->key[i % key->length]) % len]);
 }
 

@@ -16,7 +16,7 @@
 # if				!defined(__LAPIN_H__)
 #  error			You cannot include this file directly.
 # endif
-# include			<mysql.h>
+# include			<mysql/mysql.h>
 
 /*!
 ** The t_bunny_database structure contains datas

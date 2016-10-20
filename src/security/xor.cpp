@@ -7,9 +7,9 @@
 
 void				__bunny_xor(char			*cnt,
 					    size_t			len,
-					    const t_bunny_key		*key)
+					    const t_bunny_cipher_key	*key)
 {
-  int				i;
+  size_t			i;
 
   for (i = 0; i < len; ++i)
     cnt[i] ^= key->key[i % key->length];

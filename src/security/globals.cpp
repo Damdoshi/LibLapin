@@ -5,5 +5,6 @@
 
 #include			"lapin_private.h"
 
-extern t_bunny_my_cipher	gl_bunny_my_cipher = NULL;
-extern t_bunny_my_cipher	gl_bunny_my_uncipher = NULL;
+t_bunny_my_cipher		gl_bunny_my_cipher = NULL;
+t_bunny_my_cipher		gl_bunny_my_uncipher = NULL;
+

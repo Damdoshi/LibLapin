@@ -1,6 +1,8 @@
 ---------------------
 Fonctionnalité Lapin:
 
+ - Passer a la SFML 2.4.0
+
  - bunny_strerror et bunny_perror font leur apparition. bunny_errno est un alias vers errno.
 
  => Peut etre briser la compatibilité INI en vue de faire ceci:
@@ -33,6 +35,12 @@ ou depuis l'internet.
 - Inclure le resolveur d'operations dans la LibLapin, prenant en paramètre
   l'environnement de valeurs
 
+- Ajouter un micro gestionnaire de pluging compatible avec un format de fonction
+  situe en configuration.
+
+- Dans plugin... ajouter des fonctions type "bunny_complete_me" permettant de charger des fichiers .so
+  et d'assigner les pointeurs gl_bunny_my automatiquement
+
 -----------------------------
 Deployement code block Lapin:
 
@@ -50,3 +58,13 @@ Deployement Unix Lapin:
 
 - Créer un package debian pour l'installation de la liblapin via apt-get
   avec resolution des dependances automatiquement
+
+
+-----------------------
+Pour beaucoup plus tard
+- Module CGI Lapin pour faire des sites webs en LibLapin,
+  avec une petite lib JS pour s'occuper de la transaction via AJAX.
+- Pour realiser cela, il faudra ajouter a bunny_loop la gestion d'evenements
+  de type "communication" permettant d'inserer la lecture sur pipe ou
+  sur le reseau... et egalement la possibilite d'ajouter des evenements de
+  type clavier ou autre manuellement

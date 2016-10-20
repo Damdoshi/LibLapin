@@ -64,7 +64,7 @@ typedef struct			s_bunny_trap
 ** \param order The function will be called
 ** \return Return the structure that incarnates the trap. NULL on error.
 */
-t_bunny_trap			*bunny_new_trap(t_bunny_trap_function		*func,
+t_bunny_trap			*bunny_new_trap(t_bunny_trap_function		func,
 						t_bunny_call_order		order,
 						double				start_time,
 						double				duration,

@@ -3,12 +3,14 @@
 //
 // Lapin library
 
+#include			<fcntl.h>
 #include			<alloca.h>
+#include			<string.h>
 #include			"lapin_private.h"
 
 bool				bunny_fill_default_key(const char	*bunny_prog)
 {
-  const t_bunny_key		*def = bunny_default_key();
+  const t_bunny_cipher_key	*def = bunny_default_key();
   int32_t			buflen = def->length + sizeof(def->length);
   char				*file;
   size_t			siz;

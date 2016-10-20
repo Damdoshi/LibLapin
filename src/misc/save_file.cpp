@@ -3,6 +3,7 @@
 //
 // Lapin library
 
+#include			<fcntl.h>
 #include			"lapin_private.h"
 
 bool				bunny_save_file(const char		*file,
@@ -13,7 +14,7 @@ bool				bunny_save_file(const char		*file,
 
   if ((fd = open(file, O_CREAT | O_TRUNC | O_WRONLY, 0644)) == -1)
     return (false);
-  if (write(fd, data, len) != len)
+  if (write(fd, data, len) != (ssize_t)len)
     {
       close(fd);
       return (false);

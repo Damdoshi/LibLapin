@@ -5,6 +5,7 @@
 
 #include		"lapin_private.h"
 
+/*
 t_bunny_configuration	*bunny_load_configuration(t_bunny_configuration_type		type,
 						  t_bunny_configuration			*config,
 						  bool					overwrite,
@@ -49,4 +50,6 @@ t_bunny_configuration	*bunny_load_configuration(t_bunny_configuration_type		type
     }
   return (cnf);
 }
+
+*/
 

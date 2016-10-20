@@ -14,7 +14,7 @@
 #  pragma			packed
 # endif
 # include			"lapin.h"
-# include			"Configuration.hpp"
+//# include			"Configuration.hpp"
 
 # define			MEMORY_CHUNK_SIZE			64
 
@@ -155,12 +155,12 @@ struct				bunny_database_iterator
 {
   int				index;
   int				nbr_rows;
-  hbs::Dictionnary<size_t>	*dic;
+  // hbs::Dictionnary<size_t>	*dic;
 };
 
 struct				bunny_configuration
 {
-  hbs::Configuration		*config;
+  // hbs::Configuration		*config;
   char				*data[4];
   size_t			type;
   const char			*name;
@@ -169,14 +169,14 @@ struct				bunny_configuration
 
 void				__bunny_xor(char			*cnt,
 					    size_t			len,
-					    const t_bunny_key		*key);
+					    const t_bunny_cipher_key	*key);
 void				__bunny_caesar(char			*cnt,
 					       size_t			len,
-					       const t_bunny_key	*key,
+					       const t_bunny_cipher_key	*key,
 					       bool			cipher);
 void				__bunny_shaker(char			*cnt,
 					       size_t			len,
-					       const t_bunny_key	*key,
+					       const t_bunny_cipher_key	*key,
 					       bool			cipher);
 
 struct				bunny_trap
