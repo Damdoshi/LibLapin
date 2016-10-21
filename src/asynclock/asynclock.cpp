@@ -5,33 +5,38 @@
 
 #include		"lapin_private.h"
 
-static int		remove_dead_trap(struct bunny_trap	*trap)
+static int		remove_dead_trap(struct bunny_trap	**trap,
+					 t_bunny_call_order	order)
 {
   struct bunny_trap	*lst;
   struct bunny_trap	*nxt;
   int			cnt;
 
   cnt = 0;
-  for (lst = trap; lst != NULL; lst = lst->next)
+  for (lst = *trap; lst != NULL; lst = lst->next)
     if (lst->remove_it)
       {
 	nxt = lst->next;
-	__bunny_delete_trap(lst);
+	__bunny_delete_trap(lst, order);
 	lst = nxt;
       }
     else
-      lst = lst->next;
+      {
+	cnt += 1;
+	lst = lst->next;
+      }
+  return (cnt);
 }
 
 static void		asyncall(double				elapsed,
-				 struct bunny_trap		*trap,
+				 struct bunny_trap		*lst,
 				 double				now)
 {
   // Call the function between time A and B
   if (lst->duration > 0.001)
     {
       if (lst->start_time < now && lst->start_time + lst->duration > now)
-	lst->func(elapsed, (t_bunny_trap*)lst, lst->additional_param);
+	lst->func(elapsed, (t_bunny_trap*)lst, lst->param);
       else if (lst->start_time + lst->duration < now)
 	lst->remove_it = true;
     }
@@ -39,7 +44,7 @@ static void		asyncall(double				elapsed,
   else if (lst->duration < -0.001)
     {
       if (lst->start_time < now && lst->start_time - lst->duration > now)
-	lst->func(elapsed, (t_bunny_trap*)lst, lst->additional_param);
+	lst->func(elapsed, (t_bunny_trap*)lst, lst->param);
       else if (lst->start_time - lst->duration < now)
 	lst->start_time -= lst->duration;
     }
@@ -49,32 +54,33 @@ static void		asyncall(double				elapsed,
       if (lst->start_time > bunny_get_current_time() &&
 	  lst->start_time <= now)
 	{
-	  lst->func(elapsed, (t_bunny_trap*)lst, lst->additional_param);
+	  lst->func(elapsed, (t_bunny_trap*)lst, lst->param);
 	  lst->remove_it = true;
 	}
     }
 }
 
 static int		asynclock(double			elapsed,
-				  struct bunny_trap		*trap)
+				  struct bunny_trap		**trap,
+				  t_bunny_call_order		order)
 {
   struct bunny_trap	*lst;
   double		now;
 
   now = bunny_get_current_time() + elapsed;
-  for (lst = trap; lst != NULL; lst = lst->next)
+  for (lst = *trap; lst != NULL; lst = lst->next)
     if (lst->start_time > 0)
       asyncall(elapsed, lst, now);
-    else if (lst == trap)
+    else if (lst == *trap)
       asyncall(elapsed, lst, now);
-  return (remove_dead_trap(trap));
+  return (remove_dead_trap(trap, order));
 }
 
 int			bunny_asynclock(double			elapsed,
 					t_bunny_call_order	order)
 {
   if (order == BCO_BEFORE_LOOP_MAIN_FUNCTION)
-    return (asynclock(elapsed, &gl_bunny_trap_head[0]));
-  return (asynclock(elapsed, &gl_bunny_trap_head[2]));
+    return (asynclock(elapsed, &gl_bunny_trap_head[0], order));
+  return (asynclock(elapsed, &gl_bunny_trap_head[2], order));
 }
 

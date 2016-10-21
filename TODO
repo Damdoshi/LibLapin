@@ -41,6 +41,14 @@ ou depuis l'internet.
 - Dans plugin... ajouter des fonctions type "bunny_complete_me" permettant de charger des fichiers .so
   et d'assigner les pointeurs gl_bunny_my automatiquement
 
+- Retirer la couche d'abstraction unix windows qui est completment naze et juste s'en passer...
+  aux dernieres nouvelles, Windows est POSIX...
+
+- Ranger encore les exemples... Créer un dossier "misc" ou un truc comme ca ou mettre le bordel
+  d'avant (sauf les demos) et ecrire des exemples reelement typique de l'utilisation de chaque module.
+
+- Module de saut inter fonction basé sur longjmp ?
+
 -----------------------------
 Deployement code block Lapin:
 

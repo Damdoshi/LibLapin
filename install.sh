@@ -77,11 +77,11 @@ make						|| get_out "No bunnies were build. Make failed."
 
 # Bunnies
 cp -r include/* ${INCLUDE_DIR}		|| get_out "Failed to install Lapin headers."
-cp liblapin.a lib/ ${LIB_DIR}			|| get_out "Failed to install Lapin binaries."
+cp liblapin.a ${LIB_DIR}			|| get_out "Failed to install Lapin binaries."
 
-chmod 644 ${INCLUDE_DIR}*.h*			|| get_out "Failed to change mode of headers."
-chmod 644 ${INCLUDE_DIR}*/*.h*		|| get_out "Failed to change mode of headers."
-chmod 644 ${INCLUDE_DIR}*/*/*.h*		|| get_out "Failed to change mode of headers."
+chmod 644 ${INCLUDE_DIR}/*.h*			|| get_out "Failed to change mode of headers."
+chmod 644 ${INCLUDE_DIR}/*/*.h*			|| get_out "Failed to change mode of headers."
+chmod 644 ${INCLUDE_DIR}/*/*/*.h*		|| get_out "Failed to change mode of headers."
 chmod 644 ${LIB_DIR}/*.a			|| get_out "Failed to change mode of binaries."
 chmod 755 ${LIB_DIR}/*.so			|| get_out "Failed to change mode of binaries."
 

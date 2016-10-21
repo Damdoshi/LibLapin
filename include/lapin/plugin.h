@@ -47,7 +47,7 @@ typedef struct			s_bunny_extern_function
   const char * const		name;
   const char * const		parameters;
   const char			return_value;
-  void * const			fptr;
+  const t_bunny_plugged_function fptr;
 }				t_bunny_extern_function;
 
 typedef struct			s_bunny_plugin
@@ -63,7 +63,7 @@ typedef struct			s_bunny_plugin
 
 typedef t_bunny_extern_function	*(*t_bunny_list_plugin_function)(size_t	*nbr_func);
 
-const t_bunny_plugin		*bunny_new_plugin(const char		*dyn_lib);
+t_bunny_plugin			*bunny_new_plugin(const char		*dyn_lib);
 void				bunny_delete_plugin(t_bunny_plugin	*plugin);
 
 void				*bunny_plugin_get_function(t_bunny_plugin *plugin,
@@ -72,14 +72,14 @@ void				*bunny_plugin_get_function(t_bunny_plugin *plugin,
 bool				bunny_vcall(t_bunny_plugin		*plugin,
 					    const char			*func,
 					    const char			*param,
-					    t_bunny_value_type		*out,
+					    t_bunny_value		*out,
 					    ...);
 
 bool				bunny_call(t_bunny_plugin		*plugin,
 					   const char			*func,
 					   const char			*paramdesc,
-					   t_bunny_value_type		*out,
-					   t_bunny_value_type		*param);
+					   t_bunny_value		*out,
+					   t_bunny_value		*param);
 
 // array instead of ... ?
 

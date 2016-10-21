@@ -2,7 +2,7 @@
 ** Jason Brillante "Damdoshi"
 ** Hanged Bunny Studio 2014-2016
 **
-** LibLapin - Opening a window
+** LibLapin - Handle events
 */
 
 #include		<stdlib.h> /* EXIT_FAILURE, EXIT_SUCCESS */
@@ -76,7 +76,7 @@ int			main(int				argc,
   program.win = bunny_start(800, 600, false, "LibLapin - Events");
   if (program.win == NULL)
     {
-      printlerr("Cannot open the window."); /* print litteral on stderr. lapin/misc.h */
+      bunny_printlerr("Cannot open the window."); /* print litteral on stderr */
       return (EXIT_FAILURE);
     }
   program.name = argv[0];
@@ -87,7 +87,7 @@ int			main(int				argc,
   /* The second parameter is the color */
   bunny_clear(&program.win->buffer, PINK2);
   
-  printl("Press escape to exit. Click left to change the window color."); /* lapin/misc.h */
+  bunny_printl("Press escape to exit. Click left to change the window color."); /* print litteral on stdout */
 
   /* set functions that will be called if event of specific types happened */
   /* keydown or keyup, clickdown or clickup, time passes  */

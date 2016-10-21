@@ -13,15 +13,15 @@ int			main(void)
 {
   t_bunny_window	*win;
 
-  /* open a window */
+  /* open a window (lapin/window.h) */
   /* width on window, height of window, fullscreen? true, or false, name of the window */
   win = bunny_start(800, 600, false, "LibLapin - Opening a Window");
   if (win == NULL)
     {
-      printlerr("Cannot open the window."); /* print litteral on stderr. lapin/misc.h */
+      bunny_printlerr("Cannot open the window."); /* print litteral on stderr. lapin/misc.h */
       return (EXIT_FAILURE);
     }
-  printl("Properties of the window:");
+  bunny_printl("Properties of the window:"); /* print litteral on stdout. lapin/misc.h */
   printf("Name: %s.\n", win->name);
   printf("Width: %d.\n", win->buffer.width);
   printf("Height: %d.\n", win->buffer.height);

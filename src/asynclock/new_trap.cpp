@@ -5,6 +5,8 @@
 
 #include			"lapin_private.h"
 
+struct bunny_trap		*gl_bunny_trap_head[4];
+
 t_bunny_trap			*bunny_new_trap(t_bunny_trap_function	func,
 						t_bunny_call_order	order,
 						double			start,

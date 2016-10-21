@@ -3,6 +3,7 @@
 //
 // Bibliothèque Lapin
 
+#include		<dlfcn.h>
 #include		"lapin_private.h"
 
 void			*bunny_plugin_get_function(t_bunny_plugin	*plugin,

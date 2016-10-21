@@ -5,10 +5,10 @@
 
 #include		"lapin_private.h"
 
-void			__bunny_delete_trap(t_bunny_trap		*_trap)
+void			__bunny_delete_trap(struct bunny_trap		*trap,
+					    t_bunny_call_order		order)
 {
-  struct bunny_trap	*snt;
-  struct bunny_trap	*trap = (struct bunny_trap*)_trap;
+  struct bunny_trap	**snt;
 
   if (order == BCO_BEFORE_LOOP_MAIN_FUNCTION)
     snt = &gl_bunny_trap_head[0];

@@ -148,7 +148,12 @@ extern bool			gl_full_blit;
 
 struct				bunny_database
 {
-  
+  char				_private[sizeof(size_t)]; // things
+  char				*url;
+  char				*login;
+  char				*password;
+  char				*database;
+  size_t			response_length;
 };
 
 struct				bunny_database_iterator
@@ -194,8 +199,16 @@ struct				bunny_trap
 };
 
 extern sf::Clock		gl_bunny_current_time;
-struct bunny_trap		*gl_bunny_trap_head[4];
+extern struct bunny_trap	*gl_bunny_trap_head[4];
 
-void				__bunny_delete_trap(t_bunny_trap	*_trap);
+void				__bunny_delete_trap(struct bunny_trap	*trap,
+						    t_bunny_call_order	order);
+
+struct				bunny_plugin
+{
+  void				*handler;
+  size_t			nbr_functions;
+  t_bunny_extern_function	functions[0];
+};
 
 #endif	/*			__LAPIN_PRIVATE_H__	*/
