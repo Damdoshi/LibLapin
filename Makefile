@@ -31,7 +31,7 @@
   LINKER	?=	ar rcs
   COMPILER	?=	g++
 
-  CONFIG	=	-W -Wall -fPIC -std=gnu++03				\
+  CONFIG	=	-W -Wall -Werror -fPIC -std=gnu++98			\
 			-D_GLIBCXX_USE_CXX11_ABI=0 -Wno-unused-result
 
   DEBUG		=	-O0 -g -g3 -ggdb -DBUNNY_ALLOCATOR_DEACTIVATED
