@@ -172,23 +172,29 @@ bool			bpt::NetAbs::NetUnix::Select(Socket			max,
     if (select(max, &fdread, &fdwrite, &fdexcept, NULL) == -1)
       return (false);
   if (read != NULL)
+  {
     for (it = read->state.begin(); it != read->state.end(); ++it)
       if (FD_ISSET(it->first, &fdread))
 	it->second = true;
       else
 	it->second = false;
+  }
   if (write != NULL)
+  {
     for (it = write->state.begin(); it != write->state.end(); ++it)
       if (FD_ISSET(it->first, &fdwrite))
 	it->second = true;
       else
 	it->second = false;
+  }
   if (except != NULL)
+  {
     for (it = except->state.begin(); it != except->state.end(); ++it)
       if (FD_ISSET(it->first, &fdexcept))
 	it->second = true;
       else
 	it->second = false;
+  }
   return (true);
 }
 
