@@ -5,11 +5,6 @@
 
 #include		"lapin_private.h"
 
-/*
- * unused yet, clang is stricter than gcc therefore does not compile because
- * of this unused variable
- */
-#if 0
 /* 20 * 20 */
 const t_bunny_letter	gl_vector_font[LAST_BUNNY_FONT] =
   {
@@ -368,5 +363,3 @@ const t_bunny_letter	gl_vector_font[LAST_BUNNY_FONT] =
       }
     }
   };
-
-#endif /* !0 */

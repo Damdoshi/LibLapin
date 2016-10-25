@@ -541,7 +541,7 @@ typedef struct			s_bunny_letter
 ** letters in this order: a-z0-9!. There is a enumeration that describe completly
 ** how the gl_vector is made in the enum.h file: t_bunny_letter_tab.
 */
-extern const t_bunny_letter	gl_vector[LAST_BUNNY_FONT];
+extern const t_bunny_letter	gl_vector_font[LAST_BUNNY_FONT];
 
 /*!
 ** The t_bunny_shader element is an effect that will be applied while blitting.
