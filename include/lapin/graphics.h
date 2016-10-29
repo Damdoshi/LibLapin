@@ -118,6 +118,14 @@ t_bunny_pixelarray		*bunny_new_pixelarray(unsigned int		wid,
 t_bunny_pixelarray		*bunny_load_pixelarray(const char		*file);
 
 /*!
+** The bunny_read_pixelarray load a picture from memory. Supported formats are
+** .png, .jpg, .gif and 24 bits bitmap. Output is a manual access picture.
+** \param buffer The buffer that contains the loaded in memory picture file
+** \return Return a t_bunny_pixelarray filled with the picture or NULL on error.
+*/
+t_bunny_pixelarray		*bunny_read_pixelarray(const void		*buffer);
+
+/*!
 ** The t_bunny_my_load_pixelarray type is currently unused by the library. It
 ** is the type of the function you have to implement to make the bunny library
 ** support specific formats it does not know how to manage (Like 32 bits bitmap)
@@ -127,12 +135,29 @@ t_bunny_pixelarray		*bunny_load_pixelarray(const char		*file);
 typedef t_bunny_pixelarray	*(*t_bunny_my_load_pixelarray)(const char	*file);
 
 /*!
+** The t_bunny_my_read_pixelarray type is currently unused by the library. It
+** is the type of the function you have to implement to make the bunny library
+** support specific formats it does not know how to manage (Like 32 bits bitmap)
+** The self test function does not currently evaluate the function you would assign to
+** gl_bunny_my_read_pixelarray.
+*/
+typedef t_bunny_pixelarray	*(*t_bunny_my_read_pixelarray)(const void	*buf);
+
+/*!
 ** The gl_bunny_my_load_pixelarray is supposed to be the function pointer to set
 ** in order to expand bunny_load_pixelarray functionnalities to manage new types
 ** of picture and having your function evaluate by bunny_self_test, but it is
 ** currently unused.p
 */
 extern t_bunny_my_load_pixelarray gl_bunny_my_load_pixelarray;
+
+/*!
+** The gl_bunny_my_read_pixelarray is supposed to be the function pointer to set
+** in order to expand bunny_read_pixelarray functionnalities to manage new types
+** of picture and having your function evaluate by bunny_self_test, but it is
+** currently unused.p
+*/
+extern t_bunny_my_read_pixelarray gl_bunny_my_read_pixelarray;
 
 /*!
 ** The bunny_save_pixelarray save a t_bunny_pixelarray content into a picture file.
@@ -174,6 +199,16 @@ t_bunny_picture			*bunny_new_picture(unsigned int			wid,
 ** \return Return a t_bunny_picture filled with the picture or NULL on error.
 */
 t_bunny_picture			*bunny_load_picture(const char			*file);
+
+/*!
+** The bunny_read_picture load a picture from memory. Supported formats are
+** .png, .jpg, .gif and 24 bits bitmap. Output is a fast picture.
+** The reserved memory to handle it is outside the bunny_malloc space.
+** \param buffer The buffer to read.
+** \return Return a t_bunny_picture filled with the picture or NULL on error.
+*/
+t_bunny_picture			*bunny_read_picture(const void			*pic,
+						    size_t			l);
 
 /*!
 ** Destroy a clipable element. If the element is a t_bunny_pixelarray, you have

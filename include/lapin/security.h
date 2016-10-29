@@ -36,8 +36,19 @@ typedef enum			e_bunny_ciphering
     BS_XOR,			/* ^ */
     BS_CAESAR,			/* + */
     BS_SHAKER,			/* swap data in the buffer */
+    /* BS_COKTAIL - it mix all previous algorithm */
     BS_CUSTOM			/* any >= BS_CUSTOM */
   }				t_bunny_ciphering;
+
+/*!
+** An associative table for an easy enumeration<->string transaction
+*/
+extern const char * const	gl_bunny_ciphering_table[BS_CUSTOM];
+
+/*!
+** Resolve the ciphering algorithm name with the gl_bunny_ciphering_table tbale
+*/
+t_bunny_ciphering		bunny_get_ciphering(const char		*name);
 
 /*!
 ** A t_bunny_key represents a ciphering key. The first field is the length
@@ -48,7 +59,7 @@ typedef enum			e_bunny_ciphering
 */
 typedef struct			s_bunny_cipher_key
 {
-  size_t			length;
+  int32_t			length;
 # ifndef			__ANSI__
   char				key[0];
 # else
@@ -71,9 +82,11 @@ const t_bunny_cipher_key	*bunny_default_key(void);
 ** the cipher/unciphering capacity of the bunny security module (because
 ** the key used won't be 0 anymore)
 ** \param bunny_program A binary file, designed with LibLapin, to modify
+** \param key The key to insert inside the binary. If NULL, a key is generated.
 ** \return True if every thing went well.
 */
-bool				bunny_fill_default_key(const char	*bunny_program);
+bool				bunny_fill_default_key(const char	*bunny_program,
+						       t_bunny_cipher_key *key);
 
 /*!
 ** The t_bunny_key_twist function type is the type of the function that will be

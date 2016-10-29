@@ -8,15 +8,21 @@
 #include			<string.h>
 #include			"lapin_private.h"
 
-bool				bunny_fill_default_key(const char	*bunny_prog)
+bool				bunny_fill_default_key(const char	*bunny_prog,
+						       t_bunny_cipher_key *key)
 {
-  const t_bunny_cipher_key	*def = bunny_default_key();
-  int32_t			buflen = def->length + sizeof(def->length);
+  int32_t			buflen;
+  const t_bunny_cipher_key	*def;
   char				*file;
   size_t			siz;
   size_t			i;
   int				fd;
-  
+
+  if (key == NULL)
+    def = bunny_default_key();
+  else
+    def = key;
+  buflen = def->length + sizeof(def->length);
   if ((file = bunny_load_file(bunny_prog, &siz)) == NULL)
     return (false);
   for (i = 0; i < siz - buflen; ++i)
