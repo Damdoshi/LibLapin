@@ -13,7 +13,7 @@ bool				bunny_cipher_file(const char			*file,
   size_t			len;
   bool				ret;
 
-  if ((cnt = bunny_load_file(file, &len)) == NULL)
+  if (bunny_load_file(file, &cnt, &len) == false)
     return (false);
   bunny_cipher_data(cnt, len, cip, key);
   ret = bunny_save_file(file, cnt, len);

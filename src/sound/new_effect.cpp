@@ -3,6 +3,7 @@
 //
 // Bibliothèque Lapin
 
+#include		<string.h>
 #include		"lapin_private.h"
 
 t_bunny_effect		*bunny_new_effect(double		duration)
@@ -14,6 +15,7 @@ t_bunny_effect		*bunny_new_effect(double		duration)
   if ((eff->sample = (int16_t*)bunny_malloc(sizeof(*eff->sample) * duration * 44100)) == NULL)
     goto FailStruct;
 
+  eff->file = strdup("");
   eff->sample_per_second = SAMPLE_PER_SECONDS;
   eff->duration = duration;
   eff->sound.setBuffer(eff->effect);

@@ -16,8 +16,14 @@
 #  error			You cannot include this file directly.
 # endif
 # include			<unistd.h>
-
 # define			LITTERAL(fd, str)			write((fd), str "\n", sizeof(str "\n"))
+
+# ifdef				BUNNY_DEBUG
+#  undef			BUNNY_DEBUG
+#  define			BUNNY_DEBUG(code)			code
+# else
+#  define			BUNNY_DEBUG(code)
+# endif
 
 /*!
 ** Write a litteral string (defined in code, with two double quotes) on stdout.
@@ -54,14 +60,18 @@ const char			*bunny_strerror(int			errorcode);
 void				bunny_perror(const char			*str);
 
 /*!
-** Load a file into the space managed by bunny_malloc. The content of
-** the file is returned, the size is written at the sent address.
-** \param file The file to load
-** \param size The address where to save the file size
-** \return The content of the file, NULL on error.
+** Load an entire file.
+** \param file The file name
+** \param data A pointer to the content of the file (this param is an output)
+** \param size A pointer to the size of the file (this param is an output)
+** If size is NULL, then an additionnal '\0' is set at the end of the data.
+** \return The size of the file if everything went well, else -1
+**
+** Note that data and size are only changed if everything went well.
 */
-char				*bunny_load_file(const char		*file,
-						 size_t			*size);
+ssize_t				bunny_load_file(const char				*file,
+						char					**data,
+						size_t					*size);
 
 /*!
 ** Save the sent data into a file.

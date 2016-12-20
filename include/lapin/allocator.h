@@ -20,32 +20,6 @@
 # endif
 
 /*!
-** The LAPIN_ALLOCATOR_OVERLOAD should be defined inside your Makefile with the -D option
-** for GCC. The purpose of this macro is to transform every calls to malloc, calloc, realloc
-** and free into calls to their bunny equivalent without having to change your code.
-*/
-# ifdef				LAPIN_ALLOCATOR_OVERLOAD
-#  define			malloc						bunny_malloc
-#  define			calloc						bunny_calloc
-#  define			realloc						bunny_realloc
-#  define			free						bunny_free
-# endif
-
-/*!
-** The LAPIN_ALLOCATOR_DEACTIVATED should be defined inside your Makefile with the -D option
-** for GCC. The purpose of this macro is to transform every calls to bunny_malloc, bunny_calloc,
-** bunny_realloc and bunny_free to their standard equivalent without having to change your code.
-** Considering that tools like valgrind cannot help you to debug if you use the bunny allocator,
-** deactivating it may help you during your debugging.
-*/
-# ifdef				LAPIN_ALLOCATOR_DEACTIVATED
-#  define			bunny_malloc					malloc
-#  define			bunny_calloc					calloc
-#  define			bunny_realloc					realloc
-#  define			bunny_free					free
-# endif
-
-/*!
 ** Reserve a sent amount of bytes and return a pointer to it. If there is not enough
 ** memory available, the function returns NULL.
 ** \param siz The amount, in bytes, of data to reserve
@@ -104,5 +78,39 @@ void				bunny_set_memory_check(bool			chk);
 ** \param byt The quantity of bytes the program will be allowed to use.
 */
 void				bunny_set_maximum_ram(size_t			byt);
+
+# ifdef				BUNNY_ALLOCATOR_OVERLOAD
+#  define			LAPIN_ALLOCATOR_OVERLOAD
+# endif
+
+/*!
+** The BUNNY_ALLOCATOR_OVERLOAD should be defined inside your Makefile with the -D option
+** for GCC. The purpose of this macro is to transform every calls to malloc, calloc, realloc
+** and free into calls to their bunny equivalent without having to change your code.
+*/
+# ifdef				LAPIN_ALLOCATOR_OVERLOAD
+#  define			malloc(a)					bunny_malloc(a)
+#  define			calloc(a, b)					bunny_calloc(a, b)
+#  define			realloc(a, b)					bunny_realloc(a, b)
+#  define			free(a)						bunny_free(a)
+# endif
+
+# ifdef				BUNNY_ALLOCATOR_DEACTIVATED
+#  define			LAPIN_ALLOCATOR_DEACTIVATED
+# endif
+
+/*!
+** The LAPIN_ALLOCATOR_DEACTIVATED should be defined inside your Makefile with the -D option
+** for GCC. The purpose of this macro is to transform every calls to bunny_malloc, bunny_calloc,
+** bunny_realloc and bunny_free to their standard equivalent without having to change your code.
+** Considering that tools like valgrind cannot help you to debug if you use the bunny allocator,
+** deactivating it may help you during your debugging.
+*/
+# ifdef				LAPIN_ALLOCATOR_DEACTIVATED
+#  define			bunny_malloc(a)					malloc(a)
+#  define			bunny_calloc(a, b)				calloc(a, b)
+#  define			bunny_realloc(a, b)				realloc(a, b)
+#  define			bunny_free(a)					free(a)
+# endif
 
 #endif	/*		__LAPIN_ALLOCATOR_H__	*/

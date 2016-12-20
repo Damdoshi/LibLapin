@@ -30,6 +30,8 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
   pic->height = pic->rect.height = pic->texture->getSize().y;
   pic->rect.left = 0;
   pic->rect.top = 0;
+  pic->x_position = 0;
+  pic->y_position = 0;
   pic->x_origin = 0;
   pic->y_origin = 0;
   pic->x_scale = 1;

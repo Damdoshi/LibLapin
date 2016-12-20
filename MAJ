@@ -1,6 +1,15 @@
 ------------------------------------- Version 1.11
 
  - Epuration du dossier racine du projet
+
+ - A propos du système d'allocation:
+ - - LAPIN_ALLOCATOR_DEACTIVATED peut maintenant être utilisé dans la LibLapin
+     de manière à forcer celle-ci a utiliser l'allocateur système. Les fonctions
+     d'allocations restent présente mais ne sont plus appellées par la lib elle-même.
+ - - Les macros BUNNY_ALLOCATOR_OVERLOAD et BUNNY_ALLOCATOR_DEACTIVATED sont ajoutés
+     et sont des synonymes de LAPIN_ALLOCATOR_OVERLOAD et LAPIN_ALLOCATOR_DEACTIVATED.
+
+ - Ajout des fonctions bunny_load_file et bunny_save_file.
  
  - Ajout du module "Bunny Security":
  - - bunny_cipher/uncipher_file/data permet de chiffrer/dechiffrer des fichiers/buffers.
@@ -11,9 +20,13 @@
      fonction bunny_default_key et ecrite (de l'exterieur du programme) a l'aide de la
      fonction bunny_fill_default_key.
 
- - Retrait de l'API Bunny INI du module "Bunny Configuration" en vue de la
+ - Mise en arrière de l'API Bunny INI du module "Bunny Configuration" en vue de la
    construction d'une API Bunny Configuration plus complete:
  - - X
+
+ - - Ajout (malgré la mise en retrait de l'API INI) des fonctions bunny_write_ini
+     et bunny_read_ini permettant de charger et sauvegarder du INI depuis des
+     chaines de caractère (Utile pour combiner ce module au module bunny_security)
 
 
 

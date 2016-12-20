@@ -14,6 +14,7 @@
 #  pragma			packed
 # endif
 # include			"lapin.h"
+# include			"Ini.hpp"
 //# include			"Configuration.hpp"
 
 # define			MEMORY_CHUNK_SIZE			64
@@ -76,6 +77,8 @@ struct				bunny_picture
   unsigned int			width;
   unsigned int			height;
   sf::IntRect			rect;
+  double			x_position;
+  double			y_position;
   double			x_origin;
   double			y_origin;
   double			x_scale;
@@ -93,6 +96,8 @@ struct				bunny_pixelarray
   unsigned int			width;
   unsigned int			height;
   sf::IntRect			rect;
+  double			x_position;
+  double			y_position;
   double			x_origin;
   double			y_origin;
   double			x_scale;

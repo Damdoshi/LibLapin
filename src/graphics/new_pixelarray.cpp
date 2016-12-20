@@ -27,6 +27,8 @@ static t_bunny_pixelarray	*bunny_fake_pixelarray(unsigned int		width,
   pa->clipable.clip_y_position = 0;
   pa->clipable.clip_width = pa->clipable.buffer.width = width;
   pa->clipable.clip_height = pa->clipable.buffer.height = height;
+  pa->clipable.position.x = 0;
+  pa->clipable.position.y = 0;
   pa->clipable.origin.x = 0;
   pa->clipable.origin.y = 0;
   pa->clipable.scale.x = 1;
@@ -64,6 +66,8 @@ t_bunny_pixelarray		*bunny_new_pixelarray(unsigned int		width,
   pa->rect.width = pa->width = width;
   pa->rect.height = pa->height = height;
   pa->sprite.setTexture(pa->tex);
+  pa->x_position = 0;
+  pa->y_position = 0;
   pa->x_origin = 0;
   pa->y_origin = 0;
   pa->x_scale = 1;

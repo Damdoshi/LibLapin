@@ -2,7 +2,7 @@
 clear
 echo "## ----------------------------------------------------------------------------- ##"
 sleep 0.03
-echo "## -- HANGED BUNNY STUDIO 2014-2016 ------- ---   -   --- ---- --  --   - --- -- ##"
+echo "## -- HANGED BUNNY STUDIO 2014-2017 ------- ---   -   --- ---- --  --   - --- -- ##"
 sleep 0.03
 echo "## ---Jason Brillante \"Damdoshi\"----------- ---- --- - -- --- - - - -- --  -- -- ##"
 sleep 0.03
@@ -73,7 +73,7 @@ mkdir -p ${LIB_DIR} ${INCLUDE_DIR}		|| get_out "Failed to create installation di
 cp -r external/include/* ${INCLUDE_DIR}		|| get_out "Failed to install dependancies headers."
 cp external/lib/* ${LIB_DIR}			|| get_out "Failed to install dependancies binaries."
 
-make						|| get_out "No bunnies were build. Make failed."
+make -j4					|| get_out "No bunnies were build. Make failed."
 
 # Bunnies
 cp -r include/* ${INCLUDE_DIR}		|| get_out "Failed to install Lapin headers."

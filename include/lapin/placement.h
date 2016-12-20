@@ -16,6 +16,12 @@
 # if				!defined(__LAPIN_H__)
 #  error			You cannot include this file directly.
 # endif
+# if				defined(__MINGW32__) || defined(__GNUC__)
+#  undef			PACKED
+#  define			PACKED				__attribute__((packed))
+# else
+#  pragma			packed
+# endif
 
 /*!
 ** The t_bunny_position structure represents a position in a 2D space.
@@ -27,7 +33,16 @@ typedef struct			s_bunny_position
 {
   int32_t			x;
   int32_t			y;
-}				t_bunny_position;
+
+# ifdef				__cplusplus
+  inline struct s_bunny_position &operator=(const struct s_bunny_position	&pos)
+  {
+    x = pos.x;
+    y = pos.y;
+    return (*this);
+  }
+# endif
+} PACKED			t_bunny_position;
 /*!
 ** The t_bunny_size structure represents the size of an element in
 ** a 2D space. It is useful to describe size of elements in memory or
@@ -50,7 +65,16 @@ typedef struct			s_bunny_accurate_position
 {
   double			x;
   double			y;
-}				t_bunny_accurate_position;
+
+# ifdef				__cplusplus
+  inline struct s_bunny_accurate_position &operator=(const struct s_bunny_accurate_position &pos)
+  {
+    x = pos.x;
+    y = pos.y;
+    return (*this);
+  }
+# endif
+} PACKED			t_bunny_accurate_position;
 
 /*!
 ** The t_bunny_accurate_size represents the size of an element in
@@ -69,7 +93,18 @@ typedef struct			s_bunny_area
   int32_t			y;
   int32_t			w;
   int32_t			h;
-}				t_bunny_area;
+
+# ifdef				__cplusplus
+  inline struct s_bunny_area	&operator=(const struct s_bunny_area	&pos)
+  {
+    x = pos.x;
+    y = pos.y;
+    w = pos.w;
+    h = pos.h;
+    return (*this);
+  }
+# endif
+} PACKED			t_bunny_area;
 
 /*!
 ** The t_bunny_accurate_area structure describes an area in a 2D space.
@@ -81,7 +116,18 @@ typedef struct			s_bunny_accurate_area
   double			y;
   double			w;
   double			h;
-}				t_bunny_accureate_area;
+
+# ifdef				__cplusplus
+  inline struct s_bunny_accurate_area &operator=(const struct s_bunny_accurate_area &pos)
+  {
+    x = pos.x;
+    y = pos.y;
+    w = pos.w;
+    h = pos.h;
+    return (*this);
+  }
+# endif
+} PACKED			t_bunny_accurate_area;
 
 #endif	/*			__LAPIN_PLACEMENT_H__	*/
 

@@ -8,6 +8,13 @@
 #include		<unistd.h>
 #include		"lapin_private.h"
 
+#ifdef			LAPIN_ALLOCATOR_DEACTIVATED
+# undef			bunny_malloc
+# undef			bunny_calloc
+# undef			bunny_realloc
+# undef			bunny_free
+#endif
+
 typedef void		*(*t_sysmalloc)(size_t);
 typedef void		(*t_sysfree)(void*);
 

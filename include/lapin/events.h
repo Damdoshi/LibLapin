@@ -48,8 +48,12 @@ typedef enum			e_bunny_event_state
   {
     GO_DOWN,
     GO_UP,
+    LOST_FOCUS			= GO_DOWN,
+    GOT_FOCUS			= GO_UP,
     CONNECTED			= GO_DOWN,
-    DISCONNECTED		= GO_UP
+    DISCONNECTED		= GO_UP,
+    ENTERING			= GO_DOWN,
+    LEAVING			= GO_UP
   }				t_bunny_event_state;
 
 /*!

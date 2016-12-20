@@ -100,7 +100,7 @@ extern const char		*DEFAULT_SCOPE;
 ** Use bunny_new_configuration instead.
 */
 t_bunny_ini			*bunny_new_ini(void);
-# define			bunny_new_ini()					bunny_new_configuration(BC_INI);
+//# define			bunny_new_ini()					bunny_new_configuration(BC_INI);
 
 /*!
 ** The bunny_load_ini function open and read a file that is supposed to be a INI file.
@@ -111,7 +111,17 @@ t_bunny_ini			*bunny_new_ini(void);
 ** Use bunny_load_configuration instead.
 */
 t_bunny_ini			*bunny_load_ini(const char			*file);
-# define			bunny_load_ini(file)				bunny_load_configuration(BC_INI, NULL, file); // NULL is where to add the data. NULL means new
+//# define			bunny_load_ini(file)				bunny_load_configuration(BC_INI, NULL, file); // NULL is where to add the data. NULL means new
+
+/*!
+** The bunny_read_ini function read INI from the given string.
+** \param str The INI string.
+** \return The readed INI
+**
+** This type is obsolete and should not be used anymore.
+** Use bunny_read_configuration instead.
+*/
+t_bunny_ini			*bunny_read_ini(const char			*ini);
 
 /*!
 ** The bunny_ini_get_error return a description of the last error encountered by
@@ -135,6 +145,17 @@ const char			*bunny_ini_get_error(void);
 */
 bool				bunny_save_ini(t_bunny_ini			*ini,
 					       const char			*file);
+
+/*!
+** The bunny_write_ini function write INI from the given INI to a string.
+** \param ini The INI
+** \return The written string
+**
+** This type is obsolete and should not be used anymore.
+** Use bunny_write_configuration instead.
+*/
+char				*bunny_write_ini(const t_bunny_ini		*ini);
+
 
 /*!
 ** The bunny_ini_get_field function returns a value stored in a specific point in

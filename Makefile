@@ -34,7 +34,9 @@
   CONFIG	=	-W -Wall -Werror -fPIC -std=gnu++98			\
 			-D_GLIBCXX_USE_CXX11_ABI=0 -Wno-unused-result
 
-  DEBUG		=	-O0 -g -g3 -ggdb -DBUNNY_ALLOCATOR_DEACTIVATED
+  DEBUG		=	-O0 -g -g3 -ggdb					\
+			-DBUNNY_ALLOCATOR_DEACTIVATED				\
+			-DBUNNY_DEBUG
 #  OPTIM		=	-O2
 
   RM		=	rm -f
@@ -58,6 +60,7 @@
 
   SRC		=	$(wildcard ./src/allocator/*.cpp)			\
 			$(wildcard ./src/configuration/*.cpp)			\
+			$(wildcard ./src/configuration/archive/*.cpp)		\
 			$(wildcard ./src/events/*.cpp)				\
 			$(wildcard ./src/graphics/*.cpp)			\
 			$(wildcard ./src/hardware/*.cpp)			\

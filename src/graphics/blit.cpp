@@ -20,7 +20,11 @@ void				bunny_blit_shader(t_bunny_buffer		*output,
   static t_bunny_position	defaul = {0, 0};
 
   if (pos == NULL)
-    pos = &defaul;
+    {
+      defaul.x = picture->position.x;
+      defaul.y = picture->position.y;
+      pos = &defaul;
+    }
 
   size_t			*type = (size_t*)output;
   size_t			*input_type = (size_t*)picture;

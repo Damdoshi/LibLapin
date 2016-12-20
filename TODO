@@ -3,7 +3,10 @@ Fonctionnalité Lapin:
 
  - Passer a la SFML 2.4.0
 
- - bunny_strerror et bunny_perror font leur apparition. bunny_errno est un alias vers errno.
+ - bunny_strerror et bunny_perror font leur apparition. bunny_errno est un alias vers errno...
+   du coup il faut revoir toutes les fonctions pour qu'elles mettent à jour errno.
+   + Indiquer que contrairement aux fonction systeme, les fonctions lapins retablissent
+   errno a success si tout s'est bien passé.
 
  => Peut etre briser la compatibilité INI en vue de faire ceci:
    => Créer un objet "configuration" contenant des informations et dont trois dérivés existerait:

@@ -8,6 +8,13 @@
 #include		<string.h>
 #include		"lapin_private.h"
 
+#ifdef			LAPIN_ALLOCATOR_DEACTIVATED
+# undef			bunny_malloc
+# undef			bunny_calloc
+# undef			bunny_realloc
+# undef			bunny_free
+#endif
+
 void			check_memory_state(void);
 
 extern size_t		border0;

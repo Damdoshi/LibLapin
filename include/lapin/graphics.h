@@ -19,6 +19,7 @@
 #  error			You cannot include this file directly.
 # endif
 # if				defined(__MINGW32__) || defined(__GNUC__)
+#  undef			PACKED
 #  define			PACKED				__attribute__((packed))
 # else
 #  pragma			packed
@@ -58,6 +59,7 @@ typedef struct			s_bunny_clipable
   int32_t			clip_y_position;
   int32_t			clip_width;
   int32_t			clip_height;
+  t_bunny_accurate_position	position;
   t_bunny_accurate_position	origin;
   t_bunny_accurate_position	scale;
   double			rotation;

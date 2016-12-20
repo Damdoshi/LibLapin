@@ -25,8 +25,8 @@ t_bunny_joystick		gl_joystick[sf::Joystick::Count];
 t_bunny_window			*gl_window;
 bool				gl_full_blit;
 
-const char			*DEFAULT_SCOPE = NULL;
-const char			*default_scope = NULL;
+const char			*DEFAULT_SCOPE = "";
+const char			*default_scope = "";
 const char			*erase_scope = NULL;
 const unsigned int		erase_field = UINT_MAX;
 const char			*erase_index = NULL;

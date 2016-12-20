@@ -10,9 +10,11 @@ extern char		*ini_last_error;
 
 t_bunny_ini		*bunny_load_ini(const char		*file)
 {
+  if (file == NULL)
+    return (NULL);
   bpt::Ini		*ini = new (std::nothrow) bpt::Ini;
 
-  if (ini == NULL || file == NULL)
+  if (ini == NULL)
     return (NULL);
   std::string		fil = file;
 

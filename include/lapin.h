@@ -1,6 +1,6 @@
 /*
 ** Jason Brillante "Damdoshi"
-** Hanged Bunny Studio 2014-2016
+** Hanged Bunny Studio 2014-2017
 **
 ** Bibliotheque Lapin
 */
@@ -96,6 +96,7 @@
 */
 # define			LAPIN_MINOR_VERSION	10
 
+# include			"lapin/placement.h"
 # ifdef				__cplusplus
 #  include			"lapin/cpp_guard.hpp"
 # endif
@@ -104,7 +105,6 @@
 # include			"lapin/self_test.h"
 # include			"lapin/color.h"
 # include			"lapin/allocator.h"
-# include			"lapin/placement.h"
 # include			"lapin/buffer.h"
 # include			"lapin/window.h"
 # include			"lapin/graphics.h"
@@ -126,6 +126,7 @@
 # ifdef				__cplusplus
 #  include			"LoopStone.hpp"
 #  include			"lapin/cpp_guard_end.hpp"
+#  include			"lapin/cpp_tools.hpp"
 # endif
 #endif	/*			__LAPIN_H__					*/
 

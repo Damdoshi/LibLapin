@@ -23,7 +23,7 @@ bool				bunny_fill_default_key(const char	*bunny_prog,
   else
     def = key;
   buflen = def->length + sizeof(def->length);
-  if ((file = bunny_load_file(bunny_prog, &siz)) == NULL)
+  if (bunny_load_file(bunny_prog, &file, &siz) == false)
     return (false);
   for (i = 0; i < siz - buflen; ++i)
     if (memcmp(file, def, buflen) == 0)

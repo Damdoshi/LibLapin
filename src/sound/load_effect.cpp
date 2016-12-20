@@ -16,13 +16,14 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
   if ((eff->effect.loadFromFile(file)) == false)
     goto FailStruct;
 
+  eff->file = strdup(file);
   eff->sample_per_second = eff->effect.getSampleRate();
   eff->duration = (double)eff->effect.getSampleCount() / eff->sample_per_second;
 
   len = eff->effect.getSampleCount();
   if ((eff->sample = (int16_t*)bunny_malloc(sizeof(*eff->sample) * len)) == NULL)
     goto FailStruct;
-  memcpy(eff->sample, eff->effect.getSamples(), 2 * len);
+  memcpy(eff->sample, eff->effect.getSamples(), len * sizeof(*eff->sample));
 
   eff->sound.setBuffer(eff->effect);
   eff->type = EFFECT;
