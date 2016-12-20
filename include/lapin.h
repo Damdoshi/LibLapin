@@ -124,6 +124,7 @@
 # include			"lapin/compat.h"
 
 # ifdef				__cplusplus
+#  include			"LoopStone.hpp"
 #  include			"lapin/cpp_guard_end.hpp"
 # endif
 #endif	/*			__LAPIN_H__					*/

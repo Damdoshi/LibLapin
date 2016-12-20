@@ -11,10 +11,11 @@ Fonctionnalité Lapin:
      => Client SQL complet
      => hierarchical avec back end SQL (et des tables precises...) pour faire une BDD hierarchique
 
-- Passer de pthread à std::thread ou sf::thread pour pouvoir threader sous Windows facilement
+- Passer de pthread à std::thread pour pouvoir threader sous Windows facilement
 
 - Ajouter un paramètre à bunny_malloc afin de placer un fichier et une ligne
-  et permettre de tracer l'alloc. Ajouter une allocation par vague.
+  et permettre de tracer l'alloc. Ajouter une allocation par vague... Placer une
+  macro d'abstraction pour placer les informations automatiquement.
 
 - Ajouter, lorsque bunny_malloc ne trouve pas de blocs en mémoire, casser
   un gros bloc en plusieurs morceaux.
@@ -33,7 +34,7 @@ ou depuis l'internet.
 - Créer un systeme d'ordre avec duree de vie
 
 - Inclure le resolveur d'operations dans la LibLapin, prenant en paramètre
-  l'environnement de valeurs
+  l'environnement de valeurs - Un bind vers hbs::Operation en gros
 
 - Ajouter un micro gestionnaire de pluging compatible avec un format de fonction
   situe en configuration.
@@ -48,6 +49,12 @@ ou depuis l'internet.
   d'avant (sauf les demos) et ecrire des exemples reelement typique de l'utilisation de chaque module.
 
 - Module de saut inter fonction basé sur longjmp ?
+
+- Faire un petit module de parsing en surchargeant hbs::Parsing
+
+- Faire un bind avec le moniteur memoire que tu vas ajouter dans HBSL
+
+- Plutot que get/lost focus, faire un focus tout court qui prend un t_bunny_event_state
 
 -----------------------------
 Deployement code block Lapin:
@@ -70,8 +77,10 @@ Deployement Unix Lapin:
 
 -----------------------
 Pour beaucoup plus tard
+
 - Module CGI Lapin pour faire des sites webs en LibLapin,
   avec une petite lib JS pour s'occuper de la transaction via AJAX.
+
 - Pour realiser cela, il faudra ajouter a bunny_loop la gestion d'evenements
   de type "communication" permettant d'inserer la lecture sur pipe ou
   sur le reseau... et egalement la possibilite d'ajouter des evenements de
