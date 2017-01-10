@@ -1,17 +1,24 @@
-------------------------------------- Version 1.11
+=========================================================================================
+------------------------------------- Version 1.11 --------------------------------------
+=========================================================================================
+
+ - Les notes entre crochets [ ] indiquent les éléments qui ne sont pas
+   encore réalisés.
 
  - Epuration du dossier racine du projet
 
+ - ---------------------------------
  - A propos du système d'allocation:
+
  - - LAPIN_ALLOCATOR_DEACTIVATED peut maintenant être utilisé dans la LibLapin
      de manière à forcer celle-ci a utiliser l'allocateur système. Les fonctions
      d'allocations restent présente mais ne sont plus appellées par la lib elle-même.
  - - Les macros BUNNY_ALLOCATOR_OVERLOAD et BUNNY_ALLOCATOR_DEACTIVATED sont ajoutés
      et sont des synonymes de LAPIN_ALLOCATOR_OVERLOAD et LAPIN_ALLOCATOR_DEACTIVATED.
 
- - Ajout des fonctions bunny_load_file et bunny_save_file.
- 
+ - ---------------------------------
  - Ajout du module "Bunny Security":
+
  - - bunny_cipher/uncipher_file/data permet de chiffrer/dechiffrer des fichiers/buffers.
  - - Trois algorithmes sont actuellement supportés: XOR, le chiffre de césar et un mélangeage
      des données
@@ -20,17 +27,39 @@
      fonction bunny_default_key et ecrite (de l'exterieur du programme) a l'aide de la
      fonction bunny_fill_default_key.
 
+ - ----------------------------------
+ - Ajout du module "Bunny Asynclock":
+ 
+ - - Ajout des fonctions bunny_new_trap, bunny_delete_trap, bunny_reset_clock,
+     bunny_get_current_time et surtout bunny_asynclock permettant de placer des
+     demandes d'appels de fonction dans un style proche de cron et que celle
+     ci soient appellée en fonction de paramètres temporels
+
+ - -------------------------------------
+ - Ajout du module "Bunny configuraton":
+
  - Mise en arrière de l'API Bunny INI du module "Bunny Configuration" en vue de la
    construction d'une API Bunny Configuration plus complete:
- - - X
+ - - [Chargement et sauvegarde de fichier INI, DABSIC, XML, LUA et depuis une BDD SQL]
+ - - [Manipulations unifiées, quelque soit le format chargé]
 
- - - Ajout (malgré la mise en retrait de l'API INI) des fonctions bunny_write_ini
-     et bunny_read_ini permettant de charger et sauvegarder du INI depuis des
-     chaines de caractère (Utile pour combiner ce module au module bunny_security)
+ - - Ajout des fonctions bunny_write_ini et bunny_read_ini permettant de charger et
+     sauvegarder du INI depuis des chaines de caractère (Utile pour combiner ce module
+     au module bunny_security)
 
+ - ------------------------------------------------------
+ - Ajout des fonctions bunny_load_file et bunny_save_file
 
+ - ---------------------------------------------------------------
+ - [bunny_strerror et bunny_perror uniformise la gestion d'erreur]
+ - - [/!\ Les fonctions de la LibLapin rétablissent errno à 0 en cas de succès !]
 
-------------------------------------- Version 1.10
+ - ----------------------
+ - [SFML 2.4.0]
+
+=========================================================================================
+------------------------------------- Version 1.10 --------------------------------------
+=========================================================================================
 
  - Eclatement par module des fichiers en tete basic.h, advanced.h et extra.h,
    desormais, les en tetes seront ranges par fonctionnalites.
@@ -39,7 +68,9 @@
  - Refonte du Makefile
  - Template de projet simple
 
-------------------------------------- Version 1.9.1:
+=========================================================================================
+------------------------------------- Version 1.9.1: ------------------------------------
+=========================================================================================
 
  - Fonction bunny_get_screen_resolution
  - Fonction bunny_strnlen (Pour Windows)
@@ -47,7 +78,9 @@
  - Compatibilité dela 1.9 assuré sous Windows.
  - L'interface de threading ne thread pas sous Windows...
 
-------------------------------------- Version 1.9:
+=========================================================================================
+------------------------------------- Version 1.9: --------------------------------------
+=========================================================================================
 
  - Les fichiers en-tete extra.h et extra_type.h s'ajoutent a la LibLapin.
    Avec, un ensemble de mécanismes dont les dependances sont dans dep et include/dep.
@@ -74,7 +107,9 @@
 
  - Ajout de la fonction bunny_get_screen_size.
 
-------------------------------------- Version 1.8:
+=========================================================================================
+------------------------------------- Version 1.8: --------------------------------------
+=========================================================================================
 
  - La globale DEFAULT_SCOPE n'existait pas... Maintenant elle existe est equivaut à la globale
    default_scope.
@@ -116,7 +151,9 @@
 
  - Ajout du typedef sur t_bunny_position t_bunny_size.
 
-------------------------------------- Version 1.7:
+=========================================================================================
+------------------------------------- Version 1.7: --------------------------------------
+=========================================================================================
 
  - Refonte générale des fichiers en tete. Un fichier "lapin/basic.h" contient la base
    de la lib lapin (historiquement, l'equivalent de la 1.0 avec quelques fonctions en moins)
@@ -168,11 +205,15 @@
    il faudra passer par les même fonction qu'en C (c'était vraiment gadget, de toute façon)
    Elle reviendra peut-être plus tard, mais c'est pas dit.
 
-------------------------------------- Version 1.6.3:
+=========================================================================================
+------------------------------------- Version 1.6.3: ------------------------------------
+=========================================================================================
 
  - Correction d'un conflit entre clic et déplacement de souris dans la gestion d'events
 
-------------------------------------- Version 1.6.2:
+=========================================================================================
+------------------------------------- Version 1.6.2: ------------------------------------
+=========================================================================================
 
  - Ajout de bunny_save_pixelarray, interdite sauf recode, evidemment
 
@@ -184,7 +225,9 @@
 
  - Correction de bunny_set_context
 
------------------------------------- Version 1.6:
+=========================================================================================
+------------------------------------ Version 1.6: ---------------------------------------
+=========================================================================================
 
  - On passe de la version "stable" 2.3.2 de SFML a la derniere version issue du depot
    pour cause d'instabilite avec l'objet sf::String... Merci à boudon_v pour avoir
@@ -220,7 +263,9 @@
 
   - Ajout de bunny_set_key_repeat pour activer/desactiver la repetition des touches.
 
------------------------------------- Version 1.5.1:
+=========================================================================================
+------------------------------------ Version 1.5.1: -------------------------------------
+=========================================================================================
 
  - Les champs t_bunny_window.name et t_bunny_pixelarray.pixels sont désormais constant.
    name est constant et pointe sur des octets constant
@@ -228,7 +273,9 @@
 
    ainsi, il est impossible de reassigner pixels sans forcer.
 
------------------------------------ Version 1.5:
+=========================================================================================
+----------------------------------- Version 1.5: ----------------------------------------
+=========================================================================================
 
  - Ajout des fonctions bunny_set_context et bunny_get_context pour charger et sauvegarder
    un contexte d'evenements.
@@ -276,13 +323,17 @@
 
  - Nouveau template.c
 
------------------------------------ Version 1.4:
+=========================================================================================
+----------------------------------- Version 1.4: ----------------------------------------
+=========================================================================================
 
  - Mise à jour de fake_install.sh.
 
  - Ajout d'un champ "mod" dans le type t_color.
 
------------------------------------ Version 1.3:
+=========================================================================================
+----------------------------------- Version 1.3: ----------------------------------------
+=========================================================================================
 
 - Ajout de la fonction bunny_start_style permettant de definir plus finement
 le style des fenetres.
@@ -294,7 +345,9 @@ inutile et handicapant lors des comparaisons
 
 - Mise à jour de fake_install.sh
 
------------------------------------ Version 1.2:
+=========================================================================================
+----------------------------------- Version 1.2: ----------------------------------------
+=========================================================================================
 
 - Ajout de la macro M_PI afin de respecter la norme des lapins noirs invectivant
 l'usage de -ansi -pedantic
@@ -311,7 +364,9 @@ aux allocateurs du systeme pour ls remplacer par ceux de la lib lapin
 
 - Ajout d'une enumeration pour la gestion des touches.
 
-------------------------------------- Version 1.1:
+=========================================================================================
+------------------------------------- Version 1.1: --------------------------------------
+=========================================================================================
 
 - Ajout de pointeurs sur fonctions initialement vide
 permettant d'appeler ses propres fonctions en passant
@@ -332,3 +387,28 @@ en-tete et details de compilation supplementaires
 
 - Modification des constantes de couleur
 
+=======================================================================================
+------------------------------------- Version 1.0: ------------------------------------
+=======================================================================================
+
+- Première version.
+
+- La LibLapin est une bibliothèque graphique permettant la programmation au pixel
+  sur CPU comme via GPU, disposant d'une boucle de synchro temps avec gestion
+  d'événements via fonctions de rappels.
+
+- Les objectifs de la LibLapin sont les suivants:
+
+- - Etre agréable a utiliser (Pas au sens typo, mais dans le sens agréable de
+    broder autour)
+
+- - Etre simple, sans ambiguité et manipulable en limitant au maximum les aller
+    retour avec la documentation
+
+- - Permettre a l'utilisateur de progresser en C comme en graphisme.
+
+
+- La principale force de cette bibliothèque réside dans sa gestion d'événements
+  direct mais surtout dans sa boucle de synchro temps permettant la réalisation
+  de programmes a vitesse fixe sur différentes machines. Cette boucle de synchro
+  est auto-réparatrice: elle rattrapage les éventuels retards accumulés.

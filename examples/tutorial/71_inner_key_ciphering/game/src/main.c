@@ -37,7 +37,7 @@ int			main(void)
   void			*picbuf;
   size_t		len;
   
-  if ((picbuf = bunny_load_file("sexy.png", &len)) == NULL)
+  if (bunny_load_file("sexy.png", &picbuf, &len) == false)
     return (EXIT_FAILURE);
   ckey = bunny_default_key();
   bunny_uncipher_data(picbuf, len, BS_SHAKER, ckey);

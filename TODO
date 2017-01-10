@@ -1,21 +1,6 @@
 ---------------------
 Fonctionnalité Lapin:
 
- - Passer a la SFML 2.4.0
-
- - bunny_strerror et bunny_perror font leur apparition. bunny_errno est un alias vers errno...
-   du coup il faut revoir toutes les fonctions pour qu'elles mettent à jour errno.
-   + Indiquer que contrairement aux fonction systeme, les fonctions lapins retablissent
-   errno a success si tout s'est bien passé.
-
- => Peut etre briser la compatibilité INI en vue de faire ceci:
-   => Créer un objet "configuration" contenant des informations et dont trois dérivés existerait:
-     => hierarchical (Pouvant provenir de INI, Dabsic, JSON, XML), avec une compatibilité de l'API INI vers hierarchical
-     => Client SQL complet
-     => hierarchical avec back end SQL (et des tables precises...) pour faire une BDD hierarchique
-
-- Passer de pthread à std::thread pour pouvoir threader sous Windows facilement
-
 - Ajouter un paramètre à bunny_malloc afin de placer un fichier et une ligne
   et permettre de tracer l'alloc. Ajouter une allocation par vague... Placer une
   macro d'abstraction pour placer les informations automatiquement.
@@ -25,14 +10,7 @@ Fonctionnalité Lapin:
 
 - Une fonction pour lancer une unique tache dans un thread.
 
-- Une fonction pour charger tout un fichier d'un coup, depuis l'ordinateur
-ou depuis l'internet.
-
-- Module bunny security
-
 - Module SQL
-
-- Mettre une option a bunny_malloc pour appeller malloc.
 
 - Créer un systeme d'ordre avec duree de vie
 
@@ -48,9 +26,6 @@ ou depuis l'internet.
 - Retirer la couche d'abstraction unix windows qui est completment naze et juste s'en passer...
   aux dernieres nouvelles, Windows est POSIX...
 
-- Ranger encore les exemples... Créer un dossier "misc" ou un truc comme ca ou mettre le bordel
-  d'avant (sauf les demos) et ecrire des exemples reelement typique de l'utilisation de chaque module.
-
 - Module de saut inter fonction basé sur longjmp ?
 
 - Faire un petit module de parsing en surchargeant hbs::Parsing
@@ -58,6 +33,9 @@ ou depuis l'internet.
 - Faire un bind avec le moniteur memoire que tu vas ajouter dans HBSL
 
 - Plutot que get/lost focus, faire un focus tout court qui prend un t_bunny_event_state
+
+- Que bunny_loop saute volontairement la phase de dessin (l'appel a bunny_display) si
+  la vitesse de la boucle principale est limite.
 
 -----------------------------
 Deployement code block Lapin:
