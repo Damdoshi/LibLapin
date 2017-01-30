@@ -30,9 +30,9 @@
 */
 typedef struct			s_bunny_buffer
 {
-  const char			_private[2 * sizeof(size_t)];
-  int32_t			width;
-  int32_t			height;
+  const size_t			_private[2];
+  ssize_t			width;
+  ssize_t			height;
 }				t_bunny_buffer;
 
 #endif	/*			__LAPIN_BUFFER_H__		*/

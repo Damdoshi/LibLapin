@@ -65,8 +65,8 @@ struct				bunny_window
 {
   size_t			type;
   sf::RenderWindow		*window;
-  unsigned int			width;
-  unsigned int			height;
+  ssize_t			width;
+  ssize_t			height;
   const char			*window_name;
 };
 
@@ -74,15 +74,12 @@ struct				bunny_picture
 {
   size_t			type;
   sf::RenderTexture		*texture;
-  unsigned int			width;
-  unsigned int			height;
-  sf::IntRect			rect;
-  double			x_position;
-  double			y_position;
-  double			x_origin;
-  double			y_origin;
-  double			x_scale;
-  double			y_scale;
+  ssize_t			width;
+  ssize_t			height;
+  t_bunny_area			rect;
+  t_bunny_accurate_position	position;
+  t_bunny_accurate_position	origin;
+  t_bunny_accurate_position	scale;
   double			rotation;
   t_bunny_color			color_mask;
   const sf::Texture		*tex;
@@ -93,15 +90,12 @@ struct				bunny_pixelarray
 {
   size_t			type;
   size_t			unused;
-  unsigned int			width;
-  unsigned int			height;
-  sf::IntRect			rect;
-  double			x_position;
-  double			y_position;
-  double			x_origin;
-  double			y_origin;
-  double			x_scale;
-  double			y_scale;
+  ssize_t			width;
+  ssize_t			height;
+  t_bunny_area			rect;
+  t_bunny_accurate_position	position;
+  t_bunny_accurate_position	origin;
+  t_bunny_accurate_position	scale;
   double			rotation;
   t_bunny_color			color_mask;
   unsigned int			*rawpixels;

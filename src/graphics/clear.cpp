@@ -28,10 +28,11 @@ void			bunny_clear(t_bunny_buffer		*picture,
     case GRAPHIC_RAM:
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)picture;
+	sf::IntRect		rect(pic->rect.x, pic->rect.y, pic->rect.w, pic->rect.h);
 	sf::RectangleShape	shape;
 
-	shape.setPosition(sf::Vector2f(pic->rect.left, pic->rect.top));
-	shape.setSize(sf::Vector2f(pic->rect.width, pic->rect.height));
+	shape.setPosition(sf::Vector2f(rect.left, rect.top));
+	shape.setSize(sf::Vector2f(rect.width, rect.height));
 	shape.setFillColor(color);
 	pic->texture->draw(shape, sf::RenderStates(sf::BlendNone));
 	return ;

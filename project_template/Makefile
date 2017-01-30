@@ -33,7 +33,7 @@
   COMPILER	?=	gcc
 
   CONFIG	=	-W -Wall -Werror					\
-			-D_GLIBCXX_USE_CXX11_ABI=0 -Wno-unused-result		\
+			-Wno-unused-result					\
 			-DBUNNY_TITLE=$(TITLE)					\
 			-DBUNNY_FREQUENCY=$(FREQUENCY)
   DEBUG		=	-O0 -g -g3 -ggdb -DBUNNY_ALLOCATOR_DEACTIVATED

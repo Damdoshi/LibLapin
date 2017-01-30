@@ -37,7 +37,7 @@ typedef struct			s_bunny_configuration
 
 /*!
 ** Depending of the type, may takes parameters (sql... logins)
-**
+** using Dabsic as type for example does not limit further loading to dabsic.
 */
 t_bunny_configuration		*bunny_new_configuration(t_bunny_configuration_type	type,
 							 ...);
@@ -71,10 +71,9 @@ t_bunny_configuration		*bunny_configuration_get_node(t_bunny_configuration	*conf
 							      const char		*addr);
 
 bool				bunny_configuration_set_value(t_bunny_configuration	*config,
-							      const char		*addr,
 							      const char		*value);
 # define			bunny_configuration_remove_value(cnf, addr) \
-  bunny_configuration_set_value(cnf, addr, NULL)
+  bunny_configuration_set_value(cnf, NULL)
 
 t_bunny_configuration		*bunny_configuration_first(t_bunny_configuration	*config);
 

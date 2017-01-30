@@ -15,6 +15,7 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
 {
   size_t			*type = (size_t*)clip;
 
+  BUNNY_LOG(fprintf(stderr, "%s: Deleting %p.\n", __PRETTY_FUNCTION__, clip));
   switch (*type)
     {
     case GRAPHIC_RAM:

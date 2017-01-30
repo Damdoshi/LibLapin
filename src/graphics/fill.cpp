@@ -32,9 +32,10 @@ void			bunny_fill(t_bunny_buffer		*picture,
     case GRAPHIC_RAM:
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)picture;
+	sf::IntRect		rect(pic->rect.x, pic->rect.y, pic->rect.w, pic->rect.h);
 
-	sh.setSize(sf::Vector2f(pic->rect.width, pic->rect.height));
-	sh.setPosition(pic->rect.left, pic->rect.top);
+	sh.setSize(sf::Vector2f(rect.width, rect.height));
+	sh.setPosition(rect.left, rect.top);
 	pic->texture->draw(sh);
 	return ;
       }

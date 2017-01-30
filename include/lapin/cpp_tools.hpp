@@ -5,13 +5,16 @@
 
 #ifndef				__LAPIN_CPP_TOOLS_HPP__
 # define			__LAPIN_CPP_TOOLS_HPP__
+# include			<string.h>
 
+# ifndef			cascade
 /*!
 ** "cascade" means each level of the inheritance that overload the function
 ** must call the previous level at its end or beginning. It is here to
 ** allow you to specify you need this behaviour. It won't force anything.
 */
-# define			cascade					virtual
+#  define			cascade					virtual
+# endif
 
 template<typename		Vector>
 inline Vector			operator+(const Vector			&a,
@@ -53,4 +56,12 @@ inline Vector			&operator-=(Vector			&a,
   return (a);
 }
 
+template<typename		Chunk>
+void				bunny_raw_copy(Chunk			&a,
+					       const Chunk		&b)
+{
+  memcpy((void*)&a, (void*)&b, sizeof(Chunk));
+}
+
 #endif	//			__LAPIN_CPP_TOOLS_HPP__
+

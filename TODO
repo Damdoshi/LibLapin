@@ -1,6 +1,18 @@
 ---------------------
 Fonctionnalité Lapin:
 
+ - Permettre a bunny_load_file et bunny_save_file de fonctionner avec des URLs
+
+ - ---------------------------------------------------------------
+ - [bunny_strerror et bunny_perror uniformise la gestion d'erreur]
+ - - [/!\ Les fonctions de la LibLapin rétablissent errno à 0 en cas de succès !]
+
+
+
+- Ajouter des fonctions inline dans cpp_tools pour permettre aux fonctions de la liblapin
+  d'etre prototypairement plus souple... genre une fonction prenant deux int, x et y devra
+  aussi pouvoir prendre un t_bunny_position/t_bunny_accurate_position. etc.
+
 - Ajouter un paramètre à bunny_malloc afin de placer un fichier et une ligne
   et permettre de tracer l'alloc. Ajouter une allocation par vague... Placer une
   macro d'abstraction pour placer les informations automatiquement.

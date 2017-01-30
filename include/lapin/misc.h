@@ -24,6 +24,12 @@
 # else
 #  define			BUNNY_DEBUG(code)
 # endif
+# ifdef				BUNNY_LOG
+#  undef			BUNNY_LOG
+#  define			BUNNY_LOG(code)				code
+# else
+#  define			BUNNY_LOG(code)
+# endif
 
 /*!
 ** Write a litteral string (defined in code, with two double quotes) on stdout.
@@ -86,19 +92,20 @@ bool				bunny_save_file(const char		*file,
 
 /*!
 ** Compute the operation sent as first parameter. Supported operators are:
-** ',', '=', '||=', '^^=', '&&=' '|=', '^=', '&=', '<<=', '>>=', '+=', '-=',
-** '*=', '/=', '%=', '##=', '? :', '||', '^^', '&&', '==', '!=', '~=', '<=',
-** '>=', '<', '>', '|', '^', '&' '<<>', '<>>', '<<', '>>', '+', '-', '*', '/'
-** '%', '.*', '##' and '(' ')'.
-** Integers, floats, string and variables can be used. Variables availability
-** fully depend on the given env parameter.
+** +, -, *, /, %, (), >, <, >=, <=, !=, ==
+** Support doubles and integers and variables. You can use '.' to go inside a
+** variable.
 ** \param operation The operation to compute
 ** \param env The variable environment
-** \return Return the result as a string that must be freed by bunny_free. It
-** may return NULL on error.
+** \return The result or nan("") on error.
 */
-char				*bunny_evaluate(const char		*operation,
+double				bunny_evaluate(const char		*operation,
 						t_bunny_configuration	*env);
+
+/*
+** Self evaluation
+*/
+void				bunny_consistancy(void);
 
 #endif	/*			__LAPIN_MISC_H__			*/
 

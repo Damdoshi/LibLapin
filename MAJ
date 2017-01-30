@@ -2,9 +2,6 @@
 ------------------------------------- Version 1.11 --------------------------------------
 =========================================================================================
 
- - Les notes entre crochets [ ] indiquent les éléments qui ne sont pas
-   encore réalisés.
-
  - Epuration du dossier racine du projet
 
  - ---------------------------------
@@ -42,7 +39,6 @@
    construction d'une API Bunny Configuration plus complete:
  - - [Chargement et sauvegarde de fichier INI, DABSIC, XML, LUA et depuis une BDD SQL]
  - - [Manipulations unifiées, quelque soit le format chargé]
-
  - - Ajout des fonctions bunny_write_ini et bunny_read_ini permettant de charger et
      sauvegarder du INI depuis des chaines de caractère (Utile pour combiner ce module
      au module bunny_security)
@@ -50,12 +46,20 @@
  - ------------------------------------------------------
  - Ajout des fonctions bunny_load_file et bunny_save_file
 
- - ---------------------------------------------------------------
- - [bunny_strerror et bunny_perror uniformise la gestion d'erreur]
- - - [/!\ Les fonctions de la LibLapin rétablissent errno à 0 en cas de succès !]
+ - ----------------------
+ - Ajout des fonctions de collision suivants, dans le module collide.h:
+ - - bunny_circle_collision_dot & bunny_circle_collision
+ - - bunny_rectangular_collision_dot & bunny_rectangular_collision
+ - - Mais surtout:
+ - - - bunny_triangle_collision_dot
+ - - - bunny_quad_collision_dot
+ - - - + Ajout de "geosquare", programme de démo dans example/misc permettant
+ - -     de tester la collision entre un clic de souris et un quadrilatère quelconque.
 
  - ----------------------
- - [SFML 2.4.0]
+ - Compatibilité avec SFML 2.4.0 (+Retrait de la SFML inclue dans la bibliothèque)
+ - Resolution d'un bug dans bunny_set_geometry lors d'une utilisation de texture:
+   Des points étaient la seule forme affichée, quelque soit la forme demandée.
 
 =========================================================================================
 ------------------------------------- Version 1.10 --------------------------------------

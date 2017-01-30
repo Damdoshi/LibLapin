@@ -119,12 +119,12 @@
 # include			"lapin/asynclock.h"
 # include			"lapin/security.h"
 # include			"lapin/self_test.h"
+# include			"lapin/collide.h"
 # include			"lapin/misc.h"
 
 # include			"lapin/compat.h"
 
 # ifdef				__cplusplus
-#  include			"LoopStone.hpp"
 #  include			"lapin/cpp_guard_end.hpp"
 #  include			"lapin/cpp_tools.hpp"
 # endif

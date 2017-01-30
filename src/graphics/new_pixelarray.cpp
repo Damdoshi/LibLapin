@@ -23,10 +23,13 @@ static t_bunny_pixelarray	*bunny_fake_pixelarray(unsigned int		width,
 
   type = (size_t*)pa;
   *type = 2;
+  pa->clipable.buffer.width = width;
+  pa->clipable.buffer.height = height;
+  
   pa->clipable.clip_x_position = 0;
   pa->clipable.clip_y_position = 0;
-  pa->clipable.clip_width = pa->clipable.buffer.width = width;
-  pa->clipable.clip_height = pa->clipable.buffer.height = height;
+  pa->clipable.clip_width = width;
+  pa->clipable.clip_height = height;
   pa->clipable.position.x = 0;
   pa->clipable.position.y = 0;
   pa->clipable.origin.x = 0;
@@ -35,6 +38,8 @@ static t_bunny_pixelarray	*bunny_fake_pixelarray(unsigned int		width,
   pa->clipable.scale.y = 1;
   pa->clipable.rotation = 0;
   pa->clipable.color_mask.full = WHITE;
+
+  BUNNY_LOG(fprintf(stderr, "%s: Returning %p.\n", __PRETTY_FUNCTION__, pa));
 
   return (pa);
 
@@ -61,19 +66,24 @@ t_bunny_pixelarray		*bunny_new_pixelarray(unsigned int		width,
   pa->image.create(width, height, sf::Color(255, 105, 180, 255));
 
   pa->type = SYSTEM_RAM;
-  pa->rect.left = 0;
-  pa->rect.top = 0;
-  pa->rect.width = pa->width = width;
-  pa->rect.height = pa->height = height;
+  pa->width = width;
+  pa->height = height;
+
+  pa->rect.x = 0;
+  pa->rect.y = 0;
+  pa->rect.w = width;
+  pa->rect.h = height;
   pa->sprite.setTexture(pa->tex);
-  pa->x_position = 0;
-  pa->y_position = 0;
-  pa->x_origin = 0;
-  pa->y_origin = 0;
-  pa->x_scale = 1;
-  pa->y_scale = 1;
+  pa->position.x = 0;
+  pa->position.y = 0;
+  pa->origin.x = 0;
+  pa->origin.y = 0;
+  pa->scale.x = 1;
+  pa->scale.y = 1;
   pa->rotation = 0;
   pa->color_mask.full = WHITE;
+
+  BUNNY_LOG(fprintf(stderr, "%s: Returning %p.\n", __PRETTY_FUNCTION__, pa));
 
   return ((t_bunny_pixelarray*)pa);
 

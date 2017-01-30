@@ -35,14 +35,19 @@ void				bunny_blit_shader(t_bunny_buffer		*output,
 
   if (*input_type == GRAPHIC_RAM)
     {
-      struct bunny_picture *pic = (struct bunny_picture*)picture;
+      struct bunny_picture	*pic = (struct bunny_picture*)picture;
+      sf::IntRect		rect;
 
+      rect.left = pic->rect.x;
+      rect.top = pic->rect.y;
+      rect.width = pic->rect.w;
+      rect.height = pic->rect.h;
       pic->tex = &pic->texture->getTexture();
       pic->sprite.setTexture(*pic->tex);
-      pic->sprite.setTextureRect(pic->rect);
+      pic->sprite.setTextureRect(rect);
       pic->sprite.setPosition(pos->x, pos->y);
-      pic->sprite.setOrigin(pic->x_origin, pic->y_origin);
-      pic->sprite.setScale(pic->x_scale, pic->y_scale);
+      pic->sprite.setOrigin(pic->origin.x, pic->origin.y);
+      pic->sprite.setScale(pic->scale.x, pic->scale.y);
       pic->sprite.setRotation(pic->rotation);
       pic->sprite.setColor
 	(sf::Color(pic->color_mask.argb[RED_CMP],
@@ -55,9 +60,14 @@ void				bunny_blit_shader(t_bunny_buffer		*output,
   else
     {
       struct bunny_pixelarray	*pic = (struct bunny_pixelarray*)picture;
+      sf::IntRect		rect;
       int			i;
       int			j;
 
+      rect.left = pic->rect.x;
+      rect.top = pic->rect.y;
+      rect.width = pic->rect.w;
+      rect.height = pic->rect.h;
       for (j = picture->clip_y_position; j < picture->clip_y_position + picture->clip_height; ++j)
 	for (i = picture->clip_x_position; i < picture->clip_x_position + picture->clip_width; ++i)
 	  if (i >= 0 && j >= 0 && i < picture->buffer.width && j < picture->buffer.height)
@@ -74,13 +84,13 @@ void				bunny_blit_shader(t_bunny_buffer		*output,
 		  )
 		 );
 	    }
-      pic->tex.loadFromImage(pic->image, pic->rect);
+      pic->tex.loadFromImage(pic->image, rect);
       pic->sprite.setTexture(pic->tex, true);
       pic->sprite.setPosition(pos->x, pos->y);
       if (gl_full_blit)
 	{
-	  pic->sprite.setOrigin(pic->x_origin, pic->y_origin);
-	  pic->sprite.setScale(pic->x_scale, pic->y_scale);
+	  pic->sprite.setOrigin(pic->origin.x, pic->origin.y);
+	  pic->sprite.setScale(pic->scale.x, pic->scale.y);
 	  pic->sprite.setRotation(pic->rotation);
 	  pic->sprite.setColor
 	    (sf::Color(pic->color_mask.argb[RED_CMP],

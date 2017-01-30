@@ -10,14 +10,14 @@
   MOD		=	`pwd | rev | cut -d "/" -f3 | rev`
 
   BIN		=	`pwd | rev | cut -d "/" -f1 | rev`
-  FLAG		=	-W -Wall -Werror -D_GLIBCXX_USE_CXX11_ABI=0
+  FLAG		=	-W -Wall -Werror
 
   INCLUDE	=	-I./include/
   SRC		=	$(wildcard src/*.c)
   OBJ		=	$(SRC:.c=.o)
   LIBPATH	=	-L${HOME}/.froot/lib/
   LIB		=	-llapin -lsfml-graphics -lsfml-audio -lsfml-window	\
-			-lsfml-system -lstdc++ -lm -ldl -lpthread
+			-lsfml-system -lstdc++ -lm -ldl -lpthread -lgcc_s
 
   ## Rules ------------------------------------------------------------------
   all:		bin

@@ -25,19 +25,26 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
   pic->texture->display();
   pic->tex = &pic->texture->getTexture();
   pic->sprite.setTexture(*pic->tex);
+
   pic->type = GRAPHIC_RAM;
-  pic->width = pic->rect.width = pic->texture->getSize().x;
-  pic->height = pic->rect.height = pic->texture->getSize().y;
-  pic->rect.left = 0;
-  pic->rect.top = 0;
-  pic->x_position = 0;
-  pic->y_position = 0;
-  pic->x_origin = 0;
-  pic->y_origin = 0;
-  pic->x_scale = 1;
-  pic->y_scale = 1;
+  pic->width = txt.getSize().x;
+  pic->height = txt.getSize().y;
+
+  pic->rect.x = 0;
+  pic->rect.y = 0;
+  pic->rect.w = pic->width;
+  pic->rect.h = pic->height;
+
+  pic->position.x = 0;
+  pic->position.y = 0;
+  pic->origin.x = 0;
+  pic->origin.y = 0;
+  pic->scale.x = 1;
+  pic->scale.y = 1;
   pic->rotation = 0;
   pic->color_mask.full = WHITE;
+
+  BUNNY_LOG(fprintf(stderr, "%s: Returning %p.\n", __PRETTY_FUNCTION__, pic));
 
   return ((t_bunny_picture*)pic);
 

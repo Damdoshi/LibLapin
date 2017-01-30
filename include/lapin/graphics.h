@@ -64,7 +64,7 @@ typedef struct			s_bunny_clipable
   t_bunny_accurate_position	scale;
   double			rotation;
   t_bunny_color			color_mask;
-} PACKED			t_bunny_clipable;
+}				t_bunny_clipable;
 
 /*!
 ** The t_bunny_pixelarray is a graphic element that is convenient to
@@ -486,7 +486,7 @@ typedef enum			e_bunny_geometry
 */
 typedef struct			s_bunny_vertex
 {
-  t_bunny_position		pos;
+  t_bunny_accurate_position	pos;
   t_bunny_position		tex;
   unsigned int			color;
 }				t_bunny_vertex;

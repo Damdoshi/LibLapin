@@ -54,8 +54,9 @@ void				bunny_set_geometry(t_bunny_buffer		*buffer,
 		      " if used on a t_bunny_window or a t_bunny_picture.\n");
 	    else
 	      {
-		sf::RenderStates state;
+		sf::RenderStates state = sf::RenderStates::Default;
 
+		vert.setPrimitiveType((sf::PrimitiveType)geometry);
 		state.texture = &tex->texture->getTexture();
 		win->window->draw(vert, state);
 	      }
@@ -79,6 +80,7 @@ void				bunny_set_geometry(t_bunny_buffer		*buffer,
 	      {
 		sf::RenderStates state;
 
+		vert.setPrimitiveType((sf::PrimitiveType)geometry);
 		state.texture = &tex->texture->getTexture();
 		pic->texture->draw(vert, state);
 	      }
