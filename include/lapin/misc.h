@@ -75,9 +75,9 @@ void				bunny_perror(const char			*str);
 **
 ** Note that data and size are only changed if everything went well.
 */
-ssize_t				bunny_load_file(const char				*file,
-						char					**data,
-						size_t					*size);
+ssize_t				bunny_load_file(const char		*file,
+						char			**data,
+						size_t			*size);
 
 /*!
 ** Save the sent data into a file.
@@ -92,7 +92,8 @@ bool				bunny_save_file(const char		*file,
 
 /*!
 ** Compute the operation sent as first parameter. Supported operators are:
-** +, -, *, /, %, (), >, <, >=, <=, !=, ==
+** +, -, *, /, %, >, <, >=, <=, !=, ==, ?: and () (not the function call but
+** the priority modifier.
 ** Support doubles and integers and variables. You can use '.' to go inside a
 ** variable.
 ** \param operation The operation to compute
@@ -100,7 +101,7 @@ bool				bunny_save_file(const char		*file,
 ** \return The result or nan("") on error.
 */
 double				bunny_evaluate(const char		*operation,
-						t_bunny_configuration	*env);
+					       t_bunny_configuration	*env);
 
 /*
 ** Self evaluation
