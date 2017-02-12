@@ -9,6 +9,9 @@
 ** \file database.h
 ** The database module is useful to talk with a MySQL database server.
 ** It wraps the MySQL client library.
+**
+** /!\ DOES NOT WORK YET /!\
+**
 */
 
 #ifndef				__LAPIN_DATABASE_H__
@@ -16,7 +19,7 @@
 # if				!defined(__LAPIN_H__)
 #  error			You cannot include this file directly.
 # endif
-# include			<mysql/mysql.h>
+// # include			<mysql/mysql.h>
 
 /*!
 ** The t_bunny_database structure contains datas
