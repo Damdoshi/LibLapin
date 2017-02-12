@@ -19,6 +19,7 @@
 #  error			You cannot include this file directly.
 # endif
 # if				defined(__MINGW32__) || defined(__GNUC__)
+#  undef			PACKED
 #  define			PACKED				__attribute__((packed))
 # else
 #  pragma			packed
@@ -58,11 +59,12 @@ typedef struct			s_bunny_clipable
   int32_t			clip_y_position;
   int32_t			clip_width;
   int32_t			clip_height;
+  t_bunny_accurate_position	position;
   t_bunny_accurate_position	origin;
   t_bunny_accurate_position	scale;
   double			rotation;
   t_bunny_color			color_mask;
-} PACKED			t_bunny_clipable;
+}				t_bunny_clipable;
 
 /*!
 ** The t_bunny_pixelarray is a graphic element that is convenient to
@@ -118,6 +120,14 @@ t_bunny_pixelarray		*bunny_new_pixelarray(unsigned int		wid,
 t_bunny_pixelarray		*bunny_load_pixelarray(const char		*file);
 
 /*!
+** The bunny_read_pixelarray load a picture from memory. Supported formats are
+** .png, .jpg, .gif and 24 bits bitmap. Output is a manual access picture.
+** \param buffer The buffer that contains the loaded in memory picture file
+** \return Return a t_bunny_pixelarray filled with the picture or NULL on error.
+*/
+t_bunny_pixelarray		*bunny_read_pixelarray(const void		*buffer);
+
+/*!
 ** The t_bunny_my_load_pixelarray type is currently unused by the library. It
 ** is the type of the function you have to implement to make the bunny library
 ** support specific formats it does not know how to manage (Like 32 bits bitmap)
@@ -127,12 +137,29 @@ t_bunny_pixelarray		*bunny_load_pixelarray(const char		*file);
 typedef t_bunny_pixelarray	*(*t_bunny_my_load_pixelarray)(const char	*file);
 
 /*!
+** The t_bunny_my_read_pixelarray type is currently unused by the library. It
+** is the type of the function you have to implement to make the bunny library
+** support specific formats it does not know how to manage (Like 32 bits bitmap)
+** The self test function does not currently evaluate the function you would assign to
+** gl_bunny_my_read_pixelarray.
+*/
+typedef t_bunny_pixelarray	*(*t_bunny_my_read_pixelarray)(const void	*buf);
+
+/*!
 ** The gl_bunny_my_load_pixelarray is supposed to be the function pointer to set
 ** in order to expand bunny_load_pixelarray functionnalities to manage new types
 ** of picture and having your function evaluate by bunny_self_test, but it is
 ** currently unused.p
 */
 extern t_bunny_my_load_pixelarray gl_bunny_my_load_pixelarray;
+
+/*!
+** The gl_bunny_my_read_pixelarray is supposed to be the function pointer to set
+** in order to expand bunny_read_pixelarray functionnalities to manage new types
+** of picture and having your function evaluate by bunny_self_test, but it is
+** currently unused.p
+*/
+extern t_bunny_my_read_pixelarray gl_bunny_my_read_pixelarray;
 
 /*!
 ** The bunny_save_pixelarray save a t_bunny_pixelarray content into a picture file.
@@ -174,6 +201,16 @@ t_bunny_picture			*bunny_new_picture(unsigned int			wid,
 ** \return Return a t_bunny_picture filled with the picture or NULL on error.
 */
 t_bunny_picture			*bunny_load_picture(const char			*file);
+
+/*!
+** The bunny_read_picture load a picture from memory. Supported formats are
+** .png, .jpg, .gif and 24 bits bitmap. Output is a fast picture.
+** The reserved memory to handle it is outside the bunny_malloc space.
+** \param buffer The buffer to read.
+** \return Return a t_bunny_picture filled with the picture or NULL on error.
+*/
+t_bunny_picture			*bunny_read_picture(const void			*pic,
+						    size_t			l);
 
 /*!
 ** Destroy a clipable element. If the element is a t_bunny_pixelarray, you have
@@ -449,7 +486,7 @@ typedef enum			e_bunny_geometry
 */
 typedef struct			s_bunny_vertex
 {
-  t_bunny_position		pos;
+  t_bunny_accurate_position	pos;
   t_bunny_position		tex;
   unsigned int			color;
 }				t_bunny_vertex;
@@ -541,7 +578,7 @@ typedef struct			s_bunny_letter
 ** letters in this order: a-z0-9!. There is a enumeration that describe completly
 ** how the gl_vector is made in the enum.h file: t_bunny_letter_tab.
 */
-extern const t_bunny_letter	gl_vector[LAST_BUNNY_FONT];
+extern const t_bunny_letter	gl_vector_font[LAST_BUNNY_FONT];
 
 /*!
 ** The t_bunny_shader element is an effect that will be applied while blitting.
@@ -656,6 +693,15 @@ void				bunny_delete_shader(t_bunny_shader		*shader);
 ** \param enable True to enable full support, false to disable it. False is the default.
 */
 void				bunny_enable_full_blit(bool			enable);
+
+/*!
+** This function reset OpenGL states.
+*/
+void				bunny_GL_reset_states(const t_bunny_window	*pic);
+
+void				bunny_GL_push_states(const t_bunny_window	*pic);
+
+void				bunny_GL_pop_states(const t_bunny_window	*pic);
 
 #endif	/*			__LAPIN_GRAPHICS_H__	*/
 

@@ -16,6 +16,12 @@
 # if				!defined(__LAPIN_H__)
 #  error			You cannot include this file directly.
 # endif
+# if				defined(__MINGW32__) || defined(__GNUC__)
+#  undef			PACKED
+#  define			PACKED				__attribute__((packed))
+# else
+#  pragma			packed
+# endif
 
 /*!
 ** The t_bunny_position structure represents a position in a 2D space.
@@ -25,9 +31,10 @@
 */
 typedef struct			s_bunny_position
 {
-  int32_t			x;
-  int32_t			y;
+  int				x;
+  int				y;
 }				t_bunny_position;
+
 /*!
 ** The t_bunny_size structure represents the size of an element in
 ** a 2D space. It is useful to describe size of elements in memory or
@@ -65,10 +72,10 @@ typedef t_bunny_accurate_position t_bunny_accurate_size;
 */
 typedef struct			s_bunny_area
 {
-  int32_t			x;
-  int32_t			y;
-  int32_t			w;
-  int32_t			h;
+  int				x;
+  int				y;
+  int				w;
+  int				h;
 }				t_bunny_area;
 
 /*!
@@ -81,7 +88,7 @@ typedef struct			s_bunny_accurate_area
   double			y;
   double			w;
   double			h;
-}				t_bunny_accureate_area;
+}				t_bunny_accurate_area;
 
 #endif	/*			__LAPIN_PLACEMENT_H__	*/
 

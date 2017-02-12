@@ -16,6 +16,12 @@
 # if				!defined(__LAPIN_H__)
 #  error			You cannot include this file directly.
 # endif
+# if				defined(__MINGW32__) || defined(__GNUC__)
+#  undef			PACKED
+#  define			PACKED				__attribute__((packed))
+# else
+#  pragma			packed
+# endif
 
 /*!
 ** The t_bunny_sound is the header of every other sound structure
@@ -27,7 +33,7 @@ typedef struct			s_bunny_sound
 {
   const char			_private[sizeof(int32_t)];
   const char * const		file;
-}				t_bunny_sound;
+} PACKED			t_bunny_sound;
 
 /*!
 ** The t_bunny_music structure is useful to play, load and
@@ -38,7 +44,7 @@ typedef struct			s_bunny_music
 {
   t_bunny_sound			sound;
   const double			duration;
-}				t_bunny_music;
+} PACKED			t_bunny_music;
 
 /*!
 ** The t_bunny_effect structure is useful to play, load and
@@ -57,7 +63,7 @@ typedef struct			s_bunny_effect
   const size_t			sample_per_second;
   const double			duration;
   int16_t * const		sample;
-}				t_bunny_effect;
+} PACKED			t_bunny_effect;
 
 /*!
 ** The bunny_load_music function load a sound file and return a matching t_bunny_music.

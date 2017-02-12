@@ -7,12 +7,6 @@
 
 /*!
 ** \file configuration.h
-** The configuration module give you a INI file parser.
-** A INI file data structure is defined like this:
-** #here, we are in DEFAULT_SCOPE
-** [scopename]
-** #here, we are in scopename
-** fieldname=index0,index1,index2,index3 #this is the field fieldname in scopename
 */
 
 #ifndef				__LAPIN_CONFIGURATION_H__
@@ -20,267 +14,244 @@
 # if				!defined(__LAPIN_H__)
 #  error			You cannot include this file directly.
 # endif
+# include			<stdarg.h>
+
+typedef enum			e_bunny_configuration_type
+  {
+    BC_INI,
+    BC_DABSIC,
+    BC_XML,
+    BC_LUA,
+    BC_CUSTOM
+  }				t_bunny_configuration_type;
+
+typedef void			t_bunny_configuration;
 
 /*!
-** A t_bunny_ini is a completly private type that contains a configuration tree
-** that may be managed throught ini functions.
-** Because it is fully private, you can only move a pointer on it and cannot make
-** a copy directly.
+** Create an empty configuration node.
+** \return NULL on error, if no more memory is available.
 */
-typedef void			t_bunny_ini;
+t_bunny_configuration		*bunny_new_configuration(void);
 
 /*!
-** The DEFAULT_SCOPE symbolic constant is useful to get fields from INI file
-** that was defined before any scope was defined.
-** Use it like this: bunny_ini_get_field(ini, DEFAULT_SCOPE, "fieldname", index)
+** Load a file into a configuration node and its children.
+** You can send NULL as config to create a completly new one. If it is not NULL, the sent
+** node will be filled with new data and then returned.
+** Some fields may be overwritten.
+** \param type The configuration format to load and read
+** \param file The file to load
+** \param config An existing config to fill, or NULL to create a new one
+** \return config if it is not NULL else a new node if everything went well, NULL on error.
 */
-extern const char		*DEFAULT_SCOPE;
+t_bunny_configuration		*bunny_load_configuration(t_bunny_configuration_type	type,
+							  const char			*file,
+							  t_bunny_configuration		*config);
 
 /*!
-** The REMOVE_SCOPE symbolic constant is useful to remove a scope from a INI configuration.
-** Use it like this: bunny_ini_set_field(ini, "scopename", REMOVE_SCOPE)
+** Save a configuration into a file.
+** \param type The configuration format that will be used to export
+** \param file The name of the file to save
+** \param config The configuration to save
+** \return True if everything went well, false on error.
 */
-# define			REMOVE_SCOPE					NULL, 0, NULL
+bool				bunny_save_configuration(t_bunny_configuration_type	type,
+							 const char			*file,
+							 t_bunny_configuration		*config);
 
 /*!
-** The REMOVE_FIELD symbolic constant is useful to remove a field from a INI configuration
-** in a specific scope.
-** Use it like this: bunny_ini_set_field(ini, "scopename", "fieldname", REMOVE_FIELD)
+** Read the content of the string and convert it to a configuration node.
+** You can send NULL as config to generate a new one. If it is not NULL, the sent
+** node will be filled with new data and then returned.
+** Some fields may be overwritten.
+** \param type The configuration format to read
+** \param code The string to parse
+** \param config An existing config to fill or NULL to create a new one.
+** \return config if it is not NULL else a new node if everything went well, NULL on error.
 */
-# define			REMOVE_FIELD					(unsigned int)-1, NULL
+t_bunny_configuration		*bunny_read_configuration(t_bunny_configuration_type	type,
+							  const char			*code,
+							  t_bunny_configuration		*config);
 
 /*!
-** The REMOVE_INDEX symbolic constant is useful to remove a value from a field at a given
-** address in a INI configuration.
-** Use it like this: bunny_ini_set_field(ini, "scopename", "fieldname", index, REMOVE_INDEX)
+** The type of the function that will be called by bunny_read_configuration if type is
+** greater or equal to BC_CUSTOM. Note that config will be allocated by bunny_read_configuration
+** if it was NULL. Also note that it will be freed by bunny_read_configuration if you return NULL.
 */
-# define			REMOVE_INDEX					NULL
+typedef t_bunny_configuration	*(*t_bunny_my_read_configuration)(t_bunny_configuration_type t,
+								  const char		*code,
+								  t_bunny_configuration	*config);
 
 /*!
-** Create an INI configuration.
-** \return Return a t_bunny_ini pointer or NULL on error.
+** The function pointer that will be used by bunny_read_configuration if type is greater or
+** equal to BC_CUSTOM. Note that config will be allocated by bunny_read_configuration if it
+** was NULL. Also note that it will be freed by bunny_read_configuration if you return NULL.
 */
-t_bunny_ini			*bunny_new_ini(void);
+extern
+t_bunny_my_read_configuration	gl_bunny_my_read_configuration;
 
 /*!
-** The bunny_load_ini function open and read a file that is supposed to be a INI file.
-** \param file The INI file.
-** \return The loaded INI configuration or NULL if an error happened.
+** Convert the sent configuration into a string of type format.
+** \param type The configuraton format to write
+** \param config The node to convert into string
+** \return A string if everything went well, NULL on error.
 */
-t_bunny_ini			*bunny_load_ini(const char			*file);
+char				*bunny_write_configuration(t_bunny_configuration_type	type,
+							   const t_bunny_configuration	*config);
 
 /*!
-** The bunny_ini_get_error return a description of the last error encountered by
-** the bunny_load_ini function. It will help you to know why it returned NULL.
-** \return The last encountered error, NULL if no error was encountered.
+** The type of the function that will be called by bunny_write_configuration if type is
+** greater or equal to BC_CUSTOM.
 */
-const char			*bunny_ini_get_error(void);
+typedef char			*(*t_bunny_my_write_configuration)(t_bunny_configuration_type t,
+								   const t_bunny_configuration *config);
 
 /*!
-** The bunny_save_ini function save the content of the sent t_bunny_ini in the specified
-** file in the INI file format.
-** \param ini The INI configuration to save.
-** \param file The file where to save the configuration
-** \return True if everything went well. False on error.
+** The function pointer that will be used by bunny_write_configuration if type is greater or
+** equal to BC_CUSTOM.
 */
-bool				bunny_save_ini(t_bunny_ini			*ini,
-					       const char			*file);
+extern
+t_bunny_my_write_configuration	gl_bunny_my_write_configuration;
 
 /*!
-** The bunny_ini_get_field function returns a value stored in a specific point in
-** the INI configuration, if it exists.
-** \param ini The INI configuration
-** \param scope The scope name where is the data you need. Use DEFAULT_SCOPE to
-** access to the fields that were written before any scope was precised in your INI file.
-** \param field The field name where is the data you need.
-** \param index The index in the field you want to read
-** \return Return a constant string (You have to duplicate it if you wanna keep it
-** after closing the INI configuration) if the data exists, else it returns NULL.
+** Delete the sent configuration node. All children will be destroyed as well.
+** If the configuration is a child, it will remove itself cleanly from its parent.
+** \param config The configuration node to delete.
 */
-const char			*bunny_ini_get_field(const t_bunny_ini		*ini,
-						     const char			*scope,
-						     const char			*field,
-						     unsigned int		index);
+void				bunny_delete_configuration(t_bunny_configuration	*config);
 
 /*!
-** The bunny_ini_set_field function write a data inside a specific point in the INI
-** configuration.
-** \param ini The INI configuration
-** \param scope The scope name in which you wanna write. Use DEFAULT_SCOPE to
-** access to the fields that were written before any scope was precised in your INI file.
-** \param field The field name in which you wanna write.
-** \param index The index in the field you wanna write in.
-** \param value The value that will be inserted into the INI configuration. Send
-** REMOVE_INDEX to remove the data instead of writing a new one.
+** Get the parent of the sent configuration node.
+** \param config The config we want to parent
+** \return A pointer to the parent or NULL if config was a root.
 */
-void				bunny_ini_set_field(t_bunny_ini			*ini,
-						    const char			*scope,
-						    const char			*field,
-						    unsigned int		index,
-						    const char			*value);
+t_bunny_configuration		*bunny_configuration_get_parent(t_bunny_configuration	*config);
 
 /*!
-** The bunny_delete_ini destroy an INI configuration.
-** All strings returned by INI function for this INI configuration should be trashed,
-** or your program may crash.
-** \param ini The INI configuration to delete.
+** Get the children of the sent config that match the sent name.
+** If create mode is true (It is not by default), the child will be created if it does
+** not exists.
+** \param config The configuration to search in
+** \param child The child name to fetch
+** \return A pointer to the child, NULL if there is no child with this name and create_mode
+** is false, NULL if create_mode is true but there is no more memory.
 */
-void				bunny_delete_ini(t_bunny_ini			*ini);
+t_bunny_configuration		*bunny_configuration_get_child(t_bunny_configuration	*config,
+							       const char		*child);
 
 /*!
-** The t_bunny_ini_scope is a fully private element that is useful to browse scopes
-** stored inside a INI configuration.
-** This is how you browse scopes inside a INI configuration:
-** void				browse(t_bunny_ini				*cnf)
-** {
-**   t_bunny_ini_scope		*scp;
-**
-**   for (scp = bunny_ini_first_scope(cnf); scp != LAST_SCOPE; scp = bunny_ini_next_scope(cnf, scp))
-**   {}
-** }
+** Get the children of the sent config that match the sent index.
+** If create mode is true (It is not by default), the child will be created if it does
+** not exists.
+** \param config The configuration to search in
+** \param child The child index to fetch
+** \return A pointer to the child, NULL if there is no child at this index and create_mode
+** false, NULL if create_mode is true but here is no more memory.
 */
-typedef void			t_bunny_ini_scope;
+t_bunny_configuration		*bunny_configuration_get_case(t_bunny_configuration	*config,
+							      size_t			i);
 
 /*!
-** A symbolic constant to compare with the value returned by bunny_ini_next_scope
-** in order to know if the browse loop reached its end.
+** Get the name of the current node. Note that this name may be different from the one you
+** used to fetch it in its parent node, especially if it was a fetch by index: For example,
+** an XML node may be inserted in an array, but still have a name.
+** \param config The node to fetch the name of
+** \return The name of the node. Is always valid.
 */
-# define			LAST_SCOPE					NULL
+const char			*bunny_configuration_get_name(const t_bunny_configuration *config);
 
 /*!
-** Get the first scope inside the INI configuration. The first scope should be
-** DEFAULT_SCOPE.
-** \param ini The INI configuration to browse.
-** \return The first scope in the INI configuration. NULL if there is no scope.
+** Set the create mode to on or off. If the create mode is on, every node required to handle
+** get child or get case will be created on the fly. On the contrary, functions will return NULL
+** if nodes does not exists.
+** \param cmode Set or unset the create mode
 */
-t_bunny_ini_scope		*bunny_ini_first_scope(t_bunny_ini		*ini);
+void				bunny_configuration_create_mode(bool			cmode);
 
 /*!
-** Get the next scope inside the INI configuration.
-** \param ini The INI configuration
-** \param scope The current scope, which will become the previous one.
-** \return Return the scope after the given one. LAST_SCOPE if it was the last one.
+** Set the value inside the node to a string.
+** \param config The node to set
+** \param str The value to set
 */
-t_bunny_ini_scope		*bunny_ini_next_scope(t_bunny_ini		*ini,
-						      t_bunny_ini_scope		*scope);
+void				bunny_configuration_set_string(t_bunny_configuration	*config,
+							       const char		*str);
 
 /*!
-** Get the name of the sent scope. DEFAULT_SCOPE's name is "".
-** \param ini The INI configuration
-** \param scope The scope you wanna get the name from
-** \return The name of the scope.
+** Set the value inside the node to a double.
+** \param config The node to set
+** \param val The value to set
 */
-const char			*bunny_ini_scope_name(const t_bunny_ini		*ini,
-						      const t_bunny_ini_scope	*scope);
+void				bunny_configuration_set_double(t_bunny_configuration	*config,
+							       double			val);
 
 /*!
-** The bunny_ini_scope_get_field returns a value stored in a specific point in
-** the INI configuration, if it exists. The scope name does not need to be precised,
-** because the function takes a t_bunny_ini_scope and the search is already limited
-** to it.
-** \param scope The scope where is the data you need.
-** \param field The field name where is the data you need.
-** \param index The index in the field you want to read
-** \return Return a constant string (You have to duplicate it if you wanna keep it
-** after closing the INI configuration) if the data exists, else it returns NULL.
+** Set the value inside the node to an integer.
+** \param config The node to set
+** \param val The value to set
 */
-const char			*bunny_ini_scope_get_field(const t_bunny_ini_scope *scope,
-							   const char		*field,
-							   unsigned int		index);
+void				bunny_configuration_set_int(t_bunny_configuration	*config,
+							    int				val);
 
 /*!
-** The bunny_ini_set_field function write a data inside a specific point in the INI
-** configuration. The scope is precised thanks to a t_bunny_ini_scope pointer instead
-** of its name.
-** \param scope The scope in which you wanna write.
-** \param field The field in which you wanna write.
-** \param index The index in the field you wanna write in.
-** \param value The value that will be inserted into the INI configuration. Send
-** REMOVE_INDEX to remove the data instead of writing a new one.
+** Get the value inside the node as a string.
+** \param config The node to read
+** \param str A pointer to the space that will be used to contain the value
+** \return True if the value was set. Can fail if no value was ever set.
 */
-void				bunny_ini_scope_set_field(t_bunny_ini_scope	*scope,
-							  const char		*field,
-							  unsigned int		index,
-							  const char		*value);
+bool				bunny_configuration_get_string(const t_bunny_configuration *config,
+							       const char		**str);
 
 /*!
-** Get a t_bunny_ini_scope by name instead of browsing throught the INI configuration.
-** \param ini The INI configuration
-** \param scope The name of the scope you wanna get
-** \return The requested t_bunny_ini_scope. NULL if it does not exist.
+** Get the value inside the node as a double.
+** \param config The node to read
+** \param val A pointer to the space that will be used to contain the value
+** \return True if the value was set. Can fail if no value was ever set or if
+** the value cannot be converted into a double.
 */
-t_bunny_ini_scope		*bunny_ini_get_scope(t_bunny_ini		*ini,
-						     const char			*scope);
+bool				bunny_configuration_get_double(const t_bunny_configuration *config,
+							       double			*val);
 
 /*!
-** The t_bunny_ini_field is a fully private element that is useful to browse fields
-** of a scope stored inside a INI configuration.
-** This is how you browse fields inside a scope:
-** void				browse(t_bunny_ini_scope			*scp)
-** {
-**   t_bunny_ini_field		*fld;
-**
-**   for (fld = bunny_ini_first_field(scp); fld != LAST_FIELD; fld = bunny_ini_next_field(scp, fdl))
-**   {}
-** }
+** Get the value inside the node as an integer.
+** \param config The node to read
+** \param val A pointer to the space that will be used to contain the value
+** \return True if the value was set. Can fail if no value was ever set or if
+** the value cannot be converted into an integer.
 */
-typedef void			t_bunny_ini_field;
+bool				bunny_configuration_get_int(const t_bunny_configuration	*config,
+							    int				*val);
 
 /*!
-** A symbolic constant to compare with the value return by bunny_ini_next_field
-** in order to know if the browse loop reached its end.
+** Return the first children of the sent node.
+** \param The node to browse
+** \return The first chil. Return NULL ("bunny_configuration_end") if there is no child.
 */
-# define			LAST_FIELD					NULL
+t_bunny_configuration		*bunny_configuration_first(t_bunny_configuration	*config);
 
 /*!
-** Get the first field inside a scope in a INI configuration.
-** \param scope The scope to browse inside a INI configuration.
-** \return The first field in the scope. NULL if there is no scope.
+** Return the next children of config->father, directly after config.
+** \param The node that have a father we want the next child.
+** \param The next child. Return NULL ("bunny_configuration_end"() if it was the last.
 */
-t_bunny_ini_field		*bunny_ini_first_field(t_bunny_ini_scope	*scope);
+t_bunny_configuration		*bunny_configuration_next(t_bunny_configuration		*config);
 
 /*!
-** Get the next field inside the given scope from an INI configuration.
-** \param scope The scope to browse
-** \param field The current field, which will become the previous one.
-** \return Return the field after the given one, LAST_FIELD if it was the last one.
+** Return a recognizable element that is after the last children of config (NULL...)
+** \param The node that we want the children terminating symbol.
+** \return Always NULL.
 */
-t_bunny_ini_field		*bunny_ini_next_field(t_bunny_ini_scope		*scope,
-						      t_bunny_ini_field		*field);
+t_bunny_configuration		*bunny_configuration_end(t_bunny_configuration		*config);
 
 /*!
-** Get the name of the sent field.
-** \param scope The scope that own the field
-** \param field The field you wanna get to name from
-** \return The name of the field
+** Get the requested node from config.
+** \param config The configuration to browse.
+** \param nbr The number of fieldname and integers you sent.
+** \param ... nbr parameters that can be strings or integers. All integers must be
+** negative or 0.
+** \return The matching node
 */
-const char			*bunny_ini_field_name(const t_bunny_ini_scope	*scope,
-						      const t_bunny_ini_field	*field);
-
-/*!
-** The bunny_ini_field_get_value returns a value stored in a specific point in the
-** INI configuration, if it exists. The field name does not need to be precised, neither
-** the scope because the function takes a t_bunny_ini_field and the search is already
-** limited to it.
-** \param field The field where is the data you need
-** \param index The index in the field you want to read
-** \return Return a constant string (You have to duplicate it if you wanna keep it
-** after closing the INI configuration) if the data exists, else it returns NULL.
-*/
-const char			*bunny_ini_field_get_value(const t_bunny_ini_field *field,
-							   unsigned int		index);
-
-/*!
-** The bunny_ini_field_set_value function write a data inside a specific point in
-** the INI configuration. The field and scope are precised thanks to a t_bunny_ini_field
-** pointer instead of names.
-** \param field The field in which you wanna write.
-** \param index The index in the field you wanna write in.
-** \param value The value that will be inserted into the INI configuration. Send
-** REMOVE_INDEX to remove the data instead of writing a new one.
-*/
-void				bunny_ini_field_set_value(t_bunny_ini_field	*field,
-							  unsigned int		index,
-							  const char		*value);
+t_bunny_configuration		*bunny_configuration_get_node_va(t_bunny_configuration	*config,
+								 size_t			nbr,
+								 ...);
 
 #endif	/*			__LAPIN_CONFIGURATION_H__	*/
+

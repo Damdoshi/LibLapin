@@ -1,0 +1,37 @@
+
+ In this tutorial, there is two programs:
+  - The "game" (you loose) is your program.
+  - The "cipher" is a tool you will use to cipher your ressources and
+    prepare your program's binary.
+
+ This is how the system work:
+
+   You program your game with the liblapin, so it got a inner key.
+   
+   The key's default value provide no ciphering capacity, so you can
+   test and debug your game as usual.
+
+   When you are done and that you want to distribute your game with
+   ciphered ressources, then, you use the cipher program on your
+   ressources and on your binary.
+
+   What does it make? It simply cipher the ressources with a randomly
+   generated key and then writes this key inside your binary, erasing
+   its default value and enabling ciphering/unciphering capacity.
+
+   So it won't made any difference for your program, but it will
+   completly change the view from the outside.
+
+
+   Pay attention: if you do not write a program that can print
+   the inner key with some parameters or hidden manipulations, the
+   only way to get it is to open it and get it... if you know where
+   it is! (You can of course use an unfilled binary to help yourself)
+
+   If you choose to cipher saved games, pay attention to your politic:
+   if every game have a different key, for example, or something like
+   this, or if different version got one... then, you may make saved
+   games incompatible between version or users.
+   Actually, it is the same for ressources, but dead ressources are
+   easy to fix, dead saved games ain't.
+

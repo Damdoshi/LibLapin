@@ -7,7 +7,7 @@
 
 /*!
 ** \file compat.h
-** This header contains old symbols and or definitions that was used
+** This header contains or include old symbols and or definitions that was used
 ** in previous version of the bunny library. So it is useful to make
 ** old programs written in older versions of the bunny library still compiling.
 **
@@ -24,18 +24,10 @@
 # if				!defined(__LAPIN_H__)
 #  error			You cannot include this file directly.
 # endif
+# include			"compat/ini.h"
 
 # define			bunny_get_screen_size()		\
   *bunny_get_screen_resolution()
-
-# define			ERASE_SCOPE					NULL
-# define			ERASE_FIELD					((unsigned int)-1)
-# define			ERASE_INDEX					NULL
-
-# define			bunny_ini_first(ini)		\
-  bunny_ini_first_scope(ini)
-# define			bunny_ini_next(ini, scope)	\
-  bunny_ini_next_scope(ini, scope)
 
 # ifdef				__WIN32
 #  define			kill(a, b)			exit(1)
