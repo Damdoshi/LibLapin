@@ -31,13 +31,13 @@
   LINKER	?=	ar rcs
   COMPILER	?=	g++
 
-  CONFIG	=	-W -Wall -fPIC -std=gnu++98				\
+  CONFIG	=	-W -Wall -fPIC						\
 			-Wno-unused-result
-
-  DEBUG		=	-O0 -g -g3 -ggdb					\
-			-DBUNNY_ALLOCATOR_DEACTIVATED				\
-			-DBUNNY_DEBUG -DBUNNY_LOG
-#  OPTIM		=	-O2
+#			-DBUNNY_ALLOCATOR_DEACTIVATED				\
+#			-DBUNNY_DEBUG -DBUNNY_LOG
+#
+#  DEBUG		=	-O0 -g -g3 -ggdb
+  OPTIM		=	-O2
 
   RM		=	rm -f
   ECHO		=	/bin/echo -e

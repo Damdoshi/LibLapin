@@ -33,13 +33,6 @@
 #  define			kill(a, b)			exit(1)
 # endif
 
-# ifdef				__APPLE__
-#  ifndef			__ssize_t_defined
-#   define			__ssize_t_defined
-typedef long long int		ssize_t;
-#  endif
-# endif
-
 size_t				bunny_strnlen(const char	*str,
 					      size_t		max);
 

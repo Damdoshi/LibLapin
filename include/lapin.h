@@ -101,6 +101,8 @@
 #  include			"lapin/cpp_guard.hpp"
 # endif
 
+# include			"lapin/porta.h"
+
 # include			"lapin/enum.h"
 # include			"lapin/self_test.h"
 # include			"lapin/color.h"
