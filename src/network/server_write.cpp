@@ -3,7 +3,7 @@
 //
 // Bibliotheque Lapin
 
-#include		"dep/NetCom.hpp"
+#include		"deps/NetCom.hpp"
 #include		"lapin.h"
 
 bool			bunny_server_write(t_bunny_server		*srv,
@@ -13,4 +13,3 @@ bool			bunny_server_write(t_bunny_server		*srv,
 {
   return (((bpt::NetCom::Server*)srv->_private)->Write(data, len, fd));
 }
-

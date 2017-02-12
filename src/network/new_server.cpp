@@ -3,7 +3,7 @@
 //
 // Bibliotheque Lapin
 
-#include		"dep/NetCom.hpp"
+#include		"deps/NetCom.hpp"
 #include		"lapin.h"
 
 struct			bunny_server
@@ -40,4 +40,3 @@ t_bunny_server		*bunny_new_server(uint16_t		port)
   server->c = port;
   return ((t_bunny_server*)server);
 }
-

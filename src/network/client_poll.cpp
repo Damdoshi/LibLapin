@@ -3,7 +3,7 @@
 //
 // Bibliotheque Lapin
 
-#include			"dep/NetCom.hpp"
+#include			"deps/NetCom.hpp"
 #include			"lapin.h"
 
 const t_bunny_communication	*bunny_client_poll(t_bunny_client		*clt,
@@ -11,4 +11,3 @@ const t_bunny_communication	*bunny_client_poll(t_bunny_client		*clt,
 {
   return ((t_bunny_communication*)&(*(bpt::NetCom::Client*)clt->_private)(tmout));
 }
-

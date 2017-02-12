@@ -3,7 +3,7 @@
 //
 // Bibliotheque Lapin
 
-#include		"dep/NetCom.hpp"
+#include		"deps/NetCom.hpp"
 #include		"lapin.h"
 
 bool			bunny_server_doom_client(t_bunny_server		*srv,
@@ -11,4 +11,3 @@ bool			bunny_server_doom_client(t_bunny_server		*srv,
 {
   return (((bpt::NetCom::Server*)srv->_private)->DoomClient(fd));
 }
-
