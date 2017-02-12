@@ -51,6 +51,9 @@
 /*!
 ** Return a string that contains the description of the sent error number in
 ** an human readable fashion. Works the same way as strerror(3).
+**
+** /!\ This function is not implemented yet
+**
 ** \param An error number
 */
 const char			*bunny_strerror(int			errorcode);
@@ -59,6 +62,9 @@ const char			*bunny_strerror(int			errorcode);
 ** Print the sent string followed by ": " if the string is not NULL and if the
 ** first byte is not '\0', followed by the last error description.
 ** Works the same way as perror(3)
+**
+** /!\ This function is not implemented yet
+**
 ** \param A prefix to write before the error description. __FUNC__ or
 ** __PRETTY_FUNCTION__ may be a good idea, or the concatenation of __FILE__ and
 ** __LINE__... Or the name of the function that provokes the error.
@@ -104,7 +110,7 @@ double				bunny_evaluate(const char		*operation,
 					       t_bunny_configuration	*env);
 
 /*
-** Self evaluation
+** Self evaluation.
 */
 void				bunny_consistancy(void);
 

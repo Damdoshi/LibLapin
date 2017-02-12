@@ -154,6 +154,9 @@ void			check_memory_state(void)
 
 void			*bunny_malloc(size_t		data)
 {
+#ifdef			LAPIN_ALLOCATOR_DEACTIVATED
+  return (malloc(data));
+#endif
   struct memhead	*head;
   struct memchunk	*node;
   size_t		jam;

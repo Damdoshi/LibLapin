@@ -10,13 +10,21 @@ void			bunny_ini_scope_set_field(t_bunny_ini_scope		*sc,
 						  unsigned int			index,
 						  const char			*value)
 {
-  bpt::Ini::Scope		*scope;
-  std::vector<bpt::string>	*vec;
+  t_bunny_configuration	*cnf = (t_bunny_configuration*)sc;
+  bool			create = SmallConf::create_mode;
 
-  scope = (bpt::Ini::Scope*)sc;
-  vec = &(*scope)[bpt::string(field)];
-  if (vec->size() < index)
-    return ;
-  (*vec)[index] = value;
+  SmallConf::create_mode = true;
+  if ((cnf = bunny_configuration_get_child(cnf, field)) == NULL)
+    {
+      SmallConf::create_mode = create;
+      return ;
+    }
+  if ((cnf = bunny_configuration_get_case(cnf, index)) == NULL)
+    {
+      SmallConf::create_mode = create;
+      return ;
+    }
+  bunny_configuration_set_string(cnf, value);
+  SmallConf::create_mode = create;
 }
 

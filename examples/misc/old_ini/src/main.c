@@ -36,7 +36,7 @@ int			main(int	argc,
     bunny_load_ini("lechec.ini");
   if ((ini = bunny_load_ini("blob.ini")) == NULL)
     return (EXIT_FAILURE);
-  while ((str = bunny_ini_get_field(ini, "section", "field", i++)) != NULL)
+  for (i = 0; (str = bunny_ini_get_field(ini, "section", "field", i)) != NULL; ++i)
     {
       write(1, str, dstrlen(str));
       write(1, "\n", 1);
@@ -44,7 +44,9 @@ int			main(int	argc,
   write(1, "\n", 1);
   for (scope = bunny_ini_first(ini); scope != LAST_SCOPE; scope = bunny_ini_next(ini, scope))
     {
+      write(1, "[", 1);
       write(1, bunny_ini_scope_name(ini, scope), dstrlen(bunny_ini_scope_name(ini, scope)));
+      write(1, "]", 1);
       write(1, "\n", 1);
       for (field = bunny_ini_first_field(scope); field != LAST_FIELD; field = bunny_ini_next_field(scope, field))
 	{

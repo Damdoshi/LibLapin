@@ -1,13 +1,30 @@
 ---------------------
 Fonctionnalité Lapin:
 
- - Permettre a bunny_load_file et bunny_save_file de fonctionner avec des URLs
+ - ----------------------------------
+ - Ajout du module "Bunny Asynclock":
+ 
+ - - Ajout des fonctions bunny_new_trap, bunny_delete_trap, bunny_reset_clock,
+     bunny_get_current_time et surtout bunny_asynclock permettant de placer des
+     demandes d'appels de fonction dans un style proche de cron et que celle
+     ci soient appellée en fonction de paramètres temporels
+
+
+ - Les fonctions suivantes:
+    t_bunny_configuration *bunny_configuration_get_node(config, const char *str);
+    avec str du style "node.zoubida[42].genial"
+
+- Permettre a bunny_load_file et bunny_save_file de fonctionner avec des URLs
+
+ - Systeme d'archivage de fichier facon pseudo ar.
+
+ - Passer de setParameter a setUniform pour les shaders
+
+ - Implementer l'utilisation de l'environnement pour bunny_evaluate
 
  - ---------------------------------------------------------------
  - [bunny_strerror et bunny_perror uniformise la gestion d'erreur]
  - - [/!\ Les fonctions de la LibLapin rétablissent errno à 0 en cas de succès !]
-
-
 
 - Ajouter des fonctions inline dans cpp_tools pour permettre aux fonctions de la liblapin
   d'etre prototypairement plus souple... genre une fonction prenant deux int, x et y devra
@@ -26,9 +43,6 @@ Fonctionnalité Lapin:
 
 - Créer un systeme d'ordre avec duree de vie
 
-- Inclure le resolveur d'operations dans la LibLapin, prenant en paramètre
-  l'environnement de valeurs - Un bind vers hbs::Operation en gros
-
 - Ajouter un micro gestionnaire de pluging compatible avec un format de fonction
   situe en configuration.
 
@@ -40,11 +54,12 @@ Fonctionnalité Lapin:
 
 - Module de saut inter fonction basé sur longjmp ?
 
-- Faire un petit module de parsing en surchargeant hbs::Parsing
-
 - Faire un bind avec le moniteur memoire que tu vas ajouter dans HBSL
 
 - Plutot que get/lost focus, faire un focus tout court qui prend un t_bunny_event_state
+
+- t_bunny_zbuffer est une image avec une dimension en plus (faite de float) permettant
+  la gestion de la profondeur. Ce type est un dérivé de t_bunny_pixelarray ?
 
 - Que bunny_loop saute volontairement la phase de dessin (l'appel a bunny_display) si
   la vitesse de la boucle principale est limite.

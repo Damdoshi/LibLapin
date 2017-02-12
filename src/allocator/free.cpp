@@ -22,6 +22,10 @@ extern size_t		border1;
 
 void			bunny_free(void		*data)
 {
+#ifdef			LAPIN_ALLOCATOR_DEACTIVATED
+  free(data);
+  return ;
+#endif
   if (data == NULL)
     return ;
   struct memchunk	*chunk;

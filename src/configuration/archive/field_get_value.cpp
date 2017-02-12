@@ -8,10 +8,13 @@
 const char		*bunny_ini_field_get_value(const t_bunny_ini_field	*field,
 						   unsigned int			index)
 {
-  bpt::Ini::FieldValue	*fvalue = (bpt::Ini::FieldValue*)field;
+  t_bunny_configuration	*cnf = (t_bunny_configuration*)field;
+  const char		*c;
 
-  if (fvalue->size() <= index)
+  if ((cnf = bunny_configuration_get_case(cnf, index)) == NULL)
     return (NULL);
-  return ((*fvalue)[index].c_str());
+  if (bunny_configuration_get_string(cnf, &c) == false)
+    return (NULL);
+  return (c);
 }
 

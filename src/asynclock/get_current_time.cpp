@@ -9,8 +9,6 @@ sf::Clock		gl_bunny_current_time;
 
 double			bunny_get_current_time(void)
 {
-  sf::Clock		clock;
-
-  return (clock.getElapsedTime().asMicroseconds() / 1e6);
+  return (gl_bunny_current_time.getElapsedTime().asMicroseconds() / 1e6);
 }
 

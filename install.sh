@@ -76,8 +76,10 @@ cp external/lib/* ${LIB_DIR}			|| get_out "Failed to install dependancies binari
 make -j4					|| get_out "No bunnies were build. Make failed."
 
 # Bunnies
-cp -r include/* ${INCLUDE_DIR}		|| get_out "Failed to install Lapin headers."
+cp -r include/* ${INCLUDE_DIR}			|| get_out "Failed to install Lapin headers."
 cp liblapin.a ${LIB_DIR}			|| get_out "Failed to install Lapin binaries."
+rm -rf ${INCLUDE_DIR}/private
+rm -f ${INCLUDE_DIR}/lapin_private.h
 
 chmod 644 ${INCLUDE_DIR}/*.h*			|| get_out "Failed to change mode of headers."
 chmod 644 ${INCLUDE_DIR}/*/*.h*			|| get_out "Failed to change mode of headers."

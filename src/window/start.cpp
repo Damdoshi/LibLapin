@@ -43,6 +43,10 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
     }
 
   win->window_name = strdup(window_name);
+  if (winstyle & ANTIALIASING)
+    settings.antialiasingLevel = 4;
+  else
+    settings.antialiasingLevel = 0;
   win->window->create(sf::VideoMode(width, height, 32), win->window_name, winstyle, settings);
   win->type = WINDOW;
   win->width = width;

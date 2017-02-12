@@ -8,11 +8,10 @@
 t_bunny_ini_scope	*bunny_ini_get_scope(t_bunny_ini		*ini,
 					     const char			*scope)
 {
-  bpt::Ini		*in = (bpt::Ini*)ini;
-  std::map<std::string, bpt::Ini::Scope>::iterator it;
+  t_bunny_configuration	*cnf = (t_bunny_configuration*)ini;
 
-  if ((it = in->GetData().find(std::string(scope))) == in->GetData().end())
+  if ((cnf = bunny_configuration_get_child(cnf, scope)) == NULL)
     return (NULL);
-  return (&it->second);
+  return ((t_bunny_ini_scope*)cnf);
 }
 

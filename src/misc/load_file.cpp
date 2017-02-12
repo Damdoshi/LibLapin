@@ -16,7 +16,7 @@ ssize_t			bunny_load_file(const char		*file,
   int			sk, sz;
 
   if ((fd = open(file, O_RDONLY)) == -1)
-    return (false);
+    return (-1);
   if ((sk = lseek(fd, 0, SEEK_END)) == -1)
     goto close_and_quit;
   lseek(fd, 0, SEEK_SET);
@@ -38,6 +38,6 @@ ssize_t			bunny_load_file(const char		*file,
   bunny_free(data);
  close_and_quit:
   close(fd);
-  return (false);
+  return (-1);
 }
 

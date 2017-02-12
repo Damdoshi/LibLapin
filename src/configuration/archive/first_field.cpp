@@ -7,11 +7,6 @@
 
 t_bunny_ini_field	*bunny_ini_first_field(t_bunny_ini_scope	*scope)
 {
-  bpt::Ini::Scope	*scop = (bpt::Ini::Scope*)scope;
-  std::map<bpt::string, bpt::Ini::FieldValue>::iterator	it;
-
-  if (scop->empty())
-    return (NULL);
-  return (&scop->begin()->second);
+  return (bunny_configuration_first((t_bunny_configuration*)scope));
 }
 

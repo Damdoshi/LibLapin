@@ -6,18 +6,11 @@
 #include		"lapin_private.h"
 
 static double		ternary(const char			*operation,
-				size_t				&i,
+				ssize_t				&i,
 				t_bunny_configuration		*env);
 
-static void		skipspace(const char			*operation,
-				  size_t			&i)
-{
-  while (operation[i] && (operation[i] == ' ' || operation[i] == '\t'))
-    ++i;
-}
-
 static double		operand(const char			*operation,
-				size_t				&i,
+				ssize_t				&i,
 				t_bunny_configuration		*env)
 {
   char			*end;
@@ -49,7 +42,7 @@ static double		operand(const char			*operation,
 }
 
 static double		test(const char				*operation,
-			     size_t				&i,
+			     ssize_t				&i,
 			     t_bunny_configuration		*env)
 {
   double		first;
@@ -73,7 +66,7 @@ static double		test(const char				*operation,
 }
 
 static double		mul_div_mod(const char			*operation,
-				    size_t			&i,
+				    ssize_t			&i,
 				    t_bunny_configuration	*env)
 {
   double		first;
@@ -91,7 +84,7 @@ static double		mul_div_mod(const char			*operation,
 }
 
 static double		add_sub(const char			*operation,
-				size_t				&i,
+				ssize_t				&i,
 				t_bunny_configuration		*env)
 {
   double		first;
@@ -107,7 +100,7 @@ static double		add_sub(const char			*operation,
 }
 
 static double		ternary(const char			*operation,
-				size_t				&i,
+				ssize_t				&i,
 				t_bunny_configuration		*env)
 {
   double		first, second, third;
@@ -135,7 +128,7 @@ static double		ternary(const char			*operation,
 double			bunny_evaluate(const char		*operation,
 				       t_bunny_configuration	*env)
 {
-  size_t		i;
+  ssize_t		i;
 
   i = 0;
   return (ternary(operation, i, env));

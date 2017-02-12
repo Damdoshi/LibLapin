@@ -10,28 +10,6 @@ extern char		*ini_last_error;
 
 t_bunny_ini		*bunny_load_ini(const char		*file)
 {
-  if (file == NULL)
-    return (NULL);
-  bpt::Ini		*ini = new (std::nothrow) bpt::Ini;
-
-  if (ini == NULL)
-    return (NULL);
-  std::string		fil = file;
-
-  try
-    {
-      if (ini->Load(fil) == false)
-	{
-	  if (ini_last_error != NULL)
-	    free(ini_last_error);
-	  ini_last_error = strdup(ini->errmsg.c_str());
-	  delete ini;
-	  return (NULL);
-	}
-    }
-  catch (...)
-    {
-      return (NULL);
-    }
-  return ((t_bunny_ini*)ini);
+  return (bunny_load_configuration(BC_INI, file, NULL));
 }
+

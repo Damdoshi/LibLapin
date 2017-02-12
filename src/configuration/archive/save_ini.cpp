@@ -5,11 +5,9 @@
 
 #include		"lapin_private.h"
 
-bool			bunny_save_ini(t_bunny_ini		*_ini,
+bool			bunny_save_ini(t_bunny_ini		*ini,
 				       const char		*file)
 {
-  bpt::Ini		*ini = (bpt::Ini*)_ini;
-  std::string		fil = file;
-
-  return (ini->Save(fil));
+  return (bunny_save_configuration(BC_INI, file, ini));
 }
+

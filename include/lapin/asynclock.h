@@ -9,6 +9,10 @@
 ** \file asynclock.h
 ** The Asynclock module is useful to insert functions that will be called
 ** later, for a specific duration or regulary.
+**
+** /!\ DOES NOT WORK YET /!\
+**
+** This module is quite complex! Pay attention to what you read.
 */
 
 #ifndef				__LAPIN_ASYNCLOCK_H__

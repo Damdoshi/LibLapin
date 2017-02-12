@@ -7,8 +7,6 @@
 
 void			bunny_delete_ini(t_bunny_ini	*ini)
 {
-  bpt::Ini		*in = (bpt::Ini*)ini;
-
-  delete in;
+  bunny_delete_configuration((t_bunny_configuration*)ini);
 }
 

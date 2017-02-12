@@ -61,6 +61,10 @@
   SRC		=	$(wildcard ./src/allocator/*.cpp)			\
 			$(wildcard ./src/configuration/*.cpp)			\
 			$(wildcard ./src/configuration/archive/*.cpp)		\
+			$(wildcard ./src/configuration/ini/*.cpp)		\
+			$(wildcard ./src/configuration/dabsic/*.cpp)		\
+			$(wildcard ./src/configuration/xml/*.cpp)		\
+			$(wildcard ./src/configuration/lua/*.cpp)		\
 			$(wildcard ./src/events/*.cpp)				\
 			$(wildcard ./src/graphics/*.cpp)			\
 			$(wildcard ./src/hardware/*.cpp)			\

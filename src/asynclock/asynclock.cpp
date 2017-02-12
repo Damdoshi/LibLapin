@@ -13,7 +13,7 @@ static int		remove_dead_trap(struct bunny_trap	**trap,
   int			cnt;
 
   cnt = 0;
-  for (lst = *trap; lst != NULL; lst = lst->next)
+  for (lst = *trap; lst != NULL; )
     if (lst->remove_it)
       {
 	nxt = lst->next;
@@ -51,7 +51,7 @@ static void		asyncall(double				elapsed,
   // Call the function one single time at start_time
   else
     {
-      if (lst->start_time > bunny_get_current_time() &&
+      if (lst->start_time > now - elapsed &&
 	  lst->start_time <= now)
 	{
 	  lst->func(elapsed, (t_bunny_trap*)lst, lst->param);
@@ -67,7 +67,7 @@ static int		asynclock(double			elapsed,
   struct bunny_trap	*lst;
   double		now;
 
-  now = bunny_get_current_time() + elapsed;
+  now = bunny_get_current_time();
   for (lst = *trap; lst != NULL; lst = lst->next)
     if (lst->start_time > 0)
       asyncall(elapsed, lst, now);
@@ -79,6 +79,7 @@ static int		asynclock(double			elapsed,
 int			bunny_asynclock(double			elapsed,
 					t_bunny_call_order	order)
 {
+  elapsed /= 1e6; // us to seconds
   if (order == BCO_BEFORE_LOOP_MAIN_FUNCTION)
     return (asynclock(elapsed, &gl_bunny_trap_head[0], order));
   return (asynclock(elapsed, &gl_bunny_trap_head[2], order));

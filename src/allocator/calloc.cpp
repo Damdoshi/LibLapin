@@ -16,6 +16,9 @@
 void			*bunny_calloc(size_t		nmemb,
 				      size_t		data)
 {
+#ifdef			LAPIN_ALLOCATOR_DEACTIVATED
+  return (calloc(nmemb, data));
+#endif
   void			*ptr;
   int			i;
 

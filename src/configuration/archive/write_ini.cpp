@@ -8,17 +8,8 @@
 
 extern char		*ini_last_error;
 
-char			*bunny_write_ini(const t_bunny_ini	*_ini)
+char			*bunny_write_ini(const t_bunny_ini	*ini)
 {
-  if (_ini == NULL)
-    return (NULL);
-  bpt::Ini		*ini = (bpt::Ini*)_ini;
-  std::stringstream	ss;
-  char			*str;
-
-  ini->Save(ss);
-  if ((str = (char*)bunny_malloc((ss.str().size() + 1) * sizeof(*str))) == NULL)
-    return (NULL);
-  return (strcpy(str, ss.str().c_str()));
+  return (bunny_write_configuration(BC_INI, ini));
 }
 

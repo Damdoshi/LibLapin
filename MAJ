@@ -24,24 +24,22 @@
      fonction bunny_default_key et ecrite (de l'exterieur du programme) a l'aide de la
      fonction bunny_fill_default_key.
 
- - ----------------------------------
- - Ajout du module "Bunny Asynclock":
- 
- - - Ajout des fonctions bunny_new_trap, bunny_delete_trap, bunny_reset_clock,
-     bunny_get_current_time et surtout bunny_asynclock permettant de placer des
-     demandes d'appels de fonction dans un style proche de cron et que celle
-     ci soient appellée en fonction de paramètres temporels
-
  - -------------------------------------
  - Ajout du module "Bunny configuraton":
 
  - Mise en arrière de l'API Bunny INI du module "Bunny Configuration" en vue de la
    construction d'une API Bunny Configuration plus complete:
- - - [Chargement et sauvegarde de fichier INI, DABSIC, XML, LUA et depuis une BDD SQL]
- - - [Manipulations unifiées, quelque soit le format chargé]
+ - - Chargement et sauvegarde de fichier INI
+ - - [Chargement et sauvegarde de fichier DABSIC, XML et LUA/JSON]
+ - - Manipulations unifiées, quelque soit le format chargé
  - - Ajout des fonctions bunny_write_ini et bunny_read_ini permettant de charger et
      sauvegarder du INI depuis des chaines de caractère (Utile pour combiner ce module
      au module bunny_security)
+
+ - ---------------------------------
+ - Ajout du mini module "Bunny Hash"
+ - Une fonction de hash générant des hashs de 64 bits, deux algorithmes simples
+   disponibles avec, ainsi qu'une mini interface d'extension, comme d'habitude.
 
  - ------------------------------------------------------
  - Ajout des fonctions bunny_load_file et bunny_save_file
@@ -57,9 +55,16 @@
  - -     de tester la collision entre un clic de souris et un quadrilatère quelconque.
 
  - ----------------------
- - Compatibilité avec SFML 2.4.0 (+Retrait de la SFML inclue dans la bibliothèque)
+ - Première version de bunny_evaluate gérant +-*/%<><=>= == != () et ?: ainsi que
+   des litteraux numeriques, mais pas encore de variables (ou de paramètre)
+ - Compatibilité avec SFML 2.4.1 (+Retrait de la SFML inclue dans la bibliothèque),
+   il reste un problème lié aux shaders qui sera reglé dans la 1.12.
  - Resolution d'un bug dans bunny_set_geometry lors d'une utilisation de texture:
    Des points étaient la seule forme affichée, quelque soit la forme demandée.
+ - ANTIALISING ajouté dans t_bunny_window_style
+ - Reorganisation des fichiers en-tête privé.
+
+
 
 =========================================================================================
 ------------------------------------- Version 1.10 --------------------------------------

@@ -9,6 +9,9 @@
 ** \file plugin.h
 ** The plugin module allows you to load dynamic libraries
 ** design with a specific fashion, imposed by the bunny plugin.
+**
+** /!\ DOES NOT WORK YET /!\
+**
 */
 
 #ifndef				__LAPIN_PLUGIN_H__
