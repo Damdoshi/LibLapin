@@ -4,7 +4,7 @@
 // Bibliotheque Lapin
 
 #include		<string.h>
-#include		"dep/NetCom.hpp"
+#include		"deps/NetCom.hpp"
 #include		"lapin.h"
 
 struct			bunny_client
@@ -49,4 +49,3 @@ t_bunny_client		*bunny_new_client(const char		*host,
   bclt->d = port;
   return ((t_bunny_client*)bclt);
 }
-

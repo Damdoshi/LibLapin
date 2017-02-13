@@ -3,7 +3,7 @@
 //
 // Bibliotheque Lapin
 
-#include			"dep/NetCom.hpp"
+#include			"deps/NetCom.hpp"
 #include			"lapin.h"
 
 bool				bunny_client_write(t_bunny_client		*clt,
@@ -12,4 +12,3 @@ bool				bunny_client_write(t_bunny_client		*clt,
 {
   return (((bpt::NetCom::Client*)clt->_private)->Write(data, len, clt->fd));
 }
-

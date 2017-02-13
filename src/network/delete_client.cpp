@@ -3,7 +3,7 @@
 //
 // Bibliotheque Lapin
 
-#include		"dep/NetCom.hpp"
+#include		"deps/NetCom.hpp"
 #include		"lapin.h"
 
 void			bunny_delete_client(t_bunny_client		*clt)
@@ -12,4 +12,3 @@ void			bunny_delete_client(t_bunny_client		*clt)
   free((char*)clt->host);
   bunny_free(clt);
 }
-
