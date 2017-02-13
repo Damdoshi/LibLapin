@@ -92,7 +92,7 @@ t_bunny_configuration	*_bunny_read_ini(const char			*code,
 	  if ((child = read_new_scope(code, i, conf)) == NULL)
 	    return (NULL);
 	}
-      else
+      else if (code[i] != '\0')
 	{
 	  if (read_inside_scope(code, i, *child) == false)
 	    return (NULL);

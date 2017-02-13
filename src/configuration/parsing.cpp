@@ -96,14 +96,14 @@ bool			getfieldname(const char			*code,
   j = i;
   if (readfield(code, j) == false)
     {
-      fprintf(stderr, "A scope name was expected after '['. (Line %d)\n",
+      fprintf(stderr, "A name was expected. (Line %d)\n",
 	      whichline(code, i));
       return (false);
     }
 
   if ((readlen = j - i) > buflen / 2)
     {
-      fprintf(stderr, "The scope name is too long. Max is %zu. (Line %d)\n",
+      fprintf(stderr, "The name is too long. Max is %zu. (Line %d)\n",
 	      buflen / 2, whichline(code, i));
       return (false);
     }
@@ -129,7 +129,13 @@ bool			readdouble(const char			*code,
   if (readchar(code, j, numbers) == false)
     return (false);
   if (readtext(code, j, ".") == false)
-    return (false);
+    {
+      if (readtext(code, j, "%") == false)
+	return (false);
+      d = strtod(&code[i], NULL) / 100.0;
+      i = j;
+      return (true);
+    }
   readchar(code, j, numbers);
   d = strtod(&code[i], NULL);
   i = j;
@@ -140,12 +146,24 @@ bool			readinteger(const char			*code,
 				    ssize_t			&i,
 				    int				&d)
 {
-  ssize_t		j = i;
+  char			*end;
 
-  if (readchar(code, j, numbers) == false)
+  if (strncmp(&code[i], "0b", 2) == 0)
+    {
+      d = 0;
+      i += 2;
+      while (code[i] == '1' || code[i] == '0')
+	{
+	  d <<= 1;
+	  d |= (code[i] == '1') ? 1 : 0;
+	  i += 1;
+	}
+      return (true);
+    }
+  d = strtol(&code[i], &end, 0);
+  if (end == &code[i])
     return (false);
-  d = strtol(&code[i], NULL, 0);
-  i = j;
+  i += end - &code[i];
   return (true);
 }
 

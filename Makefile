@@ -32,12 +32,12 @@
   COMPILER	?=	g++
 
   CONFIG	=	-W -Wall -fPIC						\
-			-Wno-unused-result
-#			-DBUNNY_ALLOCATOR_DEACTIVATED				\
-#			-DBUNNY_DEBUG -DBUNNY_LOG
-#
-#  DEBUG		=	-O0 -g -g3 -ggdb
-  OPTIM		=	-O2
+			-Wno-unused-result					\
+			-DBUNNY_ALLOCATOR_DEACTIVATED				\
+			-DBUNNY_DEBUG -DBUNNY_LOG
+
+  DEBUG		=	-O0 -g -g3 -ggdb
+#  OPTIM		=	-O2
 
   RM		=	rm -f
   ECHO		=	/bin/echo -e
