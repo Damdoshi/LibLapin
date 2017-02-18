@@ -4,7 +4,7 @@
 // Bibliotheque Lapin
 
 #include		"PVM110N.hpp"
-#include		"lapin.h"
+#include		"lapin_private.h"
 
 bool			bunny_hardware_write(const t_bunny_hardware	*hdr)
 {

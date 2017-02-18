@@ -18,7 +18,10 @@ void				bunny_ini_field_set_value(t_bunny_ini_field	*field,
       SmallConf::create_mode = create;
       return ;
     }
-  bunny_configuration_set_string(cnf, value);
+  if (value == NULL)
+    bunny_delete_configuration(cnf);
+  else
+    bunny_configuration_set_string(cnf, value);
   SmallConf::create_mode = create;
 }
 

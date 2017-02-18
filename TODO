@@ -1,3 +1,4 @@
+
 ---------------------
 Fonctionnalité Lapin:
 
@@ -13,6 +14,9 @@ Fonctionnalité Lapin:
  - Les fonctions suivantes:
     t_bunny_configuration *bunny_configuration_get_node(config, const char *str);
     avec str du style "node.zoubida[42].genial"
+
+ - Une petite bibliotheque de shader comprenant: un flou, un effet neon, une normal map,
+   un motion blur dans une direction au choix
 
 - Permettre a bunny_load_file et bunny_save_file de fonctionner avec des URLs
 

@@ -201,3 +201,4 @@ typedef void			(*t_bunny_my_uncipher)(t_bunny_ciphering ciphering,
 extern t_bunny_my_uncipher	gl_bunny_my_uncipher;
 
 #endif	/*			__LAPIN_SECURITY_H__			*/
+

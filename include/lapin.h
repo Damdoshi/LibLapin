@@ -111,13 +111,11 @@
 # include			"lapin/window.h"
 # include			"lapin/graphics.h"
 # include			"lapin/events.h"
-# include			"lapin/database.h"
 # include			"lapin/plugin.h"
 # include			"lapin/configuration.h"
 # include			"lapin/sound.h"
 # include			"lapin/network.h"
 # include			"lapin/threads.h"
-# include			"lapin/hardware.h"
 # include			"lapin/asynclock.h"
 # include			"lapin/security.h"
 # include			"lapin/self_test.h"
@@ -126,6 +124,18 @@
 # include			"lapin/misc.h"
 
 # include			"lapin/compat.h"
+
+# ifdef				BUNNY_DATABASE
+#  include			"lapin/database.h"
+# endif
+
+# ifdef				BUNNY_HARDWARE
+#  include			"lapin/hardware.h"
+# endif
+
+# ifdef				BUNNY_MACRO
+#  include			"lapin/macros.h"
+# endif
 
 # ifdef				__cplusplus
 #  include			"lapin/cpp_guard_end.hpp"

@@ -11,6 +11,80 @@
 # include			<iomanip>
 # include			<sstream>
 
+struct SmallConf;
+
+t_bunny_configuration		*_bunny_read_ini(const char			*code,
+						 t_bunny_configuration		*config);
+t_bunny_configuration		*_bunny_read_dabsic(const char			*code,
+						    t_bunny_configuration	*config);
+t_bunny_configuration		*_bunny_read_xml(const char			*code,
+						 t_bunny_configuration		*config);
+t_bunny_configuration		*_bunny_read_lua(const char			*code,
+						 t_bunny_configuration		*config);
+
+char				*_bunny_write_ini(const t_bunny_configuration	*config);
+char				*_bunny_write_dabsic(const t_bunny_configuration *config);
+char				*_bunny_write_xml(const t_bunny_configuration	*config);
+char				*_bunny_write_lua(const t_bunny_configuration	*config);
+
+int				chekchar(const char				*str,
+					 ssize_t				&index,
+					 const char				*token);
+bool				readchar(const char				*str,
+					 ssize_t				&index,
+					 const char				*token);
+bool				readtext(const char				*str,
+					 ssize_t				&index,
+					 const char				*token);
+void				skipspace(const char				*str,
+					  ssize_t				&i);
+bool				readfield(const char				*str,
+					  ssize_t				&index);
+bool				getfieldname(const char				*code,
+					     ssize_t				&i,
+					     char				*out,
+					     ssize_t				len,
+					     SmallConf				&scope,
+					     bool				overwrite);
+bool				readdouble(const char				*code,
+					   ssize_t				&i,
+					   double				&d);
+bool				readinteger(const char				*code,
+					    ssize_t				&i,
+					    int					&d);
+bool				readstring(const char				*code,
+					   ssize_t				&i,
+					   char					*d,
+					   ssize_t				len);
+bool				readrawchar(const char				*code,
+					    ssize_t				&i,
+					    char				*d,
+					    ssize_t				len,
+					    char				endtok);
+bool				readvalue(const char				*code,
+					  ssize_t				&i,
+					  SmallConf				&nod,
+					  char					endtok);
+int				whichline(const char				*code,
+					  int					i);
+void				writestring(std::stringstream			&ss,
+					    std::string				&str);
+bool				read_data(const char				*code,
+					  ssize_t				&i,
+					  SmallConf				&config);
+bool				read_sequence(const char			*code,
+					      ssize_t				&i,
+					      SmallConf				&config);
+bool				read_function(const char			*code,
+					      ssize_t				&i,
+					      SmallConf				&config);
+void				writevalue(std::stringstream			&ss,
+					   const SmallConf			&cnf);
+
+extern const char		*fieldname_first_char;
+extern const char		*fieldname;
+extern const char		*numbers;
+
 struct				SmallConf
 {
   enum				Type
@@ -23,6 +97,8 @@ struct				SmallConf
 
   std::map
   <std::string, SmallConf*>	nodes;
+  std::vector
+  <SmallConf*>			array;
   std::map<
     std::string, SmallConf*
     >::iterator			iterator;
@@ -60,6 +136,10 @@ struct				SmallConf
   {
     return (iterator);
   }
+  size_t			Size(void) const
+  {
+    return (array.size());
+  }
 
   SmallConf			&operator[](const std::string			&str)
   {
@@ -81,12 +161,27 @@ struct				SmallConf
       }
     return (**slot);
   }
-  SmallConf			&operator[](ssize_t				i)
+  SmallConf			&operator[](size_t				i)
   {
-    std::stringstream		ss;
+    size_t			olsize;
     
-    ss << std::setfill('0') << std::setw(8) << i;
-    return ((*this)[ss.str()]);
+    if ((olsize = array.size()) <= i)
+      {
+	if (!create_mode)
+	  throw 0;
+	array.resize(i + 1);
+	while (olsize <= i)
+	  {
+	    std::stringstream ss;
+
+	    ss << this->name << "[" << i << "]";
+	    array[olsize] = new SmallConf;
+	    array[olsize]->father = this;
+	    array[olsize]->name = ss.str();
+	    olsize += 1;
+	  }
+      }      
+    return (*array[i]);
   }
   bool				Access(const std::string			&str)
   {
@@ -159,8 +254,9 @@ struct				SmallConf
       return (false);
     if (is_converted == false)
       {
-	converted_2 = converted = strtod(original_value.c_str(), &str);
-	if (original_value.c_str() == str)
+	ssize_t			i;
+	
+	if (readdouble(original_value.c_str(), i, converted) == false)
 	  return (false);
 	is_converted = true;
       }
@@ -185,60 +281,5 @@ struct				SmallConf
       father->nodes.erase(name);
   }
 };
-
-t_bunny_configuration		*_bunny_read_ini(const char			*code,
-						 t_bunny_configuration		*config);
-t_bunny_configuration		*_bunny_read_dabsic(const char			*code,
-						    t_bunny_configuration	*config);
-t_bunny_configuration		*_bunny_read_xml(const char			*code,
-						 t_bunny_configuration		*config);
-t_bunny_configuration		*_bunny_read_lua(const char			*code,
-						 t_bunny_configuration		*config);
-
-char				*_bunny_write_ini(const t_bunny_configuration	*config);
-char				*_bunny_write_dabsic(const t_bunny_configuration *config);
-char				*_bunny_write_xml(const t_bunny_configuration	*config);
-char				*_bunny_write_lua(const t_bunny_configuration	*config);
-
-int				chekchar(const char				*str,
-					 ssize_t				&index,
-					 const char				*token);
-bool				readchar(const char				*str,
-					 ssize_t				&index,
-					 const char				*token);
-bool				readtext(const char				*str,
-					 ssize_t				&index,
-					 const char				*token);
-void				skipspace(const char				*str,
-					  ssize_t				&i);
-bool				readfield(const char				*str,
-					  ssize_t				&index);
-bool				getfieldname(const char				*code,
-					     ssize_t				&i,
-					     char				*out,
-					     ssize_t				len,
-					     SmallConf				&scope);
-bool				readdouble(const char				*code,
-					   ssize_t				&i,
-					   double				&d);
-bool				readinteger(const char				*code,
-					    ssize_t				&i,
-					    int					&d);
-bool				readstring(const char				*code,
-					   ssize_t				&i,
-					   char					*d,
-					   ssize_t				len);
-bool				readrawchar(const char				*code,
-					    ssize_t				&i,
-					    char				*d,
-					    ssize_t				len);
-int				whichline(const char				*code,
-					  int					i);
-void				writestring(std::stringstream			&ss,
-					    std::string				&str);
-
-extern const char		*fieldname_first_char;
-extern const char		*fieldname;
-extern const char		*numbers;
 
 #endif	/*			__LAPIN_PRIVATE_CONFIGURATION_HPP__		*/

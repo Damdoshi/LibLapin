@@ -39,12 +39,11 @@ bool			readtext(const char			*str,
 				 ssize_t			&index,
 				 const char			*token)
 {
-  ssize_t		i;
+  size_t		l;
 
-  for (i = 0; str[index + i] == token[i]; ++i);
-  if (token[i])
+  if (strncmp(&str[index], token, l = strlen(token)) != 0)
     return (false);
-  index += i;
+  index += l;
   return (true);
 }
 
@@ -89,7 +88,8 @@ bool			getfieldname(const char			*code,
 				     ssize_t			&i,
 				     char			*out,
 				     ssize_t			buflen,
-				     SmallConf			&scope)
+				     SmallConf			&scope,
+				     bool			overwrite)
 {
   ssize_t		readlen, j;
 
@@ -108,8 +108,12 @@ bool			getfieldname(const char			*code,
       return (false);
     }
   strncpy(&out[0], &code[i], readlen);
-
+  out[readlen] = '\0';
   i = j;
+
+  if (overwrite)
+    return (true);
+
   j = -1;
   do
     if (j++ < 0)
@@ -170,11 +174,12 @@ bool			readinteger(const char			*code,
 bool			readrawchar(const char			*code,
 				    ssize_t			&i,
 				    char			*d,
-				    ssize_t			len)
+				    ssize_t			len,
+				    char			endtok)
 {
   ssize_t		j;
 
-  for (j = i; code[j] && code[j] != '\n' && code[j] != '\r' && code[j] != ','; ++j);
+  for (j = i; code[j] && code[j] != '\n' && code[j] != '\r' && code[j] != endtok; ++j);
   if (j - i >= len - 1)
     {
       fprintf(stderr, "The raw string is too long. (Line %d)\n",
@@ -298,3 +303,50 @@ void			writestring(std::stringstream		&ss,
       }
   ss << "\"";
 }
+
+bool			readvalue(const char			*code,
+				  ssize_t			&i,
+				  SmallConf			&nod,
+				  char				endtok)
+{
+  char			buffer[512 * 1024];
+  int			ival;
+  double		val;
+  int			bef;
+
+  bef = i;
+  if (readdouble(code, i, val))
+    {
+      nod.SetDouble(val);
+      nod.original_value = std::string(&code[bef], i - bef);
+    }
+  else if (readinteger(code, i, ival))
+    {
+      nod.SetInt(ival);
+      nod.original_value = std::string(&code[bef], i - bef);
+    }
+  else if (readstring(code, i, &buffer[0], sizeof(buffer)))
+    nod.SetString(std::string(&buffer[0]));
+  else if (endtok != '\0')
+    {
+      readrawchar(code, i, &buffer[0], sizeof(buffer), endtok);
+      nod.SetString(std::string(&buffer[0]), true);
+    }
+  else
+    return (false);
+  return (true);
+}
+
+void			writevalue(std::stringstream		&ss,
+				   const SmallConf		&cnf)
+{
+  if (cnf.last_type == SmallConf::DOUBLE)
+    ss << cnf.converted;
+  else if (cnf.last_type == SmallConf::INTEGER)
+    ss << cnf.converted_2;
+  else if (cnf.last_type == SmallConf::STRING)
+    writestring(ss, cnf.original_value);
+  else
+    ss << cnf.original_value;
+}
+

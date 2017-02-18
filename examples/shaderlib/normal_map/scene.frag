@@ -2,7 +2,7 @@
 ** Jason Brillante "Damdoshi"
 ** Hanged Bunny Studio 2014-2016
 **
-**
+** Normal map shader
 */
 
 varying vec2 vClip;

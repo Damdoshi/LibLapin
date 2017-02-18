@@ -21,12 +21,10 @@ static bool		read_inside_scope(const char			*code,
 					  ssize_t			&i,
 					  SmallConf			&conf)
 {
-  char			buffer[512 * 1024];
-  int			ival;
-  double		val;
+  char			buffer[512];
 
   read_separator(code, i);
-  if (getfieldname(code, i, &buffer[0], sizeof(buffer), conf) == false)
+  if (getfieldname(code, i, &buffer[0], sizeof(buffer), conf, false) == false)
     return (false);
   read_separator(code, i);
   if (readtext(code, i, "=") == false)
@@ -37,17 +35,7 @@ static bool		read_inside_scope(const char			*code,
   do
     {
       read_separator(code, i);
-      if (readdouble(code, i, val))
-	newnode[iteration++].SetDouble(val);
-      else if (readinteger(code, i, ival))
-	newnode[iteration++].SetInt(ival);
-      else if (readstring(code, i, &buffer[0], sizeof(buffer)))
-	newnode[iteration++].SetString(std::string(&buffer[0]));
-      else
-	{
-	  readrawchar(code, i, &buffer[0], sizeof(buffer));
-	  newnode[iteration++].SetString(std::string(&buffer[0]), true);
-	}
+      readvalue(code, i, newnode[iteration++], ',');
       read_separator(code, i);
     }
   while (readtext(code, i, ","));
@@ -62,7 +50,7 @@ SmallConf		*read_new_scope(const char			*code,
   char			buffer[256];
 
   read_separator(code, i);
-  if (getfieldname(code, i, &buffer[0], sizeof(buffer), root) == false)
+  if (getfieldname(code, i, &buffer[0], sizeof(buffer), root, false) == false)
     return (NULL);
   read_separator(code, i);
   if (readtext(code, i, "]") == false)
@@ -90,12 +78,18 @@ t_bunny_configuration	*_bunny_read_ini(const char			*code,
       if (readtext(code, i, "["))
 	{
 	  if ((child = read_new_scope(code, i, conf)) == NULL)
-	    return (NULL);
+	    {
+	      SmallConf::create_mode = cmode;
+	      return (NULL);
+	    }
 	}
       else if (code[i] != '\0')
 	{
 	  if (read_inside_scope(code, i, *child) == false)
-	    return (NULL);
+	    {
+	      SmallConf::create_mode = cmode;
+	      return (NULL);
+	    }
 	}
       read_separator(code, i);
     }

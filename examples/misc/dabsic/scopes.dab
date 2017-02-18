@@ -1,0 +1,40 @@
+
+
+
+[Scope1
+  [Scope1_1
+    [Scope1_1_1
+      Field
+    ]
+    [Scope1_1_2
+      Field
+    ]
+  ]
+  [Scope1_2
+    [Scope1_1_1
+      Field
+    ]
+    [Scope1_1_2
+      Field
+    ]
+  ]
+]
+
+[Scope2
+  [Scope2_1
+    [Scope2_1_1
+      Field
+    ]
+    [Scope2_1_2
+      Field
+    ]
+  ]
+  [Scope2_2
+    [Scope2_2_1
+      Field
+    ]
+    [Scope2_2_2
+      Field
+    ]
+  ]
+]

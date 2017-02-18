@@ -29,9 +29,12 @@
 
  - Mise en arrière de l'API Bunny INI du module "Bunny Configuration" en vue de la
    construction d'une API Bunny Configuration plus complete:
- - - Chargement et sauvegarde de fichier INI
- - - [Chargement et sauvegarde de fichier DABSIC, XML et LUA/JSON]
- - - Manipulations unifiées, quelque soit le format chargé
+ - - Chargement et sauvegarde de fichiers INI
+ - - Chargement et sauvegarde de fichiers DABSIC
+ - - [Chargement et sauvegarde de fichier XML et LUA/JSON]
+ - - Manipulations unifiées, quelque soit le format chargé, avec de nombreuses fonctions
+     avec conversions explicites possibles
+
  - - Ajout des fonctions bunny_write_ini et bunny_read_ini permettant de charger et
      sauvegarder du INI depuis des chaines de caractère (Utile pour combiner ce module
      au module bunny_security)

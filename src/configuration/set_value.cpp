@@ -10,7 +10,10 @@ void			bunny_configuration_set_string(t_bunny_configuration	*config,
 {
   SmallConf		*conf = (SmallConf*)config;
 
-  conf->SetString(std::string(val));
+  if (val == NULL)
+    conf->SetString(std::string());
+  else
+    conf->SetString(std::string(val));
 }
 
 void			bunny_configuration_set_int(t_bunny_configuration	*config,

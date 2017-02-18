@@ -4,7 +4,7 @@
 // Bibliotheque Lapin
 
 #include		"PVM110N.hpp"
-#include		"lapin.h"
+#include		"lapin_private.h"
 
 struct			bunny_hardware
 {

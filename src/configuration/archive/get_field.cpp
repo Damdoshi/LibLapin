@@ -13,6 +13,8 @@ const char		*bunny_ini_get_field(const t_bunny_ini		*ini,
   t_bunny_configuration	*cnf = (t_bunny_configuration*)ini;
   const char		*c;
 
+  if (scope[0] == '\0')
+    scope = "default";
   if ((cnf = bunny_configuration_get_child(cnf, scope)) == NULL)
     return (NULL);
   if ((cnf = bunny_configuration_get_child(cnf, field)) == NULL)

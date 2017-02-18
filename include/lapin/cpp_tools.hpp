@@ -56,11 +56,12 @@ inline Vector			&operator-=(Vector			&a,
   return (a);
 }
 
-template<typename		Chunk>
-void				bunny_raw_copy(Chunk			&a,
-					       const Chunk		&b)
+template<typename		Chunk1,
+	 typename		Chunk2>
+void				bunny_raw_copy(Chunk1			&a,
+					       const Chunk2		&b)
 {
-  memcpy((void*)&a, (void*)&b, sizeof(Chunk));
+  memcpy((void*)&a, (void*)&b, sizeof(Chunk1) < sizeof(Chunk2) ? sizeof(Chunk1) : sizeof(Chunk2));
 }
 
 #endif	//			__LAPIN_CPP_TOOLS_HPP__

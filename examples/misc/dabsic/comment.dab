@@ -1,0 +1,11 @@
+
+
+Field = "C'est cool" 'C'est faux
+[Scope 'Tout pourri
+  [*
+  ** C'est un scope ici
+  ** Ouais, c'est vrai
+  *]
+  Field = 42
+]
+

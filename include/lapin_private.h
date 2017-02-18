@@ -8,8 +8,11 @@
 
 #ifndef				__LAPIN_PRIVATE_H__
 # define			__LAPIN_PRIVATE_H__
+
+# define			BUNNY_DATABASE
+# define			BUNNY_HARDWARE
+
 # include			"lapin.h"
-# include			"Ini.hpp"
 # include			"private/allocator.h"
 # include			"private/graphics.h"
 # include			"private/database.h"

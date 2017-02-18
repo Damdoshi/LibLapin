@@ -21,15 +21,7 @@ char			*_bunny_write_ini(const t_bunny_configuration		*config)
 	  ss << field->first << "=";
 	  for (index = field->second->Begin(); index != field->second->End(); )
 	    {
-	      if (index->second->last_type == SmallConf::DOUBLE)
-		ss << index->second->converted;
-	      else if (index->second->last_type == SmallConf::INTEGER)
-		ss << index->second->converted_2;
-	      else if (index->second->last_type == SmallConf::STRING)
-		writestring(ss, index->second->original_value);
-	      else
-		ss << index->second->original_value;
-
+	      writevalue(ss, *index->second);
 	      if (++index != field->second->End())
 		ss << ",";
 	    }

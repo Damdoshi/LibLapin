@@ -53,6 +53,18 @@ typedef enum			e_bunny_rgb
 */
 # define			TO_ALPHA(a)			(((a) & 0xFF) << (ALPHA_CMP * 8))
 /*!
+** The TO_RED macro transforms the given parameter into a red component for a color.
+*/
+# define			TO_RED(a)			(((a) & 0xFF) << (RED_CMP * 8))
+/*!
+** The TO_GREEN macro transforms the given parameter into a green component for a color.
+*/
+# define			TO_GREEN(a)			(((a) & 0xFF) << (GREEN_CMP * 8))
+/*!
+** The TO_BLUE macro transforms the given parameter into a blue component for a color.
+*/
+# define			TO_BLUE(a)			(((a) & 0xFF) << (BLUE_CMP * 8))
+/*!
 ** The GET_COLOR macro removes the alpha component of the given color.
 ** For example, TO_ALPHA(WHITE) will return 0x00FFFFFF (WHITE being 0xFFFFFFFF)
 */
@@ -62,6 +74,12 @@ typedef enum			e_bunny_rgb
 ** For example, ALPHA(128, RED) will return 0x800000FF (0x80 being 128 in hex and RED being 0xFF0000FF).
 */
 # define			ALPHA(a, c)			(TO_ALPHA(a) | GET_COLOR(c))
+
+/*!
+** Compose a color by component and return it as an int.
+*/
+# define			COLOR(a, r, g, b)		\
+  (TO_ALPHA(a) | TO_RED(r) | TO_GREEN(g) | TO_BLUE(b))
 
 /*!
 ** The t_bunny_color union represents a pixel color.

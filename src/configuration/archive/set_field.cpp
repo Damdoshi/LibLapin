@@ -14,6 +14,8 @@ void			bunny_ini_set_field(t_bunny_ini		*ini,
   t_bunny_configuration	*cnf = (t_bunny_configuration*)ini;
   bool			create = SmallConf::create_mode;
 
+  if (scope[0] == '\0')
+    scope = "default";
   SmallConf::create_mode = true;
   if ((cnf = bunny_configuration_get_child(cnf, scope)) == NULL)
     {
@@ -30,7 +32,10 @@ void			bunny_ini_set_field(t_bunny_ini		*ini,
       SmallConf::create_mode = create;
       return ;
     }
-  bunny_configuration_set_string(cnf, value);
+  if (value == NULL)
+    bunny_delete_configuration(cnf);
+  else
+    bunny_configuration_set_string(cnf, value);
   SmallConf::create_mode = create;
 }
 

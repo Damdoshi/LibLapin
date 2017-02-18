@@ -1,0 +1,16 @@
+
+
+[ScopeField = 42
+  Field = "Yeah"
+  [Scope = 4.0001
+     Field
+     Field2 = "Genial"
+     Field3
+     Field4
+  ]
+  ToujoursBien = 0
+  [Again
+
+  ]
+]
+

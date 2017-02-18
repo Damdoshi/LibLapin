@@ -1,0 +1,21 @@
+/*
+** Jason Brillante "Damdoshi"
+** Hanged Bunny Studio 2014-2016
+**
+** Spreading
+*/
+
+void main()
+{
+  gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+
+  // transforme les coordonnées de texture
+  gl_TexCoord[0] = gl_TextureMatrix[0] * (gl_MultiTexCoord0 + vec4(+0.0, +0.0, 0.0, 0.0));
+  gl_TexCoord[1] = gl_TextureMatrix[0] * (gl_MultiTexCoord0 + vec4(+0.0, -1.0, 0.0, 0.0));
+  gl_TexCoord[2] = gl_TextureMatrix[0] * (gl_MultiTexCoord0 + vec4(+0.0, +1.0, 0.0, 0.0));
+  gl_TexCoord[3] = gl_TextureMatrix[0] * (gl_MultiTexCoord0 + vec4(-1.0, +0.0, 0.0, 0.0));
+  gl_TexCoord[4] = gl_TextureMatrix[0] * (gl_MultiTexCoord0 + vec4(+1.0, +0.0, 0.0, 0.0));
+
+  //gl_FrontColor = gl_Color;
+}
+

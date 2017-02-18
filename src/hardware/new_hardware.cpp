@@ -6,7 +6,7 @@
 #include			<new>
 #include			<string.h>
 #include			"PVM110N.hpp"
-#include			"lapin.h"
+#include			"lapin_private.h"
 
 struct				bunny_hardware
 {
