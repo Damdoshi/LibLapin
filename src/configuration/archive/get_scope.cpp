@@ -10,8 +10,8 @@ t_bunny_ini_scope	*bunny_ini_get_scope(t_bunny_ini		*ini,
 {
   t_bunny_configuration	*cnf = (t_bunny_configuration*)ini;
 
-  if (scope[0] == '\0')
-    scope = "default";
+  if (strcmp(scope, "") == 0)
+    scope = "@";
   if ((cnf = bunny_configuration_get_child(cnf, scope)) == NULL)
     return (NULL);
   return ((t_bunny_ini_scope*)cnf);

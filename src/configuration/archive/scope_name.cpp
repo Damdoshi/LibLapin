@@ -11,7 +11,7 @@ const char		*bunny_ini_scope_name(const t_bunny_ini		*in,
   const char		*ret;
   
   (void)in;
-  if (strcmp(ret = bunny_configuration_get_name(sc), "default") == 0)
+  if (strcmp(ret = bunny_configuration_get_name(sc), "@") == 0)
     return ("");
   return (ret);
 }

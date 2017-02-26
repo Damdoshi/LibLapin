@@ -21,6 +21,8 @@ t_bunny_effect		*bunny_new_effect(double		duration)
   eff->sound.setBuffer(eff->effect);
   eff->type = EFFECT;
 
+  BUNNY_LOG(fprintf(stderr, "%s: Returning %p.\n", __PRETTY_FUNCTION__, eff));
+
   return ((t_bunny_effect*)eff);
   
  FailStruct:

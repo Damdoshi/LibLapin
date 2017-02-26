@@ -23,67 +23,63 @@
 
 typedef enum			e_bunny_value_type
   {
-    BVT_INTEGER			= 'i',
-    BVT_REAL			= 'r',
-    BVT_POINTER			= 'p'
+    VOID			= 'v', 
+    INTEGER			= 'i', /* int64_t */
+    DOUBLE			= 'd',
+    STRING			= 's', /* const char * */
+    POINTER			= 'p'  /* void * */
   }				t_bunny_value_type;
 
 typedef union			u_bunny_value
 {
   ssize_t			integer;
+  const char			*string;
+  void				*any;
+#if				defined(__LP64__) || defined(_WIN64)
   double			real;
-  void				*data;
+#else
+  float				real;
+#endif
 }				t_bunny_value;
 
-/*!
-** The type of function that must be written in plugins to be callable
-** by bunny_call* functions.
-** Of course, you can get other functions, but it won't bind automaticaly
-** with the configuration module.
-*/
-typedef t_bunny_value		(*t_bunny_plugged_function)(size_t		n,
-							    t_bunny_value	*p);
-
-
-typedef struct			s_bunny_extern_function
+typedef struct			s_bunny_prototype
 {
-  const char * const		name;
-  const char * const		parameters;
-  const char			return_value;
-  const t_bunny_plugged_function fptr;
-}				t_bunny_extern_function;
+  const char *			name;
+  const void *			function_ptr;
+  t_bunny_value_type		return_value;
+  size_t			nbrparam;
+  t_bunny_value_type		parameters[2];
+}				t_bunny_prototype;
+
+typedef const t_bunny_prototype	*(*t_bunny_get_function_list)(void);
 
 typedef struct			s_bunny_plugin
 {
-  void * const			handler;
+  const char * const		name;
+  const void * const		library_handler;
   const size_t			nbr_functions;
 # ifndef			__ANSI__
-  t_bunny_extern_function	functions[0];
+  const t_bunny_prototype	prototypes[0];
 # else
-  t_bunny_extern_function	functions[1];
+  const t_bunny_prototype	prototypes[1];
 # endif
 }				t_bunny_plugin;
 
-typedef t_bunny_extern_function	*(*t_bunny_list_plugin_function)(size_t	*nbr_func);
+t_bunny_plugin			*bunny_new_plugin(const char			*libfile);
+void				bunny_delete_plugin(t_bunny_plugin		*plugin);
 
-t_bunny_plugin			*bunny_new_plugin(const char		*dyn_lib);
-void				bunny_delete_plugin(t_bunny_plugin	*plugin);
+void				*bunny_plugin_get_function(const t_bunny_plugin	*plugin,
+							   const char		*funcname);
 
-void				*bunny_plugin_get_function(t_bunny_plugin *plugin,
-							   const char	*str);
+bool				bunny_plugin_call(t_bunny_plugin		*plugin,
+						  const char			*funcname,
+						  t_bunny_value			*return_value,
+						  size_t			arrlen,
+						  t_bunny_value			*val);
 
-bool				bunny_vcall(t_bunny_plugin		*plugin,
-					    const char			*func,
-					    const char			*param,
-					    t_bunny_value		*out,
-					    ...);
-
-bool				bunny_call(t_bunny_plugin		*plugin,
-					   const char			*func,
-					   const char			*paramdesc,
-					   t_bunny_value		*out,
-					   t_bunny_value		*param);
-
-// array instead of ... ?
+bool				bunny_plugin_callv(t_bunny_plugin		*plugin,
+						   const char			*func,
+						   t_bunny_value		*return_value,
+						   ...);
 
 #endif	/*			__LAPIN_PLUGIN_H__	*/

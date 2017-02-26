@@ -248,8 +248,6 @@ struct				SmallConf
   }
   bool				GetDouble(double				*v) const
   {
-    char			*str;
-
     if (have_value == false)
       return (false);
     if (is_converted == false)
@@ -274,11 +272,12 @@ struct				SmallConf
   ~SmallConf(void)
   {
     std::map<std::string, SmallConf*>::iterator	it;
+    std::map<std::string, SmallConf*> dup = nodes;
 
-    for (it = nodes.begin(); it != nodes.end(); ++it)
-      delete it->second;
     if (father != NULL)
       father->nodes.erase(name);
+    for (it = dup.begin(); it != dup.end(); ++it)
+      delete it->second;
   }
 };
 

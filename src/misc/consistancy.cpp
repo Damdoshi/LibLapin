@@ -61,4 +61,6 @@ void				bunny_consistancy(void)
   do_assert(&usr_pic->color_mask, &prv_pic->color_mask);
 
   puts("If this text appeir, all tests were successful.");
+
+  
 }

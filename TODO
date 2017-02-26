@@ -2,6 +2,8 @@
 ---------------------
 Fonctionnalité Lapin:
 
+ - Les conteneurs suivants: vector, liste, hashmap
+
  - ----------------------------------
  - Ajout du module "Bunny Asynclock":
  

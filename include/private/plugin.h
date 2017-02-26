@@ -9,11 +9,17 @@
 #ifndef				__LAPIN_PRIVATE_PLUGIN_H__
 # define			__LAPIN_PRIVATE_PLUGIN_H__
 
-struct				bunny_plugin
+typedef struct			s_bunny_buttplug
 {
-  void				*handler;
-  size_t			nbr_functions;
-  t_bunny_extern_function	functions[0];
-};
+   char				*name;
+   void				*library_handler;
+   size_t			nbr_function;
+# ifndef			__ANSI__
+   t_bunny_prototype		prototypes[0];
+# else
+   t_bunny_prototype		prototypes[1];
+# endif
+}				t_bunny_buttplug;
+
 
 #endif	/*			__LAPIN_PRIVATE_PLUGIN_H__	*/

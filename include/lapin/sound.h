@@ -31,9 +31,9 @@
 */
 typedef struct			s_bunny_sound
 {
-  const char			_private[sizeof(int32_t)];
+  const char			_private[sizeof(size_t)];
   const char * const		file;
-} PACKED			t_bunny_sound;
+}				t_bunny_sound;
 
 /*!
 ** The t_bunny_music structure is useful to play, load and
@@ -44,7 +44,7 @@ typedef struct			s_bunny_music
 {
   t_bunny_sound			sound;
   const double			duration;
-} PACKED			t_bunny_music;
+}				t_bunny_music;
 
 /*!
 ** The t_bunny_effect structure is useful to play, load and
@@ -63,7 +63,7 @@ typedef struct			s_bunny_effect
   const size_t			sample_per_second;
   const double			duration;
   int16_t * const		sample;
-} PACKED			t_bunny_effect;
+}				t_bunny_effect;
 
 /*!
 ** The bunny_load_music function load a sound file and return a matching t_bunny_music.

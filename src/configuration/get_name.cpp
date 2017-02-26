@@ -9,6 +9,8 @@ const char		*bunny_configuration_get_name(const t_bunny_configuration	*config)
 {
   SmallConf		*conf = (SmallConf*)config;
 
+  if (conf->name == "@")
+    return ("");
   return (conf->name.c_str());
 }
 

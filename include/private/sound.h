@@ -18,13 +18,13 @@ enum				_music_or_sound
 
 struct				bunny_sound
 {
-  enum _music_or_sound		type;
+  size_t			type;
   char				*file;
 };
 
 struct				bunny_music
 {
-  enum _music_or_sound		type;
+  size_t			type;
   char				*file;
   double			duration;
   sf::Music			music;
@@ -32,7 +32,7 @@ struct				bunny_music
 
 struct				bunny_effect
 {
-  enum _music_or_sound		type;
+  size_t			type;
   char				*file;
   size_t			sample_per_second;
   size_t			duration;

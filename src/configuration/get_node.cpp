@@ -5,9 +5,9 @@
 
 #include		"lapin_private.h"
 
-t_bunny_configuration	*bunny_configuration_get_node_va(t_bunny_configuration	*config,
-							 size_t			nbr,
-							 ...)
+t_bunny_configuration	*bunny_configuration_go_get_node_va(t_bunny_configuration	*config,
+							    size_t			nbr,
+							    ...)
 {
   t_bunny_configuration	*cnf = config;
   va_list		lst;

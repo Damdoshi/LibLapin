@@ -25,11 +25,13 @@ int				main(int		argc,
 	if (bunny_load_configuration(BC_INI, argv[i], conf) == NULL)
 	  {
 	    bunny_delete_configuration(conf);
+	    fprintf(stderr, "Failure while reading : %s\n", argv[i]);
 	    return (EXIT_FAILURE);
 	  }
       if ((out = bunny_write_configuration(BC_INI, conf)) == NULL)
 	{
 	  bunny_delete_configuration(conf);
+	  fprintf(stderr, "Failure while writing : %s\n", argv[i]);
 	  return (EXIT_FAILURE);
 	}
       puts(out);
@@ -40,7 +42,7 @@ int				main(int		argc,
     {
       if ((conf = bunny_load_configuration(BC_INI, "verylong.ini", NULL)) == NULL)
 	return (EXIT_FAILURE);
-      if ((conf = bunny_configuration_get_node_va(conf, 3, "topsection", "field", -3)) == NULL)
+      if ((conf = bunny_configuration_go_get_node_va(conf, 3, "topsection", "field", -3)) == NULL)
 	return (EXIT_FAILURE);
       if (bunny_configuration_get_string(conf, &out2))
 	puts(out2);

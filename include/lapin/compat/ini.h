@@ -236,7 +236,7 @@ t_bunny_ini_scope		*bunny_ini_next_scope(t_bunny_ini		*ini,
 						      t_bunny_ini_scope		*scope);
 
 /*!
-** Get the name of the sent scope. DEFAULT_SCOPE's name is "".
+** Get the name of the sent scope.
 ** \param ini The INI configuration
 ** \param scope The scope you wanna get the name from
 ** \return The name of the scope.

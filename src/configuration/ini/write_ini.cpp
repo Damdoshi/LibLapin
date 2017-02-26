@@ -8,21 +8,22 @@
 char			*_bunny_write_ini(const t_bunny_configuration		*config)
 {
   SmallConf		&conf = *(SmallConf*)config;
-  std::map<std::string, SmallConf*>::const_iterator scope, field, index;
+  std::map<std::string, SmallConf*>::const_iterator scope, field;
   std::stringstream	ss;
+  size_t		index;
   char			*ret;
 
-  if (conf.Access("default"))
+  if (conf.Access("@"))
     {
-      SmallConf		&def = conf["default"];
+      SmallConf		&def = conf["@"];
 
       for (field = def.Begin(); field != def.End(); ++field)
 	{
 	  ss << field->first << "=";
-	  for (index = field->second->Begin(); index != field->second->End(); )
+	  for (index = 0; index != field->second->Size(); )
 	    {
-	      writevalue(ss, *index->second);
-	      if (++index != field->second->End())
+	      writevalue(ss, (*field->second)[index]);
+	      if (++index != field->second->Size())
 		ss << ",";
 	    }
 	  ss << std::endl;
@@ -30,24 +31,16 @@ char			*_bunny_write_ini(const t_bunny_configuration		*config)
     }
   
   for (scope = conf.Begin(); scope != conf.End(); ++scope)
-    if (scope->first != "default")
+    if (scope->first != "@")
       {
 	ss << std::endl << "[" << scope->first << "]" << std::endl;
 	for (field = scope->second->Begin(); field != scope->second->End(); ++field)
 	  {
 	    ss << field->first << "=";
-	    for (index = field->second->Begin(); index != field->second->End(); )
+	    for (index = 0; index != field->second->Size(); )
 	      {
-		if (index->second->last_type == SmallConf::DOUBLE)
-		  ss << index->second->converted;
-		else if (index->second->last_type == SmallConf::INTEGER)
-		  ss << index->second->converted_2;
-		else if (index->second->last_type == SmallConf::STRING)
-		  writestring(ss, index->second->original_value);
-		else
-		  ss << index->second->original_value;
-
-		if (++index != field->second->End())
+		writevalue(ss, (*field->second)[index]);
+		if (++index != field->second->Size())
 		  ss << ",";
 	      }
 	    ss << std::endl;

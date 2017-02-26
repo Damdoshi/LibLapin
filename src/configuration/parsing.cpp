@@ -114,9 +114,9 @@ bool			getfieldname(const char			*code,
   if (overwrite)
     return (true);
 
-  j = -1;
+  j = -2;
   do
-    if (j++ < 0)
+    if (++j < 0)
       out[readlen] = '\0';
     else
       snprintf(&out[readlen], buflen - readlen, "%zu", j);
@@ -203,7 +203,7 @@ bool			readstring(const char			*code,
   if (readtext(code, j, "\"") == false)
     return (false);
   p = 0;
-  do
+  while (code[j] && !checkchar(code, j, "\""))
     {
       if (code[j] & 0x80) // Unicode character
 	{
@@ -266,7 +266,6 @@ bool			readstring(const char			*code,
 	  return (false);
 	}
     }
-  while (code[j] && !checkchar(code, j, "\""));
   if (readtext(code, j, "\"") == false)
     return (false);
   d[p] = '\0';

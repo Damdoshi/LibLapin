@@ -25,7 +25,13 @@
      fonction bunny_fill_default_key.
 
  - -------------------------------------
- - Ajout du module "Bunny configuraton":
+ - Ajout du module "Bunny plugin":
+
+ - Charge une bibliothèque dynamique respectant un certain format et fournissant
+   une interface d'appel typé dynamiquement devant servir plus tard a bunny_configuration.
+
+ - -------------------------------------
+ - Ajout du module "Bunny configuration":
 
  - Mise en arrière de l'API Bunny INI du module "Bunny Configuration" en vue de la
    construction d'une API Bunny Configuration plus complete:

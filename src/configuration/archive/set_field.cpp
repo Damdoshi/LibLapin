@@ -3,6 +3,7 @@
 //
 // Bibliotheque Lapin
 
+#include		<string.h>
 #include		"lapin_private.h"
 
 void			bunny_ini_set_field(t_bunny_ini		*ini,
@@ -14,8 +15,8 @@ void			bunny_ini_set_field(t_bunny_ini		*ini,
   t_bunny_configuration	*cnf = (t_bunny_configuration*)ini;
   bool			create = SmallConf::create_mode;
 
-  if (scope[0] == '\0')
-    scope = "default";
+  if (strcmp(scope, "") == 0)
+    scope = "@";
   SmallConf::create_mode = true;
   if ((cnf = bunny_configuration_get_child(cnf, scope)) == NULL)
     {
