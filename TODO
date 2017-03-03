@@ -2,7 +2,25 @@
 ---------------------
 Fonctionnalité Lapin:
 
- - Les conteneurs suivants: vector, liste, hashmap
+ - Deux paramètres en plus a bunny_malloc (ou une fonction en plus) dont les valeurs
+   peuvent etre NULL par default. Le premier est un pointeur sur fonction, d'une
+   fonction qui sera appellée une fois l'espace mémoire alloué => c'est un constructeur.
+   Le second est un pointeur sur fonction qui sera appellé avant la destruction
+   de l'espace mémoire => un destructeur)
+   Il est possible de passer une taille + des paramètres variadiques. Le pointeur sur
+   fonction utilisé pour la construction recevra la va_list et la taille en paramètre.
+   ==> bunny_build est le nom de la fonction avec tous ces parametres <==
+
+ - Les conteneurs suivants: vector, liste, hashmap, bitfield, pool
+
+ - Un systeme de monitoring par enregistrement des ptrs (basé sur hashmap) avec
+   mini gui pour parcourir les valeurs depuis une fenetre ouverte.
+
+ - Un systeme de gestion de ttf ET de texte au format png, geré de facon transparente.
+
+ - Un systeme de chargement de ressource alternatif passant par des fichiers
+   de configuration (comme dans GateCracker/Melordandek) et permettant de
+   définir a l'avance des propriétés.
 
  - ----------------------------------
  - Ajout du module "Bunny Asynclock":
