@@ -49,7 +49,7 @@ void			bunny_set_line(t_bunny_buffer		*buffer,
 	pic->texture->draw(vert, 2, sf::Lines);
 	return ;
       }
-    default:
+    case SYSTEM_RAM:
       {
 	t_bunny_pixelarray	*pix = (t_bunny_pixelarray*)buffer;
 
@@ -59,5 +59,7 @@ void			bunny_set_line(t_bunny_buffer		*buffer,
 	  gl_bunny_my_set_line(pix, position, color);
 	return ;
       }
+    default:
+      return ;
     }
 }

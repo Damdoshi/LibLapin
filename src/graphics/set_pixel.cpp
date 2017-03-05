@@ -40,7 +40,7 @@ void			bunny_set_pixel(t_bunny_buffer		*buffer,
 	pic->texture->draw(vert, 1, sf::Points);
 	return ;
       }
-    default:
+    case SYSTEM_RAM:
       {
 	t_bunny_pixelarray	*pix = (t_bunny_pixelarray*)buffer;
 
@@ -50,6 +50,8 @@ void			bunny_set_pixel(t_bunny_buffer		*buffer,
 	  gl_bunny_my_set_pixel(pix, position, color);
 	return ;
       }
+    default:
+      return ;
     }
 }
 

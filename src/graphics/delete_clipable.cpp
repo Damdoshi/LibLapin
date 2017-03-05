@@ -18,6 +18,7 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
   BUNNY_LOG(fprintf(stderr, "%s: Deleting %p.\n", __PRETTY_FUNCTION__, clip));
   switch (*type)
     {
+    case GRAPHIC_TEXT:
     case GRAPHIC_RAM:
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)clip;
@@ -37,6 +38,13 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
 	  }
 	bunny_free(pic->rawpixels);
 	delete pic;
+	return ;
+      }
+    case TTF_TEXT:
+      {
+	struct bunny_ttf	*ttf = (struct bunny_ttf*)clip;
+
+	delete ttf;
 	return ;
       }
     default:

@@ -76,6 +76,7 @@
 			$(wildcard ./src/security/*.cpp)			\
 			$(wildcard ./src/asynclock/*.cpp)			\
 			$(wildcard ./src/database/*.cpp)			\
+			$(wildcard ./src/text/*.cpp)				\
 			$(wildcard ./src/plugin/*.cpp)				\
 			$(wildcard ./src/collide/*.cpp)				\
 			$(wildcard ./src/hash/*.cpp)				\

@@ -19,13 +19,15 @@ t_bunny_picture		*bunny_read_picture(const void		*_pic,
     goto Fail;
   if ((pic->texture = new (std::nothrow) sf::RenderTexture) == NULL)
     goto FailStruct;
+  if ((pic->sprite = new (std::nothrow) sf::Sprite) == NULL)
+    goto FailSprite;
 
   pic->texture->create(txt.getSize().x, txt.getSize().y);
   pic->texture->clear(sf::Color(0, 0, 0, 0));
   pic->texture->draw(spr);
   pic->texture->display();
   pic->tex = &pic->texture->getTexture();
-  pic->sprite.setTexture(*pic->tex);
+  pic->sprite->setTexture(*pic->tex);
 
   pic->type = GRAPHIC_RAM;
   pic->width = pic->texture->getSize().x;
@@ -48,6 +50,8 @@ t_bunny_picture		*bunny_read_picture(const void		*_pic,
 
   return ((t_bunny_picture*)pic);
 
+ FailSprite:
+  delete pic->texture;
  FailStruct:
   delete pic;
  Fail:

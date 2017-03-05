@@ -37,7 +37,7 @@ void			bunny_clear(t_bunny_buffer		*picture,
 	pic->texture->draw(shape, sf::RenderStates(sf::BlendNone));
 	return ;
       }
-    default:
+    case SYSTEM_RAM:
       {
 	t_bunny_pixelarray	*pix = (t_bunny_pixelarray*)picture;
 
@@ -47,5 +47,7 @@ void			bunny_clear(t_bunny_buffer		*picture,
 	  gl_bunny_my_clear(pix, _color);
 	return ;
       }
+    default:
+      return ;
     }
 }

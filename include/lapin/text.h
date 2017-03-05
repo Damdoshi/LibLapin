@@ -18,7 +18,7 @@
 typedef enum			e_bunny_align
   {
     BAL_LEFT,
-    BAL_UP			= BAL_LEFT,
+    BAL_TOP			= BAL_LEFT,
     BAL_MIDDLE,
     BAL_RIGHT,
     BAL_BOTTOM			= BAL_RIGHT
@@ -37,23 +37,20 @@ typedef enum			e_bunny_align
 typedef struct			s_bunny_font
 {
   t_bunny_clipable		clipable;
-  const char			*text;
-  bool				crop;
+  size_t			_private[2];
+  const char			*string;
+  bool				hcrop;
+  bool				vcrop;
+  bool				justify;
   t_bunny_align			halign;
   t_bunny_align			valign;
+  unsigned int			outline;
 }				t_bunny_font;
 
 t_bunny_font			*bunny_load_ttf_font(const char			*file);
 
 t_bunny_font			*bunny_load_gfx_font(const char			*file,
 						     const t_bunny_position	*siz);
-
-t_bunny_font			*bunny_set_font(t_bunny_clipable		*font,
-						const t_bunny_position		*siz);
-
-void				bunny_delete_font(t_bunny_font			*font);
-
-
 
 /*!
 ** The t_bunny_vector_font_line_coord contains two sets of coordinates that

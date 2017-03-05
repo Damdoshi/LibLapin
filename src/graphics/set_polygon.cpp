@@ -56,7 +56,7 @@ void			bunny_set_polygon(t_bunny_buffer		*buffer,
 	pic->texture->draw(vert, 3, sf::Triangles);
 	return ;
       }
-    default:
+    case SYSTEM_RAM:
       {
 	t_bunny_pixelarray	*pix = (t_bunny_pixelarray*)buffer;
 
@@ -66,5 +66,7 @@ void			bunny_set_polygon(t_bunny_buffer		*buffer,
 	  gl_bunny_my_set_polygon(pix, position, color);
 	return ;
       }
+    default:
+      return ;
     }
 }

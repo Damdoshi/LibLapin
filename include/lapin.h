@@ -121,6 +121,7 @@
 # include			"lapin/self_test.h"
 # include			"lapin/collide.h"
 # include			"lapin/hash.h"
+# include			"lapin/text.h"
 # include			"lapin/misc.h"
 
 # include			"lapin/compat.h"
