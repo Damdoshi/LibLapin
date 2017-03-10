@@ -52,7 +52,7 @@ bool			bunny_thread_foreach(t_bunny_threadpool		*pol,
     {
       _Launcher		*ptr;
 
-      if ((ptr = new _Launcher(func, data[i], add_ptr)) == NULL)
+      if ((ptr = new (std::nothrow) _Launcher(func, data[i], add_ptr)) == NULL)
 	{
 	  _ClearWorkers();
 	  return (false);
@@ -78,6 +78,7 @@ bool			bunny_thread_foreach(t_bunny_threadpool		*pol,
 #else
     size_t		i;
 
+    (void)pol;
     for (i = 0; i < len; ++i)
         func(data[i], add_ptr);
   return (true);

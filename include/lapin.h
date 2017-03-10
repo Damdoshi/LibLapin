@@ -122,6 +122,15 @@
 # include			"lapin/collide.h"
 # include			"lapin/hash.h"
 # include			"lapin/text.h"
+
+# include			"lapin/stack.h"
+# include			"lapin/queue.h"
+# include			"lapin/list.h"
+# include			"lapin/map.h"
+# include			"lapin/vector.h"
+# include			"lapin/pool.h"
+# include			"lapin/bitfield.h"
+
 # include			"lapin/misc.h"
 
 # include			"lapin/compat.h"

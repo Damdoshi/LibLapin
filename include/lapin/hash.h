@@ -1,6 +1,6 @@
 /*
 ** Jason Brillante "Damdoshi"
-** Hanged Bunny Studio 2014-2016
+** Hanged Bunny Studio 2014-2017
 **
 ** Bibliotheque Lapin
 */
@@ -8,7 +8,7 @@
 /*!
 ** \file hash.h
 ** Hash function. As bunny_security, they are not
-** made to be 
+** made to be safe in term of crack or hack.
 */
 
 #ifndef				__LAPIN_HASH_H__
@@ -29,8 +29,10 @@ typedef enum			e_bunny_hash
 
 /*!
 ** Compute a short hash. 
-**
-**
+** \param hash The algorithm to use.
+** \param ptr The data to hash
+** \param len The size of the data to hash
+** \return The data hash
 */
 uint64_t			bunny_hash(t_bunny_hash			hash,
 					   const void			*ptr,

@@ -79,6 +79,7 @@
 			$(wildcard ./src/text/*.cpp)				\
 			$(wildcard ./src/plugin/*.cpp)				\
 			$(wildcard ./src/collide/*.cpp)				\
+			$(wildcard ./src/container/*.cpp)			\
 			$(wildcard ./src/hash/*.cpp)				\
 			$(wildcard ./src/deps/*/*.cpp)
   OBJ		=	$(SRC:.cpp=.o)

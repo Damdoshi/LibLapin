@@ -3,6 +3,7 @@
 //
 // Lapin library
 
+#include		<errno.h>
 #include		<signal.h>
 #include		<string.h>
 #include		<unistd.h>
@@ -166,7 +167,10 @@ void			*bunny_malloc(size_t		data)
     data += MEMORY_CHUNK_SIZE - (data % MEMORY_CHUNK_SIZE);
   head = memory_head();
   if ((node = get_node(head, data)) == NULL)
-    return (NULL);
+    {
+      errno = ENOMEM;
+      return (NULL);
+    }
   head->alloc_count += 1;
   head->total_count += data;
   head->alloc += 1;

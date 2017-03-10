@@ -52,6 +52,13 @@
 
  - ------------------------------------------------------
  - Ajout des fonctions bunny_load_file et bunny_save_file
+ - Ajout de la fonction bunny_thread_push permettant d'ajouter une unique tache
+   dans le thread pool.
+
+ - ------------------
+ - Ajout de conteneur: pile, file, liste, tableau dynamique, map, champ de bit
+ - Ajout de conteneur: "pool": ensemble d'elements pre alloué rapide a "l'allocation"
+   et a la liberation.
 
  - ----------------------
  - Ajout des fonctions de collision suivants, dans le module collide.h:
@@ -73,6 +80,8 @@
  - ANTIALISING ajouté dans t_bunny_window_style
  - Reorganisation des fichiers en-tête privé.
 
+ - Dossier pour test unitaire. Actuellement, les conteneurs sont les seuls testé,
+   a l'exception de leur fonction threades et de certains foreach.
 
 
 =========================================================================================
