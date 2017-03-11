@@ -10,6 +10,7 @@
 # if				!defined(__LAPIN_H__)
 #  error			You cannot include this file directly.
 # endif
+# include			<stdbool.h>
 
 /*!
 ** Useful to precise on which side you want to align.
@@ -17,10 +18,12 @@
 */
 typedef enum			e_bunny_align
   {
-    BAL_LEFT,
+    BAL_LEFT			= 0,
     BAL_TOP			= BAL_LEFT,
-    BAL_MIDDLE,
-    BAL_RIGHT,
+
+    BAL_MIDDLE			= 1,
+
+    BAL_RIGHT			= 2,
     BAL_BOTTOM			= BAL_RIGHT
   }				t_bunny_align;
 
@@ -39,18 +42,25 @@ typedef struct			s_bunny_font
   t_bunny_clipable		clipable;
   size_t			_private[2];
   const char			*string;
-  bool				hcrop;
-  bool				vcrop;
-  bool				justify;
-  t_bunny_align			halign;
-  t_bunny_align			valign;
+  bool				hcrop:1;
+  bool				vcrop:1;
+  bool				hjustify:1;
+  bool				vjustify:1;
+  t_bunny_align			halign:2;
+  t_bunny_align			valign:2;
   unsigned int			outline;
+  t_bunny_position		offset;
 }				t_bunny_font;
 
-t_bunny_font			*bunny_load_ttf_font(const char			*file);
+t_bunny_font			*bunny_load_font(unsigned int			width,
+						 unsigned int			height,
+						 const char			*file,
+						 const t_bunny_position		*siz);
 
-t_bunny_font			*bunny_load_gfx_font(const char			*file,
-						     const t_bunny_position	*siz);
+
+
+
+
 
 /*!
 ** The t_bunny_vector_font_line_coord contains two sets of coordinates that

@@ -67,32 +67,6 @@ struct				bunny_pixelarray
   sf::Sprite			sprite;
 };
 
-struct				bunny_ttf
-{
-  size_t			type;
-  size_t			unused;
-  ssize_t			width;
-  ssize_t			height;
-  t_bunny_area			rect;
-  t_bunny_accurate_position	position;
-  t_bunny_accurate_position	origin;
-  t_bunny_accurate_position	scale;
-  double			rotation;
-  t_bunny_color			color_mask;
-
-  size_t			padding[2];
-
-  const char			*string;
-  bool				hcrop;
-  bool				vcrop;
-  bool				justify;
-  t_bunny_align			halign;
-  t_bunny_align			valign;
-  unsigned int			outline;
-  sf::Font			font;
-  sf::Text			text;
-};
-
 struct				bunny_gfx_font
 {
   size_t			type;
@@ -105,18 +79,54 @@ struct				bunny_gfx_font
   t_bunny_accurate_position	scale;
   double			rotation;
   t_bunny_color			color_mask;
-
   const sf::Texture		*tex;
   sf::Sprite			*sprite;
 
   const char			*string;
-  bool				hcrop;
-  bool				vcrop;
-  bool				justify;
-  t_bunny_align			halign;
-  t_bunny_align			valign;
+  bool				hcrop;1;
+  bool				vcrop:1;
+  bool				hjustify:1;
+  bool				vjustify:1;
+  t_bunny_align			halign:2;
+  t_bunny_align			valign:2;
   unsigned int			outline;
+  t_bunny_position		offset;
+
+  t_bunny_picture		*gfx;
 };
+
+struct				bunny_ttf_font
+{
+  size_t			type;
+  sf::RenderTexture		*texture;
+  ssize_t			width;
+  ssize_t			height;
+  t_bunny_area			rect;
+  t_bunny_accurate_position	position;
+  t_bunny_accurate_position	origin;
+  t_bunny_accurate_position	scale;
+  double			rotation;
+  t_bunny_color			color_mask;
+  const sf::Texture		*tex;
+  sf::Sprite			*sprite;
+
+  const char			*string;
+  bool				hcrop:1;
+  bool				vcrop:1;
+  bool				hjustify:1;
+  bool				vjustify:1;
+  t_bunny_align			halign:2;
+  t_bunny_align			valign:2;
+  unsigned int			outline;
+  t_bunny_position		offset;
+
+  sf::Font			font;
+  sf::Text			text;
+};
+
+
+
+
 
 void				__blit_text_gfx(t_bunny_buffer			*buffer,
 						const t_bunny_clipable		*font,

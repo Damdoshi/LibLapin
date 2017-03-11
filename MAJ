@@ -24,6 +24,38 @@
      fonction bunny_default_key et ecrite (de l'exterieur du programme) a l'aide de la
      fonction bunny_fill_default_key.
 
+ - ----------------------------
+ - Ajout du module "Bunny text":
+ - - Module de texte ajoutant un type "clipable" gerant de la même facon les polices
+     de caractere au format ttf que les polices de caractere au format png.
+ - - Le clipable texte dispose des proprietes suivantes:
+ - - - Le texte, evidemment. Avec gestion des sauts de ligne et tabulation.
+ - - - La possibilite de renvoyer a la ligne un texte qui déborde a gauche ou a droite
+       ou de le couper (hcrop)
+ - - - La possibilite de couper le texte qui deborde en haut ou en bas ou de le laisser
+       deborder. (vcrop)
+ - - - La justification du texte horizontalement (le texte commence a la toute gauche
+       et termine a la toute droite, sauf saut de ligne)
+ - - - La justification du texte verticalement (le texte commence tout en haut et termine,
+       tout en bas, si il comporte au moins deux lignes, bien sur)
+ - - - L'alignement a gauche, au milieu ou a droite (Si hjustify est vrai, c'est ignoré)
+ - - - l'alignement en haut, au milieu ou a droite (Si vjustify est vrai, c'est ignoré)
+ - - - Le contour coloré du texte (0 si vous n'en voulez pas)
+ - - - Le t_bunny_position offset qui permet de deplacer la "camera" sur la boite de
+       texte. Cela ressemble au clipable, mais fonctionne sur le dessin du texte et
+       non celui de l'image.
+
+ - - Les fonctions suivantes ont évolué afin de prendre en charge le nouveau clipable:
+ - - - bunny_draw permet maintenant de dessiner un texte d'un clipable dans le clipable
+     lui meme.
+ - - - bunny_blit permet d'afficher le texte a l'endroit desire
+ - - - Les fonctions bunny_set_*, bunny_fill et bunny_clear fonctionnent dessus comme
+       sur un t_bunny_picture.
+
+ - - La fonction bunny_load_font permet de générer l'un ou l'autre des formats en
+     fonction du fichier passé en paramètre. Si il s'agit d'un fichier *.ttf, il l'ouvrira
+     comme une font, sinon il l'ouvrira comme une image.
+
  - -------------------------------------
  - Ajout du module "Bunny plugin":
 
