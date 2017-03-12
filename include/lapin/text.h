@@ -50,6 +50,7 @@ typedef struct			s_bunny_font
   t_bunny_align			valign:2;
   unsigned int			outline;
   t_bunny_position		offset;
+  t_bunny_position		glyph_size;
 }				t_bunny_font;
 
 t_bunny_font			*bunny_load_font(unsigned int			width,

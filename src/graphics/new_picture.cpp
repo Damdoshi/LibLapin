@@ -16,8 +16,9 @@ t_bunny_picture		*bunny_new_picture(unsigned int		width,
     goto FailStruct;
   if ((pic->sprite = new (std::nothrow) sf::Sprite) == NULL)
     goto FailSprite;
+  if (pic->texture->create(width, height) == false)
+    goto FailSprite;
 
-  pic->texture->create(width, height);
   pic->texture->clear(sf::Color(0, 0, 0, 0));
   pic->texture->display();
   pic->texture->setSmooth(false);

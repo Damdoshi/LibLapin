@@ -83,7 +83,7 @@ struct				bunny_gfx_font
   sf::Sprite			*sprite;
 
   const char			*string;
-  bool				hcrop;1;
+  bool				hcrop:1;
   bool				vcrop:1;
   bool				hjustify:1;
   bool				vjustify:1;
@@ -91,6 +91,7 @@ struct				bunny_gfx_font
   t_bunny_align			valign:2;
   unsigned int			outline;
   t_bunny_position		offset;
+  t_bunny_position		glyph_size;
 
   t_bunny_picture		*gfx;
 };
@@ -119,23 +120,12 @@ struct				bunny_ttf_font
   t_bunny_align			valign:2;
   unsigned int			outline;
   t_bunny_position		offset;
+  t_bunny_position		glyph_size;
 
   sf::Font			font;
   sf::Text			text;
 };
 
+void				_bunny_draw_text(t_bunny_font			*font);
 
-
-
-
-void				__blit_text_gfx(t_bunny_buffer			*buffer,
-						const t_bunny_clipable		*font,
-						const t_bunny_position		*pos,
-						const t_bunny_shader		*shader);
-
-void				__blit_text_ttf(t_bunny_buffer			*buffer,
-						const t_bunny_clipable		*font,
-						const t_bunny_position		*pos,
-						const t_bunny_shader		*shader);
-
-#endif	/*			__LAPIN_PRIVATE_GRAPHICS_H__	*/
+#endif	/*			__LAPIN_PRIVATE_GRAPHICS_H__			*/
