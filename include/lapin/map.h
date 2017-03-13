@@ -47,8 +47,9 @@ typedef struct			s_bunny_map
 /*!
 ** Create a new map.
 ** \param cmp A function that will serve to sort and search into the map,
-** it must be able to compare two keys and return <0, 0 or 0< depending
-** of a < b, a == b and a > b.
+**            it must be able to compare two keys and return <0, 0 or 0< depending
+**            of a < b, a == b and a > b. If cmp is NULL, the pointer stored are
+**            compared. (Fitting behavior for a map of int type)
 ** \param dup This function can duplicate keys. It is useful to store
 **            key inside the map. It can return NULL on error. The allocation
 **            will be freed by the del function. Can be NULL if the type is

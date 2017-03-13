@@ -16,7 +16,7 @@ t_bunny_font			*bunny_load_front(unsigned int			width,
     {
       struct bunny_ttf_font	*ttf;
 
-      if ((final = (t_bunny_font*)ttf = new (std::nothrow) struct bunny_ttf_font) == NULL)
+      if ((final = (t_bunny_font*)(ttf = new (std::nothrow) struct bunny_ttf_font)) == NULL)
 	return (NULL);
       if (ttf->font.loadFromFile(file) == false)
 	{
@@ -44,7 +44,7 @@ t_bunny_font			*bunny_load_front(unsigned int			width,
       ttf->text.setCharacterSize(size->y);
       ttf->texture->clear(sf::Color(0, 0, 0, 0));
       ttf->texture->display();
-      ttf->tex = ttf->texture->getTexture();
+      ttf->tex = &ttf->texture->getTexture();
       ttf->sprite->setTexture(*ttf->tex);
       ttf->type = TTF_TEXT;
     }
@@ -52,7 +52,7 @@ t_bunny_font			*bunny_load_front(unsigned int			width,
     {
       struct bunny_gfx_font	*gfx;
 
-      if ((final = (t_bunny_font*)gfx = new (std::nothrow) struct bunny_gfx_font) == NULL)
+      if ((final = (t_bunny_font*)(gfx = new (std::nothrow) struct bunny_gfx_font)) == NULL)
 	return (NULL);
       if ((gfx->gfx = bunny_load_picture(file)) == NULL)
 	{
@@ -68,7 +68,7 @@ t_bunny_font			*bunny_load_front(unsigned int			width,
 	}
       if (gfx->texture->create(width, height) == false)
 	{
-	  delete ttf;
+	  delete gfx;
 	  return (NULL);
 	}
       if ((gfx->sprite = new (std::nothrow) sf::Sprite) == NULL)
@@ -80,34 +80,31 @@ t_bunny_font			*bunny_load_front(unsigned int			width,
 	}
       gfx->texture->clear(sf::Color(0, 0, 0, 0));
       gfx->texture->display();
-      gfx->tex = gfx->texture->getTexture();
+      gfx->tex = &gfx->texture->getTexture();
       gfx->sprite->setTexture(*gfx->tex);
       gfx->type = GRAPHIC_TEXT;
     }
   
   // Clipable properties
-  final->width = width;
-  final->height = height;
-  final->rect.x = 0;
-  final->rect.y = 0;
-  final->rect.w = final->width;
-  final->rect.h = final->height;
-  final->position.x = 0;
-  final->position.y = 0;
-  final->origin.x = 0;
-  final->origin.y = 0;
-  final->scale.x = 1;
-  final->scale.y = 1;
-  final->rotation = 0;
-  final->color_mask.full = WHITE;
+  final->clipable.buffer.width = width;
+  final->clipable.buffer.height = height;
+  final->clipable.clip_x_position = 0;
+  final->clipable.clip_y_position = 0;
+  final->clipable.clip_width = final->clipable.buffer.width;
+  final->clipable.clip_height = final->clipable.buffer.height;
+  final->clipable.position.x = 0;
+  final->clipable.position.y = 0;
+  final->clipable.origin.x = 0;
+  final->clipable.origin.y = 0;
+  final->clipable.scale.x = 1;
+  final->clipable.scale.y = 1;
+  final->clipable.rotation = 0;
+  final->clipable.color_mask.full = WHITE;
 
   // Text properties
   final->string = NULL;
-  final->hcrop = false;
-  final->vcrop = true;
-  final->hjustify = true;
-  final->vjustify = false;
-  final->halign = BA_LEFT;
+  final->halign = BAL_LEFT;
+  final->valign = BAL_TOP;
   final->outline = 0;
   final->offset.x = 0;
   final->offset.y = 0;

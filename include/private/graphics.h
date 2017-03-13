@@ -83,13 +83,11 @@ struct				bunny_gfx_font
   sf::Sprite			*sprite;
 
   const char			*string;
-  bool				hcrop:1;
-  bool				vcrop:1;
-  bool				hjustify:1;
-  bool				vjustify:1;
-  t_bunny_align			halign:2;
-  t_bunny_align			valign:2;
-  unsigned int			outline;
+  t_bunny_align			halign;
+  t_bunny_align			valign;
+  unsigned int			color;
+  unsigned int			outline_color;
+  double			outline_size;
   t_bunny_position		offset;
   t_bunny_position		glyph_size;
 
@@ -112,13 +110,11 @@ struct				bunny_ttf_font
   sf::Sprite			*sprite;
 
   const char			*string;
-  bool				hcrop:1;
-  bool				vcrop:1;
-  bool				hjustify:1;
-  bool				vjustify:1;
-  t_bunny_align			halign:2;
-  t_bunny_align			valign:2;
-  unsigned int			outline;
+  t_bunny_align			halign;
+  t_bunny_align			valign;
+  unsigned int			color;
+  unsigned int			outline_color;
+  double			outline_size;
   t_bunny_position		offset;
   t_bunny_position		glyph_size;
 
@@ -127,5 +123,24 @@ struct				bunny_ttf_font
 };
 
 void				_bunny_draw_text(t_bunny_font			*font);
+
+sf::Color			bunny_color_to_sf_color(unsigned int	i)
+{
+  t_bunny_color			col;
+
+  col.full = i;
+  return (sf::Color(col.argb[RED_CMP], col.argb[GREEN_CMP], col.argb[BLUE_CMP], col.argb[ALPHA_CMP]));
+}
+
+unsigned int			sf_color_to_bunny_color(const sf::Color	&clr)
+{
+  t_bunny_color			col;
+
+  col.argb[RED_CMP] = clr.r;
+  col.argb[GREEN_CMP] = clr.g;
+  col.argb[BLUE_CMP] = clr.b;
+  col.argb[ALPHA_CMP] = clr.a;
+  return (col.full);
+}
 
 #endif	/*			__LAPIN_PRIVATE_GRAPHICS_H__			*/

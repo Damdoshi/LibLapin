@@ -24,7 +24,9 @@ typedef enum			e_bunny_align
     BAL_MIDDLE			= 1,
 
     BAL_RIGHT			= 2,
-    BAL_BOTTOM			= BAL_RIGHT
+    BAL_BOTTOM			= BAL_RIGHT,
+
+    BAL_JUSTIFY			= 3
   }				t_bunny_align;
 
 /*!
@@ -42,13 +44,11 @@ typedef struct			s_bunny_font
   t_bunny_clipable		clipable;
   size_t			_private[2];
   const char			*string;
-  bool				hcrop:1;
-  bool				vcrop:1;
-  bool				hjustify:1;
-  bool				vjustify:1;
-  t_bunny_align			halign:2;
-  t_bunny_align			valign:2;
+  t_bunny_align			halign;
+  t_bunny_align			valign;
+  unsigned int			color;
   unsigned int			outline;
+  double			outline_size;
   t_bunny_position		offset;
   t_bunny_position		glyph_size;
 }				t_bunny_font;

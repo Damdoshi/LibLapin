@@ -15,3 +15,4 @@ void			bunny_draw(const t_bunny_picture	*picture)
 
   pic->texture->display();
 }
+

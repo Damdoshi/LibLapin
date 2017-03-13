@@ -88,8 +88,16 @@ t_bunny_map		*bunny_map_get_subtree(t_bunny_map	*_map,
       return (_map);
     }
 
-  if ((res = map->cmp(map->key, key, map->param)) == 0)
-    return (_map);
+  if (map->cmp)
+    {
+      if ((res = map->cmp(map->key, key, map->param)) == 0)
+	return (_map);
+    }
+  else
+    {
+      if ((res = (ssize_t)map->key - (ssize_t)key) == 0)
+	return (_map);
+    }
 
   if (res > 0)
     {
