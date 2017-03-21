@@ -163,7 +163,8 @@ void			bunny_map_foreach(t_bunny_map		*map,
     return ;
   if (nod->left)
     bunny_map_foreach((t_bunny_map*)nod->left, func, param);
-  func(nod->data, param);
+  if (nod->data != NULL)
+    func(nod->data, param);
   if (nod->right)
     bunny_map_foreach((t_bunny_map*)nod->right, func, param);
 }

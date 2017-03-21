@@ -8,6 +8,6 @@
 
 void			bunny_delete_server(t_bunny_server		*srv)
 {
-  delete (bpt::NetCom::Server*)(srv->_private);
+  delete (bpt::NetCom::Server*)(srv->_private[1]);
   bunny_free(srv);
 }

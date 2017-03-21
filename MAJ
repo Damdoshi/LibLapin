@@ -112,6 +112,8 @@
  - ANTIALISING ajouté dans t_bunny_window_style
  - Reorganisation des fichiers en-tête privé.
 
+ - Ajout des évenements co/deco reseau et message reseau.
+
  - Dossier pour test unitaire. Actuellement, les conteneurs sont les seuls testé,
    a l'exception de leur fonction threades et de certains foreach.
 

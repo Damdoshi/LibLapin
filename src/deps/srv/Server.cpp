@@ -6,14 +6,15 @@
 #include	<cstdlib>
 #include	"Server.hpp"
 
-bool		bpt::NetCom::Server::Start(const std::string	&port)
+bool		bpt::NetCom::Server::Start(const std::string	&port,
+					   NetAbs::INetAccess::Protocol prot)
 {
   if (this->init == true)
     this->Stop();
   else
     this->init = true;
   this->port = port;
-  if (OpenSocket(NetAbs::INetAccess::TCP, this->master_info, port) == false)
+  if (OpenSocket(prot, this->master_info, port) == false)
     return (false);
   if (Bind(this->master_info) == false)
     return (false);

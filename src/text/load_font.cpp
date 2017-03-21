@@ -5,10 +5,10 @@
 
 #include			"lapin_private.h"
 
-t_bunny_font			*bunny_load_front(unsigned int			width,
-						  unsigned int			height,
-						  const char			*file,
-						  const t_bunny_position	*size)
+t_bunny_font			*bunny_load_font(unsigned int		width,
+						 unsigned int		height,
+						 const char		*file,
+						 const t_bunny_position	*size)
 {
   t_bunny_font			*final;
 
@@ -41,12 +41,15 @@ t_bunny_font			*bunny_load_front(unsigned int			width,
 	  return (NULL);
 	}
       ttf->text.setFont(ttf->font);
-      ttf->text.setCharacterSize(size->y);
+      ttf->text.setCharacterSize(size->y * 2);
       ttf->texture->clear(sf::Color(0, 0, 0, 0));
       ttf->texture->display();
       ttf->tex = &ttf->texture->getTexture();
       ttf->sprite->setTexture(*ttf->tex);
       ttf->type = TTF_TEXT;
+
+      final->glyph_size.x = size->x * 2;
+      final->glyph_size.y = size->y * 2;
     }
   else
     {
@@ -78,11 +81,16 @@ t_bunny_font			*bunny_load_front(unsigned int			width,
 	  delete gfx;
 	  return (NULL);
 	}
+      gfx->gfx->clip_width = size->x;
+      gfx->gfx->clip_height = size->y;
       gfx->texture->clear(sf::Color(0, 0, 0, 0));
       gfx->texture->display();
       gfx->tex = &gfx->texture->getTexture();
       gfx->sprite->setTexture(*gfx->tex);
       gfx->type = GRAPHIC_TEXT;
+
+      final->glyph_size.x = size->x;
+      final->glyph_size.y = size->y;
     }
   
   // Clipable properties
@@ -106,10 +114,10 @@ t_bunny_font			*bunny_load_front(unsigned int			width,
   final->halign = BAL_LEFT;
   final->valign = BAL_TOP;
   final->outline = 0;
+  final->outline_size = 0;
+  final->color = WHITE;
   final->offset.x = 0;
   final->offset.y = 0;
-  final->glyph_size.x = size->x;
-  final->glyph_size.y = size->y;
 
   return (final);
 }

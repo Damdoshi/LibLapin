@@ -20,13 +20,18 @@ bool			bpt::NetAbs::NetUnix::OpenSocket(Protocol		protocol,
     "UDP"
   };
 
-  if (protocol == TCP)
+  if (protocol != UDP)
     type = SOCK_STREAM;
   else
     type = SOCK_DGRAM;
   if ((proto = getprotobyname(protoname[protocol])) == NULL)
     return (false);
-  if ((master_info.socket = socket(AF_INET, type, proto->p_proto)) == UMAX)
+  if (protocol == UNIX)
+    {
+      if ((master_info.socket = socket(AF_UNIX, type, proto->p_proto)) == UMAX)
+	return (false);
+    }
+  else if ((master_info.socket = socket(AF_INET, type, proto->p_proto)) == UMAX)
     return (false);
   master_info.port = htons(atoi(port.c_str()));
   if (ip.compare("") != 0)
@@ -118,20 +123,26 @@ unsigned int		bpt::NetAbs::NetUnix::SendTo(const Info			&master_info,
   struct sockaddr_in	sockaddr;
   unsigned int		l;
 
+#ifndef			__WIN32
+# define		_LOCALFLAG		MSG_NOSIGNAL
+#else
+# define		_LOCALFLAG		0
+#endif
+
   sockaddr.sin_family = AF_INET;
   if (info != NULL)
     {
-     sockaddr.sin_addr.s_addr = info->ip;
-     sockaddr.sin_port = info->port;
+      sockaddr.sin_addr.s_addr = info->ip;
+      sockaddr.sin_port = info->port;
+      if ((l = sendto(master_info.socket, buffer, len, _LOCALFLAG, (struct sockaddr*)&sockaddr, (socklen_t)sizeof(sockaddr))) == UINT_MAX)
+	return (UMAX);
+      return (l);
     }
-#ifndef             __WIN32
-  if ((l = sendto(master_info.socket, buffer, len, MSG_NOSIGNAL, (struct sockaddr*)&sockaddr, (socklen_t)sizeof(sockaddr))) == UINT_MAX)
+  if ((l = send(master_info.socket, buffer, len, _LOCALFLAG)) == UINT_MAX)
     return (UMAX);
-#else
-  if ((l = sendto(master_info.socket, buffer, len, 0, (struct sockaddr*)&sockaddr, (socklen_t)sizeof(sockaddr))) == UINT_MAX)
-    return (UMAX);
-#endif
   return (l);
+
+#undef			_LOCALFLAG
 }
 
 int			bpt::NetAbs::NetUnix::Select(Socket			max,

@@ -11,5 +11,5 @@ bool			bunny_server_write(t_bunny_server		*srv,
 					   size_t			len,
 					   int				fd)
 {
-  return (((bpt::NetCom::Server*)srv->_private)->Write(data, len, fd));
+  return (((bpt::NetCom::Server*)srv->_private[1])->Write(data, len, fd));
 }

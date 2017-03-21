@@ -6,7 +6,7 @@
 #include		"deps/NetCom.hpp"
 #include		"lapin.h"
 
-bool			bunny_server_packet_ready(const t_bunny_server	*srv)
+bool			bunny_client_packet_ready(const t_bunny_client	*clt)
 {
-  return (((bpt::NetCom::Server*)srv->_private[1])->AnyFullPacket());
+  return (((bpt::NetCom::Client*)clt->_private[1])->CheckFullPacket());
 }

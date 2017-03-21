@@ -33,6 +33,8 @@ void			bunny_set_pixel(t_bunny_buffer		*buffer,
 	pic->window->draw(vert, 1, sf::Points);
 	return ;
       }
+    case TTF_TEXT:
+    case GRAPHIC_TEXT:
     case GRAPHIC_RAM:
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)buffer;

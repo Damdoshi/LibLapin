@@ -12,18 +12,18 @@ typedef struct		s_token
   const char		*str;
 }			t_token;
 
-static void		precom_tokens(const char			**tokens,
-				      t_token				**tok)
+static bool		precom_tokens(const char			**tokens,
+				      t_token				*tok,
+				      size_t				max)
 {
   size_t		i;
 
-  for (i = 0; tokens[i]; ++i);
-  *tok = (t_token*)alloca((i + 1) * sizeof(**tok));
-  (*tok)[i].len = 0;
-  (*tok)[i].str = NULL;
-  for (i = 0; tokens[i]; ++i)
-    (*tok)[i].len = strlen((*tok)[i].str = tokens[i]);
-
+  for (i = 0; tokens[i] && i < max; ++i)
+    tok[i].len = strlen(tok[i].str = tokens[i]);
+  if (i - 1 >= max)
+    return (false);
+  tok[i].str = NULL;
+  return (true);
 }
 
 static size_t		test_token(const char				*str,
@@ -52,29 +52,40 @@ const char * const	*bunny_split(const char				*str,
 				     const char				**tokens,
 				     bool				agreg)
 {
-  char			*buf[1024];
-  t_token		*tok;
+  char			*buf[4096];
+  t_token		tok[32];
   size_t		i, prev;
   size_t		tmp;
   ssize_t		cur;
   void			*ret;
 
-  precom_tokens(tokens, &tok);
+  if (precom_tokens(tokens, &tok[0], sizeof(tok) / sizeof(tok[0])) == false)
+    return (NULL);
 
   i = 0;
   cur = 0;
   prev = 0;
   while (str[i])
-    if ((tmp = test_token(str, i, tok, agreg)))
+    if ((tmp = test_token(str, i, &tok[0], agreg)))
       {
-	if ((buf[cur] = bunny_strndup(&str[prev], i - prev)) == NULL)
-	  goto clean;
-	if ((cur += 1) + 1 >= (ssize_t)(sizeof(buf) / sizeof(buf[0])))
-	  goto clean;
+	if (i != 0 || agreg == false)
+	  {
+	    if ((buf[cur] = bunny_strndup(&str[prev], i - prev)) == NULL)
+	      goto clean;
+	    if ((cur += 1) + 1 >= (ssize_t)(sizeof(buf) / sizeof(buf[0])))
+	      goto clean;
+	  }
 	prev = (i += tmp);
       }
     else
       i += 1;
+  if (prev != i)
+    {
+      if ((buf[cur] = bunny_strndup(&str[prev], i - prev)) == NULL)
+	goto clean;
+      if ((cur += 1) + 1 >= (ssize_t)(sizeof(buf) / sizeof(buf[0])))
+	goto clean;
+    }
   buf[cur] = NULL;
   if ((ret = bunny_memdup(&buf[0], (cur + 1) * sizeof(buf[0]))) == NULL)
     goto clean;

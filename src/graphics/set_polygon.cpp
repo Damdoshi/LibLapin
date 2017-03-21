@@ -49,6 +49,8 @@ void			bunny_set_polygon(t_bunny_buffer		*buffer,
 	pic->window->draw(vert, 3, sf::Triangles);
 	return ;
       }
+    case TTF_TEXT:
+    case GRAPHIC_TEXT:
     case GRAPHIC_RAM:
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)buffer;

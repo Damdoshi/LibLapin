@@ -20,7 +20,8 @@ namespace			bpt
       typedef enum		e_protocol
 	{
 	  TCP			= 0,
-	  UDP			= 1
+	  UDP			= 1,
+	  UNIX
 	}			Protocol;
       class			Info
       {

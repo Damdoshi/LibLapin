@@ -149,6 +149,13 @@ void				*_bunny_list_pop_back(t_bunny_list	*list);
 # define			bunny_list_pop_back(lst, ty)		(ty)_bunny_list_pop_back(lst)
 
 /*!
+** Empty the whole list.
+** \param lst The list to empty
+*/
+# define			bunny_list_clear(lst)			\
+  while (bunny_list_size(lst)) bunny_list_pop_back(lst, void*)
+
+/*!
 ** Return a sublist filled with elements that makes the filter function pointer
 ** return true.
 ** \param list The source list
@@ -183,7 +190,7 @@ void				bunny_list_sort(t_bunny_list		*list,
 ** \param type The type of the data that is contained by the node
 ** \return The data inside the node with the correct type
 */
-# define			bunny_list_data(node, type)		*(type*)&(node)->data
+# define			bunny_list_data(node, type)		(*((type*)&(node)->data))
 
 /*!
 ** Return an iterator to the first element of the list.
@@ -271,6 +278,38 @@ bool				bunny_list_fast_foreach(t_bunny_threadpool *pool,
 							(void		*nod,
 							 const void	*param),
 							const void	*param);
+
+/*!
+** Browse a list in the direct order.
+** To be used in a for statement, giving a t_bunny_list* and a t_bunny_node*
+** as parameter:
+** t_bunny_list *lts = get_list();
+** t_bunny_node *nod;
+**
+** for (bunny_list_all(lst, nod))
+** { ... }
+**
+** \param lst The list to browse
+** \param nod The node to use inside the for loop
+*/
+# define			bunny_list_all(lst, nod)		\
+  nod = bunny_list_begin(lst); nod != NULL; nod = bunny_list_next(nod)
+
+/*!
+** Browse a list in the reverse order.
+** To be used in a for statement, giving a t_bunny_list* and a t_bunny_node*
+** as parameter:
+** t_bunny_list *lts = get_list();
+** t_bunny_node *nod;
+**
+** for (bunny_list_all_rev(lst, nod))
+** { ... }
+**
+** \param lst The list to browse
+** \param nod The node to use inside the for loop
+*/
+# define			bunny_list_all_rev(lst, nod)		\
+  nod = bunny_list_end(lst); nod != NULL; nod = bunny_list_prev(nod)
 
 #endif	/*			__LAPIN_LIST_H__			*/
 

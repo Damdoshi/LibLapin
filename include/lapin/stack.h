@@ -30,6 +30,7 @@ typedef struct			s_bunny_stack
 /*!
 ** Create a new stack.
 ** Return null on failure.
+** \return A t_bunny_stack
 */
 # define			bunny_new_stack()			\
   ((t_bunny_stack*)bunny_calloc(1, sizeof(t_bunny_stack)))
@@ -46,14 +47,16 @@ size_t				bunny_delete_stack(t_bunny_stack	*stack);
 ** \param stack The stack to get the length
 ** \return The stack size in size_t
 */
-# define			bunny_stack_size(stack)			((stack)->length)
+# define			bunny_stack_size(stack)			\
+  ((stack)->length)
 
 /*!
 ** Test if the stack is empty.
 ** \param stack The stack to test
 ** \return True if it is empty
 */
-# define			bunny_stack_empty(stack)		(!(stack)->length)
+# define			bunny_stack_empty(stack)		\
+  (!(stack)->length)
 
 /*!
 ** Get the element at the top of the stack
@@ -61,7 +64,8 @@ size_t				bunny_delete_stack(t_bunny_stack	*stack);
 ** \param type The type of the element at the top
 ** \return The data at the top, NULL if there is none
 */
-# define			bunny_stack_top(stack, type)		((stack)->top ? *((type*)(stack)->top) : (type)NULL)
+# define			bunny_stack_top(stack, type)		\
+  ((stack)->top ? *((type*)(stack)->top) : (type)NULL)
 
 /*!
 ** Push an element on the top of the stack
@@ -78,7 +82,8 @@ bool				_bunny_stack_push(t_bunny_stack		*stack,
 ** \param data The data to stack
 ** \return True if everything went well
 */
-# define			bunny_stack_push(st, da)		_bunny_stack_push(st, (void*)(size_t)da)
+# define			bunny_stack_push(st, da)		\
+  _bunny_stack_push(st, (void*)(size_t)da)
 
 /*!
 ** Remove the element at the top of the stack.
@@ -93,6 +98,7 @@ void				*_bunny_stack_pop(t_bunny_stack		*stack);
 ** \param ty The type of the extracted data
 ** \return The data that was stacked, NULL if there was none.
 */
-# define			bunny_stack_pop(st, ty)			(ty)_bunny_stack_pop(st)
+# define			bunny_stack_pop(st, ty)			\
+  (ty)_bunny_stack_pop(st)
 
 #endif	/*			__LAPIN_STACK_H__			*/

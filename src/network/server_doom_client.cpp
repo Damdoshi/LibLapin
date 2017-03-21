@@ -9,5 +9,5 @@
 bool			bunny_server_doom_client(t_bunny_server		*srv,
 						 int			fd)
 {
-  return (((bpt::NetCom::Server*)srv->_private)->DoomClient(fd));
+  return (((bpt::NetCom::Server*)srv->_private[1])->DoomClient(fd));
 }

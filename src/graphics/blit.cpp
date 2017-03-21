@@ -38,11 +38,11 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
     case GRAPHIC_TEXT:
     case TTF_TEXT:
       {
-	size_t			typ = *type;
+	size_t			typ = *input_type;
 
-	*type = GRAPHIC_RAM;
+	*input_type = GRAPHIC_RAM;
 	bunny_blit_shader(output, picture, pos, _shader);
-	*type = typ;
+	*input_type = typ;
 	return ;
       }
     case GRAPHIC_RAM:
@@ -138,6 +138,8 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	  out->window->draw(*spr);
 	return ;
       }
+    case TTF_TEXT:
+    case GRAPHIC_TEXT:
     case GRAPHIC_RAM:
       {
 	struct bunny_picture	*out = (struct bunny_picture*)output;

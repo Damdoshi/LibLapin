@@ -31,6 +31,10 @@
 #  define			BUNNY_LOG(code)
 # endif
 
+# define			__TOSTRING(a)				#a
+# define			STRINGIFY(a)				__TOSTRING(a)
+# define			NBRCELL(array)				(sizeof(array) / sizeof(array[0]))
+
 # include			<errno.h>
 
 /*!
@@ -134,9 +138,9 @@ double				bunny_evaluate(const char		*operation,
 ** tokens themselves! The more they are close to the beginning, the higher
 ** they are.
 **
-** \param str The string to split
+** \param str The string to split. bunny_split only handle less than 4096 words.
 ** \param tokens An array of string that are separator for the string to split/
-**        It must be NULL terminated
+**        It must be NULL terminated. There can't be more than 31 tokens.
 ** \param aggregate Can separator be stacked or not
 ** \return A NULL terminated string array. NULL on error.
 */
@@ -149,6 +153,13 @@ const char * const		*bunny_split(const char			*str,
 ** \param tab The array to free.
 */
 void				bunny_delete_split(const char * const	*tab);
+
+/*!
+** Some of you may find const char * const * too long to write and prefer this
+** typedef which is shorter, but also occulting.
+*/
+typedef const char * const *	t_bunny_split;
+
 
 /*!
 ** Duplicate the chunk of size len pointed by ptr

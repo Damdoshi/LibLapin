@@ -42,6 +42,8 @@ void			bunny_set_line(t_bunny_buffer		*buffer,
 	pic->window->draw(vert, 2, sf::Lines);
 	return ;
       }
+    case TTF_TEXT:
+    case GRAPHIC_TEXT:
     case GRAPHIC_RAM:
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)buffer;

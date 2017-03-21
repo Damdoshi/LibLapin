@@ -5,11 +5,11 @@
 
 #include		"lapin_private.h"
 
-t_bunny_configuration	*_bunny_configuration_go_get_node_va(t_bunny_configuration	*config,
+t_bunny_configuration	*_bunny_configuration_go_get_node_va(const t_bunny_configuration *config,
 							     size_t			nbr,
 							     va_list			*lst)
 {
-  t_bunny_configuration	*cnf = config;
+  t_bunny_configuration	*cnf = (t_bunny_configuration*)config;
   union
   {
     int			i;
@@ -43,12 +43,12 @@ t_bunny_configuration	*bunny_configuration_go_get_node_va(t_bunny_configuration	
   return (cnf);
 }
 
-bool			bunny_configuration_go_get_int_va(t_bunny_configuration		*config,
+bool			bunny_configuration_go_get_int_va(const t_bunny_configuration	*config,
 							  int				*val,
 							  size_t			nbr,
 							  ...)
 {
-  t_bunny_configuration	*cnf;
+  const t_bunny_configuration *cnf;
   va_list		lst;
 
   va_start(lst, nbr);
@@ -58,12 +58,12 @@ bool			bunny_configuration_go_get_int_va(t_bunny_configuration		*config,
   return (bunny_configuration_get_int(cnf, val));
 }
 
-bool			bunny_configuration_go_get_double_va(t_bunny_configuration	*config,
+bool			bunny_configuration_go_get_double_va(const t_bunny_configuration *config,
 							     double			*val,
 							     size_t			nbr,
 							     ...)
 {
-  t_bunny_configuration	*cnf;
+  const t_bunny_configuration *cnf;
   va_list		lst;
 
   va_start(lst, nbr);
@@ -73,12 +73,12 @@ bool			bunny_configuration_go_get_double_va(t_bunny_configuration	*config,
   return (bunny_configuration_get_double(cnf, val));
 }
 
-bool			bunny_configuration_go_get_string_va(t_bunny_configuration	*config,
+bool			bunny_configuration_go_get_string_va(const t_bunny_configuration *config,
 							     const char			**val,
 							     size_t			nbr,
 							     ...)
 {
-  t_bunny_configuration	*cnf;
+  const t_bunny_configuration *cnf;
   va_list		lst;
 
   va_start(lst, nbr);

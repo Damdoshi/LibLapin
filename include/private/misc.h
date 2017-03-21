@@ -20,5 +20,8 @@ extern t_bunny_joystick		gl_joystick[LAST_BUNNY_JOYSTICK];
 extern t_bunny_window		*gl_window;
 extern bool			gl_full_blit;
 
+t_bunny_response		network_event(unsigned int		v,
+					      void			*dat);
+
 #endif	/*			__LAPIN_PRIVATE_MISC_H__		*/
 
