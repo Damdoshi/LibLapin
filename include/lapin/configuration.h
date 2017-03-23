@@ -155,6 +155,13 @@ t_bunny_configuration	*bunny_configuration_get_child(t_bunny_configuration		*con
 						       const char			*child);
 
 /*!
+** Return how many children the node have.
+** \param config The node to inspect
+** \return The amount of children
+*/
+size_t			bunny_configuration_get_nbr_child(const t_bunny_configuration	*config);
+
+/*!
 ** Get the children of the sent config that match the sent index.
 ** If create mode is true (It is not by default), the child will be created if it does
 ** not exists.
@@ -165,6 +172,13 @@ t_bunny_configuration	*bunny_configuration_get_child(t_bunny_configuration		*con
 */
 t_bunny_configuration	*bunny_configuration_get_case(t_bunny_configuration		*config,
 						      size_t				i);
+
+/*!
+** Return how many case the node have.
+** \param config The node to inspect
+** \return The amount of cases
+*/
+size_t			bunny_configuration_get_nbr_case(const t_bunny_configuration	*config);
 
 /*!
 ** Get the value inside the node as a string.

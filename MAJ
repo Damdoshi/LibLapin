@@ -77,6 +77,9 @@
      sauvegarder du INI depuis des chaines de caractère (Utile pour combiner ce module
      au module bunny_security)
 
+ - Fonctions bunny_configurationçget_nbr_child, bunny_configuration_get_nbr_case et
+   bunny_ini_field_count.
+
  - ---------------------------------
  - Ajout du mini module "Bunny Hash"
  - Une fonction de hash générant des hashs de 64 bits, deux algorithmes simples
