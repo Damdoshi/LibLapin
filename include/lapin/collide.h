@@ -45,6 +45,25 @@ bool				bunny_rectangular_collision(const t_bunny_accurate_area		*a,
 							    const t_bunny_accurate_area		*b);
 
 /*!
+** Return true if dot is on the clip
+** \param clip The clipable
+** \param dot The dot
+** \return True if dot is on clip
+*/
+bool				bunny_clip_collision_dot(const t_bunny_clipable			*clip,
+							 const t_bunny_accurate_position	*dot);
+
+/*!
+** Return true if a and b clip collides.
+** \param a A first clip
+** \param b A second clip
+** \return True if clips overlaps.
+*/
+bool				bunny_clip_collision(const t_bunny_clipable			*a,
+						     const t_bunny_clipable			*b);
+
+
+/*!
 ** Return true if dot is inside the triangle.
 ** \param v3 A 3 elements vertex_array
 ** \param dot The position to test

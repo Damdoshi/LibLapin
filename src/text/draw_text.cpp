@@ -173,6 +173,8 @@ void			_bunny_draw_text(t_bunny_font	*font)
   int			lines, word, space;
   size_t		i, j;
 
+  if (font->string == NULL)
+    return ;
   if (*((size_t*)font) == TTF_TEXT)
     {
       struct bunny_ttf_font *fnt = (struct bunny_ttf_font*)font;
