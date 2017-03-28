@@ -83,6 +83,8 @@ struct				bunny_gfx_font
   sf::Sprite			*sprite;
 
   const char			*string;
+  size_t			string_offset;
+  size_t			string_len;
   t_bunny_align			halign;
   t_bunny_align			valign;
   unsigned int			color;
@@ -110,6 +112,8 @@ struct				bunny_ttf_font
   sf::Sprite			*sprite;
 
   const char			*string;
+  size_t			string_offset;
+  size_t			string_len;
   t_bunny_align			halign;
   t_bunny_align			valign;
   unsigned int			color;
@@ -117,6 +121,7 @@ struct				bunny_ttf_font
   double			outline_size;
   t_bunny_position		offset;
   t_bunny_position		glyph_size;
+  t_bunny_position		interglyph_space;
 
   sf::Font			font;
   sf::Text			text;

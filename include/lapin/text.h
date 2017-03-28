@@ -44,6 +44,8 @@ typedef struct			s_bunny_font
   t_bunny_clipable		clipable;
   size_t			_private[2];
   const char			*string;
+  size_t			string_offset;
+  size_t			string_len;
   t_bunny_align			halign;
   t_bunny_align			valign;
   unsigned int			color;
@@ -51,6 +53,7 @@ typedef struct			s_bunny_font
   double			outline_size;
   t_bunny_position		offset;
   t_bunny_position		glyph_size;
+  t_bunny_position		interglyph_space;
 }				t_bunny_font;
 
 t_bunny_font			*bunny_load_font(unsigned int			width,

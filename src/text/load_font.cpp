@@ -41,15 +41,15 @@ t_bunny_font			*bunny_load_font(unsigned int		width,
 	  return (NULL);
 	}
       ttf->text.setFont(ttf->font);
-      ttf->text.setCharacterSize(size->y * 2);
+      ttf->text.setCharacterSize(size->y);
       ttf->texture->clear(sf::Color(0, 0, 0, 0));
       ttf->texture->display();
       ttf->tex = &ttf->texture->getTexture();
       ttf->sprite->setTexture(*ttf->tex);
       ttf->type = TTF_TEXT;
 
-      final->glyph_size.x = size->x * 2;
-      final->glyph_size.y = size->y * 2;
+      final->glyph_size.x = size->x;
+      final->glyph_size.y = size->y;
     }
   else
     {
@@ -111,6 +111,8 @@ t_bunny_font			*bunny_load_font(unsigned int		width,
 
   // Text properties
   final->string = NULL;
+  final->string_offset = 0;
+  final->string_len = (size_t)-1;
   final->halign = BAL_LEFT;
   final->valign = BAL_TOP;
   final->outline = 0;
@@ -118,6 +120,8 @@ t_bunny_font			*bunny_load_font(unsigned int		width,
   final->color = WHITE;
   final->offset.x = 0;
   final->offset.y = 0;
+  final->interglyph_space.x = 0;
+  final->interglyph_space.y = 0;
 
   return (final);
 }

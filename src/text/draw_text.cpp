@@ -20,9 +20,9 @@ static size_t		get_char_width(t_bunny_font	*font,
   struct bunny_gfx_font	*gfx;
 
   if ((ttf = (struct bunny_ttf_font*)font)->type == TTF_TEXT)
-    return (ttf->font.getGlyph(str[i], font->glyph_size.y, false, 1).advance);
+    return (ttf->font.getGlyph(str[i], font->glyph_size.y, false, 1).advance + font->interglyph_space.x);
   gfx = (struct bunny_gfx_font*)font;
-  return (gfx->glyph_size.x);
+  return (gfx->glyph_size.x + font->interglyph_space.x);
 }
 
 static size_t		count_word(const char		*str,
@@ -171,7 +171,7 @@ void			_bunny_draw_text(t_bunny_font	*font)
   double		vpitch, hspace;
   t_bunny_position	startpos, iterat;
   int			lines, word, space;
-  size_t		i, j;
+  size_t		i, j, k;
 
   if (font->string == NULL)
     return ;
@@ -194,7 +194,7 @@ void			_bunny_draw_text(t_bunny_font	*font)
 
   if (font->valign != BAL_JUSTIFY)
     {
-      vpitch = font->glyph_size.y;
+      vpitch = font->glyph_size.y + font->interglyph_space.y;
       if (font->valign == BAL_TOP)
 	startpos.y = font->offset.y;
       if (font->valign == BAL_MIDDLE)
@@ -209,13 +209,13 @@ void			_bunny_draw_text(t_bunny_font	*font)
   else
     {
       if ((vpitch = font->clipable.buffer.height / (lines + 2)) < font->glyph_size.y)
-	vpitch = font->glyph_size.y;
+	vpitch = font->glyph_size.y + font->interglyph_space.y;
       startpos.y = font->offset.y;
 
       iterat.y = startpos.y + vpitch;
     }
 
-  for (j = 0; linemem[j].str != NULL; ++j, iterat.y += vpitch)
+  for (j = 0, k = 0; linemem[j].str != NULL; ++j, iterat.y += vpitch)
     {
       if (font->halign == BAL_JUSTIFY)
 	{
@@ -242,12 +242,16 @@ void			_bunny_draw_text(t_bunny_font	*font)
       for (i = 0; linemem[j].str[i] && i < linemem[j].len; ++i)
 	if (linemem[j].str[i] != '\n')
 	  {
-	    put_letter(font, iterat, linemem[j].str, i);
+	    if (k >= font->string_offset)
+	      put_letter(font, iterat, linemem[j].str, i);
 
 	    if (linemem[j].str[i] != ' ')
 	      iterat.x += get_char_width(font, linemem[j].str, i);
 	    else
 	      iterat.x += hspace;
+
+	    if (++k > font->string_len)
+	      return ;
 	  }
     }
 }

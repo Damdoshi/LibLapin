@@ -235,7 +235,7 @@ bool			readstring(const char			*code,
 	strncpy(&d[p++], &code[j++], 1);
       else
 	{
-	  switch (code[j++])
+	  switch (code[++j])
 	    {
 	    case 'a': d[p++] = '\a'; break;
 	    case 'b': d[p++] = '\b'; break;
@@ -258,6 +258,7 @@ bool			readstring(const char			*code,
 	      fprintf(stderr, "Unknown escaped character. (Line %d)\n", whichline(code, j));
 	      return (false);
 	    }
+	  j += 1;
 	}
       if (p >= len - 5)
 	{
