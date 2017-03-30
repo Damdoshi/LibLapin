@@ -116,6 +116,7 @@
  - Reorganisation des fichiers en-tête privé.
 
  - Ajout des évenements co/deco reseau et message reseau.
+ - Ajout d'un module unix avec bunny_popen et bunny_pclose.
 
  - Dossier pour test unitaire. Actuellement, les conteneurs sont les seuls testé,
    a l'exception de leur fonction threades et de certains foreach.

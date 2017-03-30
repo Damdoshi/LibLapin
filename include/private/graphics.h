@@ -92,6 +92,7 @@ struct				bunny_gfx_font
   double			outline_size;
   t_bunny_position		offset;
   t_bunny_position		glyph_size;
+  t_bunny_position		interglyph_space;
 
   t_bunny_picture		*gfx;
 };
