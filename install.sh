@@ -47,9 +47,9 @@ test_and_add_bash()
 	FROOT=`grep "${INCLUDE_DIR}" $1`
 	if [ -z "${FROOT}" ]; then
 	    echo "" >> $1
-	    echo 'export LD_LIBRARY_PATH="${LIB_DIR}"' >> $1
-	    echo 'export C_INCLUDE_PATH=\"${INCLUDE_DIR}"' >> $1
-	    echo 'export CPLUS_INCLUDE_PATH=\"${INCLUDE_DIR}"' >> $1
+	    echo "export LD_LIBRARY_PATH=\"${LIB_DIR}\"" >> $1
+	    echo "export C_INCLUDE_PATH=\"${INCLUDE_DIR}\"" >> $1
+	    echo "export CPLUS_INCLUDE_PATH=\"${INCLUDE_DIR}\"" >> $1
 	fi
     fi
 }
@@ -60,9 +60,9 @@ test_and_add_csh()
 	FROOT=`grep "${INCLUDE_DIR}" $1`
 	if [ -z "${FROOT}" ]; then
 	    echo "" >> $1
-	    echo 'setenv LD_LIBRARY_PATH "${LIB_DIR"' >> $1
-	    echo 'setenv C_INCLUDE_PATH "${INCLUDE_DIR}"' >> $1
-	    echo 'setenv CPLUS_INCLUDE_PATH "${INCLUDE_DIR}"' >> $1
+	    echo "setenv LD_LIBRARY_PATH \"${LIB_DIR}\"" >> $1
+	    echo "setenv C_INCLUDE_PATH \"${INCLUDE_DIR}\"" >> $1
+	    echo "setenv CPLUS_INCLUDE_PATH \"${INCLUDE_DIR}\"" >> $1
 	fi
     fi
 }
