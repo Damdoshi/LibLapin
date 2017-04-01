@@ -117,6 +117,9 @@
 
  - Ajout des évenements co/deco reseau et message reseau.
  - Ajout d'un module unix avec bunny_popen et bunny_pclose.
+ - Si le temps restant à l'execution de la boucle principale est inferieur a 5% du delai,
+   l'affichage n'a pas lieu. Si l'affichage n'a pas lieu 20 fois d'affilé, il est tout
+   de même fait une fois.
 
  - Dossier pour test unitaire. Actuellement, les conteneurs sont les seuls testé,
    a l'exception de leur fonction threades et de certains foreach.
