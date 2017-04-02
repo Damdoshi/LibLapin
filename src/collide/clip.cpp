@@ -13,7 +13,7 @@ bool			bunny_clip_collision_dot(const t_bunny_clipable			*elem,
   l.x = elem->position.x - elem->origin.x;
   l.y = elem->position.y - elem->origin.y;
   s.x = elem->clip_width * elem->scale.x;
-  s.y = elem->clip_width * elem->scale.y;
+  s.y = elem->clip_height * elem->scale.y;
   
   return (pos->x >= l.x && pos->x < l.x + s.x && pos->y >= l.y && pos->y < l.y + s.y);
 }
