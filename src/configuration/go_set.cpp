@@ -58,4 +58,43 @@ bool			bunny_configuration_go_set_string_va(t_bunny_configuration	*config,
   return (true);
 }
 
+t_bunny_configuration	*_bunny_configuration_go_get_node(const t_bunny_configuration	*config,
+							  const char			*addr);
+
+bool			bunny_configuration_go_set_string(t_bunny_configuration		*config,
+							  const char			*val,
+							  const char			*addr)
+{
+  t_bunny_configuration	*cnf;
+
+  if ((cnf = _bunny_configuration_go_get_node(config, addr)) == NULL)
+    return (false);
+  bunny_configuration_set_string(cnf, val);
+  return (true);
+}
+
+bool			bunny_configuration_go_set_double(t_bunny_configuration		*config,
+							  double			val,
+							  const char			*addr)
+{
+  t_bunny_configuration	*cnf;
+
+  if ((cnf = _bunny_configuration_go_get_node(config, addr)) == NULL)
+    return (false);
+  bunny_configuration_set_double(cnf, val);
+  return (true);
+}
+
+bool			bunny_configuration_go_set_int(t_bunny_configuration		*config,
+						       int				val,
+						       const char			*addr)
+{
+  t_bunny_configuration	*cnf;
+
+  if ((cnf = _bunny_configuration_go_get_node(config, addr)) == NULL)
+    return (false);
+  bunny_configuration_set_int(cnf, val);
+  return (true);
+}
+
 

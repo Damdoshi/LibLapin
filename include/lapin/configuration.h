@@ -134,6 +134,13 @@ void			bunny_configuration_create_mode(bool				cmode);
 t_bunny_configuration	*bunny_configuration_get_parent(t_bunny_configuration		*config);
 
 /*!
+** Get the top parent of the sent configuration node.
+** \param config The config tree node we will seek the root
+** \return The root node
+*/
+t_bunny_configuration	*bunny_configuration_get_root(t_bunny_configuration		*config);
+
+/*!
 ** Get the name of the current node. Note that this name may be different from the one you
 ** used to fetch it in its parent node, especially if it was a fetch by index: For example,
 ** an XML node may be inserted in an array, but still have a name.
@@ -141,6 +148,20 @@ t_bunny_configuration	*bunny_configuration_get_parent(t_bunny_configuration		*co
 ** \return The name of the node. Is always valid.
 */
 const char		*bunny_configuration_get_name(const t_bunny_configuration	*config);
+
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+/*!
+** Cover bunny_configuration_get_child and bunny_configuration_get_case with the same
+** symbol.
+** \param cnf The configuration to browse
+** \param id A string or an integer to browse the configuration
+** \return A t_bunny_configuration
+*/
+#  define		bunny_configuration_access(cnf, id)				\
+  _Generic((id),									\
+	   char*: bunny_configuration_get_child,					\
+	   size_t: bunny_configuration_get_case)(cnf, id)
+# endif
 
 /*!
 ** Get the children of the sent config that match the sent name.
@@ -180,11 +201,25 @@ t_bunny_configuration	*bunny_configuration_get_case(t_bunny_configuration		*conf
 */
 size_t			bunny_configuration_get_nbr_case(const t_bunny_configuration	*config);
 
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+/*!
+** Get a value inside the configuration. Its type will match of the type of val.
+** \param cnf The configuration to browse
+** \param val A pointer to the space that will be written to get the value.
+** \return True if the value was get
+*/
+#  define		bunny_configuration_get(cnf, val)				\
+  _Generic((val),									\
+	   const char**: bunny_configuration_get_string,				\
+	   double*: bunny_configuration_get_double,					\
+	   int*: bunny_configuration_get_int)(cnf, val)
+# endif
+
 /*!
 ** Get the value inside the node as a string.
 ** \param config The node to read
 ** \param str A pointer to the space that will be used to contain the value
-** \return True if the value was set. Can fail if no value was ever set.
+** \return True if the value was get. Can fail if no value was ever set.
 */
 bool			bunny_configuration_get_string(const t_bunny_configuration	*config,
 						       const char			**str);
@@ -193,7 +228,7 @@ bool			bunny_configuration_get_string(const t_bunny_configuration	*config,
 ** Get the value inside the node as a double.
 ** \param config The node to read
 ** \param val A pointer to the space that will be used to contain the value
-** \return True if the value was set. Can fail if no value was ever set or if
+** \return True if the value was get. Can fail if no value was ever set or if
 ** the value cannot be converted into a double.
 */
 bool			bunny_configuration_get_double(const t_bunny_configuration	*config,
@@ -203,7 +238,7 @@ bool			bunny_configuration_get_double(const t_bunny_configuration	*config,
 ** Get the value inside the node as an integer.
 ** \param config The node to read
 ** \param val A pointer to the space that will be used to contain the value
-** \return True if the value was set. Can fail if no value was ever set or if
+** \return True if the value was get. Can fail if no value was ever set or if
 ** the value cannot be converted into an integer.
 */
 bool			bunny_configuration_get_int(const t_bunny_configuration		*config,
@@ -221,9 +256,26 @@ t_bunny_configuration	*bunny_configuration_go_get_node_va(t_bunny_configuration	
 							    size_t			nbr,
 							    ...);
 
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+/*!
+** Get a value inside the configuration. Its type will match of the type of val.
+** \param cnf The configuration to browse
+** \param val A pointer to the space that will be written to get the value.
+** \pram nbr How many variadic parameter there is
+** \param ... nbr parameters that can be strings or integers. All integers must be negative
+** or 0 or they will be considered as pointers.
+** \return True if the value was get
+*/
+#  define		bunny_configuration_go_get_va(cnf, val, nbr, ...)		\
+  _Generic((val),									\
+	   const char**: bunny_configuration_go_get_string_va,				\
+	   double*: bunny_configuration_go_get_double_va,				\
+	   int*: bunny_configuration_go_get_int_va)(cnf, val, nbr, __VA_ARGS__)
+# endif
+
 /*!
 ** Go to the describded node and get its value as a string.
-** \param config THe configuration to browse
+** \param config The configuration to browse
 ** \param val A pointer where to store the string you want t get
 ** \param nbr The number of fieldname and integers you sent as variadic parameters.
 ** \param ... nbr parameters that can be strings or integers. All integers must be negative
@@ -237,7 +289,7 @@ bool			bunny_configuration_go_get_string_va(const t_bunny_configuration *config,
 
 /*!
 ** Go to the describded node and get its value as a double
-** \param config THe configuration to browse
+** \param config The configuration to browse
 ** \param val A pointer where to store the double you want t get
 ** \param nbr The number of fieldname and integers you sent as variadic parameters.
 ** \param ... nbr parameters that can be strings or integers. All integers must be negative
@@ -251,7 +303,7 @@ bool			bunny_configuration_go_get_double_va(const t_bunny_configuration *config,
 
 /*!
 ** Go to the describded node and get its value as an integer.
-** \param config THe configuration to browse
+** \param config The configuration to browse
 ** \param val A pointer where to store the integer you want to get
 ** \param nbr The number of fieldname and integers you sent as variadic parameters.
 ** \param ... nbr parameters that can be strings or integers. All integers must be negative
@@ -262,6 +314,82 @@ bool			bunny_configuration_go_get_int_va(const t_bunny_configuration	*config,
 							  int				*val,
 							  size_t			nbr,
 							  ...);
+
+/*!
+** Get the requested node from config.
+** \param config The configuration to browseg.
+** \param addr An address in the C fashion, for example: "varname[index][index2]->pointed.attribute"
+** The '*' operator is not supported yet. Parenthesis are not supported yet.
+** \return The matching node
+*/
+t_bunny_configuration	*bunny_configuration_go_get_node(t_bunny_configuration		*config,
+							 const char			*addr);
+
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+/*!
+** Get a value inside the configuration. Its type will match of the type of val.
+** \param cnf The configuration to browse
+** \param val A pointer to the space that will be written to get the value.
+** \param addr An address in the C fashion, for example: "varname[index][index2]->pointed.attribute"
+** The '*' operator is not supported yet. Parenthesis are not supported yet.
+** \return True if the value was get
+*/
+#  define		bunny_configuration_go_get(cnf, val, addr)			\
+  _Generic((val),									\
+	   const char**: bunny_configuration_go_get_string,				\
+	   double*: bunny_configuration_go_get_double,					\
+	   int*: bunny_configuration_go_get_int)(cnf, val, addr)
+# endif
+
+/*!
+** Go to the describded node and get its value as a string.
+** \param config The configuration to browse
+** \param val A pointer where to store the string you want t get
+** \param addr An address in the C fashion, for example: "varname[index][index2]->pointed.attribute"
+** The '*' operator is not supported yet. Parenthesis are not supported yet.
+** \return True if the output value was set.
+*/
+bool			bunny_configuration_go_get_string(t_bunny_configuration		*config,
+							  const char			**val,
+							  const char			*addr);
+
+/*!
+** Go to the describded node and get its value as a double.
+** \param config The configuration to browse
+** \param val A pointer where to store the double you want t get
+** \param addr An address in the C fashion, for example: "varname[index][index2]->pointed.attribute"
+** The '*' operator is not supported yet. Parenthesis are not supported yet.
+** \return True if the output value was set.
+*/
+bool			bunny_configuration_go_get_double(t_bunny_configuration		*config,
+							  double			*val,
+							  const char			*addr);
+
+/*!
+** Go to the describded node and get its value as an integer
+** \param config The configuration to browse
+** \param val A pointer where to store the integer you want t get
+** \param addr An address in the C fashion, for example: "varname[index][index2]->pointed.attribute"
+** The '*' operator is not supported yet. Parenthesis are not supported yet.
+** \return True if the output value was set.
+*/
+bool			bunny_configuration_go_get_int(t_bunny_configuration		*config,
+						       int				*val,
+						       const char			*addr);
+
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+/*!
+** Set a value inside the configuration. Its type will match of the type of val.
+** \param cnf The configuration to editr
+** \param val The value to write
+** \return True if the value was set
+*/
+#  define		bunny_configuration_set(cnf, val)				\
+  _Generic((val),									\
+	   const char*: bunny_configuration_set_string,					\
+	   double: bunny_configuration_set_double,					\
+	   int: bunny_configuration_set_int)(cnf, val)
+# endif
 
 /*!
 ** Set the value inside the node to a string.
@@ -287,10 +415,27 @@ void			bunny_configuration_set_double(t_bunny_configuration		*config,
 void			bunny_configuration_set_int(t_bunny_configuration		*config,
 						    int					val);
 
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+/*!
+** Go to the describded node and set its value.
+** \param config The configuration to browse
+** \param val The value to set
+** \param nbr The number of fieldname and integers you sent as variadic parameters.
+** \param ... nbr parameters that can be strings or integers. All integers must be negative
+** or 0 or they will be considered as pointers.
+** \return True if the value was set.
+*/
+#  define		bunny_configuration_go_set_va(cnf, val, nbr, ...)		\
+  _Generic((val),									\
+	   const char*: bunny_configuration_go_set_string_va,				\
+	   double: bunny_configuration_go_set_double_va,				\
+	   int: bunny_configuration_go_set_int_va)(cnf, val, nbr, __VA_ARGS__)
+# endif
+
 /*!
 ** Go to the describded node and set its value to a string.
-** \param config THe configuration to browse
-** \param val A pointer where to store the string you want to set
+** \param config The configuration to browse
+** \param val The value to set
 ** \param nbr The number of fieldname and integers you sent as variadic parameters.
 ** \param ... nbr parameters that can be strings or integers. All integers must be negative
 ** or 0 or they will be considered as pointers.
@@ -303,8 +448,8 @@ bool			bunny_configuration_go_set_string_va(const t_bunny_configuration *config,
 
 /*!
 ** Go to the describded node and set its value to a double.
-** \param config THe configuration to browse
-** \param val A pointer where to store the double you want to set
+** \param config The configuration to browse
+** \param val The value to set
 ** \param nbr The number of fieldname and integers you sent as variadic parameters.
 ** \param ... nbr parameters that can be strings or integers. All integers must be negative
 ** or 0 or they will be considered as pointers.
@@ -318,7 +463,7 @@ bool			bunny_configuration_go_set_double_va(const t_bunny_configuration *config,
 /*!
 ** Go to the describded node and set its value to an integer.
 ** \param config THe configuration to browse
-** \param val A pointer where to store the integer you want to set
+** \param val The value to set
 ** \param nbr The number of fieldname and integers you sent as variadic parameters.
 ** \param ... nbr parameters that can be strings or integers. All integers must be negative
 ** or 0 or they will be considered as pointers.
@@ -328,6 +473,59 @@ bool			bunny_configuration_go_set_int_va(const t_bunny_configuration	*config,
 							  int				val,
 							  size_t			nbr,
 							  ...);
+
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+/*!
+** Go to the describded node and set its value.
+** \param config The configuration to browse
+** \param val The value to set
+** \param addr An address in the C fashion, for example: "varname[index][index2]->pointed.attribute"
+** The '*' operator is not supported yet. Parenthesis are not supported yet.
+** \return True if the value was set.
+*/
+#  define		bunny_configuration_go_set(cnf, val, addr)			\
+  _Generic((val),									\
+	   const char*: bunny_configuration_go_set_string,				\
+	   double: bunny_configuration_go_set_double,					\
+	   int: bunny_configuration_go_set_int)(cnf, val, addr)
+# endif
+
+/*!
+** Go to the describded node and set its value to a string.
+** \param config The configuration to browse
+** \param val A pointer where to store the string you want to set
+** \param addr An address in the C fashion, for example: "varname[index][index2]->pointed.attribute"
+** The '*' operator is not supported yet. Parenthesis are not supported yet.
+** \return True if the value was set.
+*/
+bool			bunny_configuration_go_set_string(t_bunny_configuration		*config,
+							  const char			*val,
+							  const char			*addr);
+
+/*!
+** Go to the describded node and set its value to a double
+** \param config The configuration to browse
+** \param val The value to set
+** \param addr An address in the C fashion, for example: "varname[index][index2]->pointed.attribute"
+** The '*' operator is not supported yet. Parenthesis are not supported yet.
+** \return True if the value was set.
+*/
+bool			bunny_configuration_go_set_double(t_bunny_configuration		*config,
+							  double			val,
+							  const char			*addr);
+
+/*!
+** Go to the describded node and set its value to an integer
+** \param config The configuration to browse
+** \param val The value to set
+** \param addr An address in the C fashion, for example: "varname[index][index2]->pointed.attribute"
+** The '*' operator is not supported yet. Parenthesis are not supported yet.
+** \return True if the value was set.
+*/
+bool			bunny_configuration_go_set_int(t_bunny_configuration		*config,
+						       int				val,
+						       const char			*addr);
+
 
 /*!
 ** Return the first children of the sent node.

@@ -124,7 +124,6 @@
  - Dossier pour test unitaire. Actuellement, les conteneurs sont les seuls testé,
    a l'exception de leur fonction threades et de certains foreach.
 
-
 =========================================================================================
 ------------------------------------- Version 1.10 --------------------------------------
 =========================================================================================
