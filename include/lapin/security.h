@@ -36,6 +36,7 @@ typedef enum			e_bunny_ciphering
     BS_XOR,			/* ^ */
     BS_CAESAR,			/* + */
     BS_SHAKER,			/* swap data in the buffer */
+    BS_SWITCH,			/* switch from bits are state to bits are switch */
     /* BS_COKTAIL - it mix all previous algorithm */
     BS_CUSTOM			/* any >= BS_CUSTOM */
   }				t_bunny_ciphering;

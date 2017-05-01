@@ -94,7 +94,7 @@
 /*!
 ** LAPIN_MINOR_VERSION expands into an integer that contains the current revision of the library
 */
-# define			LAPIN_MINOR_VERSION	10
+# define			LAPIN_MINOR_VERSION	11
 
 # include			"lapin/placement.h"
 # ifdef				__cplusplus
@@ -123,6 +123,7 @@
 # include			"lapin/hash.h"
 # include			"lapin/text.h"
 # include			"lapin/unix.h"
+# include			"lapin/camera.h"
 
 # include			"lapin/stack.h"
 # include			"lapin/astack.h"

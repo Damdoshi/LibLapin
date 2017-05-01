@@ -82,6 +82,18 @@ typedef enum			e_bunny_rgb
   (TO_ALPHA(a) | TO_RED(r) | TO_GREEN(g) | TO_BLUE(b))
 
 /*!
+** Compose your grey with alpha level
+*/
+# define			ALPHA_GREY(a, g)		\
+  COLOR(a, g, g, g)
+
+/*!
+** Compose your plain grey
+*/
+# define			GREY(g)				\
+  COLOR(255, g, g, g)
+
+/*!
 ** The t_bunny_color union represents a pixel color.
 ** This union allow you to manipulate the color in different
 ** convenient ways.
