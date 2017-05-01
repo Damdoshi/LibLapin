@@ -30,6 +30,13 @@ void			bunny_clear(t_bunny_buffer		*picture,
     case GRAPHIC_RAM:
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)picture;
+	if (pic->rect.x == 0 && pic->rect.y == 0 &&
+	    pic->rect.w == picture->width && pic->rect.h == picture->height)
+	  {
+	    pic->texture->clear(color);
+	    return ;
+	  }
+
 	sf::IntRect		rect(pic->rect.x, pic->rect.y, pic->rect.w, pic->rect.h);
 	sf::RectangleShape	shape;
 
