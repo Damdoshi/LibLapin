@@ -12,15 +12,34 @@ struct			cstring
   size_t		len;
 };
 
+static int		get_unicode_len(const char	*str)
+{
+  if (!(*str & 0x80)) // Unicode character
+    return (1);
+  if ((*str & 0xE0) == 0xC0) // 110x xxxx
+    return (2);
+  if ((*str & 0xF0) == 0xE0) // 1110 xxxx
+    return (3);
+  if ((*str & 0xF8) == 0xF0) // 1111 0xxx
+    return (4);
+  return (1);
+}
+
 static size_t		get_char_width(t_bunny_font	*font,
 				       const char	*str,
 				       size_t		i)
 {
   struct bunny_ttf_font	*ttf;
   struct bunny_gfx_font	*gfx;
+  int			len = get_unicode_len(&str[i]);
+  std::string		x(str, i, len);
+  std::basic_string<sf::Uint32> conv;
+
+  sf::Utf8::toUtf32(x.begin(), x.end(), std::back_inserter(conv));
 
   if ((ttf = (struct bunny_ttf_font*)font)->type == TTF_TEXT)
-    return (ttf->font.getGlyph(str[i], font->glyph_size.y, false, 1).advance + font->interglyph_space.x);
+    return (ttf->font.getGlyph
+	    (conv[0], font->glyph_size.y, false, 1).advance + font->interglyph_space.x);
   gfx = (struct bunny_gfx_font*)font;
   return (gfx->glyph_size.x + font->interglyph_space.x);
 }
@@ -31,10 +50,28 @@ static size_t		count_word(const char		*str,
   size_t		cnt, i;
 
   cnt = 0;
-  for (i = 1; str[i + 1] && i < len; ++i)
-    if (str[i - 1] == ' ' && str[i] != ' ')
-      cnt += 1;
+  for (i = 1; str[i + 1] && i < len; )
+    {
+      if (str[i - 1] == ' ' && str[i] != ' ')
+	cnt += 1;
+      i += get_unicode_len(&str[i]);
+    }
   return (cnt ? cnt : 1);
+}
+
+static size_t		total_len(t_bunny_font		*font,
+				  const char		*str,
+				  size_t		len)
+{
+  size_t		cnt, i;
+
+  cnt = 0;
+  for (i = 0; str[i] && i < len; )
+    {
+      cnt += get_char_width(font, str, i);
+      i += get_unicode_len(&str[i]);
+    }
+  return (cnt);
 }
 
 static size_t		sum_letter_space(t_bunny_font	*font,
@@ -46,29 +83,20 @@ static size_t		sum_letter_space(t_bunny_font	*font,
 
   cnt = 0;
   space = false;
-  for (i = 0; str[i] && i < len; ++i)
-    if (str[i] != ' ')
-      {
-	cnt += get_char_width(font, str, i);
-	space = false;
-      }
-    else if (space == false)
-      {
-	space = true;
-	cnt += get_char_width(font, str, i);
-      }
-  return (cnt);
-}
-
-static size_t		total_len(t_bunny_font		*font,
-				  const char		*str,
-				  size_t		len)
-{
-  size_t		cnt, i;
-
-  cnt = 0;
-  for (i = 0; str[i] && i < len; ++i)
-    cnt += get_char_width(font, str, i);
+  for (i = 0; str[i] && i < len; )
+    {
+      if (str[i] != ' ')
+	{
+	  cnt += get_char_width(font, str, i);
+	  space = false;
+	}
+      else if (space == false)
+	{
+	  space = true;
+	  cnt += get_char_width(font, str, i);
+	}
+      i += get_unicode_len(&str[i]);
+    }
   return (cnt);
 }
 
@@ -138,19 +166,23 @@ static size_t		count_lines(t_bunny_font	*font,
   return (line);
 }
 
-static void		put_letter(t_bunny_font		*font,
+static int		put_letter(t_bunny_font		*font,
 				   t_bunny_position	&pos,
 				   const char		*str,
 				   size_t		i)
 {
   size_t		*s = (size_t*)font;
+  int			len = get_unicode_len(&str[i]);
 
   if (*s == TTF_TEXT)
     {
       struct bunny_ttf_font *fnt = (struct bunny_ttf_font*)font;
+      std::basic_string<sf::Uint32>			conv;
+      std::string					x(str, i, len);
 
+      sf::Utf8::toUtf32(x.begin(), x.end(), std::back_inserter(conv));
       fnt->text.setPosition(sf::Vector2f(pos.x, pos.y));
-      fnt->text.setString(std::string(str, i, 1));
+      fnt->text.setString(sf::String(conv));
       fnt->texture->draw(fnt->text);
     }
   else
@@ -163,6 +195,7 @@ static void		put_letter(t_bunny_font		*font,
       fnt->gfx->clip_y_position = n / fnt->gfx->buffer.width;
       bunny_blit(&font->clipable.buffer, fnt->gfx, &pos);
     }
+  return (len);
 }
 
 void			_bunny_draw_text(t_bunny_font	*font)
@@ -239,11 +272,13 @@ void			_bunny_draw_text(t_bunny_font	*font)
       iterat.x = startpos.x;
       //write(1, linemem[j].str, linemem[j].len);
       //write(1, "\n", 1);
-      for (i = 0; linemem[j].str[i] && i < linemem[j].len; ++i)
+      for (i = 0; linemem[j].str[i] && i < linemem[j].len; )
 	if (linemem[j].str[i] != '\n')
 	  {
+	    int		adv = 0;
+
 	    if (k >= font->string_offset)
-	      put_letter(font, iterat, linemem[j].str, i);
+	      adv = put_letter(font, iterat, linemem[j].str, i);
 
 	    if (linemem[j].str[i] != ' ')
 	      iterat.x += get_char_width(font, linemem[j].str, i);
@@ -252,7 +287,10 @@ void			_bunny_draw_text(t_bunny_font	*font)
 
 	    if (++k > font->string_len)
 	      return ;
+	    i += adv;
 	  }
+	else
+	  ++i;
     }
 }
 
