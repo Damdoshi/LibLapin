@@ -270,8 +270,6 @@ void			_bunny_draw_text(t_bunny_font	*font)
 	}
 
       iterat.x = startpos.x;
-      //write(1, linemem[j].str, linemem[j].len);
-      //write(1, "\n", 1);
       for (i = 0; linemem[j].str[i] && i < linemem[j].len; )
 	if (linemem[j].str[i] != '\n')
 	  {
