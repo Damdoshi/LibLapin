@@ -112,18 +112,18 @@
 # include			"lapin/graphics.h"
 # include			"lapin/network.h"
 # include			"lapin/events.h"
-# include			"lapin/plugin.h"
+# include			"working/plugin.h"
 # include			"lapin/configuration.h"
 # include			"lapin/sound.h"
 # include			"lapin/threads.h"
-# include			"lapin/asynclock.h"
+# include			"working/asynclock.h"
 # include			"lapin/security.h"
 # include			"lapin/self_test.h"
 # include			"lapin/collide.h"
 # include			"lapin/hash.h"
 # include			"lapin/text.h"
 # include			"lapin/unix.h"
-# include			"lapin/camera.h"
+# include			"working/camera.h"
 
 # include			"lapin/stack.h"
 # include			"lapin/astack.h"
@@ -139,7 +139,7 @@
 # include			"lapin/compat.h"
 
 # ifdef				BUNNY_DATABASE
-#  include			"lapin/database.h"
+#  include			"working/database.h"
 # endif
 
 # ifdef				BUNNY_HARDWARE

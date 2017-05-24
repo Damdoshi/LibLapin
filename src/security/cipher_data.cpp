@@ -21,6 +21,9 @@ void				bunny_cipher_data(void				*cnt,
     case BS_SHAKER:      
       __bunny_shaker((char*)cnt, len, key, true);
       return ;
+    case BS_SWITCH:      
+      __bunny_switch((char*)cnt, len, key, true);
+      return ;
     default:
       gl_bunny_my_cipher(cip, (char*)cnt, len, key);
     }
