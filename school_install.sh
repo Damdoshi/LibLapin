@@ -69,10 +69,6 @@ test_and_add_csh()
 
 mkdir -p ${LIB_DIR} ${INCLUDE_DIR}		|| get_out "Failed to create installation directories."
 
-# Dependancies
-cp -r external/include/* ${INCLUDE_DIR}		|| get_out "Failed to install dependancies headers."
-cp external/lib/* ${LIB_DIR}			|| get_out "Failed to install dependancies binaries."
-
 make -j4					|| get_out "No bunnies were build. Make failed."
 
 # Bunnies
@@ -86,22 +82,6 @@ chmod 644 ${INCLUDE_DIR}/*/*.h*			|| get_out "Failed to change mode of headers."
 chmod 644 ${INCLUDE_DIR}/*/*/*.h*		|| get_out "Failed to change mode of headers."
 chmod 644 ${LIB_DIR}/*.a			|| get_out "Failed to change mode of binaries."
 chmod 755 ${LIB_DIR}/*.so			|| get_out "Failed to change mode of binaries."
-
-# "LDCONFIG"
-
-ln -fs ${LIB_DIR}/libsfml-audio.so ${LIB_DIR}/libsfml-audio.so.2.3 && \
-    ln -fs ${LIB_DIR}/libsfml-graphics.so ${LIB_DIR}/libsfml-graphics.so.2.3 && \
-    ln -fs ${LIB_DIR}/libsfml-network.so ${LIB_DIR}/libsfml-network.so.2.3 && \
-    ln -fs ${LIB_DIR}/libsfml-system.so ${LIB_DIR}/libsfml-system.so.2.3 && \
-    ln -fs ${LIB_DIR}/libsfml-window.so ${LIB_DIR}/libsfml-window.so.2.3 || \
-    get_out "Failed to create symbolic links"
-
-ln -fs ${LIB_DIR}/libsfml-audio.so ${LIB_DIR}/libsfml-audio.so.2 && \
-    ln -fs ${LIB_DIR}/libsfml-graphics.so ${LIB_DIR}/libsfml-graphics.so.2 && \
-    ln -fs ${LIB_DIR}/libsfml-network.so ${LIB_DIR}/libsfml-network.so.2 && \
-    ln -fs ${LIB_DIR}/libsfml-system.so ${LIB_DIR}/libsfml-system.so.2 && \
-    ln -fs ${LIB_DIR}/libsfml-window.so ${LIB_DIR}/libsfml-window.so.2 || \
-    get_out "Failed to create symbolic links"
 
 # Conf
 
