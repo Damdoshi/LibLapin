@@ -2,18 +2,18 @@ Source: liblapin-dev
 Priority: optional
 Maintainer: Jason Brillante Damdoshi <damdoshi@hotmail.com>
 Build-Depends:
-  debhelper (>= 9), make, g++, libsfml-dev (>= 2.4), libusb-dev (>=2)
+  debhelper (>= 9), make (>= 4.0), g++ (>= 5.0), libsfml-dev (>= 2.2), libusb-dev (>= 2)
 Standards-Version: 1.11
-Section: graphics
+Section: libdevel
 Homepage: http://hangedbunnystudio.com/sub/liblapin
 
 Package: liblapin-dev
 Architecture: all
 Depends:
-  debhelper (>= 9), make, g++, libsfml-dev (>= 2.4), libusb-dev (>=2),
+  debhelper (>= 9), make (>= 4.0), g++ (>= 5.0), libsfml-dev (>= 2.2), libusb-dev (>= 2),
   ${misc:Depends}
 Description: Daemon and API to monitor service status
- This package brings binaries and headers of the game libary LibLapin.
+ This package brings binaries and headers of the game library LibLapin.
  The LibLapin (aka "BunnyLibrary") was started as a library for rookies
  in C programming and as a game jam library.
 

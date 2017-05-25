@@ -60,8 +60,8 @@ static void		display(char		*a,
 static void		test(void)
 {
   // Simple test to debug the function
-  char			simple[2] = {0xF0, 0xC6};   // 1111 0000 , 1100 1010
-  char			expected[2] = {0x10, 0x5F}; // 0001 0000 , 0101 1111
+  char			simple[2] = {0xF0, 0xCA};   // 0000 1111 , 0101 0011
+  char			expected[2] = {0x10, 0x5F}; // 0000 1000 , 1111 1010
 
   bunny_cipher_data(simple, sizeof(simple), BS_SWITCH, NULL);
   display(simple, expected, sizeof(simple) * 8);
@@ -82,7 +82,7 @@ static void		test(void)
 	buffer[i] = duplicate[i] = rand();
       bunny_cipher_data(&buffer[0], max, BS_SWITCH, NULL);
       bunny_uncipher_data(&buffer[0], max, BS_SWITCH, NULL);
-      display(simple, expected, sizeof(simple) * 8);
+      display(buffer, duplicate, sizeof(simple) * 8);
       for (i = 0; i < max; ++i)
 	assert(buffer[i] == duplicate[i]);
     }

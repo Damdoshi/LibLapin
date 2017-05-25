@@ -1,3 +1,3 @@
 #!/bin/sh
 
-debuild -us -uc
+debuild -us -uc -d

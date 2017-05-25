@@ -12,10 +12,10 @@
   BIN		=	`pwd | rev | cut -d "/" -f1 | rev`
   FLAG		=	-W -Wall -Werror -g -g3 -ggdb
 
-  INCLUDE	=	-I./include/
+  INCLUDE	=	-I./include/ -I../../include/
   SRC		=	$(wildcard src/*.c)
   OBJ		=	$(SRC:.c=.o)
-  LIBPATH	=	-L${HOME}/.froot/lib/
+  LIBPATH	=	-L../../
   LIB		=	-llapin -lsfml-graphics -lsfml-audio -lsfml-window	\
 			-lsfml-system -lstdc++ -lm -ldl -lpthread
 
