@@ -12,6 +12,7 @@ liblapin-dev (1.11) UNRELEASED; urgency=medium
   * Add network related events
   * Down the screen resfresh rate if the main loop is too slow.
   * Reorganize privates header.
+  * Add bunny_get_fullscreen_modes
 
   * Add a security module to cipher configuration file, assets and saved games.
     **Only for low security needs*
