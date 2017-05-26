@@ -22,6 +22,9 @@ typedef enum		e_bunny_configuration_type
     BC_DABSIC,
     BC_XML,
     BC_LUA,
+    //BC_CSV,
+    //BC_JSON,
+    //BC_YAML,
     BC_CUSTOM
   }			t_bunny_configuration_type;
 
