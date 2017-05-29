@@ -1,4 +1,4 @@
-liblapin-dev (1.11) UNRELEASED; urgency=medium
+liblapin-dev (1.11) stable; urgency=low
 
   * Add a text module that can handle png font and real font and act as textbox.
     Based on clipable.
