@@ -3,6 +3,7 @@
 //
 // Lapin library
 
+#include		<errno.h>
 #include		<signal.h>
 #include		<unistd.h>
 #include		<string.h>
@@ -46,7 +47,10 @@ void			*bunny_realloc(void		*ptr,
       while (1);
     }
   if ((rel = bunny_malloc(data)) == NULL)
-    return (NULL);
+    {
+      errno = ENOMEM;
+      return (NULL);
+    }
   if (data >= chunk->tree->chunk_size)
     memcpy(rel, ptr, chunk->tree->chunk_size);
   else

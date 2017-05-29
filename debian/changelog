@@ -1,0 +1,191 @@
+liblapin-dev (1.11) stable; urgency=low
+
+  * Add a text module that can handle png font and real font and act as textbox.
+    Based on clipable.
+  * Add a configuration module that can load and save in different formats and
+    handle all the same way
+  * Handle INI format
+  * Handle DABSIC format
+  * Add bunny_read_ini and bunny_write_ini to read and write from and to memory instead of file
+  * Add bunny_ini_field_count
+  * Deprecate bunny_ini module, use bunny_configuration instead now
+  * Add network related events
+  * Down the screen resfresh rate if the main loop is too slow.
+  * Reorganize privates header.
+  * Add bunny_get_fullscreen_modes
+
+  * Add a security module to cipher configuration file, assets and saved games.
+    **Only for low security needs*
+  * Add a hash module
+  * Add a bunny_load_file and bunny_save_file
+  * Add bunny_thread_push to push a single task into a bunny threadpool
+  * Add a stack, queue, list, vector, map, bitfield module
+  * Add a pool module for fast memory alloc and free
+  * Add a stack on stack module (Container that act as stack, with all its alloc on the real stack)
+  * Add bunny_evaluate to compute mathematic operations. Supported operators
+    are +-*/%<><=>= == != () and ?:. Currently, variable environment is ignored.
+  * Add a collision module that includes triangle collision
+  * Add a bunny_unix module
+  * Add ANTIALIASING flag for window style
+  * Edit LAPIN_ALLOCATOR_DEACTIVATED so it can be used while compiling the library
+  * Add BUNNY_ALLOCATOR_* as alias of LAPIN_ALLOCATOR_* macros
+
+  * Add the geosquare demo.
+
+ -- Jason Brillante <damdoshi@hotmail.com>  Tue, 23 May 2017 12:00:00 +0100
+
+liblapin-dev (1.10) stable; urgency=low
+
+  * Remove basic.h, advanced.h and extra.h to organize functions around modules instead.
+  * Fully documented with Doxygen.
+  * New Makefile
+  * Simple project template
+
+ -- Jason Brillante <damdoshi@hotmail.com>  Wed, 10 Aug 2016 00:00:00 +0100
+
+liblapin-dev (1.9) stable; urgency=low
+
+  * Add lapin/extra.h and lapin/extra_type.h
+  * Add bunny_server_ and bunny_client_ for network programming
+  * Add bunny_thread for parrallel programming
+  * Add bunny_hardware, driver for PVM110N by Velleman. (Activate with BUNNY_HARDWARE, need libusb)
+  * Add bunny_move_window and bunny_resize_window
+  * Add bunny_get_screen_resolution
+  * Add bunny_strnlen (Windows missing function)
+
+  * Check the malloc return value in bunny allocator
+
+  * Add a demo script for shader, window resize, network, thread and hardware
+  * Codeblock project for Windows
+
+ -- Jason Brillante <damdoshi@hotmail.com>  Thu, 19 Jul 2016 00:00:00 +0100
+
+liblapin-dev (1.8) stable; urgency=low
+
+  * Add DEFAULT_SCOPE symbolic constant
+  * Add a color field in clipable for color masking
+  * Edit the pixelarray functions to make it works without any graphic environment
+  * Edit the bunny allocator to make it scream on stderr instead of stdout
+  * Add bunny_set_circle
+  * Add bunny_ini_first_scope, bunny_ini_next_scope, bunny_ini_first_field, bunny_field_set_value,
+    bunny_ini_get_scope, bunny_ini_field_name, bunny_ini_next_field, bunny_field_get_value.
+  * Add bunny_self_test to evaluate pixelarray drawing functions set to gl_buny_my_* function pointer.
+
+  * Fix bunny_save_pixelarray
+  * Fix the segmentation fault in the INI error handling. (Discovered by users)
+
+ -- Jason Brillante <damdoshi@hotmail.com>  Tue, 14 Jun 2016 00:00:00 +0100
+
+liblapin-dev (1.7) stable; urgency=low
+
+  * Split lapin.h into lapin/basic.h and lapin/advanced.h
+  * Define t_bunny_sound and t_bunny_effect as real structure instead of void pointer.
+    **Compatibility break!**
+  * Add a way to generate sound with your program
+  * Add a callback for screen rendering.
+  * Add a callback for the window resize event.
+  * Add a callback for get and lost focus events.
+  * Add a callback for window close event for multiple window mode.
+  * Add bunny_set_maximum_ram to set the maximum amount of bytes the bunny allocator can give.
+  * Edit the bunny allocator to make it more aggressive with buffer overflows
+  * Add bunny_set_geometry
+
+  * Remove the anti aliasing
+  * Remove vsync
+  * Remove C++ wrapper: C symbols are reachable anyway.
+
+ -- Jason Brillante <damdoshi@hotmail.com> Mon, 21 Mar 2016 00:00:00 +0100
+
+liblapin-dev (1.6) stable; urgency=high
+
+  * Add bunny_set_mouse_position_window, set_mouse_position to move the mouse on window or screen
+  * Add bunny_set_mouse_visibility to hide or display the cursor.
+  * Add bunny_request_focus
+  * Rename t_bunny_transform into t_bunny_accurate_position. **Compatibility break!**
+  * Add a t_bunny_transform structure that contains transformation information for shaders
+  * Add bunny_is_shader_available, new_shader, delete_shader, load_shader, shader_set_variable
+    to create shaders and bunny_blit_shader to blit a picture using a shader.
+  * Add bunny_set_key_repeat to activate or deactivate key repetition.
+  * Add bunny_save_pixelarray to save a cpu picture into a file
+
+  * Fix bunny_ini_scope_get_field
+  * Fix bunny_blit from gpu to cpu (again)
+  * Fix the conflit between clic and mouse move event that turn into invalid values in callbacks.
+
+ -- Jason Brillante <damdoshi@hotmail.com>  Fri, 27 Nov 2015 00:00:00 +0100
+
+liblapin-dev (1.5.1) stable; urgency=high
+
+  * Constify t_bunny_window.name and its characters
+  * Constify t_bunny_pixelarray.pixels but not its pixels
+
+ -- Jason Brillante <damdoshi@hotmail.com>  Tue, 3 Nov 2015 00:00:00 +0100
+
+liblapin-dev (1.5) stable; urgency=medium
+
+  * Add bunny_set/get_context to load and save all callbacks in one shot.
+  * Add bunny_ini_first, ini_scope_name, ini_next, ini_scope_get_field and ini_scope_set_field
+    functions to allow to browse scopes inside a INI file without having to know them before.
+  * Add bunny_set_joy_axis_response, joy_button_response, joy_connect_response, get_joy_button,
+    get_joy_axis functions. Those functions handle joysticks events. Associated enums and structures were added.
+  * Add bunny_set_wheel_response for mouse wheel
+  * Add CONNECTED and DISCONNECTED in the event_state enum.
+  * Add gl_vector font and associated types.
+  * Add origin and scale modifier in the clipable structure
+  * Handle commentaries with '#' at the beginning of a line in INI file
+
+  * Add several const
+  * Make the main loop sleeps instead of spamming time
+  * Fix the typo in BKS_SUBSTRACT
+  * Fix bunny_blit from gpu to cpu
+
+  * Add a font.png file
+  * Add the joystick_panel program that is useful to test your joystick
+
+ -- Jason Brillante <damdoshi@hotmail.com>  Mon, 2 Nov 2015 00:00:00 +0100
+
+liblapin-dev (1.4) stable; urgency=low
+
+  * Add a mod attribute in the t_color union to create color offsets.
+
+ -- Jason Brillante <damdoshi@hotmail.com>  Mon, 2 Nov 2015 00:00:00 +0100
+
+liblapin-dev (1.3) stable; urgency=low
+
+  * Add bunny_start_style that allow to define a window style.
+  * Use int instead of unsigned int everywhere
+
+ -- Jason Brillante <damdoshi@hotmail.com>  Thu, 23 Sep 2015 00:00:00 +0100
+
+liblapin-dev (1.2) stable; urgency=low
+
+  * Bring bunny_malloc, a custom allocator to limit and monitor allocations
+  * Add an enumeration for keyboard keys
+
+ -- Jason Brillante <damdoshi@hotmail.com>  Mon, 21 Sep 2015 00:00:00 +0100
+
+liblapin-dev (1.1) stable; urgency=low
+
+  * Add functions pointers gl_bunny_my_* that makes drawing functions handle cpu pictures.
+  * Set pink as default color for new pictures
+  * Fix bunny_fill on gpu pictures
+  * Fix color constant to have the same colors on cpu and gpu pictures
+  * Fix bunny_blit from cpu to gpu
+
+ -- Jason Brillante <damdoshi@hotmail.com>  Tue, 17 Jun 2015 00:00:00 +0100
+
+liblapin-dev (1.0) stable; urgency=low
+
+  * First version of the "Bunny Library"
+  * Brings pixel-per-pixel throught CPU
+  * Brings block-per-block throught GPU
+  * Brings ways to mix both
+  * Brings a time locked loop with event callbacks.
+
+  * Objectives are:
+  * Simplicity: tools must be direct and quick to work with.
+  * Explicity: avoid the need to read the doc for each function
+  * Pedagogic: beginners must be able to progress in graphics, but also in C programming
+
+ -- Jason Brillante <damdoshi@hotmail.com>  Sun, 01 Mar 2015 00:00:00 +0100
+

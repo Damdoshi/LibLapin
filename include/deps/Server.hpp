@@ -66,7 +66,9 @@ namespace				bpt
       bool				DoomClient(unsigned int		client);
       unsigned int			GetIP(unsigned int		usr);
 
-      bool				Start(const std::string		&port);
+      bool				Start(const std::string		&port,
+					      NetAbs::INetAccess::Protocol prot
+					      = NetAbs::INetAccess::TCP);
       bool				Stop(void);
 
       Server(const std::string		&port = "") throw (int);

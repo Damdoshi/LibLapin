@@ -11,6 +11,7 @@ const bpt::NetCom::Communication	&bpt::NetCom::Server::operator()(unsigned int	t
   NetAbs::INetAccess::Delay		delay;
   unsigned int				max;
   int					tmp;
+  int					count;
 
   if (this->communication.comtype == MESSAGE)
     {
@@ -25,18 +26,18 @@ const bpt::NetCom::Communication	&bpt::NetCom::Server::operator()(unsigned int	t
     {
       delay.microseconds = timeout * 1000;
       delay.seconds = timeout / 1000;
-      if (Select(max, &this->fds_read, &this->fds_write, &this->fds_error, &delay) == false)
+      if ((count = Select(max, &this->fds_read, &this->fds_write, &this->fds_error, &delay)) == -1)
 	return (RetError(SELECT_FAIL, delay.seconds * 1000 + delay.microseconds / 1000));
       if ((max =  delay.seconds * 1000 + delay.microseconds / 1000) == 0)
 	return (RetExpired(0));
     }
   else
     {
-      if (Select(max, &this->fds_read, &this->fds_write, &this->fds_error) == false)
+      if ((count = Select(max, &this->fds_read, &this->fds_write, &this->fds_error)) == -1)
 	return (RetError(SELECT_FAIL, 0));
       max = 0;
     }
-  for (i = this->client.begin(); i != this->client.end(); ++i)
+  for (i = this->client.begin(); i != this->client.end() && count > 0; ++i)
     {
       if (this->fds_write.IsSet((*i)->info->socket))
 	{
@@ -44,6 +45,7 @@ const bpt::NetCom::Communication	&bpt::NetCom::Server::operator()(unsigned int	t
 	    return (Disconnected((*i)->info->socket, max));
 	  else if (tmp == -1)
 	    return (RetError(WRITE_FAIL, max));
+	  count -= 1;
 	}
       if (this->fds_read.IsSet((*i)->info->socket))
 	{
@@ -51,8 +53,11 @@ const bpt::NetCom::Communication	&bpt::NetCom::Server::operator()(unsigned int	t
 	    return (Disconnected((*i)->info->socket, max));
 	  else if (tmp == -1)
 	    return (RetError(READ_FAIL, max));
+	  count -= 1;
 	}
     }
-  NewConnexion(max);
+  if (count > 0)
+    NewConnexion(max);
   return (this->communication);
 }
+

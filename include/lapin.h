@@ -94,7 +94,7 @@
 /*!
 ** LAPIN_MINOR_VERSION expands into an integer that contains the current revision of the library
 */
-# define			LAPIN_MINOR_VERSION	10
+# define			LAPIN_MINOR_VERSION	11
 
 # include			"lapin/placement.h"
 # ifdef				__cplusplus
@@ -110,23 +110,36 @@
 # include			"lapin/buffer.h"
 # include			"lapin/window.h"
 # include			"lapin/graphics.h"
+# include			"lapin/network.h"
 # include			"lapin/events.h"
-# include			"lapin/plugin.h"
+# include			"working/plugin.h"
 # include			"lapin/configuration.h"
 # include			"lapin/sound.h"
-# include			"lapin/network.h"
 # include			"lapin/threads.h"
-# include			"lapin/asynclock.h"
+# include			"working/asynclock.h"
 # include			"lapin/security.h"
 # include			"lapin/self_test.h"
 # include			"lapin/collide.h"
 # include			"lapin/hash.h"
+# include			"lapin/text.h"
+# include			"lapin/unix.h"
+# include			"working/camera.h"
+
+# include			"lapin/stack.h"
+# include			"lapin/astack.h"
+# include			"lapin/queue.h"
+# include			"lapin/list.h"
+# include			"lapin/map.h"
+# include			"lapin/vector.h"
+# include			"lapin/pool.h"
+# include			"lapin/bitfield.h"
+
 # include			"lapin/misc.h"
 
 # include			"lapin/compat.h"
 
 # ifdef				BUNNY_DATABASE
-#  include			"lapin/database.h"
+#  include			"working/database.h"
 # endif
 
 # ifdef				BUNNY_HARDWARE

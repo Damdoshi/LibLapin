@@ -60,6 +60,15 @@ void				bunny_consistancy(void)
   do_assert(&usr_pic->rotation, &prv_pic->rotation);
   do_assert(&usr_pic->color_mask, &prv_pic->color_mask);
 
+  t_bunny_effect		*usr_eff = NULL;
+  struct bunny_effect		*prv_eff = NULL;
+
+  do_assert(&usr_eff->sound._private[0], &prv_eff->type);
+  do_assert(&usr_eff->sound.file, &prv_eff->file);
+  do_assert(&usr_eff->sample_per_second, &prv_eff->sample_per_second);
+  do_assert(&usr_eff->duration, &prv_eff->duration);
+  do_assert(&usr_eff->sample, &prv_eff->sample);
+
   puts("If this text appeir, all tests were successful.");
 
   

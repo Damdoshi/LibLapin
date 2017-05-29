@@ -21,7 +21,6 @@ namespace				bpt
       SizeBuffer			packet_size;
       unsigned char			size_received;
 
-      bool				CheckFullPacket(void);
       void				InitFdSet(void);
       int				ReadOnNetwork(void);
       int				WriteOnNetwork(void);
@@ -31,12 +30,15 @@ namespace				bpt
       std::string			host;
 
     public:
+      bool				CheckFullPacket(void);
       virtual const Communication	&operator()(unsigned int	timeout = 0);
       bool				Write(const void		*buffer,
 					      unsigned int		size,
 					      unsigned int		client = UINT_MAX);
       bool				Start(const std::string		&host,
-					      const std::string		&port);
+					      const std::string		&port,
+					      NetAbs::INetAccess::Protocol prot
+					      = NetAbs::INetAccess::TCP);
       bool				Stop(void);
 
       Client(const std::string		&host = "",

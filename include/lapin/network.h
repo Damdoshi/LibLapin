@@ -17,6 +17,8 @@
 #  error			You cannot include this file directly.
 # endif
 
+typedef void			t_bunny_network;
+
 /*!
 ** Five types of answers are possible when you poll a network element:
 ** - An error happened
@@ -138,17 +140,33 @@ typedef union			u_bunny_communication
 */
 typedef struct			s_bunny_server
 {
-  const void * const		_private;
+  const void * const		_private[2];
   const int			fd;
   const uint16_t		port;
 }				t_bunny_server;
 
+typedef enum			e_bunny_protocol
+  {
+    BPT_UNIX,
+    BPT_TCP
+  }				t_bunny_protocol;
+
 /*!
-** The bunny_new_server function creates a TCP server that listen on a specific port.
+** The bunny_new_server_opt function creates a server that listen on a specific port.
 ** \param port The port where to listen
+** \param prt The protocol you want to use
 ** \return A pointer on a t_bunny_server, NULL on error.
 */
-t_bunny_server			*bunny_new_server(uint16_t			port);
+t_bunny_server			*bunny_new_server_opt(uint16_t			port,
+						      t_bunny_protocol		prt);
+
+/*!
+** The bunny_new_server macro creates a TCP server that listen on a specific port.
+** \param port The port to use
+** \return A pointer on a t_bunny_server, NULL on error.
+*/
+# define			bunny_new_server(p)				\
+  bunny_new_server_opt(p, BPT_TCP)
 
 /*!
 ** The bunny_delete_server function destroy a TCP server. All connections dies
@@ -208,20 +226,31 @@ bool				bunny_server_doom_client(t_bunny_server		*srv,
 */
 typedef struct			s_bunny_client
 {
-  const void * const		_private;
+  const void * const		_private[2];
   const int			fd;
   const char * const		host;
   uint16_t			port;
 }				t_bunny_client;
 
 /*!
-** The bunny_new_client function creates a TCP client that will talk with a distant server.
+** The bunny_new_client_opt function creates a client that will talk with a server.
 ** \param host The IP address of the server.
-** \param port The port on the server
+** \param port The port on the server.
+** \param prt The protocol to use.
 ** \return A t_bunny_client or NULL on error.
 */
-t_bunny_client			*bunny_new_client(const char			*host,
-						  uint16_t			port);
+t_bunny_client			*bunny_new_client_opt(const char		*host,
+						      uint16_t			port,
+						      t_bunny_protocol		prt);
+
+/*!
+** The bunny_new_client function create a TCP client that will talk with a server.
+** \param h The IP address of the server.
+** \param p The port to use
+** \return A pointer on a t_bunny_client, NULL on error.
+*/
+# define			bunny_new_client(h, p)				\
+  bunny_new_client_opt(h, p, BPT_TCP)
 
 /*!
 ** The bunny_delete_client function destroy a TCP client.
@@ -237,6 +266,14 @@ void				bunny_delete_client(t_bunny_client		*clt);
 */
 const t_bunny_communication	*bunny_client_poll(t_bunny_client		*clt,
 						   uint32_t			timout);
+
+/*!
+** Return true if there is a ready packet inside the TCP client. In this case, calling
+** bunny_client_poll returns immediatly.
+** \param clt The client to look at
+** \return True if there is completed packets.
+*/
+bool				bunny_client_packet_ready(const t_bunny_client	*clt);
 
 /*!
 ** Ask to the client to write data at the next call to bunny_client_write.

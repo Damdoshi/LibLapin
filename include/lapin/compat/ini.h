@@ -174,6 +174,17 @@ const char			*bunny_ini_get_field(const t_bunny_ini		*ini,
 						     unsigned int		index);
 
 /*!
+** Return how many elements there is in scope.field.
+** \param ini The ini configuration to inspect
+** \param scope The name of the scope to inspect
+** \param field The name of the field to inspect
+** \return How many case there inside. 0 if the field or scope does not exists.
+*/
+size_t				bunny_ini_count_field(const t_bunny_ini		*ini,
+						      const char		*scope,
+						      const char		*field);
+
+/*!
 ** The bunny_ini_set_field function write a data inside a specific point in the INI
 ** configuration.
 ** \param ini The INI configuration

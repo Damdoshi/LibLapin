@@ -71,6 +71,19 @@ bool				bunny_thread_foreach(t_bunny_threadpool		*pol,
 						     const void			*add_ptr);
 
 /*!
+** Push a single task at the top of the thread pool.
+** \param pol The threadpool
+** \param func The function that a thread will call
+** \param data The data that will be treated by the thread in func
+** \param A pointer that will be transmitted to func.
+** \return False if not enough memory was available, true if everything went well.
+*/
+bool				bunny_thread_push(t_bunny_threadpool		*pol,
+						  t_bunny_function		func,
+						  void				*data,
+						  const void			*add_ptr);
+
+/*!
 ** This function does not return while every threads are not back in the threadpool sleeping.
 ** Useful to wait between two foreach, when their order is important.
 ** \param pol The threadpool.

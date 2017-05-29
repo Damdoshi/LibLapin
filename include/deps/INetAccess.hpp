@@ -20,7 +20,8 @@ namespace			bpt
       typedef enum		e_protocol
 	{
 	  TCP			= 0,
-	  UDP			= 1
+	  UDP			= 1,
+	  UNIX
 	}			Protocol;
       class			Info
       {
@@ -36,7 +37,7 @@ namespace			bpt
       class			WatchedSocket
       {
       public:
-	std::map<unsigned int, bool>	state;
+	fd_set			state;
 
 	void			Clear(const Socket&			socket);
 	void			Set(const Socket&			socket);
@@ -67,7 +68,7 @@ namespace			bpt
 				       const char			*buffer,
 				       unsigned int			len,
 				       const Info			*info = NULL) const = 0;
-      virtual bool		Select(Socket				max,
+      virtual int		Select(Socket				max,
 				       WatchedSocket			*read = NULL,
 				       WatchedSocket			*write = NULL,
 				       WatchedSocket			*exception = NULL,

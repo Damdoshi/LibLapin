@@ -23,14 +23,14 @@ const bpt::NetCom::Communication	&bpt::NetCom::Client::operator()(unsigned int	t
     {
       delay.microseconds = timeout * 1000;
       delay.seconds = timeout / 1000;
-      if (Select(this->master_info.socket + 1, &this->fds_read, &this->fds_write, &this->fds_error, &delay) == false)
+      if (Select(this->master_info.socket + 1, &this->fds_read, &this->fds_write, &this->fds_error, &delay) == -1)
 	return (RetError(SELECT_FAIL, delay.seconds * 1000 + delay.microseconds / 1000));
       if ((max =  delay.seconds * 1000 + delay.microseconds / 1000) == 0)
 	return (RetExpired(0));
     }
   else
     {
-      if (Select(this->master_info.socket + 1, &this->fds_read, &this->fds_write, &this->fds_error) == false)
+      if (Select(this->master_info.socket + 1, &this->fds_read, &this->fds_write, &this->fds_error) == -1)
 	return (RetError(SELECT_FAIL, 0));
       max = 0;
     }

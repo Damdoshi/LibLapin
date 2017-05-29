@@ -25,9 +25,18 @@ void			bunny_clear(t_bunny_buffer		*picture,
 	win->window->clear(color);
 	return ;
       }
+    case TTF_TEXT:
+    case GRAPHIC_TEXT:
     case GRAPHIC_RAM:
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)picture;
+	if (pic->rect.x == 0 && pic->rect.y == 0 &&
+	    pic->rect.w == picture->width && pic->rect.h == picture->height)
+	  {
+	    pic->texture->clear(color);
+	    return ;
+	  }
+
 	sf::IntRect		rect(pic->rect.x, pic->rect.y, pic->rect.w, pic->rect.h);
 	sf::RectangleShape	shape;
 
@@ -37,7 +46,7 @@ void			bunny_clear(t_bunny_buffer		*picture,
 	pic->texture->draw(shape, sf::RenderStates(sf::BlendNone));
 	return ;
       }
-    default:
+    case SYSTEM_RAM:
       {
 	t_bunny_pixelarray	*pix = (t_bunny_pixelarray*)picture;
 
@@ -47,5 +56,7 @@ void			bunny_clear(t_bunny_buffer		*picture,
 	  gl_bunny_my_clear(pix, _color);
 	return ;
       }
+    default:
+      return ;
     }
 }

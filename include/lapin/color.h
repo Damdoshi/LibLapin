@@ -29,6 +29,8 @@ typedef enum			e_bunny_rgb
     ALPHA_CMP			= 3
   }				t_bunny_rgb;
 
+# define			TRANSPARENT		((uint32_t)0)
+
 # define			BLACK			((uint32_t)(255 << (ALPHA_CMP * 8)))
 
 # define			RED			((uint32_t)(BLACK | (255 << RED_CMP * 8)))
@@ -80,6 +82,18 @@ typedef enum			e_bunny_rgb
 */
 # define			COLOR(a, r, g, b)		\
   (TO_ALPHA(a) | TO_RED(r) | TO_GREEN(g) | TO_BLUE(b))
+
+/*!
+** Compose your grey with alpha level
+*/
+# define			ALPHA_GREY(a, g)		\
+  COLOR(a, g, g, g)
+
+/*!
+** Compose your plain grey
+*/
+# define			GREY(g)				\
+  COLOR(255, g, g, g)
 
 /*!
 ** The t_bunny_color union represents a pixel color.

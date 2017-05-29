@@ -16,7 +16,7 @@
 # if				!defined(__LAPIN_H__)
 #  error			You cannot include this file directly.
 # endif
-# include			<stdlib.h>
+# include			<sys/types.h>
 
 /*!
 ** The t_bunny_buffer is a structure that contains foundamental

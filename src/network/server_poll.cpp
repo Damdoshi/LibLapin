@@ -9,5 +9,5 @@
 const t_bunny_communication	*bunny_server_poll(t_bunny_server		*srv,
 						   uint32_t			tmout)
 {
-  return ((t_bunny_communication*)&(*(bpt::NetCom::Server*)srv->_private)(tmout));
+  return ((t_bunny_communication*)&(*(bpt::NetCom::Server*)srv->_private[1])(tmout));
 }

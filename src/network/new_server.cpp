@@ -8,23 +8,32 @@
 
 struct			bunny_server
 {
+  size_t		server;
   void			*a;
   int			b;
   uint16_t		c;
 };
 
-t_bunny_server		*bunny_new_server(uint16_t		port)
+t_bunny_server		*bunny_new_server_opt(uint16_t		port,
+					      t_bunny_protocol	local)
 {
   bpt::NetCom::Server	*bptserv;
   struct bunny_server	*server;
   std::stringstream	ss;
+  bool			r;
 
   if ((server = (struct bunny_server*)bunny_malloc(sizeof(*server))) == NULL)
     return (NULL);
+  server->server = true;
   ss << port;
   try
     {
-      if ((bptserv = new (std::nothrow) bpt::NetCom::Server(ss.str())) == NULL)
+      bptserv = new bpt::NetCom::Server;
+      if (local == BPT_UNIX)
+	r = bptserv->Start(ss.str(), bpt::NetAbs::INetAccess::UNIX);
+      else
+	r = bptserv->Start(ss.str(), bpt::NetAbs::INetAccess::TCP);
+      if (r == false)
 	{
 	  bunny_free(server);
 	  return (NULL);

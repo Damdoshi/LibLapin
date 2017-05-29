@@ -28,7 +28,6 @@ static uint64_t		fnv(const void				*ptr,
   uint8_t		*data;
   size_t		i;
 
-  hashout = 0xDEADBEEFB15B00B5;
   data = (uint8_t*)ptr;
   hashout = 0xDEADBEEFB15B00B5;
   for (i = 0; i < len; ++i)

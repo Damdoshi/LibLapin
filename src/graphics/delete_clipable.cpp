@@ -39,6 +39,23 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
 	delete pic;
 	return ;
       }
+    case TTF_TEXT:
+      {
+	struct bunny_ttf_font	*ttf = (struct bunny_ttf_font*)clip;
+
+	delete ttf->texture;
+	delete ttf;
+	return ;
+      }
+    case GRAPHIC_TEXT:
+      {
+	struct bunny_gfx_font	*gfx = (struct bunny_gfx_font*)clip;
+
+	bunny_delete_clipable(gfx->gfx);
+	delete gfx->texture;
+	delete gfx;
+	return ;
+      }
     default:
       return ;
     }

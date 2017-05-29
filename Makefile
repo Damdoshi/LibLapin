@@ -58,28 +58,7 @@
 ## Source                                                                      ##
 #################################################################################
 
-  SRC		=	$(wildcard ./src/allocator/*.cpp)			\
-			$(wildcard ./src/configuration/*.cpp)			\
-			$(wildcard ./src/configuration/archive/*.cpp)		\
-			$(wildcard ./src/configuration/ini/*.cpp)		\
-			$(wildcard ./src/configuration/dabsic/*.cpp)		\
-			$(wildcard ./src/configuration/xml/*.cpp)		\
-			$(wildcard ./src/configuration/lua/*.cpp)		\
-			$(wildcard ./src/events/*.cpp)				\
-			$(wildcard ./src/graphics/*.cpp)			\
-			$(wildcard ./src/hardware/*.cpp)			\
-			$(wildcard ./src/misc/*.cpp)				\
-			$(wildcard ./src/network/*.cpp)				\
-			$(wildcard ./src/sound/*.cpp)				\
-			$(wildcard ./src/threads/*.cpp)				\
-			$(wildcard ./src/window/*.cpp)				\
-			$(wildcard ./src/security/*.cpp)			\
-			$(wildcard ./src/asynclock/*.cpp)			\
-			$(wildcard ./src/database/*.cpp)			\
-			$(wildcard ./src/plugin/*.cpp)				\
-			$(wildcard ./src/collide/*.cpp)				\
-			$(wildcard ./src/hash/*.cpp)				\
-			$(wildcard ./src/deps/*/*.cpp)
+  SRC		=	$(shell find src/ -name "*.cpp")
   OBJ		=	$(SRC:.cpp=.o)
 
 #################################################################################

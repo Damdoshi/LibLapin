@@ -11,6 +11,9 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
   sf::Texture		txt;
   sf::Sprite		spr;
 
+  // This work with sf::Texture txt and pic->texture is made because
+  // bunny_picture needs to be able to be modified but cannot load
+  // file...
   if (txt.loadFromFile(file) == false)
     goto Fail;
   spr.setTexture(txt);
@@ -18,13 +21,16 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
     goto Fail;
   if ((pic->texture = new (std::nothrow) sf::RenderTexture) == NULL)
     goto FailStruct;
+  if ((pic->sprite = new (std::nothrow) sf::Sprite) == NULL)
+    goto FailSprite;
+  if (pic->texture->create(txt.getSize().x, txt.getSize().y) == false)
+    goto FailSprite;
 
-  pic->texture->create(txt.getSize().x, txt.getSize().y);
   pic->texture->clear(sf::Color(0, 0, 0, 0));
   pic->texture->draw(spr);
   pic->texture->display();
   pic->tex = &pic->texture->getTexture();
-  pic->sprite.setTexture(*pic->tex);
+  pic->sprite->setTexture(*pic->tex);
 
   pic->type = GRAPHIC_RAM;
   pic->width = txt.getSize().x;
@@ -48,6 +54,8 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
 
   return ((t_bunny_picture*)pic);
 
+ FailSprite:
+  delete pic->texture;
  FailStruct:
   delete pic;
  Fail:

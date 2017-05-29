@@ -19,6 +19,7 @@ t_bunny_response	bunny_loop(t_bunny_window	*window,
   unsigned int		prev;
   unsigned int		now;
   bool			once;
+  int			display_cnt;
 
   /// How many microseconds
   delay = 1000000.0 / freq;
@@ -26,6 +27,7 @@ t_bunny_response	bunny_loop(t_bunny_window	*window,
   rep = GO_ON;
   prev = clock.getElapsedTime().asMicroseconds();
   gl_window = window;
+  display_cnt = 0;
   while (rep == GO_ON)
     {
       once = false;
@@ -258,11 +260,25 @@ t_bunny_response	bunny_loop(t_bunny_window	*window,
 	  prev += delay;
 	}
       if (once && gl_callback.display != NULL)
-	if ((rep = gl_callback.display(data)) != GO_ON)
-	  return (rep);
+	{
+	  if (delay - (now - prev) > 0.05 * delay || display_cnt > 20)
+	    {
+	      display_cnt = 0;
+	      if ((rep = gl_callback.display(data)) != GO_ON)
+		return (rep);
+	    }
+	  else
+	    display_cnt += 1;
+	}
+
       /// Let the CPU rest a little...
-      usleep(delay - (now - prev));
-      // usleep(now - prev);
+      if (gl_callback.netcom == NULL)
+	{
+	  if (delay > now - prev)
+	    usleep(delay - (now - prev));
+	}
+      else
+	network_event(delay - (now - prev), data);
     }
   return (rep);
 }

@@ -426,6 +426,68 @@ t_bunny_response		bunny_loop_mw(t_bunny_window			**win,
 					      uint8_t				freq,
 					      void				*data);
 
+/*
+** Network event
+*/
+
+/*!
+** Add the sent client into the bunny_loop event system.
+** This client will be automatically removed if it died.
+** Only one network device can be inserted inside the bunny_loop.
+** \param clt The client to add
+*/
+void				bunny_set_client_to_scheduler(t_bunny_client	*clt);
+
+/*!
+** Add the sent server into the bunny_loop event system.
+** This server will be automatically removed if it died.
+** Only one network device can be inserted inside the bunny_loop.
+** \param srv The server to add
+*/
+void				bunny_set_server_to_scheduler(t_bunny_server	*srv);
+
+/*!
+** Remove the network scheduling from bunny_loop.
+*/
+void				bunny_remove_network_from_scheduler(void);
+
+/*!
+** The type of the function that will be called when a t_bunny_client or a connection
+** opened throught a t_bunny_server receive a message.
+** \param fd The file descriptor that receive the message.
+** \param buffer The data. It will be freed automatically, make your copy if you need it.
+** \param size The length of the filled part of the buffer
+** \param data The data parameter of bunny_loop
+*/
+typedef t_bunny_response	(*t_bunny_message_response)(int			fd,
+							    const void		*buffer,
+							    size_t		size,
+							    void		*data);
+
+/*!
+** Set the function that will be called whe you receive a message.
+** \param func The function that will be called.
+*/
+void				bunny_set_message_response(t_bunny_message_response func);
+
+/*!
+** The type of the function that will be called when a t_bunny_client or a t_bunny_server
+** or an opened connection by a t_bunny_server is opened or closed.
+** \param fd The file descriptor that receive the message.
+** \param state Is the file descriptor opened or closed.
+** \param data The data parameter of bunny_loop
+** \return A t_bunny_response in order to keep the loop or break it.
+*/
+typedef t_bunny_response	(*t_bunny_connect_response)(int			fd,
+							    t_bunny_event_state	state,
+							    void		*data);
+
+/*!
+** Set the function that will be called when a connection is opened or closed.
+** \param func The function to call
+*/
+void				bunny_set_connect_response(t_bunny_connect_response func);
+
 /*!
 ** The t_bunny_context structure is a collection of function pointer of various types.
 ** These types match all function pointer that can be sent with bunny_set_*_response,
@@ -451,6 +513,9 @@ typedef struct			s_bunny_context
   t_bunny_loop			loop;
   t_bunny_display		display;
   t_bunny_close			close;
+  t_bunny_network		*netcom;
+  t_bunny_message_response	netmessage;
+  t_bunny_connect_response	netconnect;
 }				t_bunny_context;
 
 /*!
@@ -482,6 +547,9 @@ typedef struct			s_bunny_anonymous_context
   void				*loop;
   void				*display;
   void				*close;
+  void				*netcom;
+  void				*netmessage;
+  void				*netconnect;
 }				t_bunny_anonymous_context;
 
 /*!

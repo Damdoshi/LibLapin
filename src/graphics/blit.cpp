@@ -12,10 +12,10 @@ void				bunny_blit(t_bunny_buffer		*output,
   bunny_blit_shader(output, picture, pos, NULL);
 }
 
-void				bunny_blit_shader(t_bunny_buffer		*output,
-						  const t_bunny_picture		*picture,
-						  const t_bunny_position	*pos,
-						  const t_bunny_shader		*_shader)
+void				bunny_blit_shader(t_bunny_buffer	*output,
+						  const t_bunny_picture	*picture,
+						  const t_bunny_position *pos,
+						  const t_bunny_shader	*_shader)
 {
   static t_bunny_position	defaul = {0, 0};
 
@@ -33,75 +33,92 @@ void				bunny_blit_shader(t_bunny_buffer		*output,
   sf::Texture			_txt;
   sf::Sprite			_spr;
 
-  if (*input_type == GRAPHIC_RAM)
+  switch (*input_type)
     {
-      struct bunny_picture	*pic = (struct bunny_picture*)picture;
-      sf::IntRect		rect;
+    case GRAPHIC_TEXT:
+    case TTF_TEXT:
+      {
+	size_t			typ = *input_type;
 
-      rect.left = pic->rect.x;
-      rect.top = pic->rect.y;
-      rect.width = pic->rect.w;
-      rect.height = pic->rect.h;
-      pic->tex = &pic->texture->getTexture();
-      pic->sprite.setTexture(*pic->tex);
-      pic->sprite.setTextureRect(rect);
-      pic->sprite.setPosition(pos->x, pos->y);
-      pic->sprite.setOrigin(pic->origin.x, pic->origin.y);
-      pic->sprite.setScale(pic->scale.x, pic->scale.y);
-      pic->sprite.setRotation(pic->rotation);
-      pic->sprite.setColor
-	(sf::Color(pic->color_mask.argb[RED_CMP],
-		   pic->color_mask.argb[GREEN_CMP],
-		   pic->color_mask.argb[BLUE_CMP],
-		   pic->color_mask.argb[ALPHA_CMP]
-		   ));
-      spr = &pic->sprite;
-    }
-  else
-    {
-      struct bunny_pixelarray	*pic = (struct bunny_pixelarray*)picture;
-      sf::IntRect		rect;
-      int			i;
-      int			j;
+	*input_type = GRAPHIC_RAM;
+	bunny_blit_shader(output, picture, pos, _shader);
+	*input_type = typ;
+	return ;
+      }
+    case GRAPHIC_RAM:
+      {
+	struct bunny_picture	*pic = (struct bunny_picture*)picture;
+	sf::IntRect		rect;
 
-      rect.left = pic->rect.x;
-      rect.top = pic->rect.y;
-      rect.width = pic->rect.w;
-      rect.height = pic->rect.h;
-      for (j = picture->clip_y_position; j < picture->clip_y_position + picture->clip_height; ++j)
-	for (i = picture->clip_x_position; i < picture->clip_x_position + picture->clip_width; ++i)
-	  if (i >= 0 && j >= 0 && i < picture->buffer.width && j < picture->buffer.height)
-	    {
-	      unsigned int	c = pic->rawpixels[i + j * pic->width];
+	rect.left = pic->rect.x;
+	rect.top = pic->rect.y;
+	rect.width = pic->rect.w;
+	rect.height = pic->rect.h;
+	pic->tex = &pic->texture->getTexture();
+	pic->sprite->setTexture(*pic->tex);
+	pic->sprite->setTextureRect(rect);
+	pic->sprite->setPosition(pos->x, pos->y);
+	pic->sprite->setOrigin(pic->origin.x, pic->origin.y);
+	pic->sprite->setScale(pic->scale.x, pic->scale.y);
+	pic->sprite->setRotation(pic->rotation);
+	pic->sprite->setColor
+	  (sf::Color(pic->color_mask.argb[RED_CMP],
+		     pic->color_mask.argb[GREEN_CMP],
+		     pic->color_mask.argb[BLUE_CMP],
+		     pic->color_mask.argb[ALPHA_CMP]
+		     ));
+	spr = pic->sprite;
+	break ;
+      }
+    case SYSTEM_RAM:
+      {
+	struct bunny_pixelarray	*pic = (struct bunny_pixelarray*)picture;
+	sf::IntRect		rect;
+	int			i;
+	int			j;
 
-	      pic->image.setPixel
-		(i, j,
-		 sf::Color
-		 ((c >> (RED_CMP * 8)) & 0xFF,
-		  (c >> (GREEN_CMP * 8)) & 0xFF,
-		  (c >> (BLUE_CMP * 8)) & 0xFF,
-		  (c >> (ALPHA_CMP * 8)) & 0xFF
-		  )
+	rect.left = pic->rect.x;
+	rect.top = pic->rect.y;
+	rect.width = pic->rect.w;
+	rect.height = pic->rect.h;
+	for (j = picture->clip_y_position; j < picture->clip_y_position + picture->clip_height; ++j)
+	  for (i = picture->clip_x_position; i < picture->clip_x_position + picture->clip_width; ++i)
+	    if (i >= 0 && j >= 0 && i < picture->buffer.width && j < picture->buffer.height)
+	      {
+		unsigned int	c = pic->rawpixels[i + j * pic->width];
+
+		pic->image.setPixel
+		  (i, j,
+		   sf::Color
+		   ((c >> (RED_CMP * 8)) & 0xFF,
+		    (c >> (GREEN_CMP * 8)) & 0xFF,
+		    (c >> (BLUE_CMP * 8)) & 0xFF,
+		    (c >> (ALPHA_CMP * 8)) & 0xFF
+		    )
 		 );
-	    }
-      pic->tex.loadFromImage(pic->image, rect);
-      pic->sprite.setTexture(pic->tex, true);
-      pic->sprite.setPosition(pos->x, pos->y);
-      if (gl_full_blit)
-	{
-	  pic->sprite.setOrigin(pic->origin.x, pic->origin.y);
-	  pic->sprite.setScale(pic->scale.x, pic->scale.y);
-	  pic->sprite.setRotation(pic->rotation);
-	  pic->sprite.setColor
-	    (sf::Color(pic->color_mask.argb[RED_CMP],
-		       pic->color_mask.argb[GREEN_CMP],
-		       pic->color_mask.argb[BLUE_CMP],
-		       pic->color_mask.argb[ALPHA_CMP]
-		       ));
-	}
-      spr = &pic->sprite;
+	      }
+	pic->tex.loadFromImage(pic->image, rect);
+	pic->sprite.setTexture(pic->tex, true);
+	pic->sprite.setPosition(pos->x, pos->y);
+	if (gl_full_blit)
+	  {
+	    pic->sprite.setOrigin(pic->origin.x, pic->origin.y);
+	    pic->sprite.setScale(pic->scale.x, pic->scale.y);
+	    pic->sprite.setRotation(pic->rotation);
+	    pic->sprite.setColor
+	      (sf::Color(pic->color_mask.argb[RED_CMP],
+			 pic->color_mask.argb[GREEN_CMP],
+			 pic->color_mask.argb[BLUE_CMP],
+			 pic->color_mask.argb[ALPHA_CMP]
+			 ));
+	  }
+	spr = &pic->sprite;
+	break ;
+      }
+    default:
+      return ;
     }
-
+      
   switch (*type)
     {
     case WINDOW:
@@ -121,6 +138,8 @@ void				bunny_blit_shader(t_bunny_buffer		*output,
 	  out->window->draw(*spr);
 	return ;
       }
+    case TTF_TEXT:
+    case GRAPHIC_TEXT:
     case GRAPHIC_RAM:
       {
 	struct bunny_picture	*out = (struct bunny_picture*)output;
@@ -184,6 +203,8 @@ void				bunny_blit_shader(t_bunny_buffer		*output,
 	  }
 	return ;
       }
+    default:
+      return ;
     }
 }
 

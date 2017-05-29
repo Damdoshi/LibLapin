@@ -8,5 +8,5 @@
 
 bool			bunny_server_packet_ready(const t_bunny_server	*srv)
 {
-  return (((bpt::NetCom::Server*)srv->_private)->AnyFullPacket());
+  return (((bpt::NetCom::Server*)srv->_private[1])->AnyFullPacket());
 }

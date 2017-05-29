@@ -3,6 +3,7 @@
 //
 //
 
+#include			<sys/select.h>
 #include			<iostream>
 #include			"ANetAccess.hpp"
 
@@ -17,29 +18,22 @@ bpt::NetAbs::ANetAccess::Info	*bpt::NetAbs::ANetAccess::NewInfo(void)
 
 void				bpt::NetAbs::INetAccess::WatchedSocket::Clear(const Socket&	socket)
 {
-  std::map<unsigned int, bool>::iterator it = this->state.find(socket);
-
-  if (it != this->state.end())
-    this->state.erase(it);
+  FD_CLR(socket, &state);
 }
 
 void				bpt::NetAbs::INetAccess::WatchedSocket::Set(const Socket&	socket)
 {
-  this->state.insert(std::pair<unsigned int, bool>(socket, true));
+  FD_SET(socket, &state);
 }
 
 bool				bpt::NetAbs::INetAccess::WatchedSocket::IsSet(const Socket&	socket)
 {
-  std::map<unsigned int, bool>::iterator it = this->state.find(socket);
-
-  if (it != this->state.end())
-    return (this->state[socket]);
-  return false;
+  return (FD_ISSET(socket, &state));
 }
 
 void				bpt::NetAbs::INetAccess::WatchedSocket::Clear(void)
 {
-  this->state.clear();
+  FD_ZERO(&state);
 }
 
 bpt::NetAbs::ANetAccess::ANetAccess(void)

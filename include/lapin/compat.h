@@ -36,6 +36,9 @@
 size_t				bunny_strnlen(const char	*str,
 					      size_t		max);
 
+char				*bunny_strndup(const char	*str,
+					       size_t		max);
+
 extern int			memory_check;
 void				set_max_heap_size(size_t	s);
 typedef t_bunny_color		t_color;

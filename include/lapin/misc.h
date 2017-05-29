@@ -31,6 +31,12 @@
 #  define			BUNNY_LOG(code)
 # endif
 
+# define			__TOSTRING(a)				#a
+# define			STRINGIFY(a)				__TOSTRING(a)
+# define			NBRCELL(array)				(sizeof(array) / sizeof(array[0]))
+
+# include			<errno.h>
+
 /*!
 ** Write a litteral string (defined in code, with two double quotes) on stdout.
 ** \param str The string litteral to write
@@ -108,6 +114,70 @@ bool				bunny_save_file(const char		*file,
 */
 double				bunny_evaluate(const char		*operation,
 					       t_bunny_configuration	*env);
+
+/*!
+** Split the given string accordingly to sent tokens.
+** For example:
+** const char tok[3] = {",", "==", NULL};
+**
+** bunny_split("a, b == c", &tok[0], false);
+** Will return "a", " b" and " c".
+**
+** The "aggregate" parameter is useful to ignore several following tokens
+** For example:
+** const char tok[2] = {" ", NULL};
+**
+** bunny_split("a b c  d", &tok[0], false);
+** Will return "a", "b", "c", "" and "d".
+**
+** While:
+** bunny_split("a b c  d", &tok[0], true);
+** Will return "a", "b", "c" and "d".
+**
+** Pay attention with the order in tokens: the priority is the order of the
+** tokens themselves! The more they are close to the beginning, the higher
+** they are.
+**
+** \param str The string to split. bunny_split only handle less than 4096 words.
+** \param tokens An array of string that are separator for the string to split/
+**        It must be NULL terminated. There can't be more than 31 tokens.
+** \param aggregate Can separator be stacked or not
+** \return A NULL terminated string array. NULL on error.
+*/
+const char * const		*bunny_split(const char			*str,
+					     const char			**tokens,
+					     bool			aggregate);
+
+/*!
+** Free the value returned by bunny_split and every string inside.
+** \param tab The array to free.
+*/
+void				bunny_delete_split(const char * const	*tab);
+
+/*!
+** Some of you may find const char * const * too long to write and prefer this
+** typedef which is shorter, but also occulting.
+*/
+typedef const char * const *	t_bunny_split;
+
+
+/*!
+** Duplicate the chunk of size len pointed by ptr
+** \param ptr The address of the chunk to duplicate
+** \param len The size of the chunk to duplicate
+**
+*/
+void				*bunny_memdup(const void		*ptr,
+					      size_t			len);
+
+/*!
+** Swap two pointers of any type
+** \param a The pointer to swap with b
+** \param b The pointer to swap with a
+*/
+void				bunny_swap(void				**a,
+					   void				**b);
+
 
 /*
 ** Self evaluation.

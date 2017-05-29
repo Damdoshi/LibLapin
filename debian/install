@@ -1,0 +1,4 @@
+include/lapin.h /usr/include/
+include/lapin/* /usr/include/lapin/
+include/deps/* /usr/include/deps
+liblapin.a /usr/lib/
