@@ -7,32 +7,32 @@
 #include		<opencv2/opencv.hpp>
 #include		"lapin_private.h"
 
-bool			bunny_capture_to_pixelarray(t_bunny_camera		*camera,
+bool			bunny_capture_to_pixelarray(t_bunny_capture		*cap,
 						    t_bunny_pixelarray		*pix)
 {
   t_bunny_position	pos;
-  cv::Mat		*mat = (cv::Mat*)bunny_new_capture(camera);
+  cv::Mat		*mat = (cv::Mat*)cap;
   int			i, j;
 
   if (mat == NULL)
     return (false);
-  if (mat->cols == pix->clipable.buffer.width && mat->rows == pix->clipable.buffer.height)
-    {
-      memcpy(pix->pixels, mat->data, mat->cols * mat->rows * sizeof(t_bunny_color));
-      delete mat;
-      return (true);
-    }
   for (j = 0; j < pix->clipable.buffer.height; ++j)
     {
-      pos.y = ((double)j / pix->clipable.buffer.height) * mat->cols;
+      pos.y = ((double)j / pix->clipable.buffer.height) * mat->rows;
       for (i = 0; i < pix->clipable.buffer.width; ++i)
 	{
+	  t_bunny_color	col;
+	  cv::Vec3b	vec;
+
 	  pos.x = ((double)i / pix->clipable.buffer.width) * mat->cols;
-	  ((unsigned int*)pix->pixels)[i + j * pix->clipable.buffer.width] =
-	    ((unsigned int*)mat->data)[pos.x + pos.y * mat->cols];
+	  vec = mat->at<cv::Vec3b>(pos.y,  pos.x);
+	  col.argb[ALPHA_CMP] = 255;
+	  col.argb[RED_CMP] = vec[2]; // OpenCV pictures are BGR ordered
+	  col.argb[GREEN_CMP] = vec[1];
+	  col.argb[BLUE_CMP] = vec[0];
+	  ((unsigned int*)pix->pixels)[i + j * pix->clipable.buffer.width] = col.full;
 	}
     }
-  delete mat;
   return (true);
 }
 

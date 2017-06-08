@@ -123,7 +123,7 @@
 # include			"lapin/hash.h"
 # include			"lapin/text.h"
 # include			"lapin/unix.h"
-# include			"working/camera.h"
+# include			"lapin/camera.h"
 
 # include			"lapin/stack.h"
 # include			"lapin/astack.h"

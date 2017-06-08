@@ -3,7 +3,7 @@
 # LibLapin - "Bunny Library"
 
 LibLapin is an easy and direct graphic and game library offering a C API.
-It provides features from graphics, events and sound to network and configuration scripts.
+It provides features for graphics, events and sound to network and configuration scripts.
 It is written in "C+" and can be used in both C and C++.
 
 It was originally designed to be used as rookie library for a private french school with three objectives:

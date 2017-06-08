@@ -7,9 +7,9 @@
 #include		<opencv2/opencv.hpp>
 #include		"lapin_private.h"
 
-t_bunny_pixelarray	*bunny_capture_new_pixelarray(t_bunny_capture	*capture)
+t_bunny_pixelarray	*bunny_capture_new_pixelarray(const t_bunny_capture	*capture)
 {
-  cv::Mat		*mat = (cv::Mat*)capture;
+  const cv::Mat		*mat = (cv::Mat*)capture;
   t_bunny_pixelarray	*pix;
 
   if ((pix = bunny_new_pixelarray(mat->cols, mat->rows)) == NULL)

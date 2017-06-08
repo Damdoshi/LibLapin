@@ -160,7 +160,6 @@ void				bunny_delete_split(const char * const	*tab);
 */
 typedef const char * const *	t_bunny_split;
 
-
 /*!
 ** Duplicate the chunk of size len pointed by ptr
 ** \param ptr The address of the chunk to duplicate
@@ -177,6 +176,20 @@ void				*bunny_memdup(const void		*ptr,
 */
 void				bunny_swap(void				**a,
 					   void				**b);
+
+/*!
+** Set the file descriptor used for error logging.
+** This file descriptor can be negative to disable error logging.
+** \param fd The file descriptor for error logging
+*/
+void				bunny_set_error_descriptor(int		fd);
+
+/*!
+** Get the file descriptor used to log errors.
+** This file descriptor can be negative: no logs are printed.
+** \return The file descriptor used for error logs.
+*/
+int				bunny_get_error_descriptor(void);
 
 
 /*
