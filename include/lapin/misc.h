@@ -178,6 +178,19 @@ void				bunny_swap(void				**a,
 					   void				**b);
 
 /*!
+** Create a smooth move between two points. Used by bunny_stabilize_headtrack
+** and quite useful for camera on tile based graphics.
+** \param target The coordinates the second point want to rejoin
+** \param current The coordinates of the current position, they will be edited.
+** \param speed A value between 0 and 1 that is the distance
+** the point will travel at each call. This value is relative to
+** the distance in both points.
+*/
+void				bunny_smooth_move(const t_bunny_position *target,
+						  t_bunny_position	*current,
+						  double		speed);
+
+/*!
 ** Set the file descriptor used for error logging.
 ** This file descriptor can be negative to disable error logging.
 ** \param fd The file descriptor for error logging

@@ -72,10 +72,10 @@ bool			bunny_camera_headtrack(const t_bunny_capture	*capture,
   classifier_face.detectMultiScale(gray, faces, 1.3, 3);
   if (faces.size() == 0)
     return (false);
-  head->x = faces[0].x;
-  head->y = faces[0].y;
-  head->w = faces[0].width;
-  head->h = faces[0].height;
+  head->x = faces[0].x + faces[0].width * 0.2;
+  head->y = faces[0].y + faces[0].width * 0.2;
+  head->w = faces[0].width * 1.4;
+  head->h = faces[0].height * 1.4;
   return (true);
 }
 
