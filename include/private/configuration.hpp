@@ -21,11 +21,14 @@ t_bunny_configuration		*_bunny_read_xml(const char			*code,
 						 t_bunny_configuration		*config);
 t_bunny_configuration		*_bunny_read_lua(const char			*code,
 						 t_bunny_configuration		*config);
+t_bunny_configuration		*_bunny_read_csv(const char			*code,
+						 t_bunny_configuration		*config);
 
 char				*_bunny_write_ini(const t_bunny_configuration	*config);
 char				*_bunny_write_dabsic(const t_bunny_configuration *config);
 char				*_bunny_write_xml(const t_bunny_configuration	*config);
 char				*_bunny_write_lua(const t_bunny_configuration	*config);
+char				*_bunny_write_csv(const t_bunny_configuration	*config);
 
 int				chekchar(const char				*str,
 					 ssize_t				&index,
@@ -38,6 +41,8 @@ bool				readtext(const char				*str,
 					 const char				*token);
 void				skipspace(const char				*str,
 					  ssize_t				&i);
+void				skipspace_inline(const char			*str,
+						 ssize_t			&i);
 bool				readfield(const char				*str,
 					  ssize_t				&index);
 bool				getfieldname(const char				*code,
@@ -60,11 +65,11 @@ bool				readrawchar(const char				*code,
 					    ssize_t				&i,
 					    char				*d,
 					    ssize_t				len,
-					    char				endtok);
+					    char				*endtok = NULL);
 bool				readvalue(const char				*code,
 					  ssize_t				&i,
 					  SmallConf				&nod,
-					  char					endtok);
+					  char					*endtok = NULL);
 int				whichline(const char				*code,
 					  int					i);
 void				writestring(std::stringstream			&ss,

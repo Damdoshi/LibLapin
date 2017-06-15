@@ -35,7 +35,7 @@ static bool		read_inside_scope(const char			*code,
   do
     {
       read_separator(code, i);
-      readvalue(code, i, newnode[iteration++], ',');
+      readvalue(code, i, newnode[iteration++], ",");
       read_separator(code, i);
     }
   while (readtext(code, i, ","));

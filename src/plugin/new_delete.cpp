@@ -13,20 +13,26 @@ t_bunny_plugin			*bunny_new_plugin(const char			*libfile)
   const t_bunny_prototype	*list;
   void				*handler;
   size_t			nbrfunc;
- 
+
+  // Load lib and get function list
   if ((handler = dlopen(libfile, RTLD_NOW)) == NULL)
     return (NULL);
   if ((func = (t_bunny_get_function_list)dlsym(handler, "__get_function_list")) == NULL)
     goto closelib;
   list = func();
 
+  // Allocate space for function array
   for (nbrfunc = 0; list[nbrfunc].function_ptr != NULL; ++nbrfunc);
   if ((plug = (t_bunny_buttplug*)bunny_malloc(sizeof(*plug) + nbrfunc * sizeof(plug->prototypes[0]))) == NULL)
     goto closelib;
+
+  // Init structure
   if ((plug->name = strdup(libfile)) == NULL)
     goto freeplug;
   plug->library_handler = handler;
   plug->nbr_function = nbrfunc;
+
+  // Load all functions
   for (nbrfunc = 0; list[nbrfunc].function_ptr != NULL; ++nbrfunc)
     {
       t_bunny_prototype		*proto = &plug->prototypes[nbrfunc];
@@ -34,7 +40,7 @@ t_bunny_plugin			*bunny_new_plugin(const char			*libfile)
       if ((proto->function_ptr = dlsym(handler, list[nbrfunc].name)) == NULL)
 	goto freename;
       if ((proto->nbrparam = list[nbrfunc].nbrparam) > 4)
-	goto freename;
+	goto unsupported_format;
       proto->name = list[nbrfunc].name;
       proto->return_value = list[nbrfunc].return_value;
       memcpy(&proto->parameters[0], &list[nbrfunc].parameters[0], sizeof(proto->parameters));
@@ -42,6 +48,10 @@ t_bunny_plugin			*bunny_new_plugin(const char			*libfile)
 
   return ((t_bunny_plugin*)plug);
 
+ unsupported_format:
+  dprintf(bunny_get_error_descriptor(),
+	  "Function %s have an unsupported format.",
+	  list[nbrfunc].name);
  freename:
   free(plug->name);
  freeplug:

@@ -46,6 +46,13 @@ t_bunny_configuration	*bunny_read_configuration(t_bunny_configuration_type		type
       return (nw);
     }
 
+  if (type == BC_CSV)
+    {
+      if ((nw = _bunny_read_csv(code, config)) == NULL && local)
+	bunny_delete_configuration(config);
+      return (nw);
+    }
+
   if (gl_bunny_my_read_configuration)
     {
       if ((nw = gl_bunny_my_read_configuration(type, code, config)) == NULL && local)

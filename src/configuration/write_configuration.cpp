@@ -18,6 +18,8 @@ char			*bunny_write_configuration(t_bunny_configuration_type		type,
     return (_bunny_write_xml(config));
   if (type == BC_LUA)
     return (_bunny_write_lua(config));
+  if (type == BC_CSV)
+    return (_bunny_write_csv(config));
 
   if (gl_bunny_my_write_configuration)
     return (gl_bunny_my_write_configuration(type, config));

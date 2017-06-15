@@ -23,5 +23,11 @@ extern bool			gl_full_blit;
 t_bunny_response		network_event(unsigned int		v,
 					      void			*dat);
 
+void				_real_call(const t_bunny_prototype	*function,
+					   t_bunny_value		*return_value,
+					   size_t			nbr,
+					   t_bunny_value		*params);
+
+
 #endif	/*			__LAPIN_PRIVATE_MISC_H__		*/
 

@@ -12,6 +12,13 @@ const char		*fieldname =
 const char		*numbers =
   "1234567890";
 
+void			skipspace_inline(const char		*str,
+					 ssize_t		&i)
+{
+  while (str[i] && (str[i] == ' ' || str[i] == '\t'))
+    ++i;
+}
+
 void			skipspace(const char			*str,
 				  ssize_t			&i)
 {
@@ -171,15 +178,28 @@ bool			readinteger(const char			*code,
   return (true);
 }
 
+static bool		is_in(char				c,
+			      char				*tok)
+{
+  size_t		i;
+
+  for (i = 0; tok[i]; ++i)
+    if (tok[i] == c)
+      return (true);
+  return (false);
+}
+
 bool			readrawchar(const char			*code,
 				    ssize_t			&i,
 				    char			*d,
 				    ssize_t			len,
-				    char			endtok)
+				    char			*endtok)
 {
   ssize_t		j;
 
-  for (j = i; code[j] && code[j] != '\n' && code[j] != '\r' && code[j] != endtok; ++j);
+  for (j = i; code[j] &&
+	 code[j] != '\n' && code[j] != '\r'
+	 && !is_in(code[j], endtok); ++j);
   if (j - i >= len - 1)
     {
       fprintf(stderr, "The raw string is too long. (Line %d)\n",
@@ -307,7 +327,7 @@ void			writestring(std::stringstream		&ss,
 bool			readvalue(const char			*code,
 				  ssize_t			&i,
 				  SmallConf			&nod,
-				  char				endtok)
+				  char				*endtok)
 {
   char			buffer[512 * 1024];
   int			ival;
@@ -327,7 +347,7 @@ bool			readvalue(const char			*code,
     }
   else if (readstring(code, i, &buffer[0], sizeof(buffer)))
     nod.SetString(std::string(&buffer[0]));
-  else if (endtok != '\0')
+  else if (endtok != NULL)
     {
       readrawchar(code, i, &buffer[0], sizeof(buffer), endtok);
       nod.SetString(std::string(&buffer[0]), true);

@@ -31,7 +31,7 @@
   LINKER	?=	ar rcs
   COMPILER	?=	g++
 
-  CONFIG	=	-W -Wall -fPIC -std=c++11				\
+  CONFIG	=	-W -Wall -fPIC -std=c++11 -Wno-write-strings		\
 			-Wno-unused-result					\
 			-DBUNNY_ALLOCATOR_DEACTIVATED				\
 			-DBUNNY_DEBUG -DBUNNY_LOG
