@@ -11,6 +11,8 @@ bool			bunny_plugin_callv(t_bunny_plugin		*plugin,
 					   ...)
 {
   va_list		lst;
+  size_t		ptr;
+  double		rel;
   t_bunny_value		val
     [sizeof(plugin->prototypes[0].parameters) / sizeof(t_bunny_value_type)];
   size_t		i, j;
@@ -21,7 +23,18 @@ bool			bunny_plugin_callv(t_bunny_plugin		*plugin,
     if (strcmp(plugin->prototypes[i].name, func) == 0)
       {
 	for (j = 0, len = plugin->prototypes[i].nbrparam; j < len; ++j)
-	  memcpy(&val[i], va_arg(lst, t_bunny_value*), sizeof(val[i]));
+	  {
+	    if (plugin->prototypes[i].parameters[j] == DOUBLE)
+	      {
+		rel = va_arg(lst, double);
+		val[j].real = rel;
+	      }
+	    else
+	      {
+		ptr = va_arg(lst, size_t);
+		memcpy(&val[j], &ptr, sizeof(val[j]));
+	      }
+	  }
 	va_end(lst);
 	_real_call(&plugin->prototypes[i], return_value, len, &val[0]);
 	return (true);

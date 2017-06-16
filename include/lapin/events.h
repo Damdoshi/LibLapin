@@ -489,6 +489,27 @@ typedef t_bunny_response	(*t_bunny_connect_response)(int			fd,
 void				bunny_set_connect_response(t_bunny_connect_response func);
 
 /*!
+** Set the function that will be called when you enter in the bunny loop.
+** \param func The function to call
+*/
+void				bunny_set_entering_context_response(t_bunny_loop func);
+
+/*!
+** The type of the function that will be called when the bunny_loop is exited.
+** It receives what will be the return value.
+** \param returned The value that will be sent to the bunny_loop caller
+** \param data The data parameter of bunny loop
+*/
+typedef void			(*t_bunny_leaving_context)(t_bunny_response	returned,
+							   void			*data);
+
+/*!
+** Set the function that will be called when you leave the bunny loop.
+** \param func The function to call
+*/
+void				bunny_set_leaving_context_response(t_bunny_leaving_context func);
+
+/*!
 ** The t_bunny_context structure is a collection of function pointer of various types.
 ** These types match all function pointer that can be sent with bunny_set_*_response,
 ** buny_set_loop_main_function or bunny_set_display_function.
@@ -516,6 +537,8 @@ typedef struct			s_bunny_context
   t_bunny_network		*netcom;
   t_bunny_message_response	netmessage;
   t_bunny_connect_response	netconnect;
+  t_bunny_loop			entering_context;
+  t_bunny_leaving_context	leaving_context;
 }				t_bunny_context;
 
 /*!
@@ -550,6 +573,8 @@ typedef struct			s_bunny_anonymous_context
   void				*netcom;
   void				*netmessage;
   void				*netconnect;
+  void				*entering_context;
+  void				*leaving_context;
 }				t_bunny_anonymous_context;
 
 /*!

@@ -25,8 +25,12 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
   /// How many microseconds
   delay = 1000000.0 / freq;
 
+  if (gl_callback.entering_context != NULL)
+    rep = gl_callback.entering_context(data);
+  else
+    rep = GO_ON;
+
   display_cnt = 0;
-  rep = GO_ON;
   prev = clock.getElapsedTime().asMicroseconds();
   while (rep == GO_ON)
     {
@@ -48,7 +52,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			if (gl_callback.close)
 			  {
 			    if ((rep = gl_callback.close(gl_window, data)) != GO_ON)
-			      return (rep);
+			      goto end;
 			  }
 			else
 			  return (EXIT_ON_CROSS);
@@ -60,13 +64,13 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 		    //
 		    if (event.type == sf::Event::GainedFocus && gl_callback.get_focus)
 		      if ((rep = gl_callback.get_focus(gl_window, data)) != GO_ON)
-			return (rep);
+			goto end;
 		    ////
 		    /// LOST FOCUS
 		    //
 		    if (event.type == sf::Event::LostFocus && gl_callback.lost_focus)
 		      if ((rep = gl_callback.lost_focus(gl_window, data)) != GO_ON)
-			return (rep);
+			goto end;
 		    ////
 		    /// RESIZE
 		    //
@@ -77,7 +81,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			siz.x = event.size.width;
 			siz.y = event.size.height;
 			if ((rep = gl_callback.resize(gl_window, &siz, data)) != GO_ON)
-			  return (rep);
+			  goto end;
 		      }
 		    
 		    ///////
@@ -94,7 +98,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			      gl_keyboard[event.key.code] = true;
 			    if ((rep = gl_callback.key
 				 (GO_DOWN, (t_bunny_keysym)event.key.code, data)) != GO_ON)
-			      return (rep);
+			      goto end;
 			  }
 			else if (event.type == sf::Event::KeyReleased)
 			  {
@@ -102,7 +106,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			      gl_keyboard[event.key.code] = false;
 			    if ((rep = gl_callback.key
 				 (GO_UP, (t_bunny_keysym)event.key.code, data)) != GO_ON)
-			      return (rep);
+			      goto end;
 			  }
 		      }
 		    ////
@@ -111,7 +115,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 		    if (gl_callback.type != NULL && event.type == sf::Event::TextEntered)
 		      {
 			if ((rep = gl_callback.type(event.text.unicode, data)) != GO_ON)
-			  return (rep);
+			  goto end;
 		      }
 		    
 		    ///////
@@ -152,7 +156,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			    if ((rep = gl_callback.connect
 				 (connect ? CONNECTED : DISCONNECTED,
 				  joyid, &gl_joystick[joyid], data)) != GO_ON)
-			      return (rep);      
+			      goto end;      
 			  }
 			
 			////
@@ -169,7 +173,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 				      event.joystickButton.joystickId,
 				      event.joystickButton.button,
 				      data)) != GO_ON)
-				  return (rep);
+				  goto end;
 			      }
 			    else if (event.type == sf::Event::JoystickButtonReleased)
 			      {
@@ -180,7 +184,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 				      event.joystickButton.joystickId,
 				      event.joystickButton.button,
 				      data)) != GO_ON)
-				  return (rep);
+				  goto end;
 			      }
 			  }
 			
@@ -199,7 +203,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 				      (t_bunny_axis)event.joystickMove.axis,
 				      event.joystickMove.position,
 				      data)) != GO_ON)
-				  return (rep);
+				  goto end;
 			      }
 			  }
 		      }
@@ -219,7 +223,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			    gl_button[event.mouseButton.button] = true;
 			    if ((rep = gl_callback.click
 				 (GO_DOWN, (t_bunny_mousebutton)event.mouseButton.button, data)) != GO_ON)
-			      return (rep);
+			      goto end;
 			  }
 			else if (event.type == sf::Event::MouseButtonReleased)
 			  {
@@ -228,7 +232,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			    gl_button[event.mouseButton.button] = false;
 			    if ((rep = gl_callback.click
 				 (GO_UP, (t_bunny_mousebutton)event.mouseButton.button, data)) != GO_ON)
-			      return (rep);
+			      goto end;
 			  }
 		      }
 		    ////
@@ -244,7 +248,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 				 ((int)event.mouseWheelScroll.wheel,
 				  event.mouseWheelScroll.delta,
 				  data)) != GO_ON)
-			      return (rep);
+			      goto end;
 			  }
 		      }
 		    ////
@@ -261,7 +265,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			if (gl_callback.move != NULL)
 			  {
 			    if ((rep = gl_callback.move(&pos, data)) != GO_ON)
-			      return (rep);
+			      goto end;
 			  }
 		      }
 		  }
@@ -269,7 +273,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 	  bunny_asynclock(delay, BCO_BEFORE_LOOP_MAIN_FUNCTION);
 	  if (gl_callback.loop != NULL)
 	    if ((rep = gl_callback.loop(data)) != GO_ON)
-	      return (rep);
+	      goto end;
 	  bunny_asynclock(delay, BCO_AFTER_LOOP_MAIN_FUNCTION);
 	  prev += delay;
 	}
@@ -279,7 +283,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 	    {
 	      display_cnt = 0;
 	      if ((rep = gl_callback.display(data)) != GO_ON)
-		return (rep);
+		goto end;
 	    }
 	  else
 	    display_cnt += 1;
@@ -294,6 +298,9 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
       else
 	network_event(delay - (now - prev), data);
     }
+ end:
+  if (gl_callback.leaving_context != NULL)
+    gl_callback.leaving_context(rep, data);
   return (rep);
 }
 

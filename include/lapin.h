@@ -112,7 +112,7 @@
 # include			"lapin/graphics.h"
 # include			"lapin/network.h"
 # include			"lapin/events.h"
-# include			"working/plugin.h"
+# include			"lapin/plugin.h"
 # include			"lapin/configuration.h"
 # include			"lapin/sound.h"
 # include			"lapin/threads.h"

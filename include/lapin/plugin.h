@@ -10,8 +10,6 @@
 ** The plugin module allows you to load dynamic libraries
 ** design with a specific fashion, imposed by the bunny plugin.
 **
-** /!\ DOES NOT WORK YET /!\
-**
 */
 
 #ifndef				__LAPIN_PLUGIN_H__
@@ -43,14 +41,10 @@ typedef enum			e_bunny_value_type
 */
 typedef union			u_bunny_value
 {
-  ssize_t			integer;
+  int64_t			integer;
   const char			*string;
   void				*any;
-#if				defined(__LP64__) || defined(_WIN64)
   double			real;
-#else
-  float				real;
-#endif
 }				t_bunny_value;
 
 /*!
@@ -72,7 +66,7 @@ typedef struct			s_bunny_prototype
   const void *			function_ptr;
   t_bunny_value_type		return_value;
   size_t			nbrparam;
-  t_bunny_value_type		parameters[2];
+  t_bunny_value_type		parameters[8];
 }				t_bunny_prototype;
 
 /*!

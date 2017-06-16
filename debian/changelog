@@ -1,6 +1,12 @@
 liblapin-dev (1.12) UNRELEASED; urgency=low
 
   * Add the bunny_camera module with headtracking capability and associated example.
+  * Open bunny_plugin_get_function to unlisted functions.
+  * Fix bunny_call and bunny_callv, move the bunny_plugin module from working/ to lapin/
+  * Edit t_bunny_value to simplify it and use int64_t instead of ssize_t.
+  * Use avcall to bind any scripted function call to a C function.
+  * Add on_entering_context and on_leaving_context response function for bunny_loop.
+  * Add support for CSV files in bunny_configuration
 
  -- Jason Brillante <damdoshi@hotmail.com>  Tue, 01 Jun 2017 12:00:00 +0100
 
