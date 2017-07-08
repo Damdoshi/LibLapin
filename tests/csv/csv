@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./csv_bin *.csv

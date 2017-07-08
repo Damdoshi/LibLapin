@@ -11,6 +11,7 @@ size_t			bunny_configuration_get_nbr_case(const t_bunny_configuration	*conf)
   size_t		i;
 
   for (i = 0; bunny_configuration_get_case((t_bunny_configuration*)conf, i); ++i);
+  scream_log_if("%p -> %zu", conf, i);
   return (i);
 }
 

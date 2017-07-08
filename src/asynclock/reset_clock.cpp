@@ -8,6 +8,7 @@
 double			bunny_reset_clock(void)
 {
   gl_bunny_current_time.restart();
+  scream_log_if("%s", "");
   return (0);
 }
 

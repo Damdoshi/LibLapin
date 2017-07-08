@@ -31,7 +31,7 @@
 */
 typedef struct			s_bunny_buffer
 {
-  const size_t			_private[2];
+  const size_t			_private[3];
   ssize_t			width;
   ssize_t			height;
 }				t_bunny_buffer;

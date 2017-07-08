@@ -4,9 +4,13 @@
 // Bibliotheque Lapin
 
 #include		"deps/NetCom.hpp"
-#include		"lapin.h"
+#include		"lapin_private.h"
 
 bool			bunny_client_packet_ready(const t_bunny_client	*clt)
 {
-  return (((bpt::NetCom::Client*)clt->_private[1])->CheckFullPacket());
+  bool			ret;
+
+  ret = (((bpt::NetCom::Client*)clt->_private[1])->CheckFullPacket());
+  scream_log_if("%p -> %s", clt, ret ? "true" : "false");
+  return (ret);
 }

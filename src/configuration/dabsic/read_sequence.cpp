@@ -11,10 +11,11 @@ bool			read_sequence(const char		*code,
 {
   (void)config;
   if (!readtext(code, i, "]"))
-    {
-      fprintf(stderr, "A ']' closing the sequence section was expected. (Line %d)\n", whichline(code, i));
-      return (false);
-    }
+    scream_error_if
+      (return (false), BE_SYNTAX_ERROR,
+       "%s code, %p config -> %s "
+       "(A ']' closing the sequence section was expected on line %d)",
+       code, &config, "false", whichline(code, i));
   return (true);
 }
 

@@ -7,6 +7,8 @@
 #include		<opencv2/opencv.hpp>
 #include		"lapin_private.h"
 
+#define			PATTERN		"%p capture, %p pix -> %s"
+
 bool			bunny_capture_to_pixelarray(t_bunny_capture		*cap,
 						    t_bunny_pixelarray		*pix)
 {
@@ -15,7 +17,7 @@ bool			bunny_capture_to_pixelarray(t_bunny_capture		*cap,
   int			i, j;
 
   if (mat == NULL)
-    return (false);
+    scream_error_if(return (false), EINVAL, PATTERN, cap, pix, "false");
   for (j = 0; j < pix->clipable.buffer.height; ++j)
     {
       pos.y = ((double)j / pix->clipable.buffer.height) * mat->rows;
@@ -33,6 +35,7 @@ bool			bunny_capture_to_pixelarray(t_bunny_capture		*cap,
 	  ((unsigned int*)pix->pixels)[i + j * pix->clipable.buffer.width] = col.full;
 	}
     }
+  scream_log_if(PATTERN, cap, pix, "true");
   return (true);
 }
 

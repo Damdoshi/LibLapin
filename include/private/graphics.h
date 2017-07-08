@@ -15,26 +15,35 @@
 
 enum				_buffer_type
   {
-    WINDOW,
-    GRAPHIC_RAM,
-    SYSTEM_RAM,
-    GRAPHIC_TEXT,
-    TTF_TEXT
+    WINDOW			= 0,
+    GRAPHIC_RAM			= 1,
+    SYSTEM_RAM			= 2,
+    GRAPHIC_TEXT		= 3,
+    TTF_TEXT			= 4,
   };
 
 struct				bunny_window
 {
   size_t			type;
   sf::RenderWindow		*window;
+  size_t			unused;
   ssize_t			width;
   ssize_t			height;
   const char			*window_name;
 };
 
+struct				bunny_picture;
+typedef struct bunny_picture	*(*t_copy_on_write_gfx)(struct bunny_picture	*p);
+struct bunny_picture		*_cow_clipable(struct bunny_picture		*p);
+struct bunny_picture		*_cow_pixelarray(struct bunny_picture		*p);
+struct bunny_picture		*_cow_gfx_text(struct bunny_picture		*p);
+struct bunny_picture		*_cow_ttf_text(struct bunny_picture		*p);
+
 struct				bunny_picture
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;
   t_bunny_area			rect;
@@ -52,6 +61,7 @@ struct				bunny_pixelarray
 {
   size_t			type;
   size_t			unused;
+  t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;
   t_bunny_area			rect;
@@ -71,6 +81,7 @@ struct				bunny_gfx_font
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;
   t_bunny_area			rect;
@@ -101,6 +112,7 @@ struct				bunny_ttf_font
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;
   t_bunny_area			rect;

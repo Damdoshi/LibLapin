@@ -5,6 +5,9 @@
 
 #include		"lapin_private.h"
 
+#define			PATTERN \
+  "%p picture, (%d, %d) position, (%d, %d) size, %p color"
+
 void			bunny_set_circle(t_bunny_buffer		*buffer,
 					 t_bunny_position	pos,
 					 t_bunny_position	siz,
@@ -35,16 +38,20 @@ void			bunny_set_circle(t_bunny_buffer		*buffer,
 	struct bunny_window	*pic = (struct bunny_window*)buffer;
 
 	pic->window->draw(shape);
+	scream_log_if(PATTERN, buffer, pos.x, pos.y, siz.x, siz.y, (void*)(size_t)color);
 	return ;
       }
+    case TTF_TEXT:
     case GRAPHIC_RAM:
+    case GRAPHIC_TEXT:
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)buffer;
 
 	pic->texture->draw(shape);
+	scream_log_if(PATTERN, buffer, pos.x, pos.y, siz.x, siz.y, (void*)(size_t)color);
 	return ;
       }
-    default:
+    case SYSTEM_RAM:
       {
 	t_bunny_pixelarray	*pix = (t_bunny_pixelarray*)buffer;
 
@@ -52,7 +59,10 @@ void			bunny_set_circle(t_bunny_buffer		*buffer,
 	  fprintf(stderr, "gl_bunny_my_set_circle is not set.\n");
 	else
 	  gl_bunny_my_set_circle(pix, pos, siz, color);
+	scream_log_if(PATTERN, buffer, pos.x, pos.y, siz.x, siz.y, (void*)(size_t)color);
 	return ;
       }
+    default:
+      scream_error_if(return, EINVAL, PATTERN, buffer, pos.x, pos.y, siz.x, siz.y, (void*)(size_t)color);
     }
 }

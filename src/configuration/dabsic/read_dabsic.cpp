@@ -56,12 +56,11 @@ static bool		read_field_value(const char			*code,
   if (readtext(code, i, "[Function"))
     return (read_function(code, i, config));
   if (readvalue(code, i, config, '\0') == false)
-    {
-      fprintf(stderr, "A data, sequence or function "
-	      "scope or a value was expected after '='."
-	      " (Line %d)\n", whichline(code, i));
-      return (false);
-    }
+    scream_error_if
+      (return (false), BE_SYNTAX_ERROR,
+       "%s code, config -> %s "
+       "(A data, sequence or function scope or a value was expected after '=' on "
+       "line %d)", code, "false", whichline(code, i));
   read_separator(code, i);
   return (true);
 }
@@ -84,6 +83,7 @@ static bool		read_inside_scope(const char			*code,
 	{
 	  int		start;
 
+	  (void)start; // When NO_BUNNY_ERROR_LOG is set
 	  read_separator(code, i);
 	  if (getfieldname(code, i, &buffer[0], sizeof(buffer), config, true) == false)
 	    return (false);
@@ -94,11 +94,11 @@ static bool		read_inside_scope(const char			*code,
 	    return (false);
 	  read_separator(code, i);
 	  if (readtext(code, i, "]") == false)
-	    {
-	      fprintf(stderr, "The ']' token was expected to close the scope. (Scope opened line %d)\n",
-		      whichline(code, start));
-	      return (false);
-	    }
+	    scream_error_if
+	      (return (false), BE_SYNTAX_ERROR,
+	       "%s code, config -> %s "
+	       "(The ']' token was expected to close the scope opened line %d)",
+	       code, "false", whichline(code, start));
 	}
       else if (readtext(code, i, "{"))
 	{
@@ -114,11 +114,11 @@ static bool		read_inside_scope(const char			*code,
 	    return (false);
 	  read_separator(code, i);
 	  if (readtext(code, i, "}") == false)
-	    {
-	      fprintf(stderr, "The '}' token was expected to close the array. (Array opened line %d)\n",
-		      whichline(code, start));
-	      return (false);
-	    }
+	    scream_error_if
+	      (return (false), BE_SYNTAX_ERROR,
+	       "%s code, config -> %s "
+	       "(The '}' token was expected to close the array opened line %d)",
+	       code, "false", whichline(code, start));
 	}
       else if (getfieldname(code, i, &buffer[0], sizeof(buffer), config, true))
 	{
@@ -128,10 +128,11 @@ static bool		read_inside_scope(const char			*code,
 	    return (false);
 	}
       else
-	{
-	  fprintf(stderr, "A new scope or a field was expected. (Line %d)\n", whichline(code, i));
-	  return (false);
-	}
+	scream_error_if
+	  (return (false), BE_SYNTAX_ERROR,
+	   "%s code, config -> %s "
+	   "(A new scope or a field was expected on line %d)",
+	   code, "false", whichline(code, i));
       read_separator(code, i);
     }
   return (true);
@@ -153,6 +154,7 @@ t_bunny_configuration	*_bunny_read_dabsic(const char			*code,
       }
   while (code[i] != '\0');
   SmallConf::create_mode = cmode;
+  scream_log_if("%s code, %p config -> %p", code, config, config);
   return (config);
 }
 

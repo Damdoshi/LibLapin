@@ -54,10 +54,11 @@ SmallConf		*read_new_scope(const char			*code,
     return (NULL);
   read_separator(code, i);
   if (readtext(code, i, "]") == false)
-    {
-      fprintf(stderr, "The ']' token was expected after scope name. (Line %d)\n", whichline(code, i));
-      return (NULL);
-    }
+    scream_error_if
+      (return (NULL), BE_SYNTAX_ERROR,
+       "%s code, %p config -> %p "
+       "(The ']' token was expected after scope name on line %d)",
+       code, &root, (void*)NULL, whichline(code, i));
   return (&root[&buffer[0]]);
 }
 
@@ -94,6 +95,7 @@ t_bunny_configuration	*_bunny_read_ini(const char			*code,
       read_separator(code, i);
     }
   SmallConf::create_mode = cmode;
+  scream_log_if("%s code, %p config -> %p", code, config, config);
   return (config);
 }
 

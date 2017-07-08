@@ -5,6 +5,8 @@
 
 #include		"lapin_private.h"
 
+#define			PATTERN		"%p ini, %s scope -> %p"
+
 t_bunny_ini_scope	*bunny_ini_get_scope(t_bunny_ini		*ini,
 					     const char			*scope)
 {
@@ -13,7 +15,8 @@ t_bunny_ini_scope	*bunny_ini_get_scope(t_bunny_ini		*ini,
   if (strcmp(scope, "") == 0)
     scope = "@";
   if ((cnf = bunny_configuration_get_child(cnf, scope)) == NULL)
-    return (NULL);
+    scream_error_if(return (NULL), bunny_errno, PATTERN, ini, scope, cnf);
+  scream_log_if(PATTERN, ini, scope, cnf);
   return ((t_bunny_ini_scope*)cnf);
 }
 

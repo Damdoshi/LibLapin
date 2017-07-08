@@ -8,5 +8,6 @@
 void			bunny_configuration_create_mode(bool			cmode)
 {
   SmallConf::create_mode = cmode;
+  scream_log_if("%s", cmode ? "true" : "false");
 }
 

@@ -5,6 +5,8 @@
 
 #include		"lapin_private.h"
 
+#define			PATTERN		"%p picture, %s file -> %s"
+
 bool			bunny_save_pixelarray(const t_bunny_pixelarray	*pix,
 					      const char		*file)
 {
@@ -28,6 +30,9 @@ bool			bunny_save_pixelarray(const t_bunny_pixelarray	*pix,
 	    )
 	   );
       }
-  return (pic->image.saveToFile(file));
+  if (pic->image.saveToFile(file) == false)
+    scream_error_if(return (false), errno, PATTERN, pix, file, "false");
+  scream_log_if(PATTERN, pix, file, "true");
+  return (true);
 }
 

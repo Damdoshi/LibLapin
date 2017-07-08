@@ -8,7 +8,9 @@
 t_bunny_configuration	*bunny_configuration_get_parent(t_bunny_configuration	*conf)
 {
   SmallConf		*c = (SmallConf*)conf;
+  t_bunny_configuration	*cnf = (t_bunny_configuration*)c->father;
 
-  return ((t_bunny_configuration*)c->father);
+  scream_log_if("%p -> %p", conf, cnf);
+  return (cnf);
 }
 

@@ -10,5 +10,6 @@ void			bunny_delete_shader(t_bunny_shader	*_shader)
   sf::Shader		*shader = (sf::Shader*)_shader;
 
   delete shader;
+  scream_log_if("%p", shader);
 }
 

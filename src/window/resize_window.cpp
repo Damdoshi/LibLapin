@@ -14,5 +14,6 @@ void			bunny_resize_window(t_bunny_window	*_win,
   win->window->setSize(vec);
   win->width = pos.x;
   win->height = pos.y;
+  scream_log_if("%p window, (%d, %d) size", win, pos.x, pos.y);
 }
 

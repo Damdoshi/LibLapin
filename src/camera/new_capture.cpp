@@ -7,10 +7,12 @@
 #include		<opencv2/opencv.hpp>
 #include		"lapin_private.h"
 
+#define			PATTERN		"%p -> %p"
+
 t_bunny_capture		*bunny_new_capture(t_bunny_camera		*camera)
 {
   cv::VideoCapture	*cap = (cv::VideoCapture*)camera;
-  cv::Mat		*mat;
+  cv::Mat		*mat = NULL;
 
   try
     {
@@ -18,9 +20,11 @@ t_bunny_capture		*bunny_new_capture(t_bunny_camera		*camera)
     }
   catch (...)
     {
+      scream_error_if(return (NULL), ENOMEM, PATTERN, camera, mat);
       return (NULL);
     }
   *cap >> *mat;
+  scream_log_if(PATTERN, camera, mat);
   return ((t_bunny_capture*)mat);
 }
 

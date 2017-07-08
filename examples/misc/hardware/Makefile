@@ -12,7 +12,7 @@
   BIN		=	`pwd | rev | cut -d "/" -f1 | rev`
   FLAG		=	-W -Wall -Werror -g -g3 -ggdb
 
-  INCLUDE	=	-I./include/
+  INCLUDE	=	-I./include/ -DBUNNY_HARDWARE
   SRC		=	$(wildcard src/*.c)
   OBJ		=	$(SRC:.c=.o)
   LIBPATH	=	-L${HOME}/.froot/lib/

@@ -11,6 +11,7 @@ size_t			bunny_strnlen(const char	*str,
   size_t		i;
 
   for (i = 0; str[i] && i < max; ++i);
+  scream_log_if("%s string, %zu max_size -> %zu", str, max, i);
   return (i);
 }
 

@@ -7,6 +7,11 @@
 
 t_bunny_ini		*bunny_new_ini(void)
 {
-  return (bunny_new_configuration());
+  t_bunny_ini		*ini = NULL;
+
+  if ((ini = bunny_new_configuration()) == NULL)
+    scream_error_if(return (NULL), bunny_errno, "[] -> %p", ini);
+  scream_log_if("[] -> %p", ini);
+  return (ini);
 }
 

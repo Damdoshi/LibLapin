@@ -9,6 +9,7 @@ void			bunny_delete_configuration(t_bunny_configuration	*conf)
 {
   SmallConf		*c = (SmallConf*)conf;
 
+  scream_log_if("%p", c);
   delete c;
 }
 

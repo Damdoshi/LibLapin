@@ -4,9 +4,13 @@
 // Bibliotheque Lapin
 
 #include		"deps/NetCom.hpp"
-#include		"lapin.h"
+#include		"lapin_private.h"
 
 bool			bunny_server_packet_ready(const t_bunny_server	*srv)
 {
-  return (((bpt::NetCom::Server*)srv->_private[1])->AnyFullPacket());
+  bool			ret;
+
+  ret = (((bpt::NetCom::Server*)srv->_private[1])->AnyFullPacket());
+  scream_log_if("%p -> %s", srv, ret ? "true" : "false");
+  return (ret);
 }

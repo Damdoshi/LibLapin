@@ -5,6 +5,9 @@
 
 #include			"lapin_private.h"
 
+#define				PATTERN					\
+  "%p func, %d order, %f start, %f duration, %p duration -> %p"
+
 struct bunny_trap		*gl_bunny_trap_head[4];
 
 t_bunny_trap			*bunny_new_trap(t_bunny_trap_function	func,
@@ -22,7 +25,8 @@ t_bunny_trap			*bunny_new_trap(t_bunny_trap_function	func,
     snt = &gl_bunny_trap_head[2];
   
   if ((trap = (struct bunny_trap*)bunny_malloc(sizeof(*trap))) == NULL)
-    return (NULL);
+    scream_error_if(return (NULL), bunny_errno, PATTERN,
+		    func, order, start, duration, param, trap);
   trap->next = NULL;
   trap->remove_it = false;
   trap->start_time = start;
@@ -42,6 +46,7 @@ t_bunny_trap			*bunny_new_trap(t_bunny_trap_function	func,
       else
 	trap->next = NULL;
     }
+  scream_log_if(PATTERN, func, order, start, duration, param, trap);
   return ((t_bunny_trap*)trap);
 }
 

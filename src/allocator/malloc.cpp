@@ -16,6 +16,8 @@
 # undef			bunny_free
 #endif
 
+#define			PATTERN				"%zu size -> %p"
+
 typedef void		*(*t_sysmalloc)(size_t);
 typedef void		(*t_sysfree)(void*);
 
@@ -155,9 +157,16 @@ void			check_memory_state(void)
 
 void			*bunny_malloc(size_t		data)
 {
+
 #ifdef			LAPIN_ALLOCATOR_DEACTIVATED
-  return (malloc(data));
+  void			*ptr;
+
+  if ((ptr = malloc(data)) == NULL)
+    scream_error_if(return (NULL), errno, PATTERN, data, ptr);
+  scream_log_if(PATTERN, data, ptr);
+  return (ptr);
 #endif
+
   struct memhead	*head;
   struct memchunk	*node;
   size_t		jam;
@@ -167,10 +176,7 @@ void			*bunny_malloc(size_t		data)
     data += MEMORY_CHUNK_SIZE - (data % MEMORY_CHUNK_SIZE);
   head = memory_head();
   if ((node = get_node(head, data)) == NULL)
-    {
-      errno = ENOMEM;
-      return (NULL);
-    }
+    scream_error_if(return (NULL), ENOMEM, PATTERN, data, node);
   head->alloc_count += 1;
   head->total_count += data;
   head->alloc += 1;
@@ -181,6 +187,7 @@ void			*bunny_malloc(size_t		data)
   node->real_size = jam;
   for (; jam < data; ++jam)
     node->data[jam] = 0x21;
+  scream_log_if(PATTERN, data, node->data);
   return (node->data);
 }
 

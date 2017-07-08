@@ -7,9 +7,9 @@
 ## ----------------------------------------------------------------------------
 ## Configuration --------------------------------------------------------------
 
-  MOD		=	`pwd | rev | cut -d "/" -f3 | rev`
+  MOD		=	csv_bin
 
-  BIN		=	`pwd | rev | cut -d "/" -f1 | rev`
+  BIN		=	csv_bin
   FLAG		=	-W -Wall -Werror -g -g3 -ggdb
 
   INCLUDE	=	-I./include/

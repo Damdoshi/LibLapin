@@ -8,6 +8,8 @@
 #include			<string.h>
 #include			"lapin_private.h"
 
+#define				PATTERN		"%s program, %p key -> %s"
+
 bool				bunny_fill_default_key(const char	*bunny_prog,
 						       t_bunny_cipher_key *key)
 {
@@ -24,27 +26,31 @@ bool				bunny_fill_default_key(const char	*bunny_prog,
     def = key;
   buflen = def->length + sizeof(def->length);
   if (bunny_load_file(bunny_prog, &file, &siz) == false)
-    return (false);
+    scream_error_if(return (false), bunny_errno, PATTERN, bunny_prog, key, "false");
   for (i = 0; i < siz - buflen; ++i)
     if (memcmp(file, def, buflen) == 0)
       {
 	if ((fd = open(bunny_prog, O_WRONLY)) == -1)
 	  {
+	    i = errno;
 	    bunny_free(file);
-	    return (false);
+	    scream_error_if(return (false), i, PATTERN, bunny_prog, key, "false");
 	  }
 	lseek(fd, i, SEEK_SET);
 	if (write(fd, def, buflen) != buflen)
 	  {
+	    i = errno;
 	    close(fd);
 	    bunny_free(file);
-	    return (false);
+	    scream_error_if(return (false), i, PATTERN, bunny_prog, key, "false");
 	  }
 	close(fd);
 	bunny_free(file);
+	scream_log_if(PATTERN, bunny_prog, key, "true");
 	return (true);
       }
   bunny_free(file);
+  scream_error_if(return (false), BE_CANNOT_FIND_EMBEDDED_KEY, PATTERN, bunny_prog, key, "false");
   return (false);
 }
 

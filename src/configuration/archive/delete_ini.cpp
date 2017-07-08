@@ -7,6 +7,7 @@
 
 void			bunny_delete_ini(t_bunny_ini	*ini)
 {
+  scream_log_if("%p", ini);
   bunny_delete_configuration((t_bunny_configuration*)ini);
 }
 

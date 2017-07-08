@@ -278,11 +278,15 @@ struct				SmallConf
   {
     std::map<std::string, SmallConf*>::iterator	it;
     std::map<std::string, SmallConf*> dup = nodes;
+    std::vector<SmallConf*> dupx = array;
+    std::vector<SmallConf*>::iterator itx;
 
     if (father != NULL)
       father->nodes.erase(name);
     for (it = dup.begin(); it != dup.end(); ++it)
       delete it->second;
+    for (itx = dupx.begin(); itx != dupx.end(); ++itx)
+      delete *itx;
   }
 };
 

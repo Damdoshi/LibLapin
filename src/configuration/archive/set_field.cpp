@@ -6,6 +6,8 @@
 #include		<string.h>
 #include		"lapin_private.h"
 
+#define			PATTERN		"%p ini, %s scope, %s field, %u index, %s value"
+
 void			bunny_ini_set_field(t_bunny_ini		*ini,
 					    const char		*scope,
 					    const char		*field,
@@ -21,22 +23,23 @@ void			bunny_ini_set_field(t_bunny_ini		*ini,
   if ((cnf = bunny_configuration_get_child(cnf, scope)) == NULL)
     {
       SmallConf::create_mode = create;
-      return ;
+      scream_error_if(return, bunny_errno, PATTERN, ini, scope, field, index, value);
     }
   if ((cnf = bunny_configuration_get_child(cnf, field)) == NULL)
     {
       SmallConf::create_mode = create;
-      return ;
+      scream_error_if(return, bunny_errno, PATTERN, ini, scope, field, index, value);
     }
   if ((cnf = bunny_configuration_get_case(cnf, index)) == NULL)
     {
       SmallConf::create_mode = create;
-      return ;
+      scream_error_if(return, bunny_errno, PATTERN, ini, scope, field, index, value);
     }
   if (value == NULL)
     bunny_delete_configuration(cnf);
   else
     bunny_configuration_set_string(cnf, value);
   SmallConf::create_mode = create;
+  scream_log_if(PATTERN, ini, scope, field, index, value);
 }
 

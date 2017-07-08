@@ -50,19 +50,19 @@ typedef enum			e_bunny_comerror
     READ_FAIL			= 4,
     ALLOC_FAIL			= 5,
     GETTIME_FAIL		= 6,
-    LAST_ERROR
+    LAST_NETWORK_ERROR
   }				t_bunny_comerror;
 
 /*!
 ** This structure resumes all informations about the error that occured while polling.
 ** The time attribute is the remaining time before the polling was suppose to end.
 */
-typedef struct			s_bunny_error
+typedef struct			s_bunny_network_error
 {
   t_bunny_comtype		comtype;
   unsigned int			time;
   t_bunny_comerror		errortype;
-}				t_bunny_error;
+}				t_bunny_network_error;
 
 /*!
 ** This structure resumes all informations about the nothingness that happened while polling.
@@ -125,7 +125,7 @@ typedef struct			s_bunny_message
 typedef union			u_bunny_communication
 {
   t_bunny_comtype		comtype;
-  t_bunny_error			error;
+  t_bunny_network_error		error;
   t_bunny_expired		expired;
   t_bunny_connected		connected;
   t_bunny_disconnected		disconnected;

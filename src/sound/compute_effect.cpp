@@ -8,12 +8,17 @@
 bool				bunny_compute_effect(t_bunny_effect		*effect)
 {
   struct bunny_effect		*eff = (struct bunny_effect*)effect;
+  bool				ret;
 
-  return (eff->effect.loadFromSamples
-	  (eff->sample,
-	   eff->duration * eff->sample_per_second,
-	   1,
-	   eff->sample_per_second)
-	  );
+  ret = (eff->effect.loadFromSamples
+	 (eff->sample,
+	  eff->duration * eff->sample_per_second,
+	  1,
+	  eff->sample_per_second)
+	 );
+  if (ret == false)
+    scream_error_if(return (false), bunny_errno, "%p -> %s", effect, "false");
+  scream_log_if("%p -> %s", effect, "true");
+  return (true);
 }
 

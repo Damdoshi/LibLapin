@@ -51,6 +51,8 @@ const std::string	FileDumper::haar =
 #include		"haarcascade_frontalface_alt.xml"
   ;
 
+#define			PATTERN		"%p capture, %p head -> %s"
+
 bool			bunny_camera_headtrack(const t_bunny_capture	*capture,
 					       t_bunny_area		*head)
 {
@@ -60,7 +62,8 @@ bool			bunny_camera_headtrack(const t_bunny_capture	*capture,
   cv::Mat		gray;
 
   if (fdump.dead())
-    return (false);
+    scream_error_if(return (false),
+		    BE_CANT_GENERATE_RESSOURCE, PATTERN, capture, head, "false");
 
   if (fdump.is_loaded() == false)
     {
@@ -69,13 +72,19 @@ bool			bunny_camera_headtrack(const t_bunny_capture	*capture,
     }
 
   cv::cvtColor(*(cv::Mat*)capture, gray, CV_BGR2GRAY);
-  classifier_face.detectMultiScale(gray, faces, 1.3, 3);
+  //classifier_face.detectMultiScale(gray, faces, 1.3, 3);
+  classifier_face.detectMultiScale(gray, faces, 3.3, 2);
+
   if (faces.size() == 0)
-    return (false);
+    {
+      scream_log_if(PATTERN, capture, head, "false");
+      return (false);
+    }
   head->x = faces[0].x + faces[0].width * 0.2;
   head->y = faces[0].y + faces[0].width * 0.2;
   head->w = faces[0].width * 1.4;
   head->h = faces[0].height * 1.4;
+  scream_log_if(PATTERN, capture, head, "true");
   return (true);
 }
 

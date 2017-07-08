@@ -9,6 +9,7 @@ t_bunny_configuration	*_bunny_configuration_go_get_node_va(const t_bunny_configu
 							     size_t			nbr,
 							     va_list			*lst);
 
+#define			PATTERN		"%p config, %d value, %zu params, ... -> %s"
 
 bool			bunny_configuration_go_set_int_va(t_bunny_configuration		*config,
 							  int				val,
@@ -20,11 +21,15 @@ bool			bunny_configuration_go_set_int_va(t_bunny_configuration		*config,
 
   va_start(lst, nbr);
   if ((cnf = _bunny_configuration_go_get_node_va(config, nbr, &lst)) == NULL)
-    return (false);
+    scream_error_if(return (false), bunny_errno, PATTERN, config, val, nbr, "false");
   va_end(lst);
   bunny_configuration_set_int(cnf, val);
+  scream_log_if(PATTERN, config, val, nbr, "true");
   return (true);
 }
+
+#undef			PATTERN
+#define			PATTERN		"%p config, %f value, %zu params, ... -> %s"
 
 bool			bunny_configuration_go_set_double_va(t_bunny_configuration	*config,
 							     double			val,
@@ -36,11 +41,15 @@ bool			bunny_configuration_go_set_double_va(t_bunny_configuration	*config,
 
   va_start(lst, nbr);
   if ((cnf = _bunny_configuration_go_get_node_va(config, nbr, &lst)) == NULL)
-    return (false);
+    scream_error_if(return (false), bunny_errno, PATTERN, config, val, nbr, "false");
   va_end(lst);
   bunny_configuration_set_double(cnf, val);
+  scream_log_if(PATTERN, config, val, nbr, "true");
   return (true);
 }
+
+#undef			PATTERN
+#define			PATTERN		"%p config, %s value, %zu params, ... -> %s"
 
 bool			bunny_configuration_go_set_string_va(t_bunny_configuration	*config,
 							     const char			*val,
@@ -52,14 +61,18 @@ bool			bunny_configuration_go_set_string_va(t_bunny_configuration	*config,
 
   va_start(lst, nbr);
   if ((cnf = _bunny_configuration_go_get_node_va(config, nbr, &lst)) == NULL)
-    return (false);
+    scream_error_if(return (false), bunny_errno, PATTERN, config, val, nbr, "false");
   va_end(lst);
   bunny_configuration_set_string(cnf, val);
+  scream_log_if(PATTERN, config, val, nbr, "true");
   return (true);
 }
 
 t_bunny_configuration	*_bunny_configuration_go_get_node(const t_bunny_configuration	*config,
 							  const char			*addr);
+
+#undef			PATTERN
+#define			PATTERN		"%p config, %s value, %s address -> %s"
 
 bool			bunny_configuration_go_set_string(t_bunny_configuration		*config,
 							  const char			*val,
@@ -68,10 +81,14 @@ bool			bunny_configuration_go_set_string(t_bunny_configuration		*config,
   t_bunny_configuration	*cnf;
 
   if ((cnf = _bunny_configuration_go_get_node(config, addr)) == NULL)
-    return (false);
+    scream_error_if(return (false), bunny_errno, PATTERN, config, val, addr, "false");
   bunny_configuration_set_string(cnf, val);
+  scream_log_if(PATTERN, config, val, addr, "true");
   return (true);
 }
+
+#undef			PATTERN
+#define			PATTERN		"%p config, %f value, %s address -> %s"
 
 bool			bunny_configuration_go_set_double(t_bunny_configuration		*config,
 							  double			val,
@@ -80,10 +97,14 @@ bool			bunny_configuration_go_set_double(t_bunny_configuration		*config,
   t_bunny_configuration	*cnf;
 
   if ((cnf = _bunny_configuration_go_get_node(config, addr)) == NULL)
-    return (false);
+    scream_error_if(return (false), bunny_errno, PATTERN, config, val, addr, "false");
   bunny_configuration_set_double(cnf, val);
+  scream_log_if(PATTERN, config, val, addr, "true");
   return (true);
 }
+
+#undef			PATTERN
+#define			PATTERN		"%p config, %d value, %s address -> %s"
 
 bool			bunny_configuration_go_set_int(t_bunny_configuration		*config,
 						       int				val,
@@ -92,8 +113,9 @@ bool			bunny_configuration_go_set_int(t_bunny_configuration		*config,
   t_bunny_configuration	*cnf;
 
   if ((cnf = _bunny_configuration_go_get_node(config, addr)) == NULL)
-    return (false);
+    scream_error_if(return (false), bunny_errno, PATTERN, config, val, addr, "false");
   bunny_configuration_set_int(cnf, val);
+  scream_log_if(PATTERN, config, val, addr, "true");
   return (true);
 }
 

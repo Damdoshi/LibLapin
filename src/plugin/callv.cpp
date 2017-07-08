@@ -5,6 +5,8 @@
 
 #include		"lapin_private.h"
 
+#define			PATTERN		"%p plugin, %s function name, %p target for return value -> %s"
+
 bool			bunny_plugin_callv(t_bunny_plugin		*plugin,
 					   const char			*func,
 					   t_bunny_value		*return_value,
@@ -37,9 +39,12 @@ bool			bunny_plugin_callv(t_bunny_plugin		*plugin,
 	  }
 	va_end(lst);
 	_real_call(&plugin->prototypes[i], return_value, len, &val[0]);
+	scream_log_if(PATTERN, plugin, func, return_value, "true");
 	return (true);
       }
   va_end(lst);
+  scream_error_if(return (false), EINVAL, PATTERN " (Cannot find function name)",
+		  plugin, func, return_value, "false");
   return (false);
 }
 

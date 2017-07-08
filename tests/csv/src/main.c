@@ -5,14 +5,19 @@
 ** Bibliotheque Lapin
 */
 
+#include			<unistd.h>
+#include			<fcntl.h>
+#include			<assert.h>
 #include			<lapin.h>
+#include			<string.h>
 #include			<stdlib.h>
 #include			<stdio.h>
 
 int				main(int		argc,
 				     char		**argv)
 {
-  t_bunny_configuration		*conf, *nod;
+  char				buf[256];
+  t_bunny_configuration		*conf;
   char				*out;
   int				i;
 
@@ -24,20 +29,29 @@ int				main(int		argc,
 	{
 	  bunny_delete_configuration(conf);
 	  fprintf(stderr, "Failure while reading : %s\n", argv[i]);
+	  unlink("dup.csv");
 	  return (EXIT_FAILURE);
 	}
-      nod = bunny_configuration_go_get_node_va(conf, 2, -1, -1);
-      bunny_configuration_set_string(nod, "ZOUBIDA");
       if ((out = bunny_write_configuration(BC_CSV, conf)) == NULL)
 	{
 	  bunny_delete_configuration(conf);
 	  fprintf(stderr, "Failure while writing : %s\n", argv[i]);
+	  unlink("dup.csv");
 	  return (EXIT_FAILURE);
 	}
-      write(1, out, strlen(out));
+      int			fd;
+
+      assert(fd = open("dup.csv", O_WRONLY | O_CREAT | O_TRUNC, 0644));
+      assert(write(fd, out, strlen(out)) == (ssize_t)strlen(out));
+      close(fd);
       bunny_free(out);
       bunny_delete_configuration(conf);
+      snprintf(&buf[0], sizeof(buf), "diff dup.csv %s", argv[i]);
+      assert(system(&buf[0]) == 0);
+      printf("%s is ok.\n", argv[i]);
     }
+  printf("All ok\n");
+  unlink("dup.csv");
   return (EXIT_SUCCESS);
 }
 

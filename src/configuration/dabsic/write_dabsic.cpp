@@ -100,8 +100,9 @@ char			*_bunny_write_dabsic(const t_bunny_configuration	*config)
 
   restore_dabsic(ss, *(SmallConf*)config, 0);
   if ((ret = (char*)bunny_malloc(sizeof(*ret) * (ss.str().size() + 1))) == NULL)
-    return (NULL);
+    scream_error_if(return (NULL), bunny_errno, "%p -> %s", config, ret);
   strcpy(ret, ss.str().c_str());
+  scream_log_if("%p -> %s", config, ret);
   return (ret);
 }
 

@@ -5,20 +5,31 @@
 
 #include		"lapin_private.h"
 
+#define			PATTERN		"%p communication, %p data ("
+
 static t_bunny_response	notify(const t_bunny_communication	*com,
 			       void				*data)
 {
   if (com->comtype == MESSAGE && gl_callback.netmessage)
-    return (gl_callback.netmessage
-	    (com->message.fd, (const void*)com->message.buffer, com->message.size, data));
+    {
+      scream_log_if(PATTERN "network_message)", com, data);
+      return (gl_callback.netmessage
+	      (com->message.fd, (const void*)com->message.buffer, com->message.size, data));
+    }
 
   if (gl_callback.netconnect)
     {
       if (com->comtype == NETCONNECTED)
-	return (gl_callback.netconnect(com->connected.fd, CONNECTED, data));
+	{
+	  scream_log_if(PATTERN "network_connect)", com, data);
+	  return (gl_callback.netconnect(com->connected.fd, CONNECTED, data));
+	}
       
       if (com->comtype == NETDISCONNECTED)
-	return (gl_callback.netconnect(com->connected.fd, DISCONNECTED, data));
+	{
+	  scream_log_if(PATTERN "network_connect)", com, data);
+	  return (gl_callback.netconnect(com->connected.fd, DISCONNECTED, data));
+	}
     }
 
   return (GO_ON);

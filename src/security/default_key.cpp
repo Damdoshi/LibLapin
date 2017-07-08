@@ -85,6 +85,11 @@ static void				funk_swap(char			*a,
     funk_swap(b, a, false);
 }
 
+//
+// Twist key generate the key that will be used by bunny_security,
+// so the key used is not verbatim the one in the binary file.
+//
+
 static const t_bunny_default_key	*twist_key(t_bunny_default_key	*inkey,
 						   t_bunny_default_key	*outkey)
 {
@@ -105,10 +110,18 @@ static const t_bunny_default_key	*twist_key(t_bunny_default_key	*inkey,
 
 const t_bunny_cipher_key		*bunny_default_key(void)
 {
+  t_bunny_cipher_key			*key;
   int					i;
 
   for (i = 0; i < gl_bunny_default_key[0].length; ++i)
     if (gl_bunny_default_key[0].key[i] != 0)
-      return ((t_bunny_cipher_key*)twist_key(&gl_bunny_default_key[0], &gl_bunny_default_key[1]));
-  return ((t_bunny_cipher_key*)&gl_bunny_default_key[0]);
+      {
+	key = ((t_bunny_cipher_key*)twist_key(&gl_bunny_default_key[0], &gl_bunny_default_key[1]));
+	scream_log_if("-> %p", key);
+	return (key);
+      }
+  key = ((t_bunny_cipher_key*)&gl_bunny_default_key[0]);
+  scream_log_if("-> %p", key);
+  return (key);
 }
+

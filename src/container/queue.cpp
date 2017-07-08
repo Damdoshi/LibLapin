@@ -31,8 +31,11 @@ size_t			bunny_delete_queue(t_bunny_queue	*queue)
       nod = prv;
     }
   bunny_free(queue);
+  scream_log_if("%p -> %zu", queue, siz);
   return (siz);
 }
+
+#define			PATTERN		"%p queue, %p data -> %s"
 
 bool			_bunny_queue_push(t_bunny_queue		*queue,
 					  const void		*data)
@@ -41,7 +44,8 @@ bool			_bunny_queue_push(t_bunny_queue		*queue,
   struct bunny_node	*nod = (struct bunny_node*)bunny_malloc(sizeof(*nod));
 
   if (nod == NULL)
-    return (false);
+    scream_error_if(return (false), bunny_errno, PATTERN, queue, data, "false");
+
   nod->data = (void*)data;
 
   nod->next = NULL;
@@ -55,8 +59,12 @@ bool			_bunny_queue_push(t_bunny_queue		*queue,
       que->back = nod;
     }
   que->length += 1;
+  scream_log_if(PATTERN, queue, data, "true");
   return (true);
 }
+
+#undef			PATTERN
+#define			PATTERN		"%p -> %p"
 
 void			*_bunny_queue_pop(t_bunny_queue		*queue)
 {
@@ -65,11 +73,12 @@ void			*_bunny_queue_pop(t_bunny_queue		*queue)
   void			*dat;
 
   if ((nod = que->front) == NULL)
-    return (NULL);
+    scream_error_if(return (NULL), BE_CONTAINER_IS_EMPTY, PATTERN, queue, nod);
   que->front = nod->next;
   dat = nod->data;
   bunny_free(nod);
   que->length -= 1;
+  scream_log_if(PATTERN, queue, dat);
   return (dat);
 }
 

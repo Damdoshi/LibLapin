@@ -5,6 +5,8 @@
 
 #include			"lapin_private.h"
 
+#define				PATTERN		"%s file, %d ciphering algorithm, %p key -> %s"
+
 bool				bunny_uncipher_file(const char			*file,
 						    t_bunny_ciphering		cip,
 						    const t_bunny_cipher_key	*key)
@@ -14,10 +16,14 @@ bool				bunny_uncipher_file(const char			*file,
   bool				ret;
 
   if (bunny_load_file(file, &cnt, &len) == false)
-    return (false);
+    scream_error_if(return (false), bunny_errno, PATTERN, file, cip, key, "false");
   bunny_uncipher_data(cnt, len, cip, key);
   ret = bunny_save_file(file, cnt, len);
+  len = bunny_errno;
   bunny_free(cnt);
+  if (ret == false)
+    scream_error_if(return (false), len, PATTERN, file, cip, key, "false");
+  scream_log_if(PATTERN, file, cip, key, "true");
   return (ret);
 }
 

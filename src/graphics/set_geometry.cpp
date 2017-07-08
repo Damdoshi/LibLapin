@@ -5,6 +5,9 @@
 
 #include			"lapin_private.h"
 
+#define				PATTERN \
+  "%p picture, %d form, %p vertex_array, %p texture"
+
 void				bunny_set_geometry(t_bunny_buffer		*buffer,
 						   t_bunny_geometry		geometry,
 						   t_bunny_vertex_array		*array,
@@ -14,7 +17,7 @@ void				bunny_set_geometry(t_bunny_buffer		*buffer,
   sf::VertexArray		vert;
   size_t			i;
 
-  if (*typ != SYSTEM_RAM)
+  if (*typ != SYSTEM_RAM && *typ != GRAPHIC_TEXT)
     {
       vert.resize(array->length);
       for (i = 0; i < array->length; ++i)
@@ -61,9 +64,12 @@ void				bunny_set_geometry(t_bunny_buffer		*buffer,
 		win->window->draw(vert, state);
 	      }
 	  }
+	scream_log_if(PATTERN, buffer, geometry, array, picture);
 	return ;
       }
+    case TTF_TEXT:
     case GRAPHIC_RAM:
+    case GRAPHIC_TEXT:
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)buffer;
 
@@ -85,9 +91,10 @@ void				bunny_set_geometry(t_bunny_buffer		*buffer,
 		pic->texture->draw(vert, state);
 	      }
 	  }
+	scream_log_if(PATTERN, buffer, geometry, array, picture);
 	return ;
       }
-    default:
+    case SYSTEM_RAM:
       {
 	t_bunny_pixelarray	*pix = (t_bunny_pixelarray*)buffer;
 
@@ -104,7 +111,10 @@ void				bunny_set_geometry(t_bunny_buffer		*buffer,
 	    else
 	      gl_bunny_my_geometry(pix, geometry, array, (t_bunny_pixelarray*)picture);
 	  }
+	scream_log_if(PATTERN, buffer, geometry, array, picture);
 	return ;
       }
+    default:
+      scream_error_if(return, EINVAL, PATTERN, buffer, geometry, array, picture);
     }
 }

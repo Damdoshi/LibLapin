@@ -5,6 +5,8 @@
 
 #include		"lapin_private.h"
 
+#define			PATTERN		"%p memory, %zu length -> %p"
+
 t_bunny_picture		*bunny_read_picture(const void		*_pic,
 					    size_t		len)
 {
@@ -13,7 +15,7 @@ t_bunny_picture		*bunny_read_picture(const void		*_pic,
   sf::Sprite		spr;
 
   if (txt.loadFromMemory(_pic, len) == false)
-    goto Fail;
+    scream_error_if(return (NULL), errno, PATTERN, _pic, len, (void*)NULL);
   spr.setTexture(txt);
   if ((pic = new (std::nothrow) struct bunny_picture) == NULL)
     goto Fail;
@@ -46,8 +48,7 @@ t_bunny_picture		*bunny_read_picture(const void		*_pic,
   pic->rotation = 0;
   pic->color_mask.full = WHITE;
 
-  BUNNY_LOG(fprintf(stderr, "%s: Returning %p.\n", __PRETTY_FUNCTION__, pic));
-
+  scream_log_if(PATTERN, _pic, len, pic);
   return ((t_bunny_picture*)pic);
 
  FailSprite:
@@ -55,5 +56,6 @@ t_bunny_picture		*bunny_read_picture(const void		*_pic,
  FailStruct:
   delete pic;
  Fail:
+  scream_error_if(return (NULL), ENOMEM, PATTERN, _pic, len, (void*)NULL);
   return (NULL);
 }

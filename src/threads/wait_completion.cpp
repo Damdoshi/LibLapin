@@ -5,7 +5,7 @@
 
 #include		<list>
 #include		"Threads.hpp"
-#include		"lapin.h"
+#include		"lapin_private.h"
 
 #ifndef			__WIN32
 
@@ -29,6 +29,7 @@ void			bunny_thread_wait_completion(t_bunny_threadpool	*pol)
     usleep(300);
   while (w->GetMessage(msg));
   _ClearWorkers();
+  scream_log_if("%p", pol);
 }
 
 #else
@@ -36,6 +37,7 @@ void			bunny_thread_wait_completion(t_bunny_threadpool	*pol)
 void			bunny_thread_wait_completion(t_bunny_threadpool	*pol)
 {
   (void)pol;
+  scream_log_if("%p", pol);
 }
 
 #endif

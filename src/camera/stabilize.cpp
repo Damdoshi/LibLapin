@@ -9,6 +9,7 @@ void			bunny_stabilize_headtrack(const t_bunny_area	*prev,
 						  t_bunny_area		*cur,
 						  double		speed)
 {
+  scream_log_if("%p prev, %p cur, %f speed", prev, cur, speed);
   bunny_smooth_move((const t_bunny_position*)prev, (t_bunny_position*)cur, speed);
 }
 

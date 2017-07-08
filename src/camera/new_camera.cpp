@@ -7,9 +7,11 @@
 #include		<opencv2/opencv.hpp>
 #include		"lapin_private.h"
 
+#define			PATTERN		"%d -> %p"
+
 t_bunny_camera		*bunny_new_camera(int	id)
 {
-  cv::VideoCapture	*cam;
+  cv::VideoCapture	*cam = NULL;
 
   try
     {
@@ -17,11 +19,15 @@ t_bunny_camera		*bunny_new_camera(int	id)
     }
   catch (...)
     {
-      return (NULL);
+      scream_error_if(return (NULL), ENOMEM, PATTERN, id, cam);
     }
   if (cam->isOpened())
-    return ((t_bunny_camera*)cam);
+    {
+      scream_log_if(PATTERN, id, cam);
+      return ((t_bunny_camera*)cam);
+    }
   delete cam;
-  return (NULL);
+  cam = NULL;
+  scream_error_if(return (NULL), ENOMEM, PATTERN, id, cam);
 }
 

@@ -5,13 +5,17 @@
 
 #include		"lapin_private.h"
 
+#define			PATTERN		"%s operation, %p environment -> %f"
+
 static double		ternary(const char			*operation,
 				ssize_t				&i,
-				t_bunny_configuration		*env);
+				t_bunny_configuration		*env,
+				bool				&bad);
 
 static double		operand(const char			*operation,
 				ssize_t				&i,
-				t_bunny_configuration		*env)
+				t_bunny_configuration		*env,
+				bool				&bad)
 {
   char			*end;
   double		value;
@@ -20,14 +24,20 @@ static double		operand(const char			*operation,
   if (operation[i] == '(')
     {
       skipspace(operation, i);
-      value = ternary(operation, i, env);
+      value = ternary(operation, i, env, bad);
+      if (bad)
+	return (nan(""));
       skipspace(operation, i);
       if (operation[i] == ')')
 	{
 	  i += 1;
 	  skipspace(operation, i);
+	  return (value);
 	}
-      return (value);
+      bad = true;
+      scream_error_if
+	(return (nan("")), BE_SYNTAX_ERROR, PATTERN " (Token ')' was expected)",
+	 operation, env, nan(""));
     }
   if (isdigit(operation[i]) ||
       ((operation[i] == '+' || operation[i] == '-') && isdigit(operation[i])))
@@ -43,82 +53,99 @@ static double		operand(const char			*operation,
 
 static double		test(const char				*operation,
 			     ssize_t				&i,
-			     t_bunny_configuration		*env)
+			     t_bunny_configuration		*env,
+			     bool				&bad)
 {
   double		first;
 
   skipspace(operation, i);
-  first = operand(operation, i, env);
+  first = operand(operation, i, env, bad);
+  if (bad)
+    return (nan(""));
   skipspace(operation, i);
   if (strncmp(&operation[i], ">=", 2) == 0)
-    return (first >= test(operation, ++i, env));
+    return (first >= test(operation, ++i, env, bad));
   if (strncmp(&operation[i], "<=", 2) == 0)
-    return (first <= test(operation, ++i, env));
+    return (first <= test(operation, ++i, env, bad));
   if (operation[i] == '>')
-    return (first > test(operation, ++i, env));
+    return (first > test(operation, ++i, env, bad));
   if (operation[i] == '<')
-    return (first < test(operation, ++i, env));
+    return (first < test(operation, ++i, env, bad));
   if (strncmp(&operation[i], "==", 2) == 0)
-    return ((int)fabs(first - test(operation, ++i, env)) == 0);
+    return ((int)fabs(first - test(operation, ++i, env, bad)) == 0);
   if (strncmp(&operation[i], "!=", 2) == 0)
-    return ((int)fabs(first - test(operation, ++i, env)) != 0);
+    return ((int)fabs(first - test(operation, ++i, env, bad)) != 0);
   return (first);
 }
 
 static double		mul_div_mod(const char			*operation,
 				    ssize_t			&i,
-				    t_bunny_configuration	*env)
+				    t_bunny_configuration	*env,
+				    bool			&bad)
 {
   double		first;
 
   skipspace(operation, i);
-  first = test(operation, i, env);
+  first = test(operation, i, env, bad);
   skipspace(operation, i);
   if (operation[i] == '*')
-    return (first * mul_div_mod(operation, ++i, env));
+    return (first * mul_div_mod(operation, ++i, env, bad));
   if (operation[i] == '/')
-    return (first / mul_div_mod(operation, ++i, env));
+    return (first / mul_div_mod(operation, ++i, env, bad));
   if (operation[i] == '%')
-    return ((int)first % (int)mul_div_mod(operation, ++i, env));
+    return ((int)first % (int)mul_div_mod(operation, ++i, env, bad));
   return (first);
 }
 
 static double		add_sub(const char			*operation,
 				ssize_t				&i,
-				t_bunny_configuration		*env)
+				t_bunny_configuration		*env,
+				bool				&bad)
 {
   double		first;
 
   skipspace(operation, i);
-  first = mul_div_mod(operation, i, env);
+  first = mul_div_mod(operation, i, env, bad);
   skipspace(operation, i);
   if (operation[i] == '+')
-    return (first + add_sub(operation, ++i, env));
+    return (first + add_sub(operation, ++i, env, bad));
   if (operation[i] == '-')
-    return (first - add_sub(operation, ++i, env));
+    return (first - add_sub(operation, ++i, env, bad));
   return (first);
 }
 
 static double		ternary(const char			*operation,
 				ssize_t				&i,
-				t_bunny_configuration		*env)
+				t_bunny_configuration		*env,
+				bool				&bad)
 {
   double		first, second, third;
 
   skipspace(operation, i);
-  first = add_sub(operation, i, env);
+  first = add_sub(operation, i, env, bad);
+  if (bad)
+    return (nan(""));
   skipspace(operation, i);
   if (operation[i] == '?')
     {
       skipspace(operation, ++i);
-      second = add_sub(operation, i, env);
+      second = add_sub(operation, i, env, bad);
+      if (bad)
+	return (nan(""));
       skipspace(operation, i);
+      if (operation[i] != ':')
+	{
+	  bad = true;
+	  scream_error_if(return (nan("")), BE_SYNTAX_ERROR,
+			  PATTERN " (Token ':' was expected in ternary)",
+			  operation, env, nan(""));
+	}
       if ((int)first != 0)
 	return (second);
-      if (operation[i] != ':')
-	return (0);
       skipspace(operation, ++i);
-      third = add_sub(operation, i, env);
+      third = add_sub(operation, i, env, bad);
+      if (bad)
+	return (nan(""));
       skipspace(operation, i);
       return (third);
     }
@@ -129,8 +156,22 @@ double			bunny_evaluate(const char		*operation,
 				       t_bunny_configuration	*env)
 {
   ssize_t		i;
+  double		res;
+  bool			bad;
 
   i = 0;
-  return (ternary(operation, i, env));
+  bad = false;
+  res = (ternary(operation, i, env, bad));
+  if (bad)
+    scream_error_if
+      (return (nan("")), BE_SYNTAX_ERROR, PATTERN, operation, env, nan(""));
+
+  skipspace(operation, i);
+  if (operation[i] != '\0')
+    scream_error_if
+      (return (nan("")), BE_SYNTAX_ERROR, PATTERN " (End of string not reached)",
+       operation, env, nan(""));
+  scream_log_if(PATTERN, operation, env, res);
+  return (res);
 }
 

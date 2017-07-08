@@ -7,6 +7,10 @@
 
 t_bunny_ini_field	*bunny_ini_first_field(t_bunny_ini_scope	*scope)
 {
-  return (bunny_configuration_first((t_bunny_configuration*)scope));
+  t_bunny_ini_field	*ini;
+
+  ini = bunny_configuration_first((t_bunny_configuration*)scope);
+  scream_log_if("%p -> %p", scope, ini);
+  return (ini);
 }
 

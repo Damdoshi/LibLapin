@@ -5,6 +5,8 @@
 
 #include			"lapin_private.h"
 
+#define				PATTERN		"%u width, %u height, %s file, %p (%d, %d) size -> %p"
+
 t_bunny_font			*bunny_load_font(unsigned int		width,
 						 unsigned int		height,
 						 const char		*file,
@@ -17,28 +19,37 @@ t_bunny_font			*bunny_load_font(unsigned int		width,
       struct bunny_ttf_font	*ttf;
 
       if ((final = (t_bunny_font*)(ttf = new (std::nothrow) struct bunny_ttf_font)) == NULL)
-	return (NULL);
+	scream_error_if(return (NULL), ENOMEM, PATTERN,
+			 width, height, file, size, size->x, size->y, (void*)NULL);
       if (ttf->font.loadFromFile(file) == false)
 	{
 	  delete ttf;
-	  return (NULL);
+	  scream_error_if
+	    (return (NULL), bunny_errno, PATTERN,
+	     width, height, file, size, size->x, size->y, (void*)NULL);
 	}
 
       if ((ttf->texture = new (std::nothrow) sf::RenderTexture) == NULL)
 	{
 	  delete ttf;
-	  return (NULL);
+	  scream_error_if
+	    (return (NULL), bunny_errno, PATTERN,
+	     width, height, file, size, size->x, size->y, (void*)NULL);
 	}
       if (ttf->texture->create(width, height) == false)
 	{
 	  delete ttf;
-	  return (NULL);
+	  scream_error_if
+	    (return (NULL), bunny_errno, PATTERN,
+	     width, height, file, size, size->x, size->y, (void*)NULL);
 	}
       if ((ttf->sprite = new (std::nothrow) sf::Sprite) == NULL)
 	{
 	  delete ttf->texture;
 	  delete ttf;
-	  return (NULL);
+	  scream_error_if
+	    (return (NULL), bunny_errno, PATTERN,
+	     width, height, file, size, size->x, size->y, (void*)NULL);
 	}
       ttf->text.setFont(ttf->font);
       ttf->text.setCharacterSize(size->y);
@@ -60,26 +71,34 @@ t_bunny_font			*bunny_load_font(unsigned int		width,
       if ((gfx->gfx = bunny_load_picture(file)) == NULL)
 	{
 	  delete gfx;
-	  return (NULL);
+	  scream_error_if
+	    (return (NULL), bunny_errno, PATTERN,
+	     width, height, file, size, size->x, size->y, (void*)NULL);
 	}
 
       if ((gfx->texture = new (std::nothrow) sf::RenderTexture) == NULL)
 	{
 	  bunny_delete_clipable(gfx->gfx);
 	  delete gfx;
-	  return (NULL);
+	  scream_error_if
+	    (return (NULL), bunny_errno, PATTERN,
+	     width, height, file, size, size->x, size->y, (void*)NULL);
 	}
       if (gfx->texture->create(width, height) == false)
 	{
 	  delete gfx;
-	  return (NULL);
+	  scream_error_if
+	    (return (NULL), bunny_errno, PATTERN,
+	     width, height, file, size, size->x, size->y, (void*)NULL);
 	}
       if ((gfx->sprite = new (std::nothrow) sf::Sprite) == NULL)
 	{
 	  bunny_delete_clipable(gfx->gfx);
 	  delete gfx->texture;
 	  delete gfx;
-	  return (NULL);
+	  scream_error_if
+	    (return (NULL), bunny_errno, PATTERN,
+	     width, height, file, size, size->x, size->y, (void*)NULL);
 	}
       gfx->gfx->clip_width = size->x;
       gfx->gfx->clip_height = size->y;
@@ -123,6 +142,7 @@ t_bunny_font			*bunny_load_font(unsigned int		width,
   final->interglyph_space.x = 0;
   final->interglyph_space.y = 0;
 
+  scream_log_if(PATTERN, width, height, file, size, size->x, size->y, final);
   return (final);
 }
 

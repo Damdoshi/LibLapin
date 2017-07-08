@@ -15,6 +15,9 @@ t_bunny_window		*bunny_start(unsigned int		width,
   return (bunny_start_style(width, height, fullscreen ? FULLSCREEN : DEFAULT_WIN_STYLE, winname));
 }
 
+#define			PATTERN			\
+  "%u width, %u height, %d window style, %s window name -> %p"
+
 t_bunny_window		*bunny_start_style(unsigned int		width,
 					   unsigned int		height,
 					   t_bunny_window_style	winstyle,
@@ -27,19 +30,18 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
 
 #ifdef			__linux__
   if ((str = getenv("DISPLAY")) == NULL || str[0] != ':')
-    return (NULL);
-  /*
-  if (getenv("BUNNY_SELF_TEST") != NULL)
-    bunny_self_test();
-  */
+    scream_error_if(return (NULL), BE_UNKNOWN_DISPLAY_DEVICE, PATTERN,
+		    width, height, winstyle, window_name, (void*)NULL);
 #endif
 
   if ((win = new (std::nothrow) bunny_window) == NULL)
-    return (NULL);
+    scream_error_if(return (NULL), ENOMEM, PATTERN,
+		    width, height, winstyle, window_name, (void*)NULL);
   if ((win->window = new (std::nothrow) sf::RenderWindow) == NULL)
     {
       delete win;
-      return (NULL);
+      scream_error_if(return (NULL), ENOMEM, PATTERN,
+		      width, height, winstyle, window_name, (void*)NULL);
     }
 
   win->window_name = strdup(window_name);
@@ -68,5 +70,6 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
 	  gl_joystick[i].axis |= (sf::Joystick::hasAxis(i, (sf::Joystick::Axis)j) ? 1 : 0) << j;
       }
 
+  scream_log_if(PATTERN, width, height, winstyle, window_name, win);
   return ((t_bunny_window*)win);
 }

@@ -6,6 +6,9 @@
 #include		<stdint.h>
 #include		"lapin_private.h"
 
+#define			PATTERN		\
+  "%p picture, (%d, %d) position, %p color"
+
 void			bunny_set_pixel(t_bunny_buffer		*buffer,
 					t_bunny_position	position,
 					unsigned int		color)
@@ -31,6 +34,7 @@ void			bunny_set_pixel(t_bunny_buffer		*buffer,
 	struct bunny_window	*pic = (struct bunny_window*)buffer;
 
 	pic->window->draw(vert, 1, sf::Points);
+	scream_log_if(PATTERN, buffer, position.x, position.y, (void*)(size_t)color);
 	return ;
       }
     case TTF_TEXT:
@@ -40,6 +44,7 @@ void			bunny_set_pixel(t_bunny_buffer		*buffer,
 	struct bunny_picture	*pic = (struct bunny_picture*)buffer;
 
 	pic->texture->draw(vert, 1, sf::Points);
+	scream_log_if(PATTERN, buffer, position.x, position.y, (void*)(size_t)color);
 	return ;
       }
     case SYSTEM_RAM:
@@ -50,10 +55,11 @@ void			bunny_set_pixel(t_bunny_buffer		*buffer,
 	  fprintf(stderr, "gl_bunny_my_set_pixel is not set.\n");
 	else
 	  gl_bunny_my_set_pixel(pix, position, color);
+	scream_log_if(PATTERN, buffer, position.x, position.y, (void*)(size_t)color);
 	return ;
       }
     default:
-      return ;
+      scream_error_if(return, EINVAL, PATTERN, buffer, position.x, position.y, (void*)(size_t)color);
     }
 }
 

@@ -5,7 +5,7 @@
 
 #include		<string.h>
 #include		"deps/NetCom.hpp"
-#include		"lapin.h"
+#include		"lapin_private.h"
 
 struct			bunny_client
 {
@@ -16,6 +16,8 @@ struct			bunny_client
   uint16_t		d;
 };
 
+#define			PATTERN		"%s host, %d port, %d protocol -> %p"
+
 t_bunny_client		*bunny_new_client_opt(const char	*host,
 					      uint16_t		port,
 					      t_bunny_protocol	local)
@@ -24,9 +26,10 @@ t_bunny_client		*bunny_new_client_opt(const char	*host,
   bpt::NetCom::Client	*clt;
   std::stringstream	ss;
   bool			r;
+  int			err;
 
   if ((bclt = (struct bunny_client*)bunny_malloc(sizeof(*bclt))) == NULL)
-    return (NULL);
+    scream_error_if(return (NULL), bunny_errno, PATTERN, host, port, local, bclt);
   ss << port;
   bclt->server = false;
   try
@@ -38,23 +41,25 @@ t_bunny_client		*bunny_new_client_opt(const char	*host,
 	r = clt->Start(std::string(host), ss.str(), bpt::NetAbs::INetAccess::TCP);
       if (r == false)
 	{
+	  err = bunny_errno;
 	  bunny_free(bclt);
-	  return (NULL);
+	  scream_error_if(return (NULL), err, PATTERN, host, port, local, (void*)NULL);
 	}
     }
   catch (...)
     {
       bunny_free(bclt);
-      return (NULL);
+      scream_error_if(return (NULL), ENOMEM, PATTERN, host, port, local, (void*)NULL);
     }
   if ((bclt->c = strdup(host)) == NULL)
     {
       delete clt;
       bunny_free(bclt);
-      return (NULL);
+      scream_error_if(return (NULL), ENOMEM, PATTERN, host, port, local, (void*)NULL);   
     }
   bclt->a = (void*)clt;
   bclt->b = clt->GetFd();
   bclt->d = port;
+  scream_log_if(PATTERN, host, port, local, bclt);
   return ((t_bunny_client*)bclt);
 }

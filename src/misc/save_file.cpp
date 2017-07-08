@@ -3,23 +3,26 @@
 //
 // Lapin library
 
-#include			<fcntl.h>
-#include			"lapin_private.h"
+#include		<fcntl.h>
+#include		"lapin_private.h"
 
-bool				bunny_save_file(const char		*file,
-						const char		*data,
-						size_t			len)
+#define			PATTERN		"%s file, %p data, %zu data length -> %s"
+
+bool			bunny_save_file(const char		*file,
+					const char		*data,
+					size_t			len)
 {
-  int				fd;
+  int			fd;
 
   if ((fd = open(file, O_CREAT | O_TRUNC | O_WRONLY, 0644)) == -1)
-    return (false);
+    scream_error_if(return (false), bunny_errno, PATTERN, file, data, len, "false");
   if (write(fd, data, len) != (ssize_t)len)
     {
       close(fd);
-      return (false);
+      scream_error_if(return (false), bunny_errno, PATTERN, file, data, len, "false");
     }
   close(fd);
+  scream_log_if(PATTERN, file, data, len, "true");
   return (true);
 }
 

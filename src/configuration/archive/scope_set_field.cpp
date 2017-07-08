@@ -5,6 +5,8 @@
 
 #include		"lapin_private.h"
 
+#define			PATTERN		"%p scope, %s field, %d index, %s value"
+
 void			bunny_ini_scope_set_field(t_bunny_ini_scope		*sc,
 						  const char			*field,
 						  unsigned int			index,
@@ -17,17 +19,18 @@ void			bunny_ini_scope_set_field(t_bunny_ini_scope		*sc,
   if ((cnf = bunny_configuration_get_child(cnf, field)) == NULL)
     {
       SmallConf::create_mode = create;
-      return ;
+      scream_error_if(return, bunny_errno, PATTERN, sc, field, index, value);
     }
   if ((cnf = bunny_configuration_get_case(cnf, index)) == NULL)
     {
       SmallConf::create_mode = create;
-      return ;
+      scream_error_if(return, bunny_errno, PATTERN, sc, field, index, value);
     }
   if (value == NULL)
     bunny_delete_configuration(cnf);
   else
     bunny_configuration_set_string(cnf, value);
   SmallConf::create_mode = create;
+  scream_log_if(PATTERN, sc, field, index, value);
 }
 

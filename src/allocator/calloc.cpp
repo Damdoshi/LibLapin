@@ -13,17 +13,26 @@
 # undef			bunny_free
 #endif
 
+#define			PATTERN				"%zu nmemb, %zu size -> %p"
+
 void			*bunny_calloc(size_t		nmemb,
 				      size_t		data)
 {
-#ifdef			LAPIN_ALLOCATOR_DEACTIVATED
-  return (calloc(nmemb, data));
-#endif
   void			*ptr;
+
+#ifdef			LAPIN_ALLOCATOR_DEACTIVATED
+  if ((ptr = calloc(nmemb, data)) == NULL)
+    scream_error_if(return (NULL), errno, PATTERN, nmemb, data, ptr);
+  scream_log_if(PATTERN, nmemb, data, ptr);
+  return (ptr);
+#endif
+
   int			i;
 
   if ((ptr = bunny_malloc(i = nmemb * data)) == NULL)
-    return (NULL);
+    scream_error_if(return (NULL), errno, PATTERN, nmemb, data, ptr);
+
+  scream_log_if(PATTERN, nmemb, data, ptr);
   return (memset(ptr, 0, i));
 }
 

@@ -8,6 +8,18 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
   * Add on_entering_context and on_leaving_context response function for bunny_loop.
   * Add support for CSV files in bunny_configuration
 
+  * t_bunny_error become t_bunny_network_error in network.h
+    **Compatibility break!**
+  * LAST_ERROR become LAST_NETWORK_ERROR in network.h
+    **Compatibility break!**
+  * A new t_bunny_error type appeir and is an enumeration of errors that can be made by bunny functions. The type is in error.h.
+  * A new enumeration value LAST_ERROR appeir and is a value of t_bunny_error in error.h
+  * Every functions of the bunny library now set errno on error.
+  * Every functions of the bunny library now write error log on stderr if activated (by default)
+  * Every functions of the bunny library now write success log on stdout if activated (by default)
+
+  * Switch from a single file errors~ to a directory with errors and warnings associated to files.
+
  -- Jason Brillante <damdoshi@hotmail.com>  Tue, 01 Jun 2017 12:00:00 +0100
 
 liblapin-dev (1.11) stable; urgency=low
@@ -19,7 +31,7 @@ liblapin-dev (1.11) stable; urgency=low
   * Handle INI format
   * Handle DABSIC format
   * Add bunny_read_ini and bunny_write_ini to read and write from and to memory instead of file
-  * Add bunny_ini_field_count
+  * Add bunny_ini_count_field
   * Deprecate bunny_ini module, use bunny_configuration instead now
   * Add network related events
   * Down the screen resfresh rate if the main loop is too slow.

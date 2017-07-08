@@ -28,6 +28,48 @@ void				_real_call(const t_bunny_prototype	*function,
 					   size_t			nbr,
 					   t_bunny_value		*params);
 
+# ifdef				NO_BUNNY_ERROR_LOG
+#  define			scream_error_if(out, err, patt, ...)	\
+  do									\
+    {									\
+      bunny_errno = err;						\
+      out;								\
+    }									\
+  while (0)
+# else
+#  define			scream_error_if(out, err, patt, ...)	\
+  do									\
+    {									\
+      if (bunny_get_error_descriptor() >= 0)				\
+	dprintf(bunny_get_error_descriptor(),				\
+		"FAILURE [%016lu]\t[%16s]\t[%s]\t[" patt "].\n",	\
+		(long unsigned int)time(NULL),				\
+		__PRETTY_FUNCTION__,					\
+		strerror(err),						\
+		__VA_ARGS__);						\
+      bunny_errno = err;						\
+      out;								\
+    }									\
+  while (0)
+# endif
+
+# ifdef				NO_BUNNY_LOG
+#  define			scream_log_if(pattern, ...)		\
+  //  bunny_errno = 0;
+# else
+#  define			scream_log_if(pattern, ...)		\
+  do									\
+    {									\
+      if (bunny_get_log_descriptor() >= 0)				\
+	dprintf(bunny_get_log_descriptor(),				\
+		"LOG     [%016lu]\t[%16s]\t[" pattern "].\n",		\
+		(long unsigned int)time(NULL),				\
+		__PRETTY_FUNCTION__,					\
+		__VA_ARGS__);						\
+      bunny_errno = 0;							\
+    }									\
+  while (0)
+# endif
 
 #endif	/*			__LAPIN_PRIVATE_MISC_H__		*/
 

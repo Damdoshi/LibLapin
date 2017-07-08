@@ -69,7 +69,7 @@ static t_bunny_response	loop(void		*data)
   bunny_blit(&win->buffer, bunny, &mid);
   bunny_blit(&win->buffer, pic[1], &pos);
   bunny_display(win);
-  bunny_set_mouse_position_window(win, win->buffer.width / 2, win->buffer.height / 2);
+  //bunny_set_mouse_position_window(win, win->buffer.width / 2, win->buffer.height / 2);
   return (GO_ON);
 }
 

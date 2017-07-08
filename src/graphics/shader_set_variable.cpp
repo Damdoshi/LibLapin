@@ -109,4 +109,5 @@ void			bunny_shader_set_variable(t_bunny_shader	*_shader,
   else
     func[type - 2](shader, varname, 1, &va);
   va_end(va);
+  scream_log_if("%p shader, %s variable_name, %d type, ...", _shader, varname, type);
 }

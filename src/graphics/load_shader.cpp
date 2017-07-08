@@ -5,6 +5,8 @@
 
 #include		"lapin_private.h"
 
+#define			PATTERN		"%p shader, %s vertex_file, %s fragment_file -> %s"
+
 bool			bunny_load_shader(t_bunny_shader		*_shader,
 					  const char			*vertex,
 					  const char			*fragment)
@@ -12,9 +14,18 @@ bool			bunny_load_shader(t_bunny_shader		*_shader,
   sf::Shader		*shader = (sf::Shader*)_shader;
 
   if (fragment == NULL)
-    return (false);
+    scream_error_if(return (false), EINVAL, PATTERN, shader, vertex, fragment, "false");
   if (vertex == NULL)
-    return (shader->loadFromFile(fragment, sf::Shader::Fragment));
-  return (shader->loadFromFile(vertex, fragment));
+    {
+      if (shader->loadFromFile(fragment, sf::Shader::Fragment) == false)
+	scream_error_if(return (false), BE_SYNTAX_ERROR, PATTERN, shader, vertex, fragment, "false");
+      scream_log_if(PATTERN, shader, vertex, fragment, "true");
+      return (true);
+    }
+
+  if (shader->loadFromFile(vertex, fragment) == false)
+    scream_error_if(return (false), BE_SYNTAX_ERROR, PATTERN, shader, vertex, fragment, "false");
+  scream_log_if(PATTERN, shader, vertex, fragment, "true");
+  return (true);
 }
 

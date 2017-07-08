@@ -5,6 +5,8 @@
 
 #include		"lapin_private.h"
 
+#define			PATTERN		"%p picture, %p color"
+
 void			bunny_fill(t_bunny_buffer		*picture,
 				   unsigned int			_color)
 {
@@ -27,6 +29,7 @@ void			bunny_fill(t_bunny_buffer		*picture,
 	sh.setSize(sf::Vector2f(win->width, win->height));
 	sh.setPosition(0, 0);
 	win->window->draw(sh);
+	scream_log_if(PATTERN, picture, (void*)(size_t)_color);
 	return ;
       }
     case TTF_TEXT:
@@ -39,9 +42,10 @@ void			bunny_fill(t_bunny_buffer		*picture,
 	sh.setSize(sf::Vector2f(rect.width, rect.height));
 	sh.setPosition(rect.left, rect.top);
 	pic->texture->draw(sh);
+	scream_log_if(PATTERN, picture, (void*)(size_t)_color);
 	return ;
       }
-    default:
+    case SYSTEM_RAM:
       {
 	t_bunny_pixelarray	*pix = (t_bunny_pixelarray*)picture;
 
@@ -49,7 +53,11 @@ void			bunny_fill(t_bunny_buffer		*picture,
 	  fprintf(stderr, "gl_bunny_my_fill is not set.\n");
 	else
 	  gl_bunny_my_fill(pix, _color);
+       	scream_log_if(PATTERN, picture, (void*)(size_t)_color);
 	return ;
       }
+    default:
+      scream_error_if(return, EINVAL, PATTERN, picture, (void*)(size_t)_color);
     }
 }
+

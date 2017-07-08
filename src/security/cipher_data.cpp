@@ -10,6 +10,7 @@ void				bunny_cipher_data(void				*cnt,
 						  t_bunny_ciphering		cip,
 						  const t_bunny_cipher_key	*key)
 {
+  scream_log_if("%p data, %zu data length, %d ciphering algorithm, %p key", cnt, len, cip, key);
   switch (cip)
     {
     case BS_XOR:

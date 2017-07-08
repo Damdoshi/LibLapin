@@ -7,6 +7,8 @@
 #include		<unistd.h>
 #include		"lapin_private.h"
 
+#define			PATTERN		"%s file, %p target for data, %p target for data size -> %zd"
+
 ssize_t			bunny_load_file(const char		*file,
 					char			**data,
 					size_t			*size)
@@ -16,7 +18,7 @@ ssize_t			bunny_load_file(const char		*file,
   int			sk, sz;
 
   if ((fd = open(file, O_RDONLY)) == -1)
-    return (-1);
+    scream_error_if(return (-1), bunny_errno, PATTERN, file, data, size, (ssize_t)-1);
   if ((sk = lseek(fd, 0, SEEK_END)) == -1)
     goto close_and_quit;
   lseek(fd, 0, SEEK_SET);
@@ -32,12 +34,16 @@ ssize_t			bunny_load_file(const char		*file,
   if (size)
     *size = sk;
   *data = buf;
+  scream_log_if(PATTERN, file, data, size, (ssize_t)sk);
   return (sk);
 
  free_close_and_quit:
+  sk = bunny_errno;
   bunny_free(data);
+  bunny_errno = sk;
  close_and_quit:
   close(fd);
+  scream_error_if(return (-1), bunny_errno, PATTERN, file, data, size, (ssize_t)-1);
   return (-1);
 }
 

@@ -5,6 +5,8 @@
 
 #include		"lapin_private.h"
 
+#define			PATTERN		"%u width, %u height -> %p"
+
 t_bunny_picture		*bunny_new_picture(unsigned int		width,
 					   unsigned int		height)
 {
@@ -41,8 +43,7 @@ t_bunny_picture		*bunny_new_picture(unsigned int		width,
   pic->rotation = 0;
   pic->color_mask.full = WHITE;
 
-  BUNNY_LOG(fprintf(stderr, "%s: Returning %p.\n", __PRETTY_FUNCTION__, pic));
-
+  scream_log_if(PATTERN, width, height, pic);
   return ((t_bunny_picture*)pic);
 
  FailSprite:
@@ -50,5 +51,6 @@ t_bunny_picture		*bunny_new_picture(unsigned int		width,
  FailStruct:
   delete pic;
  Fail:
+  scream_error_if(return (NULL), ENOMEM, PATTERN, width, height, (void*)NULL);
   return (NULL);
 }

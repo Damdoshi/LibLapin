@@ -24,12 +24,11 @@ t_bunny_configuration	*_bunny_read_csv(const char			*code,
       if (code[i])
 	{
 	  if (readvalue(code, i, conf[y][x], ";\n") == false)
-	    {
-	      dprintf(bunny_get_error_descriptor(),
-		      "CSV: A correct value was expected on line %d, column %d.\n",
-		      y, x);
-	      return (NULL);
-	    }
+	    scream_error_if
+	      (return (NULL), BE_SYNTAX_ERROR,
+	       "%s code, %p config -> %p "
+	       "(A correct value was expected on line %d, column %d)",
+	       code, config, (void*)NULL, y, x);
 	  skipspace_inline(code, i);
 	  if (readtext(code, i, "\n"))
 	    {
@@ -41,6 +40,7 @@ t_bunny_configuration	*_bunny_read_csv(const char			*code,
 	}
     }
   SmallConf::create_mode = cmode;
+  scream_log_if("%s code, %p config -> %p", code, config, config);
   return (config);
 }
 

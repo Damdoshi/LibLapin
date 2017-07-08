@@ -12,7 +12,11 @@ t_bunny_ciphering	bunny_get_ciphering(const char		*name)
 
   for (i = 0; i < BS_CUSTOM; ++i)
     if (strcmp(name, gl_bunny_ciphering_table[i]) == 0)
-      return ((t_bunny_ciphering)i);
+      {
+	scream_log_if("%s -> %zu", name, i);
+	return ((t_bunny_ciphering)i);
+      }
+  scream_log_if("%s -> %d", name, BS_CUSTOM);
   return (BS_CUSTOM);
 }
 

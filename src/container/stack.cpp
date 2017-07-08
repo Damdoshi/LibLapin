@@ -30,8 +30,11 @@ size_t			bunny_delete_stack(t_bunny_stack	*stack)
       nod = prv;
     }
   bunny_free(stack);
+  scream_log_if("%p -> %zu", stack, siz);
   return (siz);
 }
+
+#define			PATTERN		"%p stack, %p data -> %s"
 
 bool			_bunny_stack_push(t_bunny_stack		*_stack,
 					  const void		*data)
@@ -41,13 +44,17 @@ bool			_bunny_stack_push(t_bunny_stack		*_stack,
   size_t		*i = &stack->length;
 
   if (nod == NULL)
-    return (false);
+    scream_error_if(return (false), bunny_errno, PATTERN, stack, data, "false");
   nod->data = (void*)data;
   nod->next = stack->top;
   stack->top = nod;
   *i += 1;
+  scream_log_if(PATTERN, stack, data, "true");
   return (true);
 }
+
+#undef			PATTERN
+#define			PATTERN		"%p -> %p"
 
 void			*_bunny_stack_pop(t_bunny_stack		*_stack)
 {
@@ -57,11 +64,12 @@ void			*_bunny_stack_pop(t_bunny_stack		*_stack)
   size_t		*i = &stack->length;
 
   if ((nod = stack->top) == NULL)
-    return (NULL);
+    scream_error_if(return (NULL), BE_CONTAINER_IS_EMPTY, PATTERN, stack, nod);
   stack->top = nod->next;
   dat = nod->data;
   bunny_free(nod);
   *i -= 1;
+  scream_log_if(PATTERN, stack, dat);
   return (dat);
 }
 

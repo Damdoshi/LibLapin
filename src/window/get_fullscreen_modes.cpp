@@ -13,6 +13,7 @@ const t_bunny_position			*bunny_get_fullscreen_modes(void)
     <sf::VideoMode>::const_iterator	it;
   size_t				i;
 
+  scream_log_if("-> %p", &array[0]);
   if (array[0].x != 0)
     return (&array[0]);
 

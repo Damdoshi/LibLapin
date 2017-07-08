@@ -6,6 +6,8 @@
 #include		<string.h>
 #include		"lapin_private.h"
 
+#define			PATTERN		"%s -> %p"
+
 t_bunny_effect		*bunny_load_effect(const char		*file)
 {
   struct bunny_effect	*eff;
@@ -28,12 +30,12 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
   eff->sound.setBuffer(eff->effect);
   eff->type = EFFECT;
 
-  BUNNY_LOG(fprintf(stderr, "%s: Returning %p.\n", __PRETTY_FUNCTION__, eff));
-  
+  scream_log_if(PATTERN, file, eff);
   return ((t_bunny_effect*)eff);
 
  FailStruct:
   delete eff;
  Fail:
+  scream_error_if(return (NULL), bunny_errno, PATTERN, file, (void*)NULL);
   return (NULL);
 }

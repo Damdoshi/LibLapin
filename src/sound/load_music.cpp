@@ -6,6 +6,8 @@
 #include		<string.h>
 #include		"lapin_private.h"
 
+#define			PATTERN		"%s -> %p"
+
 t_bunny_music		*bunny_load_music(const char		*file)
 {
   struct bunny_music	*mus;
@@ -19,12 +21,12 @@ t_bunny_music		*bunny_load_music(const char		*file)
   mus->type = MUSIC;
   mus->duration = mus->music.getDuration().asSeconds();
 
-  BUNNY_LOG(fprintf(stderr, "%s: Returning %p.\n", __PRETTY_FUNCTION__, mus));
-  
+  scream_log_if(PATTERN, file, mus);
   return ((t_bunny_music*)mus);
 
  FailStruct:
   delete mus;
  Fail:
+  scream_error_if(return (NULL), bunny_errno, PATTERN, file, (void*)NULL);
   return (NULL);
 }

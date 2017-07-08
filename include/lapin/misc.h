@@ -18,24 +18,9 @@
 # include			<unistd.h>
 # define			LITTERAL(fd, str)			write((fd), str "\n", sizeof(str "\n"))
 
-# ifdef				BUNNY_DEBUG
-#  undef			BUNNY_DEBUG
-#  define			BUNNY_DEBUG(code)			code
-# else
-#  define			BUNNY_DEBUG(code)
-# endif
-# ifdef				BUNNY_LOG
-#  undef			BUNNY_LOG
-#  define			BUNNY_LOG(code)				code
-# else
-#  define			BUNNY_LOG(code)
-# endif
-
 # define			__TOSTRING(a)				#a
 # define			STRINGIFY(a)				__TOSTRING(a)
 # define			NBRCELL(array)				(sizeof(array) / sizeof(array[0]))
-
-# include			<errno.h>
 
 /*!
 ** Write a litteral string (defined in code, with two double quotes) on stdout.
@@ -48,34 +33,6 @@
 ** \param str The string litteral to write
 */
 # define			bunny_printlerr(str)			LITTERAL(2,  str)
-
-/*!
-** The last error that occurs.
-*/
-# define			bunny_errno				errno
-
-/*!
-** Return a string that contains the description of the sent error number in
-** an human readable fashion. Works the same way as strerror(3).
-**
-** /!\ This function is not implemented yet
-**
-** \param An error number
-*/
-const char			*bunny_strerror(int			errorcode);
-
-/*!
-** Print the sent string followed by ": " if the string is not NULL and if the
-** first byte is not '\0', followed by the last error description.
-** Works the same way as perror(3)
-**
-** /!\ This function is not implemented yet
-**
-** \param A prefix to write before the error description. __FUNC__ or
-** __PRETTY_FUNCTION__ may be a good idea, or the concatenation of __FILE__ and
-** __LINE__... Or the name of the function that provokes the error.
-*/
-void				bunny_perror(const char			*str);
 
 /*!
 ** Load an entire file.
@@ -189,21 +146,6 @@ void				bunny_swap(void				**a,
 void				bunny_smooth_move(const t_bunny_position *target,
 						  t_bunny_position	*current,
 						  double		speed);
-
-/*!
-** Set the file descriptor used for error logging.
-** This file descriptor can be negative to disable error logging.
-** \param fd The file descriptor for error logging
-*/
-void				bunny_set_error_descriptor(int		fd);
-
-/*!
-** Get the file descriptor used to log errors.
-** This file descriptor can be negative: no logs are printed.
-** \return The file descriptor used for error logs.
-*/
-int				bunny_get_error_descriptor(void);
-
 
 /*
 ** Self evaluation.

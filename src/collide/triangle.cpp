@@ -5,8 +5,10 @@
 
 #include		"lapin_private.h"
 
-static double		 _scalar(const t_bunny_accurate_position			*a,
-				 const t_bunny_accurate_position			*b)
+#define			PATTERN			"%p quad, %p dot -> %s"
+
+static double		_scalar(const t_bunny_accurate_position			*a,
+				const t_bunny_accurate_position			*b)
 {
   return (a->x * b->x + a->y * b->y);
 }
@@ -20,7 +22,8 @@ bool			bunny_triangle_collision_dot(const t_bunny_vertex_array		*v3,
   double		u, v;
 
   if (v3->length != 3)
-    return (false);
+    scream_error_if(return (false), EINVAL, PATTERN, v3, dot, "false");
+
   vec[0].x = v3->vertex[2].pos.x - v3->vertex[0].pos.x;
   vec[0].y = v3->vertex[2].pos.y - v3->vertex[0].pos.y;
 
@@ -40,6 +43,12 @@ bool			bunny_triangle_collision_dot(const t_bunny_vertex_array		*v3,
   u = (scalar[3] * scalar[2] - scalar[1] * scalar[4]) * inv;
   v = (scalar[0] * scalar[4] - scalar[1] * scalar[2]) * inv;
 
-  return ((u >= 0) && (v >= 0) && (u + v < 1));
+  if ((u >= 0) && (v >= 0) && (u + v < 1))
+    {
+      scream_log_if(PATTERN, v3, dot, "true");
+      return (true);
+    }
+  scream_log_if(PATTERN, v3, dot, "false");
+  return (false);
 }
 

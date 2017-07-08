@@ -24,6 +24,10 @@ typedef enum			e_bunny_hash
   {
     BH_MULTIPLIER,
     BH_FNV,
+    BH_FNV_A,
+    BH_DJB2,
+    BH_SDBM,
+    BH_LOSELOSE,		// CHECKSUM
     BH_CUSTOM
   }				t_bunny_hash;
 

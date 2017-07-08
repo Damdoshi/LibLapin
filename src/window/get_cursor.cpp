@@ -8,6 +8,9 @@
 double			bunny_music_get_cursor(t_bunny_music		*music)
 {
   struct bunny_music	*mus = (struct bunny_music*)music;
+  double		f;
 
-  return (mus->music.getPlayingOffset().asSeconds());
+  f = (mus->music.getPlayingOffset().asSeconds());
+  scream_log_if("%p -> %f", music, f);
+  return (f);
 }

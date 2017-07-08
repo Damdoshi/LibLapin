@@ -3,16 +3,24 @@
 //
 // Bibliothèque Lapin
 
-#include		"lapin_private.h"
+#include	"lapin_private.h"
 
-bool			bunny_circle_collision_dot(const t_bunny_accurate_position	*a,
-						   const t_bunny_accurate_position	*b,
-						   double				r)
+#define		PATTERN		"%p a, %p b, %f radius -> %s"
+
+bool		bunny_circle_collision_dot(const t_bunny_accurate_position	*a,
+					   const t_bunny_accurate_position	*b,
+					   double				r)
 {
-  double		va, vb;
+  double	va, vb;
 
   va = b->x - a->x;
   vb = b->y - a->y;
-  return (va * va + vb * vb < r * r);
+  if (va * va + vb * vb < r * r)
+    {
+      scream_log_if(PATTERN, a, b, r, "true");
+      return (true);
+    }
+  scream_log_if(PATTERN, a, b, r, "false");
+  return (false);
 }
 

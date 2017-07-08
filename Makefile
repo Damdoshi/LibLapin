@@ -41,8 +41,7 @@
 
   RM		=	rm -f
   ECHO		=	/bin/echo -e
-  LOGFILE	=	errors~
-  ERRLOG	=	2>> $(LOGFILE)
+  LOGDIR	=	errors/
 
   HEADER	=	-I./include						\
 			-I./include/deps/					\
@@ -67,14 +66,17 @@
 
 all:			erase $(NAME)
 $(NAME):		title $(OBJ)
-			@$(LINKER) $(NAME) $(OBJ) $(ERRLOG) &&			\
+			@$(LINKER) $(NAME) $(OBJ) 2>> $(LOGDIR)/$(NAME) &&	\
 			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $(NAME) $(DEFAULT) ||	\
 			 $(ECHO) $(RED)  "[KO]" $(NAME) $(DEFAULT)
+			@find $(LOGDIR)/$(NAME) -size 0 -delete || true
 .cpp.o:
+			@$(eval TRACE="$(addprefix $(LOGDIR), $(subst /,-, $<))")
 			@$(COMPILER) -c $< -o $@ $(DEBUG) $(OPTIM) $(CONFIG)	\
-			 $(HEADER) $(ERRLOG) &&					\
+			 $(HEADER) 2>> $(TRACE) &&				\
 			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $< $(DEFAULT) ||	\
 			 $(ECHO) $(RED)  "[KO]" $< $(DEFAULT)
+			@find $(TRACE) -size 0 -delete || true
 
 #################################################################################
 ## Misc                                                                        ##
@@ -82,14 +84,15 @@ $(NAME):		title $(OBJ)
 
 title:
 			@$(ECHO) $(TEAL) $(TITLE) $(DEFAULT)
+			@mkdir -p $(LOGDIR)
 clean:
 			@$(RM) $(OBJ) &&					\
 			 $(ECHO) $(GREEN) "Object file deleted" $(DEFAULT) ||	\
 			 $(ECHO) $(RED) "Error in clean rule!" $(DEFAULT)
-fclean:			clean
+fclean:			clean erase
 			@$(RM) $(NAME) &&					\
 			 $(ECHO) $(GREEN) "Program deleted!" $(DEFAULT) ||	\
 			 $(ECHO) $(RED) "Error in fclean rule!" $(DEFAULT)
 re:			fclean all
 erase:
-			@$(RM) $(LOGFILE)
+			@$(RM) -r $(LOGDIR)/*.*

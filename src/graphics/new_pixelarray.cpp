@@ -5,6 +5,8 @@
 
 #include			"lapin_private.h"
 
+#define				PATTERN		"%u width, %u height -> %p"
+
 static t_bunny_pixelarray	*bunny_fake_pixelarray(unsigned int		width,
 						       unsigned int		height)
 {
@@ -39,13 +41,14 @@ static t_bunny_pixelarray	*bunny_fake_pixelarray(unsigned int		width,
   pa->clipable.rotation = 0;
   pa->clipable.color_mask.full = WHITE;
 
-  BUNNY_LOG(fprintf(stderr, "%s: Returning %p.\n", __PRETTY_FUNCTION__, pa));
+  scream_log_if(PATTERN, width, height, pa);
 
   return (pa);
 
  FailStruct:
   free(ptr);
  Fail:
+  scream_error_if(return (NULL), ENOMEM, PATTERN, width, height, (void*)NULL);
   return (NULL);
 }
 
@@ -57,6 +60,7 @@ t_bunny_pixelarray		*bunny_new_pixelarray(unsigned int		width,
 
   if (getenv("TECHNOCORE") != NULL)
     return (bunny_fake_pixelarray(width, height));
+
   if ((pa = new (std::nothrow) struct bunny_pixelarray) == NULL)
     goto Fail;
   if ((pa->rawpixels = (unsigned int*)bunny_malloc(width * height * sizeof(*pa->rawpixels))) == NULL)
@@ -83,12 +87,12 @@ t_bunny_pixelarray		*bunny_new_pixelarray(unsigned int		width,
   pa->rotation = 0;
   pa->color_mask.full = WHITE;
 
-  BUNNY_LOG(fprintf(stderr, "%s: Returning %p.\n", __PRETTY_FUNCTION__, pa));
-
+  scream_log_if(PATTERN, width, height, pa);
   return ((t_bunny_pixelarray*)pa);
 
  FailStruct:
   delete pa;
  Fail:
+  scream_error_if(return (NULL), ENOMEM, PATTERN, width, height, (void*)NULL);
   return (NULL);
 }

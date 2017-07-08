@@ -5,6 +5,8 @@
 
 #include		"lapin_private.h"
 
+#define			PATTERN		"%s file -> %p"
+
 t_bunny_picture		*bunny_load_picture(const char	*file)
 {
   struct bunny_picture	*pic;
@@ -50,8 +52,7 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
   pic->rotation = 0;
   pic->color_mask.full = WHITE;
 
-  BUNNY_LOG(fprintf(stderr, "%s: Returning %p.\n", __PRETTY_FUNCTION__, pic));
-
+  scream_log_if(PATTERN, file, pic);
   return ((t_bunny_picture*)pic);
 
  FailSprite:
@@ -59,5 +60,6 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
  FailStruct:
   delete pic;
  Fail:
+  scream_error_if(return (NULL), ENOMEM, PATTERN, file, (void*)NULL);
   return (NULL);
 }

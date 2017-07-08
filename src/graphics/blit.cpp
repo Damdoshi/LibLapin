@@ -5,6 +5,9 @@
 
 #include			"lapin_private.h"
 
+#define				PATTERN				\
+  "%p target, %p source, %p position (%d, %d), %p shader"
+
 void				bunny_blit(t_bunny_buffer		*output,
 					   const t_bunny_clipable	*picture,
 					   const t_bunny_position	*pos)
@@ -43,6 +46,8 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	*input_type = GRAPHIC_RAM;
 	bunny_blit_shader(output, picture, pos, _shader);
 	*input_type = typ;
+	scream_log_if
+	  (PATTERN, output, picture, pos, pos->x, pos->y, _shader);
 	return ;
       }
     case GRAPHIC_RAM:
@@ -116,7 +121,8 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	break ;
       }
     default:
-      return ;
+      scream_error_if
+	(return, EINVAL, PATTERN, output, picture, pos, pos->x, pos->y, _shader);
     }
       
   switch (*type)
@@ -136,6 +142,8 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	  out->window->draw(*spr, sf::RenderStates(sf::BlendNone));
 	else
 	  out->window->draw(*spr);
+	scream_log_if
+	  (PATTERN, output, picture, pos, pos->x, pos->y, _shader);
 	return ;
       }
     case TTF_TEXT:
@@ -155,6 +163,8 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	  out->texture->draw(*spr, sf::RenderStates(sf::BlendNone));
 	else
 	  out->texture->draw(*spr);
+	scream_log_if
+	  (PATTERN, output, picture, pos, pos->x, pos->y, _shader);
 	return ;
       }
     case SYSTEM_RAM:
@@ -201,10 +211,13 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 		    }
 		}
 	  }
+	scream_log_if
+	  (PATTERN, output, picture, pos, pos->x, pos->y, _shader);
 	return ;
       }
     default:
-      return ;
+      scream_error_if
+	(return, EINVAL, PATTERN, output, picture, pos, pos->x, pos->y, _shader);
     }
 }
 

@@ -24,6 +24,7 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
 
 	delete pic->texture;
 	delete pic;
+	scream_log_if("%p", clip);
 	return ;
       }
     case SYSTEM_RAM:
@@ -33,10 +34,12 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
 	if (getenv("TECHNOCORE") != NULL)
 	  {
 	    bunny_delete_fake((t_bunny_pixelarray*)clip);
+	    scream_log_if("%p", clip);
 	    return ;
 	  }
 	bunny_free(pic->rawpixels);
 	delete pic;
+	scream_log_if("%p", clip);
 	return ;
       }
     case TTF_TEXT:
@@ -45,6 +48,7 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
 
 	delete ttf->texture;
 	delete ttf;
+	scream_log_if("%p", clip);
 	return ;
       }
     case GRAPHIC_TEXT:
@@ -54,9 +58,10 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
 	bunny_delete_clipable(gfx->gfx);
 	delete gfx->texture;
 	delete gfx;
+	scream_log_if("%p", clip);
 	return ;
       }
     default:
-      return ;
+      scream_error_if(return, EINVAL, "%p", clip);
     }
 }

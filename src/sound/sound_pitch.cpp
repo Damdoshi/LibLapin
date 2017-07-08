@@ -17,4 +17,6 @@ void			bunny_sound_pitch(t_bunny_sound		*sound,
     ((struct bunny_music*)sound)->music.setPitch(pit);
   else
     ((struct bunny_effect*)sound)->sound.setPitch(pit);
+  scream_log_if("%p sound, %f pit", sound, pit);
 }
+

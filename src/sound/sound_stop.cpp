@@ -18,5 +18,6 @@ void			bunny_sound_stop(t_bunny_sound		*sound)
     }
   else
     ((struct bunny_effect*)sound)->sound.stop();
+  scream_log_if("%p", sound);
 }
 

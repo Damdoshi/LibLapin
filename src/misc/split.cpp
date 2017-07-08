@@ -48,6 +48,8 @@ static size_t		test_token(const char				*str,
   return (0);
 }
 
+#define			PATTERN		"%s string, %p tokens, %s agreg -> %p"
+
 const char * const	*bunny_split(const char				*str,
 				     const char				**tokens,
 				     bool				agreg)
@@ -60,7 +62,7 @@ const char * const	*bunny_split(const char				*str,
   void			*ret;
 
   if (precom_tokens(tokens, &tok[0], sizeof(tok) / sizeof(tok[0])) == false)
-    return (NULL);
+    scream_error_if(return (NULL), ENOMEM, PATTERN " (Too many parts)", str, tokens, agreg ? "true" : "false", (void*)NULL);
 
   i = 0;
   cur = 0;
@@ -89,11 +91,16 @@ const char * const	*bunny_split(const char				*str,
   buf[cur] = NULL;
   if ((ret = bunny_memdup(&buf[0], (cur + 1) * sizeof(buf[0]))) == NULL)
     goto clean;
+
+  scream_log_if(PATTERN, str, tokens, agreg ? "true" : "false", ret);
   return ((char**)ret);
 
  clean:
+  tmp = bunny_errno;
   while (--cur >= 0)
     bunny_free(buf[cur]);
+  bunny_errno = tmp;
+  scream_error_if(return (NULL), bunny_errno, PATTERN, str, tokens, agreg ? "true" : "false", (void*)NULL);
   return (NULL);
 }
 
@@ -104,5 +111,6 @@ void			bunny_delete_split(const char * const		*tab)
   for (i = 0; tab[i]; ++i)
     bunny_free((void*)tab[i]);
   bunny_free((void*)tab);
+  scream_log_if("%p", tab);
 }
 

@@ -17,6 +17,8 @@ static void		to_neg(int				*ptr,
     ptr[i] = -1;
 }
 
+#define			PATTERN		"%p subprocess, %p environment, %zu nbr_parameters, ... -> %d"
+
 int			bunny_popen(t_bunny_subprocess		*subproc,
 				    char			**env,
 				    size_t			nbr,
@@ -94,6 +96,7 @@ int			bunny_popen(t_bunny_subprocess		*subproc,
     close(pip[6][1]);
 
   subproc->pid = pid;
+  scream_log_if(PATTERN, subproc, env, nbr, pid);
   return (pid);
 
  closepipes:
@@ -103,6 +106,7 @@ int			bunny_popen(t_bunny_subprocess		*subproc,
 	close(pip[i][0]);
 	close(pip[i][1]);
       }
+  scream_error_if(return (-1), errno, PATTERN, subproc, env, nbr, -1);
   return (-1);
 }
 

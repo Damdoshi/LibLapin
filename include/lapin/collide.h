@@ -32,8 +32,8 @@ bool				bunny_circle_collision_dot(const t_bunny_accurate_position	*elem,
 ** \param dot The dot that may collide
 ** \return True if it collides
 */
-bool				bunny_retangular_collision_dot(const t_bunny_accurate_area	*elem,
-							       const t_bunny_accurate_position	*dot);
+bool				bunny_rectangular_collision_dot(const t_bunny_accurate_area	*elem,
+								const t_bunny_accurate_position	*dot);
 
 /*!
 ** Return true if a and b rectangle collides.

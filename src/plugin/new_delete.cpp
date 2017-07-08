@@ -6,19 +6,27 @@
 #include			<dlfcn.h>
 #include			"lapin_private.h"
 
+#define				PATTERN		"%s library file -> %p"
+
 t_bunny_plugin			*bunny_new_plugin(const char			*libfile)
 {
+  const char			*last_param = "";
   t_bunny_buttplug		*plug;
   t_bunny_get_function_list	func;
   const t_bunny_prototype	*list;
   void				*handler;
   size_t			nbrfunc;
+  int				err;
 
   // Load lib and get function list
   if ((handler = dlopen(libfile, RTLD_NOW)) == NULL)
-    return (NULL);
+    scream_error_if(return (NULL), EINVAL, PATTERN, libfile, handler);
+
   if ((func = (t_bunny_get_function_list)dlsym(handler, "__get_function_list")) == NULL)
-    goto closelib;
+    {
+      bunny_errno = EINVAL;
+      goto closelib;
+    }
   list = func();
 
   // Allocate space for function array
@@ -46,18 +54,23 @@ t_bunny_plugin			*bunny_new_plugin(const char			*libfile)
       memcpy(&proto->parameters[0], &list[nbrfunc].parameters[0], sizeof(proto->parameters));
     }
 
+  scream_log_if(PATTERN, libfile, plug);
   return ((t_bunny_plugin*)plug);
 
  unsupported_format:
-  dprintf(bunny_get_error_descriptor(),
-	  "Function %s have an unsupported format.",
-	  list[nbrfunc].name);
+  last_param = list[nbrfunc].name;
  freename:
   free(plug->name);
  freeplug:
+  err = bunny_errno;
   bunny_free(plug);
+  bunny_errno = err;
  closelib:
   dlclose(handler);
+  if (last_param)
+    scream_error_if(return (NULL), bunny_errno, PATTERN " (Function %s have an unsupported format)", libfile, (void*)NULL, last_param);
+  else
+    scream_error_if(return (NULL), bunny_errno, PATTERN, libfile, (void*)NULL);
   return (NULL);
 }
 
@@ -66,6 +79,7 @@ void				bunny_delete_plugin(t_bunny_plugin	*plugin)
   free((void*)plugin->name);
   dlclose((void*)plugin->library_handler);
   bunny_free(plugin);
+  scream_log_if("%p", plugin);
 }
 
 
