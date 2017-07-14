@@ -20,7 +20,7 @@ bool			bunny_save_pixelarray(const t_bunny_pixelarray	*pix,
       {
 	unsigned int	c = pic->rawpixels[i + j * pic->width];
 
-	pic->image.setPixel
+	pic->image->setPixel
 	  (i, j,
 	   sf::Color
 	   ((c >> (RED_CMP * 8)) & 0xFF,
@@ -30,7 +30,7 @@ bool			bunny_save_pixelarray(const t_bunny_pixelarray	*pix,
 	    )
 	   );
       }
-  if (pic->image.saveToFile(file) == false)
+  if (pic->image->saveToFile(file) == false)
     scream_error_if(return (false), errno, PATTERN, pix, file, "false");
   scream_log_if(PATTERN, pix, file, "true");
   return (true);

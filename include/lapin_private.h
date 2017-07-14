@@ -22,5 +22,6 @@
 # include			"private/asynclock.h"
 # include			"private/plugin.h"
 # include			"private/misc.h"
+# include			"private/manager.h"
 
 #endif	/*			__LAPIN_PRIVATE_H__	*/

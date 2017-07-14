@@ -33,6 +33,9 @@ void			bunny_clear(t_bunny_buffer		*picture,
     case GRAPHIC_RAM:
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)picture;
+
+	if (pic->res_id != 0)
+	  bunny_make_clipable_unique((t_bunny_clipable*)pic);
 	if (pic->rect.x == 0 && pic->rect.y == 0 &&
 	    pic->rect.w == picture->width && pic->rect.h == picture->height)
 	  {
@@ -53,12 +56,16 @@ void			bunny_clear(t_bunny_buffer		*picture,
       }
     case SYSTEM_RAM:
       {
-	t_bunny_pixelarray	*pix = (t_bunny_pixelarray*)picture;
+	struct bunny_pixelarray	*pix = (struct bunny_pixelarray*)picture;
 
 	if (gl_bunny_my_clear == NULL)
 	  fprintf(stderr, "gl_bunny_my_set_clear is not set.\n");
 	else
-	  gl_bunny_my_clear(pix, _color);
+	  {
+	    if (pix->res_id != 0)
+	      bunny_make_clipable_unique((t_bunny_clipable*)pix);
+	    gl_bunny_my_clear((t_bunny_pixelarray*)pix, _color);
+	  }
 	scream_log_if(PATTERN, picture, (void*)(size_t)_color);
 	return ;
       }

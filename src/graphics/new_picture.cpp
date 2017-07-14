@@ -43,6 +43,8 @@ t_bunny_picture		*bunny_new_picture(unsigned int		width,
   pic->rotation = 0;
   pic->color_mask.full = WHITE;
 
+  pic->res_id = 0;
+
   scream_log_if(PATTERN, width, height, pic);
   return ((t_bunny_picture*)pic);
 

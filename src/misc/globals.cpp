@@ -6,6 +6,8 @@
 #include			<limits.h>
 #include			"lapin_private.h"
 
+ResManager			RessourceManager;
+
 t_bunny_my_set_pixel		gl_bunny_my_set_pixel = NULL;
 t_bunny_my_set_line		gl_bunny_my_set_line = NULL;
 t_bunny_my_set_circle		gl_bunny_my_set_circle = NULL;

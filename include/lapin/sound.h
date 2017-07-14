@@ -183,5 +183,24 @@ double				bunny_music_get_cursor(t_bunny_music		*music);
 */
 void				bunny_delete_sound(t_bunny_sound		*sound);
 
+/*!
+** The effect loading function use a ressource manager to avoid loading several
+** times the same file. This means behind every t_bunny_effect you will create
+** throught bunny_load_effect, there is only one single true load.
+** This mean that modifying a single effect would modify every effects that was
+** loaded throught the same file.
+**
+** To avoid this behaviour if that what you want, you can use this function that
+** will turn unique the sent effect and contains modification to itself.
+** Calling this function on an already unique effect does not make anything.
+**
+** This function is the effect equivalent of bunny_make_clipable_unique in graphics.
+**
+** \param clipable The clipable that will be turned unique
+** \return True if everything went well. If the clipable was already unique,
+** everything went well.
+*/
+bool				bunny_make_effect_unique(t_bunny_effect		*eff);
+
 #endif	/*			__LAPIN_SOUND_H__	*/
 

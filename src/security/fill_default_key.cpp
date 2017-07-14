@@ -25,7 +25,7 @@ bool				bunny_fill_default_key(const char	*bunny_prog,
   else
     def = key;
   buflen = def->length + sizeof(def->length);
-  if (bunny_load_file(bunny_prog, &file, &siz) == false)
+  if (bunny_load_file(bunny_prog, (void**)&file, &siz) == false)
     scream_error_if(return (false), bunny_errno, PATTERN, bunny_prog, key, "false");
   for (i = 0; i < siz - buflen; ++i)
     if (memcmp(file, def, buflen) == 0)

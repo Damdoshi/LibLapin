@@ -5,7 +5,7 @@
 
 #include		"lapin_private.h"
 
-static int		log_descriptor = STDOUT_FILENO;
+static int		log_descriptor = -1;
 
 void			bunny_set_log_descriptor(int	fd)
 {

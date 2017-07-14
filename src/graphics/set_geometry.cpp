@@ -73,6 +73,8 @@ void				bunny_set_geometry(t_bunny_buffer		*buffer,
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)buffer;
 
+	if (pic->res_id != 0)
+	  bunny_make_clipable_unique((t_bunny_clipable*)buffer);
 	if (picture == NULL)
 	  pic->texture->draw(&vert[0], vert.getVertexCount(), (sf::PrimitiveType)geometry);
 	else
@@ -96,12 +98,16 @@ void				bunny_set_geometry(t_bunny_buffer		*buffer,
       }
     case SYSTEM_RAM:
       {
-	t_bunny_pixelarray	*pix = (t_bunny_pixelarray*)buffer;
+	struct bunny_pixelarray	*pix = (struct bunny_pixelarray*)buffer;
 
 	if (gl_bunny_my_geometry == NULL)
 	  fprintf(stderr, "gl_bunny_my_geometry is not set.\n");
 	else if (picture == NULL)
-	  gl_bunny_my_geometry(pix, geometry, array, NULL);
+	  {
+	    if (pix->res_id != 0)
+	      bunny_make_clipable_unique((t_bunny_clipable*)buffer);
+	    gl_bunny_my_geometry((t_bunny_pixelarray*)pix, geometry, array, NULL);
+	  }
 	else
 	  {
 	    typ = (size_t*)picture;
@@ -109,7 +115,11 @@ void				bunny_set_geometry(t_bunny_buffer		*buffer,
 	    if (*typ == GRAPHIC_RAM)
 	      fprintf(stderr, "Warning: gl_bunny_my_geometry's 4th parameter is a t_bunny_picture.\n");
 	    else
-	      gl_bunny_my_geometry(pix, geometry, array, (t_bunny_pixelarray*)picture);
+	      {
+		if (pix->res_id != 0)
+		  bunny_make_clipable_unique((t_bunny_clipable*)buffer);
+		gl_bunny_my_geometry((t_bunny_pixelarray*)pix, geometry, array, (t_bunny_pixelarray*)picture);
+	      }
 	  }
 	scream_log_if(PATTERN, buffer, geometry, array, picture);
 	return ;

@@ -64,6 +64,8 @@ void			bunny_set_polygon(t_bunny_buffer		*buffer,
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)buffer;
 
+	if (pic->res_id != 0)
+	  bunny_make_clipable_unique((t_bunny_clipable*)buffer);
 	pic->texture->draw(vert, 3, sf::Triangles);
 	scream_log_if
 	  (PATTERN, buffer, position,
@@ -75,12 +77,16 @@ void			bunny_set_polygon(t_bunny_buffer		*buffer,
       }
     case SYSTEM_RAM:
       {
-	t_bunny_pixelarray	*pix = (t_bunny_pixelarray*)buffer;
+	struct bunny_pixelarray	*pix = (struct bunny_pixelarray*)buffer;
 
 	if (gl_bunny_my_set_polygon == NULL)
 	  fprintf(stderr, "gl_bunny_my_set_polygon is not set.\n");
 	else
-	  gl_bunny_my_set_polygon(pix, position, color);
+	  {
+	    if (pix->res_id != 0)
+	      bunny_make_clipable_unique((t_bunny_clipable*)buffer);
+	    gl_bunny_my_set_polygon((t_bunny_pixelarray*)pix, position, color);
+	  }
 	scream_log_if
 	  (PATTERN, buffer, position,
 	   position[0].x, position[0].y,

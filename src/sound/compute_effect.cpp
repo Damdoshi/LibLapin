@@ -10,7 +10,7 @@ bool				bunny_compute_effect(t_bunny_effect		*effect)
   struct bunny_effect		*eff = (struct bunny_effect*)effect;
   bool				ret;
 
-  ret = (eff->effect.loadFromSamples
+  ret = (eff->effect->loadFromSamples
 	 (eff->sample,
 	  eff->duration * eff->sample_per_second,
 	  1,

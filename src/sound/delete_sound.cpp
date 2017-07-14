@@ -14,7 +14,10 @@ void			bunny_delete_sound(t_bunny_sound		*sound)
     delete ((struct bunny_music*)sound);
   else
     {
-      bunny_free(((struct bunny_effect*)sound)->sample);
+      struct bunny_effect *snd = (struct bunny_effect*)sound;
+
+      RessourceManager.TryRemove(ResManager::BUNNY_SAMPLE, snd->res_id, snd);
+      RessourceManager.TryRemove(ResManager::SF_SOUNDBUFFER, snd->res_id, snd);
       delete ((struct bunny_effect*)sound);
     }
   scream_log_if("%p", sound);

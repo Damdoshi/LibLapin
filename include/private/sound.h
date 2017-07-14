@@ -37,7 +37,8 @@ struct				bunny_effect
   size_t			sample_per_second;
   size_t			duration;
   int16_t *			sample;
-  sf::SoundBuffer		effect;
+  size_t			res_id;
+  sf::SoundBuffer		*effect;
   sf::Sound			sound;
 };
 

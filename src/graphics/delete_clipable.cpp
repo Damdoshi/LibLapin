@@ -5,24 +5,21 @@
 
 #include			"lapin_private.h"
 
-static void			bunny_delete_fake(t_bunny_pixelarray		*pix)
-{
-  free(pix->pixels);
-  free(pix);
-}
-
 void				bunny_delete_clipable(t_bunny_clipable	*clip)
 {
   size_t			*type = (size_t*)clip;
 
-  BUNNY_LOG(fprintf(stderr, "%s: Deleting %p.\n", __PRETTY_FUNCTION__, clip));
   switch (*type)
     {
     case GRAPHIC_RAM:
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)clip;
 
-	delete pic->texture;
+	if (pic->res_id)
+	  RessourceManager.TryRemove(ResManager::SF_RENDERTEXTURE, pic->res_id, pic);
+	else
+	  delete pic->texture;
+	delete pic->sprite;
 	delete pic;
 	scream_log_if("%p", clip);
 	return ;
@@ -31,13 +28,19 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
       {
 	struct bunny_pixelarray	*pic = (struct bunny_pixelarray*)clip;
 	
-	if (getenv("TECHNOCORE") != NULL)
+	if (pic->res_id)
 	  {
-	    bunny_delete_fake((t_bunny_pixelarray*)clip);
-	    scream_log_if("%p", clip);
-	    return ;
+	    RessourceManager.TryRemove(ResManager::SF_TEXTURE, pic->res_id, pic);
+	    RessourceManager.TryRemove(ResManager::SF_IMAGE, pic->res_id, pic);
+	    RessourceManager.TryRemove(ResManager::BUNNY_PIXELS, pic->res_id, pic);
 	  }
-	bunny_free(pic->rawpixels);
+	else if (getenv("TECHNOCORE") == NULL)
+	  {
+	    delete pic->tex;
+	    delete pic->image;
+	    bunny_free(pic->rawpixels);
+	  }
+	delete pic->sprite;
 	delete pic;
 	scream_log_if("%p", clip);
 	return ;
@@ -46,6 +49,9 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
       {
 	struct bunny_ttf_font	*ttf = (struct bunny_ttf_font*)clip;
 
+	RessourceManager.TryRemove(ResManager::SF_FONT, ttf->res_id, ttf);
+	delete ttf->text;
+	delete ttf->sprite;
 	delete ttf->texture;
 	delete ttf;
 	scream_log_if("%p", clip);
@@ -55,7 +61,9 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
       {
 	struct bunny_gfx_font	*gfx = (struct bunny_gfx_font*)clip;
 
+	RessourceManager.TryRemove(ResManager::BUNNY_PICTURE, gfx->res_id, gfx);
 	bunny_delete_clipable(gfx->gfx);
+	delete gfx->sprite;
 	delete gfx->texture;
 	delete gfx;
 	scream_log_if("%p", clip);

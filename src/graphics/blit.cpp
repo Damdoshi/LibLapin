@@ -92,7 +92,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	      {
 		unsigned int	c = pic->rawpixels[i + j * pic->width];
 
-		pic->image.setPixel
+		pic->image->setPixel
 		  (i, j,
 		   sf::Color
 		   ((c >> (RED_CMP * 8)) & 0xFF,
@@ -102,22 +102,22 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 		    )
 		 );
 	      }
-	pic->tex.loadFromImage(pic->image, rect);
-	pic->sprite.setTexture(pic->tex, true);
-	pic->sprite.setPosition(pos->x, pos->y);
+	pic->tex->loadFromImage(*pic->image, rect);
+	pic->sprite->setTexture(*pic->tex, true);
+	pic->sprite->setPosition(pos->x, pos->y);
 	if (gl_full_blit)
 	  {
-	    pic->sprite.setOrigin(pic->origin.x, pic->origin.y);
-	    pic->sprite.setScale(pic->scale.x, pic->scale.y);
-	    pic->sprite.setRotation(pic->rotation);
-	    pic->sprite.setColor
+	    pic->sprite->setOrigin(pic->origin.x, pic->origin.y);
+	    pic->sprite->setScale(pic->scale.x, pic->scale.y);
+	    pic->sprite->setRotation(pic->rotation);
+	    pic->sprite->setColor
 	      (sf::Color(pic->color_mask.argb[RED_CMP],
 			 pic->color_mask.argb[GREEN_CMP],
 			 pic->color_mask.argb[BLUE_CMP],
 			 pic->color_mask.argb[ALPHA_CMP]
 			 ));
 	  }
-	spr = &pic->sprite;
+	spr = pic->sprite;
 	break ;
       }
     default:
@@ -152,6 +152,8 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
       {
 	struct bunny_picture	*out = (struct bunny_picture*)output;
 
+	if (out->res_id != 0)
+	  bunny_make_clipable_unique((t_bunny_clipable*)out);
 	if (*input_type == GRAPHIC_RAM)
 	  {
 	    if (shader)
@@ -178,15 +180,22 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	    if (gl_bunny_my_blit == NULL)
 	      fprintf(stderr, "gl_bunny_my_blit is not set.");
 	    else
-	      gl_bunny_my_blit((t_bunny_pixelarray*)out, pic, pos);
+	      {
+		if (out->res_id != 0)
+		  bunny_make_clipable_unique((t_bunny_clipable*)out);
+		gl_bunny_my_blit((t_bunny_pixelarray*)out, pic, pos);
+	      }
 	  }
 	else
 	  {
+	    // This function is an horrible mess
 	    const bunny_pixelarray	*pic = (const bunny_pixelarray*)output;
 	    sf::Image			img = spr->getTexture()->copyToImage();
 	    int				i;
 	    int				j;
 
+	    if (pic->res_id != 0)
+	      bunny_make_clipable_unique((t_bunny_clipable*)pic);
 	    for (j = picture->clip_y_position;
 		 j < picture->clip_y_position + picture->clip_height;
 		 ++j)

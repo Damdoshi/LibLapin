@@ -43,18 +43,24 @@ void			bunny_set_pixel(t_bunny_buffer		*buffer,
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)buffer;
 
+	if (pic->res_id != 0)
+	  bunny_make_clipable_unique((t_bunny_clipable*)buffer);
 	pic->texture->draw(vert, 1, sf::Points);
 	scream_log_if(PATTERN, buffer, position.x, position.y, (void*)(size_t)color);
 	return ;
       }
     case SYSTEM_RAM:
       {
-	t_bunny_pixelarray	*pix = (t_bunny_pixelarray*)buffer;
+	struct bunny_pixelarray	*pix = (struct bunny_pixelarray*)buffer;
 
 	if (gl_bunny_my_set_pixel == NULL)
 	  fprintf(stderr, "gl_bunny_my_set_pixel is not set.\n");
 	else
-	  gl_bunny_my_set_pixel(pix, position, color);
+	  {
+	    if (pix->res_id != 0)
+	      bunny_make_clipable_unique((t_bunny_clipable*)buffer);
+	    gl_bunny_my_set_pixel((t_bunny_pixelarray*)pix, position, color);
+	  }
 	scream_log_if(PATTERN, buffer, position.x, position.y, (void*)(size_t)color);
 	return ;
       }

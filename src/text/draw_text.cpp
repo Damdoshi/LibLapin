@@ -38,7 +38,7 @@ static size_t		get_char_width(t_bunny_font	*font,
   sf::Utf8::toUtf32(x.begin(), x.end(), std::back_inserter(conv));
 
   if ((ttf = (struct bunny_ttf_font*)font)->type == TTF_TEXT)
-    return (ttf->font.getGlyph
+    return (ttf->font->getGlyph
 	    (conv[0], font->glyph_size.y, false, 1).advance + font->interglyph_space.x);
   gfx = (struct bunny_gfx_font*)font;
   return (gfx->glyph_size.x + font->interglyph_space.x);
@@ -182,9 +182,9 @@ static int		put_letter(t_bunny_font		*font,
       std::string					x(str, i, len);
 
       sf::Utf8::toUtf32(x.begin(), x.end(), std::back_inserter(conv));
-      fnt->text.setPosition(sf::Vector2f(pos.x, pos.y));
-      fnt->text.setString(sf::String(conv));
-      fnt->texture->draw(fnt->text);
+      fnt->text->setPosition(sf::Vector2f(pos.x, pos.y));
+      fnt->text->setString(sf::String(conv));
+      fnt->texture->draw(*fnt->text);
     }
   else
     {
@@ -213,9 +213,9 @@ void			_bunny_draw_text(t_bunny_font	*font)
     {
       struct bunny_ttf_font *fnt = (struct bunny_ttf_font*)font;
 
-      fnt->text.setOutlineThickness(fnt->outline_size);
-      fnt->text.setOutlineColor(bunny_color_to_sf_color(fnt->outline_color));
-      fnt->text.setFillColor(bunny_color_to_sf_color(fnt->color));
+      fnt->text->setOutlineThickness(fnt->outline_size);
+      fnt->text->setOutlineColor(bunny_color_to_sf_color(fnt->outline_color));
+      fnt->text->setFillColor(bunny_color_to_sf_color(fnt->color));
     }
   else
     {

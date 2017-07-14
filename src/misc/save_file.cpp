@@ -9,7 +9,7 @@
 #define			PATTERN		"%s file, %p data, %zu data length -> %s"
 
 bool			bunny_save_file(const char		*file,
-					const char		*data,
+					const void		*data,
 					size_t			len)
 {
   int			fd;

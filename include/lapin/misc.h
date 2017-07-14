@@ -36,6 +36,9 @@
 
 /*!
 ** Load an entire file.
+** The file is stored in the bunny ressource manager, so loading the same
+** file multiple times won't load it several times. To prevent this behaviour,
+** you can use the bunny_make_file_unique function.
 ** \param file The file name
 ** \param data A pointer to the content of the file (this param is an output)
 ** \param size A pointer to the size of the file (this param is an output)
@@ -45,7 +48,7 @@
 ** Note that data and size are only changed if everything went well.
 */
 ssize_t				bunny_load_file(const char		*file,
-						char			**data,
+						void			**data,
 						size_t			*size);
 
 /*!
@@ -56,8 +59,30 @@ ssize_t				bunny_load_file(const char		*file,
 ** \return True if everything went well, false instead.
 */
 bool				bunny_save_file(const char		*file,
-						const char		*data,
+						const void		*data,
 						size_t			len);
+
+/*!
+** When you load a file with bunny_load_file, it is stored inside a ressource
+** manager to prevent loading several times the same file.
+** If you need to force the duplication of a file, call the following function
+** with the loaded data.
+** \param data The data that will turn unique
+** \param len The size of the data that will be turn unique
+** \return The data turned unique. It is actually a copy of the sent data.
+*/
+void				*bunny_make_file_unique(const char	*file,
+							void		*data,
+							size_t		len);
+
+/*!
+** Delete a loaded file. Mandatory for loaded file inside the ressource manager,
+** but can be used on other too, a simple bunny_free/free will be performed.
+** \param data The file to delete.
+** \param file The file that was loaded. Mandatory for a managed ressource.
+*/
+void				bunny_delete_file(void			*data,
+						  const char		*file);
 
 /*!
 ** Compute the operation sent as first parameter. Supported operators are:
@@ -149,8 +174,11 @@ void				bunny_smooth_move(const t_bunny_position *target,
 
 /*
 ** Self evaluation.
+** Test public/privates structures consistancy.
+** List all managed ressource.
 */
 void				bunny_consistancy(void);
+void				bunny_managed_ressource(void);
 
 #endif	/*			__LAPIN_MISC_H__			*/
 

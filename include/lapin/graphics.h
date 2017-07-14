@@ -120,12 +120,27 @@ t_bunny_pixelarray		*bunny_new_pixelarray(unsigned int		wid,
 t_bunny_pixelarray		*bunny_load_pixelarray(const char		*file);
 
 /*!
+** The bunny_read_pixelarray_d load a picture from memory. Supported formats are
+** .png, .jpg, .gif and 24 bits bitmap. Output is a manual access picture.
+** The picture will be stored inside the ressource manager if from_file is not NULL.
+** \param buffer The buffer that contains the loaded in memory picture file
+** \param len The size of the sent buffer
+** \param from_file The file from which the data was loaded. Used to create a checksum
+** to store the ressource inside the bunny ressource manager.
+** \return Return a t_bunny_pixelarray filled with the picture or NULL on error.
+*/
+t_bunny_pixelarray		*bunny_read_pixelarray_id(const void		*buffer,
+							  size_t		len,
+							  const char		*from_file);
+
+/*!
 ** The bunny_read_pixelarray load a picture from memory. Supported formats are
 ** .png, .jpg, .gif and 24 bits bitmap. Output is a manual access picture.
 ** \param buffer The buffer that contains the loaded in memory picture file
 ** \return Return a t_bunny_pixelarray filled with the picture or NULL on error.
 */
-t_bunny_pixelarray		*bunny_read_pixelarray(const void		*buffer);
+#define				bunny_read_pixelarray(buffer, len)		\
+  bunny_read_pixelarray_id(buffer, len, NULL)
 
 /*!
 ** The t_bunny_my_load_pixelarray type is currently unused by the library. It
@@ -206,11 +221,30 @@ t_bunny_picture			*bunny_load_picture(const char			*file);
 ** The bunny_read_picture load a picture from memory. Supported formats are
 ** .png, .jpg, .gif and 24 bits bitmap. Output is a fast picture.
 ** The reserved memory to handle it is outside the bunny_malloc space.
+** The picture will be stored inside the ressource manager if from_file is not NULL.
 ** \param buffer The buffer to read.
+** \param len The size of the sent buffer
+** \param from_file The file from which the data was loaded. Used to create a checksum
+** to store the ressource inside the bunny ressource manager.
 ** \return Return a t_bunny_picture filled with the picture or NULL on error.
 */
-t_bunny_picture			*bunny_read_picture(const void			*pic,
-						    size_t			l);
+t_bunny_picture			*bunny_read_picture_id(const void		*pic,
+						       size_t			l,
+						       const char		*from_file);
+
+/*!
+** The bunny_read_picture load a picture from memory. Supported formats are
+** .png, .jpg, .gif and 24 bits bitmap. Output is a fast picture.
+** The reserved memory to handle it is outside the bunny_malloc space.
+** The picture will be stored inside the ressource manager if from_file is not NULL.
+** \param buffer The buffer to read.
+** \param len The size of the sent buffer
+** \param from_file The file from which the data was loaded. Used to create a checksum
+** to store the ressource inside the bunny ressource manager.
+** \return Return a t_bunny_picture filled with the picture or NULL on error.
+*/
+#define				bunny_read_picture(buffer, len)			\
+  bunny_read_picture_id(buffer, len, NULL)
 
 /*!
 ** Destroy a clipable element. If the element is a t_bunny_pixelarray, you have
@@ -671,6 +705,29 @@ void				bunny_GL_reset_states(const t_bunny_window	*pic);
 void				bunny_GL_push_states(const t_bunny_window	*pic);
 
 void				bunny_GL_pop_states(const t_bunny_window	*pic);
+
+/*!
+** All picture loading function in the bunny library use a ressource manager to avoid
+** loading several times the same file. This means behind every t_bunny_clipable
+** you will create throught bunny_load_pi* functions, there is only one true
+** load.
+** bunny_set_*, bunny_blit, bunny_clear and bunny_fill functions are actually
+** calling this function when you try to use them on a clipable that share datas
+** to make it unique: like with copy on write, the data will be duplicated
+** before being written.
+** Pictures and pixelarrays created with bunny_new_* are already unique.
+**
+** The direct acces to pixels of t_bunny_pixelarray of course does not provoke
+** the data duplication: so you may use this function before.
+** Calling this function on an already unique clipable does not make anything.
+**
+** This function is the graphic equivalent of bunny_make_effect_unique in sound.
+**
+** \param clipable The clipable that will be turned unique
+** \return True if everything went well. If the clipable was already unique,
+** everything went well.
+*/
+bool				bunny_make_clipable_unique(t_bunny_clipable	*clipable);
 
 #endif	/*			__LAPIN_GRAPHICS_H__	*/
 

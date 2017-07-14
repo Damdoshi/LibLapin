@@ -27,6 +27,7 @@
 ** BS_CAESAR use the '+' / '-' operator to cipher / uncipher.
 ** BS_SHAKER swap the currently ciphered data chunk with another chunk at
 ** a specified offset
+** BE_SWITCH transform state bit into change bit => 1100 become 1010
 ** BS_CUSTOM (and greater values) means that you want to use
 ** a custom algorithm, so the system will call the function defined
 ** in gl_bunny_my_cipher or gl_bunny_my_uncipher.

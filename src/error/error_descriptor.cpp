@@ -5,7 +5,7 @@
 
 #include		"lapin_private.h"
 
-static int		error_descriptor = STDERR_FILENO;
+static int		error_descriptor = -1;
 
 void			bunny_set_error_descriptor(int	fd)
 {

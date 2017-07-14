@@ -39,6 +39,8 @@ void			bunny_fill(t_bunny_buffer		*picture,
 	struct bunny_picture	*pic = (struct bunny_picture*)picture;
 	sf::IntRect		rect(pic->rect.x, pic->rect.y, pic->rect.w, pic->rect.h);
 
+	if (pic->res_id != 0)
+	  bunny_make_clipable_unique((t_bunny_clipable*)pic);
 	sh.setSize(sf::Vector2f(rect.width, rect.height));
 	sh.setPosition(rect.left, rect.top);
 	pic->texture->draw(sh);
@@ -47,12 +49,16 @@ void			bunny_fill(t_bunny_buffer		*picture,
       }
     case SYSTEM_RAM:
       {
-	t_bunny_pixelarray	*pix = (t_bunny_pixelarray*)picture;
+	struct bunny_pixelarray	*pix = (struct bunny_pixelarray*)picture;
 
 	if (gl_bunny_my_fill == NULL)
 	  fprintf(stderr, "gl_bunny_my_fill is not set.\n");
 	else
-	  gl_bunny_my_fill(pix, _color);
+	  {
+	    if (pix->res_id != 0)
+	      bunny_make_clipable_unique((t_bunny_clipable*)pix);
+	    gl_bunny_my_fill((t_bunny_pixelarray*)pix, _color);
+	  }
        	scream_log_if(PATTERN, picture, (void*)(size_t)_color);
 	return ;
       }

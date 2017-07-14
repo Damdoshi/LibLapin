@@ -15,7 +15,7 @@ bool				bunny_uncipher_file(const char			*file,
   size_t			len;
   bool				ret;
 
-  if (bunny_load_file(file, &cnt, &len) == false)
+  if (bunny_load_file(file, (void**)&cnt, &len) == false)
     scream_error_if(return (false), bunny_errno, PATTERN, file, cip, key, "false");
   bunny_uncipher_data(cnt, len, cip, key);
   ret = bunny_save_file(file, cnt, len);

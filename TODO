@@ -1,3 +1,5 @@
+=> Placer un booléen dans la racine des configurations de facon a empecher la suppression partielle d'un arbre avec un delete_configuration.
+
 
 -> La mise en place de log est faite jusqu'a configuration/archive...
 

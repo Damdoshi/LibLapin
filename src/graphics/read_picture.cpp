@@ -5,40 +5,56 @@
 
 #include		"lapin_private.h"
 
-#define			PATTERN		"%p memory, %zu length -> %p"
+#define			PATTERN		"%p memory, %zu length, %s file -> %p"
 
-t_bunny_picture		*bunny_read_picture(const void		*_pic,
-					    size_t		len)
+t_bunny_picture		*bunny_read_picture_id(const void	*_pic,
+					       size_t		len,
+					       const char	*file)
 {
   struct bunny_picture	*pic;
   sf::Texture		txt;
   sf::Sprite		spr;
+  uint64_t		hash;
 
-  if (txt.loadFromMemory(_pic, len) == false)
-    scream_error_if(return (NULL), errno, PATTERN, _pic, len, (void*)NULL);
-  spr.setTexture(txt);
+  hash = bunny_hash(BH_FNV, file, strlen(file));
   if ((pic = new (std::nothrow) struct bunny_picture) == NULL)
-    goto Fail;
-  if ((pic->texture = new (std::nothrow) sf::RenderTexture) == NULL)
-    goto FailStruct;
+    goto ReturnNull;
   if ((pic->sprite = new (std::nothrow) sf::Sprite) == NULL)
-    goto FailSprite;
+    goto DeleteStructure;
+  if (file == NULL ||
+      (pic->texture = (sf::RenderTexture*)
+       RessourceManager.TryGet(ResManager::SF_RENDERTEXTURE, hash)) == NULL)
+    {
+      // We use a temporary texture because RenderTexture cannot load files.
+      if (txt.loadFromMemory(_pic, len) == false)
+	goto DeleteSprite;
+      spr.setTexture(txt);
 
-  pic->texture->create(txt.getSize().x, txt.getSize().y);
-  pic->texture->clear(sf::Color(0, 0, 0, 0));
-  pic->texture->draw(spr);
-  pic->texture->display();
+      if ((pic->texture = new (std::nothrow) sf::RenderTexture) == NULL)
+	goto DeleteSprite;
+      if (pic->texture->create(txt.getSize().x, txt.getSize().y) == false)
+	goto DeleteRenderTexture;
+
+      pic->texture->clear(sf::Color(0, 0, 0, 0));
+      pic->texture->draw(spr);
+      pic->texture->display();
+    }
+
+  RessourceManager.AddToPool(ResManager::SF_RENDERTEXTURE, hash, pic, pic->texture);
+
+  pic->res_id = hash;
   pic->tex = &pic->texture->getTexture();
   pic->sprite->setTexture(*pic->tex);
 
   pic->type = GRAPHIC_RAM;
-  pic->width = pic->texture->getSize().x;
-  pic->height = pic->texture->getSize().y;
+  pic->width = pic->tex->getSize().x;
+  pic->height = pic->tex->getSize().y;
 
   pic->rect.x = 0;
   pic->rect.y = 0;
-  pic->rect.w = txt.getSize().x;
-  pic->rect.h = txt.getSize().y;
+  pic->rect.w = pic->width;
+  pic->rect.h = pic->height;
+
   pic->position.x = 0;
   pic->position.y = 0;
   pic->origin.x = 0;
@@ -48,14 +64,16 @@ t_bunny_picture		*bunny_read_picture(const void		*_pic,
   pic->rotation = 0;
   pic->color_mask.full = WHITE;
 
-  scream_log_if(PATTERN, _pic, len, pic);
+  scream_log_if(PATTERN, _pic, len, file, pic);
   return ((t_bunny_picture*)pic);
 
- FailSprite:
+ DeleteRenderTexture:
   delete pic->texture;
- FailStruct:
+ DeleteSprite:
+  delete pic->sprite;
+ DeleteStructure:
   delete pic;
- Fail:
-  scream_error_if(return (NULL), ENOMEM, PATTERN, _pic, len, (void*)NULL);
+ ReturnNull:
+  scream_error_if(return (NULL), ENOMEM, PATTERN, _pic, len, file, (void*)NULL);
   return (NULL);
 }
