@@ -9,7 +9,7 @@ In case you wonder:
 - I don't care "this is much simpler in any other language".
 
 You can use any language, I will still go faster than you with C.
-Your ability to go faster with other language is mainly a proof of your incompetence in C.
+Your ability to go faster with other language is mainly a proof of your incompetence in C, it is nothing because of the C language itself.
 
 My language are C and C++, I am not as efficient with other.
 So, use your language, any engine because I bet you use one, like Unity, and stop bother me.

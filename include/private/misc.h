@@ -19,6 +19,7 @@ extern float			gl_joy_axis[LAST_BUNNY_JOYSTICK][LAST_BUNNY_AXIS];
 extern t_bunny_joystick		gl_joystick[LAST_BUNNY_JOYSTICK];
 extern t_bunny_window		*gl_window;
 extern bool			gl_full_blit;
+extern size_t			gl_bunny_frequency;
 
 t_bunny_response		network_event(unsigned int		v,
 					      void			*dat);
@@ -27,6 +28,9 @@ void				_real_call(const t_bunny_prototype	*function,
 					   t_bunny_value		*return_value,
 					   size_t			nbr,
 					   t_bunny_value		*params);
+
+t_bunny_configuration		*_get_good_conf(const char		*file,
+						t_bunny_configuration	**conf);
 
 # ifdef				NO_BUNNY_ERROR_LOG
 #  define			scream_error_if(out, err, patt, ...)	\
@@ -44,7 +48,7 @@ void				_real_call(const t_bunny_prototype	*function,
 	dprintf(bunny_get_error_descriptor(),				\
 		"FAILURE [%016lu]\t[%16s]\t[%s]\t[" patt "].\n",	\
 		(long unsigned int)time(NULL),				\
-		__PRETTY_FUNCTION__,					\
+		__FUNCTION__,						\
 		strerror(err),						\
 		__VA_ARGS__);						\
       bunny_errno = err;						\
@@ -64,7 +68,7 @@ void				_real_call(const t_bunny_prototype	*function,
 	dprintf(bunny_get_log_descriptor(),				\
 		"LOG     [%016lu]\t[%16s]\t[" pattern "].\n",		\
 		(long unsigned int)time(NULL),				\
-		__PRETTY_FUNCTION__,					\
+		__FUNCTION__,						\
 		__VA_ARGS__);						\
       bunny_errno = 0;							\
     }									\

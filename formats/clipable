@@ -1,0 +1,166 @@
+T_BUNNY_CLIPABLE EXTERNAL CONFIGURATION
+=======================================
+
+You can set properties of a t_bunny_clipable thanks to a file at runtime.
+This allow you to get rid of a lot of configuration and to create space for
+any outside editor.
+
+INI format and complete field description
+-----------------------------------------
+
+### Mandatory field
+
+* RessourceFile is a single string that contains the address of a picture.
+  Usage:
+
+    RessourceFile="Picture file that will be loaded"
+
+### Optionnal fields
+
+* Position is the position of the clipable when blitted.
+  It must be two int or double long.
+  Usage:
+
+    Position=XPosition,YPosition
+
+* Scale is a zoom. It can be a single float or two.
+  If there is a single float, then it scales on X and Y.
+  If there is two floats, theen it scales accordingly on X and Y.
+  Usage:
+
+    Scale=XandYScale
+    Scale=XScale,YScale
+
+* Origin move the spot used to place the clipable, turn or scale it.
+  It is two int or double long.
+  Usage:
+  
+    Origin=XPosition,YPosition
+
+* Rotation is a float that represent the rotation in degree of the clipable.
+  It turns as in trigonometry.
+  Usage:
+
+    Rotation=Degree
+
+* Color is a collection of integer between 0 and 255 used as color mask.
+  It can be one field long to create a grey mask.
+  It can be three fields long to create a RGB mask with no transparency.
+  It can be four fields long to create a RGBA mask.
+  About transparency, 0 is transparent.
+  Usage:
+
+    Color=GreyLevel
+    Color=Red,Green,Blue
+    Color=Red,Green,Blue,Alpha
+
+* Transparency is a single integer between 0 and 255 used as color mask.
+  It is redundant with the Color field and will override it.
+  About transparency, 0 is transparent.
+  Usage:
+
+    Transparency=TransparencyLevel
+
+* Clip.Position is the position of a clip inside the clipable.
+  It is two positive integer long.
+  Usage:
+
+    [Clip]
+    Position=XPosition,YPosition
+
+* Clip.Size is the size of the clip inside the clipable.
+  It is two positive integer long.
+  Usage:
+
+    [Clip]
+    Size=Width,Height
+
+* Clip.Selected is the number of the current clip. This field needs
+  the Clip.Size field to be set. It is a positive integer.
+  This field is redundant with the Clip.Position field and will override it.
+  Usage:
+
+    [Clip]
+    Size=Width,Height
+    Selected=NbrCase
+
+DAB format
+----------
+
+The Dabsic format follow the same architecture as the INI one.
+Here is a complete usage:
+
+RessourceFile="PathToRessourceFile"
+Position=XPosition,YPosition
+Scale=XScale,YScale
+Scale=XYScale
+Origin=XPosition,YPosition
+Rotation=Degree
+Color=GreyLevel
+Color=Red,Green,Blue
+Color=Red,Green,Blue,Alpha
+Transparency=TransparencyLevel
+[Clip
+  Size=Width,Height
+  Position=XPosition,YPosition
+  Selected=NbrCase
+]
+
+Note that the ability of Dabsic to create array with the following fashion:
+
+Color = [Array
+      Red
+      Green
+      Blue
+]
+
+Does not interfere with the way the value is get. It is perfectly equivalent.
+
+CSV format
+----------
+
+The CSV format does not follow the same architecture as the INI one.
+Here is its architecture:
+
+"ressourcefile";"path_to_ressource_file"
+"position";xposition;ypostition
+"scale";xscale;yscale
+"scale";xscale
+"origin";xposition;yposition
+"rotation";degree
+"color";greylevel
+"color";red;green;blue
+"color";red;green;blue;alpha
+"transparency";transparency
+"clip"
+;"size";width;height
+;"position";xposition;yposition
+;"selected";nbrcase
+
+*Note that fields inside clip does not start on the first column!*
+
+XML format
+----------
+
+There is no support for XML yet.
+
+LUA format
+----------
+
+There is no support for LUA yet.
+
+JSON format
+-----------
+
+There is no support for JSON yet.
+
+YAML format
+-----------
+
+There is no support for YAML yet.
+
+LISP format
+-----------
+
+There is no support for LISP yet.
+

@@ -247,6 +247,34 @@ t_bunny_picture			*bunny_read_picture_id(const void		*pic,
   bunny_read_picture_id(buffer, len, NULL)
 
 /*!
+** Load the sent configuration file (must be accepted by the bunny_configuration module)
+** and set all values accordingly to what is inside the file.
+**
+** If conf_file or clipable is NULL, an error occurs.
+** If *clipable is NULL, then a picture will be created et set thanks to the associated field
+** in configuration file. The picture will be returned throught *clipable.
+** If *clipable is not NULL, every of its attribute will be set depending on the config file.
+**
+** If config is NULL, then a configuration file will be loaded, used and destroyed.
+** If *config is NULL, then a configuration file will be loaded, used and set to *config
+** to be returned.
+** If *config is not NULL, then it will be used as target to load the new configuration
+** file.
+**
+** See formats/clipable to see how to format you files accordinly to their syntax.
+**
+** \param conf_file The configuration file that contains attributes.
+** \param clipable The clipable to configure, or where to store the new one
+** \param config The configuration file to use, or where to store the new loaded one,
+** \param is_px Is the clipable a pixelarray or a picture/bunny_font.
+** \return True if the loading, reading and setting were done properly.
+*/
+bool				bunny_set_clipable_attribute(const char		*conf_file,
+							     t_bunny_clipable	**clipable,
+							     t_bunny_configuration **config,
+							     bool		is_px);
+
+/*!
 ** Destroy a clipable element. If the element is a t_bunny_pixelarray, you have
 ** to cast its address to the t_bunny_clipable* type or give the address of the
 ** clipable attribute of the pixelarray to the function.

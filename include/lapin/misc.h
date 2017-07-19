@@ -72,7 +72,7 @@ bool				bunny_save_file(const char		*file,
 ** \return The data turned unique. It is actually a copy of the sent data.
 */
 void				*bunny_make_file_unique(const char	*file,
-							void		*data,
+							const void	*data,
 							size_t		len);
 
 /*!

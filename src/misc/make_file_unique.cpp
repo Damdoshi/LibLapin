@@ -12,12 +12,12 @@ void			*bunny_make_file_unique(const char	*file,
   uint64_t		hash;
 
   hash = bunny_hash(BH_FNV, file, strlen(file));
-  RessourceManager.TryRemove
+  RessourceManager.Extract
     (ResManager::LOADED_FILE, hash,
      (void*)(RessourceManager.NbrLoad(ResManager::LOADED_FILE, hash) - 1));
-  RessourceManager.TryRemove
+  RessourceManager.Extract
     (ResManager::SIZE_LOADED_FILE, hash,
      (void*)(RessourceManager.NbrLoad(ResManager::LOADED_FILE, hash) - 1));
-  return (bunny_memdup(data, len));
+  return (bunny_memdup(data, len + 1));
 }
 

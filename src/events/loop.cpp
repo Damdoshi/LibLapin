@@ -27,7 +27,7 @@ t_bunny_response	bunny_loop(t_bunny_window	*window,
   
   /// How many microseconds
   delay = 1000000.0 / freq;
-
+  gl_bunny_frequency = freq;
   if (gl_callback.entering_context != NULL)
     {
       scream_log_if(PATTERN "enter_context)", window, freq, data);

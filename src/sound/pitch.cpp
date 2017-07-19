@@ -13,6 +13,7 @@ void			bunny_sound_pitch(t_bunny_sound		*sound,
   if (pit < 0)
     pit = 0;
 
+  sound->pitch = pit;
   if (*type == MUSIC)
     ((struct bunny_music*)sound)->music.setPitch(pit);
   else

@@ -29,10 +29,7 @@ ssize_t			bunny_load_file(const char		*file,
       if ((sk = lseek(fd, 0, SEEK_END)) == -1)
 	goto close_and_quit;
       lseek(fd, 0, SEEK_SET);
-      if (size == NULL)
-	sz = sk + 1;
-      else
-	sz = sk;
+      sz = sk + 1;
       if ((buf = (char*)bunny_malloc(sz * sizeof(*buf))) == NULL)
 	goto close_and_quit;
       if (read(fd, buf, sk) != sk)

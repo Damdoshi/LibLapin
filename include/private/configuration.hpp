@@ -145,6 +145,10 @@ struct				SmallConf
   {
     return (array.size());
   }
+  size_t			NbrChild(void) const
+  {
+    return (nodes.size());
+  }
 
   SmallConf			&operator[](const std::string			&str)
   {
@@ -161,6 +165,7 @@ struct				SmallConf
 	else
 	  {
 	    nodes.erase(str);
+	    bunny_errno = BE_CANNOT_FIND_ELEMENT;
 	    throw 0;
 	  }
       }
@@ -173,7 +178,10 @@ struct				SmallConf
     if ((olsize = array.size()) <= i)
       {
 	if (!create_mode)
-	  throw 0;
+	  {
+	    bunny_errno = BE_CANNOT_FIND_ELEMENT;
+	    throw 0;
+	  }
 	array.resize(i + 1);
 	while (olsize <= i)
 	  {

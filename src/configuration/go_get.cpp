@@ -138,6 +138,7 @@ t_bunny_configuration	*_bunny_configuration_go_get_node(const t_bunny_configurat
 	    return (NULL);
 	  if ((cnf = bunny_configuration_get_case(cnf, j)) == NULL)
 	    return (NULL);
+	  i += str - &addr[i];
 	  if (readtext(addr, i, "]") == false)
 	    return (NULL);
 	  j = i;
@@ -152,6 +153,7 @@ t_bunny_configuration	*_bunny_configuration_go_get_node(const t_bunny_configurat
 	}
       else if (readtext(addr, j, ".") == false)
 	return (cnf);
+      i = j;
     }
   return (cnf);
 }

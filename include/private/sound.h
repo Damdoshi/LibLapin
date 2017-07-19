@@ -20,12 +20,27 @@ struct				bunny_sound
 {
   size_t			type;
   char				*file;
+  double			volume;
+  double			pitch;
+  bool				loop;
+  double			position[3];
+  double			attenuation;
+  bool				playing;
+  bool				pause;
 };
 
 struct				bunny_music
 {
   size_t			type;
   char				*file;
+  double			volume;
+  double			pitch;
+  bool				loop;
+  double			position[3];
+  double			attenuation;
+  bool				playing;
+  bool				pause;
+
   double			duration;
   sf::Music			music;
 };
@@ -34,6 +49,14 @@ struct				bunny_effect
 {
   size_t			type;
   char				*file;
+  double			volume;
+  double			pitch;
+  bool				loop;
+  double			position[3];
+  double			attenuation;
+  bool				playing;
+  bool				pause;
+
   size_t			sample_per_second;
   size_t			duration;
   int16_t *			sample;

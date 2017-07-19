@@ -12,6 +12,14 @@ t_bunny_music		*bunny_load_music(const char		*file)
 {
   struct bunny_music	*mus;
 
+  if (bunny_which_format(file) != BC_CUSTOM)
+    {
+      t_bunny_sound	*pc = NULL;
+      
+      if (bunny_set_sound_attribute(file, &pc, NULL, true) == false)
+	return (NULL);
+      return ((t_bunny_music*)pc);
+    }  
   if ((mus = new (std::nothrow) struct bunny_music) == NULL)
     goto Fail;
   if ((mus->music.openFromFile(file)) == false)
@@ -20,6 +28,16 @@ t_bunny_music		*bunny_load_music(const char		*file)
   mus->file = strdup(file);
   mus->type = MUSIC;
   mus->duration = mus->music.getDuration().asSeconds();
+
+  mus->volume = 50;
+  mus->pitch = 1;
+  mus->loop = true;
+  mus->position[0] = 0;
+  mus->position[1] = 0;
+  mus->position[2] = 0;
+  mus->attenuation = 5;
+  mus->playing = false;
+  mus->pause = false;
 
   scream_log_if(PATTERN, file, mus);
   return ((t_bunny_music*)mus);

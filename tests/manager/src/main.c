@@ -33,7 +33,7 @@ int			main(void)
     }
   bunny_managed_ressource();
   printf("FREEING THE OTHER HALF ---------------------------------------------\n");
-  for (; i < 200; ++i)
+  for (i = 200 / 2; i < 200; ++i)
     {
       bunny_delete_clipable(pic[i]);
       bunny_delete_sound(&eff[i]->sound);

@@ -7,6 +7,7 @@
 #include			"lapin_private.h"
 
 ResManager			RessourceManager;
+size_t				gl_bunny_frequency;
 
 t_bunny_my_set_pixel		gl_bunny_my_set_pixel = NULL;
 t_bunny_my_set_line		gl_bunny_my_set_line = NULL;

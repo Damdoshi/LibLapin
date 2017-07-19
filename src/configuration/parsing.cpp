@@ -350,7 +350,18 @@ bool			readvalue(const char			*code,
   else if (endtok != NULL)
     {
       readrawchar(code, i, &buffer[0], sizeof(buffer), endtok);
-      nod.SetString(std::string(&buffer[0]), true);
+      if (strcmp(&buffer[0], "true") == 0)
+	{
+	  nod.SetInt(1);
+	  nod.original_value = "true";
+	}
+      else if (strcmp(&buffer[0], "false") == 0)
+	{
+	  nod.SetInt(0);
+	  nod.original_value = "false";
+	}
+      else
+	nod.SetString(std::string(&buffer[0]), true);
     }
   else
     return (false);

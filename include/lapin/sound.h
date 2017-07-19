@@ -33,6 +33,13 @@ typedef struct			s_bunny_sound
 {
   const char			_private[sizeof(size_t)];
   const char * const		file;
+  double			volume;
+  double			pitch;
+  bool				loop;
+  double			position[3];
+  double			attenuation;
+  const bool			playing;
+  const bool			pause;
 }				t_bunny_sound;
 
 /*!
@@ -158,24 +165,69 @@ void				bunny_sound_attenuation(t_bunny_sound		*sound,
 							double			attenuation);
 
 /*!
-** Play the sound. If the sound is a t_bunny_effect and that it was manually edited,
-** do to forget to call bunny_compute_effect before.
+** Play the sound. Applies all attributes to the sound, so even if the sound was
+** being played, you can edit its attributes and call bunny_sound_play to edit all of
+** them simultaneously.
+** If the sound is a t_bunny_effect and that it was manually edited,
+** do to forget to call bunny_compute_effect before calling this function.
 ** \param sound The sound to play.
 */
 void				bunny_sound_play(t_bunny_sound			*sound);
 
 /*!
-** Stop the sound.
+** Pause the sound.
+** \param sound The sound to play.
+*/
+void				bunny_sound_pause(t_bunny_sound			*sound);
+
+/*!
+** Stop the sound. Unpause it if it was paused.
 ** \param sound The sound to stop.
 */
 void				bunny_sound_stop(t_bunny_sound			*sound);
 
 /*!
-** Get the position in seconds of the sent music.
-** \param music The music to know where the cursor is
-** \return The position in seconds between the beginning and the current cursor.
+** Set the position in seconds of the cursor for the sent sound.
+** \param snd The sound to move the cursor in
+** \param secds The position of the cursor to set
 */
-double				bunny_music_get_cursor(t_bunny_music		*music);
+void				bunny_sound_set_cursor(t_bunny_sound		*snd,
+						       double			secs);
+
+/*!
+** Get the position in seconds of the sent sound.
+** \param snd The sound to know where the cursor is
+** \reutrn The position in seconds between the beginning and the current cursor.
+*/
+double				bunny_sound_get_cursor(t_bunny_sound		*snd);
+
+/*!
+** Load the sent configuration file (must be accepted by the bunny_configuration module)
+** and set all values accordingly to what is inside the file.
+**
+** If conf_file or sound is NULL, an error occurs.
+** If *sound is NULL, then a picture will be created et set thanks to the associated field
+** in configuration file. The picture will be returned throught *clipable.
+** If *sound is not NULL, every of its attribute will be set depending on the config file.
+**
+** If config is NULL, then a configuration file will be loaded, used and destroyed.
+** If *config is NULL, then a configuration file will be loaded, used and set to *config
+** to be returned.
+** If *config is not NULL, then it will be used as target to load the new configuration
+** file.
+**
+** See formats/sound to see how to format you files accordinly to their syntax.
+**
+** \param conf_file The configuration file that contains attributes.
+** \param sound The sound to configure, or where to store the new one
+** \param config The configuration file to use, or where to store the new loaded one.
+** \param is_music Is the sound a music or a sound effect.
+** \return True if the loading, reading and setting were done properly.
+*/
+bool				bunny_set_sound_attribute(const char		*conf_file,
+							  t_bunny_sound		**sound,
+							  t_bunny_configuration **config,
+							  bool			is_music);
 
 /*!
 ** Delete the sent sound.

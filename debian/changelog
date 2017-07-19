@@ -7,18 +7,42 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
   * Use avcall to bind any scripted function call to a C function.
   * Add on_entering_context and on_leaving_context response function for bunny_loop.
   * Add support for CSV files in bunny_configuration
+  * Add bunny_get_frequency that return the current frequency of the bunny_loop,
+    value is undefined when outside the bunny loop.
+  * Add bunny_sound_set/get_cursor and turn bunny_music_get_cursor into compat.h
+    as a macro.
+  * Add bunny_sound_pause
+  * Add sound attributes like volume, pitch, loop, etc. in t_bunny_sound
+  * Edit bunny_soud_play to apply every structure attributes to the sound.
+  * Imprive bunny_load_music and bunny_load_effect thanks to the new function
+    bunny_set_sound_attribute with the ability to load sounds and set attributes
+    by giving to them a configuration file instead of a sound file.
+    Supported formats for ressources are describded in formats/. For this one, formats/sound
+
+  * t_bunny_display now take a non const pointer.
+    **Compatibility break!**
 
   * t_bunny_error become t_bunny_network_error in network.h
     **Compatibility break!**
+
   * LAST_ERROR become LAST_NETWORK_ERROR in network.h
     **Compatibility break!**
+
   * A new t_bunny_error type appeir and is an enumeration of errors that can be made by bunny functions. The type is in error.h.
   * A new enumeration value LAST_ERROR appeir and is a value of t_bunny_error in error.h
   * Every functions of the bunny library now set errno on error.
-  * Every functions of the bunny library now write error log on stderr if activated (by default)
-  * Every functions of the bunny library now write success log on stdout if activated (by default)
+  * Every functions of the bunny library now write error log on stderr if activated (not by default)
+  * Every functions of the bunny library now write success log on stdout if activated (not by default)
+  * Improve bunny_load_picture and bunny_load_pixelarray thanks to the new function
+    bunny_set_clipable_attribute with the ability to load pictures and set attribute
+    by giving to them a configuration file instead of a picture file.
+    Supported formats for ressources are describded in formats/. For this one, formats/clipable.
 
+  * Remove the log printing commanded by the DEBUG macro, replaced by the new system on lapin/error.h.
   * Switch from a single file errors~ to a directory with errors and warnings associated to files.
+  * Instead of having a "@" node inside bunny_configuration to store field in default scope,
+    consider that those fields are on scope level, to improve compatibility with other
+    formats.
 
  -- Jason Brillante <damdoshi@hotmail.com>  Tue, 01 Jun 2017 12:00:00 +0100
 

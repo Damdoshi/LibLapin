@@ -39,6 +39,15 @@ size_t				bunny_strnlen(const char	*str,
 char				*bunny_strndup(const char	*str,
 					       size_t		max);
 
+/*!
+** Get the position in seconds of the sent music.
+** \param music The music to know where the cursor is
+** \return The position in seconds between the beginning and the current cursor.
+*/
+#define				bunny_music_get_cursor(music)	\
+  bunny_sound_get_cursor(&(music)->sound)
+
+
 extern int			memory_check;
 void				set_max_heap_size(size_t	s);
 typedef t_bunny_color		t_color;

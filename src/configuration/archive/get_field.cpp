@@ -16,10 +16,12 @@ const char		*bunny_ini_get_field(const t_bunny_ini		*ini,
   t_bunny_configuration	*cnf = (t_bunny_configuration*)ini;
   const char		*c = NULL;
 
-  if (strcmp(scope, "") == 0)
-    scope = "@";
-  if ((cnf = bunny_configuration_get_child(cnf, scope)) == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, ini, scope, field, index, c);
+  if (strcmp(scope, "") != 0)
+    {
+      if ((cnf = bunny_configuration_get_child(cnf, scope)) == NULL)
+	scream_error_if
+	  (return (NULL), bunny_errno, PATTERN, ini, scope, field, index, c);
+    }
   if ((cnf = bunny_configuration_get_child(cnf, field)) == NULL)
     scream_error_if(return (NULL), bunny_errno, PATTERN, ini, scope, field, index, c);
   if ((cnf = bunny_configuration_get_case(cnf, index)) == NULL)

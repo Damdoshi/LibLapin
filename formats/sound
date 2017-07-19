@@ -1,0 +1,81 @@
+T_BUNNY_SOUND EXTERNAL CONFIGURATION
+====================================
+
+You can set properties of a t_bunny_sound thanks to a file at runtime.
+This allow you to get rid of a lot of configuration and to create space for
+any outside editor.
+
+INI format and complete field description
+-----------------------------------------
+
+### Mandatory field
+
+* RessourceFile is a single string that contains the address of a sound.
+  Usage:
+
+    RessourceFile="Sound file that will be loaded"
+
+### Optionnal fields
+
+* Volume is the volume of the sound. It should be an integer between 0 and 100.
+
+    Volume=42
+
+* Pitch is the accelleration of the sound. A pitch of 2 will shorter the
+  sound, but also make it more acute. A pitch of 0.5 will make it longer
+  and also more low. A single double is neccessary.
+
+    Pitch=3
+
+* Loop indicates if the sound must be play continuously or a single time.
+  A single integer is required, like 1, true, 0 or false.
+
+    Loop=true
+
+* Position indicates the position of the sound in space. It is three double.
+
+    Position=X,Y,Y
+
+* Attenuation is how fast the sound decrease when going far away. It is a single
+  double. that should be between 0 and 10.
+
+    Attenuation=10
+
+CSV format
+----------
+
+The CSV format does not follow the same architecture as the INI one.
+Here is its architecture:
+
+"ressourcefile";"path_to_ressource_file"
+"volume";volume
+"pitch";pitch
+"loop";loop
+"position";x;y;z
+"attenuation";attenuation
+
+XML format
+----------
+
+There is no support for XML yet.
+
+LUA format
+----------
+
+There is no support for LUA yet.
+
+JSON format
+-----------
+
+There is no support for JSON yet.
+
+YAML format
+-----------
+
+There is no support for YAML yet.
+
+LISP format
+-----------
+
+There is no support for LISP yet.
+

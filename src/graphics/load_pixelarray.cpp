@@ -12,6 +12,14 @@ t_bunny_pixelarray	*bunny_load_pixelarray(const char		*file)
   struct bunny_pixelarray	*pa;
   uint64_t			hash;
 
+  if (bunny_which_format(file) != BC_CUSTOM)
+    {
+      t_bunny_pixelarray	*px;
+
+      if (bunny_set_clipable_attribute(file, (t_bunny_picture**)&px, NULL, true) == false)
+	return (NULL);
+      return (px);
+    }
   hash = bunny_hash(BH_FNV, file, strlen(file));
   if ((pa = new (std::nothrow) struct bunny_pixelarray) == NULL)
     goto ReturnNull;

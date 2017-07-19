@@ -13,25 +13,23 @@ char			*_bunny_write_ini(const t_bunny_configuration		*config)
   size_t		index;
   char			*ret;
 
-  if (conf.Access("@"))
-    {
-      SmallConf		&def = conf["@"];
+  for (scope = conf.Begin(); scope != conf.End(); ++scope)
+    if (scope->second->NbrChild() == 0)
+      {
+	field = scope;
 
-      for (field = def.Begin(); field != def.End(); ++field)
-	{
-	  ss << field->first << "=";
-	  for (index = 0; index != field->second->Size(); )
-	    {
-	      writevalue(ss, (*field->second)[index]);
-	      if (++index != field->second->Size())
-		ss << ",";
-	    }
-	  ss << std::endl;
-	}
-    }
+	ss << field->first << "=";
+	for (index = 0; index != field->second->Size(); )
+	  {
+	    writevalue(ss, (*field->second)[index]);
+	    if (++index != field->second->Size())
+	      ss << ",";
+	  }
+	ss << std::endl;
+      }
   
   for (scope = conf.Begin(); scope != conf.End(); ++scope)
-    if (scope->first != "@")
+    if (scope->second->NbrChild() != 0)
       {
 	ss << std::endl << "[" << scope->first << "]" << std::endl;
 	for (field = scope->second->Begin(); field != scope->second->End(); ++field)

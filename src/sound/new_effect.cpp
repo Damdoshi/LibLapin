@@ -20,6 +20,16 @@ t_bunny_effect		*bunny_new_effect(double		duration)
     goto FailEffect;
 
   eff->file = strdup("");
+  eff->volume = 50;
+  eff->pitch = 1;
+  eff->loop = false;
+  eff->position[0] = 0;
+  eff->position[1] = 0;
+  eff->position[2] = 0;
+  eff->attenuation = 5;
+  eff->playing = false;
+  eff->pause = false;
+
   eff->sample_per_second = SAMPLE_PER_SECONDS;
   eff->duration = duration;
   eff->sound.setBuffer(*eff->effect);

@@ -550,6 +550,14 @@ t_bunny_configuration	*bunny_configuration_next(t_bunny_configuration			*config)
 ** \return Always NULL.
 */
 t_bunny_configuration	*bunny_configuration_end(t_bunny_configuration			*config);
-  
-#endif	/*			__LAPIN_CONFIGURATION_H__	*/
+
+/*!
+** Return the format which is supposed to be used in file thanks to its extension.
+** \param file The filename/path
+** \return The file format, accordingly to its extension. BC_CUSTOM if there is no
+** matching built-in type.
+*/
+t_bunny_configuration_type bunny_which_format(const char				*file);
+
+#endif	/*			__LAPIN_CONFIGURATION_H__				*/
 

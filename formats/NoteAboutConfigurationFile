@@ -1,0 +1,43 @@
+NOTE ABOUT CONFIGURATION FILE
+=============================
+
+DOUBLE
+------
+
+Supported double formats are many. Here are example of double:
+
+4.2
+2.1e+2
+0.1e-26
+7e4
+
+Any integer can also be turned into a double.
+You can also use '%':
+
+47% will be read as 0.47
+
+INTEGER
+-------
+
+Supported integer formats includes decimal, octal and hexadecimal:
+
+47
+0x4F
+077
+
+You can also use true and false, which match 1 and 0.
+
+STRING
+------
+
+Strings are supported between " tokens. You can use any C special char.
+UTF-8 characters are supported.	
+Here are a few examples:
+
+"I am fine."
+"Good!\tDo it!\n"
+"Well... \x7F\033"
+
+Strings can also be present without ", but C special char won't be interpreted
+and UTF-8 characters may not work. Note that true and false without " won't
+be interpreted as strings but as integer, like said previously.

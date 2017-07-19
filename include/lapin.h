@@ -105,6 +105,7 @@
 
 # include			"lapin/enum.h"
 # include			"lapin/error.h"
+# include			"lapin/configuration.h"
 # include			"lapin/self_test.h"
 # include			"lapin/color.h"
 # include			"lapin/allocator.h"
@@ -114,7 +115,6 @@
 # include			"lapin/network.h"
 # include			"lapin/events.h"
 # include			"lapin/plugin.h"
-# include			"lapin/configuration.h"
 # include			"lapin/sound.h"
 # include			"lapin/threads.h"
 # include			"working/asynclock.h"
@@ -135,6 +135,7 @@
 # include			"lapin/pool.h"
 # include			"lapin/bitfield.h"
 
+# include			"lapin/context.h"
 # include			"lapin/misc.h"
 
 # include			"lapin/compat.h"

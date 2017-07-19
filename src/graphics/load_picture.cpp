@@ -15,6 +15,14 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
   sf::Sprite		spr;
   uint64_t		hash;
 
+  if (bunny_which_format(file) != BC_CUSTOM)
+    {
+      t_bunny_picture	*pc = NULL;
+      
+      if (bunny_set_clipable_attribute(file, &pc, NULL, false) == false)
+	return (NULL);
+      return (pc);
+    }
   hash = bunny_hash(BH_FNV, file, strlen(file));
   if ((pic = new (std::nothrow) struct bunny_picture) == NULL)
     goto ReturnNull;

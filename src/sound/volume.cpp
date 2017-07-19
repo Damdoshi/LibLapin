@@ -15,6 +15,7 @@ void			bunny_sound_volume(t_bunny_sound	*sound,
   else if (vol > 100)
     vol = 100;
 
+  sound->volume = vol;
   if (*type == MUSIC)
     ((struct bunny_music*)sound)->music.setVolume(vol);
   else

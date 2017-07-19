@@ -17,13 +17,16 @@ void			bunny_ini_set_field(t_bunny_ini		*ini,
   t_bunny_configuration	*cnf = (t_bunny_configuration*)ini;
   bool			create = SmallConf::create_mode;
 
-  if (strcmp(scope, "") == 0)
-    scope = "@";
   SmallConf::create_mode = true;
-  if ((cnf = bunny_configuration_get_child(cnf, scope)) == NULL)
+
+  if (strcmp(scope, "") != 0)
     {
-      SmallConf::create_mode = create;
-      scream_error_if(return, bunny_errno, PATTERN, ini, scope, field, index, value);
+      if ((cnf = bunny_configuration_get_child(cnf, scope)) == NULL)
+	{
+	  SmallConf::create_mode = create;
+	  scream_error_if
+	    (return, bunny_errno, PATTERN, ini, scope, field, index, value);
+	}
     }
   if ((cnf = bunny_configuration_get_child(cnf, field)) == NULL)
     {

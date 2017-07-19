@@ -12,6 +12,10 @@ void			bunny_sound_position(t_bunny_sound		*sound,
 {
   enum _music_or_sound	*type = (enum _music_or_sound*)sound;
 
+  sound->position[0] = x;
+  sound->position[1] = y;
+  sound->position[2] = z;
+
   if (*type == MUSIC)
     ((struct bunny_music*)sound)->music.setPosition(x, y, z);
   else

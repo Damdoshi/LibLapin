@@ -17,7 +17,7 @@ t_bunny_configuration	*bunny_load_configuration(t_bunny_configuration_type		type
   if (bunny_load_file(file, (void**)&code, NULL) == -1)
     scream_error_if(return (NULL), bunny_errno, PATTERN, type, file, config, outconf);
   outconf = bunny_read_configuration(type, code, config);
-  bunny_free(code);
+  bunny_delete_file(code, file);
   if (!outconf)
     scream_error_if(, bunny_errno, PATTERN, type, file, config, outconf);
   scream_log_if(PATTERN, type, file, config, outconf);

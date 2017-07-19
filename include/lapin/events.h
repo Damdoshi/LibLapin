@@ -353,7 +353,7 @@ const t_bunny_window	       *bunny_get_window(void);
 ** it is what you sent to bunny_loop or bunny_loop_mw as last parameter.
 ** Return a t_bunny_response in order to keep the loop or break it.
 */
-typedef t_bunny_response	(*t_bunny_display)(const void			*data);
+typedef t_bunny_response	(*t_bunny_display)(void				*data);
 
 /*!
 ** Register the sent function in order to call it under certain circumstances.
@@ -425,6 +425,13 @@ t_bunny_response		bunny_loop_mw(t_bunny_window			**win,
 					      size_t				nwin,
 					      uint8_t				freq,
 					      void				*data);
+
+/*!
+** Get the frequency of the current bunny_loop
+** \return The number of call to the loop callback per seconds, under good
+** condition of performences.
+*/
+size_t				bunny_get_frequency(void);
 
 /*
 ** Network event

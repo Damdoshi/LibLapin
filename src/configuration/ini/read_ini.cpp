@@ -72,7 +72,7 @@ t_bunny_configuration	*_bunny_read_ini(const char			*code,
 
   i = 0;
   SmallConf::create_mode = true;
-  child = &conf["@"]; // Create the INI "default node"
+  child = &conf; // Create the INI "default node"
   while (code[i])
     {
       read_separator(code, i);

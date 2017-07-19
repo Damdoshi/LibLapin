@@ -6,12 +6,11 @@
 #include		<sstream>
 #include		"lapin_private.h"
 
-size_t			bunny_configuration_get_nbr_case(const t_bunny_configuration	*conf)
+size_t			bunny_configuration_get_nbr_case(const t_bunny_configuration	*_conf)
 {
-  size_t		i;
+  SmallConf		*conf = (SmallConf*)_conf;
 
-  for (i = 0; bunny_configuration_get_case((t_bunny_configuration*)conf, i); ++i);
-  scream_log_if("%p -> %zu", conf, i);
-  return (i);
+  scream_log_if("%p -> %zu", conf, conf->Size());
+  return (conf->Size());
 }
 

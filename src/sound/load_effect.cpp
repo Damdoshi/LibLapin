@@ -13,7 +13,15 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
   struct bunny_effect	*eff;
   size_t		len;
   uint64_t		hash;
-  
+
+  if (bunny_which_format(file) != BC_CUSTOM)
+    {
+      t_bunny_sound	*pc = NULL;
+      
+      if (bunny_set_sound_attribute(file, &pc, NULL, false) == false)
+	return (NULL);
+      return ((t_bunny_effect*)pc);
+    }  
   hash = bunny_hash(BH_FNV, file, strlen(file));
   if ((eff = new (std::nothrow) struct bunny_effect) == NULL)
     goto Fail;
@@ -21,7 +29,6 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
     {
       if ((eff->effect = new (std::nothrow) sf::SoundBuffer) == NULL)
 	goto FailStruct;
-      fprintf(stderr, "NEW EFFECT LOADING %p\n", eff->effect);
       if ((eff->effect->loadFromFile(file)) == false)
 	goto FailEffect;
       len = eff->effect->getSampleCount();
@@ -38,6 +45,16 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
   eff->res_id = hash;
 
   eff->file = strdup(file);
+  eff->volume = 50;
+  eff->pitch = 1;
+  eff->loop = false;
+  eff->position[0] = 0;
+  eff->position[1] = 0;
+  eff->position[2] = 0;
+  eff->attenuation = 5;
+  eff->playing = false;
+  eff->pause = false;
+
   eff->sample_per_second = eff->effect->getSampleRate();
   eff->duration = (double)eff->effect->getSampleCount() / eff->sample_per_second;
   eff->sound.setBuffer(*eff->effect);
