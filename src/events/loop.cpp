@@ -320,6 +320,7 @@ t_bunny_response	bunny_loop(t_bunny_window	*window,
       scream_log_if(PATTERN "leave_context)", window, freq, data);
       gl_callback.leaving_context(rep, data);
     }
+  while (win->window->pollEvent(event));
   scream_log_if("%p window, %u frequency, %p parameter -> %d (Exiting)", window, freq, data, rep);
   return (rep);
 }

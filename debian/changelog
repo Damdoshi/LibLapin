@@ -1,5 +1,6 @@
 liblapin-dev (1.12) UNRELEASED; urgency=low
 
+  * Empty the event stack when leaving bunny_loop or bunny_loop_mw.
   * Add the bunny_camera module with headtracking capability and associated example.
   * Open bunny_plugin_get_function to unlisted functions.
   * Fix bunny_call and bunny_callv, move the bunny_plugin module from working/ to lapin/
@@ -14,7 +15,7 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
   * Add bunny_sound_pause
   * Add sound attributes like volume, pitch, loop, etc. in t_bunny_sound
   * Edit bunny_soud_play to apply every structure attributes to the sound.
-  * Imprive bunny_load_music and bunny_load_effect thanks to the new function
+  * Improve bunny_load_music and bunny_load_effect thanks to the new function
     bunny_set_sound_attribute with the ability to load sounds and set attributes
     by giving to them a configuration file instead of a sound file.
     Supported formats for ressources are describded in formats/. For this one, formats/sound
