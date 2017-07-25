@@ -212,7 +212,7 @@ t_bunny_picture			*bunny_new_picture(unsigned int			wid,
 ** The bunny_load_picture load a picture from a file. Supported formats are
 ** .png, .jpg, .gif and 24 bits bitmap. Output is a fast picture.
 ** The reserved memory to handle it is outside the bunny_malloc space.
-** \param The file to open and read.
+** \param file The file to open and read.
 ** \return Return a t_bunny_picture filled with the picture or NULL on error.
 */
 t_bunny_picture			*bunny_load_picture(const char			*file);

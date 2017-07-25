@@ -78,8 +78,8 @@ bool				_bunny_stack_push(t_bunny_stack		*stack,
 
 /*!
 ** Push an element on the top of the stack
-** \param stack The stack to edit
-** \param data The data to stack
+** \param st The stack to edit
+** \param da The data to stack
 ** \return True if everything went well
 */
 # define			bunny_stack_push(st, da)		\

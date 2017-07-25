@@ -152,6 +152,14 @@ t_bunny_configuration	*bunny_configuration_get_root(t_bunny_configuration		*conf
 */
 const char		*bunny_configuration_get_name(const t_bunny_configuration	*config);
 
+/*!
+** Get the address of the current node.
+** \param config The node to fetch the name of
+** \return The address of the node. Is always valid.
+** "" is returned if the node is the root.
+*/
+const char		*bunny_configuration_get_address(const t_bunny_configuration	*config);
+
 # if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 /*!
 ** Cover bunny_configuration_get_child and bunny_configuration_get_case with the same
@@ -163,7 +171,9 @@ const char		*bunny_configuration_get_name(const t_bunny_configuration	*config);
 #  define		bunny_configuration_access(cnf, id)				\
   _Generic((id),									\
 	   char*: bunny_configuration_get_child,					\
-	   size_t: bunny_configuration_get_case)(cnf, id)
+	   size_t: bunny_configuration_get_case,					\
+	   int: bunny_configuration_get_case						\
+	   )(cnf, id)
 # endif
 
 /*!

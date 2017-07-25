@@ -86,6 +86,16 @@ bool				read_function(const char			*code,
 void				writevalue(std::stringstream			&ss,
 					   const SmallConf			&cnf);
 
+
+bool				_bunny_handle_directive(const char		*code,
+							ssize_t			&i,
+							SmallConf		*node,
+							t_bunny_configuration	*fileroot,
+							void (*readseparator)(const char*, ssize_t&));
+t_bunny_configuration		*_bunny_configuration_go_get_node(const t_bunny_configuration *config,
+								  const char		*addr,
+								  ssize_t		&i);
+
 extern const char		*fieldname_first_char;
 extern const char		*fieldname;
 extern const char		*numbers;
@@ -109,6 +119,7 @@ struct				SmallConf
     >::iterator			iterator;
 
   std::string			name;
+  std::string			address;
   mutable bool			have_value;
   mutable std::string		original_value;
   mutable double		converted;
@@ -158,9 +169,16 @@ struct				SmallConf
       {
 	if (create_mode)
 	  {
+	    std::stringstream	ss;
+
+	    if (father)
+	      ss << this->address << "." << str;
+	    else
+	      ss << this->address << str;
 	    *slot = new SmallConf;
 	    (*slot)->name = str;
 	    (*slot)->father = this;
+	    (*slot)->address = ss.str();
 	  }
 	else
 	  {
@@ -185,12 +203,14 @@ struct				SmallConf
 	array.resize(i + 1);
 	while (olsize <= i)
 	  {
-	    std::stringstream ss;
+	    std::stringstream ss, sx;
 
+	    sx << this->address << "[" << i << "]";
 	    ss << this->name << "[" << i << "]";
 	    array[olsize] = new SmallConf;
 	    array[olsize]->father = this;
 	    array[olsize]->name = ss.str();
+	    array[olsize]->address = sx.str();
 	    olsize += 1;
 	  }
       }      
@@ -221,7 +241,16 @@ struct				SmallConf
   bool				GetString(const char				**out) const
   {
     if (have_value == false)
-      return (false);
+      {
+	if (array.size() == 1)
+	  {
+	    if (array[0]->GetString(out) == false)
+	      return (false);
+	    original_value = *out;
+	    return (true);
+	  }
+	return (false);
+      }
     *out = original_value.c_str();
     return (true);
   }
@@ -242,7 +271,16 @@ struct				SmallConf
     double			d;
 
     if (GetDouble(&d) == false)
-      return (false);
+      {
+	if (array.size() == 1)
+	  {
+	    if (array[0]->GetInt(i) == false)
+	      return (false);
+	    converted = *i;
+	    return (true);
+	  }
+	return (false);
+      }
     converted_2 = converted;
     *i = converted_2;
     return (true);
@@ -262,11 +300,20 @@ struct				SmallConf
   bool				GetDouble(double				*v) const
   {
     if (have_value == false)
-      return (false);
+      {
+	if (array.size() == 1)
+	  {
+	    if (array[0]->GetDouble(v) == false)
+	      return (false);
+	    converted = *v;
+	    return (true);
+	  }
+	return (false);
+      }
     if (is_converted == false)
       {
-	ssize_t			i;
-	
+	ssize_t			i = 0;
+
 	if (readdouble(original_value.c_str(), i, converted) == false)
 	  return (false);
 	is_converted = true;

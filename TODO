@@ -1,8 +1,6 @@
-=> Placer un booléen dans la racine des configurations de facon a empecher la suppression partielle d'un arbre avec un delete_configuration.
 
-
--> La mise en place de log est faite jusqu'a configuration/archive...
-
+ => Ajouter un offset configurable pour le joystick en dessous duquel un mouvement d'un axe
+    n'est pas remonté comme event. Par defaut, il vaut zero pour conserver le comportement precedent.
 
  => Integrer le dechiffrement des ressources aux fonctions de chargement,
     de facon a ce que rien ne soit neccessaire pour le faire ensuite.

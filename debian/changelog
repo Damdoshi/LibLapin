@@ -19,6 +19,12 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
     bunny_set_sound_attribute with the ability to load sounds and set attributes
     by giving to them a configuration file instead of a sound file.
     Supported formats for ressources are describded in formats/. For this one, formats/sound
+  * bunny_configuration_go_get_* functions can now use a value from another field
+    with the operator [] in addr. For example: node.field[node.case]
+  * Scope in INI can now use full address as name instead of simple fieldname.
+    It places the scope at the written address.
+  * Add bunny_real_width & bunny_real_height macros in placement.h for C11.
+    They compute the real size on screen of window and clipable elements.
 
   * t_bunny_display now take a non const pointer.
     **Compatibility break!**

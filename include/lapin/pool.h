@@ -41,8 +41,8 @@ t_bunny_pool			*_bunny_new_pool(size_t			nmemb,
 
 /*!
 ** Create a managed array of maximum nmemb elements of type typ
-** \param nmemb How many elements there is in your pool
-** \param size What is the type of elements inside your pool
+** \param nbr How many elements there is in your pool
+** \param typ What is the type of elements inside your pool
 ** \return A pool or NULL on error
 */
 # define			bunny_new_pool(nbr, typ)		_bunny_new_pool(nbr, sizeof(typ))
@@ -91,7 +91,7 @@ t_bunny_pool			*_bunny_new_pool(size_t			nmemb,
 /*!
 ** Get a free element inside the pool.
 ** \param pol The pool to browse.
-** \param id A pointer to store the id of the element. Useful when you will release to element.
+** \param id A pointer to store the id of the element. Useful when you will release the element.
 ** \return NULL if there is no free element inside the pool, or a pointer to a free element
 **
 */
@@ -103,6 +103,7 @@ t_bunny_pool			*_bunny_new_pool(size_t			nmemb,
 /*!
 ** Get a free element inside the pool.
 ** \param pol The pool to browse.
+** \param id A pointer to store the id of the element. Useful when you will release the element.
 ** \param type The type of datas inside the pool
 ** \return NULL if there is no free element inside the pool, or a pointer to a free element
 */

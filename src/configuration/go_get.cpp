@@ -112,15 +112,17 @@ bool			bunny_configuration_go_get_string_va(const t_bunny_configuration *config,
 }
 
 t_bunny_configuration	*_bunny_configuration_go_get_node(const t_bunny_configuration	*config,
-							  const char			*addr)
+							  const char			*addr,
+							  ssize_t			&i)
 {
   t_bunny_configuration	*cnf = (t_bunny_configuration*)config;
   const char		*str;
   char			buffer[4096];
-  ssize_t		i, j;
+  ssize_t		j;
+  int			tmp;
 
-  i = j = 0;
-  while (addr[i])
+  j = i;
+  while (addr[i] && addr[i] != ']')
     {
       if (readchar(addr, j, fieldname) == false)
 	return (NULL);
@@ -135,10 +137,41 @@ t_bunny_configuration	*_bunny_configuration_go_get_node(const t_bunny_configurat
 	  i = j;
 	  j = strtol(&addr[i], (char**)&str, 0);
 	  if (str == &addr[i])
-	    return (NULL);
-	  if ((cnf = bunny_configuration_get_case(cnf, j)) == NULL)
-	    return (NULL);
-	  i += str - &addr[i];
+	    {
+	      t_bunny_configuration *sub;
+
+	      if ((sub = _bunny_configuration_go_get_node(config, addr, i)) == NULL)
+		return (NULL);
+	      else if (bunny_configuration_get_int(sub, &tmp))
+		{
+		  if ((cnf = bunny_configuration_get_case(cnf, tmp)) == NULL)
+		    return (NULL);
+		}
+	      else if (bunny_configuration_get_string(sub, &str))
+		{
+		  if ((cnf = bunny_configuration_get_child(cnf, str)) == NULL)
+		    return (NULL);
+		}
+	      else
+		return (NULL);
+	      /*
+	      for (j = i, tmp = 1; addr[j] && (i == j || tmp != 0); ++j)
+		if (addr[j] == '[')
+		  tmp += 1;
+		else if (addr[j] == ']')
+		  tmp -= 1;
+	      if (tmp == 0)
+		i = j - 1;
+	      else
+		i = j;
+	      */
+	    }
+	  else
+	    {
+	      if ((cnf = bunny_configuration_get_case(cnf, j)) == NULL)
+		return (NULL);
+	      i += str - &addr[i];
+	    }
 	  if (readtext(addr, i, "]") == false)
 	    return (NULL);
 	  j = i;
@@ -148,11 +181,14 @@ t_bunny_configuration	*_bunny_configuration_go_get_node(const t_bunny_configurat
 	  if (bunny_configuration_get_string(cnf, &str) == false)
 	    return (NULL);
 	  cnf = bunny_configuration_get_root(cnf);
-	  if ((cnf = _bunny_configuration_go_get_node(cnf, str)) == NULL)
+	  if ((cnf = _bunny_configuration_go_get_node(cnf, str, j)) == NULL)
 	    return (NULL);
 	}
       else if (readtext(addr, j, ".") == false)
-	return (cnf);
+	{
+	  i = j;
+	  return (cnf);
+	}
       i = j;
     }
   return (cnf);
@@ -165,8 +201,10 @@ t_bunny_configuration	*bunny_configuration_go_get_node(t_bunny_configuration		*c
 							 const char			*addr)
 {
   t_bunny_configuration	*cnf;
+  ssize_t		i;
 
-  if ((cnf = _bunny_configuration_go_get_node(config, addr)) == NULL)
+  i = 0;
+  if ((cnf = _bunny_configuration_go_get_node(config, addr, i)) == NULL)
     scream_error_if(return (NULL), bunny_errno, PATTERN, config, addr, cnf);
   scream_log_if(PATTERN, config, addr, cnf);
   return (cnf);

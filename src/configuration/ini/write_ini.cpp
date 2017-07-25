@@ -8,7 +8,7 @@
 char			*_bunny_write_ini(const t_bunny_configuration		*config)
 {
   SmallConf		&conf = *(SmallConf*)config;
-  std::map<std::string, SmallConf*>::const_iterator scope, field;
+  std::map<std::string, SmallConf*>::const_iterator scope;
   std::stringstream	ss;
   size_t		index;
   char			*ret;
@@ -16,37 +16,47 @@ char			*_bunny_write_ini(const t_bunny_configuration		*config)
   for (scope = conf.Begin(); scope != conf.End(); ++scope)
     if (scope->second->NbrChild() == 0)
       {
-	field = scope;
-
-	ss << field->first << "=";
-	for (index = 0; index != field->second->Size(); )
-	  {
-	    writevalue(ss, (*field->second)[index]);
-	    if (++index != field->second->Size())
-	      ss << ",";
-	  }
+	ss << scope->first << "=";
+	if (scope->second->Size() == 0)
+	  writevalue(ss, (*scope->second));
+	else
+	  for (index = 0; index != scope->second->Size(); )
+	    {
+	      if ((*scope->second)[index].NbrChild() == 0)
+		writevalue(ss, (*scope->second)[index]);
+	      else
+		ss << "&" << bunny_configuration_get_address((const void*)&(*scope->second)[index]);
+	      if (++index != scope->second->Size())
+		ss << ",";
+	    }
 	ss << std::endl;
       }
   
   for (scope = conf.Begin(); scope != conf.End(); ++scope)
-    if (scope->second->NbrChild() != 0)
+    if (scope->second->NbrChild() == 0)
       {
-	ss << std::endl << "[" << scope->first << "]" << std::endl;
-	for (field = scope->second->Begin(); field != scope->second->End(); ++field)
-	  {
-	    ss << field->first << "=";
-	    for (index = 0; index != field->second->Size(); )
-	      {
-		writevalue(ss, (*field->second)[index]);
-		if (++index != field->second->Size())
-		  ss << ",";
-	      }
-	    ss << std::endl;
-	  }
+	for (index = 0; index != scope->second->Size(); ++index)
+	  if ((*scope->second)[index].NbrChild() != 0)
+	    {
+	      ss << std::endl << "["
+		 << bunny_configuration_get_address((const void*)&(*scope->second)[index])
+		 << "]" << std::endl;
+	      if ((ret = _bunny_write_ini((const void*)&((*scope->second)[index]))) == NULL)
+		return (NULL);
+	      ss << ret;
+	      bunny_free(ret);
+	    }
       }
-  if ((ret = (char*)bunny_malloc(sizeof(*ret) * (ss.str().size() + 1))) == NULL)
+    else
+      {
+	ss << std::endl << "[" << bunny_configuration_get_address(scope->second) << "]" << std::endl;
+	if ((ret = _bunny_write_ini(scope->second)) == NULL)
+	  return (NULL);
+	ss << ret;
+	bunny_free(ret);
+      }
+  if ((ret = bunny_strndup(ss.str().c_str(), ss.str().size() + 1)) == NULL)
     scream_error_if(return (NULL), bunny_errno, "%p -> %s", config, ret);
-  strcpy(ret, ss.str().c_str());
   scream_log_if("%p -> %s", config, ret);
   return (ret);
 }

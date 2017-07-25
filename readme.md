@@ -3,6 +3,7 @@
 # LibLapin - "Bunny Library"
 
 LibLapin is an easy and direct graphic and game library offering a C API.
+
 It provides features for graphics, events and sound to network and configuration scripts.
 It is written in "C+" and can be used in both C and C++.
 
@@ -43,7 +44,7 @@ For Windows (May need some tweaks - will be fixed soon):
  * The [manual] (http://hangedbunnystudio.com/sub/liblapin/)
  * The [tutorials] (http://)
  * The [LibLapin Facebook page] (https://www.facebook.com/LeGrandLapinNoir/)
- * The [Hanged Bunny Studio forum] 
+ * The [Hanged Bunny Studio forum]
 
 ## Contribute
 
@@ -55,8 +56,8 @@ If you want to commit something, my only request is: please, keep the project ho
 
  * You may found names too long but that is the way it is, make your symbols'name the same way.
  * Use existing types if you bring a new object that have similar behaviour to one and patch functions that use the parent types to make it work on yours.
- * Try to keep the coding style as it is, at least inside the headers file. I don't care much about code files.
- * If you create a new module, add a small program in example/misc/ to demonstrate what your module do.
+ * Try to keep the coding style as it is, at least inside the headers file. I don't care much about code files. Please avoid commiting ^M (\r)
+ * If you create a new module, add a small program in example/misc/ to demonstrate what your module do, and if possible a full test in tests/.
  * If you need to break the API to extend it, don't break it: create a new function with your new prototype and bring an additional macro with the old one that call the new one.
  * Doxygen all
 

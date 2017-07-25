@@ -90,5 +90,54 @@ typedef struct			s_bunny_accurate_area
   double			h;
 }				t_bunny_accurate_area;
 
-#endif	/*			__LAPIN_PLACEMENT_H__	*/
+
+# if				defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+
+typedef struct s_bunny_clipable	t_bunny_clipable;
+typedef struct s_bunny_pixelarray t_bunny_pixelarray;
+typedef struct s_bunny_font	t_bunny_font;
+
+/*!
+** Get the effective width on screen of the sent clipable.
+** It consists in its clip size multiplied by its scale.
+** Can also retrieve the width of window.
+** \param clip The clip or window to measure
+** \return The width on screen of the clip
+*/
+#  define			bunny_real_width(clip)		\
+  _Generic((clip),						\
+	   t_bunny_window*:					\
+	   clip->buffer.width					\
+	   t_bunny_clipable*:					\
+	   ((clip)->clip_width * (clip)->scale.x),		\
+	   t_bunny_pixelarray*:					\
+	   ((clip)->clipable.clip_width				\
+	    * (clip)->clipable.scale.x),			\
+	   t_bunny_font*:					\
+	   ((clip)->clipable.clip_width				\
+	    * (clip)->clipable.scale.x)				\
+	   )
+
+/*!
+** Get the effective height on screen of the sent clipable.
+** It consists in its clip size multiplied by its scale.
+** Can also retrieve the height of a window.
+** \param clip The clip or window to measure
+** \return The height on screen of the clip
+*/
+#  define			bunny_real_height(clip)		\
+  _Generic((clip),						\
+	   t_bunny_window*:					\
+	   clip->buffer.height,					\
+	   t_bunny_clipable*:					\
+	   ((clip)->clip_height * (clip)->scale.y),		\
+	   t_bunny_pixelarray*:					\
+	   ((clip)->clipable.clip_height			\
+	    * (clip)->clipable.scale.y),			\
+	   t_bunny_font*:					\
+	   ((clip)->clipable.clip_height			\
+	    * (clip)->clipable.scale.y)				\
+	   )
+# endif
+#endif	/*			__LAPIN_PLACEMENT_H__		*/
 

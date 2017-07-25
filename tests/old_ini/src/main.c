@@ -50,6 +50,7 @@ int			main(void)
 
   fprintf(stderr, "Trying to load and reload the same file and check consistancy.\n");
   assert(load_save_test(file, "./tmp1.ini~", "./tmp2.ini~"));
+  system("rm *~");
   assert(ini = bunny_load_ini(file));
   assert(bunny_save_ini(ini, "/dev/stdout"));
   assert(strcmp("Damdoshi", bunny_ini_get_field(ini, DEFAULT_SCOPE, "Name", 0)) == 0);

@@ -17,7 +17,8 @@ static void		read_separator(const char			*code,
     }
 }
 
-static bool		read_inside_scope(const char			*code,
+static bool		read_inside_scope(t_bunny_configuration		*fileroot,
+					  const char			*code,
 					  ssize_t			&i,
 					  SmallConf			&conf)
 {
@@ -35,7 +36,13 @@ static bool		read_inside_scope(const char			*code,
   do
     {
       read_separator(code, i);
-      readvalue(code, i, newnode[iteration++], ",");
+      if (code[i] == '@')
+	{
+	  if (_bunny_handle_directive(code, i, &newnode[iteration++], fileroot, read_separator) == false)
+	    return (false);
+	}
+      else
+	readvalue(code, i, newnode[iteration++], ",");
       read_separator(code, i);
     }
   while (readtext(code, i, ","));
@@ -47,19 +54,25 @@ SmallConf		*read_new_scope(const char			*code,
 					ssize_t				&i,
 					SmallConf			&root)
 {
-  char			buffer[256];
+  t_bunny_configuration	*cnf;
 
   read_separator(code, i);
-  if (getfieldname(code, i, &buffer[0], sizeof(buffer), root, false) == false)
-    return (NULL);
+  if ((cnf = _bunny_configuration_go_get_node
+       ((t_bunny_configuration*)&root, code, i)) == NULL)
+    scream_error_if
+      (return (NULL), BE_SYNTAX_ERROR,
+       "%s code, %p config -> %p "
+       "(Error while getting scope name or scope address on line %d)",
+       code, &root, cnf, whichline(code, i));
   read_separator(code, i);
   if (readtext(code, i, "]") == false)
     scream_error_if
       (return (NULL), BE_SYNTAX_ERROR,
        "%s code, %p config -> %p "
        "(The ']' token was expected after scope name on line %d)",
-       code, &root, (void*)NULL, whichline(code, i));
-  return (&root[&buffer[0]]);
+       code, &root, (void*)NULL, whichline(code, i));  
+  read_separator(code, i);
+  return ((SmallConf*)cnf);
 }
 
 t_bunny_configuration	*_bunny_read_ini(const char			*code,
@@ -79,23 +92,26 @@ t_bunny_configuration	*_bunny_read_ini(const char			*code,
       if (readtext(code, i, "["))
 	{
 	  if ((child = read_new_scope(code, i, conf)) == NULL)
-	    {
-	      SmallConf::create_mode = cmode;
-	      return (NULL);
-	    }
+	    goto RestoreExit;
+	}
+      else if (code[i] == '@')
+	{
+	  if (_bunny_handle_directive(code, i, child, config, read_separator) == false)
+	    goto RestoreExit;
 	}
       else if (code[i] != '\0')
 	{
-	  if (read_inside_scope(code, i, *child) == false)
-	    {
-	      SmallConf::create_mode = cmode;
-	      return (NULL);
-	    }
+	  if (read_inside_scope(config, code, i, *child) == false)
+	    goto RestoreExit;
 	}
       read_separator(code, i);
     }
   SmallConf::create_mode = cmode;
   scream_log_if("%s code, %p config -> %p", code, config, config);
   return (config);
+
+ RestoreExit:
+  SmallConf::create_mode = cmode;
+  return (NULL);
 }
 
