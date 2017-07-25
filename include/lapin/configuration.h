@@ -122,6 +122,14 @@ extern t_bunny_my_write_configuration gl_bunny_my_write_configuration;
 void			bunny_delete_configuration(t_bunny_configuration		*config);
 
 /*!
+** Delete the sent configuration node. All children will be destroyed as well.
+** If the configuration is a child, it will remove itself cleanly from its parent.
+** \param config The configuration node to delete.
+*/
+void			bunny_delete_node(t_bunny_configuration				*config,
+						   const char				*addr);
+
+/*!
 ** Set the create mode to on or off. If the create mode is on, every node required to handle
 ** get child or get case will be created on the fly. On the contrary, functions will return NULL
 ** if nodes does not exists.

@@ -17,11 +17,12 @@ static double		operand(const char			*operation,
 				t_bunny_configuration		*env,
 				bool				&bad)
 {
+  t_bunny_configuration	*cnf;
   char			*end;
   double		value;
 
   skipspace(operation, i);
-  if (operation[i] == '(')
+  if (readtext(operation, i, "("))
     {
       skipspace(operation, i);
       value = ternary(operation, i, env, bad);
@@ -47,8 +48,25 @@ static double		operand(const char			*operation,
       i = end - operation;
       return (value);
     }
-  // get variable from env...
-  return (-42);
+
+  // Get variable
+  if ((cnf = _bunny_configuration_go_get_node(env, operation, i)) == NULL)
+    {
+      bad = true;
+      scream_error_if
+	(return (nan("")), BE_SYNTAX_ERROR,
+	 PATTERN " (Variable %10s... not found)",
+	 operation, env, nan(""), &operation[i]);
+    }
+  if (bunny_configuration_get_double(cnf, &value) == false)
+    {
+      bad = true;
+      scream_error_if
+	(return (nan("")), BE_SYNTAX_ERROR,
+	 PATTERN " (Variable %10s is not a number)",
+	 operation, env, nan(""), &operation[i]);
+    }
+  return (value);
 }
 
 static double		test(const char				*operation,
