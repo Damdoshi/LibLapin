@@ -23,7 +23,16 @@ t_bunny_configuration	*_bunny_read_csv(const char			*code,
       skipspace_inline(code, i);
       if (code[i])
 	{
-	  if (readvalue(code, i, conf[y][x], ";\n") == false)
+	  if (code[i] == '@')
+	    {
+	      if (_bunny_handle_directive(code, i, &conf[y][x], NULL, skipspace_inline) == false)
+		scream_error_if
+		  (return (NULL), BE_SYNTAX_ERROR,
+		   "%s code, %p config -> %p "
+		   "(Cannot load required file from line %d, column %d)",
+		   code, config, (void*)NULL, y, x);
+	    }
+	  else if (readvalue(code, i, conf[y][x], ";\n") == false)
 	    scream_error_if
 	      (return (NULL), BE_SYNTAX_ERROR,
 	       "%s code, %p config -> %p "

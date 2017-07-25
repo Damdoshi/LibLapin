@@ -17,7 +17,7 @@ bool			_bunny_handle_directive(const char		*code,
 {
   char			buffer[512];
 
-  if (readtext(code, i, "@include"))
+  if (readtext(code, i, "@include") && fileroot)
     {
       read_separator(code, i);
       if (readstring(code, i, &buffer[0], sizeof(buffer)) == false)
@@ -28,7 +28,7 @@ bool			_bunny_handle_directive(const char		*code,
 			code, i, node, fileroot, "false", "Error while loading ",
 			&buffer[0], whichline(code, i));
     }
-  else if (readtext(code, i, "@insert"))
+  else if (readtext(code, i, "@insert") && node)
     {
       read_separator(code, i);
       if (readstring(code, i, &buffer[0], sizeof(buffer)) == false)
@@ -41,7 +41,8 @@ bool			_bunny_handle_directive(const char		*code,
     }
   else
     scream_error_if(return (false), BE_SYNTAX_ERROR,  PATTERN,
-		    code, i, node, fileroot, "false", "Unknow directive ",
+		    code, i, node, fileroot, "false",
+		    "Unknow or unsupported directive ",
 		    "", whichline(code, i));
   scream_log_if(PATTERN, code, i, node, fileroot, "false", "Success", "", whichline(code, i));
   return (true);
