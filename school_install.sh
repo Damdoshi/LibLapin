@@ -81,7 +81,6 @@ chmod 644 ${INCLUDE_DIR}/*.h*			|| get_out "Failed to change mode of headers."
 chmod 644 ${INCLUDE_DIR}/*/*.h*			|| get_out "Failed to change mode of headers."
 chmod 644 ${INCLUDE_DIR}/*/*/*.h*		|| get_out "Failed to change mode of headers."
 chmod 644 ${LIB_DIR}/*.a			|| get_out "Failed to change mode of binaries."
-chmod 755 ${LIB_DIR}/*.so			|| get_out "Failed to change mode of binaries."
 
 # Conf
 
