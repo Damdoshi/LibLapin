@@ -36,22 +36,34 @@ t_bunny_font			*__bunny_load_gfx(unsigned int		width,
 	  goto DeleteTexture;
 	}
     }
-  bunny_errno = 0;
-  gfx->res_id = hash;
 
-  gfx->gfx->clip_width = size->x;
-  gfx->gfx->clip_height = size->y;
+  gfx->res_id = hash;
   gfx->texture->clear(sf::Color(0, 0, 0, 0));
   gfx->texture->display();
   gfx->tex = &gfx->texture->getTexture();
   gfx->sprite->setTexture(*gfx->tex);
   gfx->type = GRAPHIC_TEXT;
+
+  /*
+  if (bunny_which_format(file) != BC_CUSTOM)
+    {
+      if (bunny_set_text_attribute(file, gfx, NULL, false) == false)
+	goto DeletePicture;
+      return (true);
+    }
+  */
+  bunny_errno = 0;
+
+  gfx->gfx->clip_width = size->x;
+  gfx->gfx->clip_height = size->y;
   gfx->glyph_size.x = size->x;
   gfx->glyph_size.y = size->y;
 
   scream_log_if(PATTERN, width, height, file, size, size->x, size->y, gfx);
   return ((t_bunny_font*)gfx);
 
+ DeletePicture:
+  bunny_delete_clipable(gfx->gfx);
  DeleteTexture:
   delete gfx->texture;
  DeleteSprite:

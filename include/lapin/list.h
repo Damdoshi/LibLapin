@@ -249,15 +249,12 @@ typedef void			(*t_bunny_list_foreach)(void		*node,
 /*!
 ** Apply a function on every nodes in the list.
 ** \param lst The list to edit
-** \param nod A free to use t_bunny_node.
 ** \param func A t_bunny_list_foreach function
 ** \param par A parameter that will be sent as second parameter of func
 */
-# define			bunny_list_foreach(lst, nod, func, par)	\
-  for (nod = bunny_list_begin(lst);					\
-       nod != NULL;							\
-       nod = bunny_list_next(nod))					\
-    func(bunny_list_data(nod, void*), (void*)par);
+void				bunny_list_foreach(t_bunny_list		*list,
+						   t_bunny_list_foreach	func,
+						   void			*param);
 
 /*!
 ** Apply a function on every nodes in the list with multiple threads.
@@ -274,10 +271,10 @@ typedef void			(*t_bunny_list_foreach)(void		*node,
 */
 bool				bunny_list_fast_foreach(t_bunny_threadpool *pool,
 							t_bunny_list	*list,
-							 void		(*func)
+							void		(*func)
 							(void		*nod,
-							 const void	*param),
-							const void	*param);
+							 void		*param),
+							void		*param);
 
 /*!
 ** Browse a list in the direct order.

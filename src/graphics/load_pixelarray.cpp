@@ -44,6 +44,8 @@ t_bunny_pixelarray	*bunny_load_pixelarray(const char		*file)
 	{}
       if (pa->image->getSize() != pa->tex->getSize())
 	goto DeleteImage;
+      memcpy(pa->rawpixels, pa->image->getPixelsPtr(),
+	     pa->tex->getSize().x * pa->tex->getSize().y * sizeof(*pa->rawpixels));
     }
   else
     {

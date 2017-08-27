@@ -138,6 +138,16 @@ void			bunny_vector_sort(t_bunny_vector		*vec,
   scream_log_if("%p vector, %p cmp_func, %p param", vec, cmp, param);
 }
 
+void			bunny_vector_foreach(t_bunny_vector	*vector,
+					     t_bunny_vector_foreach func,
+					     void		*param)
+{
+  size_t		i;
+
+  for (i = 0; i < bunny_vector_size(vector); ++i)
+    func(bunny_vector_data(vector, i, void*), param);
+}
+
 #undef			PATTERN
 #define			PATTERN		"%p threadpool, %p vector, %p func, %p param -> %s"
 
@@ -145,8 +155,8 @@ bool			bunny_vector_fast_foreach(t_bunny_threadpool *pool,
 						  t_bunny_vector *vector,
 						  void		(*func)
 						  (void		*nod,
-						   const void	*par),
-						  const void	*par)
+						   void		*par),
+						  void		*par)
 {
   size_t		i;
   int			err;
@@ -160,8 +170,10 @@ bool			bunny_vector_fast_foreach(t_bunny_threadpool *pool,
 	    func(bunny_vector_data(vector, i, void*), par);
 	    ++i;
 	  }
+	bunny_thread_wait_completion(pool);
 	scream_error_if(return (false), err, PATTERN, pool, vector, func, par, "false");
       }
+  bunny_thread_wait_completion(pool);
   scream_log_if(PATTERN, pool, vector, func, par, "true");
   return (true);
 }

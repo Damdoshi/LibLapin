@@ -178,6 +178,7 @@ const char		*bunny_configuration_get_address(const t_bunny_configuration	*config
 */
 #  define		bunny_configuration_access(cnf, id)				\
   _Generic((id),									\
+	   const char*: bunny_configuration_get_child,					\
 	   char*: bunny_configuration_get_child,					\
 	   size_t: bunny_configuration_get_case,					\
 	   int: bunny_configuration_get_case						\
@@ -232,6 +233,7 @@ size_t			bunny_configuration_get_nbr_case(const t_bunny_configuration	*config);
 #  define		bunny_configuration_get(cnf, val)				\
   _Generic((val),									\
 	   const char**: bunny_configuration_get_string,				\
+	   char**: bunny_configuration_get_string,					\
 	   double*: bunny_configuration_get_double,					\
 	   int*: bunny_configuration_get_int)(cnf, val)
 # endif
@@ -408,6 +410,7 @@ bool			bunny_configuration_go_get_int(t_bunny_configuration		*config,
 #  define		bunny_configuration_set(cnf, val)				\
   _Generic((val),									\
 	   const char*: bunny_configuration_set_string,					\
+	   char*: bunny_configuration_set_string,					\
 	   double: bunny_configuration_set_double,					\
 	   int: bunny_configuration_set_int)(cnf, val)
 # endif
@@ -449,6 +452,7 @@ void			bunny_configuration_set_int(t_bunny_configuration		*config,
 #  define		bunny_configuration_go_set_va(cnf, val, nbr, ...)		\
   _Generic((val),									\
 	   const char*: bunny_configuration_go_set_string_va,				\
+	   char*: bunny_configuration_go_set_string_va,					\
 	   double: bunny_configuration_go_set_double_va,				\
 	   int: bunny_configuration_go_set_int_va)(cnf, val, nbr, __VA_ARGS__)
 # endif
@@ -507,6 +511,7 @@ bool			bunny_configuration_go_set_int_va(const t_bunny_configuration	*config,
 #  define		bunny_configuration_go_set(cnf, val, addr)			\
   _Generic((val),									\
 	   const char*: bunny_configuration_go_set_string,				\
+	   char*: bunny_configuration_go_set_string,					\
 	   double: bunny_configuration_go_set_double,					\
 	   int: bunny_configuration_go_set_int)(cnf, val, addr)
 # endif

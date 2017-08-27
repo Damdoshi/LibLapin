@@ -28,22 +28,28 @@ size_t			border1;
 
 void			check_memory_state(void);
 
-struct memhead		*memory_head(void)
+struct memhead		*memory_head(bool	reset)
 {
   static struct memhead	*head = NULL;
 
-  if (head == NULL)
+  if (head == NULL || reset)
     {
       t_sysmalloc	sysmalloc = malloc;
       size_t		s = heap_size + sizeof(*head);
 
       memset(&border0, 0x42, sizeof(border0));	// Because size_t size is quite volatile...
       memset(&border1, 0x84, sizeof(border1));
-      if ((head = (struct memhead*)sysmalloc(s)) == NULL)
+      if (head)
 	{
-	  fprintf(stderr, "Initial memory allocation failed. Exiting right now. Sorry.\n");
-	  exit(EXIT_FAILURE);
+	  if ((head = (struct memhead*)sysmalloc(s)) == NULL)
+	    {
+	      fprintf(stderr, "Initial memory allocation failed. Exiting right now. Sorry.\n");
+	      exit(EXIT_FAILURE);
+	    }
+	  atexit(check_memory_state);
 	}
+      else
+	memset(head, 0, s);
       head->alloc_count = 0;
       head->total_count = 0;
       head->alloc = 0;
@@ -51,9 +57,13 @@ struct memhead		*memory_head(void)
       head->first = NULL;
       head->limit = &(((char*)head)[s]);
       head->last_position = &(((char*)head)[sizeof(*head)]);
-      atexit(check_memory_state);
     }
   return (head);
+}
+
+void			bunny_allocator_reset(void)
+{
+  memory_head(true);
 }
 
 void			bunny_set_maximum_ram(size_t	byt)

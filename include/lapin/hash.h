@@ -56,5 +56,18 @@ typedef uint64_t		(*t_bunny_my_hash)(t_bunny_hash		hash,
 */
 extern t_bunny_my_hash		gl_bunny_my_hash;
 
+/*!
+** Create a digest with a wider footprint.
+** \param hash The algorithm to use.
+** \param to_hash The data to hash
+** \param len The size of the data to hash
+** \param storage A space where to store the digest, can be of any size
+** \param storage_size The size of the storage space
+*/
+void				bunny_wide_hash(t_bunny_hash		hash,
+						const void		*to_hash,
+						size_t			to_hash_len,
+						void			*storage,
+						size_t			storage_len);
 
 #endif	/*			__LAPIN_HASH_H__	*/

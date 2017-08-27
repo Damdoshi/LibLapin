@@ -35,6 +35,24 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
   * LAST_ERROR become LAST_NETWORK_ERROR in network.h
     **Compatibility break!**
 
+  * Change array field to data in t_bunny_pool.
+    **Compatibility break!**
+
+  * Put pool_get/getv and pool_release in compat.h, bring a better way to alloc/free,
+    with bunny_pool_new and bunny_pool_free. No id is required anymore.
+  * Bunny_pool_size is now bunny_pool_capacity, which return the max amount of element in pool.
+    The new bunny_pool_size return how many busy elements there is in pool.
+    **Compatibility break!**
+  * Put bunny_pool_free_elem and bunny_pool_occupied_elem in compat.h
+  * User data in pool are not constant anymore.
+  * You don't need to use bunny_thread_wait_completion anymore after a list/map/vector/pool_fast_foreach.
+  * You don't need to send a index variable to bunny_pool_foreach anymore.
+    Same for vector and list.
+    **Compatibility break!**
+  * Fix GREY macro to GRAY, same for ALPHA_GREY. Old version available in compat.h
+  * Remove the const specifier in every fast_foreach functions for the additional parameter..
+  * Remove the const specifier in thread_foreach and thread_push for the additional parameter.
+
   * A new t_bunny_error type appeir and is an enumeration of errors that can be made by bunny functions. The type is in error.h.
   * A new enumeration value LAST_ERROR appeir and is a value of t_bunny_error in error.h
   * Every functions of the bunny library now set errno on error.
@@ -50,6 +68,11 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
   * Instead of having a "@" node inside bunny_configuration to store field in default scope,
     consider that those fields are on scope level, to improve compatibility with other
     formats.
+
+  * Use bunny_alloca instead of alloca. On Windows, bunny_alloca becomes bunny_malloc, on linux
+    it becomes alloca. bunny_freea free on Windows, and nothing on Linux.
+  * Add bunny_allocator_reset to restart completly the allocator and deprecate all
+    pointers.
 
  -- Jason Brillante <damdoshi@hotmail.com>  Tue, 01 Jun 2017 12:00:00 +0100
 

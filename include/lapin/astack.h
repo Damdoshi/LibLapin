@@ -18,7 +18,7 @@
 # if				!defined(__LAPIN_H__)
 #  error			You cannot include this file directly.
 # endif
-# ifndef			__ANSI__
+# ifdef				__GNUC__
 #  include			<string.h>
 #  include			<alloca.h>
 #  include			"stack.h"

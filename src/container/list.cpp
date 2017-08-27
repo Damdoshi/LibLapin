@@ -202,6 +202,17 @@ t_bunny_vector		*_bunny_list_tie(const t_bunny_list	*lst,
   return (vec);
 }
 
+void			bunny_list_foreach(t_bunny_list		*lst,
+					   t_bunny_list_foreach func,
+					   void			*param)
+{
+  t_bunny_node		*nod;
+
+  for (nod = bunny_list_begin(lst); nod != NULL; nod = bunny_list_next(nod))
+    func(bunny_list_data(nod, void*), (void*)param);
+}
+
+
 #undef			PATTERN
 #define			PATTERN		"%p threadpool, %p list, %p func, %p param -> %s"
 
@@ -209,8 +220,8 @@ bool			bunny_list_fast_foreach(t_bunny_threadpool *pool,
 						t_bunny_list	*list,
 						void		(*func)
 						(void		*nod,
-						 const void	*par),
-						 const void	*par)
+						 void		*par),
+						void		*par)
 {
   t_bunny_node		*nod;
   int			err;
@@ -224,9 +235,10 @@ bool			bunny_list_fast_foreach(t_bunny_threadpool *pool,
 	    func(bunny_list_data(nod, void*), par);
 	    nod = bunny_list_next(nod);
 	  }
+	bunny_thread_wait_completion(pool);
 	scream_error_if(return (false), err, PATTERN, pool, list, func, par, "false");
       }
+  bunny_thread_wait_completion(pool);
   scream_log_if(PATTERN, pool, list, func, par, "true");
   return (true);
 }
-

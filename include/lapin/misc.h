@@ -179,6 +179,7 @@ void				bunny_smooth_move(const t_bunny_position *target,
 */
 void				bunny_consistancy(void);
 void				bunny_managed_ressource(void);
+void				bunny_set_ressource_management(bool	enabled);
 
 #endif	/*			__LAPIN_MISC_H__			*/
 

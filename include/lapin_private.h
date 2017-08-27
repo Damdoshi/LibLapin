@@ -19,6 +19,7 @@
 # include			"private/configuration.hpp"
 # include			"private/sound.h"
 # include			"private/security.h"
+# include			"private/collide.h"
 # include			"private/asynclock.h"
 # include			"private/plugin.h"
 # include			"private/misc.h"

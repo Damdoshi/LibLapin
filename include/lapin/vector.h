@@ -148,13 +148,12 @@ typedef void			(*t_bunny_vector_foreach)(void		*node,
 /*!
 ** Apply a function on every data in the vector.
 ** \param vec The vector to edit
-** \param i A free to use size_t
 ** \param func A t_bunny_vector_foreach function
 ** \param par A parameter that will be sent as second parameter of func
 */
-# define			bunny_vector_foreach(vec, i, func, par)	\
-  for (i = 0; i < bunny_vector_size(vec); ++i)				\
-    func(&bunny_vector_data(vec, i, void*), (void*)par);
+void				bunny_vector_foreach(t_bunny_vector	*vec,
+						     t_bunny_vector_foreach func,
+						     void		*param);
 
 /*!
 ** Apply a function on every data in the vector with multiple threads.
@@ -173,7 +172,7 @@ bool				bunny_vector_fast_foreach(t_bunny_threadpool *pool,
 							  t_bunny_vector *vector,
 							  void		(*func)
 							  (void		*nod,
-							   const void	*param),
-							  const void	*param);
+							   void		*param),
+							  void		*param);
 
 #endif	/*			__LAPIN_VECTOR_H__			*/

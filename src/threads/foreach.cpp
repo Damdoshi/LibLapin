@@ -10,13 +10,13 @@
 #ifndef			__WIN32
 
 class			_Launcher
-  : public hbs::WorkSpec::Work3<_Launcher, t_bunny_function, void*, const void*>
+  : public hbs::WorkSpec::Work3<_Launcher, t_bunny_function, void*, void*>
 {
 public:
   hbs::IdMessage	operator()(hbs::IdTask				task,
 				   t_bunny_function			func,
 				   void					*data,
-				   const void				*add)
+				   void					*add)
   {
     (void)task;
     func(data, add);
@@ -25,7 +25,7 @@ public:
 
   _Launcher(t_bunny_function	func,
 	    void		*data,
-	    const void		*add)
+	    void		*add)
     : Work3(*this, func, data, add)
   {}
   ~_Launcher(void) {}
@@ -44,7 +44,7 @@ bool			bunny_thread_foreach(t_bunny_threadpool		*pol,
 					     t_bunny_function		func,
 					     void			**data,
 					     size_t			len,
-					     const void			*add_ptr)
+					     void			*add_ptr)
 {
 #ifndef			__WIN32
   hbs::Workers		*work = (hbs::Workers*)pol->_private;

@@ -15,7 +15,7 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)clip;
 
-	if (pic->res_id)
+	if (pic->res_id && !RessourceManager.disable_manager)
 	  RessourceManager.TryRemove(ResManager::SF_RENDERTEXTURE, pic->res_id, pic);
 	else
 	  delete pic->texture;
@@ -28,7 +28,7 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
       {
 	struct bunny_pixelarray	*pic = (struct bunny_pixelarray*)clip;
 	
-	if (pic->res_id)
+	if (pic->res_id && !RessourceManager.disable_manager)
 	  {
 	    RessourceManager.TryRemove(ResManager::SF_TEXTURE, pic->res_id, pic);
 	    RessourceManager.TryRemove(ResManager::SF_IMAGE, pic->res_id, pic);
@@ -49,7 +49,10 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
       {
 	struct bunny_ttf_font	*ttf = (struct bunny_ttf_font*)clip;
 
-	RessourceManager.TryRemove(ResManager::SF_FONT, ttf->res_id, ttf);
+	if (!RessourceManager.disable_manager)
+	  RessourceManager.TryRemove(ResManager::SF_FONT, ttf->res_id, ttf);
+	else
+	  delete ttf->font;
 	delete ttf->text;
 	delete ttf->sprite;
 	delete ttf->texture;
@@ -61,7 +64,6 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
       {
 	struct bunny_gfx_font	*gfx = (struct bunny_gfx_font*)clip;
 
-	RessourceManager.TryRemove(ResManager::BUNNY_PICTURE, gfx->res_id, gfx);
 	bunny_delete_clipable(gfx->gfx);
 	delete gfx->sprite;
 	delete gfx->texture;

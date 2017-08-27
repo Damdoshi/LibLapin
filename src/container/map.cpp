@@ -226,8 +226,8 @@ bool			bunny_map_fast_foreach(t_bunny_threadpool *pol,
 					       t_bunny_map	*map,
 					       void		(*func)
 					       (void		*nod,
-						const void	*param),
-					       const void	*param)
+						void		*param),
+					       void		*param)
 {
   struct bunny_map	*nod = (struct bunny_map*)map;
   int			errorcode = -1;
@@ -238,6 +238,7 @@ bool			bunny_map_fast_foreach(t_bunny_threadpool *pol,
   if (nod == NULL)
     {
       scream_log_if(PATTERN, pol, map, func, param, "true");
+      bunny_thread_wait_completion(pol);
       return (true);
     }
 
@@ -266,6 +267,7 @@ bool			bunny_map_fast_foreach(t_bunny_threadpool *pol,
   if (errorcode == -1)
     errorcode = 0;
 
+  bunny_thread_wait_completion(pol);
   if (ok == false)
     scream_error_if(return (false), errorcode, PATTERN, pol, map, func, param, "false");
 

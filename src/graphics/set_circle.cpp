@@ -22,7 +22,8 @@ void			bunny_set_circle(t_bunny_buffer		*buffer,
       shape.setRadius(siz.x);
       shape.setScale(sf::Vector2f(1, (double)(coef = (double)siz.y / siz.x)));
       shape.setPosition(sf::Vector2f(pos.x - siz.x, pos.y - siz.y));
-      shape.setFillColor
+      shape.setFillColor(sf::Color::Transparent);
+      shape.setOutlineColor
 	(sf::Color
 	 ((color >> (RED_CMP * 8)) & 0xFF,
 	  (color >> (GREEN_CMP * 8)) & 0xFF,
@@ -30,6 +31,7 @@ void			bunny_set_circle(t_bunny_buffer		*buffer,
 	  (color >> (ALPHA_CMP * 8)) & 0xFF
 	  )
 	 );
+      shape.setOutlineThickness(1);
     }
   switch (*type)
     {

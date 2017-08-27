@@ -180,8 +180,8 @@ bool				bunny_map_fast_foreach(t_bunny_threadpool *pool,
 						       t_bunny_map	*map,
 						       void		(*func)
 						       (void		*nod,
-							const void	*param),
-						       const void	*param);
+							void		*param),
+						       void		*param);
 
 #endif	/*			__LAPIN_MAP_H__				*/
 

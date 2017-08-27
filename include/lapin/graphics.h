@@ -726,15 +726,6 @@ void				bunny_delete_shader(t_bunny_shader		*shader);
 void				bunny_enable_full_blit(bool			enable);
 
 /*!
-** This function reset OpenGL states.
-*/
-void				bunny_GL_reset_states(const t_bunny_window	*pic);
-
-void				bunny_GL_push_states(const t_bunny_window	*pic);
-
-void				bunny_GL_pop_states(const t_bunny_window	*pic);
-
-/*!
 ** All picture loading function in the bunny library use a ressource manager to avoid
 ** loading several times the same file. This means behind every t_bunny_clipable
 ** you will create throught bunny_load_pi* functions, there is only one true
@@ -756,6 +747,15 @@ void				bunny_GL_pop_states(const t_bunny_window	*pic);
 ** everything went well.
 */
 bool				bunny_make_clipable_unique(t_bunny_clipable	*clipable);
+
+/*!
+** This function reset OpenGL states.
+*/
+void				bunny_GL_reset_states(const t_bunny_window	*pic);
+
+void				bunny_GL_push_states(const t_bunny_window	*pic);
+
+void				bunny_GL_pop_states(const t_bunny_window	*pic);
 
 #endif	/*			__LAPIN_GRAPHICS_H__	*/
 

@@ -42,17 +42,25 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
     }
 
   ttf->res_id = hash;
-  bunny_errno = 0;
-
-  ttf->text->setFont(*ttf->font);
-  ttf->text->setCharacterSize(size->y);
   ttf->texture->clear(sf::Color(0, 0, 0, 0));
   ttf->texture->display();
   ttf->tex = &ttf->texture->getTexture();
   ttf->sprite->setTexture(*ttf->tex);
   ttf->type = TTF_TEXT;
+  ttf->text->setFont(*ttf->font);
+  /*
+  if (bunny_which_format(file) != BC_CUSTOM)
+    {
+      if (bunny_set_text_attribute(file, gfx, NULL, true) == false)
+	goto DeleteFont;
+      return (true);
+    }
+  */
+  bunny_errno = 0;
+
   ttf->glyph_size.x = size->x;
   ttf->glyph_size.y = size->y;
+  ttf->text->setCharacterSize(size->y);
 
   scream_log_if(PATTERN, width, height, file, size, size->x, size->y, ttf);
   return ((t_bunny_font*)ttf);

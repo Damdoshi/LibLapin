@@ -7,9 +7,16 @@
 
 /*!
 ** \file pool.h
+** A pool is useful if you need a fast container.
+** Pay attention while using it, it is really more complex to use than it appeirs,
+** if you try to build not foreach-like applications.
 **
-**
-**
+** Limitations are: it is for simple browing!
+** Releasing an element breaks the id of the last reserved data, so storing it
+** is dangerous.
+** Considering the data is swapped, you may nevertheless restore any id you were
+** storing by reassigning it: if the freed data was not the last, then its id
+** is now the id of the data that was freed.
 */
 
 #ifndef				__LAPIN_POOL_H__
@@ -24,9 +31,9 @@ typedef struct			s_bunny_pool
   const size_t			elemsize;
   const size_t			nbr_occupied;
 #ifndef				__ANSI__
-  const void * const		array[0];
+  void * const			data[0];
 #else
-  const void * const		array[1];
+  void * const			data[1];
 #endif
 }				t_bunny_pool;
 
@@ -45,79 +52,82 @@ t_bunny_pool			*_bunny_new_pool(size_t			nmemb,
 ** \param typ What is the type of elements inside your pool
 ** \return A pool or NULL on error
 */
-# define			bunny_new_pool(nbr, typ)		_bunny_new_pool(nbr, sizeof(typ))
+# define			bunny_new_pool(nbr, typ)		\
+  _bunny_new_pool(nbr, sizeof(typ))
 
 /*!
 ** Delete the sent pool
 ** \param pol The pool to delete
 */
-# define			bunny_delete_pool(pol)			bunny_free(pol)
+# define			bunny_delete_pool(pol)			\
+  bunny_free(pol)
 
 /*!
 ** Get how many elements there is in the pool.
 ** \param pool The pool to get the length
 ** \return The pool size as size_t
 */
-# define			bunny_pool_size(pool)			((pool)->nmemb)
+# define			bunny_pool_capacity(pool)		\
+  ((pool)->nmemb)
 
 /*!
-** Get how many free elements there is in the pool.
-** \param pool The pool to get the number of free element
-** \return The pool amount of free elements as size_t
-*/
-# define			bunny_pool_free_elem(pool)		((pool)->nmemb - (pool)->nbr_occupied)
-
-/*!
-** Get how many occupied elements there is in the pool.
+** Get how many busy elements there is in the pool.
 ** \param pool The pool to get the number of occupied element
 ** \return The pool amount of occupied elements as size_t
 */
-# define			bunny_pool_occupied_elem(pool)		(pool)->nbr_occupied
+# define			bunny_pool_size(pool)			\
+  (pool)->nbr_occupied
 
 /*!
 ** Test if the pool is empty.
 ** \param pool The pool to test
 ** \return True if it is empty
 */
-# define			bunny_pool_empty(pool)			(!(pool)->nmemb)
+# define			bunny_pool_empty(pool)			\
+  (!(pool)->nmemb)
 
 /*!
 ** Get the size of a single element of the pool
 ** \param pool The pool to get the size of an element
 ** \return The element size as size_t
 */
-# define			bunny_pool_elem_size(pool)		((pool)->elemsize)
+# define			bunny_pool_elem_size(pool)		\
+  ((pool)->elemsize)
 
 /*!
-** Get a free element inside the pool.
-** \param pol The pool to browse.
-** \param id A pointer to store the id of the element. Useful when you will release the element.
-** \return NULL if there is no free element inside the pool, or a pointer to a free element
-**
+** Get the position of the element in the pool.
+** \param elem A pointer to the element to inspect.
+** \return A size_t that is the current index of the element in the array.
+** It may change depending of the life of the pool.
 */
-# define			bunny_pool_getv(pol, id)		\
-  ((pol)->nbr_occupied < (pol)->nmemb ?					\
-   (void*)(pol)->array[*(id) = (*(size_t*)&(pol)->nbr_occupied)++] :	\
-   NULL)
+# define			bunny_pool_elem_index(elem)		\
+  ((size_t*)elem)[-1]
 
 /*!
-** Get a free element inside the pool.
-** \param pol The pool to browse.
-** \param id A pointer to store the id of the element. Useful when you will release the element.
-** \param type The type of datas inside the pool
-** \return NULL if there is no free element inside the pool, or a pointer to a free element
+** Free all elements in pool but keep the pool.
+** \param A pointer on a pool.
 */
-# define			bunny_pool_get(pol, id, type)		\
-  (type*)bunny_pool_getv(pol, id)
+# define			bunny_pool_clear(pool)	\
+  *(size_t*)&(pool)->nbr_occupied = 0
+
+/*!
+** Get a new element from the pool.
+** \param pool The pool to browse.
+** \param type The type of the data. No type checking is done!
+** \return An available element or NULL if there was none.
+*/
+# define			bunny_pool_new(pool, type)		\
+  (type*)bunny_pool_getv(pool, NULL)
 
 /*!
 ** Signal that the sent element is free again.
+** Pay attention: its fast free mechanism have a cost: it changes the id
+** of the last reserved allocation! Its id is now the id of the freed element.
 ** \param pol The pool to browse.
-** \param elm The element to release
+** \param elem The element to release
 */
-# define			bunny_pool_release(pol, id)		\
-  bunny_swap((void**)&(pol)->array[id], (void**)&(pol)->array		\
-	     [(--(*(size_t*)&(pol)->nbr_occupied))])
+void				bunny_pool_free(t_bunny_pool		*pool,
+						void			*elem);
 
 typedef void			(*t_bunny_pool_foreach)(void		*node,
 							void		*param);
@@ -125,13 +135,12 @@ typedef void			(*t_bunny_pool_foreach)(void		*node,
 /*!
 ** Apply a function on every data in the pool.
 ** \param pol The pool to edit
-** \param i A free to use size_t
 ** \param func A t_bunny_pool_foreach function
 ** \param par A parameter that will be sent as second parameter of func
 */
-# define			bunny_pool_foreach(pol, i, func, par)	\
-  for (i = 0; i < bunny_pool_occupied_element(pol); ++i)		\
-    func((void*)(pol)->array[i], (void*)par);
+void				bunny_pool_foreach(t_bunny_pool		*pool,
+						   t_bunny_pool_foreach	func,
+						   void			*param);
 
 /*!
 ** Apply a function on every data in the pool with multiple threads.
@@ -143,16 +152,13 @@ typedef void			(*t_bunny_pool_foreach)(void		*node,
 **         were not treated by threads, some of them were treated by the
 **         main thread because of thread pool memory exhaustion.
 **         True if all was ok.
-**
-** You should use bunny_thread_wait_completion at the end of your thread cycle.
-
 */
 bool				bunny_pool_fast_foreach(t_bunny_threadpool *the,
 							t_bunny_pool	*pool,
 							void		(*func)
 							(void		*nod,
-							 const void	*param),
-							const void	*param);
+							 void		*param),
+							void		*param);
 
 
 #endif	/*			__LAPIN_POOL_H__			*/

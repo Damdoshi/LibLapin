@@ -1,3 +1,8 @@
+=> Changer tous les appels a alloca par des appels a bunny_alloca et placer des bunny_freea...
+
+=> Nouvelles callbacks pour "KeyIsDown", "ButtonIsDown", etc.
+
+=> Faire le chargeur de conf pour font. ( + Ecrire ce ticket sur github)
 
  => Ajouter un offset configurable pour le joystick en dessous duquel un mouvement d'un axe
     n'est pas remonté comme event. Par defaut, il vaut zero pour conserver le comportement precedent.

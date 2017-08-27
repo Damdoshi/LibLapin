@@ -61,10 +61,13 @@ t_bunny_font			*bunny_load_font(unsigned int			width,
 						 const char			*file,
 						 const t_bunny_position		*siz);
 
-
-
-
-
+/*!
+**
+*/
+bool				bunny_set_text_attribute(const char		*conf_file,
+							 t_bunny_font		**font,
+							 t_bunny_configuration **config,
+							 bool			is_ttf);
 
 /*!
 ** The t_bunny_vector_font_line_coord contains two sets of coordinates that

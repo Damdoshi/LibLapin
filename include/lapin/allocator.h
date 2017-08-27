@@ -79,6 +79,12 @@ void				bunny_set_memory_check(bool			chk);
 */
 void				bunny_set_maximum_ram(size_t			byt);
 
+/*!
+** Erase the allocator space. Make all pointers deprecate.
+** Use with caution.
+*/
+void				bunny_allocator_reset(void);
+
 # ifdef				BUNNY_ALLOCATOR_OVERLOAD
 #  define			LAPIN_ALLOCATOR_OVERLOAD
 # endif

@@ -112,7 +112,8 @@ static void		remove_trailing(struct cstring	*line)
   for (i = line->len; i > 0 &&
 	 (line->str[i] == ' ' || line->str[i] == '\n' || line->str[i] == '\r');
        --i);
-  line->len = i + (int)(i != 0);
+  if (line->str[i])
+    line->len = i + (int)(i != 0);
 }
 
 static size_t		count_lines(t_bunny_font	*font,

@@ -16,7 +16,6 @@
 #endif
 
 void			check_memory_state(void);
-struct memhead		*memory_head(void);
 extern size_t		border0;
 extern size_t		border1;
 
@@ -41,7 +40,7 @@ void			bunny_free(void		*data)
     {
       fprintf(stderr, "Bad pointer or altered memory detected while freeing 0x%p.\n", data);
       check_memory_state();
-      kill(getpid(), SIGSEGV); /* die Die DIE! */
+      freexit(getpid(), SIGSEGV); /* die Die DIE! (my darling) */
       usleep(2e6);
       exit(EXIT_FAILURE);
     }

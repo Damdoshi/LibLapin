@@ -84,15 +84,15 @@ typedef enum			e_bunny_rgb
   (TO_ALPHA(a) | TO_RED(r) | TO_GREEN(g) | TO_BLUE(b))
 
 /*!
-** Compose your grey with alpha level
+** Compose your gray with alpha level
 */
-# define			ALPHA_GREY(a, g)		\
+# define			ALPHA_GRAY(a, g)		\
   COLOR(a, g, g, g)
 
 /*!
 ** Compose your plain grey
 */
-# define			GREY(g)				\
+# define			GRAY(g)				\
   COLOR(255, g, g, g)
 
 /*!

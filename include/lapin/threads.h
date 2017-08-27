@@ -50,7 +50,7 @@ void				bunny_delete_threadpool(t_bunny_threadpool	*pol);
 ** It is mainly here to be read, not written!
 */
 typedef void			(*t_bunny_function)(void			*data,
-						    const void			*add_ptr);
+						    void			*add_ptr);
 
 /*!
 ** Make every threads inside pol call func with a part of data and add_ptr as parameter.
@@ -68,7 +68,7 @@ bool				bunny_thread_foreach(t_bunny_threadpool		*pol,
 						     t_bunny_function		func,
 						     void			**data,
 						     size_t			len,
-						     const void			*add_ptr);
+						     void			*add_ptr);
 
 /*!
 ** Push a single task at the top of the thread pool.
@@ -81,7 +81,7 @@ bool				bunny_thread_foreach(t_bunny_threadpool		*pol,
 bool				bunny_thread_push(t_bunny_threadpool		*pol,
 						  t_bunny_function		func,
 						  void				*data,
-						  const void			*add_ptr);
+						  void				*add_ptr);
 
 /*!
 ** This function does not return while every threads are not back in the threadpool sleeping.

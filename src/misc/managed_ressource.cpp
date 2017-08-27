@@ -43,3 +43,9 @@ void			bunny_managed_ressource(void)
     }
   std::cout << "TOTAL: " << i << std::endl;
 }
+
+void			bunny_set_ressource_management(bool		enabled)
+{
+  RessourceManager.disable_manager = !enabled;
+}
+

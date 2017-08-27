@@ -31,6 +31,7 @@ public:
     LAST_TYPE
   };
   static const std::string	TypeName[LAST_TYPE];
+  bool				disable_manager;
 
   struct			Ressource
   {

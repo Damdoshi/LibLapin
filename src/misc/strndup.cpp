@@ -3,6 +3,7 @@
 //
 // Lapin Library
 
+#include		<string.h>
 #include		"lapin_private.h"
 
 char			*bunny_strndup(const char	*str,
@@ -18,5 +19,10 @@ char			*bunny_strndup(const char	*str,
   s[i] = '\0';
   scream_log_if("%s string, %zu max_size -> %p", str, max, s);
   return (s);
+}
+
+char			*bunny_strdup(const char	*str)
+{
+  return (bunny_strndup(str, strlen(str)));
 }
 
