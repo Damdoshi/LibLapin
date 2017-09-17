@@ -44,11 +44,11 @@ static void		delint(void		*a,
   assert(b == (void*)0x1);
 }
 
-static void		check_order(void	*nod,
+static void		check_order(t_bunny_map	*nod,
 				    void	*param)
 {
   static ssize_t	previous;
-  ssize_t		current = (ssize_t)nod;
+  ssize_t		current = (ssize_t)nod->data;
 
   if (param != NULL)
     previous = 0;
@@ -61,6 +61,7 @@ static void		check_order(void	*nod,
 
 static void		test(void)
 {
+  static t_bunny_map	empty;
   ssize_t		rnd[4096];
   t_bunny_map		*map;
   ssize_t		val;
@@ -89,7 +90,7 @@ static void		test(void)
   assert(bunny_map_get_data(map, 5000, ssize_t) == 0);
   assert(bunny_map_get_data(map, 6000, ssize_t) == 0);
 
-  check_order(NULL, (void*)0x1);
+  check_order(&empty, (void*)0x1);
   bunny_map_foreach(map, check_order, NULL);
 
   bunny_delete_map(map);

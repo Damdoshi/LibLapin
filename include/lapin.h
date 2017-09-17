@@ -105,6 +105,7 @@
 
 # include			"lapin/enum.h"
 # include			"lapin/error.h"
+# include			"lapin/parsing.h"
 # include			"lapin/configuration.h"
 # include			"lapin/self_test.h"
 # include			"lapin/color.h"

@@ -159,7 +159,7 @@ void				*_bunny_map_set_data(t_bunny_map	*map,
 */
 void				bunny_map_foreach(t_bunny_map		*map,
 						  void			(*func)
-						  (void			*nod,
+						  (t_bunny_map		*node,
 						   void			*param),
 						  void			*param);
 
@@ -179,7 +179,7 @@ void				bunny_map_foreach(t_bunny_map		*map,
 bool				bunny_map_fast_foreach(t_bunny_threadpool *pool,
 						       t_bunny_map	*map,
 						       void		(*func)
-						       (void		*nod,
+						       (t_bunny_map	*map,
 							void		*param),
 						       void		*param);
 

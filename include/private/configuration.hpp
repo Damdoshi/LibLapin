@@ -30,9 +30,9 @@ char				*_bunny_write_xml(const t_bunny_configuration	*config);
 char				*_bunny_write_lua(const t_bunny_configuration	*config);
 char				*_bunny_write_csv(const t_bunny_configuration	*config);
 
-int				chekchar(const char				*str,
-					 ssize_t				&index,
-					 const char				*token);
+int				checkchar(const char				*str,
+					  ssize_t				&index,
+					  const char				*token);
 bool				readchar(const char				*str,
 					 ssize_t				&index,
 					 const char				*token);

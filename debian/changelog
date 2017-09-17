@@ -25,6 +25,7 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
     It places the scope at the written address.
   * Add bunny_real_width & bunny_real_height macros in placement.h for C11.
     They compute the real size on screen of window and clipable elements.
+  * Add a parsing module consisting in bindings to the private/ parsing functions.
 
   * t_bunny_display now take a non const pointer.
     **Compatibility break!**
@@ -52,6 +53,7 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
   * Fix GREY macro to GRAY, same for ALPHA_GREY. Old version available in compat.h
   * Remove the const specifier in every fast_foreach functions for the additional parameter..
   * Remove the const specifier in thread_foreach and thread_push for the additional parameter.
+  * Use the entire node for map foreach instead of the value only so you can have the key too, and use map functions in the sent function.
 
   * A new t_bunny_error type appeir and is an enumeration of errors that can be made by bunny functions. The type is in error.h.
   * A new enumeration value LAST_ERROR appeir and is a value of t_bunny_error in error.h

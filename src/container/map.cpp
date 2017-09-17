@@ -199,7 +199,7 @@ void			*_bunny_map_set_data(t_bunny_map	*map,
 
 void			bunny_map_foreach(t_bunny_map		*map,
 					  void			(*func)
-					  (void			*nod,
+					  (t_bunny_map		*map,
 					   void			*param),
 					  void			*param)
 {
@@ -213,7 +213,7 @@ void			bunny_map_foreach(t_bunny_map		*map,
   if (nod->left)
     bunny_map_foreach((t_bunny_map*)nod->left, func, param);
   if (nod->data != NULL)
-    func(nod->data, param);
+    func((t_bunny_map*)nod, param);
   if (nod->right)
     bunny_map_foreach((t_bunny_map*)nod->right, func, param);
   scream_log_if("%p map, %p func, %p param", map, func, param);
@@ -225,7 +225,7 @@ void			bunny_map_foreach(t_bunny_map		*map,
 bool			bunny_map_fast_foreach(t_bunny_threadpool *pol,
 					       t_bunny_map	*map,
 					       void		(*func)
-					       (void		*nod,
+					       (t_bunny_map	*map,
 						void		*param),
 					       void		*param)
 {
@@ -248,13 +248,13 @@ bool			bunny_map_fast_foreach(t_bunny_threadpool *pol,
     errorcode = bunny_errno;
 
   if (pol == NULL || ok == false)
-    func(nod->data, param);
+    func((t_bunny_map*)nod, param);
   else
-    if (bunny_thread_push(pol, func, nod->data, param) == false)
+    if (bunny_thread_push(pol, (void (*)(void*,void*))func, (t_bunny_map*)nod, param) == false)
       {
 	if (errorcode == -1)
 	  errorcode = bunny_errno;
-      	func(nod->data, param);
+      	func((t_bunny_map*)nod, param);
 	ok = false;
 	pol = NULL;
       }
