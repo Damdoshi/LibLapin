@@ -115,4 +115,21 @@ typedef struct			s_bunny_splash_screen
 
 extern const t_bunny_context	gl_bunny_splash_context;
 
+/*!
+** ******************************************************************
+** ************** HANGED BUNNY STUDIO DEPTH ENGINE ******************
+** ******************************************************************
+**
+** This context is the HBS Depth graphic engine.
+**
+**
+*/
+
+typedef struct			s_bunny_depth_engine
+{
+  t_bunny_context_runtime_info	head;
+
+  t_bunny_position		map_size;
+}				t_bunny_depth_engine;
+
 #endif	/*			__LAPIN_CONTEXT_H__			*/
