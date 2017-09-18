@@ -75,6 +75,8 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
     it becomes alloca. bunny_freea free on Windows, and nothing on Linux.
   * Add bunny_allocator_reset to restart completly the allocator and deprecate all
     pointers.
+  * Change bunny_configuration_access on string to make it call go_get_node instead of get_child,
+    and so handle address as parameter.
 
  -- Jason Brillante <damdoshi@hotmail.com>  Tue, 01 Jun 2017 12:00:00 +0100
 

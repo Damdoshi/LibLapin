@@ -178,8 +178,8 @@ const char		*bunny_configuration_get_address(const t_bunny_configuration	*config
 */
 #  define		bunny_configuration_access(cnf, id)				\
   _Generic((id),									\
-	   const char*: bunny_configuration_get_child,					\
-	   char*: bunny_configuration_get_child,					\
+	   const char*: bunny_configuration_go_get_node,				\
+	   char*: bunny_configuration_go_get_node,					\
 	   size_t: bunny_configuration_get_case,					\
 	   int: bunny_configuration_get_case						\
 	   )(cnf, id)
