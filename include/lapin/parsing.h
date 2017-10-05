@@ -137,6 +137,17 @@ bool			bunny_read_cstring(const char		*str,
 					   size_t		out_len);
 
 /*!
+** Transform the sent string into a c-string format. Turn LF into '\' and 'n',
+** for example.
+** \param str The string to transform.
+** \param out Where the generated string will be saved. Must be free with
+** bunny_free.
+** \return True if the string was generated.
+*/
+bool			bunny_write_cstring(const char		*str,
+					    char		**out);
+
+/*!
 ** Try to read and retrieve a raw string.
 ** A raw string is any amount of characters that end with a specific token.
 **

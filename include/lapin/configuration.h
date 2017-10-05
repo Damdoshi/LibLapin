@@ -575,6 +575,13 @@ t_bunny_configuration	*bunny_configuration_next(t_bunny_configuration			*config)
 t_bunny_configuration	*bunny_configuration_end(t_bunny_configuration			*config);
 
 /*!
+** Return if the sent configuration node is the last children of its local tree.
+** \param config The node to test
+** \return True if it is the last.
+*/
+bool			bunny_configuration_is_last(t_bunny_configuration		*config);
+
+/*!
 ** Return the format which is supposed to be used in file thanks to its extension.
 ** \param file The filename/path
 ** \return The file format, accordingly to its extension. BC_CUSTOM if there is no

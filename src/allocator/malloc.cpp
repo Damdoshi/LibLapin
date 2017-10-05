@@ -39,7 +39,7 @@ struct memhead		*memory_head(bool	reset)
 
       memset(&border0, 0x42, sizeof(border0));	// Because size_t size is quite volatile...
       memset(&border1, 0x84, sizeof(border1));
-      if (head)
+      if (head == NULL)
 	{
 	  if ((head = (struct memhead*)sysmalloc(s)) == NULL)
 	    {

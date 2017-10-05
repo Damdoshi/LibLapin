@@ -3,6 +3,7 @@
 //
 // Lapin library
 
+#include		<string.h>
 #include		"lapin_private.h"
 
 int			bunny_check_char(const char		*str,
@@ -71,6 +72,22 @@ bool			bunny_read_cstring(const char		*str,
 					   size_t		out_len)
 {
   return (readstring(str, *index, out, out_len));
+}
+
+bool			bunny_write_cstring(const char		*cstr,
+					    char		**out)
+{
+  std::string		str(cstr);
+  std::stringstream	ss;
+  char			*x;
+
+  writestring(ss, str);
+  str = ss.str();
+  if ((x = (char*)bunny_malloc(str.size() + 1)) == NULL)
+    return (false);
+  strcpy(x, str.c_str());
+  *out = x;
+  return (true);
 }
 
 bool			bunny_read_rawstring(const char		*code,
