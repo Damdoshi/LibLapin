@@ -165,8 +165,18 @@ void			check_memory_state(void)
     }
 }
 
+static bool		malloc_failure = false;
+
+void			bunny_malloc_failure(bool	f)
+{
+  malloc_failure = f;
+}
+
 void			*bunny_malloc(size_t		data)
 {
+
+  if (malloc_failure)
+    return (NULL);
 
 #ifdef			LAPIN_ALLOCATOR_DEACTIVATED
   void			*ptr;

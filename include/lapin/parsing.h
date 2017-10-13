@@ -141,11 +141,14 @@ bool			bunny_read_cstring(const char		*str,
 ** for example.
 ** \param str The string to transform.
 ** \param out Where the generated string will be saved. Must be free with
-** bunny_free.
+** bunny_free. If *out is not NULL, the string is not allocated but
+** directly written into the sent buffer.
+** \param siz The size of *out if not NULL, ignored in other cases.
 ** \return True if the string was generated.
 */
 bool			bunny_write_cstring(const char		*str,
-					    char		**out);
+					    char		**out,
+					    size_t		siz);
 
 /*!
 ** Try to read and retrieve a raw string.

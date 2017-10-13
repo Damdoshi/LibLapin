@@ -75,7 +75,8 @@ bool			bunny_read_cstring(const char		*str,
 }
 
 bool			bunny_write_cstring(const char		*cstr,
-					    char		**out)
+					    char		**out,
+					    size_t		siz)
 {
   std::string		str(cstr);
   std::stringstream	ss;
@@ -83,10 +84,15 @@ bool			bunny_write_cstring(const char		*cstr,
 
   writestring(ss, str);
   str = ss.str();
-  if ((x = (char*)bunny_malloc(str.size() + 1)) == NULL)
-    return (false);
-  strcpy(x, str.c_str());
-  *out = x;
+  if (*out == NULL)
+    {
+      if ((x = (char*)bunny_malloc(str.size() + 1)) == NULL)
+	return (false);
+      strcpy(x, str.c_str());
+      *out = x; 
+    }
+  else
+    strncpy(*out, str.c_str(), siz);
   return (true);
 }
 

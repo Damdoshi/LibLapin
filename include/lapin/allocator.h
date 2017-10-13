@@ -85,6 +85,12 @@ void				bunny_set_maximum_ram(size_t			byt);
 */
 void				bunny_allocator_reset(void);
 
+/*!
+** Make allocation functions fail.
+** Use with caution.
+*/
+void				bunny_malloc_failure(bool			f);
+
 # ifdef				BUNNY_ALLOCATOR_OVERLOAD
 #  define			LAPIN_ALLOCATOR_OVERLOAD
 # endif
