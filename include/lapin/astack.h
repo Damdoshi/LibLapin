@@ -10,7 +10,10 @@
 ** The astack container is a fully automatic container
 ** that use alloca to get its memory. Its purpose is to avoid
 ** memory allocation when you need a fast storage without
-** any needs for complex manipulators.
+** any needs for complex manipulators. You should also
+** use alloca for datas stored inside.
+**
+** Only available on systems that support alloca.
 */
 
 #ifndef				__LAPIN_ASTACK_H__
@@ -18,7 +21,7 @@
 # if				!defined(__LAPIN_H__)
 #  error			You cannot include this file directly.
 # endif
-# ifdef				__GNUC__
+# if				__GNUC__ || _WIN32 || __WIN32__
 #  include			<string.h>
 #  include			<alloca.h>
 #  include			"stack.h"
@@ -42,7 +45,7 @@ typedef t_bunny_stack		t_bunny_astack;
 */
 # define			bunny_new_astack()			\
   (t_bunny_stack*)memset						\
-  (alloca(sizeof(t_bunny_stack)), 0, sizeof(t_bunny_stack))
+  (bunny_alloca(sizeof(t_bunny_stack)), 0, sizeof(t_bunny_stack))
 
 /*!
 ** Get how many elements there is in the stack.
@@ -80,7 +83,7 @@ typedef t_bunny_stack		t_bunny_astack;
 # define			bunny_astack_push(st, da)		\
   do									\
     {									\
-      t_bunny_astack_node *__nod = alloca(sizeof(*__nod));		\
+      t_bunny_astack_node *__nod = bunny_alloca(sizeof(*__nod));	\
 									\
       __nod->data = (void*)da;						\
       __nod->next = (t_bunny_astack_node*)(st)->top;			\

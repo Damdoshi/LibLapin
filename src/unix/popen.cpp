@@ -40,7 +40,7 @@ int			bunny_popen(t_bunny_subprocess		*subproc,
     goto closepipes;
   else if (pid == 0)
     {
-      char		**params = (char**)alloca((nbr + 1) * sizeof(*params));
+      char		**params = (char**)bunny_alloca((nbr + 1) * sizeof(*params));
       va_list		lst;
 
       if (pip[0][1] != -1) // stdin pipe
@@ -78,6 +78,7 @@ int			bunny_popen(t_bunny_subprocess		*subproc,
 	  perror("execve in bunny_popen");
 	  exit(EXIT_FAILURE);
 	}
+      bunny_freea(params);
       return (0);
     }
   if (pip[0][0] != -1) // stdin pipe

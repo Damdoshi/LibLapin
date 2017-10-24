@@ -114,6 +114,9 @@ extern const void		*last_scope;
 # ifdef				__GNUC__
 #  define			bunny_alloca(a)			alloca(a)
 #  define			bunny_freea(a)
+# elif				_WIN32 || __WIN32__
+#  define			bunny_alloca(a)			_alloca(a)
+#  define			bunny_freea(a)
 # else
 #  define			bunny_alloca(a)			bunny_malloc(a)
 #  define			bunny_freea(a)			bunny_free(a)

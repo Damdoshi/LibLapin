@@ -170,7 +170,7 @@ void			bunny_list_sort(t_bunny_list		*list,
 					void			*param)
 {
   struct qsort_packet	packet;
-  void			**array = (void**)alloca(bunny_list_size(list) * sizeof(*array));
+  void			**array = (void**)bunny_alloca(bunny_list_size(list) * sizeof(*array));
   t_bunny_node		*node;
   size_t		i;
 
@@ -182,6 +182,7 @@ void			bunny_list_sort(t_bunny_list		*list,
   for (node = bunny_list_begin(list), i = 0; node != NULL; node = bunny_list_next(node), ++i)
     node->data = (void*)array[i];
   scream_log_if("%p list, %p compare_function, %p param", list, cmp, param);
+  bunny_freea(array);
 }
 
 #undef			PATTERN

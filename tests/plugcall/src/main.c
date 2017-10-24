@@ -37,7 +37,7 @@ int				main(void)
   char				buffer[1024];
   char				carbon[1024];
   struct bunny_plugin		*plugin
-    = alloca(sizeof(*plugin) + sizeof(plugin->prototypes[0]));
+    = bunny_alloca(sizeof(*plugin) + sizeof(plugin->prototypes[0]));
   int64_t			ret;
   int				sav;
 
@@ -83,6 +83,7 @@ int				main(void)
   assert(strcmp(&carbon[0], &buffer[0]) == 0);
   assert(ret == sav);
 
+  bunny_freea(plugin);
   return (EXIT_SUCCESS);
 }
 

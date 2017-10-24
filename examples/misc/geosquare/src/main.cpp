@@ -72,7 +72,7 @@ int			main(int	argc,
 
   bunny_clear(&win->buffer, BLACK);
 
-  array = (t_bunny_vertex_array*)alloca(sizeof(*array) + 4 * sizeof(t_bunny_vertex));
+  array = (t_bunny_vertex_array*)bunny_alloca(sizeof(*array) + 4 * sizeof(t_bunny_vertex));
   array->length = 4;
 
   array->vertex[0].tex.x = 0;
@@ -91,6 +91,8 @@ int			main(int	argc,
   bunny_set_key_response(key);
   bunny_set_loop_main_function(loop);
   bunny_loop(win, 20, NULL);
+  bunny_delete_clipable(pic);
+  bunny_freea(array);
   bunny_stop(win);
   return (0);
 }

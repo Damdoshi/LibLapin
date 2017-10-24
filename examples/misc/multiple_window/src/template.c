@@ -58,7 +58,7 @@ int			main(void)
   puts("Clique sur une fenetre pour la rendre rouge. Ferme en une, cela les fermera toutes");
   
   r = rand() % 3 + 2;
-  win = alloca(r * sizeof(*win));
+  win = bunny_alloca(r * sizeof(*win));
   for (i = 0; i < r; ++i)
     {
       win[i] = bunny_start(320, 240, false, "Window");
@@ -72,6 +72,7 @@ int			main(void)
 
   for (i = 0; i < r; ++i)
     bunny_stop(win[i]);
+  bunny_freea(win);
   return (0);
 }
 

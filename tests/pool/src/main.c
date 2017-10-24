@@ -27,7 +27,7 @@ static void		test(void)
 
   len = rand() % 4000 + 2000;
   
-  void			**id = alloca(sizeof(*id) * len);
+  void			**id = bunny_alloca(sizeof(*id) * len);
 
   pool = bunny_new_pool(len, size_t);
   bunny_delete_pool(pool);
@@ -67,6 +67,7 @@ static void		test(void)
     }
 
   bunny_delete_pool(pool);
+  bunny_freea(id);
 }
 
 int			main(int		argc,

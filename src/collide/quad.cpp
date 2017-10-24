@@ -11,8 +11,8 @@
 bool			bunny_quad_collision_dot(const t_bunny_vertex_array		*v4,
 						 const t_bunny_accurate_position	*dot)
 {
-  t_bunny_vertex_array	*t1 = (t_bunny_vertex_array*)alloca(sizeof(*t1) + 3 * sizeof(t1->vertex[0]));
-  t_bunny_vertex_array	*t2 = (t_bunny_vertex_array*)alloca(sizeof(*t1) + 3 * sizeof(t1->vertex[0]));
+  t_bunny_vertex_array	*t1 = (t_bunny_vertex_array*)bunny_alloca(sizeof(*t1) + 3 * sizeof(t1->vertex[0]));
+  t_bunny_vertex_array	*t2 = (t_bunny_vertex_array*)bunny_alloca(sizeof(*t1) + 3 * sizeof(t1->vertex[0]));
 
   if (v4->length != 4)
     scream_error_if(return (false), EINVAL, PATTERN, v4, dot, "false");
@@ -28,6 +28,8 @@ bool			bunny_quad_collision_dot(const t_bunny_vertex_array		*v4,
   if (bunny_triangle_collision_dot(t1, dot))
     {
       scream_log_if(PATTERN, v4, dot, "true");
+      bunny_freea(t1);
+      bunny_freea(t2);
       return (true);
     }
 
@@ -42,10 +44,14 @@ bool			bunny_quad_collision_dot(const t_bunny_vertex_array		*v4,
   if (bunny_triangle_collision_dot(t2, dot))
     {
       scream_log_if(PATTERN, v4, dot, "true");
+      bunny_freea(t1);
+      bunny_freea(t2);
       return (true);
     }
 
   scream_log_if(PATTERN, v4, dot, "false");
+  bunny_freea(t1);
+  bunny_freea(t2);
   return (false);
 }
 

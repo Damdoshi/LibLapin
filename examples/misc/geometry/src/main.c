@@ -23,7 +23,7 @@ int			main(void)
 
   srand(time(NULL));
   l = (rand() % 2) ? (rand() % 37 + 5) : 5;
-  t_bunny_vertex_array	*array = alloca(sizeof(*array) + l * sizeof(t_bunny_vertex));
+  t_bunny_vertex_array	*array = bunny_alloca(sizeof(*array) + l * sizeof(t_bunny_vertex));
 
   bunny_set_key_response(key);
   array->length = l;
@@ -44,6 +44,7 @@ int			main(void)
   bunny_set_geometry(&win->buffer, BGY_TRIANGLE_FAN, array, NULL);
   bunny_display(win);
   bunny_loop(win, 20, NULL);
+  bunny_freea(array);
   bunny_stop(win);
   return (0);
 }

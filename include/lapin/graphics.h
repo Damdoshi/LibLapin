@@ -559,7 +559,7 @@ typedef struct			s_bunny_vertex
 ** manually reserve a specific amount of data depending of what you
 ** wish to store. For example, if you wish to draw two pixels:
 **
-** t_bunny_vertex_array		*array = alloca(sizeof(*array) + 2 * sizeof(array->vertex[0]));
+** t_bunny_vertex_array		*array = bunny_alloca(sizeof(*array) + 2 * sizeof(array->vertex[0]));
 **
 ** array->lenght = 2;
 ** fill(&array->vertex[0]);
