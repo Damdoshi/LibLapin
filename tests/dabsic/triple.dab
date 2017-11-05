@@ -1,0 +1,11 @@
+
+[* ScopeArrayValue *]
+
+[SAV = [Data = 42
+    1, 2, 3
+  ]
+  A = 4
+  B = 5
+  C = 6
+]
+

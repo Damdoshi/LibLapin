@@ -1,0 +1,36 @@
+
+Name="Adventure"
+Version=4.2
+
+[GeneralConfiguration
+  Resolution=800,600
+  Bits=32
+  Volume=50%
+]
+
+{Players = 2
+  [
+    Name="Damdoshi"
+    Age=28
+    Items = {
+      Computer,
+      Pantie,
+      "Bottle of wine",
+      ID
+    }
+  ],
+  [
+    Name="Koneko"
+    Age=26
+    {Items
+      ID,
+      Pen,
+      { = "Bag"
+	Phone,
+	PainKiller,
+	Lipstick
+      }
+    }
+  ]
+}
+

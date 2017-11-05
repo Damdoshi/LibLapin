@@ -15,6 +15,7 @@ t_bunny_configuration	*_bunny_read_csv(const char			*code,
 
   cmode = SmallConf::create_mode;
   SmallConf::create_mode = true;
+  conf.construct = SmallConf::ARRAY;
   y = 0;
   x = 0;
   i = 0;
@@ -38,6 +39,7 @@ t_bunny_configuration	*_bunny_read_csv(const char			*code,
 	       "%s code, %p config -> %p "
 	       "(A correct value was expected on line %d, column %d)",
 	       code, config, (void*)NULL, y, x);
+	  conf[y].construct = SmallConf::ARRAY;
 	  skipspace_inline(code, i);
 	  if (readtext(code, i, "\n"))
 	    {

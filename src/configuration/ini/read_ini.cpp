@@ -33,6 +33,7 @@ static bool		read_inside_scope(t_bunny_configuration		*fileroot,
   SmallConf		&newnode = conf[&buffer[0]];
   int			iteration = 0;
 
+  newnode.construct = SmallConf::ARRAY;
   do
     {
       read_separator(code, i);
@@ -71,6 +72,7 @@ SmallConf		*read_new_scope(const char			*code,
        "%s code, %p config -> %p "
        "(The ']' token was expected after scope name on line %d)",
        code, &root, (void*)NULL, whichline(code, i));  
+  ((SmallConf*)cnf)->construct = SmallConf::MAP;
   read_separator(code, i);
   return ((SmallConf*)cnf);
 }
@@ -86,6 +88,7 @@ t_bunny_configuration	*_bunny_read_ini(const char			*code,
   i = 0;
   SmallConf::create_mode = true;
   child = &conf; // Create the INI "default node"
+  child->construct = SmallConf::MAP;
   while (code[i])
     {
       read_separator(code, i);

@@ -11,12 +11,18 @@
 # include			<iomanip>
 # include			<sstream>
 
-struct SmallConf;
+enum				Decision
+  {
+    BD_ERROR,
+    BD_NOT_FOUND,
+    BD_OK
+  };
+struct				SmallConf;
+
+# include			"dabsic.hpp"
 
 t_bunny_configuration		*_bunny_read_ini(const char			*code,
 						 t_bunny_configuration		*config);
-t_bunny_configuration		*_bunny_read_dabsic(const char			*code,
-						    t_bunny_configuration	*config);
 t_bunny_configuration		*_bunny_read_xml(const char			*code,
 						 t_bunny_configuration		*config);
 t_bunny_configuration		*_bunny_read_lua(const char			*code,
@@ -25,7 +31,6 @@ t_bunny_configuration		*_bunny_read_csv(const char			*code,
 						 t_bunny_configuration		*config);
 
 char				*_bunny_write_ini(const t_bunny_configuration	*config);
-char				*_bunny_write_dabsic(const t_bunny_configuration *config);
 char				*_bunny_write_xml(const t_bunny_configuration	*config);
 char				*_bunny_write_lua(const t_bunny_configuration	*config);
 char				*_bunny_write_csv(const t_bunny_configuration	*config);
@@ -50,7 +55,8 @@ bool				getfieldname(const char				*code,
 					     char				*out,
 					     ssize_t				len,
 					     SmallConf				&scope,
-					     bool				overwrite);
+					     bool				overwrite,
+					     bool				manda = true);
 bool				readdouble(const char				*code,
 					   ssize_t				&i,
 					   double				&d);
@@ -102,6 +108,14 @@ extern const char		*numbers;
 
 struct				SmallConf
 {
+  enum				Construct
+    {
+      PLAIN,
+      ARRAY,
+      MAP
+    };
+  Construct			construct;
+
   enum				Type
     {
       INTEGER,
@@ -118,6 +132,7 @@ struct				SmallConf
     std::string, SmallConf*
     >::iterator			iterator;
 
+  bool				given_name;
   std::string			name;
   std::string			address;
   mutable bool			have_value;
@@ -176,6 +191,7 @@ struct				SmallConf
 	    else
 	      ss << this->address << str;
 	    *slot = new SmallConf;
+	    (*slot)->given_name = true;
 	    (*slot)->name = str;
 	    (*slot)->father = this;
 	    (*slot)->address = ss.str();
@@ -209,6 +225,7 @@ struct				SmallConf
 	    ss << this->name << "[" << i << "]";
 	    array[olsize] = new SmallConf;
 	    array[olsize]->father = this;
+	    array[olsize]->given_name = false;
 	    array[olsize]->name = ss.str();
 	    array[olsize]->address = sx.str();
 	    olsize += 1;
@@ -323,7 +340,9 @@ struct				SmallConf
   }
 
   SmallConf(void)
-    : have_value(false),
+    : construct(PLAIN),
+      given_name(false),
+      have_value(false),
       converted(0),
       converted_2(0),
       is_converted(false),

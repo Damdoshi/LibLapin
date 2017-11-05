@@ -96,22 +96,25 @@ bool			getfieldname(const char			*code,
 				     char			*out,
 				     ssize_t			buflen,
 				     SmallConf			&scope,
-				     bool			overwrite)
+				     bool			overwrite,
+				     bool			manda)
 {
   ssize_t		readlen, j;
 
   j = i;
   if (readfield(code, j) == false)
     {
-      fprintf(stderr, "A name was expected. (Line %d)\n",
-	      whichline(code, i));
+      if (manda)
+	fprintf(stderr, "A name was expected. (Line %d)\n",
+		whichline(code, i));
       return (false);
     }
 
   if ((readlen = j - i) > buflen / 2)
     {
-      fprintf(stderr, "The name is too long. Max is %zu. (Line %d)\n",
-	      buflen / 2, whichline(code, i));
+      if (manda)
+	fprintf(stderr, "The name is too long. Max is %zu. (Line %d)\n",
+		buflen / 2, whichline(code, i));
       return (false);
     }
   strncpy(&out[0], &code[i], readlen);

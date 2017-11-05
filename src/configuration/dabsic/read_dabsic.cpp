@@ -6,153 +6,48 @@
 #include		<string.h>
 #include		"lapin_private.h"
 
-static bool		read_inside_scope(const char			*code,
-					  ssize_t			&i,
-					  SmallConf			&config);
-
-static void		read_separator(const char			*code,
-				       ssize_t				&i)
-{
-  bool			once;
-
-  once = true;
-  skipspace(code, i);
-  while (once == true)
-    {
-      once = false;
-      while (code[i] == '\'')
-	{
-	  once = true;
-	  while (code[i] != '\0' && code[i] != '\n' && code[i] != '\r')
-	    ++i;
-	  skipspace(code, i);
-	}
-      while (strncmp(&code[i], "[*", 2) == 0)
-	{
-	  once = true;
-	  while (code[i] != '\0' && strncmp(&code[i], "*]", 2) != 0)
-	    ++i;
-	  if (code[i])
-	    i += 2;
-	  skipspace(code, i);
-	}
-    }
-}
-
-static bool		read_field_value(const char			*code,
-					 ssize_t			&i,
-					 SmallConf			&config)
-{
-  read_separator(code, i);
-  if (readtext(code, i, "=") == false)
-    return (true);
-  read_separator(code, i);
-  if (readtext(code, i, "[Scope"))
-    return (read_inside_scope(code, i, config));
-  if (readtext(code, i, "[Data"))
-    return (read_data(code, i, config));
-  if (readtext(code, i, "[Sequence"))
-    return (read_sequence(code, i, config));
-  if (readtext(code, i, "[Function"))
-    return (read_function(code, i, config));
-  if (readvalue(code, i, config, '\0') == false)
-    scream_error_if
-      (return (false), BE_SYNTAX_ERROR,
-       "%s code, config -> %s "
-       "(A data, sequence or function scope or a value was expected after '=' on "
-       "line %d)", code, "false", whichline(code, i));
-  read_separator(code, i);
-  return (true);
-}
-
-static bool		read_inside_scope(const char			*code,
-					  ssize_t			&i,
-					  SmallConf			&config)
-{
-  char			buffer[128];
-  SmallConf		*newnode;
-
-  read_separator(code, i);
-  if (read_field_value(code, i, config) == false)
-    return (false);
-  read_separator(code, i);
-  while (code[i] != '\0' && code[i] != ']')
-    {
-      read_separator(code, i);
-      if (readtext(code, i, "["))
-	{
-	  int		start;
-
-	  (void)start; // When NO_BUNNY_ERROR_LOG is set
-	  read_separator(code, i);
-	  if (getfieldname(code, i, &buffer[0], sizeof(buffer), config, true) == false)
-	    return (false);
-	  if ((newnode = &config[&buffer[0]]) == NULL)
-	    return (false);
-	  start = i;
-	  if (read_inside_scope(code, i, *newnode) == false)
-	    return (false);
-	  read_separator(code, i);
-	  if (readtext(code, i, "]") == false)
-	    scream_error_if
-	      (return (false), BE_SYNTAX_ERROR,
-	       "%s code, config -> %s "
-	       "(The ']' token was expected to close the scope opened line %d)",
-	       code, "false", whichline(code, start));
-	}
-      else if (readtext(code, i, "{"))
-	{
-	  int		start;
-
-	  read_separator(code, i);
-	  if (getfieldname(code, i, &buffer[0], sizeof(buffer), config, true) == false)
-	    return (false);
-	  if ((newnode = &config[&buffer[0]]) == NULL)
-	    return (false);
-	  start = i;
-	  if (read_data(code, i, *newnode) == false)
-	    return (false);
-	  read_separator(code, i);
-	  if (readtext(code, i, "}") == false)
-	    scream_error_if
-	      (return (false), BE_SYNTAX_ERROR,
-	       "%s code, config -> %s "
-	       "(The '}' token was expected to close the array opened line %d)",
-	       code, "false", whichline(code, start));
-	}
-      else if (getfieldname(code, i, &buffer[0], sizeof(buffer), config, true))
-	{
-	  if ((newnode = &config[&buffer[0]]) == NULL)
-	    return (false);
-	  if (read_field_value(code, i, *newnode) == false)
-	    return (false);
-	}
-      else
-	scream_error_if
-	  (return (false), BE_SYNTAX_ERROR,
-	   "%s code, config -> %s "
-	   "(A new scope or a field was expected on line %d)",
-	   code, "false", whichline(code, i));
-      read_separator(code, i);
-    }
-  return (true);
-}
+/*
+** DABSIC ::= INSIDE_SCOPE
+**
+** INSIDE_SCOPE ::= FIELD_VALUE? [FIELD]*
+**
+** FIELD_VALUE ::= '=' [SCOPE | SEQUENCE | FUNCTION | XML | ARRAY | LITTERALS]
+**
+** FIELD ::=
+**   FIELD_NAME FIELD_VALUE
+** | '[' FIELD_NAME INSIDE_SCOPE ']'
+** | '{' FIELD_NAME INSIDE_ARRAY '}'
+** | '<' FIELD_NAME INSIDE_XML   '>'
+**
+** SCOPE ::= ['[Scope' | '['] INSIDE_SCOPE ']'
+** SEQUENCE ::= '[Sequence' INSIDE_SEQUENCE ']'
+** FUNCTION ::= '[Function' INSIDE_FUNCTION ']'
+** XML ::= ['[XML' | '<'] INSIDE_XML [']' | '>']
+** ARRAY ::= ['[Data' | '[Array' | '{'] INSIDE_ARRAY [']' | '}']
+**
+** LITTERALS ::= EXPRESSION [',' EXPRESSION]*
+**
+** FIELD_NAME ::= C_SYMBOL ['(' C_SYMBOL [',' C_SYMBOL]* ')']?    # '(' right after
+**
+** INSIDE_ARRAY ::= [SCOPE | SEQUENCE | FUNCTION | XML | ARRAY | EXPRESSION]*
+**
+*/
 
 t_bunny_configuration	*_bunny_read_dabsic(const char			*code,
 					    t_bunny_configuration	*config)
 {
+  SmallConf		*conf = (SmallConf*)config;
   ssize_t		i;
   bool			cmode = SmallConf::create_mode;
 
   i = 0;
   SmallConf::create_mode = true;
-  do
-    if (read_inside_scope(code, i, *(SmallConf*)config) == false)
-      {
-	SmallConf::create_mode = cmode;
-	return (NULL);
-      }
-  while (code[i] != '\0');
+  conf->construct = SmallConf::MAP;
+  if (dabsic_read_inside_scope(code, i, *conf) != BD_OK)
+    {
+      SmallConf::create_mode = cmode;
+      return (NULL);
+    }
   SmallConf::create_mode = cmode;
   scream_log_if("%s code, %p config -> %p", code, config, config);
   return (config);

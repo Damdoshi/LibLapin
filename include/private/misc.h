@@ -70,7 +70,7 @@ t_bunny_configuration		*_get_good_conf(const char		*file,
 		(long unsigned int)time(NULL),				\
 		__FUNCTION__,						\
 		__VA_ARGS__);						\
-      bunny_errno = 0;							\
+      /* bunny_errno = 0; */						\
     }									\
   while (0)
 # endif

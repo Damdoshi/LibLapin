@@ -126,8 +126,9 @@
 # include			"lapin/text.h"
 # include			"lapin/unix.h"
 # include			"lapin/camera.h"
-
 # include			"lapin/fixedpoint.h"
+# include			"lapin/base64.h"
+
 # include			"lapin/stack.h"
 # include			"lapin/astack.h"
 # include			"lapin/queue.h"

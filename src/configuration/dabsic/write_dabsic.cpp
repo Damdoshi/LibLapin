@@ -5,91 +5,152 @@
 
 #include		"lapin_private.h"
 
-void			dabsic_field_value(std::stringstream			&ss,
-					   SmallConf				&conf,
-					   ssize_t				indent);
-void			restore_dabsic(std::stringstream			&ss,
+static void		restore_dabsic(std::stringstream			&ss,
 				       SmallConf				&conf,
 				       ssize_t					indent);
 
-void			dabsic_array(std::stringstream				&ss,
+static bool		got_real_field(SmallConf				&conf)
+{
+  std::map<std::string, SmallConf*>::iterator it;
+
+  for (it = conf.Begin(); it != conf.End(); ++it)
+    if (it->second->name[0] != '.')
+      return (true);
+  return (false);
+}
+
+static void		restore_prototype(std::stringstream			&ss,
+					  SmallConf				&conf)
+{
+  ssize_t		i;
+
+  if (conf.Access(".parameters") == false)
+    return ;
+  SmallConf		&params = conf[".parameters"];
+
+  ss << "(";
+  for (i = 0; i < (ssize_t)params.Size(); ++i)
+    {
+      ss << params[i].original_value;
+      if (i + 1 < (ssize_t)params.Size())
+	ss << ", ";
+    }
+  ss << ")";
+}
+
+static void		dabsic_array(std::stringstream				&ss,
 				     SmallConf					&conf,
 				     ssize_t					indent)
 {
-  ssize_t		i;
+  ssize_t		i, j;
 
+  restore_prototype(ss, conf);
+  if (conf.have_value)
+    {
+      ss <<  " = ";
+      writevalue(ss, conf);
+      ss << std::endl;
+    }
+  else
+    ss << std::endl;
   for (i = 0; i < (ssize_t)conf.Size(); ++i)
     {
-      if (conf[i].Begin() != conf[i].End())
+      if (conf[i].name[0] == '.')
+	continue ;
+      for (j = 0; j < indent; ++j)
+	ss << " ";
+      if (got_real_field(conf[i]))
 	{
-	  ss << "[" << conf[i].name;
-	  dabsic_field_value(ss, conf[i], indent + 2);
+	  ss << "[";
+	  if (conf[i].given_name)
+	    ss << conf[i].name;
 	  restore_dabsic(ss, conf[i], indent + 2);
-	  for (i = 0; i < indent; ++i)
-	    ss << " ";
-	  ss << "]" << std::endl;
-	}
-      else if (conf[i].Size())
-	{
-	  ss << "[Data";
-	  dabsic_array(ss, conf, indent + 2);
-	  for (i = 0; i < indent; ++i)
+	  for (j = 0; j < indent; ++j)
 	    ss << " ";
 	  ss << "]";
 	}
+      else if (conf[i].Size() > 1)
+	{
+	  ss << "{";
+	  if (conf[i].given_name)
+	    ss << conf[i].name;
+	  dabsic_array(ss, conf[i], indent + 2);
+	  for (j = 0; j < indent; ++j)
+	    ss << " ";
+	  ss << "}";
+	}
       else
 	writevalue(ss, conf[i]);
+      if (i + 1 < (ssize_t)conf.Size())
+	ss << "," << std::endl;
+      else
+	ss << std::endl;
     }
 }
 
-void			dabsic_field_value(std::stringstream			&ss,
-					   SmallConf				&conf,
-					   ssize_t				indent)
-{
-  ssize_t		i;
-  
-  if (conf.have_value)
-    {
-      ss << " = ";
-      writevalue(ss, conf);
-    }
-  else if (conf.Size())
-    {
-      ss << " = [Data" << std::endl;
-      dabsic_array(ss, conf, indent + 2);
-      ss << std::endl;
-      for (i = 0; i < indent; ++i)
-	ss << " ";  
-      ss << "]";
-    }
-  ss << std::endl;
-}
-
-void			restore_dabsic(std::stringstream			&ss,
+static void		restore_dabsic(std::stringstream			&ss,
 				       SmallConf				&conf,
 				       ssize_t					indent)
 {
   std::map<std::string, SmallConf*>::iterator it;
   ssize_t		i;
-  
-  dabsic_field_value(ss, conf, indent);
+
+  restore_prototype(ss, conf);
+  if (conf.have_value || conf.Size() > 0)
+    {
+      ss <<  " = ";
+      if (conf.Size() > 1)
+	{
+	  ss << "[Data";
+	  dabsic_array(ss, conf, indent + 2);
+	  for (i = 0; i < indent; ++i)
+	    ss << " ";
+	  ss << "]" << std::endl;
+	}
+      else if (conf.Size() == 1)
+	writevalue(ss, conf[0]);
+      else
+	writevalue(ss, conf);
+      ss << std::endl;
+    }
+  else
+    ss << std::endl;
   for (it = conf.Begin(); it != conf.End(); ++it)
     {
+      if (it->second->name[0] == '.')
+	continue ;
       for (i = 0; i < indent; ++i)
 	ss << " ";
-      if (it->second->Begin() == it->second->End())
-	{
-	  ss << it->second->name;
-	  dabsic_field_value(ss, *it->second, indent + 2);
-	}
-      else
+      if (got_real_field(*it->second))
 	{
 	  ss << "[" << it->second->name;
 	  restore_dabsic(ss, *it->second, indent + 2);
 	  for (i = 0; i < indent; ++i)
 	    ss << " ";
-	  ss << "]" << std::endl;;
+	  ss << "]" << std::endl;
 	}
+      else if (it->second->Size() > 1)
+	{
+	  ss << "{" << it->second->name;
+	  dabsic_array(ss, *it->second, indent + 2);
+	  for (i = 0; i < indent; ++i)
+	    ss << " ";
+	  ss << "}" << std::endl;
+	}
+      else
+	{
+	  ss << it->second->name;
+	  restore_prototype(ss, *it->second);
+	  if (it->second->have_value || it->second->Size())
+	    {
+	      ss << " = ";
+	      if (it->second->Size())
+		writevalue(ss, (*it->second)[0]);
+	      else
+		writevalue(ss, (*it->second));
+	    }
+	}
+      ss << std::endl;
     }
 }
 

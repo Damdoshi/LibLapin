@@ -5,10 +5,10 @@
 
 #include		"lapin_private.h"
 
-static const char	*bunny_errors[LAST_ERROR - EHWPOISON] =
+static const char	*bunny_errors[LAST_ERROR - BE_CANT_GENERATE_RESSOURCE] =
   {
     "Cannot generate dynamic ressource",
-    "Syntax error encountered while reading code",
+    "Syntax error encountered",
     "Container is empty and cannot supply any value",
     "Duplication of the stored element failed.",
     "Cannot find requested element",
@@ -18,8 +18,8 @@ static const char	*bunny_errors[LAST_ERROR - EHWPOISON] =
 
 const char		*bunny_strerror(int		errorid)
 {
-  if (errorid <= EHWPOISON)
+  if (errorid <= BE_CANT_GENERATE_RESSOURCE)
     return (strerror(errorid));
-  return (bunny_errors[errorid - EHWPOISON]);
+  return (bunny_errors[errorid - BE_CANT_GENERATE_RESSOURCE]);
 }
 
