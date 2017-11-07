@@ -18,7 +18,6 @@ t_bunny_configuration	*bunny_read_configuration(t_bunny_configuration_type		type
 {
   t_bunny_configuration	*nw = NULL;
   bool			local;
-  int			error;
 
   if ((local = (config == NULL)))
     if ((config = bunny_new_configuration()) == NULL)

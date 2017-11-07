@@ -8,10 +8,12 @@
 
 Decision		dabsic_read_litterals(const char		*code,
 					      ssize_t			&i,
-					      SmallConf			&conf)
+					      SmallConf			&conf,
+					      SmallConf			&root)
 {
   int			iteration;
 
+  (void)root;
   if (conf.construct == SmallConf::ARRAY)
     {
       dabsic_read_separator(code, i);

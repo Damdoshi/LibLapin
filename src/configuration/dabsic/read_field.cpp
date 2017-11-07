@@ -8,7 +8,8 @@
 
 Decision		dabsic_read_field(const char			*code,
 					  ssize_t			&i,
-					  SmallConf			&conf)
+					  SmallConf			&conf,
+					  SmallConf			&root)
 {
   SmallConf		*newnode;
   Decision		ret;
@@ -19,7 +20,7 @@ Decision		dabsic_read_field(const char			*code,
       if ((newnode = dabsic_field_name(code, i, conf)) == NULL)
 	return (BD_ERROR);
 
-      if ((ret = dabsic_read_inside_scope(code, i, *newnode)) != BD_OK)
+      if ((ret = dabsic_read_inside_scope(code, i, *newnode, root)) != BD_OK)
 	return (ret);
       if (readtext(code, i, "]") == false)
 	scream_error_if
@@ -36,7 +37,7 @@ Decision		dabsic_read_field(const char			*code,
       if ((newnode = dabsic_field_name(code, i, conf)) == NULL)
 	return (BD_ERROR);
 
-      if ((ret = dabsic_read_inside_array(code, i, *newnode)) != BD_OK)
+      if ((ret = dabsic_read_inside_array(code, i, *newnode, root)) != BD_OK)
 	return (ret);
       dabsic_read_separator(code, i);
       if (readtext(code, i, "}") == false)
@@ -54,7 +55,7 @@ Decision		dabsic_read_field(const char			*code,
       if ((newnode = dabsic_field_name(code, i, conf)) == NULL)
 	return (BD_ERROR);
 
-      if ((ret = dabsic_read_inside_xml(code, i, *newnode)) != BD_OK)
+      if ((ret = dabsic_read_inside_xml(code, i, *newnode, root)) != BD_OK)
 	return (ret);
       dabsic_read_separator(code, i);
       if (readtext(code, i, ">") == false)
@@ -67,9 +68,18 @@ Decision		dabsic_read_field(const char			*code,
       return (BD_OK);
     }
 
+  if (code[i] == '@')
+    {
+      if (_bunny_handle_directive
+	  (code, i, &conf, &root, dabsic_read_separator) == false)
+	return (BD_ERROR);
+      dabsic_read_separator(code, i);
+      return (BD_OK);
+    }
+
   if ((newnode = dabsic_field_name(code, i, conf, false)) == NULL)
     return (BD_NOT_FOUND);
-  if (dabsic_read_field_value(code, i, *newnode) == BD_ERROR)
+  if (dabsic_read_field_value(code, i, *newnode, root) == BD_ERROR)
     return (BD_ERROR);
   dabsic_read_separator(code, i);
   return (BD_OK);

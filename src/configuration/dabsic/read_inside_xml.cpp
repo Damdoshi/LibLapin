@@ -8,11 +8,10 @@
 
 Decision		dabsic_read_inside_xml(const char		*code,
 					       ssize_t			&i,
-					       SmallConf		&conf)
+					       SmallConf		&conf,
+					       SmallConf		&root)
 {
-  (void)code;
-  (void)i;
-  (void)conf;
+  xml_read_between_markup(code, i, conf, root);
   return (BD_OK);
 }
 

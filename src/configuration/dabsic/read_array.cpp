@@ -8,7 +8,8 @@
 
 Decision		dabsic_read_array(const char		*code,
 					  ssize_t		&i,
-					  SmallConf		&conf)
+					  SmallConf		&conf,
+					  SmallConf		&root)
 {
   char			buffer[128];
   int			line;
@@ -38,7 +39,7 @@ Decision		dabsic_read_array(const char		*code,
     return (BD_NOT_FOUND);
   dabsic_read_separator(code, i);
 
-  if (dabsic_read_inside_array(code, i, conf) == BD_ERROR)
+  if (dabsic_read_inside_array(code, i, conf, root) == BD_ERROR)
     return (BD_ERROR);
 
   dabsic_read_separator(code, i);

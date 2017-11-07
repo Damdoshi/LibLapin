@@ -6,15 +6,15 @@
 #include		<string.h>
 #include		"lapin_private.h"
 
-Decision		dabsic_read_inside_sequence(const char		*code,
-						    ssize_t		&i,
-						    SmallConf		&conf,
-						    SmallConf		&root)
+Decision		xml_read_between_markup(const char		*code,
+						ssize_t			&i,
+						SmallConf		&conf,
+						SmallConf		&root)
 {
   (void)code;
   (void)i;
   (void)conf;
   (void)root;
-  return (BD_OK);
+  return (BD_NOT_FOUND);
 }
 

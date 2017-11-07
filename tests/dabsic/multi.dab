@@ -1,0 +1,20 @@
+
+[Scope
+  Albert="Camus"
+  @insert "to_insert.dab"
+  Couci="Couca"
+]
+
+@insert "to_insert.dab"
+@include "to_include.dab"
+
+Robert="Dreyfus"
+
+{TheArray = 4200
+  1,
+  2,
+  3,
+  @insert "to_insert.dab",
+  5,
+  6
+}

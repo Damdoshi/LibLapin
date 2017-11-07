@@ -8,7 +8,8 @@
 
 Decision		dabsic_read_inside_array(const char		*code,
 						 ssize_t		&i,
-						 SmallConf		&conf)
+						 SmallConf		&conf,
+						 SmallConf		&root)
 {
   Decision		ret;
   int			iteration;
@@ -36,30 +37,39 @@ Decision		dabsic_read_inside_array(const char		*code,
       SmallConf		&newconf = conf[iteration++];
 
       dabsic_read_separator(code, i);
-      if ((ret = dabsic_read_sequence(code, i, newconf)) == BD_ERROR)
+      if ((ret = dabsic_read_sequence(code, i, newconf, root)) == BD_ERROR)
 	return (BD_ERROR);
       if (ret == BD_OK)
        	goto Bottom;
 
-      if ((ret = dabsic_read_function(code, i, newconf)) == BD_ERROR)
+      if ((ret = dabsic_read_function(code, i, newconf, root)) == BD_ERROR)
 	return (BD_ERROR);
       if (ret == BD_OK)
 	goto Bottom;
 
-      if ((ret = dabsic_read_xml(code, i, newconf)) == BD_ERROR)
+      if ((ret = dabsic_read_xml(code, i, newconf, root)) == BD_ERROR)
 	return (BD_ERROR);
       if (ret == BD_OK)
 	goto Bottom;
 
-      if ((ret = dabsic_read_array(code, i, newconf)) == BD_ERROR)
+      if ((ret = dabsic_read_array(code, i, newconf, root)) == BD_ERROR)
 	return (BD_ERROR);
       if (ret == BD_OK)
 	goto Bottom;
 
-      if ((ret = dabsic_read_scope(code, i, newconf)) == BD_ERROR)
+      if ((ret = dabsic_read_scope(code, i, newconf, root)) == BD_ERROR)
 	return (BD_ERROR);
       if (ret == BD_OK)
 	goto Bottom;
+
+      if (code[i] == '@')
+	{
+	  if (_bunny_handle_directive
+	      (code, i, &newconf, &root, dabsic_read_separator) == false)
+	    return (BD_ERROR);
+	  dabsic_read_separator(code, i);
+	  goto Bottom;
+	}
 
       if (readvalue(code, i, newconf, ",") == false)
 	scream_error_if

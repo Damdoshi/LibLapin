@@ -79,7 +79,8 @@ int			main(int		argc,
   bunny_delete_configuration(triple);
 
   refresh_test("./triple.dab");
-  refresh_test("parameters.dab");
+  refresh_test("./parameters.dab");
+  refresh_test("./multi.dab");
 
   return (EXIT_SUCCESS);
 }

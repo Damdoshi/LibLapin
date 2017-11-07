@@ -8,11 +8,13 @@
 
 Decision		dabsic_read_inside_function(const char		*code,
 						    ssize_t		&i,
-						    SmallConf		&conf)
+						    SmallConf		&conf,
+						    SmallConf		&root)
 {
   (void)code;
   (void)i;
   (void)conf;
+  (void)root;
   return (BD_OK);
 }
 

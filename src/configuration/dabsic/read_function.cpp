@@ -8,14 +8,15 @@
 
 Decision		dabsic_read_function(const char		*code,
 					     ssize_t		&i,
-					     SmallConf		&conf)
+					     SmallConf		&conf,
+					     SmallConf		&root)
 {
   dabsic_read_separator(code, i);
   if (readtext(code, i, "[Function") == false)
     return (BD_NOT_FOUND);
   dabsic_read_separator(code, i);
 
-  if (dabsic_read_inside_function(code, i, conf) == BD_ERROR)
+  if (dabsic_read_inside_function(code, i, conf, root) == BD_ERROR)
     return (BD_ERROR);
 
   dabsic_read_separator(code, i);

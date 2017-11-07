@@ -20,6 +20,7 @@ enum				Decision
 struct				SmallConf;
 
 # include			"dabsic.hpp"
+# include			"xml.hpp"
 
 t_bunny_configuration		*_bunny_read_ini(const char			*code,
 						 t_bunny_configuration		*config);
