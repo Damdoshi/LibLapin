@@ -1,0 +1,16 @@
+
+
+[Scope = 50
+  <ThisIsXML lol="42">
+    <this_is_not_included>
+      Raw
+    </this_is_not_included>
+    <@insert "to_include.xml" />
+  </ThisIsXML>
+
+  Field=100
+  [Scope = 10
+     Field = 200
+  ]
+]
+

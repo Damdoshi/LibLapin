@@ -12,7 +12,7 @@ Decision		dabsic_read_xml(const char		*code,
 					SmallConf		&root)
 {
   dabsic_read_separator(code, i);
-  if (readtext(code, i, "[XML") == false && readtext(code, i, "<") == false)
+  if (readtext(code, i, "<xml>") == false)
     return (BD_NOT_FOUND);
   dabsic_read_separator(code, i);
 
@@ -20,10 +20,10 @@ Decision		dabsic_read_xml(const char		*code,
     return (BD_ERROR);
 
   dabsic_read_separator(code, i);
-  if (readtext(code, i, "]") == false && readtext(code, i, ">") == false)
+  if (readtext(code, i, "</xml>") == false)
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
-       "The token ']' or '>' was expected to close the XML scope on line %d",
+       "The token '</xml>' was expected to close the XML scope on line %d",
        whichline(code, i)
        );
   dabsic_read_separator(code, i);

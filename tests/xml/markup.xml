@@ -1,0 +1,17 @@
+
+<markup>
+  This is plain text
+  <field />
+  <field />
+  <field />
+  Another text
+
+  <markup>
+    Text text text
+    <field />
+    Again & again
+    <field />
+  </markup>
+</markup>
+
+<field />

@@ -1,0 +1,4 @@
+<father>
+  <@insert "to_include.xml" />
+</father>
+<@include "to_include.xml" />

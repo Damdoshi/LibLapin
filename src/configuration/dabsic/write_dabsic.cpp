@@ -69,7 +69,7 @@ static void		dabsic_array(std::stringstream				&ss,
 	    ss << " ";
 	  ss << "]";
 	}
-      else if (conf[i].Size() > 1)
+      else if (conf[i].Size() > 0)
 	{
 	  ss << "{";
 	  if (conf[i].given_name)
@@ -78,6 +78,12 @@ static void		dabsic_array(std::stringstream				&ss,
 	  for (j = 0; j < indent; ++j)
 	    ss << " ";
 	  ss << "}";
+	}
+      else if (conf[i].given_name)
+	{
+	  ss << "[" << conf[i].name;
+	  writevalue(ss, conf[i]);
+	  ss << "]";
 	}
       else
 	writevalue(ss, conf[i]);
@@ -99,7 +105,7 @@ static void		restore_dabsic(std::stringstream			&ss,
   if (conf.have_value || conf.Size() > 0)
     {
       ss <<  " = ";
-      if (conf.Size() > 1)
+      if (conf.Size() > 0)
 	{
 	  ss << "[Data";
 	  dabsic_array(ss, conf, indent + 2);
@@ -107,8 +113,6 @@ static void		restore_dabsic(std::stringstream			&ss,
 	    ss << " ";
 	  ss << "]" << std::endl;
 	}
-      else if (conf.Size() == 1)
-	writevalue(ss, conf[0]);
       else
 	writevalue(ss, conf);
       ss << std::endl;
@@ -129,7 +133,7 @@ static void		restore_dabsic(std::stringstream			&ss,
 	    ss << " ";
 	  ss << "]" << std::endl;
 	}
-      else if (it->second->Size() > 1)
+      else if (it->second->Size() > 0)
 	{
 	  ss << "{" << it->second->name;
 	  dabsic_array(ss, *it->second, indent + 2);

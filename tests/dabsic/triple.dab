@@ -9,3 +9,14 @@
   C = 6
 ]
 
+[* Does not work:
+
+{ASV = [Scope = 42
+  A = 4
+  B = 5
+  C = 6
+  ]
+  1, 2, 3
+}
+
+*]

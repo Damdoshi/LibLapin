@@ -51,14 +51,22 @@ int			main(int		argc,
   (void)argv;
   srand(time(NULL));
   signal(SIGALRM, sighandler);
-  if (argc == 2)
-    alarm(2);
+  if (argc >= 2)
+    {
+      if (argc == 3)
+	refresh_test(argv[1]);
+      else
+	alarm(2);
+      return (EXIT_SUCCESS);
+    }
 
   refresh_test("fields.dab");
   refresh_test("scopes.dab");
   refresh_test("arrays.dab");
   refresh_test("complex.dab");
 
+  refresh_test("./triple.dab");
+  
   printf("--------------- manual test triple.dab --------------\n");
 
   assert(triple = bunny_load_configuration(BC_DABSIC, "triple.dab", NULL));
@@ -78,9 +86,9 @@ int			main(int		argc,
   assert(val == 6);
   bunny_delete_configuration(triple);
 
-  refresh_test("./triple.dab");
   refresh_test("./parameters.dab");
   refresh_test("./multi.dab");
+  refresh_test("./with_xml.dab");
 
   return (EXIT_SUCCESS);
 }

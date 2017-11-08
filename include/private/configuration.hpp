@@ -22,9 +22,9 @@ struct				SmallConf;
 # include			"dabsic.hpp"
 # include			"xml.hpp"
 
+void				shrink_single_element_array(SmallConf		&cnf);
+
 t_bunny_configuration		*_bunny_read_ini(const char			*code,
-						 t_bunny_configuration		*config);
-t_bunny_configuration		*_bunny_read_xml(const char			*code,
 						 t_bunny_configuration		*config);
 t_bunny_configuration		*_bunny_read_lua(const char			*code,
 						 t_bunny_configuration		*config);
@@ -32,7 +32,6 @@ t_bunny_configuration		*_bunny_read_csv(const char			*code,
 						 t_bunny_configuration		*config);
 
 char				*_bunny_write_ini(const t_bunny_configuration	*config);
-char				*_bunny_write_xml(const t_bunny_configuration	*config);
 char				*_bunny_write_lua(const t_bunny_configuration	*config);
 char				*_bunny_write_csv(const t_bunny_configuration	*config);
 
@@ -144,6 +143,19 @@ struct				SmallConf
   static bool			create_mode;
   SmallConf			*father;
   Type				last_type;
+
+  SmallConf			&operator=(const SmallConf			&o)
+  {
+    if (&o == this)
+      return (*this);
+    have_value = o.have_value;
+    original_value = o.original_value;
+    converted = o.converted;
+    converted_2 = o.converted_2;
+    is_converted = o.is_converted;
+    last_type = o.last_type;
+    return (*this);
+  }
 
   void				SetCreateMode(bool				cm)
   {
@@ -356,7 +368,7 @@ struct				SmallConf
     std::vector<SmallConf*> dupx = array;
     std::vector<SmallConf*>::iterator itx;
 
-    if (father != NULL)
+    if (father != NULL && father->nodes.find(name) != father->nodes.end())
       father->nodes.erase(name);
     for (it = dup.begin(); it != dup.end(); ++it)
       delete it->second;

@@ -1,0 +1,10 @@
+
+<!-- THIS IS SPARTA -->
+
+<markup novalue prop1="42" prop2=50 prop3=5.7,1,"zob">
+  <!-- THIS IS SPARTA -->
+  Raw value
+  <field xxx="aaa" samething_novalue<!-- THIS IS SPARTA --> bbb="yyy" />
+  <!-- THIS IS SPARTA -->
+</markup>
+<!-- THIS IS SPARTA -->

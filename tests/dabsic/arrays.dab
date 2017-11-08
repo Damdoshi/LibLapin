@@ -22,7 +22,7 @@ ArrayArray = {
 }
 
 Syntax0 = [Data
- 0, 1, 2
+ 2
 ]
 
 Syntax1 = [Data = 42
