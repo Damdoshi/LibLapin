@@ -98,6 +98,61 @@ double				bunny_evaluate(const char		*operation,
 					       t_bunny_configuration	*env);
 
 /*!
+** Encode using base64 algorithm the sent data of size len.
+** Store the memory space used address at *out or use the one given directly.
+** Store the size of the output in *outlen.
+** The output size is up to 4 * (len + 2) / 3.
+**
+** \param data The data to transform.
+** \param len The length of the data to transform.
+** \param out If *out is NULL, then the function will allocate a memory
+** space wide enough with bunny_malloc and store its address in *out.
+** If *out is not NULL, then it may allocate, depending on the size sent
+** in *outlen being sufficient or not.
+** \param outlen The size of the sent buffer in *out, or any space where
+** to store the size of the function output. Will be overwritten if
+** the function is successful. NULL may be sent if you don't want to
+** retrieve the size.
+** \return True if the function was successful.
+*/
+bool				bunny_base64_encode(const void		*data,
+						    size_t		len,
+						    char		**out,
+						    size_t		*outlen);
+
+/*!
+** Decode using base64 algorithm the sent data of size len.
+** Store the memory space used address at *out or use the one given directly.
+** Store the size of the output in *outlen.
+** The output size is up to 3 * len / 4.
+**
+** \param data The data to transform.
+** \param len The length of the data to transform.
+** \param out If *out is NULL, then the function will allocate a memory
+** space wide enough with bunny_malloc and store its address in *out.
+** If *out is not NULL, then it may allocate, depending on the size sent
+** in *outlen being sufficient or not.
+** \param outlen The size of the sent buffer in *out, or any space where
+** to store the size of the function output. Will be overwritten if the function
+** is successful. NULL may be sent if you don't want to retrieve the size.
+** \return True if the functon was successful.
+*/
+bool				bunny_base64_decode(const char		*data,
+						    size_t		len,
+						    void		**out,
+						    size_t		*outlen);
+
+/*!
+** Check if the sent data is valid as base64 encoded data.
+** \param data The data to check.
+** \param len The length of the data.
+** \return True if the data is valid (compose of [A-Za-z0-9+/]+[=]* and
+** with coherent size.
+*/
+bool				bunny_base64_check(const char		*data,
+						   size_t		len);
+
+/*!
 ** Split the given string accordingly to sent tokens.
 ** For example:
 ** const char tok[3] = {",", "==", NULL};

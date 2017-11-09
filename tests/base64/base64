@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echo "Test encoding"
+
+cat testfile | ./base64_bin e _ > testfile.bun
+cat testfile | base64 -w 0 > testfile.b64
+
+diff testfile.bun testfile.b64
+
+echo "Test decoding"
+
+cat testfile.bun | ./base64_bin d _ > testfile.bun.e
+cat testfile.b64 | base64 -d -w 0 > testfile.b64.e
+
+diff testfile.bun.e testfile.b64.e
+
+echo "Massive test"
+
+./base64_bin
+
+echo "Done"
+
+rm testfile.*

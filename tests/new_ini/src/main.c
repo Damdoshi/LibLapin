@@ -104,8 +104,6 @@ int			main(void)
       "Scope.FieldRawString[2]",
       "Scope",
       "",
-      "NewField[0]",
-      "OnTheFly[0]",
       "OnTheFly"
     };
   size_t		j;
@@ -113,7 +111,11 @@ int			main(void)
   for (j = 0; j < sizeof(addr) / sizeof(addr[0]); ++j)
     {
       assert(a = bunny_configuration_go_get_node(cnf, addr[j]));
-      assert(strcmp(bunny_configuration_get_address(a), addr[j]) == 0);
+      if (strcmp(bunny_configuration_get_address(a), addr[j]) != 0)
+	{
+	  printf("%s does not match %s\n", bunny_configuration_get_address(a), addr[j]);
+	  return (EXIT_FAILURE);
+	}
     }
 
   bunny_delete_configuration(cnf);

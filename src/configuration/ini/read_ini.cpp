@@ -47,6 +47,7 @@ static bool		read_inside_scope(t_bunny_configuration		*fileroot,
       read_separator(code, i);
     }
   while (readtext(code, i, ","));
+  shrink_single_element_array(newnode);
   return (true);
 }
 

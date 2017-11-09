@@ -228,7 +228,10 @@ struct				SmallConf
   SmallConf			&operator[](size_t				i)
   {
     size_t			olsize;
-    
+
+    if (i == 0 && array.size() == 0 && create_mode == false && have_value)
+      return (*this);
+
     if ((olsize = array.size()) <= i)
       {
 	if (!create_mode)
