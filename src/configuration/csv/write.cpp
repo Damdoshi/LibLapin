@@ -16,7 +16,8 @@ char			*_bunny_write_csv(const t_bunny_configuration	*config)
     {
       for (i = 0; i < conf[j].Size(); ++i)
 	{
-	  writevalue(ss, conf[j][i]);
+	  if (conf[j][i].have_value)
+	    writevalue(ss, conf[j][i]);
 	  if (i + 1 < conf[j].Size())
 	    ss << ";";
 	}

@@ -41,11 +41,10 @@ static void		test(void)
 
   for (i = 0; i < len; ++i)
     {
-      assert(*(size_t*)id[i] == 42);
-      bunny_pool_free(pool, id[i]);
-      i -= 1;
+      assert(*(size_t*)id[0] == 42);
+      bunny_pool_free(pool, id[0]);
     }
-  assert(bunny_pool_free_elem(pool) == (size_t)i);
+  assert(pool->nmemb - pool->nbr_occupied == (size_t)len);
 
   for (i = 0; i < len / 2; ++i)
     assert(id[i] = bunny_pool_new(pool, size_t));
@@ -81,7 +80,7 @@ int			main(int		argc,
   if (argc == 2)
     alarm(2);
 
-  for (i = 0; i < 5; ++i)
+  for (i = 0; i < 10; ++i)
     test();
   return (EXIT_SUCCESS);
 }

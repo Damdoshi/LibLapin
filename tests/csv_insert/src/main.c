@@ -66,6 +66,8 @@ int				main(void)
 
   bunny_save_configuration(BC_CSV, "/dev/stdout", cnf);
 
+  printf("Done!\n");
+
   bunny_delete_configuration(cnf);
   return (EXIT_SUCCESS);
 }
