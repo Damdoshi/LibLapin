@@ -28,6 +28,11 @@ Decision		dabsic_read_field_value(const char		*code,
   if (ret == BD_ERROR)
     return (ret);
 
+  if ((ret = dabsic_read_csv(code, i, conf, root)) == BD_OK)
+    return (ret);
+  if (ret == BD_ERROR)
+    return (ret);
+
   if ((ret = dabsic_read_xml(code, i, conf, root)) == BD_OK)
     return (ret);
   if (ret == BD_ERROR)

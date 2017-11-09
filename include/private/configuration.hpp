@@ -24,6 +24,13 @@ struct				SmallConf;
 
 void				shrink_single_element_array(SmallConf		&cnf);
 
+std::string			_clean_raw_data(const char			*code,
+						size_t				len);
+
+Decision			csv_read(const char				*code,
+					 ssize_t				&i,
+					 SmallConf				&conf,
+					 SmallConf				&root);
 t_bunny_configuration		*_bunny_read_ini(const char			*code,
 						 t_bunny_configuration		*config);
 t_bunny_configuration		*_bunny_read_lua(const char			*code,

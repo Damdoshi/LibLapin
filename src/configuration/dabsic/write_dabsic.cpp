@@ -107,11 +107,11 @@ static void		restore_dabsic(std::stringstream			&ss,
       ss <<  " = ";
       if (conf.Size() > 0)
 	{
-	  ss << "[Data";
+	  ss << "{";
 	  dabsic_array(ss, conf, indent + 2);
 	  for (i = 0; i < indent; ++i)
 	    ss << " ";
-	  ss << "]" << std::endl;
+	  ss << "}" << std::endl;
 	}
       else
 	writevalue(ss, conf);

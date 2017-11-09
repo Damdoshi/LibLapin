@@ -38,6 +38,10 @@ Decision		dabsic_read_scope(const char			*code,
 					  ssize_t			&i,
 					  SmallConf			&conf,
 					  SmallConf			&root);
+Decision		dabsic_read_csv(const char			*code,
+					ssize_t				&i,
+					SmallConf			&conf,
+					SmallConf			&root);
 Decision		dabsic_read_array(const char			*code,
 					  ssize_t			&i,
 					  SmallConf			&conf,

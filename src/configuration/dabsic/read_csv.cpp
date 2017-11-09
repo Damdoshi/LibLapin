@@ -6,24 +6,24 @@
 #include		<string.h>
 #include		"lapin_private.h"
 
-Decision		dabsic_read_xml(const char		*code,
+Decision		dabsic_read_csv(const char		*code,
 					ssize_t			&i,
 					SmallConf		&conf,
 					SmallConf		&root)
 {
   dabsic_read_separator(code, i);
-  if (readtext(code, i, "<xml>") == false)
+  if (readtext(code, i, "[CSV") == false)
     return (BD_NOT_FOUND);
   dabsic_read_separator(code, i);
 
-  if (xml_read_between_markup(code, i, conf, root) == BD_ERROR)
+  if (csv_read(code, i, conf, root) != BD_OK)
     return (BD_ERROR);
 
   dabsic_read_separator(code, i);
-  if (readtext(code, i, "</xml>") == false)
+  if (readtext(code, i, "]") == false)
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
-       "The token '</xml>' was expected to close the XML scope on line %d",
+       "The token ']' was expected to close the CSV scope on line %d",
        whichline(code, i)
        );
   dabsic_read_separator(code, i);

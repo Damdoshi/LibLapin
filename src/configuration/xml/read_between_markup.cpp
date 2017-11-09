@@ -30,7 +30,7 @@ Decision		xml_read_between_markup(const char		*code,
 
       // Register raw value
       if (j - i > 1)
-	if ((str = xml_clean_raw_data(&code[i], j - i)) != "")
+	if ((str = _clean_raw_data(&code[i], j - i)) != "")
 	  conf[conf.Size()].SetString(str);
 
       // Closing markup found
