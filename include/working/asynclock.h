@@ -21,6 +21,26 @@
 #  error			You cannot include this file directly.
 # endif
 
+/*!
+** An hour in nanoseconds.
+*/
+typedef uint64_t		t_bunny_time;
+
+/*!
+** Get the system hour in nanoseconds.
+** \return The system hour in ns.
+*/
+t_bunny_time			bunny_get_time(void);
+
+/*!
+** Get the difference between two hours.
+** \param bef The oldest hour.
+** \param now The youngest hour.
+** \param The difference in nanoseconds.
+*/
+t_bunny_time			bunny_delta_time(t_bunny_time			bef,
+						 t_bunny_time			now);
+
 typedef enum			e_bunny_call_order
   {
     BCO_BEFORE_LOOP_MAIN_FUNCTION,
@@ -113,7 +133,7 @@ double				bunny_reset_clock(void);
 /*!
 ** Return the current bunny time.
 ** This is not a real time clock: it is updated by bunny_asynclock, so it is your-program-time.
-** \return The current time, in seconds.
+** \return The current bunny time, in seconds.
 */
 double				bunny_get_current_time(void);
 
