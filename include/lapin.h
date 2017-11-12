@@ -138,6 +138,7 @@
 # include			"lapin/bitfield.h"
 
 # include			"lapin/context.h"
+# include			"lapin/monitor.h"
 # include			"lapin/misc.h"
 
 # include			"lapin/compat.h"

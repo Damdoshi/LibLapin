@@ -236,5 +236,11 @@ void				bunny_consistancy(void);
 void				bunny_managed_ressource(void);
 void				bunny_set_ressource_management(bool	enabled);
 
+/*!
+** May be useful for wide trashable datas. Some functions use it, it is always
+** written in their description when they do.
+*/
+extern char			bunny_big_buffer[16 * 1024 * 1024];
+
 #endif	/*			__LAPIN_MISC_H__			*/
 
