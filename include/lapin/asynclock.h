@@ -15,22 +15,22 @@
 ** This module is quite complex! Pay attention to what you read.
 */
 
-#ifndef				__LAPIN_ASYNCLOCK_H__
-# define			__LAPIN_ASYNCLOCK_H__
-# if				!defined(__LAPIN_H__)
-#  error			You cannot include this file directly.
+#ifndef			__LAPIN_ASYNCLOCK_H__
+# define		__LAPIN_ASYNCLOCK_H__
+# if			!defined(__LAPIN_H__)
+#  error		You cannot include this file directly.
 # endif
 
 /*!
 ** An hour in nanoseconds.
 */
-typedef uint64_t		t_bunny_time;
+typedef uint64_t	t_bunny_time;
 
 /*!
 ** Get the system hour in nanoseconds.
 ** \return The system hour in ns.
 */
-t_bunny_time			bunny_get_time(void);
+t_bunny_time		bunny_get_time(void);
 
 /*!
 ** Get the difference between two hours.
@@ -38,28 +38,52 @@ t_bunny_time			bunny_get_time(void);
 ** \param now The youngest hour.
 ** \param The difference in nanoseconds.
 */
-t_bunny_time			bunny_delta_time(t_bunny_time			bef,
-						 t_bunny_time			now);
+t_bunny_time		bunny_delta_time(t_bunny_time			bef,
+					 t_bunny_time			now);
 
-typedef enum			e_bunny_call_order
+/*!
+** Describe if the event must be called after or before the function
+** established as the loop main function with bunny_set_loop_main_function.
+*/
+typedef enum		e_bunny_call_order
   {
     BCO_BEFORE_LOOP_MAIN_FUNCTION,
     BCO_AFTER_LOOP_MAIN_FUNCTION
-  }				t_bunny_call_order;
+  }			t_bunny_call_order;
 
-struct				s_bunny_trap;
-typedef void			(*t_bunny_trap_function)(double			elapsed_time,
-							 struct s_bunny_trap	*trp,
-							 void			*data);
+/*
+** Described later.
+*/
+struct			s_bunny_trap;
 
-typedef struct			s_bunny_trap
+/*!
+** The function that will be called when its matching trap occurs.
+** Receive informations about the trap and an arbitrary value.
+** \param elapsed The program elapsed time.
+** \param trp The trap description structure
+** \param data An arbitrary value given when defining the trap.
+*/
+typedef void		(*t_bunny_trap_function)(double			elapsed_time,
+						 struct s_bunny_trap	*trp,
+						 void			*data);
+
+/*!
+** Represent an event of the main loop that is fakely asynchronous with it.
+** Private fields are inside business.
+**
+**
+** The function pointer is the one that will be used when the trap occurs.
+** The addiitonal_param is an arbitrary parameter set when creating the trap
+** that will be given to the callback function defined.
+*/
+typedef struct		s_bunny_trap
 {
-  const char			_private[3 * sizeof(void*)];
-  const double			start_time;
-  const double			duration;
-  t_bunny_trap_function		function;
-  void				*additional_param;
-}				t_bunny_trap;
+  const char		_private[3 * sizeof(void*)];
+  const double		start_time;
+  const double		duration;
+  t_bunny_trap_function	function;
+  void			*additional_param;
+}			t_bunny_trap;
 
 /*!
 ** Define a new trap: a function that will be called under certain circumstances.
@@ -88,11 +112,11 @@ typedef struct			s_bunny_trap
 ** \param order The function will be called
 ** \return Return the structure that incarnates the trap. NULL on error.
 */
-t_bunny_trap			*bunny_new_trap(t_bunny_trap_function		func,
-						t_bunny_call_order		order,
-						double				start_time,
-						double				duration,
-						void				*param);
+t_bunny_trap		*bunny_new_trap(t_bunny_trap_function		func,
+					t_bunny_call_order		order,
+					double				start_time,
+					double				duration,
+					void				*param);
 
 /*!
 ** Remove the sent trap from the asynclock. You can call it safely from anywhere,
@@ -100,7 +124,7 @@ t_bunny_trap			*bunny_new_trap(t_bunny_trap_function		func,
 ** its cycle.
 ** \param trap The trap to remove, it musts have been created by bunny_new_trap.
 */
-void				bunny_delete_trap(t_bunny_trap			*trap);
+void			bunny_delete_trap(t_bunny_trap			*trap);
 
 /*!
 ** This function manage all traps accordingly to the indicated elapsed_time.
@@ -122,19 +146,21 @@ void				bunny_delete_trap(t_bunny_trap			*trap);
 ** \return How many traps are still registered. Useful to stack tasks to end,
 ** make a cartoon or things like that.
 */
-int				bunny_asynclock(double				elasped_time,
-						t_bunny_call_order		order);
+int			bunny_asynclock(double				elasped_time,
+					t_bunny_call_order		order);
 
 /*!
-** Set the bunny clock to the current time
-** \return The current time in the bunny clock format
+** Set the bunny clock (the program time, not real time) to the current real time
+** \return The new program time.
 */
-double				bunny_reset_clock(void);
+double			bunny_reset_clock(void);
+
 /*!
 ** Return the current bunny time.
-** This is not a real time clock: it is updated by bunny_asynclock, so it is your-program-time.
+** This is not a real time clock: it is updated by bunny_asynclock,
+** so it is your-program-time.
 ** \return The current bunny time, in seconds.
 */
-double				bunny_get_current_time(void);
+double			bunny_get_current_time(void);
 
 #endif	/*			__LAPIN_ASYNCLOCK_H__	*/

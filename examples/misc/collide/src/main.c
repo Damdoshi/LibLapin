@@ -5,6 +5,7 @@
 ** Collide test
 */
 
+#include		<time.h>
 #include		<unistd.h>
 #include		<lapin.h>
 #include		<stdio.h>
@@ -178,6 +179,7 @@ t_bunny_response	display(void			*unused)
 
 int			main(void)
 {
+  srand(time(NULL));
   assert(window = bunny_start(1440, 900, false, "Collide test"));
   assert(threadpool = bunny_new_threadpool(4));
   assert(elements = bunny_new_pool(100, t_shape));

@@ -28,6 +28,7 @@ t_bunny_trap			*bunny_new_trap(t_bunny_trap_function	func,
     scream_error_if(return (NULL), bunny_errno, PATTERN,
 		    func, order, start, duration, param, trap);
   trap->next = NULL;
+  trap->prev = NULL;
   trap->remove_it = false;
   trap->start_time = start;
   trap->duration = duration;
@@ -41,10 +42,8 @@ t_bunny_trap			*bunny_new_trap(t_bunny_trap_function	func,
   else
     {
       snt[1]->next = trap;
-      if (snt[0] != snt[1])
-	trap->prev = snt[1];
-      else
-	trap->next = NULL;
+      trap->prev = snt[1];
+      snt[1] = trap;
     }
   scream_log_if(PATTERN, func, order, start, duration, param, trap);
   return ((t_bunny_trap*)trap);

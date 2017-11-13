@@ -21,6 +21,12 @@ void			__bunny_delete_trap(struct bunny_trap		*trap,
     snt[0] = trap->next;
   if (snt[1] == trap)
     snt[1] = trap->prev;
+
+  if (trap->prev)
+    trap->prev->next = trap->next;
+  if (trap->next)
+    trap->next->prev = trap->prev;
+
   bunny_free(trap);
 }
 

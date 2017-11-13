@@ -44,7 +44,10 @@ static void		asyncall(double				elapsed,
   else if (lst->duration < -0.001)
     {
       if (lst->start_time < now && lst->start_time - lst->duration > now)
-	lst->func(elapsed, (t_bunny_trap*)lst, lst->param);
+	{
+	  lst->func(elapsed, (t_bunny_trap*)lst, lst->param);
+	  lst->start_time -= lst->duration;
+	}
       else if (lst->start_time - lst->duration < now)
 	lst->start_time -= lst->duration;
     }
@@ -79,7 +82,6 @@ static int		asynclock(double			elapsed,
 int			bunny_asynclock(double			elapsed,
 					t_bunny_call_order	order)
 {
-  elapsed /= 1e6; // us to seconds
   if (order == BCO_BEFORE_LOOP_MAIN_FUNCTION)
     return (asynclock(elapsed, &gl_bunny_trap_head[0], order));
   return (asynclock(elapsed, &gl_bunny_trap_head[2], order));
