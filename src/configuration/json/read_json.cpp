@@ -10,9 +10,7 @@
 **
 ** INSIDE_SCOPE := FIELD? [',' FIELD]*
 **
-** FIELD := [FIELDNAME  ':' [LITTERAL, SCOPE, ARRAY]] | DIRECTIVE
-**
-** FIELDNAME := [C_SYMBOL | '[' INT ']']
+** FIELD := [C_STRING ':' [LITTERAL, SCOPE, ARRAY]] | DIRECTIVE
 **
 ** LITTERAL := C_STRING | INT | DOUBLE | BOOLEAN | DIRECTIVE
 **
@@ -23,8 +21,8 @@
 ** ARRAY_NODE := LITTERAL | SCOPE | DIRECTIVE
 */
 
-t_bunny_configuration	*_bunny_read_lua(const char			*code,
-					 t_bunny_configuration		*config)
+t_bunny_configuration	*_bunny_read_json(const char			*code,
+					  t_bunny_configuration		*config)
 {
   SmallConf		*conf = (SmallConf*)config;
   ssize_t		i;
@@ -33,7 +31,7 @@ t_bunny_configuration	*_bunny_read_lua(const char			*code,
   i = 0;
   SmallConf::create_mode = true;
   conf->construct = SmallConf::MAP;
-  if (lua_read_scope(code, i, *conf, *conf) != BD_OK)
+  if (json_read_scope(code, i, *conf, *conf) != BD_OK)
     {
       SmallConf::create_mode = cmode;
       return (NULL);

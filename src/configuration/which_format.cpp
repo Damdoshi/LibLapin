@@ -9,9 +9,13 @@ static const char	*gl_extension[BC_CUSTOM] =
   {
     ".ini",
     ".dab",
+    ".dabseq",
+    //
     ".xml",
     ".lua",
-    ".csv"
+    ".csv",
+    ".json"
+    //
   };
 
 t_bunny_configuration_type bunny_which_format(const char		*file)

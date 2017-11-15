@@ -5,6 +5,24 @@
 
 #include		"lapin_private.h"
 
+static void		restore_value(std::stringstream				&ss,
+				      SmallConf					&conf,
+				      ssize_t					ind)
+{
+  ssize_t		i;
+
+  if (conf.sequence)
+    {
+      ss << "[Sequence" << std::endl;
+      restore_sequence(ss, conf, ind + 2);
+      for (i = 0; i < ind; ++i)
+	ss << " ";      
+      ss << "]";
+    }
+  else if (conf.have_value)
+    writevalue(ss, conf);
+}
+
 static void		restore_dabsic(std::stringstream			&ss,
 				       SmallConf				&conf,
 				       ssize_t					indent);
@@ -48,7 +66,7 @@ static void		dabsic_array(std::stringstream				&ss,
   if (conf.have_value)
     {
       ss <<  " = ";
-      writevalue(ss, conf);
+      restore_value(ss, conf, indent + 2);
       ss << std::endl;
     }
   else
@@ -82,11 +100,11 @@ static void		dabsic_array(std::stringstream				&ss,
       else if (conf[i].given_name)
 	{
 	  ss << "[" << conf[i].name;
-	  writevalue(ss, conf[i]);
+	  restore_value(ss, conf[i], indent + 2);
 	  ss << "]";
 	}
       else
-	writevalue(ss, conf[i]);
+	restore_value(ss, conf[i], indent + 2);
       if (i + 1 < (ssize_t)conf.Size())
 	ss << "," << std::endl;
       else
@@ -114,7 +132,7 @@ static void		restore_dabsic(std::stringstream			&ss,
 	  ss << "}" << std::endl;
 	}
       else
-	writevalue(ss, conf);
+	restore_value(ss, conf, indent);
       ss << std::endl;
     }
   else
@@ -145,13 +163,15 @@ static void		restore_dabsic(std::stringstream			&ss,
 	{
 	  ss << it->second->name;
 	  restore_prototype(ss, *it->second);
-	  if (it->second->have_value || it->second->Size())
+	  if (it->second->have_value
+	      || it->second->Size()
+	      || it->second->sequence)
 	    {
 	      ss << " = ";
 	      if (it->second->Size())
-		writevalue(ss, (*it->second)[0]);
+		restore_value(ss, (*it->second)[0], indent);
 	      else
-		writevalue(ss, (*it->second));
+		restore_value(ss, (*it->second), indent);
 	    }
 	}
       ss << std::endl;

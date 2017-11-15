@@ -10,11 +10,26 @@
 
 t_bunny_my_read_configuration gl_bunny_my_read_configuration = NULL;
 
+typedef t_bunny_configuration
+*(*t_bunny_read_file)(const char		*code,
+		      t_bunny_configuration	*c);
+
+t_bunny_read_file	parser[BC_CUSTOM] =
+  {
+    _bunny_read_ini,
+    _bunny_read_dabsic,
+    _bunny_read_sequence,
+    _bunny_read_xml,
+    _bunny_read_lua,
+    _bunny_read_csv,
+    _bunny_read_json
+  };
+
 #define			PATTERN		"%d type, %s code, %p config -> %p"
 
-t_bunny_configuration	*bunny_read_configuration(t_bunny_configuration_type		type,
-						  const char				*code,
-						  t_bunny_configuration			*config)
+t_bunny_configuration	*bunny_read_configuration(t_bunny_configuration_type type,
+						  const char		*code,
+						  t_bunny_configuration	*config)
 {
   t_bunny_configuration	*nw = NULL;
   bool			local;
@@ -23,49 +38,9 @@ t_bunny_configuration	*bunny_read_configuration(t_bunny_configuration_type		type
     if ((config = bunny_new_configuration()) == NULL)
       scream_error_if(return (NULL), bunny_errno, PATTERN, type, code, config, nw);
 
-  if (type == BC_INI)
+  if (type < BC_CUSTOM)
     {
-      if ((nw = _bunny_read_ini(code, config)) == NULL && local)
-	bunny_delete_configuration(config);
-      if (!nw)
-	scream_error_if(return (NULL), bunny_errno, PATTERN, type, code, config, nw);
-      scream_log_if(PATTERN, type, code, config, nw);
-      return (nw);
-    }
-
-  if (type == BC_DABSIC)
-    {
-      if ((nw = _bunny_read_dabsic(code, config)) == NULL && local)
-	bunny_delete_configuration(config);
-      if (!nw)
-	scream_error_if(return (NULL), bunny_errno, PATTERN, type, code, config, nw);
-      scream_log_if(PATTERN, type, code, config, nw);
-      return (nw);
-    }
-  
-  if (type == BC_XML)
-    {
-      if ((nw = _bunny_read_xml(code, config)) == NULL && local)
-	bunny_delete_configuration(config);
-      if (!nw)
-	scream_error_if(return (NULL), bunny_errno, PATTERN, type, code, config, nw);
-      scream_log_if(PATTERN, type, code, config, nw);
-      return (nw);
-    }
-
-  if (type == BC_LUA)
-    {
-      if ((nw = _bunny_read_lua(code, config)) == NULL && local)
-	bunny_delete_configuration(config);
-      if (!nw)
-	scream_error_if(return (NULL), bunny_errno, PATTERN, type, code, config, nw);
-      scream_log_if(PATTERN, type, code, config, nw);
-      return (nw);
-    }
-
-  if (type == BC_CSV)
-    {
-      if ((nw = _bunny_read_csv(code, config)) == NULL && local)
+      if ((nw = parser[type](code, config)) == NULL && local)
 	bunny_delete_configuration(config);
       if (!nw)
 	scream_error_if(return (NULL), bunny_errno, PATTERN, type, code, config, nw);

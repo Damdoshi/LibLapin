@@ -50,34 +50,16 @@ static void		restore_scope(std::stringstream		&ss,
 				      ssize_t			indent)
 {
   std::map<std::string, SmallConf*>::iterator it;
-  char			*x;
   ssize_t		i;
 
   for (it = conf.Begin(); it != conf.End(); )
     {
       for (i = 0; i < indent; ++i)
 	ss << " ";
-      strtol(it->first.c_str(), &x, 0);
-      if (x == it->first.c_str())
-	{
-	  i = 0;
-	  if (checkchar(it->first.c_str(), i, fieldname) != (int)it->first.size())
-	    {
-	      ss << '[';
-	      writestring(ss, it->first);
-	      ss << ']';
-	    }
-	  else
-	    ss << it->first;
-	}
-      else
-	ss << '[' << it->first << ']';
+      writestring(ss, it->first);
       if (it->second->Size())
 	{
-	  ss << " =" << std::endl;
-	  for (i = 0; i < indent; ++i)
-	    ss << " ";
-	  ss << "[" << std::endl;
+	  ss << ": [" << std::endl;
 	  restore_array(ss, *it->second, indent + 2);
 	  for (i = 0; i < indent; ++i)
 	    ss << " ";
@@ -85,10 +67,7 @@ static void		restore_scope(std::stringstream		&ss,
 	}
       else if (it->second->NbrChild())
 	{
-	  ss << " =" << std::endl;
-	  for (i = 0; i < indent; ++i)
-	    ss << " ";
-	  ss << "{" << std::endl;
+	  ss << ": {" << std::endl;
 	  restore_scope(ss, *it->second, indent + 2);
 	  for (i = 0; i < indent; ++i)
 	    ss << " ";
@@ -96,7 +75,7 @@ static void		restore_scope(std::stringstream		&ss,
 	}
       else if (it->second->have_value)
 	{
-	  ss << " = ";
+	  ss << ": ";
 	  writevalue(ss, *it->second);
 	}
       if (++it != conf.End())
@@ -105,7 +84,7 @@ static void		restore_scope(std::stringstream		&ss,
     }
 }
 
-char			*_bunny_write_lua(const t_bunny_configuration	*config)
+char			*_bunny_write_json(const t_bunny_configuration	*config)
 {
   std::stringstream	ss;
   char			*ret;

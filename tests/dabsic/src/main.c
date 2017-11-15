@@ -90,6 +90,7 @@ int			main(int		argc,
   refresh_test("./multi.dab");
   refresh_test("./with_xml.dab");
   refresh_test("./with_csv.dab");
+  refresh_test("./sequence.dab");
 
   return (EXIT_SUCCESS);
 }

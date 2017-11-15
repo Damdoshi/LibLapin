@@ -181,7 +181,7 @@ bool			readinteger(const char			*code,
   return (true);
 }
 
-static bool		is_in(char				c,
+bool			is_in(char				c,
 			      char				*tok)
 {
   size_t		i;
@@ -298,7 +298,7 @@ bool			readstring(const char			*code,
 }
 
 void			writestring(std::stringstream		&ss,
-				    std::string			&str)
+				    const std::string		&str)
 {
   size_t		i;
 

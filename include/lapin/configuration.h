@@ -20,12 +20,12 @@ typedef enum		e_bunny_configuration_type
   {
     BC_INI,
     BC_DABSIC,
-    // BC_DABSIC_SEQUENCE,
+    BC_DABSIC_SEQUENCE,
     // BC_DABSIC_FUNCTION,
-    BC_XML,		// NOT IMPLEMENTED
-    BC_LUA,		// NOT IMPLEMENTED
+    BC_XML,
+    BC_LUA,
     BC_CSV,
-    //BC_JSON,
+    BC_JSON,
     //BC_YAML,
     BC_CUSTOM
   }			t_bunny_configuration_type;

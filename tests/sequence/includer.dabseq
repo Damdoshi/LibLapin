@@ -1,0 +1,17 @@
+
+  before_label
+
+label1:
+   mov 1, 2
+
+label2:
+   before_insert "a"
+   @insert "./to_include.dabseq"
+   after_insert "b"
+
+label3:
+   @include "./to_include.dabseq"
+
+label4:
+   end
+ 

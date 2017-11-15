@@ -21,6 +21,9 @@ struct				SmallConf;
 
 # include			"dabsic.hpp"
 # include			"xml.hpp"
+# include			"json.hpp"
+# include			"lua.hpp"
+# include			"sequence.hpp"
 
 void				shrink_single_element_array(SmallConf		&cnf);
 
@@ -48,6 +51,8 @@ int				checkchar(const char				*str,
 bool				readchar(const char				*str,
 					 ssize_t				&index,
 					 const char				*token);
+bool				is_in(char					c,
+				      char					*tok);
 bool				readtext(const char				*str,
 					 ssize_t				&index,
 					 const char				*token);
@@ -86,7 +91,7 @@ bool				readvalue(const char				*code,
 int				whichline(const char				*code,
 					  int					i);
 void				writestring(std::stringstream			&ss,
-					    std::string				&str);
+					    const std::string			&str);
 bool				read_data(const char				*code,
 					  ssize_t				&i,
 					  SmallConf				&config);
@@ -150,6 +155,8 @@ struct				SmallConf
   static bool			create_mode;
   SmallConf			*father;
   Type				last_type;
+
+  Sequence			*sequence;
 
   SmallConf			&operator=(const SmallConf			&o)
   {
@@ -369,7 +376,8 @@ struct				SmallConf
       converted(0),
       converted_2(0),
       is_converted(false),
-      father(NULL)
+      father(NULL),
+      sequence(NULL)
   {}
   ~SmallConf(void)
   {

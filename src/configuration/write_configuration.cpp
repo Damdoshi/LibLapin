@@ -15,9 +15,11 @@ static const write_func	gl_write_func[BC_CUSTOM] =
   {
     &_bunny_write_ini,
     &_bunny_write_dabsic,
+    &_bunny_write_dabsic_sequence,
     &_bunny_write_xml,
     &_bunny_write_lua,
-    &_bunny_write_csv
+    &_bunny_write_csv,
+    &_bunny_write_json
   };
 
 char			*bunny_write_configuration(t_bunny_configuration_type		type,
@@ -25,7 +27,7 @@ char			*bunny_write_configuration(t_bunny_configuration_type		type,
 {
   char			*ret = NULL;
 
-  if (type <= BC_CSV)
+  if (type < BC_CUSTOM)
     {
       if ((ret = gl_write_func[type](config)) == NULL)
 	scream_error_if(return (NULL), bunny_errno, PATTERN, type, config, ret);

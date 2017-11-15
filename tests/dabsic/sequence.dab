@@ -1,0 +1,9 @@
+
+
+Program = [Sequence
+  add 1, 2
+  mov 3, 4
+
+ label1:
+  after_label "toto"
+]

@@ -9,8 +9,15 @@
 #ifndef			__LAPIN_PRIVATE_DABSIC_HPP__
 # define		__LAPIN_PRIVATE_DABSIC_HPP__
 
+char
+*_bunny_write_dabsic_sequence(const t_bunny_configuration		*config);
+t_bunny_configuration	*_bunny_read_sequence(const char		*code,
+					      t_bunny_configuration	*config);
+
 t_bunny_configuration	*_bunny_read_dabsic(const char			*code,
 					    t_bunny_configuration	*config);
+void			dabsic_sequence_read_separator(const char	*code,
+						       ssize_t		&i);
 void			dabsic_read_separator(const char		*code,
 					      ssize_t			&i);
 Decision		dabsic_read_inside_scope(const char		*code,
@@ -20,7 +27,7 @@ Decision		dabsic_read_inside_scope(const char		*code,
 Decision		dabsic_read_inside_sequence(const char		*code,
 						    ssize_t		&i,
 						    SmallConf		&conf,
-						 SmallConf		&root);
+						    SmallConf		&root);
 Decision		dabsic_read_inside_function(const char		*code,
 						    ssize_t		&i,
 						    SmallConf		&conf,
