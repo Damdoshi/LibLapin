@@ -1,6 +1,6 @@
 {
   "string": "value", // commentaries are not standard
-  "integer": 42,
+  "integer": 42 * (1 + 2),
   "double": 5.6,
   /*
   ** but i don't give a shit

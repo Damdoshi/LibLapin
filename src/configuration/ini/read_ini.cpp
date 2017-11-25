@@ -42,6 +42,11 @@ static bool		read_inside_scope(t_bunny_configuration		*fileroot,
 	  if (_bunny_handle_directive(code, i, &newnode[iteration++], fileroot, read_separator) == false)
 	    return (false);
 	}
+      else if (code[i] == '$')
+	{
+	  if (expr_read_expression(code, ++i, newnode[iteration++], Expression::BEOF_TERNARY) == false)
+	    return (false);
+	}
       else
 	readvalue(code, i, newnode[iteration++], ",");
       read_separator(code, i);
@@ -72,7 +77,7 @@ SmallConf		*read_new_scope(const char			*code,
       (return (NULL), BE_SYNTAX_ERROR,
        "%s code, %p config -> %p "
        "(The ']' token was expected after scope name on line %d)",
-       code, &root, (void*)NULL, whichline(code, i));  
+       code, &root, (void*)NULL, whichline(code, i));
   ((SmallConf*)cnf)->construct = SmallConf::MAP;
   read_separator(code, i);
   return ((SmallConf*)cnf);

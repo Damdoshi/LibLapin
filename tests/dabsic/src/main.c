@@ -29,7 +29,7 @@ void			refresh_test(const char	*str)
       bunny_perror(NULL);
       exit(EXIT_FAILURE);
     }
-  
+
   bunny_save_configuration(BC_DABSIC, "/dev/stdout", a);
 
   bunny_save_configuration(BC_DABSIC, "tmp.dab", a);
@@ -51,6 +51,7 @@ int			main(int		argc,
   (void)argv;
   srand(time(NULL));
   signal(SIGALRM, sighandler);
+  bunny_set_error_descriptor(2);
   if (argc >= 2)
     {
       if (argc == 3)
@@ -59,14 +60,13 @@ int			main(int		argc,
 	alarm(2);
       return (EXIT_SUCCESS);
     }
-
   refresh_test("fields.dab");
   refresh_test("scopes.dab");
   refresh_test("arrays.dab");
   refresh_test("complex.dab");
 
   refresh_test("./triple.dab");
-  
+
   printf("--------------- manual test triple.dab --------------\n");
 
   assert(triple = bunny_load_configuration(BC_DABSIC, "triple.dab", NULL));
@@ -94,4 +94,3 @@ int			main(int		argc,
 
   return (EXIT_SUCCESS);
 }
-

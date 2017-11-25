@@ -26,12 +26,9 @@ Decision		lua_read_array_node(const char		*code,
       return (BD_OK);
     }
 
-  if (readvalue(code, i, conf[conf.Size()], ",") == false)
-    scream_error_if
-      (return (BD_ERROR), BE_SYNTAX_ERROR,
-       "A scope, array or value was expected on line %d",
-       whichline(code, i)
-       );
+  if (expr_read_expression
+      (code, i, conf[conf.Size()], Expression::BEOF_TERNARY) == BD_ERROR)
+    return (BD_ERROR);
   lua_read_separator(code, i);
   return (BD_OK);
 }

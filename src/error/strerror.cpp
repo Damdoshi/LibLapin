@@ -9,6 +9,8 @@ static const char	*bunny_errors[LAST_ERROR - BE_CANT_GENERATE_RESSOURCE] =
   {
     "Cannot generate dynamic ressource",
     "Syntax error encountered",
+    "Bad address or variable",
+    "Type mismatch",
     "Container is empty and cannot supply any value",
     "Duplication of the stored element failed.",
     "Cannot find requested element",

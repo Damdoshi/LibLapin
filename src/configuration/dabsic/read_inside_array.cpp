@@ -18,12 +18,8 @@ Decision		dabsic_read_inside_array(const char		*code,
   if (readtext(code, i, "="))
     {
       dabsic_read_separator(code, i);
-      if (readvalue(code, i, conf, NULL) == false)
-	scream_error_if
-	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "An expression or value was expected on line %d after '='",
-	   whichline(code, i)
-	   );
+      if (expr_read_expression(code, i, conf, Expression::BEOF_TERNARY) == BD_ERROR)
+	return (BD_ERROR);
       dabsic_read_separator(code, i);
     }
   dabsic_read_separator(code, i);
@@ -71,12 +67,9 @@ Decision		dabsic_read_inside_array(const char		*code,
 	  goto Bottom;
 	}
 
-      if (readvalue(code, i, newconf, ",") == false)
-	scream_error_if
-	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "An expression, value or scope was expected on line %d",
-	   whichline(code, i)
-	   );
+      if (expr_read_expression
+	  (code, i, newconf, Expression::BEOF_TERNARY) == BD_ERROR)
+	return (BD_ERROR);
 
     Bottom:
       dabsic_read_separator(code, i);

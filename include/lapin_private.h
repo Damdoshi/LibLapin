@@ -17,6 +17,7 @@
 # include			"private/graphics.h"
 # include			"private/database.h"
 # include			"private/configuration.hpp"
+# include			"private/smallconf.hpp"
 # include			"private/sound.h"
 # include			"private/security.h"
 # include			"private/collide.h"

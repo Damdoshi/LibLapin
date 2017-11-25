@@ -11,30 +11,20 @@ Decision		dabsic_read_litterals(const char		*code,
 					      SmallConf			&conf,
 					      SmallConf			&root)
 {
-  int			iteration;
 
   (void)root;
   if (conf.construct == SmallConf::ARRAY)
     {
       dabsic_read_separator(code, i);
-      if (readvalue(code, i, conf, ",") == false)
-	scream_error_if
-	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "An expression or value was expected on line %d",
-	   whichline(code, i)
-	   );
+      if (expr_read_expression(code, i, conf, Expression::BEOF_TERNARY) == BD_ERROR)
+	return (BD_ERROR);
       dabsic_read_separator(code, i);
     }
-  iteration = 0;
   do
     {
       dabsic_read_separator(code, i);
-      if (readvalue(code, i, conf[iteration++], ",") == false)
-	scream_error_if
-	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "An expression or value was expected on line %d",
-	   whichline(code, i)
-	   );
+      if (expr_read_expression(code, i, conf[conf.Size()], Expression::BEOF_TERNARY) == BD_ERROR)
+	return (BD_ERROR);
       dabsic_read_separator(code, i);
     }
   while (readtext(code, i, ","));

@@ -54,6 +54,79 @@ bool			readtext(const char			*str,
   return (true);
 }
 
+bool			readtext(const char			*str,
+				 ssize_t			&index,
+				 const std::string		*token,
+				 size_t				len)
+{
+  size_t		i;
+
+  for (i = 0; i < len && token[i] != ""; ++i)
+    if (readtext(str, index, token[i].c_str()))
+      return (true);
+  return (false);
+}
+
+int			readlongesttext(const char		*str,
+					ssize_t			&index,
+					const std::string	*token,
+					size_t			toklen)
+{
+  size_t		len, longest;
+  size_t		i;
+
+  len = 0;
+  longest = 0;
+  for (i = 0; i < toklen && token[i] != ""; ++i)
+    if (checktext(str, index, &token[i], 1))
+      {
+	if (token[i].size() > len)
+	  {
+	    len = token[i].size();
+	    longest = i;
+	  }
+      }
+  if (len == 0)
+    return (-1);
+  readtext(str, index, token[longest].c_str());
+  return (longest);
+}
+
+int			checklongesttext(const char		*str,
+					 ssize_t		index,
+					 const std::string	*token,
+					 size_t			toklen)
+{
+  ssize_t		i = index;
+
+  return (readlongesttext(str, i, token, toklen));
+}
+
+bool			checktext(const char			*str,
+				  ssize_t			&index,
+				  const std::string		*token,
+				  size_t			len)
+{
+  size_t		i;
+
+  for (i = 0; i < len && token[i] != ""; ++i)
+    if (strncmp(&str[index], token[i].c_str(), token[i].size()) == 0)
+      return (true);
+  return (false);
+}
+
+bool			readtextcase(const char			*str,
+				     ssize_t			&index,
+				     const char			*token)
+{
+  size_t		l;
+
+  if (bunny_strncasecmp(&str[index], token, l = strlen(token)) != 0)
+    return (false);
+  index += l;
+  return (true);
+}
+
 bool			readchar(const char			*str,
 				 ssize_t			&index,
 				 const char			*token)
@@ -182,7 +255,7 @@ bool			readinteger(const char			*code,
 }
 
 bool			is_in(char				c,
-			      char				*tok)
+			      const char			*tok)
 {
   size_t		i;
 
@@ -196,7 +269,7 @@ bool			readrawchar(const char			*code,
 				    ssize_t			&i,
 				    char			*d,
 				    ssize_t			len,
-				    char			*endtok)
+				    const char			*endtok)
 {
   ssize_t		j;
 
@@ -327,10 +400,55 @@ void			writestring(std::stringstream		&ss,
   ss << "\"";
 }
 
+bool			readaddress(const char			*addr,
+				    ssize_t			&i,
+				    SmallConf			&out)
+{
+  const char		*str;
+  ssize_t		start;
+  ssize_t		j;
+
+  start = j = i;
+  while (addr[i] && addr[i] != ']')
+    {
+      if (addr[i] == '[')
+	j = i;
+      else if (readchar(addr, j, fieldname) == false)
+	return (false);
+
+      while (readtext(addr, j, "["))
+	{
+	  i = j;
+	  j = strtol(&addr[i], (char**)&str, 0);
+	  if (str == &addr[i])
+	    {
+	      if (readaddress(addr, i, out) == false)
+		return (false);
+	    }
+	  else
+	    i += str - &addr[i];
+
+	  if (readtext(addr, i, "]") == false)
+	    return (false);
+	  j = i;
+	}
+
+      if (readtext(addr, j, "->") == false
+	  && readtext(addr, j, ".") == false)
+	{
+	  i = j;
+	  break ;
+	}
+      i = j;
+    }
+  out.SetString(std::string(&addr[start], i - start), true);
+  return (true);
+}
+
 bool			readvalue(const char			*code,
 				  ssize_t			&i,
 				  SmallConf			&nod,
-				  char				*endtok)
+				  const char			*endtok)
 {
   char			buffer[512 * 1024];
   int			ival;
@@ -356,18 +474,31 @@ bool			readvalue(const char			*code,
       if (strcmp(&buffer[0], "true") == 0)
 	{
 	  nod.SetInt(1);
-	  nod.original_value = "true";
+	  nod.original_value = "1";
 	}
       else if (strcmp(&buffer[0], "false") == 0)
 	{
 	  nod.SetInt(0);
-	  nod.original_value = "false";
+	  nod.original_value = "0";
 	}
       else
 	nod.SetString(std::string(&buffer[0]), true);
     }
   else
-    return (false);
+    {
+      if (readtext(code, i, "true"))
+	{
+	  nod.SetInt(1);
+	  nod.original_value = "1";
+	}
+      else if (readtext(code, i, "false"))
+	{
+	  nod.SetInt(0);
+	  nod.original_value = "0";
+	}
+      else
+	return (false);
+    }
   return (true);
 }
 

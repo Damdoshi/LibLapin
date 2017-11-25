@@ -1,0 +1,9 @@
+
+ integer i = 42
+
+ If    Then
+  "Inside if!"
+ Else
+  "Outside if!"
+ EndIf
+

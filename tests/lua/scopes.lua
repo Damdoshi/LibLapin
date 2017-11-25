@@ -1,7 +1,7 @@
 {
   pair =
   {
-    key = "zob",
+    key = "zob" # Variable[AnotherVariable],
     xxx = "teh"
   },
   deep =
@@ -10,8 +10,8 @@
     {
       deep =
       {
-	deep = "yeah"
-      } 
+	deep = "yeah" # "this is cat"
+      }
     }
   }
 }

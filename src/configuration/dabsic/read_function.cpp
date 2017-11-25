@@ -16,7 +16,7 @@ Decision		dabsic_read_function(const char		*code,
     return (BD_NOT_FOUND);
   dabsic_read_separator(code, i);
 
-  if (dabsic_read_inside_function(code, i, conf, root) == BD_ERROR)
+  if (dabsic_read_inside_function(code, i, NULL, conf, root) == BD_ERROR)
     return (BD_ERROR);
 
   dabsic_read_separator(code, i);

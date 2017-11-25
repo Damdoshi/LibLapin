@@ -47,6 +47,13 @@ char				*bunny_strndup(const char	*str,
 
 char				*bunny_strdup(const char	*str);
 
+int				bunny_strcasecmp(const char	*a,
+						 const char	*b);
+int				bunny_strncasecmp(const char	*a,
+						  const char	*b,
+						  size_t	l);
+
+
 /*!
 ** Get the position in seconds of the sent music.
 ** \param music The music to know where the cursor is

@@ -16,6 +16,8 @@ static const write_func	gl_write_func[BC_CUSTOM] =
     &_bunny_write_ini,
     &_bunny_write_dabsic,
     &_bunny_write_dabsic_sequence,
+    &_bunny_write_dabsic_function,
+    &_bunny_write_expression,
     &_bunny_write_xml,
     &_bunny_write_lua,
     &_bunny_write_csv,

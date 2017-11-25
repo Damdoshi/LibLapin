@@ -29,7 +29,7 @@ void			refresh_test(const char	*str)
       bunny_perror(NULL);
       exit(EXIT_FAILURE);
     }
-  
+
   bunny_save_configuration(BC_JSON, "/dev/stdout", a);
 
   bunny_save_configuration(BC_JSON, "tmp.json", a);
@@ -59,4 +59,3 @@ int			main(int		argc,
 
   return (EXIT_SUCCESS);
 }
-

@@ -1,0 +1,17 @@
+
+ string lol = "lol"
+
+ If Then
+   "Inside"
+   If Then
+      real rel = 4.2
+      If Then
+        "Very deep"
+      EndIf
+      "After deep"
+   EndIf
+Else If Then
+  "Else If"
+Else
+  "Else
+EndIf

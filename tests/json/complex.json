@@ -1,5 +1,5 @@
 {
-  "field": 42,
+  "field": 42 * 2,
   @insert "to_include.json",
   "other_field": 84
 }

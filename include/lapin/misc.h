@@ -16,11 +16,12 @@
 #  error			You cannot include this file directly.
 # endif
 # include			<unistd.h>
+# include			<stdio.h>
 # define			LITTERAL(fd, str)			write((fd), str "\n", sizeof(str "\n"))
 
 # define			__TOSTRING(a)				#a
 # define			STRINGIFY(a)				__TOSTRING(a)
-# define			NBRCELL(array)				(sizeof(array) / sizeof(array[0]))
+# define			NBRCELL(array)				((int)(sizeof(array) / sizeof(array[0])))
 
 /*!
 ** Write a litteral string (defined in code, with two double quotes) on stdout.
@@ -33,6 +34,11 @@
 ** \param str The string litteral to write
 */
 # define			bunny_printlerr(str)			LITTERAL(2,  str)
+
+/*!
+** Print the current file and line in code. Useful for debugging.
+*/
+# define			bunny_trace()				printf("%s:%d\n", __PRETTY_FUNCTION__, __LINE__)
 
 /*!
 ** Load an entire file.

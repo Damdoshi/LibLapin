@@ -18,12 +18,29 @@ char			*_bunny_write_ini(const t_bunny_configuration		*config)
       {
 	ss << scope->first << "=";
 	if (scope->second->Size() == 0)
-	  writevalue(ss, (*scope->second));
+	  {
+	    if (scope->second->expression)
+	      {
+		ss << "$";
+		restore_expression(ss, *scope->second->expression, true);
+	      }
+	    else
+	      writevalue(ss, (*scope->second));
+	  }
 	else
 	  for (index = 0; index != scope->second->Size(); )
 	    {
 	      if ((*scope->second)[index].NbrChild() == 0)
-		writevalue(ss, (*scope->second)[index]);
+		{
+		  if ((*scope->second)[index].expression)
+		    {
+		      ss << "$";
+		      restore_expression
+			(ss, *(*scope->second)[index].expression, true);
+		    }
+		  else
+		    writevalue(ss, (*scope->second)[index]);
+		}
 	      else
 		ss << "&" << bunny_configuration_get_address((const void*)&(*scope->second)[index]);
 	      if (++index != scope->second->Size())
@@ -31,7 +48,7 @@ char			*_bunny_write_ini(const t_bunny_configuration		*config)
 	    }
 	ss << std::endl;
       }
-  
+
   for (scope = conf.Begin(); scope != conf.End(); ++scope)
     if (scope->second->NbrChild() == 0)
       {

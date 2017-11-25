@@ -53,12 +53,16 @@ Decision		json_read_field(const char		*code,
       return (BD_OK);
     }
 
+  if (expr_read_expression(code, i, *newconf, Expression::BEOF_TERNARY) == BD_ERROR)
+    return (BD_ERROR);
+  /*
   if (readvalue(code, i, *newconf, ",") == false)
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
        "A scope, array or value was expected on line %d",
        whichline(code, i)
        );
+  */
   json_read_separator(code, i);
   return (BD_OK);
 }

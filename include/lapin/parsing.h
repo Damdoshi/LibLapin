@@ -42,6 +42,17 @@ bool			bunny_check_text(const char		*str,
 					 const char		*token);
 
 /*!
+** Check if the string at &str[*index] match token, ignoring case.
+** \param str The string to test
+** \param index A pointer to indicate the index where to start in string
+** \param token String to test
+** \return True if the string was found.
+*/
+bool			bunny_check_text_case(const char	*str,
+					      ssize_t		*index,
+					      const char	*token);
+
+/*!
 ** Increase *index while str[*index] is in token. Indicates if *index
 ** was modified.
 ** \param The string to test

@@ -1,13 +1,13 @@
 {
   "pair": {
     "key": "zob",
-    "xxx": "teh"
+    "xxx": "teh" # "this is cat"
   },
   "deep": {
     "deep": {
       "deep": {
 	"deep": "yeah"
-      } 
+      }
     }
   }
 }

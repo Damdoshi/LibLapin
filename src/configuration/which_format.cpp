@@ -10,7 +10,8 @@ static const char	*gl_extension[BC_CUSTOM] =
     ".ini",
     ".dab",
     ".dabseq",
-    //
+    ".dabfun",
+    ".expr",
     ".xml",
     ".lua",
     ".csv",

@@ -16,9 +16,11 @@ static void		restore_value(std::stringstream				&ss,
       ss << "[Sequence" << std::endl;
       restore_sequence(ss, conf, ind + 2);
       for (i = 0; i < ind; ++i)
-	ss << " ";      
+	ss << " ";
       ss << "]";
     }
+  else if (conf.expression)
+    restore_expression(ss, *conf.expression, true);
   else if (conf.have_value)
     writevalue(ss, conf);
 }
@@ -63,7 +65,7 @@ static void		dabsic_array(std::stringstream				&ss,
   ssize_t		i, j;
 
   restore_prototype(ss, conf);
-  if (conf.have_value)
+  if (conf.have_value || conf.expression)
     {
       ss <<  " = ";
       restore_value(ss, conf, indent + 2);
@@ -120,7 +122,7 @@ static void		restore_dabsic(std::stringstream			&ss,
   ssize_t		i;
 
   restore_prototype(ss, conf);
-  if (conf.have_value || conf.Size() > 0)
+  if (conf.have_value || conf.Size() > 0 || conf.expression)
     {
       ss <<  " = ";
       if (conf.Size() > 0)
@@ -165,6 +167,7 @@ static void		restore_dabsic(std::stringstream			&ss,
 	  restore_prototype(ss, *it->second);
 	  if (it->second->have_value
 	      || it->second->Size()
+	      || it->second->expression
 	      || it->second->sequence)
 	    {
 	      ss << " = ";

@@ -27,9 +27,18 @@ Decision		dabsic_read_inside_sequence(const char		*code,
       }
   Sequence		&seq = *conf.sequence;
   std::string		label;
-  
+  int			rep;
+
+  rep = -1;
   while (code[i] != '\0' && code[i] != ']')
     {
+      if (i == rep)
+	scream_error_if
+	  (return (BD_ERROR), BE_SYNTAX_ERROR,
+	   "Cannot understand what is written on line %d",
+	   whichline(code, i)
+	   );
+      rep = i;
       if (seq.nbr_lines >= seq.lines.size())
 	seq.lines.resize(seq.lines.size() + 64);
 
@@ -38,9 +47,9 @@ Decision		dabsic_read_inside_sequence(const char		*code,
 	  if (seq.labels.find(seq.nbr_lines) != seq.labels.end())
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
-	       "Address %d is already covered by a label so %s is excessive, "
+	       "Address %zu is already covered by a label so %s is excessive, "
 	       "on line %d",
-	       seq.nbr_lines, label, whichline(code, i)
+	       seq.nbr_lines, label.c_str(), whichline(code, i)
 	       );
 	  seq.labels[seq.nbr_lines] = label;
 	}

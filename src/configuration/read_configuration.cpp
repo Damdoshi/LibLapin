@@ -19,6 +19,8 @@ t_bunny_read_file	parser[BC_CUSTOM] =
     _bunny_read_ini,
     _bunny_read_dabsic,
     _bunny_read_sequence,
+    _bunny_read_function,
+    _bunny_read_expression,
     _bunny_read_xml,
     _bunny_read_lua,
     _bunny_read_csv,

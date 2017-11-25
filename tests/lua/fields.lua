@@ -6,6 +6,6 @@
   --[[
     multi line commentary
   ]]
-  boolean = true
+  boolean = true || Variable
 }
 

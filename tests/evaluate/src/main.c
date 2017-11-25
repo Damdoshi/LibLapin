@@ -24,6 +24,7 @@ int			main(void)
   printf("I confirme that : %s\nWith the following environment:\n", str);
   bunny_delete_node(cnf, "Operation");
   bunny_save_configuration(BC_INI, "/dev/stdout", cnf);
+  bunny_delete_configuration(cnf);
   printf("Is equal to %f.", dec);
 
   printf("Fully done!\n");
