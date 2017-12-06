@@ -27,6 +27,7 @@ typedef enum		e_bunny_configuration_type
     BC_LUA,
     BC_CSV,
     BC_JSON,
+    BC_LISP,
     //BC_YAML,
     BC_CUSTOM
   }			t_bunny_configuration_type;
@@ -38,6 +39,17 @@ typedef void		t_bunny_configuration;
 ** \return NULL on error, if no more memory is available.
 */
 t_bunny_configuration	*bunny_new_configuration(void);
+
+/*!
+** Load a file into a configuration node and its children.
+** You can send NULL as config to create a completly new one.
+** If it is not NULL, the sent node will be filled with new data and then returned.
+**
+** \param file The file to load
+** \param config An existing config to fill, or NULL to create a new one
+*/
+# define		bunny_open_configuration(file, config) \
+  bunny_load_configuration(bunny_which_format(file), file, config)
 
 /*!
 ** Load a file into a configuration node and its children.
@@ -555,6 +567,24 @@ bool			bunny_configuration_go_set_int(t_bunny_configuration		*config,
 						       int				val,
 						       const char			*addr);
 
+/*!
+** Execute scripts and expressions located in the sent node or behind.
+**
+** Every script and expressions will be executed and consider the root of the
+** sent node as root context.  The local context as the one containing local variable.
+** The parameter context as the sent one for parameters.
+** The artificial context is the context where the node is located, but can be
+** modified by the "with" statement.
+**
+** \param config The node to compute.
+** \param recursive True to execute all fields recursively
+** \param parameters Parameters to send to every script and expression
+** \return True if everything went well. Results of the executions will be
+** stored inside executed nodes theiselves.
+*/
+bool			bunny_configuration_execute(t_bunny_configuration		*config,
+						    bool				rec,
+						    t_bunny_configuration		*parameters);
 
 /*!
 ** Return the first children of the sent node.

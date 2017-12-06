@@ -25,7 +25,7 @@ ssize_t			bunny_load_file(const char		*file,
     {
       if ((fd = open(file, O_RDONLY)) == -1)
 	scream_error_if
-	  (return (-1), bunny_errno, PATTERN, file, data, size, (ssize_t)-1);
+	  (return (-1), bunny_errno, PATTERN, "ressource,file", file, data, size, (ssize_t)-1);
       if ((sk = lseek(fd, 0, SEEK_END)) == -1)
 	goto close_and_quit;
       lseek(fd, 0, SEEK_SET);
@@ -50,7 +50,7 @@ ssize_t			bunny_load_file(const char		*file,
      hash,
      (void*)RessourceManager.NbrLoad(ResManager::SIZE_LOADED_FILE, hash),
      (void*)(size_t)sk);
-  scream_log_if(PATTERN, file, data, size, (ssize_t)sk);
+  scream_log_if(PATTERN, "ressource,file", file, data, size, (ssize_t)sk);
   return (sk);
 
  free_close_and_quit:
@@ -59,7 +59,7 @@ ssize_t			bunny_load_file(const char		*file,
   bunny_errno = sk;
  close_and_quit:
   close(fd);
-  scream_error_if(return (-1), bunny_errno, PATTERN, file, data, size, (ssize_t)-1);
+  scream_error_if(return (-1), bunny_errno, PATTERN, "ressource,file", file, data, size, (ssize_t)-1);
   return (-1);
 }
 

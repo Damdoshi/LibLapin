@@ -12,6 +12,6 @@ void			bunny_swap(void			**a,
 
   *a = *b;
   *b = c;
-  scream_log_if("%p first_elem, %p second_elem", a, b);
+  scream_log_if("%p first_elem, %p second_elem", "misc", a, b);
 }
 

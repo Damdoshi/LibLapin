@@ -32,7 +32,7 @@ t_bunny_configuration	*_bunny_read_sequence(const char		*code,
       return (NULL);
     }
   SmallConf::create_mode = cmode;
-  scream_log_if("%s code, %p config -> %p", code, config, config);
+  scream_log_if("%s code, %p config -> %p", "ressource,configuration", code, config, config);
   return (config);
 }
 

@@ -8,6 +8,6 @@
 void			bunny_delete_key(t_bunny_cipher_key	*key)
 {
   bunny_free(key);
-  scream_log_if("%p", key);
+  scream_log_if("%p", "security", key);
 }
 

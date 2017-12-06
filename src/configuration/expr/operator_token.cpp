@@ -13,7 +13,6 @@ const std::string	Expression::OperatorToken[Expression::LAST_OPERATOR_FAMILY][21
       {"[=]", "[<-]", "[:=]"},
       {"[Array=]", "[Array<-]", "[Array:=]"},
       {"[Hash=]", "[Hash<-]", "[Hash:=]"},
-      {"[Hash=]", "[Hash<-]", "[Hash:=]"},
       {"||="},
       {"^^="},
       {"&&="},
@@ -31,8 +30,8 @@ const std::string	Expression::OperatorToken[Expression::LAST_OPERATOR_FAMILY][21
       {"#="}
     },
     { // TERNARY
-      {"?", "then"},
-      {":", "else"}
+      {"?"},
+      {":"}
     },
     { // LOW LOGIC
       {"||", "or", "ou"},

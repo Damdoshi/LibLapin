@@ -16,14 +16,14 @@ bool				bunny_uncipher_file(const char			*file,
   bool				ret;
 
   if (bunny_load_file(file, (void**)&cnt, &len) == false)
-    scream_error_if(return (false), bunny_errno, PATTERN, file, cip, key, "false");
+    scream_error_if(return (false), bunny_errno, PATTERN, "security", file, cip, key, "false");
   bunny_uncipher_data(cnt, len, cip, key);
   ret = bunny_save_file(file, cnt, len);
   len = bunny_errno;
   bunny_free(cnt);
   if (ret == false)
-    scream_error_if(return (false), len, PATTERN, file, cip, key, "false");
-  scream_log_if(PATTERN, file, cip, key, "true");
+    scream_error_if(return (false), len, PATTERN, "security", file, cip, key, "false");
+  scream_log_if(PATTERN, "security", file, cip, key, "true");
   return (ret);
 }
 

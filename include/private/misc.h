@@ -31,9 +31,10 @@ void				_real_call(const t_bunny_prototype	*function,
 
 t_bunny_configuration		*_get_good_conf(const char		*file,
 						t_bunny_configuration	**conf);
+bool				bunny_filter_label(const char		*labels);
 
 # ifdef				NO_BUNNY_ERROR_LOG
-#  define			scream_error_if(out, err, patt, ...)	\
+#  define			scream_error_if(out, err, patt, lab, ...) \
   do									\
     {									\
       bunny_errno = err;						\
@@ -41,15 +42,17 @@ t_bunny_configuration		*_get_good_conf(const char		*file,
     }									\
   while (0)
 # else
-#  define			scream_error_if(out, err, patt, ...)	\
+#  define			scream_error_if(out, err, patt, lab, ...) \
   do									\
     {									\
-      if (bunny_get_error_descriptor() >= 0)				\
+      if (bunny_get_error_descriptor() >= 0 &&				\
+	  bunny_filter_label(lab))					\
 	dprintf(bunny_get_error_descriptor(),				\
-		"FAILURE [%016lu]\t[%16s]\t[%s]\t[" patt "].\n",	\
+		"FAILURE [%s][%016lu][%16s:%d][%s][" patt "].\n",	\
+		lab,							\
 		(long unsigned int)time(NULL),				\
-		__FUNCTION__,						\
-		strerror(err),						\
+		__FUNCTION__, __LINE__,					\
+		bunny_strerror(err),					\
 		__VA_ARGS__);						\
       bunny_errno = err;						\
       out;								\
@@ -58,17 +61,19 @@ t_bunny_configuration		*_get_good_conf(const char		*file,
 # endif
 
 # ifdef				NO_BUNNY_LOG
-#  define			scream_log_if(pattern, ...)		\
+#  define			scream_log_if(pattern, lab, ...)	\
   //  bunny_errno = 0;
 # else
-#  define			scream_log_if(pattern, ...)		\
+#  define			scream_log_if(pattern, lab, ...)	\
   do									\
     {									\
-      if (bunny_get_log_descriptor() >= 0)				\
+      if (bunny_get_log_descriptor() >= 0 &&				\
+	  bunny_filter_label(lab))					\
 	dprintf(bunny_get_log_descriptor(),				\
-		"LOG     [%016lu]\t[%16s]\t[" pattern "].\n",		\
+		"LOG     [%s][%016lu][%16s:%d][" pattern "].\n",	\
+		lab,							\
 		(long unsigned int)time(NULL),				\
-		__FUNCTION__,						\
+		__FUNCTION__, __LINE__,					\
 		__VA_ARGS__);						\
       /* bunny_errno = 0; */						\
     }									\

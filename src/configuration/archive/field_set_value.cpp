@@ -18,7 +18,7 @@ void			bunny_ini_field_set_value(t_bunny_ini_field	*field,
   if ((cnf = bunny_configuration_get_case(cnf, index)) == NULL)
     {
       SmallConf::create_mode = create;
-      scream_error_if(return, bunny_errno, PATTERN, field, index, value);
+      scream_error_if(return, bunny_errno, PATTERN, "configuration", field, index, value);
       return ;
     }
   if (value == NULL)
@@ -26,6 +26,6 @@ void			bunny_ini_field_set_value(t_bunny_ini_field	*field,
   else
     bunny_configuration_set_string(cnf, value);
   SmallConf::create_mode = create;
-  scream_log_if(PATTERN, field, index, value);
+  scream_log_if(PATTERN, "configuration", field, index, value);
 }
 

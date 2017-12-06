@@ -15,6 +15,6 @@ void			bunny_capture(t_bunny_camera		*camera,
   cv::Mat		*mat = (cv::Mat*)capture;
 
   *cap >> *mat;
-  scream_log_if("%p camera, %p capture", camera, capture);
+  scream_log_if("%p camera, %p capture", "camera", camera, capture);
 }
 

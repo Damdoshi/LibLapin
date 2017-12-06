@@ -5,7 +5,7 @@
 
 #include		"lapin_private.h"
 
-void			SmallConf::SetDouble(double			v)
+void			SmallConf::SetDouble(double		v)
 {
   std::stringstream	ss;
 
@@ -17,23 +17,22 @@ void			SmallConf::SetDouble(double			v)
   last_type = DOUBLE;
 }
 
-bool			SmallConf::GetDouble(double			*v) const
+bool			SmallConf::GetDouble(double		*v,
+					     SmallConf		*root,
+					     SmallConf		*local,
+					     SmallConf		*artif,
+					     SmallConf		*param) const
 {
-  if (expression)
+  if (expression && (root || local || artif || param))
     {
-      if (expr_compute(*expression, false, NULL, NULL, NULL, NULL) == false)
+      if (expr_compute((SmallConf&)*this, false, root, local, artif, param) == false)
 	return (false);
-      if (expression->val.GetDouble(v) == false)
-	return (false);
-      converted = *v;
-      is_converted = true;
-      have_value = true;
     }
   if (have_value == false)
     {
       if (array.size() == 1)
 	{
-	  if (array[0]->GetDouble(v) == false)
+	  if (array[0]->GetDouble(v, root, local, artif, param) == false)
 	    return (false);
 	  converted = *v;
 	  return (true);

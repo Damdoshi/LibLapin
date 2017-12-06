@@ -17,10 +17,10 @@ bool		bunny_circle_collision_dot(const t_bunny_accurate_position	*a,
   vb = b->y - a->y;
   if (va * va + vb * vb < r * r)
     {
-      scream_log_if(PATTERN, a, b, r, "true");
+      scream_log_if(PATTERN, "collision", a, b, r, "true");
       return (true);
     }
-  scream_log_if(PATTERN, a, b, r, "false");
+  scream_log_if(PATTERN, "collision", a, b, r, "false");
   return (false);
 }
 

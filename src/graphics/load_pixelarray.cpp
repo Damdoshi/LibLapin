@@ -78,7 +78,7 @@ t_bunny_pixelarray	*bunny_load_pixelarray(const char		*file)
   pa->rotation = 0;
   pa->color_mask.full = WHITE;
 
-  scream_log_if(PATTERN, file, pa);
+  scream_log_if(PATTERN, "ressource,graphics", file, pa);
   return ((t_bunny_pixelarray*)pa);
 
  DeleteImage:
@@ -92,7 +92,7 @@ t_bunny_pixelarray	*bunny_load_pixelarray(const char		*file)
  DeleteStructure:
   delete pa;
  ReturnNull:
-  scream_error_if(return (NULL), ENOMEM, PATTERN, file, pa);
+  scream_error_if(return (NULL), ENOMEM, PATTERN, "ressource,graphics", file, pa);
   return (NULL);
 }
 

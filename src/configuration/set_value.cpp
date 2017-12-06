@@ -14,7 +14,7 @@ void			bunny_configuration_set_string(t_bunny_configuration	*config,
     conf->SetString(std::string());
   else
     conf->SetString(std::string(val));
-  scream_log_if("%p config, %s value", config, val);
+  scream_log_if("%p config, %s value", "configuration", config, val);
 }
 
 void			bunny_configuration_set_int(t_bunny_configuration	*config,
@@ -23,7 +23,7 @@ void			bunny_configuration_set_int(t_bunny_configuration	*config,
   SmallConf		*conf = (SmallConf*)config;
 
   conf->SetInt(val);
-  scream_log_if("%p config, %d value", config, val);
+  scream_log_if("%p config, %d value", "configuration", config, val);
 }
 
 void			bunny_configuration_set_double(t_bunny_configuration	*config,
@@ -32,6 +32,6 @@ void			bunny_configuration_set_double(t_bunny_configuration	*config,
   SmallConf		*conf = (SmallConf*)config;
 
   conf->SetDouble(val);
-  scream_log_if("%p config, %f value", config, val);
+  scream_log_if("%p config, %f value", "configuration", config, val);
 }
 

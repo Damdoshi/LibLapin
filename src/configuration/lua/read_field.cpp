@@ -38,12 +38,14 @@ Decision		lua_read_field(const char		*code,
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "An integer or a CString was expected after the '[' key token on line %d",
+	   "configuration,syntax",
 	   whichline(code, i)
 	   );
       if (readtext(code, i, "]") == false)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "The token ']' was expected after opening a integer key on line %d",
+	   "configuration,syntax",
 	   whichline(code, i)
 	   );
     }
@@ -51,6 +53,7 @@ Decision		lua_read_field(const char		*code,
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
        "A field name or integer between '[]' was expected on line %d",
+       "configuration,syntax",
        whichline(code, i)
        );
 

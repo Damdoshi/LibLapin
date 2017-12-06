@@ -12,7 +12,7 @@ const t_bunny_communication	*bunny_client_poll(t_bunny_client		*clt,
   const t_bunny_communication	*com;
 
   com = (t_bunny_communication*)&(*(bpt::NetCom::Client*)clt->_private[1])(tmout);
-  scream_log_if("%p client, %u timeout -> %p", clt, tmout, com);
+  scream_log_if("%p client, %u timeout -> %p", "network", clt, tmout, com);
   return (com);
 }
 

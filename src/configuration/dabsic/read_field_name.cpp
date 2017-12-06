@@ -22,6 +22,7 @@ SmallConf		*dabsic_field_name(const char			*code,
 	scream_error_if
 	  (return (NULL), BE_SYNTAX_ERROR,
 	   "A name was expected line %d",
+	   "configuration,syntax",
 	   whichline(code, i)
 	   );
       return (NULL);
@@ -30,6 +31,7 @@ SmallConf		*dabsic_field_name(const char			*code,
     scream_error_if
       (return (NULL), ENOMEM,
        "Memory exhausted while processing line %d",
+       "configuration,syntax",
        whichline(code, i)
        );
   dabsic_read_separator(code, i);
@@ -52,6 +54,7 @@ SmallConf		*dabsic_field_name(const char			*code,
 	      scream_error_if
 		(return (NULL), BE_SYNTAX_ERROR,
 		 "The token ')' was expected to close the prototype on line %d",
+		 "configuration,syntax",
 		 whichline(code, i)
 		 );
 	    }
@@ -65,6 +68,7 @@ SmallConf		*dabsic_field_name(const char			*code,
 	  scream_error_if
 	    (return (NULL), BE_SYNTAX_ERROR,
 	     "The token ')' was expected to close the prototype on line %d",
+	     "configuration,syntax",
 	     whichline(code, i)
 	     );
 	  delete newnode;

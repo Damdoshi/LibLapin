@@ -21,8 +21,8 @@ t_bunny_font			*bunny_load_font(unsigned int		width,
     final = __bunny_load_gfx(width, height, file, size);
   if (final == NULL)
     scream_error_if
-      (return (NULL), bunny_errno, PATTERN, width, height, file, size, size->x, size->y, (void*)NULL);
-  
+      (return (NULL), bunny_errno, PATTERN, "ressource,text", width, height, file, size, size->x, size->y, (void*)NULL);
+
   // Clipable properties
   final->clipable.buffer.width = width;
   final->clipable.buffer.height = height;
@@ -53,7 +53,7 @@ t_bunny_font			*bunny_load_font(unsigned int		width,
   final->interglyph_space.x = 0;
   final->interglyph_space.y = 0;
 
-  scream_log_if(PATTERN, width, height, file, size, size->x, size->y, final);
+  scream_log_if(PATTERN, "ressource,text", width, height, file, size, size->x, size->y, final);
   return (final);
 }
 

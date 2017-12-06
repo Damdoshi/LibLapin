@@ -70,6 +70,7 @@ SmallConf		*read_new_scope(const char			*code,
       (return (NULL), BE_SYNTAX_ERROR,
        "%s code, %p config -> %p "
        "(Error while getting scope name or scope address on line %d)",
+       "configuration,syntax",
        code, &root, cnf, whichline(code, i));
   read_separator(code, i);
   if (readtext(code, i, "]") == false)
@@ -77,6 +78,7 @@ SmallConf		*read_new_scope(const char			*code,
       (return (NULL), BE_SYNTAX_ERROR,
        "%s code, %p config -> %p "
        "(The ']' token was expected after scope name on line %d)",
+       "configuration,syntax",
        code, &root, (void*)NULL, whichline(code, i));
   ((SmallConf*)cnf)->construct = SmallConf::MAP;
   read_separator(code, i);
@@ -116,7 +118,8 @@ t_bunny_configuration	*_bunny_read_ini(const char			*code,
       read_separator(code, i);
     }
   SmallConf::create_mode = cmode;
-  scream_log_if("%s code, %p config -> %p", code, config, config);
+  scream_log_if
+    ("%s code, %p config -> %p", "ressource,configuration", code, config, config);
   return (config);
 
  RestoreExit:

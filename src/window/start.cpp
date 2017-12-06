@@ -30,17 +30,17 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
 
 #ifdef			__linux__
   if ((str = getenv("DISPLAY")) == NULL || str[0] != ':')
-    scream_error_if(return (NULL), BE_UNKNOWN_DISPLAY_DEVICE, PATTERN,
+    scream_error_if(return (NULL), BE_UNKNOWN_DISPLAY_DEVICE, PATTERN, "window",
 		    width, height, winstyle, window_name, (void*)NULL);
 #endif
 
   if ((win = new (std::nothrow) bunny_window) == NULL)
-    scream_error_if(return (NULL), ENOMEM, PATTERN,
+    scream_error_if(return (NULL), ENOMEM, PATTERN, "window",
 		    width, height, winstyle, window_name, (void*)NULL);
   if ((win->window = new (std::nothrow) sf::RenderWindow) == NULL)
     {
       delete win;
-      scream_error_if(return (NULL), ENOMEM, PATTERN,
+      scream_error_if(return (NULL), ENOMEM, PATTERN, "window",
 		      width, height, winstyle, window_name, (void*)NULL);
     }
 
@@ -70,6 +70,6 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
 	  gl_joystick[i].axis |= (sf::Joystick::hasAxis(i, (sf::Joystick::Axis)j) ? 1 : 0) << j;
       }
 
-  scream_log_if(PATTERN, width, height, winstyle, window_name, win);
+  scream_log_if(PATTERN, "window", width, height, winstyle, window_name, win);
   return ((t_bunny_window*)win);
 }

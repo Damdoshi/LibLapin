@@ -13,11 +13,11 @@ t_bunny_configuration	*bunny_configuration_get_root(t_bunny_configuration	*conf)
 
   if ((cnf = bunny_configuration_get_parent(conf)) == NULL)
     {
-      scream_log_if(PATTERN, conf, conf);
+      scream_log_if(PATTERN, "configuration", conf, conf);
       return (conf);
     }
   cnf = bunny_configuration_get_root(cnf);
-  scream_log_if(PATTERN, conf, cnf);
+  scream_log_if(PATTERN, "configuration", conf, cnf);
   return (cnf);
 }
 

@@ -22,6 +22,6 @@ void			bunny_sound_set_cursor(t_bunny_sound		*sound,
 
       snd->sound.setPlayingOffset(sf::seconds(s));
     }
-  scream_log_if("%p -> ", sound);
+  scream_log_if("%p -> ", "ressource,sound", sound);
 }
 

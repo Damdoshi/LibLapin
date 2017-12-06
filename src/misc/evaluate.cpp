@@ -38,7 +38,7 @@ static double		operand(const char			*operation,
       bad = true;
       scream_error_if
 	(return (nan("")), BE_SYNTAX_ERROR, PATTERN " (Token ')' was expected)",
-	 operation, env, nan(""));
+	 "misc", operation, env, nan(""));
     }
   if (isdigit(operation[i]) ||
       ((operation[i] == '+' || operation[i] == '-') && isdigit(operation[i])))
@@ -56,7 +56,7 @@ static double		operand(const char			*operation,
       scream_error_if
 	(return (nan("")), BE_SYNTAX_ERROR,
 	 PATTERN " (Variable %10s... not found)",
-	 operation, env, nan(""), &operation[i]);
+	 "misc", operation, env, nan(""), &operation[i]);
     }
   if (bunny_configuration_get_double(cnf, &value) == false)
     {
@@ -64,7 +64,7 @@ static double		operand(const char			*operation,
       scream_error_if
 	(return (nan("")), BE_SYNTAX_ERROR,
 	 PATTERN " (Variable %10s is not a number)",
-	 operation, env, nan(""), &operation[i]);
+	 "misc", operation, env, nan(""), &operation[i]);
     }
   return (value);
 }
@@ -156,7 +156,7 @@ static double		ternary(const char			*operation,
 	  bad = true;
 	  scream_error_if(return (nan("")), BE_SYNTAX_ERROR,
 			  PATTERN " (Token ':' was expected in ternary)",
-			  operation, env, nan(""));
+			  "misc", operation, env, nan(""));
 	}
       if ((int)first != 0)
 	return (second);
@@ -182,14 +182,14 @@ double			bunny_evaluate(const char		*operation,
   res = (ternary(operation, i, env, bad));
   if (bad)
     scream_error_if
-      (return (nan("")), BE_SYNTAX_ERROR, PATTERN, operation, env, nan(""));
+      (return (nan("")), BE_SYNTAX_ERROR, PATTERN, "misc", operation, env, nan(""));
 
   skipspace(operation, i);
   if (operation[i] != '\0')
     scream_error_if
       (return (nan("")), BE_SYNTAX_ERROR, PATTERN " (End of string not reached)",
-       operation, env, nan(""));
-  scream_log_if(PATTERN, operation, env, res);
+       "misc", operation, env, nan(""));
+  scream_log_if(PATTERN, "misc", operation, env, res);
   return (res);
 }
 

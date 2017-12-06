@@ -19,7 +19,7 @@ bool				bunny_set_sound_attribute(const char		*conf_file,
   int				tmp;
 
   if (sound == NULL || (cnf = _get_good_conf(conf_file, config)) == NULL)
-    scream_error_if(return (false), EINVAL, PATTERN, conf_file, sound, config, is_mus ? "true" : "false", "false", "");
+    scream_error_if(return (false), EINVAL, PATTERN, "ressource,sound", conf_file, sound, config, is_mus ? "true" : "false", "false", "");
 
   if (*sound == NULL)
     {
@@ -65,13 +65,13 @@ bool				bunny_set_sound_attribute(const char		*conf_file,
     bunny_delete_configuration(cnf);
   else
     *config = cnf;
-  scream_log_if(PATTERN, conf_file, sound, config, is_mus ? "true" : "false", "true", "");
+  scream_log_if(PATTERN, "ressource,sound", conf_file, sound, config, is_mus ? "true" : "false", "true", "");
   return (true);
 
  InvalidField:
   if (config == NULL || *config == NULL)
     bunny_delete_configuration(cnf);
-  scream_error_if(return (false), EINVAL, PATTERN, conf_file, sound, config, is_mus ? "true" : "false", "false", missing_field);
+  scream_error_if(return (false), EINVAL, PATTERN, "ressource,sound,syntax", conf_file, sound, config, is_mus ? "true" : "false", "false", missing_field);
   return (false);
 }
 

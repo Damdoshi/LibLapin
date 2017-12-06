@@ -13,8 +13,10 @@ Decision		expr_read_expression(const char		*code,
 {
   if ((conf.expression = expr_read_operator(code, i, ope)) == NULL)
     return (BD_ERROR);
-  if (expr_precompute(*conf.expression) == false)
+  if (expr_precompute(conf) == false)
     return (BD_ERROR);
+  if (conf.expression->is_const)
+    conf = conf.expression->val;
   return (BD_OK);
 }
 
@@ -34,7 +36,8 @@ t_bunny_configuration	*_bunny_read_expression(const char	*code,
       return (NULL);
     }
   SmallConf::create_mode = cmode;
-  scream_log_if("%s code, %p config -> %p", code, config, config);
+  scream_log_if
+    ("%s code, %p config -> %p", "ressource,configuration", code, config, config);
   return (config);
 }
 

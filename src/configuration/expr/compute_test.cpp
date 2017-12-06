@@ -48,6 +48,7 @@ bool			expr_compute_test(Expression		&exp,
 	    scream_error_if
 	      (return (false), BE_BAD_ADDRESS,
 	       "Undefined variable or unresolvable address %s on line %d",
+	       "ressource,configuration,syntax",
 	       left->original_value.c_str(), exp.line);
 	}
       else if (exp.operand[i]->is_const == false)
@@ -61,6 +62,7 @@ bool			expr_compute_test(Expression		&exp,
 	    scream_error_if
 	      (return (false), BE_BAD_ADDRESS,
 	       "Undefined variable or unresolvable address %s on line %d",
+	       "ressource,configuration,syntax",
 	       right->original_value.c_str(), exp.line);
 	}
       else if (exp.operand[i + 1]->is_const == false)

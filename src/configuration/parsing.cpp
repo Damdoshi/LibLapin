@@ -127,6 +127,15 @@ bool			readtextcase(const char			*str,
   return (true);
 }
 
+bool			checktextcase(const char		*str,
+				      ssize_t			&index,
+				      const char		*token)
+{
+  size_t		l;
+
+  return (bunny_strncasecmp(&str[index], token, l = strlen(token)) == 0);
+}
+
 bool			readchar(const char			*str,
 				 ssize_t			&index,
 				 const char			*token)
@@ -346,7 +355,7 @@ bool			readstring(const char			*code,
 	    case '0':
 	      {
 		int	nbr;
-		
+
 		readinteger(code, j, nbr);
 		d[p++] = nbr & 0xFF;
 	      }
@@ -514,4 +523,3 @@ void			writevalue(std::stringstream		&ss,
   else
     ss << cnf.original_value;
 }
-

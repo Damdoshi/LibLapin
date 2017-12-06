@@ -11,8 +11,10 @@ Decision		dabsic_read_variable_declaration(const char	*code,
 							 SmallConf	&funcnode,
 							 SmallConf	&root)
 {
+  Function		&root_function = *funcnode.function;
   char			buffer[128];
 
+  (void)func;
   (void)root;
   dabsic_read_separator(code, i);
   if (readtext(code, i, "string"))
@@ -23,15 +25,17 @@ Decision		dabsic_read_variable_declaration(const char	*code,
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "Expected variable name after type 'string' on line %d",
+	   "configuration,syntax",
 	   whichline(code, i)
 	   );
-      if (func.local_variables.Access(&buffer[0]))
+      if (root_function.local_variables.Access(&buffer[0]))
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "Variable name %s already taken on line %d",
+	   "configuration,syntax",
 	   &buffer[0], whichline(code, i)
 	   );
-      SmallConf		&nw = func.local_variables[&buffer[0]];
+      SmallConf		&nw = root_function.local_variables[&buffer[0]];
 
       dabsic_read_separator(code, i);
       if (readtext(code, i, "="))
@@ -41,12 +45,14 @@ Decision		dabsic_read_variable_declaration(const char	*code,
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
 	       "Expected value after '=' token in variable assignment on line %d",
+	       "configuration,syntax",
 	       whichline(code, i)
 	       );
 	  if (nw.last_type == SmallConf::INTEGER || nw.last_type == SmallConf::DOUBLE)
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
 	       "Invalid type for value assigned to %s: must be string, on line %d",
+	       "configuration,syntax",
 	       &buffer[0], whichline(code, i)
 	       );
 	}
@@ -63,9 +69,10 @@ Decision		dabsic_read_variable_declaration(const char	*code,
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "Expected variable name after type 'real' on line %d",
+	   "configuration,syntax",
 	   whichline(code, i)
 	   );
-      SmallConf		&nw = func.local_variables[&buffer[0]];
+      SmallConf		&nw = root_function.local_variables[&buffer[0]];
 
       dabsic_read_separator(code, i);
       if (readtext(code, i, "="))
@@ -75,12 +82,14 @@ Decision		dabsic_read_variable_declaration(const char	*code,
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
 	       "Expected value after '=' token in variable assignment on line %d",
+	       "configuration,syntax",
 	       whichline(code, i)
 	       );
 	  if (nw.last_type != SmallConf::DOUBLE)
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
 	       "Invalid type for value assigned to %s: must be string, on line %d",
+	       "configuration,syntax",
 	       &buffer[0], whichline(code, i)
 	       );
 	}
@@ -89,7 +98,7 @@ Decision		dabsic_read_variable_declaration(const char	*code,
       return (BD_OK);
     }
 
-  if (readtext(code, i, "integer"))
+  if (readtext(code, i, "integer") || readtext(code, i, "int"))
     {
       dabsic_read_separator(code, i);
       if (getfieldname
@@ -97,9 +106,10 @@ Decision		dabsic_read_variable_declaration(const char	*code,
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "Expected variable name after type 'real' on line %d",
+	   "configuration,syntax",
 	   whichline(code, i)
 	   );
-      SmallConf		&nw = func.local_variables[&buffer[0]];
+      SmallConf		&nw = root_function.local_variables[&buffer[0]];
 
       dabsic_read_separator(code, i);
       if (readtext(code, i, "="))
@@ -109,12 +119,14 @@ Decision		dabsic_read_variable_declaration(const char	*code,
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
 	       "Expected value after '=' token in variable assignment on line %d",
+	       "configuration,syntax",
 	       whichline(code, i)
 	       );
 	  if (nw.last_type != SmallConf::INTEGER)
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
 	       "Invalid type for value assigned to %s: must be string, on line %d",
+	       "configuration,syntax",
 	       &buffer[0], whichline(code, i)
 	       );
 	}

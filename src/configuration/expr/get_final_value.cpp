@@ -17,26 +17,28 @@ SmallConf		*expr_get_variable(SmallConf		&variable,
 
   if (dry)
     return (&variable);
+  if (variable.last_type != SmallConf::RAWSTRING)
+    return (&variable);
 
   i = 0;
-  if ((cnf = _bunny_configuration_go_get_node
-       (artif, variable.original_value.c_str(), i)))
-    return ((SmallConf*)cnf);
+  if (artif && (cnf = _bunny_configuration_go_get_node
+		(artif, variable.original_value.c_str(), i)))
+    return (expr_get_variable(*(SmallConf*)cnf, dry, root, local, artif, params));
 
   i = 0;
-  if ((cnf = _bunny_configuration_go_get_node
-       (local, variable.original_value.c_str(), i)))
-    return ((SmallConf*)cnf);
+  if (local && (cnf = _bunny_configuration_go_get_node
+		(local, variable.original_value.c_str(), i)))
+    return (expr_get_variable(*(SmallConf*)cnf, dry, root, local, artif, params));
 
   i = 0;
-  if ((cnf = _bunny_configuration_go_get_node
-       (params, variable.original_value.c_str(), i)))
-    return ((SmallConf*)cnf);
+  if (params && (cnf = _bunny_configuration_go_get_node
+		 (params, variable.original_value.c_str(), i)))
+    return (expr_get_variable(*(SmallConf*)cnf, dry, root, local, artif, params));
 
   i = 0;
-  if ((cnf = _bunny_configuration_go_get_node
-       (root, variable.original_value.c_str(), i)))
-    return ((SmallConf*)cnf);
+  if (root && (cnf = _bunny_configuration_go_get_node
+	       (root, variable.original_value.c_str(), i)))
+    return (expr_get_variable(*(SmallConf*)cnf, dry, root, local, artif, params));
 
   return (NULL);
 }

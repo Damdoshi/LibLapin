@@ -5,7 +5,7 @@
 
 #include		"lapin_private.h"
 
-void			SmallConf::SetInt(int				i)
+void			SmallConf::SetInt(int			i)
 {
   std::stringstream	ss;
 
@@ -17,15 +17,19 @@ void			SmallConf::SetInt(int				i)
   last_type = INTEGER;
 }
 
-bool			SmallConf::GetInt(int				*i) const
+bool			SmallConf::GetInt(int			*i,
+					  SmallConf		*root,
+					  SmallConf		*local,
+					  SmallConf		*artif,
+					  SmallConf		*param) const
 {
   double		d;
 
-  if (GetDouble(&d) == false)
+  if (GetDouble(&d, root, local, artif, param) == false)
     {
       if (array.size() == 1)
 	{
-	  if (array[0]->GetInt(i) == false)
+	  if (array[0]->GetInt(i, root, local, artif, param) == false)
 	    return (false);
 	  converted = *i;
 	  return (true);

@@ -15,6 +15,7 @@ bool			bunny_server_write(t_bunny_server		*srv,
 
   ret = (((bpt::NetCom::Server*)srv->_private[1])->Write(data, len, fd));
   scream_log_if("%p server, %p data, %zu data length, %d fd -> %s",
+		"network",
 		srv, data, len, fd, ret ? "true" : "false");
   return (ret);
 }

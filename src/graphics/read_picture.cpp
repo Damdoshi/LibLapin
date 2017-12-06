@@ -64,7 +64,7 @@ t_bunny_picture		*bunny_read_picture_id(const void	*_pic,
   pic->rotation = 0;
   pic->color_mask.full = WHITE;
 
-  scream_log_if(PATTERN, _pic, len, file, pic);
+  scream_log_if(PATTERN, "ressource,graphics", _pic, len, file, pic);
   return ((t_bunny_picture*)pic);
 
  DeleteRenderTexture:
@@ -74,6 +74,6 @@ t_bunny_picture		*bunny_read_picture_id(const void	*_pic,
  DeleteStructure:
   delete pic;
  ReturnNull:
-  scream_error_if(return (NULL), ENOMEM, PATTERN, _pic, len, file, (void*)NULL);
+  scream_error_if(return (NULL), ENOMEM, PATTERN, "ressource,graphics", _pic, len, file, (void*)NULL);
   return (NULL);
 }

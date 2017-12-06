@@ -1,7 +1,7 @@
 
  integer i = 42
 
- If    Then
+ If i == 42   Then
   "Inside if!"
  Else
   "Outside if!"

@@ -16,16 +16,19 @@ bool			expr_compute_ternary(Expression		&exp,
     scream_error_if
       (return (false), BE_BAD_ADDRESS,
        "Incomplete ternary on line %d",
+       "configuration,syntax",
        exp.line);
   if (exp.operand[1]->optor != Expression::BEO_TERNARY)
     scream_error_if
       (return (false), BE_BAD_ADDRESS,
        "First ternary token must be '?' on line %d",
+       "configuration,syntax",
        exp.line);
   if (exp.operand[2]->optor != Expression::BEO_TERNARY_ELSE)
     scream_error_if
       (return (false), BE_BAD_ADDRESS,
        "Second ternary token must be ':' on line %d",
+       "configuration,syntax",
        exp.line);
   Expression		*x = exp.operand[0];
   int			tmp;
@@ -35,12 +38,12 @@ bool			expr_compute_ternary(Expression		&exp,
   else if (gl_expr_computation[x->optor_family]
 	   (*x, dry, root, local, artif, param) == false)
     return (false);
-  SmallConf		*ope;
 
   if (x->val.GetInt(&tmp) == false)
     scream_error_if
       (return (false), BE_TYPE_ERROR,
        "Cannot evaluate the truthness of the main ternary operand on line %d",
+       "configuration,syntax",
        exp.line);
 
   if (tmp)

@@ -30,8 +30,8 @@ void			*bunny_realloc(void		*ptr,
 
 #ifdef			LAPIN_ALLOCATOR_DEACTIVATED
   if ((rel = realloc(ptr, data)) == NULL)
-    scream_error_if(return (NULL), errno, PATTERN, ptr, data, rel);
-  scream_log_if(PATTERN, ptr, data, rel);
+    scream_error_if(return (NULL), errno, PATTERN, "allocator", ptr, data, rel);
+  scream_log_if(PATTERN, "allocator", ptr, data, rel);
   return (rel);
 #endif
 
@@ -52,7 +52,7 @@ void			*bunny_realloc(void		*ptr,
       fprintf(stderr, "Bad pointer or altered memory detected while reallocing 0x%p.\n", ptr);
       check_memory_state();
       scream_error_if(dprintf(bunny_get_error_descriptor(), "Sending SIGSEGV"),
-		      errno, PATTERN, ptr, data, rel);
+		      errno, PATTERN, "allocator", ptr, data, rel);
       kill(getpid(), SIGSEGV); /* die Die DIE! */
       while (1);
     }
@@ -66,7 +66,7 @@ void			*bunny_realloc(void		*ptr,
     memcpy(rel, ptr, data);
 
   bunny_free(ptr);
-  scream_log_if(PATTERN, ptr, data, rel);
+  scream_log_if(PATTERN, "allocator", ptr, data, rel);
   return (rel);
 }
 

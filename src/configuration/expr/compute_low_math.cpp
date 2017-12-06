@@ -41,6 +41,7 @@ bool			expr_compute_low_math(Expression	&exp,
 	    scream_error_if
 	      (return (false), BE_BAD_ADDRESS,
 	       "Undefined variable or unresolvable address %s on line %d",
+	       "ressource,configuration,syntax",
 	       exp.operand[i]->val.original_value.c_str(), exp.line);
 	}
       else if (x.is_const == false)
@@ -50,11 +51,12 @@ bool			expr_compute_low_math(Expression	&exp,
 	scream_error_if
 	  (return (false), BE_TYPE_ERROR,
 	   "Operator '+' and '-' cannot use string as operand on line %d",
+	   "ressource,configuration,syntax",
 	   exp.line);
       if (ope->last_type == SmallConf::DOUBLE)
 	real = true;
 
-      exp.operand[i]->val.GetDouble(&tmp);
+      ope->GetDouble(&tmp);
       if (i == 0)
 	sum = tmp;
       else if (x.optor == Expression::BEO_ADD)

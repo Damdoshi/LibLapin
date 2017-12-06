@@ -24,9 +24,9 @@ t_bunny_server		*bunny_new_server_opt(uint16_t		port,
   std::stringstream	ss;
   bool			r;
   int			err;
-  
+
   if ((server = (struct bunny_server*)bunny_malloc(sizeof(*server))) == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, port, local, server);
+    scream_error_if(return (NULL), bunny_errno, PATTERN, "network", port, local, server);
   server->server = true;
   ss << port;
   try
@@ -40,17 +40,17 @@ t_bunny_server		*bunny_new_server_opt(uint16_t		port,
 	{
 	  err = bunny_errno;
 	  bunny_free(server);
-	  scream_error_if(return (NULL), err, PATTERN, port, local, (void*)NULL);
+	  scream_error_if(return (NULL), err, PATTERN, "network", port, local, (void*)NULL);
 	}
     }
   catch (...)
     {
       bunny_free(server);
-      scream_error_if(return (NULL), ENOMEM, PATTERN, port, local, (void*)NULL);
+      scream_error_if(return (NULL), ENOMEM, PATTERN, "network", port, local, (void*)NULL);
     }
   server->a = (void*)bptserv;
   server->b = bptserv->GetFd();
   server->c = port;
-  scream_log_if(PATTERN, port, local, server);
+  scream_log_if(PATTERN, "network", port, local, server);
   return ((t_bunny_server*)server);
 }

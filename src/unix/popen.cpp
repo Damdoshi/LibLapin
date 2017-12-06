@@ -97,7 +97,7 @@ int			bunny_popen(t_bunny_subprocess		*subproc,
     close(pip[6][1]);
 
   subproc->pid = pid;
-  scream_log_if(PATTERN, subproc, env, nbr, pid);
+  scream_log_if(PATTERN, "unix", subproc, env, nbr, pid);
   return (pid);
 
  closepipes:
@@ -107,7 +107,7 @@ int			bunny_popen(t_bunny_subprocess		*subproc,
 	close(pip[i][0]);
 	close(pip[i][1]);
       }
-  scream_error_if(return (-1), errno, PATTERN, subproc, env, nbr, -1);
+  scream_error_if(return (-1), errno, PATTERN, "unix", subproc, env, nbr, -1);
   return (-1);
 }
 

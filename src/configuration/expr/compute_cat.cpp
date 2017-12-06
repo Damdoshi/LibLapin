@@ -38,6 +38,7 @@ bool			expr_compute_cat(Expression		&exp,
 	    scream_error_if
 	      (return (false), BE_BAD_ADDRESS,
 	       "Undefined variable or unresolvable address %s on line %d",
+	       "configuration,syntax",
 	       exp.operand[i]->val.original_value.c_str(), exp.line);
 	}
       else if (x.is_const == false)
@@ -47,9 +48,10 @@ bool			expr_compute_cat(Expression		&exp,
 	scream_error_if
 	  (return (false), BE_TYPE_ERROR,
 	   "Operator '#' can only be used on string perand on line %d",
+	   "configuration,syntax",
 	   exp.line);
 
-      exp.operand[i]->val.GetString(&tmp);
+      ope->GetString(&tmp);
       ss << tmp;
     }
   if (dry && cnst == false)

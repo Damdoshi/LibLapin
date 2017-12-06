@@ -22,7 +22,7 @@ double			bunny_sound_get_cursor(t_bunny_sound		*sound)
 
       f = snd->sound.getPlayingOffset().asSeconds();
     }
-  scream_log_if("%p -> %f", sound, f);
+  scream_log_if("%p -> %f", "sound", sound, f);
   return (f);
 }
 

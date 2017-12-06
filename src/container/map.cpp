@@ -31,7 +31,9 @@ t_bunny_map		*bunny_new_map(t_bunny_map_cmp		cmp,
   struct bunny_map	*map;
 
   if ((map = (struct bunny_map*)bunny_malloc(sizeof(*map))) == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, cmp, dup, del, param, (void*)NULL);
+    scream_error_if
+      (return (NULL), bunny_errno, PATTERN, "container",
+       cmp, dup, del, param, (void*)NULL);
   map->data = NULL;
   map->key = NULL;
   map->nbr_children = 0;
@@ -42,7 +44,7 @@ t_bunny_map		*bunny_new_map(t_bunny_map_cmp		cmp,
   map->dup = dup;
   map->del = del;
   map->param = param;
-  scream_log_if(PATTERN, cmp, dup, del, param, map);
+  scream_log_if(PATTERN, "container", cmp, dup, del, param, map);
   return ((t_bunny_map*)map);
 }
 
@@ -66,7 +68,7 @@ size_t			bunny_delete_map(t_bunny_map		*_map)
   if (map->del)
     map->del(map->key, map->param);
   bunny_free(map);
-  scream_log_if("%p -> %zu", _map, n);
+  scream_log_if("%p -> %zu", "container", _map, n);
   return (n);
 }
 
@@ -88,14 +90,14 @@ t_bunny_map		*bunny_map_get_subtree(t_bunny_map	*_map,
 	{
 	  if ((map->key = map->dup(key, map->param)) == NULL)
 	    scream_error_if
-	      (return (NULL), BE_CANNOT_DUPLICATE, PATTERN, map, key,
+	      (return (NULL), BE_CANNOT_DUPLICATE, PATTERN, "container", map, key,
 	       create ? "true" : "false", (void*)NULL);
 	}
       else
 	map->key = key;
       for (nw = map; nw != NULL; nw = nw->up)
 	nw->nbr_children += 1;
-      scream_log_if(PATTERN, map, key, create ? "true" : "false", _map);
+      scream_log_if(PATTERN, "container", map, key, create ? "true" : "false", _map);
       return (_map);
     }
 
@@ -103,7 +105,7 @@ t_bunny_map		*bunny_map_get_subtree(t_bunny_map	*_map,
     {
       if ((res = map->cmp(map->key, key, map->param)) == 0)
 	{
-	  scream_log_if(PATTERN, map, key, create ? "true" : "false", _map);
+	  scream_log_if(PATTERN, "container", map, key, create ? "true" : "false", _map);
 	  return (_map);
 	}
     }
@@ -111,31 +113,31 @@ t_bunny_map		*bunny_map_get_subtree(t_bunny_map	*_map,
     {
       if ((res = (ssize_t)map->key - (ssize_t)key) == 0)
 	{
-	  scream_log_if(PATTERN, map, key, create ? "true" : "false", _map);
+	  scream_log_if(PATTERN, "container", map, key, create ? "true" : "false", _map);
 	  return (_map);
 	}
     }
-  
+
   if (res > 0)
     {
       if (map->left == NULL)
 	{
 	  if (create == false)
 	    scream_error_if
-	      (return (NULL), BE_CANNOT_FIND_ELEMENT, PATTERN, map, key,
-	       create ? "true" : "false", (void*)NULL);
+	      (return (NULL), BE_CANNOT_FIND_ELEMENT, PATTERN, "container",
+	       map, key, create ? "true" : "false", (void*)NULL);
 	  if ((map->left = (struct bunny_map*)bunny_new_map
 	       (map->cmp, map->dup, map->del, map->param)) == NULL)
 	    scream_error_if
-	      (return (NULL), bunny_errno, PATTERN, map, key,
-	       create ? "true" : "false", (void*)NULL);
+	      (return (NULL), bunny_errno, PATTERN, "container",
+	       map, key, create ? "true" : "false", (void*)NULL);
 	  map->left->up = map;
 	}
       if ((tmp = bunny_map_get_subtree((t_bunny_map*)map->left, key, create)) == NULL)
 	scream_error_if
-	  (return (NULL), BE_CANNOT_DUPLICATE, PATTERN, map, key,
-	   create ? "true" : "false", tmp);
-      scream_log_if(PATTERN, map, key, create ? "true" : "false", tmp);
+	  (return (NULL), BE_CANNOT_DUPLICATE, PATTERN, "container",
+	   map, key, create ? "true" : "false", tmp);
+      scream_log_if(PATTERN, "container", map, key, create ? "true" : "false", tmp);
       return (tmp);
     }
 
@@ -143,20 +145,20 @@ t_bunny_map		*bunny_map_get_subtree(t_bunny_map	*_map,
     {
       if (create == false)
 	scream_error_if
-	  (return (NULL), BE_CANNOT_FIND_ELEMENT, PATTERN, map, key,
-	   create ? "true" : "false", (void*)NULL);
+	  (return (NULL), BE_CANNOT_FIND_ELEMENT, PATTERN, "container",
+	   map, key, create ? "true" : "false", (void*)NULL);
       if ((map->right = (struct bunny_map*)bunny_new_map
 	   (map->cmp, map->dup, map->del, map->param)) == NULL)
 	scream_error_if
-	  (return (NULL), bunny_errno, PATTERN, map, key,
-	   create ? "true" : "false", (void*)NULL);
+	  (return (NULL), bunny_errno, PATTERN, "container",
+	   map, key, create ? "true" : "false", (void*)NULL);
       map->right->up = map;
     }
   if ((tmp = bunny_map_get_subtree((t_bunny_map*)map->right, key, create)) == NULL)
     scream_error_if
-      (return (NULL), BE_CANNOT_DUPLICATE, PATTERN, map, key,
-       create ? "true" : "false", tmp);
-  scream_log_if(PATTERN, map, key, create ? "true" : "false", tmp);
+      (return (NULL), BE_CANNOT_DUPLICATE, PATTERN, "container",
+       map, key, create ? "true" : "false", tmp);
+  scream_log_if(PATTERN, "container", map, key, create ? "true" : "false", tmp);
   return (tmp);
 }
 
@@ -169,8 +171,9 @@ void			*_bunny_map_get_data(t_bunny_map	*map,
   struct bunny_map	*tree;
 
   if ((tree = (struct bunny_map*)bunny_map_get_subtree(map, key, false)) == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, map, key, tree);
-  scream_log_if(PATTERN, map, key, tree->data);
+    scream_error_if
+      (return (NULL), bunny_errno, PATTERN, "container", map, key, tree);
+  scream_log_if(PATTERN, "container", map, key, tree->data);
   return (tree->data);
 }
 
@@ -185,15 +188,16 @@ void			*_bunny_map_set_data(t_bunny_map	*map,
   void			*old;
 
   if ((tree = (struct bunny_map*)bunny_map_get_subtree(map, key, true)) == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, map, key, data, tree);
+    scream_error_if
+      (return (NULL), bunny_errno, PATTERN, "container", map, key, data, tree);
   old = tree->data;
   tree->data = data;
   if (old)
     {
-      scream_log_if(PATTERN, map, key, data, old);
+      scream_log_if(PATTERN, "container", map, key, data, old);
       return (old);
     }
-  scream_log_if(PATTERN, map, key, data, data);
+  scream_log_if(PATTERN, "container", map, key, data, data);
   return (data);
 }
 
@@ -207,7 +211,7 @@ void			bunny_map_foreach(t_bunny_map		*map,
 
   if (nod == NULL)
     {
-      scream_log_if("%p map, %p func, %p param", map, func, param);
+      scream_log_if("%p map, %p func, %p param", "container", map, func, param);
       return ;
     }
   if (nod->left)
@@ -216,7 +220,7 @@ void			bunny_map_foreach(t_bunny_map		*map,
     func((t_bunny_map*)nod, param);
   if (nod->right)
     bunny_map_foreach((t_bunny_map*)nod->right, func, param);
-  scream_log_if("%p map, %p func, %p param", map, func, param);
+  scream_log_if("%p map, %p func, %p param", "container", map, func, param);
 }
 
 #undef			PATTERN
@@ -237,7 +241,7 @@ bool			bunny_map_fast_foreach(t_bunny_threadpool *pol,
     errorcode = 0;
   if (nod == NULL)
     {
-      scream_log_if(PATTERN, pol, map, func, param, "true");
+      scream_log_if(PATTERN, "container", pol, map, func, param, "true");
       bunny_thread_wait_completion(pol);
       return (true);
     }
@@ -269,9 +273,10 @@ bool			bunny_map_fast_foreach(t_bunny_threadpool *pol,
 
   bunny_thread_wait_completion(pol);
   if (ok == false)
-    scream_error_if(return (false), errorcode, PATTERN, pol, map, func, param, "false");
+    scream_error_if
+      (return (false), errorcode, PATTERN, "container", pol, map, func, param, "false");
 
-  scream_log_if(PATTERN, pol, map, func, param, "true");
+  scream_log_if(PATTERN, "container", pol, map, func, param, "true");
   return (true);
 }
 

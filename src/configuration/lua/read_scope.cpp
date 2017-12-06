@@ -24,6 +24,7 @@ Decision		lua_read_scope(const char		*code,
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
        "The '}' token was expected to close the scope opened on line %d, on line %d",
+       "configuration,syntax",
        line, whichline(code, i)
        );
   return (BD_OK);

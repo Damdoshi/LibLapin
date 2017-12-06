@@ -14,22 +14,24 @@ int			bunny_strcasecmp(const char		*a,
       ++a;
       ++b;
     }
-  return (*a - *b);
+  return (tolower(*a) - tolower(*b));
 }
 
 int			bunny_strncasecmp(const char		*a,
 					  const char		*b,
 					  size_t		i)
 {
+  size_t		x;
+
   if (!i)
     return (0);
-  while (*a && *b && tolower(*a) == tolower(*b))
+  for (x = 0; x < i && *a && *b && tolower(*a) == tolower(*b); ++x)
     {
-      if (i-- == 0)
-	break ;
       ++a;
       ++b;
     }
-  return (*a - *b);
+  if (x == i)
+    return (0);
+  return (tolower(*a) - tolower(*b));
 }
 

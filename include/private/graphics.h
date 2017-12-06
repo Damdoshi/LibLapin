@@ -61,6 +61,7 @@ enum				_buffer_type
     SYSTEM_RAM			= 2,
     GRAPHIC_TEXT		= 3,
     TTF_TEXT			= 4,
+    SPRITE			= 5,
     LAST_BUFFER_TYPE
   };
 
@@ -185,6 +186,34 @@ struct				bunny_ttf_font
   sf::Text			*text;
 };
 
+struct				bunny_sprite
+{
+  size_t			type;
+  sf::RenderTexture		*texture;
+  t_copy_on_write_gfx		duplicate;
+  ssize_t			width;
+  ssize_t			height;
+  t_bunny_area			rect;
+  t_bunny_accurate_position	position;
+  t_bunny_accurate_position	origin;
+  t_bunny_accurate_position	scale;
+  double			rotation;
+  t_bunny_color			color_mask;
+
+  size_t			res_id;
+  const sf::Texture		*tex;
+  sf::Sprite			*sprite;
+
+  t_bunny_vector		*animation;
+  t_bunny_map			*hashname_id;
+  int32_t			current_animation;
+  uint32_t			current_frame_repeat;
+  int32_t			current_repeat;
+  uint32_t			current_frame;
+  double			current_time;
+  bool				stop_repeat;
+};
+
 t_bunny_font			*__bunny_load_ttf(unsigned int		width,
 						  unsigned int		height,
 						  const char		*file,
@@ -199,5 +228,9 @@ void				_bunny_draw_text(t_bunny_font			*font);
 
 sf::Color			bunny_color_to_sf_color(unsigned int		i);
 unsigned int			sf_color_to_bunny_color(const sf::Color		&clr);
+
+struct SmallConf;
+bool				_bunny_set_sprite_attribute(struct bunny_sprite &sprite,
+							    SmallConf &config);
 
 #endif	/*			__LAPIN_PRIVATE_GRAPHICS_H__			*/

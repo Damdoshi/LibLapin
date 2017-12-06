@@ -34,7 +34,7 @@ void			bunny_set_pixel(t_bunny_buffer		*buffer,
 	struct bunny_window	*pic = (struct bunny_window*)buffer;
 
 	pic->window->draw(vert, 1, sf::Points);
-	scream_log_if(PATTERN, buffer, position.x, position.y, (void*)(size_t)color);
+	scream_log_if(PATTERN, "graphics", buffer, position.x, position.y, (void*)(size_t)color);
 	return ;
       }
     case TTF_TEXT:
@@ -46,7 +46,7 @@ void			bunny_set_pixel(t_bunny_buffer		*buffer,
 	if (pic->res_id != 0)
 	  bunny_make_clipable_unique((t_bunny_clipable*)buffer);
 	pic->texture->draw(vert, 1, sf::Points);
-	scream_log_if(PATTERN, buffer, position.x, position.y, (void*)(size_t)color);
+	scream_log_if(PATTERN, "graphics", buffer, position.x, position.y, (void*)(size_t)color);
 	return ;
       }
     case SYSTEM_RAM:
@@ -61,11 +61,11 @@ void			bunny_set_pixel(t_bunny_buffer		*buffer,
 	      bunny_make_clipable_unique((t_bunny_clipable*)buffer);
 	    gl_bunny_my_set_pixel((t_bunny_pixelarray*)pix, position, color);
 	  }
-	scream_log_if(PATTERN, buffer, position.x, position.y, (void*)(size_t)color);
+	scream_log_if(PATTERN, "graphics", buffer, position.x, position.y, (void*)(size_t)color);
 	return ;
       }
     default:
-      scream_error_if(return, EINVAL, PATTERN, buffer, position.x, position.y, (void*)(size_t)color);
+      scream_error_if(return, EINVAL, PATTERN, "graphics", buffer, position.x, position.y, (void*)(size_t)color);
     }
 }
 

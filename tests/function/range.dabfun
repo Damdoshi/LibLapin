@@ -1,0 +1,25 @@
+
+
+integer i
+
+For i = 0 To i <= 20 Step i += 1
+
+  If i % 2 == 0
+
+    If 5 <= i < 15 Then
+      "Middle range", i
+
+    If 0 <= i < 5 Then
+      "Low range: ", i
+
+    If 15 <= i < 20 Then
+      "High range", i
+
+    If i == 20
+      "Max!"
+    EndIf
+
+  EndIf
+
+Next
+

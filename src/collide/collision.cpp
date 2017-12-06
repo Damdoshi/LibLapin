@@ -162,7 +162,7 @@ bool		bunny_collide(const t_bunny_collision		*a,
   bool		ret;
 
   ret = _bunny_collide(a, b);
-  scream_log_if("%p a, %p b -> %s", a, b, ret ? "true" : "false");
+  scream_log_if("%p a, %p b -> %s", "collision", a, b, ret ? "true" : "false");
   return (ret);
 }
 

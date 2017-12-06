@@ -10,10 +10,10 @@ void			bunny_resize_window(t_bunny_window	*_win,
 {
   struct bunny_window	*win = (struct bunny_window*)_win;
   sf::Vector2u		vec(pos.x, pos.y);
-  
+
   win->window->setSize(vec);
   win->width = pos.x;
   win->height = pos.y;
-  scream_log_if("%p window, (%d, %d) size", win, pos.x, pos.y);
+  scream_log_if("%p window, (%d, %d) size", "window", win, pos.x, pos.y);
 }
 

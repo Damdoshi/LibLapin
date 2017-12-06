@@ -24,7 +24,8 @@ t_bunny_read_file	parser[BC_CUSTOM] =
     _bunny_read_xml,
     _bunny_read_lua,
     _bunny_read_csv,
-    _bunny_read_json
+    _bunny_read_json,
+    _bunny_read_lisp
   };
 
 #define			PATTERN		"%d type, %s code, %p config -> %p"
@@ -38,15 +39,15 @@ t_bunny_configuration	*bunny_read_configuration(t_bunny_configuration_type type,
 
   if ((local = (config == NULL)))
     if ((config = bunny_new_configuration()) == NULL)
-      scream_error_if(return (NULL), bunny_errno, PATTERN, type, code, config, nw);
+      scream_error_if(return (NULL), bunny_errno, PATTERN, "ressource,configuration", type, code, config, nw);
 
   if (type < BC_CUSTOM)
     {
       if ((nw = parser[type](code, config)) == NULL && local)
 	bunny_delete_configuration(config);
       if (!nw)
-	scream_error_if(return (NULL), bunny_errno, PATTERN, type, code, config, nw);
-      scream_log_if(PATTERN, type, code, config, nw);
+	scream_error_if(return (NULL), bunny_errno, PATTERN, "ressource,configuration", type, code, config, nw);
+      scream_log_if(PATTERN, "ressource,configuration", type, code, config, nw);
       return (nw);
     }
 
@@ -55,12 +56,12 @@ t_bunny_configuration	*bunny_read_configuration(t_bunny_configuration_type type,
       if ((nw = gl_bunny_my_read_configuration(type, code, config)) == NULL && local)
 	bunny_delete_configuration(config);
       if (!nw)
-	scream_error_if(return (NULL), bunny_errno, PATTERN, type, code, config, nw);
-      scream_log_if(PATTERN, type, code, config, nw);
+	scream_error_if(return (NULL), bunny_errno, PATTERN, "ressource,configuration", type, code, config, nw);
+      scream_log_if(PATTERN, "ressource,configuration", type, code, config, nw);
       return (nw);
     }
 
-  scream_error_if(return (NULL), EINVAL, PATTERN, type, code, config, nw);
+  scream_error_if(return (NULL), EINVAL, PATTERN, "ressource,configuration", type, code, config, nw);
   return (NULL);
 }
 

@@ -64,7 +64,7 @@ void				bunny_set_geometry(t_bunny_buffer		*buffer,
 		win->window->draw(vert, state);
 	      }
 	  }
-	scream_log_if(PATTERN, buffer, geometry, array, picture);
+	scream_log_if(PATTERN, "graphics", buffer, geometry, array, picture);
 	return ;
       }
     case TTF_TEXT:
@@ -93,7 +93,7 @@ void				bunny_set_geometry(t_bunny_buffer		*buffer,
 		pic->texture->draw(vert, state);
 	      }
 	  }
-	scream_log_if(PATTERN, buffer, geometry, array, picture);
+	scream_log_if(PATTERN, "graphics", buffer, geometry, array, picture);
 	return ;
       }
     case SYSTEM_RAM:
@@ -121,10 +121,10 @@ void				bunny_set_geometry(t_bunny_buffer		*buffer,
 		gl_bunny_my_geometry((t_bunny_pixelarray*)pix, geometry, array, (t_bunny_pixelarray*)picture);
 	      }
 	  }
-	scream_log_if(PATTERN, buffer, geometry, array, picture);
+	scream_log_if(PATTERN, "graphics", buffer, geometry, array, picture);
 	return ;
       }
     default:
-      scream_error_if(return, EINVAL, PATTERN, buffer, geometry, array, picture);
+      scream_error_if(return, EINVAL, PATTERN, "graphics", buffer, geometry, array, picture);
     }
 }

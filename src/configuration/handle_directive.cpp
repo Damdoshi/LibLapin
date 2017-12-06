@@ -25,6 +25,7 @@ bool			_bunny_handle_directive(const char		*code,
       if (bunny_load_configuration
 	  (bunny_which_format(&buffer[0]), &buffer[0], fileroot) == false)
 	scream_error_if(return (false), BE_SYNTAX_ERROR, PATTERN,
+			"ressource,configuration",
 			code, i, node, fileroot, "false", "Error while loading ",
 			&buffer[0], whichline(code, i));
     }
@@ -36,15 +37,18 @@ bool			_bunny_handle_directive(const char		*code,
       if (bunny_load_configuration
 	  (bunny_which_format(&buffer[0]), &buffer[0], node) == false)
 	scream_error_if(return (false), BE_SYNTAX_ERROR, PATTERN,
+			"ressource,configuration",
 			code, i, node, fileroot, "false", "Error while loading ",
 			&buffer[0], whichline(code, i));
     }
   else
     scream_error_if(return (false), BE_SYNTAX_ERROR,  PATTERN,
+		    "ressource,configuration,syntax",
 		    code, i, node, fileroot, "false",
 		    "Unknow or unsupported directive ",
 		    "", whichline(code, i));
-  scream_log_if(PATTERN, code, i, node, fileroot, "false", "Success", "", whichline(code, i));
+  scream_log_if(PATTERN, "ressource,configuration",
+		code, i, node, fileroot, "false", "Success", "", whichline(code, i));
   return (true);
 }
 

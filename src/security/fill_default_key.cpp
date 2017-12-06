@@ -26,7 +26,7 @@ bool				bunny_fill_default_key(const char	*bunny_prog,
     def = key;
   buflen = def->length + sizeof(def->length);
   if (bunny_load_file(bunny_prog, (void**)&file, &siz) == false)
-    scream_error_if(return (false), bunny_errno, PATTERN, bunny_prog, key, "false");
+    scream_error_if(return (false), bunny_errno, PATTERN, "security", bunny_prog, key, "false");
   for (i = 0; i < siz - buflen; ++i)
     if (memcmp(file, def, buflen) == 0)
       {
@@ -34,7 +34,7 @@ bool				bunny_fill_default_key(const char	*bunny_prog,
 	  {
 	    i = errno;
 	    bunny_free(file);
-	    scream_error_if(return (false), i, PATTERN, bunny_prog, key, "false");
+	    scream_error_if(return (false), i, PATTERN, "security", bunny_prog, key, "false");
 	  }
 	lseek(fd, i, SEEK_SET);
 	if (write(fd, def, buflen) != buflen)
@@ -42,15 +42,15 @@ bool				bunny_fill_default_key(const char	*bunny_prog,
 	    i = errno;
 	    close(fd);
 	    bunny_free(file);
-	    scream_error_if(return (false), i, PATTERN, bunny_prog, key, "false");
+	    scream_error_if(return (false), i, PATTERN, "security", bunny_prog, key, "false");
 	  }
 	close(fd);
 	bunny_free(file);
-	scream_log_if(PATTERN, bunny_prog, key, "true");
+	scream_log_if(PATTERN, "security", bunny_prog, key, "true");
 	return (true);
       }
   bunny_free(file);
-  scream_error_if(return (false), BE_CANNOT_FIND_EMBEDDED_KEY, PATTERN, bunny_prog, key, "false");
+  scream_error_if(return (false), BE_CANNOT_FIND_EMBEDDED_KEY, PATTERN, "security", bunny_prog, key, "false");
   return (false);
 }
 

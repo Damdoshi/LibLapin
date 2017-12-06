@@ -26,6 +26,7 @@ Decision		lua_read_array(const char		*code,
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
        "The ']' token was expected to close the array opened on line %d, on line %d",
+       "configuration,ressource,syntax",
        line, whichline(code, i)
        );
   return (BD_OK);

@@ -27,6 +27,7 @@ Decision		csv_read(const char				*code,
 		  (return (BD_ERROR), BE_SYNTAX_ERROR,
 		   "%s code, %p config -> %p "
 		   "(Cannot load required file from line %d, column %d)",
+		   "ressource,configuration,syntax",
 		   code, &conf, (void*)NULL, y, x);
 	    }
 	  else if (readvalue(code, i, conf[y][x], ";\n") == false)
@@ -34,6 +35,7 @@ Decision		csv_read(const char				*code,
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
 	       "%s code, %p config -> %p "
 	       "(A correct value was expected on line %d, column %d)",
+	       "ressource,configuration,syntax",
 	       code, &conf, (void*)NULL, y, x);
 	  conf[y].construct = SmallConf::ARRAY;
 	  skipspace_inline(code, i);
@@ -65,6 +67,6 @@ t_bunny_configuration	*_bunny_read_csv(const char			*code,
       return (NULL);
     }
   SmallConf::create_mode = cmode;
-  scream_log_if("%s code, %p config -> %p", code, config, config);
+  scream_log_if("%s code, %p config -> %p", "ressource,configuration", code, config, config);
   return (config);
 }

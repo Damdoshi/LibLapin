@@ -39,6 +39,7 @@ bool			expr_compute_low_logic(Expression	&exp,
 	    scream_error_if
 	      (return (false), BE_BAD_ADDRESS,
 	       "Undefined variable or unresolvable address %s on line %d",
+	       "configuration,syntax",
 	       exp.operand[i]->val.original_value.c_str(), exp.line);
 	}
       else if (x.is_const == false)
@@ -48,9 +49,10 @@ bool			expr_compute_low_logic(Expression	&exp,
 	scream_error_if
 	  (return (false), BE_TYPE_ERROR,
 	   "Operator '||' and '^^' cannot use string as operand on line %d",
+	   "configuration,syntax",
 	   exp.line);
 
-      exp.operand[i]->val.GetInt(&tmp);
+      ope->GetInt(&tmp);
       if (i == 0)
 	res = !!tmp;
       else if (x.optor == Expression::BEO_LOGIC_OR)

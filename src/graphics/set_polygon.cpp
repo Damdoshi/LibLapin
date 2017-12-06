@@ -51,7 +51,7 @@ void			bunny_set_polygon(t_bunny_buffer		*buffer,
 
 	pic->window->draw(vert, 3, sf::Triangles);
 	scream_log_if
-	  (PATTERN, buffer, position,
+	  (PATTERN, "graphics", buffer, position,
 	   position[0].x, position[0].y,
 	   position[1].x, position[1].y,
 	   position[2].x, position[2].y,
@@ -68,7 +68,7 @@ void			bunny_set_polygon(t_bunny_buffer		*buffer,
 	  bunny_make_clipable_unique((t_bunny_clipable*)buffer);
 	pic->texture->draw(vert, 3, sf::Triangles);
 	scream_log_if
-	  (PATTERN, buffer, position,
+	  (PATTERN, "graphics", buffer, position,
 	   position[0].x, position[0].y,
 	   position[1].x, position[1].y,
 	   position[2].x, position[2].y,
@@ -88,7 +88,7 @@ void			bunny_set_polygon(t_bunny_buffer		*buffer,
 	    gl_bunny_my_set_polygon((t_bunny_pixelarray*)pix, position, color);
 	  }
 	scream_log_if
-	  (PATTERN, buffer, position,
+	  (PATTERN, "graphics", buffer, position,
 	   position[0].x, position[0].y,
 	   position[1].x, position[1].y,
 	   position[2].x, position[2].y,
@@ -97,7 +97,7 @@ void			bunny_set_polygon(t_bunny_buffer		*buffer,
       }
     default:
       scream_error_if
-	(return, EINVAL, PATTERN, buffer, position,
+	(return, EINVAL, PATTERN, "graphics", buffer, position,
 	 position[0].x, position[0].y,
 	 position[1].x, position[1].y,
 	 position[2].x, position[2].y,

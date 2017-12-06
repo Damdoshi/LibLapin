@@ -14,8 +14,8 @@ void			*bunny_plugin_get_function(const t_bunny_plugin	*plugin,
   void			*ret;
 
   if ((ret = (dlsym((void*)plugin->library_handler, name))) == NULL)
-    scream_error_if(return (NULL), EINVAL, PATTERN, plugin, name, (void*)NULL);
-  scream_log_if(PATTERN, plugin, name, ret);
+    scream_error_if(return (NULL), EINVAL, PATTERN, "plugin", plugin, name, (void*)NULL);
+  scream_log_if(PATTERN, "plugin", plugin, name, ret);
   return (ret);
 }
 

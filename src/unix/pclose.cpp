@@ -32,13 +32,13 @@ int			bunny_pclose(t_bunny_subprocess		*subproc,
       if (waitpid(subproc->pid, &status, 0) != -1)
 	{
 	  signal(SIGALRM, handler);
-	  scream_log_if("%p subprocess, %d delay -> %d", subproc, delay, status);
+	  scream_log_if("%p subprocess, %d delay -> %d", "unix", subproc, delay, status);
 	  return (status);
 	}
       signal(SIGALRM, handler);
     }
   kill(subproc->pid, SIGINT);
-  scream_log_if("%p subprocess, %d delay -> %d (Killed)", subproc, delay, 0);
+  scream_log_if("%p subprocess, %d delay -> %d (Killed)", "unix", subproc, delay, 0);
   return (0);
 }
 

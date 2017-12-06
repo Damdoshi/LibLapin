@@ -29,7 +29,7 @@ t_bunny_client		*bunny_new_client_opt(const char	*host,
   int			err;
 
   if ((bclt = (struct bunny_client*)bunny_malloc(sizeof(*bclt))) == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, host, port, local, bclt);
+    scream_error_if(return (NULL), bunny_errno, PATTERN, "network", host, port, local, bclt);
   ss << port;
   bclt->server = false;
   try
@@ -43,23 +43,23 @@ t_bunny_client		*bunny_new_client_opt(const char	*host,
 	{
 	  err = bunny_errno;
 	  bunny_free(bclt);
-	  scream_error_if(return (NULL), err, PATTERN, host, port, local, (void*)NULL);
+	  scream_error_if(return (NULL), err, PATTERN, "network", host, port, local, (void*)NULL);
 	}
     }
   catch (...)
     {
       bunny_free(bclt);
-      scream_error_if(return (NULL), ENOMEM, PATTERN, host, port, local, (void*)NULL);
+      scream_error_if(return (NULL), ENOMEM, PATTERN, "network", host, port, local, (void*)NULL);
     }
-  if ((bclt->c = strdup(host)) == NULL)
+  if ((bclt->c = bunny_strdup(host)) == NULL)
     {
       delete clt;
       bunny_free(bclt);
-      scream_error_if(return (NULL), ENOMEM, PATTERN, host, port, local, (void*)NULL);   
+      scream_error_if(return (NULL), ENOMEM, PATTERN, "network", host, port, local, (void*)NULL);
     }
   bclt->a = (void*)clt;
   bclt->b = clt->GetFd();
   bclt->d = port;
-  scream_log_if(PATTERN, host, port, local, bclt);
+  scream_log_if(PATTERN, "network", host, port, local, bclt);
   return ((t_bunny_client*)bclt);
 }

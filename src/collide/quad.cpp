@@ -15,7 +15,7 @@ bool			bunny_quad_collision_dot(const t_bunny_vertex_array		*v4,
   t_bunny_vertex_array	*t2 = (t_bunny_vertex_array*)bunny_alloca(sizeof(*t1) + 3 * sizeof(t1->vertex[0]));
 
   if (v4->length != 4)
-    scream_error_if(return (false), EINVAL, PATTERN, v4, dot, "false");
+    scream_error_if(return (false), EINVAL, PATTERN, "collision", v4, dot, "false");
 
   t1->length = 3;
   t1->vertex[0].pos.x = v4->vertex[0].pos.x;
@@ -27,7 +27,7 @@ bool			bunny_quad_collision_dot(const t_bunny_vertex_array		*v4,
 
   if (bunny_triangle_collision_dot(t1, dot))
     {
-      scream_log_if(PATTERN, v4, dot, "true");
+      scream_log_if(PATTERN, "collision", v4, dot, "true");
       bunny_freea(t1);
       bunny_freea(t2);
       return (true);
@@ -43,13 +43,13 @@ bool			bunny_quad_collision_dot(const t_bunny_vertex_array		*v4,
 
   if (bunny_triangle_collision_dot(t2, dot))
     {
-      scream_log_if(PATTERN, v4, dot, "true");
+      scream_log_if(PATTERN, "collision", v4, dot, "true");
       bunny_freea(t1);
       bunny_freea(t2);
       return (true);
     }
 
-  scream_log_if(PATTERN, v4, dot, "false");
+  scream_log_if(PATTERN, "collision", v4, dot, "false");
   bunny_freea(t1);
   bunny_freea(t2);
   return (false);

@@ -1,0 +1,12 @@
+
+integer j
+integer i
+
+i = 0
+j = 1
+While j
+  If (i = i + 1) > 10 Then
+    j = 0
+  "Loop! ", i, " ", j
+WEnd
+

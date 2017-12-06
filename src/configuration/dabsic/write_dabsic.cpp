@@ -51,7 +51,7 @@ static void		restore_prototype(std::stringstream			&ss,
   ss << "(";
   for (i = 0; i < (ssize_t)params.Size(); ++i)
     {
-      ss << params[i].original_value;
+      ss << params[i].original_value; // Il faut utiliser name et non original_value
       if (i + 1 < (ssize_t)params.Size())
 	ss << ", ";
     }
@@ -188,9 +188,9 @@ char			*_bunny_write_dabsic(const t_bunny_configuration	*config)
 
   restore_dabsic(ss, *(SmallConf*)config, 0);
   if ((ret = (char*)bunny_malloc(sizeof(*ret) * (ss.str().size() + 1))) == NULL)
-    scream_error_if(return (NULL), bunny_errno, "%p -> %s", config, ret);
+    scream_error_if(return (NULL), bunny_errno, "%p -> %s", "ressource,configuration", config, ret);
   strcpy(ret, ss.str().c_str());
-  scream_log_if("%p -> %s", config, ret);
+  scream_log_if("%p -> %s", "ressource,configuration", config, ret);
   return (ret);
 }
 

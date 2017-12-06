@@ -17,6 +17,6 @@ void			bunny_sound_pause(t_bunny_sound		*sound)
     ((struct bunny_music*)sound)->music.pause();
   else
     ((struct bunny_effect*)sound)->sound.pause();
-  scream_log_if("%p", sound);
+  scream_log_if("%p", "ressource,sound", sound);
 }
 

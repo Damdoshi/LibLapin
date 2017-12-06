@@ -13,8 +13,10 @@ bool			bunny_save_ini(t_bunny_ini		*ini,
   bool			b;
 
   if ((b = bunny_save_configuration(BC_INI, file, ini)) == false)
-    scream_error_if(return (false), bunny_errno, PATTERN, ini, file, "false");
-  scream_log_if(PATTERN, ini, file, "true");
+    scream_error_if
+      (return (false), bunny_errno, PATTERN,
+       "ressource,configuration", ini, file, "false");
+  scream_log_if(PATTERN, "ressource,configuration", ini, file, "true");
   return (true);
 }
 

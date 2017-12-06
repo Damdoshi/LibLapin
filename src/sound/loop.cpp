@@ -11,7 +11,7 @@ void			bunny_sound_loop(t_bunny_sound		*sound,
   enum _music_or_sound	*type = (enum _music_or_sound*)sound;
 
   sound->loop = lop;
-  scream_log_if("%p sound, %s loop", sound, lop ? "true" : "false");
+  scream_log_if("%p sound, %s loop", "ressource,sound", sound, lop ? "true" : "false");
   if (*type == MUSIC)
     ((struct bunny_music*)sound)->music.setLoop(lop);
   else

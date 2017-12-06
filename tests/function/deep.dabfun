@@ -1,17 +1,19 @@
 
- string lol = "lol"
+string lol = "this_is_lol"
+int zob = 1
 
- If Then
+If lol == "this_is_lol"
+   real rel = 4.2
    "Inside"
-   If Then
-      real rel = 4.2
-      If Then
-        "Very deep"
+   If 0 < rel < 42
+      If zob
+        "Very deep! Here thanks to the help of lol: '", lol, "' zob: '", zob, "' and rel: '", rel, "'!"
       EndIf
       "After deep"
    EndIf
-Else If Then
+Else If true
   "Else If"
 Else
-  "Else
+  "Else"
 EndIf
+

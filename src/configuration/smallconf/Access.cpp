@@ -13,9 +13,6 @@ bool			SmallConf::Access(const std::string		&str) const
 
 bool			SmallConf::Access(ssize_t			i) const
 {
-  std::stringstream		ss;
-
-  ss << std::setfill('0') << std::setw(8) << i;
-  return (nodes.find(ss.str()) != nodes.end());
+  return (i >= 0 && i < (ssize_t)array.size());
 }
 

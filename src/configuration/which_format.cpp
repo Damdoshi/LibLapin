@@ -15,7 +15,8 @@ static const char	*gl_extension[BC_CUSTOM] =
     ".xml",
     ".lua",
     ".csv",
-    ".json"
+    ".json",
+    ".lisp"
     //
   };
 

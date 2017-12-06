@@ -31,7 +31,7 @@ t_bunny_pool		*_bunny_new_pool(size_t			nmemb,
        (i = sizeof(struct bunny_pool)
 	+ size * nmemb
 	+ nmemb * sizeof(pol->array[0]))) == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, nmemb, size, (void*)NULL);
+    scream_error_if(return (NULL), bunny_errno, PATTERN, "container", nmemb, size, (void*)NULL);
   memset(pol, 0, i);
   pol->nmemb = nmemb;
   pol->elemsize = size;
@@ -41,7 +41,7 @@ t_bunny_pool		*_bunny_new_pool(size_t			nmemb,
       *((size_t*)ptr) = i;
       pol->array[i] = (void*)&((size_t*)ptr)[1];
     }
-  scream_log_if(PATTERN, nmemb, size, pol);
+  scream_log_if(PATTERN, "container", nmemb, size, pol);
   return ((t_bunny_pool*)pol);
 }
 
@@ -107,10 +107,10 @@ bool			bunny_pool_fast_foreach(t_bunny_threadpool *the,
 	    ++i;
 	  }
 	bunny_thread_wait_completion(the);
-	scream_error_if(return (false), err, PATTERN, the, pool, func, par, "false");
+	scream_error_if(return (false), err, PATTERN, "container", the, pool, func, par, "false");
       }
   bunny_thread_wait_completion(the);
-  scream_log_if(PATTERN, the, pool, func, par, "true");
+  scream_log_if(PATTERN, "container", the, pool, func, par, "true");
   return (true);
 }
 

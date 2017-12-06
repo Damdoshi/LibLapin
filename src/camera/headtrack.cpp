@@ -62,8 +62,10 @@ bool			bunny_camera_headtrack(const t_bunny_capture	*capture,
   cv::Mat		gray;
 
   if (fdump.dead())
-    scream_error_if(return (false),
-		    BE_CANT_GENERATE_RESSOURCE, PATTERN, capture, head, "false");
+    scream_error_if
+      (return (false),
+       BE_CANT_GENERATE_RESSOURCE, PATTERN, "camera",
+       capture, head, "false");
 
   if (fdump.is_loaded() == false)
     {
@@ -77,14 +79,14 @@ bool			bunny_camera_headtrack(const t_bunny_capture	*capture,
 
   if (faces.size() == 0)
     {
-      scream_log_if(PATTERN, capture, head, "false");
+      scream_log_if(PATTERN, "camera", capture, head, "false");
       return (false);
     }
   head->x = faces[0].x + faces[0].width * 0.2;
   head->y = faces[0].y + faces[0].width * 0.2;
   head->w = faces[0].width * 1.4;
   head->h = faces[0].height * 1.4;
-  scream_log_if(PATTERN, capture, head, "true");
+  scream_log_if(PATTERN, "camera", capture, head, "true");
   return (true);
 }
 

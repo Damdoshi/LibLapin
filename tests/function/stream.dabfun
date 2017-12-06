@@ -1,0 +1,10 @@
+
+int variable = 42
+
+$"Explicit On stdout"
+$variable
+"On stdout"
+1337
+
+!"On stderr"
+!variable

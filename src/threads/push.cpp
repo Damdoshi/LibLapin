@@ -48,7 +48,7 @@ bool			bunny_thread_push(t_bunny_threadpool		*pol,
   hbs::Work		*work;
 
   if ((work = new (std::nothrow) _Launcher(func, data, param)) == NULL)
-    scream_error_if(return (false), ENOMEM, PATTERN, pol, func, data, param, "false");
+    scream_error_if(return (false), ENOMEM, PATTERN, "thread", pol, func, data, param, "false");
   try
     {
       _ToDelete.push_back(work);
@@ -56,21 +56,21 @@ bool			bunny_thread_push(t_bunny_threadpool		*pol,
   catch (...)
     {
       delete work;
-      scream_error_if(return (false), ENOMEM, PATTERN, pol, func, data, param, "false");
+      scream_error_if(return (false), ENOMEM, PATTERN, "thread", pol, func, data, param, "false");
     }
   if (workers->Add(*work) == false)
     {
       _ToDelete.pop_back();
       delete work;
-      scream_error_if(return (false), bunny_errno, PATTERN, pol, func, data, param, "false");
+      scream_error_if(return (false), bunny_errno, PATTERN, "thread", pol, func, data, param, "false");
       return (false);
     }
-  scream_log_if(PATTERN, pol, func, data, param, "true");
+  scream_log_if(PATTERN, "thread", pol, func, data, param, "true");
   return (true);
 #else
   (void)pol;
   func(data, param);
-  scream_log_if(PATTERN, pol, func, data, param, "true");
+  scream_log_if(PATTERN, "thread", pol, func, data, param, "true");
   return (true);
 #endif
 }

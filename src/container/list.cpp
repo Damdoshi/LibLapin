@@ -16,6 +16,8 @@ struct			bunny_node
 
 struct			bunny_list
 {
+  t_bunny_constructor	ctor;
+  t_bunny_constructor	dtor;
   size_t		length;
   struct bunny_node	*front;
   struct bunny_node	*back;
@@ -34,7 +36,7 @@ size_t			bunny_delete_list(t_bunny_list		*list)
       nod = prev;
     }
   bunny_free(list);
-  scream_log_if("%p -> %zu", list, siz);
+  scream_log_if("%p -> %zu", "container", list, siz);
   return (siz);
 }
 
@@ -47,7 +49,7 @@ bool			_bunny_list_push_front(t_bunny_list	*list,
   struct bunny_node	*nod = (struct bunny_node*)bunny_malloc(sizeof(*nod));
 
   if (nod == NULL)
-    scream_error_if(return (false), bunny_errno, PATTERN, list, data, "false");
+    scream_error_if(return (false), bunny_errno, PATTERN, "container", list, data, "false");
   nod->prev = NULL;
   nod->next = lst->front;
   if (lst->front != NULL)
@@ -57,7 +59,7 @@ bool			_bunny_list_push_front(t_bunny_list	*list,
     lst->back = nod;
   nod->data = (void*)data;
   lst->length += 1;
-  scream_log_if(PATTERN, list, data, "true");
+  scream_log_if(PATTERN, "container", list, data, "true");
   return (true);
 }
 
@@ -68,7 +70,7 @@ bool			_bunny_list_push_back(t_bunny_list	*list,
   struct bunny_node	*nod = (struct bunny_node*)bunny_malloc(sizeof(*nod));
 
   if (nod == NULL)
-    scream_error_if(return (false), bunny_errno, PATTERN, list, data, "false");
+    scream_error_if(return (false), bunny_errno, PATTERN, "container", list, data, "false");
   nod->next = NULL;
   nod->prev = lst->back;
   if (lst->back != NULL)
@@ -78,7 +80,7 @@ bool			_bunny_list_push_back(t_bunny_list	*list,
     lst->front = nod;
   nod->data = (void*)data;
   lst->length += 1;
-  scream_log_if(PATTERN, list, data, "true");
+  scream_log_if(PATTERN, "container", list, data, "true");
   return (true);
 }
 
@@ -89,7 +91,7 @@ void			*_bunny_list_pop_front(t_bunny_list	*list)
   void			*dat;
 
   if ((nod = lst->front) == NULL)
-    scream_error_if(return (NULL), BE_CONTAINER_IS_EMPTY, "%p -> %p", list, nod);
+    scream_error_if(return (NULL), BE_CONTAINER_IS_EMPTY, "%p -> %p", "container", list, nod);
   if ((lst->front = nod->next) != NULL)
     lst->front->prev = NULL;
   else
@@ -97,7 +99,7 @@ void			*_bunny_list_pop_front(t_bunny_list	*list)
   dat = nod->data;
   bunny_free(nod);
   lst->length -= 1;
-  scream_log_if("%p -> %p", list, dat);
+  scream_log_if("%p -> %p", "container", list, dat);
   return (dat);
 }
 
@@ -108,7 +110,7 @@ void			*_bunny_list_pop_back(t_bunny_list	*list)
   void			*dat;
 
   if ((nod = lst->back) == NULL)
-    scream_error_if(return (NULL), BE_CONTAINER_IS_EMPTY, "%p -> %p", list, nod);
+    scream_error_if(return (NULL), BE_CONTAINER_IS_EMPTY, "%p -> %p", "container", list, nod);
   if ((lst->back = nod->prev) != NULL)
     lst->back->next = NULL;
   else
@@ -116,7 +118,7 @@ void			*_bunny_list_pop_back(t_bunny_list	*list)
   dat = nod->data;
   bunny_free(nod);
   lst->length -= 1;
-  scream_log_if("%p -> %p", list, dat);
+  scream_log_if("%p -> %p", "container", list, dat);
   return (dat);
 }
 
@@ -133,16 +135,16 @@ t_bunny_list		*bunny_list_filter(t_bunny_list		*list,
   t_bunny_node		*node;
 
   if (lst == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, list, filter, param, lst);
+    scream_error_if(return (NULL), bunny_errno, PATTERN, "container", list, filter, param, lst);
   for (node = bunny_list_begin(list); node != NULL; node = bunny_list_next(node))
     if (filter(node->data, param))
       if (bunny_list_push_back(lst, node->data) == false)
 	{
 	  bunny_delete_list(lst);
 	  scream_error_if
-	    (return (NULL), bunny_errno, PATTERN, list, filter, param, (void*)NULL);
+	    (return (NULL), bunny_errno, PATTERN, "container", list, filter, param, (void*)NULL);
 	}
-  scream_log_if(PATTERN, list, filter, param, lst);
+  scream_log_if(PATTERN, "container", list, filter, param, lst);
   return (lst);
 }
 
@@ -181,7 +183,7 @@ void			bunny_list_sort(t_bunny_list		*list,
   qsort_r(&array[0], bunny_list_size(list), sizeof(*array), to_qsort, &packet);
   for (node = bunny_list_begin(list), i = 0; node != NULL; node = bunny_list_next(node), ++i)
     node->data = (void*)array[i];
-  scream_log_if("%p list, %p compare_function, %p param", list, cmp, param);
+  scream_log_if("%p list, %p compare_function, %p param", "container", list, cmp, param);
   bunny_freea(array);
 }
 
@@ -195,11 +197,12 @@ t_bunny_vector		*_bunny_list_tie(const t_bunny_list	*lst,
   t_bunny_node		*nod;
   size_t		i;
 
-  if ((vec = bunny_new_vector(bunny_list_size(lst), elemsize)) == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, lst, elemsize, vec);
+  if ((vec = _bunny_new_vector
+       (bunny_list_size(lst), elemsize, NULL, NULL, NULL)) == NULL)
+    scream_error_if(return (NULL), bunny_errno, PATTERN, "container", lst, elemsize, vec);
   for (nod = bunny_list_begin(lst), i = 0; nod != NULL; nod = bunny_list_next(nod), ++i)
     memcpy(bunny_vector_address(vec, i), &bunny_list_data(nod, void*), elemsize);
-  scream_log_if(PATTERN, lst, elemsize, vec);
+  scream_log_if(PATTERN, "container", lst, elemsize, vec);
   return (vec);
 }
 
@@ -237,9 +240,9 @@ bool			bunny_list_fast_foreach(t_bunny_threadpool *pool,
 	    nod = bunny_list_next(nod);
 	  }
 	bunny_thread_wait_completion(pool);
-	scream_error_if(return (false), err, PATTERN, pool, list, func, par, "false");
+	scream_error_if(return (false), err, PATTERN, "container", pool, list, func, par, "false");
       }
   bunny_thread_wait_completion(pool);
-  scream_log_if(PATTERN, pool, list, func, par, "true");
+  scream_log_if(PATTERN, "container", pool, list, func, par, "true");
   return (true);
 }

@@ -13,10 +13,10 @@ const char		*bunny_configuration_get_name(const t_bunny_configuration	*config)
 
   if (conf->name == "@")
     {
-      scream_log_if(PATTERN, config, "");
+      scream_log_if(PATTERN, "configuration", config, "");
       return ("");
     }
-  scream_log_if(PATTERN, config, conf->name.c_str());
+  scream_log_if(PATTERN, "configuration", config, conf->name.c_str());
   return (conf->name.c_str());
 }
 

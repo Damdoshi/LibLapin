@@ -14,7 +14,7 @@ bool			bunny_configuration_get_string(const t_bunny_configuration *config,
 
   ret = conf->GetString(str);
   scream_log_if
-    ("%p conf, %p target  -> %s (%s)",
+    ("%p conf, %p target  -> %s (%s)", "configuration",
      config, str, ret ? "true" : "false", ret ? *str : "");
   return (ret);
 }
@@ -27,7 +27,7 @@ bool			bunny_configuration_get_double(const t_bunny_configuration *config,
 
   ret = conf->GetDouble(val);
   scream_log_if
-    ("%p conf, %p target  -> %s (%f)",
+    ("%p conf, %p target  -> %s (%f)", "configuration",
      config, val, ret ? "true" : "false", ret ? *val : nan(""));
   return (ret);
 }
@@ -40,7 +40,7 @@ bool			bunny_configuration_get_int(const t_bunny_configuration	*config,
 
   ret = conf->GetInt(val);
   scream_log_if
-    ("%p conf, %p target  -> %s (%d)",
+    ("%p conf, %p target  -> %s (%d)", "configuration",
      config, val, ret ? "true" : "false", ret ? *val : 0);
   return (ret);
 }

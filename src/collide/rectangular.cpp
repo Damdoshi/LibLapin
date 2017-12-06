@@ -12,7 +12,7 @@ bool			bunny_rectangular_collision_dot(const t_bunny_accurate_area	*elem,
 
   res = pos->x >= elem->x && pos->x < elem->x + elem->w &&
     pos->y >= elem->y && pos->y < elem->y + elem->h;
-  scream_log_if("%p area, %p dot -> %s", elem, pos, res ? "true" : "false");
+  scream_log_if("%p area, %p dot -> %s", "collision", elem, pos, res ? "true" : "false");
   return (res);
 }
 
@@ -23,7 +23,7 @@ bool			bunny_rectangular_collision(const t_bunny_accurate_area		*a,
 
   res = a->x < b->x + b->w && a->x + a->w > b->x &&
     a->y < b->y + b->h && a->y + a->h > b->y;
-  scream_log_if("%p area, %p area -> %s", a, b, res ? "true" : "false");
+  scream_log_if("%p area, %p area -> %s", "collision", a, b, res ? "true" : "false");
   return (res);
 }
 

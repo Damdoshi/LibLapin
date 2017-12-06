@@ -20,7 +20,7 @@ typedef enum			e_anim_state
 
 static t_bunny_response		splash_key(t_bunny_event_state		state,
 					   t_bunny_keysym		sym,
-					   t_bunny_splash_screen	*bss)
+					   struct bunny_splash_screen	*bss)
 {
   double			pitch;
 
@@ -42,7 +42,7 @@ static t_bunny_response		splash_key(t_bunny_event_state		state,
 
 static t_bunny_response		splash_click(t_bunny_event_state	state,
 					     t_bunny_mouse_button	button,
-					     t_bunny_splash_screen	*bss)
+					     struct bunny_splash_screen	*bss)
 {
   (void)state;
   (void)button;
@@ -50,13 +50,13 @@ static t_bunny_response		splash_click(t_bunny_event_state	state,
   return (GO_ON);
 }
 
-static void			step(t_bunny_splash_screen		*bss)
+static void			step(struct bunny_splash_screen		*bss)
 {
   bss->time_counter = 0;
   bss->animation_step += 1;
 }
 
-static t_bunny_response		splash_loop(t_bunny_splash_screen	*bss)
+static t_bunny_response		splash_loop(struct bunny_splash_screen	*bss)
 {
   double			mulspeed = bunny_get_keyboard()[BKS_SPACE] ? 3 : 1;
   double			speed = mulspeed * (1.0 / bunny_get_frequency());
@@ -161,7 +161,7 @@ static double		exp(double					x,
 }
 
 
-static t_bunny_response		splash_display(t_bunny_splash_screen	*bss)
+static t_bunny_response		splash_display(struct bunny_splash_screen *bss)
 {
   int				init, y;
 
@@ -231,10 +231,10 @@ static t_bunny_response		splash_display(t_bunny_splash_screen	*bss)
   if (bss->head.subcontext.display)
     return (bss->head.subcontext.display(bss));
   bunny_display((t_bunny_window*)bss->head.screen);
-  return (GO_ON);  
+  return (GO_ON);
 }
 
-static t_bunny_response		splash_entering(t_bunny_splash_screen	*bss)
+static t_bunny_response		splash_entering(struct bunny_splash_screen *bss)
 {
   if ((bss->bunny = bunny_load_picture(bss->bunny_picture_file)) == NULL)
     goto DeleteBunny;
@@ -288,7 +288,7 @@ static t_bunny_response		splash_entering(t_bunny_splash_screen	*bss)
 }
 
 static void			splash_leaving(t_bunny_response		resp,
-					       t_bunny_splash_screen	*bss)
+					       struct bunny_splash_screen *bss)
 {
   (void)resp;
   bunny_delete_sound(&bss->outch->sound);

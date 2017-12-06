@@ -29,7 +29,7 @@ void			bunny_fill(t_bunny_buffer		*picture,
 	sh.setSize(sf::Vector2f(win->width, win->height));
 	sh.setPosition(0, 0);
 	win->window->draw(sh);
-	scream_log_if(PATTERN, picture, (void*)(size_t)_color);
+	scream_log_if(PATTERN, "graphics", picture, (void*)(size_t)_color);
 	return ;
       }
     case TTF_TEXT:
@@ -44,7 +44,7 @@ void			bunny_fill(t_bunny_buffer		*picture,
 	sh.setSize(sf::Vector2f(rect.width, rect.height));
 	sh.setPosition(rect.left, rect.top);
 	pic->texture->draw(sh);
-	scream_log_if(PATTERN, picture, (void*)(size_t)_color);
+	scream_log_if(PATTERN, "graphics", picture, (void*)(size_t)_color);
 	return ;
       }
     case SYSTEM_RAM:
@@ -59,11 +59,12 @@ void			bunny_fill(t_bunny_buffer		*picture,
 	      bunny_make_clipable_unique((t_bunny_clipable*)pix);
 	    gl_bunny_my_fill((t_bunny_pixelarray*)pix, _color);
 	  }
-       	scream_log_if(PATTERN, picture, (void*)(size_t)_color);
+       	scream_log_if(PATTERN, "graphics", picture, (void*)(size_t)_color);
 	return ;
       }
     default:
-      scream_error_if(return, EINVAL, PATTERN, picture, (void*)(size_t)_color);
+      scream_error_if
+	(return, EINVAL, PATTERN, "graphics", picture, (void*)(size_t)_color);
     }
 }
 

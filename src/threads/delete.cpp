@@ -12,6 +12,6 @@ void			bunny_delete_threadpool(t_bunny_threadpool		*pol)
   delete (hbs::Workers*)pol->_private;
 #endif
   bunny_free(pol);
-  scream_log_if("%p", pol);
+  scream_log_if("%p", "thread", pol);
 }
 

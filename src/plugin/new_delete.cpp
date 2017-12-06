@@ -20,7 +20,7 @@ t_bunny_plugin			*bunny_new_plugin(const char			*libfile)
 
   // Load lib and get function list
   if ((handler = dlopen(libfile, RTLD_NOW)) == NULL)
-    scream_error_if(return (NULL), EINVAL, PATTERN, libfile, handler);
+    scream_error_if(return (NULL), EINVAL, PATTERN, "ressource,plugin", libfile, handler);
 
   if ((func = (t_bunny_get_function_list)dlsym(handler, "__get_function_list")) == NULL)
     {
@@ -54,7 +54,7 @@ t_bunny_plugin			*bunny_new_plugin(const char			*libfile)
       memcpy(&proto->parameters[0], &list[nbrfunc].parameters[0], sizeof(proto->parameters));
     }
 
-  scream_log_if(PATTERN, libfile, plug);
+  scream_log_if(PATTERN, "ressource,plugin", libfile, plug);
   return ((t_bunny_plugin*)plug);
 
  unsupported_format:
@@ -68,9 +68,9 @@ t_bunny_plugin			*bunny_new_plugin(const char			*libfile)
  closelib:
   dlclose(handler);
   if (last_param)
-    scream_error_if(return (NULL), bunny_errno, PATTERN " (Function %s have an unsupported format)", libfile, (void*)NULL, last_param);
+    scream_error_if(return (NULL), bunny_errno, PATTERN " (Function %s have an unsupported format)", "ressource,plugin", libfile, (void*)NULL, last_param);
   else
-    scream_error_if(return (NULL), bunny_errno, PATTERN, libfile, (void*)NULL);
+    scream_error_if(return (NULL), bunny_errno, PATTERN, "ressource,plugin", libfile, (void*)NULL);
   return (NULL);
 }
 
@@ -79,7 +79,7 @@ void				bunny_delete_plugin(t_bunny_plugin	*plugin)
   free((void*)plugin->name);
   dlclose((void*)plugin->library_handler);
   bunny_free(plugin);
-  scream_log_if("%p", plugin);
+  scream_log_if("%p", "ressource,plugin", plugin);
 }
 
 

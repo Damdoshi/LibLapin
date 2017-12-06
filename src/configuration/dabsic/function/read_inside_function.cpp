@@ -24,6 +24,7 @@ Decision		dabsic_read_inside_function(const char	*code,
 	    scream_error_if
 	      (return (BD_ERROR), ENOMEM,
 	       "Memory exhausted while processing function on line %d",
+	       "ressource,configuration",
 	       whichline(code, i)
 	       );
 	  }
@@ -39,12 +40,14 @@ Decision		dabsic_read_inside_function(const char	*code,
   while (ret != BD_NOT_FOUND);
 
   while (code[i] != '\0' && code[i] != ']'
-	 && bunny_check_text(code, &i, "Else") == false
-	 && bunny_check_text(code, &i, "EndIf") == false
-	 && bunny_check_text(code, &i, "EndWhile") == false
-	 && bunny_check_text(code, &i, "WEnd") == false
-	 && bunny_check_text(code, &i, "EndFor") == false
-	 && bunny_check_text(code, &i, "Next") == false)
+	 && checktextcase(code, i, "Else") == false
+	 && checktextcase(code, i, "EndIf") == false
+	 && checktextcase(code, i, "EndWhile") == false
+	 && checktextcase(code, i, "WEnd") == false
+	 && checktextcase(code, i, "EndFor") == false
+	 && checktextcase(code, i, "Next") == false
+	 && checktextcase(code, i, "AgainIf") == false
+	 && checktextcase(code, i, "Until") == false)
     {
       if (func.lines.size() <= func.nbr_lines)
 	func.lines.resize(func.lines.size() + 16);
@@ -52,6 +55,7 @@ Decision		dabsic_read_inside_function(const char	*code,
 	  (code, i, func.lines[func.nbr_lines], funcnode, root) == BD_ERROR)
 	return (BD_ERROR);
       func.nbr_lines += 1;
+      dabsic_read_separator(code, i);
     }
   return (BD_OK);
 }

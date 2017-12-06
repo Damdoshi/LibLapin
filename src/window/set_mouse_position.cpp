@@ -10,11 +10,11 @@ void				bunny_set_mouse_position_window(const t_bunny_window	*_win,
 								int			y)
 {
   const struct bunny_window	*win = (const struct bunny_window*)_win;
-  
+
   sf::Mouse::setPosition(sf::Vector2i(x, y), *win->window);
   gl_mouse.x = x;
   gl_mouse.y = y;
-  scream_log_if("%p window, %d x, %d y", win, x, y);
+  scream_log_if("%p window, %d x, %d y", "mouse,window", win, x, y);
 }
 
 void				bunny_set_mouse_position(int				x,
@@ -23,6 +23,6 @@ void				bunny_set_mouse_position(int				x,
   sf::Mouse::setPosition(sf::Vector2i(x, y));
   gl_mouse.x = x;
   gl_mouse.y = y;
-  scream_log_if("%d x, %d y", x, y);
+  scream_log_if("%d x, %d y", "mouse", x, y);
 }
 

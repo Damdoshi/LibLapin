@@ -28,5 +28,5 @@ void			bunny_delete_sound(t_bunny_sound		*sound)
 	}
       delete ((struct bunny_effect*)sound);
     }
-  scream_log_if("%p", sound);
+  scream_log_if("%p", "ressource,sound", sound);
 }

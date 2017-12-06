@@ -17,17 +17,32 @@ Decision		dabsic_read_if(const char	*code,
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "A value or expression was expected after 'if' on line %d",
+	   "ressource,configuration,syntax",
 	   whichline(code, i)
 	   );
       dabsic_read_separator(code, i);
-      if (readtext(code, i, "Then"))
-	dabsic_read_separator(code, i);
+      if (readtextcase(code, i, "Then")) // Then mean a single statement inside
+	{
+	  dabsic_read_separator(code, i);
+	  if (func.lines.size() <= func.nbr_lines)
+	    func.lines.resize(func.lines.size() + 1);
+	  func.nbr_lines += 1;
+	  if (dabsic_read_statement
+	      (code, i, func.lines[0], funcnode, root) == BD_ERROR)
+	    scream_error_if
+	      (return (BD_ERROR), BE_SYNTAX_ERROR,
+	       "A value or expression was expected after 'then' on line %d",
+	       "ressource,configuration,syntax",
+	       whichline(code, i)
+	       );
+	  return (BD_OK);
+	}
     }
 
   if (dabsic_read_inside_function(code, i, &func, funcnode, root) == BD_ERROR)
     return (BD_ERROR);
 
-  if (readtext(code, i, "EndIf"))
+  if (readtextcase(code, i, "EndIf"))
     {
       dabsic_read_separator(code, i);
       return (BD_OK);
@@ -36,13 +51,15 @@ Decision		dabsic_read_if(const char	*code,
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
        "The EndIf token was expected on line %d",
+       "ressource,configuration,syntax",
        whichline(code, i)
        );
 
-  if (readtext(code, i, "Else") == false)
+  if (readtextcase(code, i, "Else") == false)
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
        "EndIf or Else/Else If was expected at the end of a If statement on line %d",
+       "ressource,configuration,syntax",
        whichline(code, i)
        );
   dabsic_read_separator(code, i);
@@ -53,7 +70,7 @@ Decision		dabsic_read_if(const char	*code,
 
   func.nbr_lines += 1;
   dabsic_read_separator(code, i);
-  if (readtext(code, i, "If"))
+  if (readtextcase(code, i, "If"))
     {
       newfunc.command = Function::ELSE_IF;
       return (dabsic_read_if(code, i, newfunc, funcnode, root));

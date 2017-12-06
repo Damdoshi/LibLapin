@@ -13,9 +13,9 @@ t_bunny_pixelarray	*bunny_capture_new_pixelarray(const t_bunny_capture	*capture)
   t_bunny_pixelarray	*pix;
 
   if ((pix = bunny_new_pixelarray(mat->cols, mat->rows)) == NULL)
-    scream_error_if(return (NULL), bunny_errno, "%p -> %p", capture, pix);
+    scream_error_if(return (NULL), bunny_errno, "%p -> %p", "camera", capture, pix);
   memcpy(pix->pixels, mat->data, mat->cols * mat->rows * sizeof(t_bunny_color));
-  scream_log_if("%p -> %p", capture, pix);
+  scream_log_if("%p -> %p", "camera", capture, pix);
   return (pix);
 }
 

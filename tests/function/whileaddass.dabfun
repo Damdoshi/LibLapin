@@ -1,0 +1,7 @@
+
+int i = 0
+
+While i < 10
+  "Loop ", i
+  i += 1
+WEnd

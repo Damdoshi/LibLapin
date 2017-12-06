@@ -113,6 +113,7 @@
 # include			"lapin/buffer.h"
 # include			"lapin/window.h"
 # include			"lapin/graphics.h"
+# include			"lapin/shader.h"
 # include			"lapin/network.h"
 # include			"lapin/events.h"
 # include			"lapin/plugin.h"
@@ -128,16 +129,12 @@
 # include			"lapin/camera.h"
 # include			"lapin/fixedpoint.h"
 
-# include			"lapin/stack.h"
-# include			"lapin/astack.h"
-# include			"lapin/queue.h"
-# include			"lapin/list.h"
-# include			"lapin/map.h"
-# include			"lapin/vector.h"
-# include			"lapin/pool.h"
-# include			"lapin/bitfield.h"
-
+# include			"lapin/container.h"
 # include			"lapin/context.h"
+
+# include			"lapin/sprite.h"
+# include			"lapin/tilemap.h"
+
 # include			"lapin/monitor.h"
 # include			"lapin/misc.h"
 

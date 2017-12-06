@@ -18,7 +18,7 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
   if (bunny_which_format(file) != BC_CUSTOM)
     {
       t_bunny_picture	*pc = NULL;
-      
+
       if (bunny_set_clipable_attribute(file, &pc, NULL, false) == false)
 	return (NULL);
       return (pc);
@@ -70,7 +70,7 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
   pic->rotation = 0;
   pic->color_mask.full = WHITE;
 
-  scream_log_if(PATTERN, file, pic);
+  scream_log_if(PATTERN, "ressource,graphics", file, pic);
   return ((t_bunny_picture*)pic);
 
  DeleteRenderTexture:
@@ -80,6 +80,6 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
  DeleteStructure:
   delete pic;
  ReturnNull:
-  scream_error_if(return (NULL), ENOMEM, PATTERN, file, (void*)NULL);
+  scream_error_if(return (NULL), ENOMEM, PATTERN, "ressource,graphics", file, (void*)NULL);
   return (NULL);
 }

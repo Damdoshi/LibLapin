@@ -15,7 +15,7 @@ void			bunny_smooth_move(const t_bunny_position	*target,
   res.y = speed * (target->y - current->y) + current->y;
   current->x = res.x;
   current->y = res.y;
-  scream_log_if("%p (%d, %d) target, %p (%d, %d) current, %f speed",
+  scream_log_if("%p (%d, %d) target, %p (%d, %d) current, %f speed", "misc",
 		target, target->x, target->y,
 		current, current->x, current->y,
 		speed);

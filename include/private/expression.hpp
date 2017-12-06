@@ -157,13 +157,13 @@ void				expr_read_separator(const char		*code,
 						    ssize_t		&i);
 
 
-bool				expr_compute(Expression			&expr,
+bool				expr_compute(SmallConf			&expr,
 					     bool			dry,
 					     SmallConf			*root,
 					     SmallConf			*local,
 					     SmallConf			*artif,
 					     SmallConf			*param);
-bool				expr_precompute(Expression		&expr);
+bool				expr_precompute(SmallConf		&expr);
 
 char				*_bunny_write_expression(const
 							 t_bunny_configuration
@@ -178,5 +178,6 @@ bool				expr_test_type(SmallConf		&ope,
 					       int			a = -1,
 					       int			b = -1,
 					       int			c = -1);
+bool				check_keywords(const std::string	&str);
 
 #endif	/*			__LAPIN_PRIVATE_EXPRESSION_HPP__	*/

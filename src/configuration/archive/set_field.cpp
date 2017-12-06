@@ -25,24 +25,29 @@ void			bunny_ini_set_field(t_bunny_ini		*ini,
 	{
 	  SmallConf::create_mode = create;
 	  scream_error_if
-	    (return, bunny_errno, PATTERN, ini, scope, field, index, value);
+	    (return, bunny_errno, PATTERN,
+	     "configuration", ini, scope, field, index, value);
 	}
     }
   if ((cnf = bunny_configuration_get_child(cnf, field)) == NULL)
     {
       SmallConf::create_mode = create;
-      scream_error_if(return, bunny_errno, PATTERN, ini, scope, field, index, value);
+      scream_error_if
+	(return, bunny_errno, PATTERN,
+	 "configuration", ini, scope, field, index, value);
     }
   if ((cnf = bunny_configuration_get_case(cnf, index)) == NULL)
     {
       SmallConf::create_mode = create;
-      scream_error_if(return, bunny_errno, PATTERN, ini, scope, field, index, value);
+      scream_error_if
+	(return, bunny_errno, PATTERN,
+	 "configuration", ini, scope, field, index, value);
     }
   if (value == NULL)
     bunny_delete_configuration(cnf);
   else
     bunny_configuration_set_string(cnf, value);
   SmallConf::create_mode = create;
-  scream_log_if(PATTERN, ini, scope, field, index, value);
+  scream_log_if(PATTERN, "configuration", ini, scope, field, index, value);
 }
 

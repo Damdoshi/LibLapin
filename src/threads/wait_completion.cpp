@@ -29,7 +29,7 @@ void			bunny_thread_wait_completion(t_bunny_threadpool	*pol)
     usleep(300);
   while (w->GetMessage(msg));
   _ClearWorkers();
-  scream_log_if("%p", pol);
+  scream_log_if("%p", "thread", pol);
 }
 
 #else
@@ -37,7 +37,7 @@ void			bunny_thread_wait_completion(t_bunny_threadpool	*pol)
 void			bunny_thread_wait_completion(t_bunny_threadpool	*pol)
 {
   (void)pol;
-  scream_log_if("%p", pol);
+  scream_log_if("%p", "thread", pol);
 }
 
 #endif

@@ -24,6 +24,7 @@ Decision		dabsic_read_array(const char		*code,
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
 	       "Setting a new name to an already named node on line %d",
+	       "configuration,syntax",
 	       whichline(code, i)
 	       );
 	  if (conf.father->nodes.find(conf.name) != conf.father->nodes.end())
@@ -48,6 +49,7 @@ Decision		dabsic_read_array(const char		*code,
       (return (BD_ERROR), BE_SYNTAX_ERROR,
        "The token ']' or '}' was expected to close the "
        "array scope opened on line %d, on line %d",
+       "configuration,syntax",
        line, whichline(code, i)
        );
   dabsic_read_separator(code, i);

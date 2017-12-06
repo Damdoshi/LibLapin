@@ -11,7 +11,7 @@ void			bunny_sound_attenuation(t_bunny_sound		*sound,
   enum _music_or_sound	*type = (enum _music_or_sound*)sound;
 
   sound->attenuation = att;
-  scream_log_if("%p sound, %f attenuation", sound, att);
+  scream_log_if("%p sound, %f attenuation", "ressource,sound", sound, att);
   if (*type == MUSIC)
     ((struct bunny_music*)sound)->music.setAttenuation(att);
   else

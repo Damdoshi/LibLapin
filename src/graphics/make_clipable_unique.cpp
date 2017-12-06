@@ -23,15 +23,15 @@ bool			bunny_make_clipable_unique(t_bunny_clipable	*clip)
 	if (RessourceManager.IsAlone(ResManager::SF_RENDERTEXTURE, pic->res_id, pic))
 	  {
 	    RessourceManager.Extract(ResManager::SF_RENDERTEXTURE, pic->res_id, pic);
-	    scream_log_if(PATTERN, clip, "true");
+	    scream_log_if(PATTERN, "graphics", clip, "true");
 	    return (true);
 	  }
 	if ((rtex = new (std::nothrow) sf::RenderTexture) == NULL)
-	  scream_error_if(return (false), ENOMEM, PATTERN, clip, "false");
+	  scream_error_if(return (false), ENOMEM, PATTERN, "graphics", clip, "false");
 	if (rtex->create(pic->texture->getSize().x, pic->texture->getSize().y) == false)
 	  {
 	    delete rtex;
-	    scream_error_if(return (false), ENOMEM, PATTERN, clip, "false");
+	    scream_error_if(return (false), ENOMEM, PATTERN, "graphics", clip, "false");
 	  }
 
 	RessourceManager.TryRemove(ResManager::SF_RENDERTEXTURE, pic->res_id, pic);
@@ -44,7 +44,7 @@ bool			bunny_make_clipable_unique(t_bunny_clipable	*clip)
 	rtex->draw(*pic->sprite, state);
 	rtex->display();
 	pic->texture = rtex;
-	scream_log_if(PATTERN, clip, "true");
+	scream_log_if(PATTERN, "graphics", clip, "true");
 	return (true);
       }
     case SYSTEM_RAM:
@@ -61,23 +61,23 @@ bool			bunny_make_clipable_unique(t_bunny_clipable	*clip)
 	    RessourceManager.Extract(ResManager::SF_IMAGE, pic->res_id, pic);
 	    RessourceManager.Extract(ResManager::SF_TEXTURE, pic->res_id, pic);
 	    RessourceManager.Extract(ResManager::BUNNY_PIXELS, pic->res_id, pic);
-	    scream_log_if(PATTERN, clip, "true");
+	    scream_log_if(PATTERN, "graphics", clip, "true");
 	    return (true);
 	  }
 
 	if ((img = new (std::nothrow) sf::Image) == NULL)
-	  scream_error_if(return (false), ENOMEM, PATTERN, clip, "false");
+	  scream_error_if(return (false), ENOMEM, PATTERN, "graphics", clip, "false");
 	img->create(pic->width, pic->height);
 	if (img->getSize() != pic->tex->getSize() || (tex = new (std::nothrow) sf::Texture) == NULL)
 	  {
 	    delete img;
-	    scream_error_if(return (false), ENOMEM, PATTERN, clip, "false");
+	    scream_error_if(return (false), ENOMEM, PATTERN, "graphics", clip, "false");
 	  }
 	if ((pixels = (unsigned int*)bunny_malloc(pic->width * pic->height * sizeof(*pixels))) == NULL)
 	  {
 	    delete img;
 	    delete tex;
-	    scream_error_if(return (false), bunny_errno, PATTERN, clip, "false");
+	    scream_error_if(return (false), bunny_errno, PATTERN, "graphics", clip, "false");
 	  }
 
 	RessourceManager.TryRemove(ResManager::SF_TEXTURE, pic->res_id, pic);
@@ -90,11 +90,11 @@ bool			bunny_make_clipable_unique(t_bunny_clipable	*clip)
 	pic->image = img;
 	pic->tex = tex;
 	pic->sprite->setTexture(*pic->tex);
-	scream_log_if(PATTERN, clip, "true");
+	scream_log_if(PATTERN, "graphics", clip, "true");
 	return (true);
       }
     default:
-      scream_error_if(return (false), EINVAL, PATTERN, clip, "false");
+      scream_error_if(return (false), EINVAL, PATTERN, "graphics", clip, "false");
     }
   // Never
   return (true);

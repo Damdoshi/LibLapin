@@ -3,6 +3,7 @@
 //
 // Lapin library
 
+#include		<iostream>
 #include		"lapin_private.h"
 
 bool			expr_compute_assign(Expression		&exp,
@@ -12,8 +13,8 @@ bool			expr_compute_assign(Expression		&exp,
 					    SmallConf		*artif,
 					    SmallConf		*param)
 {
+  SmallConf		*ope;
   int			i;
-
 
   if (exp.operand[exp.operand.size() - 1]->optor_family != -1)
     {
@@ -26,7 +27,7 @@ bool			expr_compute_assign(Expression		&exp,
   for (i = exp.operand.size() - 2; i >= 0; --i)
     {
       Expression	&x = *exp.operand[i];
-      SmallConf		*ope;
+      Expression	&typ = *exp.operand[i + 1];
 
       if (x.optor_family == -1)
 	{} // Operand
@@ -42,37 +43,39 @@ bool			expr_compute_assign(Expression		&exp,
 	    scream_error_if
 	      (return (false), BE_BAD_ADDRESS,
 	       "Undefined variable or unresolvable address %s on line %d",
+	       "ressource,configuration,syntax",
 	       exp.operand[i]->val.original_value.c_str(), exp.line);
 	}
       else
 	scream_error_if
 	  (return (false), BE_BAD_ADDRESS,
 	   "A variable was expected as lvalue for assignation on line %d",
+	   "ressource,configuration,syntax",
 	   exp.line);
 
       if (i < (int)exp.operand.size() - 1 && dry == false)
 	{
-	  if (x.optor == Expression::BEO_ASSIGN)
+	  if (typ.optor == Expression::BEO_ASSIGN)
 	    *ope = exp.operand[i + 1]->val;
-	  else if (x.optor == Expression::BEO_REC_ASSIGN)
+	  else if (typ.optor == Expression::BEO_REC_ASSIGN)
 	    {
 	      if (SmallConf::RecursiveAssign
 		  (*ope, exp.operand[i + 1]->val, true, true) == false)
 		return (false);
 	    }
-	  else if (x.optor == Expression::BEO_ARRAY_ASSIGN)
+	  else if (typ.optor == Expression::BEO_ARRAY_ASSIGN)
 	    {
 	      if (SmallConf::RecursiveAssign
 		  (*ope, exp.operand[i + 1]->val, false, true) == false)
 		return (false);
 	    }
-	  else if (x.optor == Expression::BEO_HASH_ASSIGN)
+	  else if (typ.optor == Expression::BEO_HASH_ASSIGN)
 	    {
 	      if (SmallConf::RecursiveAssign
 		  (*ope, exp.operand[i + 1]->val, true, false) == false)
 		return (false);
 	    }
-	  else if (x.optor == Expression::BEO_LOR_ASSIGN)
+	  else if (typ.optor == Expression::BEO_LOR_ASSIGN)
 	    {
 	      int	a, b;
 
@@ -81,6 +84,7 @@ bool			expr_compute_assign(Expression		&exp,
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '||=' expect numeric types on line %d",
+		   "ressource,configuration,syntax",
 		   exp.line);
 	      if (ope->GetInt(&a) == false
 		  || exp.operand[i + 1]->val.GetInt(&b) == false)
@@ -88,7 +92,7 @@ bool			expr_compute_assign(Expression		&exp,
 	      a = !!a || !!b;
 	      ope->SetInt(a);
 	    }
-	  else if (x.optor == Expression::BEO_LXOR_ASSIGN)
+	  else if (typ.optor == Expression::BEO_LXOR_ASSIGN)
 	    {
 	      int	a, b;
 
@@ -97,6 +101,7 @@ bool			expr_compute_assign(Expression		&exp,
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '^^=' expect numeric types on line %d",
+		   "ressource,configuration,syntax",
 		   exp.line);
 	      if (ope->GetInt(&a) == false
 		  || exp.operand[i + 1]->val.GetInt(&b) == false)
@@ -104,7 +109,7 @@ bool			expr_compute_assign(Expression		&exp,
 	      a = (!!a != !!b);
 	      ope->SetInt(a);
 	    }
-	  else if (x.optor == Expression::BEO_LAND_ASSIGN)
+	  else if (typ.optor == Expression::BEO_LAND_ASSIGN)
 	    {
 	      int	a, b;
 
@@ -113,6 +118,7 @@ bool			expr_compute_assign(Expression		&exp,
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '&&=' expect numeric types on line %d",
+		   "ressource,configuration,syntax",
 		   exp.line);
 	      if (ope->GetInt(&a) == false
 		  || exp.operand[i + 1]->val.GetInt(&b) == false)
@@ -121,7 +127,7 @@ bool			expr_compute_assign(Expression		&exp,
 	      ope->SetInt(a);
 	    }
 
-	  else if (x.optor == Expression::BEO_BOR_ASSIGN)
+	  else if (typ.optor == Expression::BEO_BOR_ASSIGN)
 	    {
 	      int	a, b;
 
@@ -130,6 +136,7 @@ bool			expr_compute_assign(Expression		&exp,
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '|=' expect integer types on line %d",
+		   "ressource,configuration,syntax",
 		   exp.line);
 	      if (ope->GetInt(&a) == false
 		  || exp.operand[i + 1]->val.GetInt(&b) == false)
@@ -137,7 +144,7 @@ bool			expr_compute_assign(Expression		&exp,
 	      a = a | b;
 	      ope->SetInt(a);
 	    }
-	  else if (x.optor == Expression::BEO_BXOR_ASSIGN)
+	  else if (typ.optor == Expression::BEO_BXOR_ASSIGN)
 	    {
 	      int	a, b;
 
@@ -146,6 +153,7 @@ bool			expr_compute_assign(Expression		&exp,
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '^=' expect integer types on line %d",
+		   "ressource,configuration,syntax",
 		   exp.line);
 	      if (ope->GetInt(&a) == false
 		  || exp.operand[i + 1]->val.GetInt(&b) == false)
@@ -153,7 +161,7 @@ bool			expr_compute_assign(Expression		&exp,
 	      a = (a ^ b);
 	      ope->SetInt(a);
 	    }
-	  else if (x.optor == Expression::BEO_BAND_ASSIGN)
+	  else if (typ.optor == Expression::BEO_BAND_ASSIGN)
 	    {
 	      int	a, b;
 
@@ -162,6 +170,7 @@ bool			expr_compute_assign(Expression		&exp,
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '&=' expect integer types on line %d",
+		   "ressource,configuration,syntax",
 		   exp.line);
 	      if (ope->GetInt(&a) == false
 		  || exp.operand[i + 1]->val.GetInt(&b) == false)
@@ -170,7 +179,7 @@ bool			expr_compute_assign(Expression		&exp,
 	      ope->SetInt(a);
 	    }
 
-	  else if (x.optor == Expression::BEO_LSHIFT_ASSIGN)
+	  else if (typ.optor == Expression::BEO_LSHIFT_ASSIGN)
 	    {
 	      int	a, b;
 
@@ -179,6 +188,7 @@ bool			expr_compute_assign(Expression		&exp,
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '<<=' expect integer types on line %d",
+		   "ressource,configuration,syntax",
 		   exp.line);
 	      if (ope->GetInt(&a) == false
 		  || exp.operand[i + 1]->val.GetInt(&b) == false)
@@ -186,7 +196,7 @@ bool			expr_compute_assign(Expression		&exp,
 	      a = (a << b);
 	      ope->SetInt(a);
 	    }
-	  else if (x.optor == Expression::BEO_RSHIFT_ASSIGN)
+	  else if (typ.optor == Expression::BEO_RSHIFT_ASSIGN)
 	    {
 	      int	a, b;
 
@@ -195,6 +205,7 @@ bool			expr_compute_assign(Expression		&exp,
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '>>=' expect integer types on line %d",
+		   "ressource,configuration,syntax",
 		   exp.line);
 	      if (ope->GetInt(&a) == false
 		  || exp.operand[i + 1]->val.GetInt(&b) == false)
@@ -203,7 +214,7 @@ bool			expr_compute_assign(Expression		&exp,
 	      ope->SetInt(a);
 	    }
 
-	  else if (x.optor == Expression::BEO_ADD_ASSIGN)
+	  else if (typ.optor == Expression::BEO_ADD_ASSIGN)
 	    {
 	      double	a, b;
 
@@ -212,6 +223,7 @@ bool			expr_compute_assign(Expression		&exp,
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '+=' expect numeric types on line %d",
+		   "ressource,configuration,syntax",
 		   exp.line);
 	      if (ope->GetDouble(&a) == false
 		  || exp.operand[i + 1]->val.GetDouble(&b) == false)
@@ -223,7 +235,7 @@ bool			expr_compute_assign(Expression		&exp,
 	      else
 		ope->SetInt(a);
 	    }
-	  else if (x.optor == Expression::BEO_SUB_ASSIGN)
+	  else if (typ.optor == Expression::BEO_SUB_ASSIGN)
 	    {
 	      double	a, b;
 
@@ -232,6 +244,7 @@ bool			expr_compute_assign(Expression		&exp,
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '-=' expect numeric types on line %d",
+		   "ressource,configuration,syntax",
 		   exp.line);
 	      if (ope->GetDouble(&a) == false
 		  || exp.operand[i + 1]->val.GetDouble(&b) == false)
@@ -243,7 +256,7 @@ bool			expr_compute_assign(Expression		&exp,
 	      else
 		ope->SetInt(a);
 	    }
-	  else if (x.optor == Expression::BEO_MUL_ASSIGN)
+	  else if (typ.optor == Expression::BEO_MUL_ASSIGN)
 	    {
 	      double	a, b;
 
@@ -252,6 +265,7 @@ bool			expr_compute_assign(Expression		&exp,
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '*=' expect numeric types on line %d",
+		   "ressource,configuration,syntax",
 		   exp.line);
 	      if (ope->GetDouble(&a) == false
 		  || exp.operand[i + 1]->val.GetDouble(&b) == false)
@@ -263,7 +277,7 @@ bool			expr_compute_assign(Expression		&exp,
 	      else
 		ope->SetInt(a);
 	    }
-	  else if (x.optor == Expression::BEO_DIV_ASSIGN)
+	  else if (typ.optor == Expression::BEO_DIV_ASSIGN)
 	    {
 	      double	a, b;
 
@@ -272,6 +286,7 @@ bool			expr_compute_assign(Expression		&exp,
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '/=' expect numeric types on line %d",
+		   "ressource,configuration,syntax",
 		   exp.line);
 	      if (ope->GetDouble(&a) == false
 		  || exp.operand[i + 1]->val.GetDouble(&b) == false)
@@ -283,7 +298,7 @@ bool			expr_compute_assign(Expression		&exp,
 	      else
 		ope->SetInt(a);
 	    }
-	  else if (x.optor == Expression::BEO_MOD_ASSIGN)
+	  else if (typ.optor == Expression::BEO_MOD_ASSIGN)
 	    {
 	      double	a, b;
 
@@ -292,6 +307,7 @@ bool			expr_compute_assign(Expression		&exp,
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '%%=' expect numeric types on line %d",
+		   "ressource,configuration,syntax",
 		   exp.line);
 	      if (ope->GetDouble(&a) == false
 		  || exp.operand[i + 1]->val.GetDouble(&b) == false)
@@ -303,7 +319,7 @@ bool			expr_compute_assign(Expression		&exp,
 	      else
 		ope->SetInt(a);
 	    }
-	  else if (x.optor == Expression::BEO_POW_ASSIGN)
+	  else if (typ.optor == Expression::BEO_POW_ASSIGN)
 	    {
 	      double	a, b;
 
@@ -312,6 +328,7 @@ bool			expr_compute_assign(Expression		&exp,
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '**=' expect numeric types on line %d",
+		   "ressource,configuration,syntax",
 		   exp.line);
 	      if (ope->GetDouble(&a) == false
 		  || exp.operand[i + 1]->val.GetDouble(&b) == false)
@@ -323,7 +340,7 @@ bool			expr_compute_assign(Expression		&exp,
 	      else
 		ope->SetInt(a);
 	    }
-	  else if (x.optor == Expression::BEO_ADD_ASSIGN)
+	  else if (typ.optor == Expression::BEO_CAT_ASSIGN)
 	    {
 	      std::stringstream ss;
 	      const char	*a, *b;
@@ -333,6 +350,7 @@ bool			expr_compute_assign(Expression		&exp,
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '#=' expect string types on line %d",
+		   "ressource,configuration,syntax",
 		   exp.line);
 	      if (ope->GetString(&a) == false
 		  || exp.operand[i + 1]->val.GetString(&b) == false)
@@ -342,7 +360,7 @@ bool			expr_compute_assign(Expression		&exp,
 	    }
 	}
     }
-
+  exp.val = *ope;
   return (true);
 }
 

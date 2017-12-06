@@ -19,6 +19,7 @@ Decision		xml_read_markup(const char		*code,
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
        "A name was expected line %d",
+       "configuration,syntax",
        whichline(code, i)
        );
   conf.name = &buffer[0];
@@ -34,9 +35,10 @@ Decision		xml_read_markup(const char		*code,
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "An expression or value was expected on line %d",
+	   "configuration,syntax",
 	   whichline(code, i)
 	   );
-      xml_read_separator(code, i);      
+      xml_read_separator(code, i);
     }
 
   while (code[i] != '/' && code[i] != '>')
@@ -47,6 +49,7 @@ Decision		xml_read_markup(const char		*code,
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "A markup property was expected line %d",
+	   "configuration,syntax",
 	   whichline(code, i)
 	   );
       newconf = &conf[&buffer[0]];
@@ -63,6 +66,7 @@ Decision		xml_read_markup(const char		*code,
 		scream_error_if
 		  (return (BD_ERROR), BE_SYNTAX_ERROR,
 		   "An expression or value was expected on line %d",
+		   "configuration,syntax",
 		   whichline(code, i)
 		   );
 	      xml_read_separator(code, i);
@@ -82,6 +86,7 @@ Decision		xml_read_markup(const char		*code,
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "A closing markup was expected to close the "
 	   "XML scope '%s' opened on line %zu, on line %d",
+	   "configuration,syntax",
 	   conf.name.c_str(), line, whichline(code, i)
 	   );
       xml_read_separator(code, i);
@@ -90,6 +95,7 @@ Decision		xml_read_markup(const char		*code,
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "A closing markup was expected to close the "
 	   "XML scope '%s' opened on line %zu, on line %d",
+	   "configuration,syntax",
 	   conf.name.c_str(), line, whichline(code, i)
 	   );
       xml_read_separator(code, i);
@@ -98,6 +104,7 @@ Decision		xml_read_markup(const char		*code,
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "A closing markup was expected to close the "
 	   "XML scope '%s' opened on line %zu, on line %d",
+	   "configuration,syntax",
 	   conf.name.c_str(), line, whichline(code, i)
 	   );
       xml_read_separator(code, i);
@@ -107,9 +114,9 @@ Decision		xml_read_markup(const char		*code,
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
        "Markup end or additionnal property was expected on line %d",
+       "configuration,syntax",
        whichline(code, i)
        );
   xml_read_separator(code, i);
   return (BD_OK);
 }
-

@@ -37,15 +37,14 @@ t_bunny_effect		*bunny_new_effect(double		duration)
 
   eff->res_id = 0;
 
-  scream_log_if(PATTERN, duration, (void*)NULL);
+  scream_log_if(PATTERN, "ressource,sound", duration, (void*)NULL);
   return ((t_bunny_effect*)eff);
-  
+
  FailEffect:
   delete eff->effect;
  FailStruct:
   delete eff;
  Fail:
-  scream_error_if(return (NULL), bunny_errno, PATTERN, duration, (void*)NULL);
+  scream_error_if(return (NULL), bunny_errno, PATTERN, "ressource,sound", duration, (void*)NULL);
   return (NULL);
 }
-

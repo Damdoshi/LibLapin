@@ -62,7 +62,7 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
   ttf->glyph_size.y = size->y;
   ttf->text->setCharacterSize(size->y);
 
-  scream_log_if(PATTERN, width, height, file, size, size->x, size->y, ttf);
+  scream_log_if(PATTERN, "ressource,text", width, height, file, size, size->x, size->y, ttf);
   return ((t_bunny_font*)ttf);
 
  DeleteTexture:
@@ -77,6 +77,6 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
   delete ttf;
  ReturnNull:
   scream_error_if
-    (return (NULL), bunny_errno, PATTERN, width, height, file, size, size->x, size->y, (void*)NULL);
+    (return (NULL), bunny_errno, PATTERN, "ressource,text", width, height, file, size, size->x, size->y, (void*)NULL);
   return (NULL);
 }

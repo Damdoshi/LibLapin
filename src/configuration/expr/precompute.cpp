@@ -5,7 +5,7 @@
 
 #include		"lapin_private.h"
 
-bool			expr_precompute(Expression		&exp)
+bool			expr_precompute(SmallConf		&exp)
 {
   return (expr_compute(exp, true, NULL, NULL, NULL, NULL));
 }

@@ -1,0 +1,17 @@
+RessourceFile = "./sprite.png"
+[Clip
+  Size = 100, 100
+  Selected = 0
+]
+
+[Animations
+  [FirstLine
+    Position = 0, 0
+    Frame = 6
+    Browsing = "BackAndForth"
+  ]
+]
+
+InitialAnimation = "FirstLine"
+Frequency = 3
+

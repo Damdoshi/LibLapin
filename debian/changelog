@@ -39,6 +39,10 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
   * Change array field to data in t_bunny_pool.
     **Compatibility break!**
 
+  * Add ctor and dtor to bunny_vector and t_bunny_list for item build and destroy.
+  * Additionnal third parameter to bunny_vector_resize and bunny_list_tie.
+    **Compatibility break!**
+
   * Put pool_get/getv and pool_release in compat.h, bring a better way to alloc/free,
     with bunny_pool_new and bunny_pool_free. No id is required anymore.
   * Bunny_pool_size is now bunny_pool_capacity, which return the max amount of element in pool.

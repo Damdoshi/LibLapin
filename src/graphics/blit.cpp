@@ -47,7 +47,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	bunny_blit_shader(output, picture, pos, _shader);
 	*input_type = typ;
 	scream_log_if
-	  (PATTERN, output, picture, pos, pos->x, pos->y, _shader);
+	  (PATTERN, "graphics", output, picture, pos, pos->x, pos->y, _shader);
 	return ;
       }
     case GRAPHIC_RAM:
@@ -122,9 +122,9 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
       }
     default:
       scream_error_if
-	(return, EINVAL, PATTERN, output, picture, pos, pos->x, pos->y, _shader);
+	(return, EINVAL, PATTERN, "graphics", output, picture, pos, pos->x, pos->y, _shader);
     }
-      
+
   switch (*type)
     {
     case WINDOW:
@@ -143,7 +143,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	else
 	  out->window->draw(*spr);
 	scream_log_if
-	  (PATTERN, output, picture, pos, pos->x, pos->y, _shader);
+	  (PATTERN, "graphics", output, picture, pos, pos->x, pos->y, _shader);
 	return ;
       }
     case TTF_TEXT:
@@ -166,7 +166,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	else
 	  out->texture->draw(*spr);
 	scream_log_if
-	  (PATTERN, output, picture, pos, pos->x, pos->y, _shader);
+	  (PATTERN, "graphics", output, picture, pos, pos->x, pos->y, _shader);
 	return ;
       }
     case SYSTEM_RAM:
@@ -176,7 +176,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	if (*input_type == SYSTEM_RAM)
 	  {
 	    const t_bunny_pixelarray	*pic = (const t_bunny_pixelarray*)picture;
-	    
+
 	    if (gl_bunny_my_blit == NULL)
 	      fprintf(stderr, "gl_bunny_my_blit is not set.");
 	    else
@@ -221,12 +221,11 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 		}
 	  }
 	scream_log_if
-	  (PATTERN, output, picture, pos, pos->x, pos->y, _shader);
+	  (PATTERN, "graphics", output, picture, pos, pos->x, pos->y, _shader);
 	return ;
       }
     default:
       scream_error_if
-	(return, EINVAL, PATTERN, output, picture, pos, pos->x, pos->y, _shader);
+	(return, EINVAL, PATTERN, "graphics", output, picture, pos, pos->x, pos->y, _shader);
     }
 }
-

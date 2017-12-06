@@ -17,11 +17,11 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
   if (bunny_which_format(file) != BC_CUSTOM)
     {
       t_bunny_sound	*pc = NULL;
-      
+
       if (bunny_set_sound_attribute(file, &pc, NULL, false) == false)
 	return (NULL);
       return ((t_bunny_effect*)pc);
-    }  
+    }
   hash = bunny_hash(BH_FNV, file, strlen(file));
   if ((eff = new (std::nothrow) struct bunny_effect) == NULL)
     goto Fail;
@@ -60,7 +60,7 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
   eff->sound.setBuffer(*eff->effect);
   eff->type = EFFECT;
 
-  scream_log_if(PATTERN, file, eff);
+  scream_log_if(PATTERN, "ressource,sound", file, eff);
   return ((t_bunny_effect*)eff);
 
  FailEffect:
@@ -68,6 +68,6 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
  FailStruct:
   delete eff;
  Fail:
-  scream_error_if(return (NULL), bunny_errno, PATTERN, file, (void*)NULL);
+  scream_error_if(return (NULL), bunny_errno, PATTERN, "ressource,sound", file, (void*)NULL);
   return (NULL);
 }

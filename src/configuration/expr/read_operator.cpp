@@ -87,7 +87,7 @@ Expression		*expr_read_operator(const char	*code,
       current->operand.push_back(son);
     }
 
-  expr_precompute(*current);
+#warning Ici, il y avait un precompute
   return (current);
 }
 

@@ -54,7 +54,7 @@ t_bunny_pixelarray		*bunny_new_pixelarray(unsigned int		width,
 
   pa->res_id = 0;
 
-  scream_log_if(PATTERN, width, height, pa);
+  scream_log_if(PATTERN, "ressource,graphics", width, height, pa);
   return ((t_bunny_pixelarray*)pa);
 
  DeleteTexture:
@@ -66,6 +66,6 @@ t_bunny_pixelarray		*bunny_new_pixelarray(unsigned int		width,
  DeleteStructure:
   delete pa;
  ReturnNull:
-  scream_error_if(return (NULL), ENOMEM, PATTERN, width, height, (void*)NULL);
+  scream_error_if(return (NULL), ENOMEM, PATTERN, "ressource,graphics", width, height, (void*)NULL);
   return (NULL);
 }

@@ -45,7 +45,7 @@ t_bunny_picture		*bunny_new_picture(unsigned int		width,
 
   pic->res_id = 0;
 
-  scream_log_if(PATTERN, width, height, pic);
+  scream_log_if(PATTERN, "ressource,graphics", width, height, pic);
   return ((t_bunny_picture*)pic);
 
  FailSprite:
@@ -53,6 +53,6 @@ t_bunny_picture		*bunny_new_picture(unsigned int		width,
  FailStruct:
   delete pic;
  Fail:
-  scream_error_if(return (NULL), ENOMEM, PATTERN, width, height, (void*)NULL);
+  scream_error_if(return (NULL), ENOMEM, PATTERN, "ressource,graphics", width, height, (void*)NULL);
   return (NULL);
 }

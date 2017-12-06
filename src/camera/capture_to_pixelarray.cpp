@@ -17,7 +17,7 @@ bool			bunny_capture_to_pixelarray(t_bunny_capture		*cap,
   int			i, j;
 
   if (mat == NULL)
-    scream_error_if(return (false), EINVAL, PATTERN, cap, pix, "false");
+    scream_error_if(return (false), EINVAL, PATTERN, "camera", cap, pix, "false");
   for (j = 0; j < pix->clipable.buffer.height; ++j)
     {
       pos.y = ((double)j / pix->clipable.buffer.height) * mat->rows;
@@ -35,7 +35,7 @@ bool			bunny_capture_to_pixelarray(t_bunny_capture		*cap,
 	  ((unsigned int*)pix->pixels)[i + j * pix->clipable.buffer.width] = col.full;
 	}
     }
-  scream_log_if(PATTERN, cap, pix, "true");
+  scream_log_if(PATTERN, "camera", cap, pix, "true");
   return (true);
 }
 

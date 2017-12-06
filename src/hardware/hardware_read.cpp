@@ -24,7 +24,7 @@ bool			bunny_hardware_read(t_bunny_hardware		*hdr)
   hbs::PVM110N		*ptr = (hbs::PVM110N*)hdr->_private;
 
   if (ptr->ReadInputs() == false)
-    scream_error_if(return (false), EAGAIN, PATTERN, hdr, "false");
+    scream_error_if(return (false), EAGAIN, PATTERN, "hardware", hdr, "false");
   hard->analog_inputs[0] = ptr->GetAnalog(hbs::PVM110N::ANAL_INPUT_0);
   hard->analog_inputs[1] = ptr->GetAnalog(hbs::PVM110N::ANAL_INPUT_1);
   hard->digital_inputs[0] = ptr->GetDigital(hbs::PVM110N::DIGI_INPUT_0);
@@ -32,7 +32,7 @@ bool			bunny_hardware_read(t_bunny_hardware		*hdr)
   hard->digital_inputs[2] = ptr->GetDigital(hbs::PVM110N::DIGI_INPUT_2);
   hard->digital_inputs[3] = ptr->GetDigital(hbs::PVM110N::DIGI_INPUT_3);
   hard->digital_inputs[4] = ptr->GetDigital(hbs::PVM110N::DIGI_INPUT_4);
-  scream_log_if(PATTERN, hdr, "true");
+  scream_log_if(PATTERN, "hardware", hdr, "true");
   return (true);
 }
 

@@ -21,6 +21,7 @@ enum				Decision
 # include			"dabsic.hpp"
 # include			"xml.hpp"
 # include			"json.hpp"
+# include			"lisp.hpp"
 # include			"lua.hpp"
 # include			"sequence.hpp"
 # include			"function.hpp"
@@ -54,9 +55,15 @@ bool				readchar(const char				*str,
 					 const char				*token);
 bool				is_in(char					c,
 				      const char				*tok);
+bool				checktextcase(const char			*str,
+					      ssize_t				&index,
+					      const char			*token);
 bool				readtext(const char				*str,
 					 ssize_t				&index,
 					 const char				*token);
+bool				readtextcase(const char				*str,
+					     ssize_t				&index,
+					     const char				*token);
 
 bool				readtext(const char				*str,
 					 ssize_t				&index,

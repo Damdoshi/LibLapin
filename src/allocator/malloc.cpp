@@ -182,8 +182,8 @@ void			*bunny_malloc(size_t		data)
   void			*ptr;
 
   if ((ptr = malloc(data)) == NULL)
-    scream_error_if(return (NULL), errno, PATTERN, data, ptr);
-  scream_log_if(PATTERN, data, ptr);
+    scream_error_if(return (NULL), errno, PATTERN, "allocator", data, ptr);
+  scream_log_if(PATTERN, "allocator", data, ptr);
   return (ptr);
 #endif
 
@@ -196,7 +196,7 @@ void			*bunny_malloc(size_t		data)
     data += MEMORY_CHUNK_SIZE - (data % MEMORY_CHUNK_SIZE);
   head = memory_head();
   if ((node = get_node(head, data)) == NULL)
-    scream_error_if(return (NULL), ENOMEM, PATTERN, data, node);
+    scream_error_if(return (NULL), ENOMEM, PATTERN, "allocator", data, node);
   head->alloc_count += 1;
   head->total_count += data;
   head->alloc += 1;
@@ -207,7 +207,7 @@ void			*bunny_malloc(size_t		data)
   node->real_size = jam;
   for (; jam < data; ++jam)
     node->data[jam] = 0x21;
-  scream_log_if(PATTERN, data, node->data);
+  scream_log_if(PATTERN, "allocator", data, node->data);
   return (node->data);
 }
 

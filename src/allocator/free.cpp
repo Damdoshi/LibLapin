@@ -23,7 +23,7 @@ void			bunny_free(void		*data)
 {
 #ifdef			LAPIN_ALLOCATOR_DEACTIVATED
   free(data);
-  scream_log_if("%p", data);
+  scream_log_if("%p", "allocator", data);
   return ;
 #endif
   if (data == NULL)
@@ -80,7 +80,7 @@ void			bunny_free(void		*data)
   head->alloc -= 1;
   head->total -= tree->chunk_size;
 
-  scream_log_if("%p", data);
+  scream_log_if("%p", "allocator", data);
 }
 
 // avec un prev, l'action de retirer serait plus rapide

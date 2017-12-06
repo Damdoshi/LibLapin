@@ -19,15 +19,73 @@ struct				Function
       ELSE_IF,
       ELSE,
       PRINT,
+      PRINT_ERROR,
+      WHILE,
+      FOR,
+      REPEAT,
+      DO_WHILE,
+      BREAK,
+      CONTINUE,
+      RETURN,
+      // WITH
       LAST_COMMAND
     };
 
   Command			command;
   SmallConf			local_variables;
   SmallConf			value; // operation ;
+  SmallConf			additionnal_values[2];
   std::vector<Function>		lines;
   size_t			nbr_lines;
+
+  int				line;
 };
+
+typedef enum			e_compute_result
+  {
+    CR_ERROR,
+    CR_RETURN,
+    CR_BREAK,
+    CR_CONTINUE,
+    CR_OK
+  }				t_compute_result;
+
+typedef t_compute_result	(*t_dabsic_compute)(Function		&func,
+						    Function		&mainnod,
+						    bool		dry,
+						    SmallConf		*root,
+						    SmallConf		*local,
+						    SmallConf		*artif,
+						    SmallConf		*params);
+typedef t_compute_result	t_dabsic_compute_f(Function		&func,
+						   Function		&mainnod,
+						   bool			dry,
+						   SmallConf		*root,
+						   SmallConf		*local,
+						   SmallConf		*artif,
+						   SmallConf		*params);
+
+t_dabsic_compute_f		dabsic_compute_instruction;
+t_dabsic_compute_f		dabsic_compute_if;
+t_dabsic_compute_f		dabsic_compute_while;
+t_dabsic_compute_f		dabsic_compute_repeat;
+t_dabsic_compute_f		dabsic_compute_do;
+t_dabsic_compute_f		dabsic_compute_for;
+t_dabsic_compute_f		dabsic_compute_no_execution;
+t_dabsic_compute_f		dabsic_compute_print;
+t_dabsic_compute_f		dabsic_compute_break;
+t_dabsic_compute_f		dabsic_compute_continue;
+t_dabsic_compute_f		dabsic_compute_return;
+t_dabsic_compute_f		dabsic_compute_scope;
+
+extern t_dabsic_compute		gl_dabsic_compute[Function::LAST_COMMAND];
+
+bool				dabsic_compute(SmallConf		&func,
+					       SmallConf		*proto,
+					       bool			dry,
+					       SmallConf		*root,
+					       SmallConf		*artif,
+					       SmallConf		*params);
 
 char *_bunny_write_dabsic_function(const t_bunny_configuration		*config);
 
@@ -63,6 +121,41 @@ Decision			dabsic_read_statement(const char	*code,
 Decision			dabsic_read_if(const char		*code,
 					       ssize_t			&i,
 					       Function			&line,
+					       SmallConf		&funcnode,
+					       SmallConf		&root);
+Decision			dabsic_read_break(const char		*code,
+						  ssize_t		&i,
+						  Function		&line,
+						  SmallConf		&funcnode,
+						  SmallConf		&root);
+Decision			dabsic_read_continue(const char		*code,
+						     ssize_t		&i,
+						     Function		&line,
+						     SmallConf		&funcnode,
+						     SmallConf		&root);
+Decision			dabsic_read_return(const char		*code,
+						   ssize_t		&i,
+						   Function		&line,
+						   SmallConf		&funcnode,
+						   SmallConf		&root);
+Decision			dabsic_read_while(const char		*code,
+						  ssize_t		&i,
+						  Function		&line,
+						  SmallConf		&funcnode,
+						  SmallConf		&root);
+Decision			dabsic_read_for(const char		*code,
+						ssize_t			&i,
+						Function		&line,
+						SmallConf		&funcnode,
+						SmallConf		&root);
+Decision			dabsic_read_repeat(const char		*code,
+						   ssize_t		&i,
+						   Function		&func,
+						   SmallConf		&funcnode,
+						   SmallConf		&root);
+Decision			dabsic_read_do(const char		*code,
+					       ssize_t			&i,
+					       Function			&func,
 					       SmallConf		&funcnode,
 					       SmallConf		&root);
 Decision			dabsic_read_instruction(const char	*code,

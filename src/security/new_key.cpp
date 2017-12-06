@@ -13,13 +13,13 @@ t_bunny_cipher_key		*bunny_new_key(size_t		len)
   size_t			i;
 
   if (len == 0)
-    scream_error_if(return (NULL), EINVAL, PATTERN, len, (void*)NULL);
+    scream_error_if(return (NULL), EINVAL, PATTERN, "security", len, (void*)NULL);
   if ((key = (t_bunny_cipher_key*)bunny_malloc(sizeof(key->length) + len)) == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, len, (void*)NULL);
+    scream_error_if(return (NULL), bunny_errno, PATTERN, "security", len, (void*)NULL);
   key->length = len;
   for (i = 0; i < len; ++i)
     key->key[i] = rand() % 256;
-  scream_log_if(PATTERN, len, key);
+  scream_log_if(PATTERN, "security", len, key);
   return (key);
 }
 

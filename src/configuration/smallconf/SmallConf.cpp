@@ -17,26 +17,11 @@ SmallConf::SmallConf(void)
     last_type(INTEGER),
     sequence(NULL),
     function(NULL),
-    expression(NULL)
+    expression(NULL),
+    line(0)
 {}
 
 SmallConf::~SmallConf(void)
 {
-  std::map<std::string, SmallConf*>::iterator	it;
-  std::map<std::string, SmallConf*> dup = nodes;
-  std::vector<SmallConf*> dupx = array;
-  std::vector<SmallConf*>::iterator itx;
-
-  if (sequence)
-    delete sequence;
-  if (expression)
-    delete expression;
-  if (function)
-    delete function;
-  if (father != NULL && father->nodes.find(name) != father->nodes.end())
-    father->nodes.erase(name);
-  for (it = dup.begin(); it != dup.end(); ++it)
-    delete it->second;
-  for (itx = dupx.begin(); itx != dupx.end(); ++itx)
-    delete *itx;
+  Clear();
 }

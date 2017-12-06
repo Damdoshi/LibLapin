@@ -73,8 +73,8 @@ char			*_bunny_write_ini(const t_bunny_configuration		*config)
 	bunny_free(ret);
       }
   if ((ret = bunny_strndup(ss.str().c_str(), ss.str().size() + 1)) == NULL)
-    scream_error_if(return (NULL), bunny_errno, "%p -> %s", config, ret);
-  scream_log_if("%p -> %s", config, ret);
+    scream_error_if(return (NULL), bunny_errno, "%p -> %s", "ressource,configuration", config, ret);
+  scream_log_if("%p -> %s", "ressource,configuration", config, ret);
   return (ret);
 }
 

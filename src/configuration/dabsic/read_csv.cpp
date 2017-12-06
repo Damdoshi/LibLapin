@@ -24,6 +24,7 @@ Decision		dabsic_read_csv(const char		*code,
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
        "The token ']' was expected to close the CSV scope on line %d",
+       "ressource,configuration,syntax",
        whichline(code, i)
        );
   dabsic_read_separator(code, i);

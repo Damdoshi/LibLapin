@@ -13,7 +13,7 @@ bool				bunny_client_write(t_bunny_client		*clt,
   bool				ret;
 
   ret = (((bpt::NetCom::Client*)clt->_private[1])->Write(data, len, clt->fd));
-  scream_log_if("%p client, %p data, %zu data length -> %s",
+  scream_log_if("%p client, %p data, %zu data length -> %s", "network",
 		clt, data, len, ret ? "true" : "false");
   return (ret);
 }

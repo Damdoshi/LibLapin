@@ -20,14 +20,14 @@ bool			bunny_plugin_call(t_bunny_plugin		*plugin,
       {
 	if (plugin->prototypes[i].nbrparam != arrlen)
 	  scream_error_if(return (false), EINVAL, PATTERN " (Invalid array length)",
+			  "plugin",
 			  plugin, func, return_value, arrlen, params, "false");
 	_real_call(&plugin->prototypes[i], return_value, arrlen, params);
-	scream_log_if(PATTERN, plugin, func, return_value, arrlen, params, "true");
+	scream_log_if
+	  (PATTERN, "plugin", plugin, func, return_value, arrlen, params, "true");
 	return (true);
       }
   scream_error_if(return (false), EINVAL, PATTERN " (Cannot find function name)",
-		   plugin, func, return_value, arrlen, params, "false");
+		  "plugin", plugin, func, return_value, arrlen, params, "false");
   return (false);
 }
-					  
-

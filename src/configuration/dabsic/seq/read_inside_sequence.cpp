@@ -22,6 +22,7 @@ Decision		dabsic_read_inside_sequence(const char		*code,
 	scream_error_if
 	  (return (BD_ERROR), ENOMEM,
 	   "Memory exhausted while processing sequence on line %d",
+	   "configuration,syntax",
 	   whichline(code, i)
 	   );
       }
@@ -36,6 +37,7 @@ Decision		dabsic_read_inside_sequence(const char		*code,
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "Cannot understand what is written on line %d",
+	   "configuration,syntax",
 	   whichline(code, i)
 	   );
       rep = i;
@@ -49,6 +51,7 @@ Decision		dabsic_read_inside_sequence(const char		*code,
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
 	       "Address %zu is already covered by a label so %s is excessive, "
 	       "on line %d",
+	       "configuration,syntax",
 	       seq.nbr_lines, label.c_str(), whichline(code, i)
 	       );
 	  seq.labels[seq.nbr_lines] = label;

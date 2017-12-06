@@ -22,17 +22,17 @@ void			*bunny_calloc(size_t		nmemb,
 
 #ifdef			LAPIN_ALLOCATOR_DEACTIVATED
   if ((ptr = calloc(nmemb, data)) == NULL)
-    scream_error_if(return (NULL), errno, PATTERN, nmemb, data, ptr);
-  scream_log_if(PATTERN, nmemb, data, ptr);
+    scream_error_if(return (NULL), errno, PATTERN, "allocator", nmemb, data, ptr);
+  scream_log_if(PATTERN, "allocator", nmemb, data, ptr);
   return (ptr);
 #endif
 
   int			i;
 
   if ((ptr = bunny_malloc(i = nmemb * data)) == NULL)
-    scream_error_if(return (NULL), errno, PATTERN, nmemb, data, ptr);
+    scream_error_if(return (NULL), errno, PATTERN, "allocator", nmemb, data, ptr);
 
-  scream_log_if(PATTERN, nmemb, data, ptr);
+  scream_log_if(PATTERN, "allocator", nmemb, data, ptr);
   return (memset(ptr, 0, i));
 }
 

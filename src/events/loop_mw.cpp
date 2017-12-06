@@ -24,15 +24,16 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
   size_t		i;
   int			display_cnt;
 
-  scream_log_if(PATTERN "Entering)", window, nwin, freq, data);
+  scream_log_if(PATTERN "Entering)", "event", window, nwin, freq, data);
 
   /// How many microseconds
   delay = 1000000.0 / freq;
   gl_bunny_frequency = freq;
   if (gl_callback.entering_context != NULL)
     {
-      scream_log_if(PATTERN "enter_context)", window, nwin, freq, data);
-      rep = gl_callback.entering_context(data);
+      scream_log_if(PATTERN "enter_context)", "event", window, nwin, freq, data);
+      if ((rep = gl_callback.entering_context(data)) != GO_ON)
+	return (rep);
     }
   else
     rep = GO_ON;
@@ -58,7 +59,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 		      {
 			if (gl_callback.close)
 			  {
-			    scream_log_if(PATTERN "close window %p)", window, nwin, freq, data, gl_window);
+			    scream_log_if(PATTERN "close window %p)", "event", window, nwin, freq, data, gl_window);
 			    if ((rep = gl_callback.close(gl_window, data)) != GO_ON)
 			      goto end;
 			  }
@@ -72,7 +73,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 		    //
 		    if (event.type == sf::Event::GainedFocus && gl_callback.get_focus)
 		      {
-			scream_log_if(PATTERN "gain_focus %p)", window, nwin, freq, data, gl_window);
+			scream_log_if(PATTERN "gain_focus %p)", "event", window, nwin, freq, data, gl_window);
 			if ((rep = gl_callback.get_focus(gl_window, data)) != GO_ON)
 			  goto end;
 		      }
@@ -81,7 +82,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 		    //
 		    if (event.type == sf::Event::LostFocus && gl_callback.lost_focus)
 		      {
-			scream_log_if(PATTERN "lost_focus %p)", window, nwin, freq, data, gl_window);
+			scream_log_if(PATTERN "lost_focus %p)", "event", window, nwin, freq, data, gl_window);
 			if ((rep = gl_callback.lost_focus(gl_window, data)) != GO_ON)
 			  goto end;
 		      }
@@ -94,7 +95,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			
 			siz.x = event.size.width;
 			siz.y = event.size.height;
-			scream_log_if(PATTERN "reisze %p)", window, nwin, freq, data, gl_window);
+			scream_log_if(PATTERN "reisze %p)", "event", window, nwin, freq, data, gl_window);
 			if ((rep = gl_callback.resize(gl_window, &siz, data)) != GO_ON)
 			  goto end;
 		      }
@@ -111,7 +112,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			  {
 			    if (event.key.code != sf::Keyboard::Unknown)
 			      gl_keyboard[event.key.code] = true;
-			    scream_log_if(PATTERN "keydown)", window, nwin, freq, data);
+			    scream_log_if(PATTERN "keydown)", "event", window, nwin, freq, data);
 			    if ((rep = gl_callback.key
 				 (GO_DOWN, (t_bunny_keysym)event.key.code, data)) != GO_ON)
 			      goto end;
@@ -120,7 +121,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			  {
 			    if (event.key.code != sf::Keyboard::Unknown)
 			      gl_keyboard[event.key.code] = false;
-			    scream_log_if(PATTERN "keyup)", window, nwin, freq, data);
+			    scream_log_if(PATTERN "keyup)", "event", window, nwin, freq, data);
 			    if ((rep = gl_callback.key
 				 (GO_UP, (t_bunny_keysym)event.key.code, data)) != GO_ON)
 			      goto end;
@@ -131,7 +132,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 		    //
 		    if (gl_callback.type != NULL && event.type == sf::Event::TextEntered)
 		      {
-			scream_log_if(PATTERN "text)", window, nwin, freq, data);
+			scream_log_if(PATTERN "text)", "event", window, nwin, freq, data);
 			if ((rep = gl_callback.type(event.text.unicode, data)) != GO_ON)
 			  goto end;
 		      }
@@ -165,13 +166,13 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 				gl_joystick[joyid].axis = 0;
 				for (i = 0; i < sf::Joystick::AxisCount; ++i)
 				  gl_joystick[joyid].axis |= (sf::Joystick::hasAxis(joyid, (sf::Joystick::Axis)i) ? 1 : 0) << i;
-				scream_log_if(PATTERN "joyconnect)", window, nwin, freq, data);
+				scream_log_if(PATTERN "joyconnect)", "event", window, nwin, freq, data);
 			      }
 			    else
 			      {
 				gl_joystick[joyid].connected = false;
 				free((char*)gl_joystick[joyid].name);
-				scream_log_if(PATTERN "joydisconnect)", window, nwin, freq, data);
+				scream_log_if(PATTERN "joydisconnect)", "event", window, nwin, freq, data);
 			      }
 			    if ((rep = gl_callback.connect
 				 (connect ? CONNECTED : DISCONNECTED,
@@ -188,7 +189,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			      {
 				gl_joy_button
 				  [event.joystickButton.joystickId][event.joystickButton.button] = true;
-				scream_log_if(PATTERN "joydown)", window, nwin, freq, data);
+				scream_log_if(PATTERN "joydown)", "event", window, nwin, freq, data);
 				if ((rep = gl_callback.button
 				     (GO_DOWN,
 				      event.joystickButton.joystickId,
@@ -200,7 +201,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			      {
 				gl_joy_button
 				  [event.joystickButton.joystickId][event.joystickButton.button] = false;
-				scream_log_if(PATTERN "joyup)", window, nwin, freq, data);
+				scream_log_if(PATTERN "joyup)", "event", window, nwin, freq, data);
 				if ((rep = gl_callback.button
 				     (GO_UP,
 				      event.joystickButton.joystickId,
@@ -220,7 +221,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 				gl_joy_axis
 				  [event.joystickMove.joystickId][event.joystickMove.axis] =
 				  event.joystickMove.position;
-				scream_log_if(PATTERN "joymove)", window, nwin, freq, data);
+				scream_log_if(PATTERN "joymove)", "event", window, nwin, freq, data);
 				if ((rep = gl_callback.axis
 				     (event.joystickMove.joystickId,
 				      (t_bunny_axis)event.joystickMove.axis,
@@ -244,7 +245,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			    gl_mouse.x = event.mouseButton.x;
 			    gl_mouse.y = event.mouseButton.y;
 			    gl_button[event.mouseButton.button] = true;
-			    scream_log_if(PATTERN "mousedown)", window, nwin, freq, data);
+			    scream_log_if(PATTERN "mousedown)", "event", window, nwin, freq, data);
 			    if ((rep = gl_callback.click
 				 (GO_DOWN, (t_bunny_mousebutton)event.mouseButton.button, data)) != GO_ON)
 			      goto end;
@@ -254,7 +255,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			    gl_mouse.x = event.mouseButton.x;
 			    gl_mouse.y = event.mouseButton.y;		    
 			    gl_button[event.mouseButton.button] = false;
-			    scream_log_if(PATTERN "mouseup)", window, nwin, freq, data);
+			    scream_log_if(PATTERN "mouseup)", "event", window, nwin, freq, data);
 			    if ((rep = gl_callback.click
 				 (GO_UP, (t_bunny_mousebutton)event.mouseButton.button, data)) != GO_ON)
 			      goto end;
@@ -269,7 +270,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			gl_mouse.y = event.mouseWheelScroll.y;
 			if (gl_callback.wheel != NULL)
 			  {
-			    scream_log_if(PATTERN "mousewheel)", window, nwin, freq, data);
+			    scream_log_if(PATTERN "mousewheel)", "event", window, nwin, freq, data);
 			    if ((rep = gl_callback.wheel
 				 ((int)event.mouseWheelScroll.wheel,
 				  event.mouseWheelScroll.delta,
@@ -290,7 +291,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			gl_mouse.y = event.mouseMove.y;
 			if (gl_callback.move != NULL)
 			  {
-			    scream_log_if(PATTERN "mousemove)", window, nwin, freq, data);
+			    scream_log_if(PATTERN "mousemove)", "event", window, nwin, freq, data);
 			    if ((rep = gl_callback.move(&pos, data)) != GO_ON)
 			      goto end;
 			  }
@@ -300,7 +301,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 	  bunny_asynclock(delay, BCO_BEFORE_LOOP_MAIN_FUNCTION);
 	  if (gl_callback.loop != NULL)
 	    {
-	      scream_log_if(PATTERN "loop)", window, nwin, freq, data);
+	      scream_log_if(PATTERN "loop)", "event", window, nwin, freq, data);
 	      if ((rep = gl_callback.loop(data)) != GO_ON)
 		goto end;
 	    }
@@ -312,7 +313,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 	  if (delay - (now - prev) > 0.05 * delay || display_cnt > 20)
 	    {
 	      display_cnt = 0;
-	      scream_log_if(PATTERN "display)", window, nwin, freq, data);
+	      scream_log_if(PATTERN "display)", "event", window, nwin, freq, data);
 	      if ((rep = gl_callback.display(data)) != GO_ON)
 		goto end;
 	    }
@@ -332,7 +333,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
  end:
   if (gl_callback.leaving_context != NULL)
     {
-      scream_log_if(PATTERN "leave_context)", window, nwin, freq, data);
+      scream_log_if(PATTERN "leave_context)", "event", window, nwin, freq, data);
       gl_callback.leaving_context(rep, data);
     }
   for (i = 0; i < nwin; ++i)
@@ -342,7 +343,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
       if (win)
 	while (win->window->pollEvent(event));
     }
-  scream_log_if("%p window, %zu nbr_window, %u frequency, %p parameter -> %d (Exiting)", window, nwin, freq, data, rep);
+  scream_log_if("%p window, %zu nbr_window, %u frequency, %p parameter -> %d (Exiting)", "event", window, nwin, freq, data, rep);
   return (rep);
 }
 

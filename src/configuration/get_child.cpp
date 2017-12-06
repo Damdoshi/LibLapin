@@ -17,13 +17,14 @@ t_bunny_configuration	*bunny_configuration_get_child(t_bunny_configuration	*conf
   try
     {
       if ((cnf = ((t_bunny_configuration*)&(*c)[str])) == NULL)
-	scream_error_if(return (cnf), bunny_errno, PATTERN, conf, child, cnf);
-      scream_log_if(PATTERN, conf, child, cnf);
+	scream_error_if
+	  (return (cnf), bunny_errno, PATTERN, "configuration", conf, child, cnf);
+      scream_log_if(PATTERN, "configuration", conf, child, cnf);
       return (cnf);
     }
   catch (...)
     {}
-  scream_error_if(return (cnf), bunny_errno, PATTERN, conf, child, cnf);
+  scream_error_if(return (cnf), bunny_errno, PATTERN, "configuration", conf, child, cnf);
   return (NULL);
 }
 

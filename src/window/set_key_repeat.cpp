@@ -11,6 +11,6 @@ void			bunny_set_key_repeat(t_bunny_window	*_win,
   struct bunny_window	*win = (struct bunny_window*)_win;
 
   win->window->setKeyRepeatEnabled(active);
-  scream_log_if("%p window, %s active", win, active ? "true" : "false");
+  scream_log_if("%p window, %s active", "system,window", win, active ? "true" : "false");
 }
 

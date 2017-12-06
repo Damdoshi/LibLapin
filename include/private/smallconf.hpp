@@ -56,6 +56,7 @@ struct				SmallConf
   Sequence			*sequence;
   Function			*function;
   Expression			*expression;
+  int				line;
 
   SmallConf			&operator=(const SmallConf			&o)
   {
@@ -138,14 +139,31 @@ struct				SmallConf
 
   void				SetString(const std::string		&v,
 					  bool				raw = false);
-  bool				GetString(const char			**out) const;
+  bool				GetString(const char			**out,
+					  SmallConf			*root = NULL,
+					  SmallConf			*local = NULL,
+					  SmallConf			*artif = NULL,
+					  SmallConf			*param = NULL) const;
   void				SetInt(int				v);
-  bool				GetInt(int				*v) const;
+  bool				GetInt(int				*v,
+				       SmallConf			*root = NULL,
+				       SmallConf			*local = NULL,
+				       SmallConf			*artif = NULL,
+				       SmallConf			*param = NULL) const;
   void				SetDouble(double			v);
-  bool				GetDouble(double			*v) const;
+  bool				GetDouble(double			*v,
+					  SmallConf			*root = NULL,
+					  SmallConf			*local = NULL,
+					  SmallConf			*artif = NULL,
+					  SmallConf			*param = NULL) const;
+
+  void				Clear(void);
 
   SmallConf(void);
   ~SmallConf(void);
 };
+
+std::ostream			&operator<<(std::ostream		&os,
+					    const SmallConf		&cnf);
 
 #endif	//			__LAPIN_PRIVATE_SMALLCONF_HPP__

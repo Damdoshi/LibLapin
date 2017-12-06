@@ -17,9 +17,9 @@ t_bunny_configuration	*bunny_new_configuration(void)
     }
   catch (...)
     {
-      scream_error_if(return (NULL), ENOMEM, " -> %p", (void*)NULL);
+      scream_error_if(return (NULL), ENOMEM, " -> %p", "ressource,configuration", (void*)NULL);
     }
-  scream_log_if(" -> %p", conf);
+  scream_log_if(" -> %p", "ressource,configuration", conf);
   return ((t_bunny_configuration*)conf);
 }
 

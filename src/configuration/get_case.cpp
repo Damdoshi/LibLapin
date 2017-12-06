@@ -18,14 +18,15 @@ t_bunny_configuration	*bunny_configuration_get_case(t_bunny_configuration	*conf,
     {
       if ((cnf = (t_bunny_configuration*)&(*c)[n]) == NULL)
 	scream_error_if
-	  (return (cnf), bunny_errno, PATTERN, conf, c->name.c_str(), n, cnf);
-      scream_log_if(PATTERN, conf, c->name.c_str(), n, cnf);
+	  (return (cnf), bunny_errno, PATTERN, "configuration",
+	   conf, c->name.c_str(), n, cnf);
+      scream_log_if(PATTERN, "configuration", conf, c->name.c_str(), n, cnf);
       return (cnf);
     }
   catch (...)
     {}
   scream_error_if
-    (return (cnf), bunny_errno, PATTERN, conf, c->name.c_str(), n, cnf);
+    (return (cnf), bunny_errno, PATTERN, "configuration", conf, c->name.c_str(), n, cnf);
   return (NULL);
 }
 

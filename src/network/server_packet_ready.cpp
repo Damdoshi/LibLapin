@@ -11,6 +11,6 @@ bool			bunny_server_packet_ready(const t_bunny_server	*srv)
   bool			ret;
 
   ret = (((bpt::NetCom::Server*)srv->_private[1])->AnyFullPacket());
-  scream_log_if("%p -> %s", srv, ret ? "true" : "false");
+  scream_log_if("%p -> %s", "network", srv, ret ? "true" : "false");
   return (ret);
 }

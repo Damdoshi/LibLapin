@@ -59,7 +59,7 @@ t_bunny_font			*__bunny_load_gfx(unsigned int		width,
   gfx->glyph_size.x = size->x;
   gfx->glyph_size.y = size->y;
 
-  scream_log_if(PATTERN, width, height, file, size, size->x, size->y, gfx);
+  scream_log_if(PATTERN, "ressource,graphics", width, height, file, size, size->x, size->y, gfx);
   return ((t_bunny_font*)gfx);
 
  DeletePicture:
@@ -72,7 +72,7 @@ t_bunny_font			*__bunny_load_gfx(unsigned int		width,
   delete gfx;
  ReturnNull:
   scream_error_if
-    (return (NULL), bunny_errno, PATTERN, width, height, file, size, size->x, size->y, (void*)NULL);
+    (return (NULL), bunny_errno, PATTERN, "ressource,graphics", width, height, file, size, size->x, size->y, (void*)NULL);
   return (NULL);
 }
 

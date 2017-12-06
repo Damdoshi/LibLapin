@@ -23,9 +23,9 @@ t_bunny_trap			*bunny_new_trap(t_bunny_trap_function	func,
     snt = &gl_bunny_trap_head[0];
   else
     snt = &gl_bunny_trap_head[2];
-  
+
   if ((trap = (struct bunny_trap*)bunny_malloc(sizeof(*trap))) == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN,
+    scream_error_if(return (NULL), bunny_errno, PATTERN, "asynclock",
 		    func, order, start, duration, param, trap);
   trap->next = NULL;
   trap->prev = NULL;
@@ -45,7 +45,6 @@ t_bunny_trap			*bunny_new_trap(t_bunny_trap_function	func,
       trap->prev = snt[1];
       snt[1] = trap;
     }
-  scream_log_if(PATTERN, func, order, start, duration, param, trap);
+  scream_log_if(PATTERN, "asynclock", func, order, start, duration, param, trap);
   return ((t_bunny_trap*)trap);
 }
-

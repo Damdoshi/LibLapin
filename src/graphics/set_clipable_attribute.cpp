@@ -19,7 +19,7 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
   int				tmp[4];
 
   if (clipable == NULL || (cnf = _get_good_conf(conf_file, config)) == NULL)
-    scream_error_if(return (false), EINVAL, PATTERN, conf_file, clipable, config, is_pxarray ? "true" : "false", "false", "");
+    scream_error_if(return (false), EINVAL, PATTERN, "resource,graphics", conf_file, clipable, config, is_pxarray ? "true" : "false", "false", "");
 
   if (*clipable == NULL)
     {
@@ -156,13 +156,13 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
     bunny_delete_configuration(cnf);
   else
     *config = cnf;
-  scream_log_if(PATTERN, conf_file, clipable, config, is_pxarray ? "true" : "false", "true", "");
+  scream_log_if(PATTERN, "graphics", conf_file, clipable, config, is_pxarray ? "true" : "false", "true", "");
   return (true);
 
  InvalidField:
   if (config == NULL || *config == NULL)
     bunny_delete_configuration(cnf);
-  scream_error_if(return (false), EINVAL, PATTERN, conf_file, clipable, config, is_pxarray ? "true" : "false", "false", missing_field);
+  scream_error_if(return (false), EINVAL, PATTERN, "ressource,graphics,syntax", conf_file, clipable, config, is_pxarray ? "true" : "false", "false", missing_field);
   return (false);
 }
 

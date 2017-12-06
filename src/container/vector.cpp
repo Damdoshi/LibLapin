@@ -7,6 +7,8 @@
 
 struct			bunny_vector
 {
+  t_bunny_constructor	ctor;
+  t_bunny_destructor	dtor;
   size_t		nmemb;
   size_t		elemsize;
   void			*array;
@@ -18,40 +20,84 @@ struct			bunny_vector
 #define			PATTERN		"%zu nmemb, %zu size -> %p"
 
 t_bunny_vector		*_bunny_new_vector(size_t			nbr,
-					   size_t			siz)
+					   size_t			siz,
+					   t_bunny_constructor		ctor,
+					   t_bunny_destructor		dtor,
+					   void				*add)
 {
   struct bunny_vector	*vec;
+  int			i;
 
-  if ((vec = (struct bunny_vector*)bunny_malloc(sizeof(struct bunny_vector) + siz * nbr)) == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, nbr, siz, vec);
+  if ((vec = (struct bunny_vector*)bunny_calloc
+       (sizeof(struct bunny_vector) + siz * nbr, 1)) == NULL)
+    scream_error_if
+      (return (NULL), bunny_errno, PATTERN, "container", nbr, siz, vec);
   vec->nmemb = nbr;
   vec->original_nmemb = siz;
   vec->elemsize = siz;
   vec->array = &vec->data[0];
-  scream_log_if(PATTERN, nbr, siz, vec);
+  vec->ctor = ctor;
+  vec->dtor = dtor;
+  if (ctor)
+    for (i = 0; i < (int)bunny_vector_size(vec); ++i)
+      if (ctor(bunny_vector_data(vec, i, void*), add) == false)
+	{
+	  if (dtor)
+	    while (--i >= 0)
+	      dtor(bunny_vector_data(vec, i, void*));
+	  bunny_free(vec);
+	  return (NULL);
+	}
+  scream_log_if(PATTERN, "container", nbr, siz, vec);
   return ((t_bunny_vector*)vec);
+}
+
+void			bunny_delete_vector(t_bunny_vector		*vec)
+{
+  int			i;
+
+  if (vec->dtor)
+    for (i = 0; i < (int)bunny_vector_size(vec); ++i)
+      vec->dtor(bunny_vector_data(vec, i, void*));
+  bunny_free(vec);
 }
 
 #undef			PATTERN
 #define			PATTERN		"%p vector, %zu newsize -> %p"
 
 t_bunny_vector		*bunny_vector_resize(t_bunny_vector		*vec,
-					     size_t			newsize)
+					     size_t			newsize,
+					     void			*add)
 {
   struct bunny_vector	*old, *nw;
+  int			i;
 
   if (newsize <= (old = (struct bunny_vector*)vec)->original_nmemb)
     {
-      scream_log_if(PATTERN, vec, newsize, vec);
+      if (vec->dtor)
+	for (i = bunny_vector_size(vec) - 1; i >= (int)newsize; --i)
+	  vec->dtor(bunny_vector_data(vec, i, void*));
+      old->nmemb = newsize;
+      scream_log_if(PATTERN, "container", vec, newsize, vec);
       return (vec);
     }
   if ((nw = (struct bunny_vector*)bunny_realloc
        (old, sizeof(struct bunny_vector) + newsize * vec->elemsize)) == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, vec, newsize, nw);
+    scream_error_if
+      (return (NULL), bunny_errno, PATTERN, "container", vec, newsize, nw);
+  nw->array = &nw->data[0];
+  if (vec->ctor)
+    for (i = nw->nmemb; i < (int)newsize; ++i)
+      if (vec->ctor(bunny_vector_data(vec, i, void*), add) == false)
+	{
+	  if (vec->dtor)
+	    while (--i >= (int)nw->nmemb)
+	      vec->dtor(bunny_vector_data(vec, i, void*));
+	  return ((t_bunny_vector*)nw);
+	}
   nw->nmemb = newsize;
   nw->original_nmemb = newsize;
-  nw->array = &nw->data[0];
-  scream_log_if(PATTERN, vec, newsize, nw);
+  scream_log_if(PATTERN, "container", vec, newsize, nw);
   return ((t_bunny_vector*)nw);
 }
 
@@ -65,9 +111,10 @@ t_bunny_vector		*bunny_vector_crop(t_bunny_vector		*vec)
   old = (struct bunny_vector*)vec;
   if ((nw = (struct bunny_vector*)bunny_realloc
        (old, sizeof(struct bunny_vector) + vec->nmemb * vec->elemsize)) == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, vec, nw);
+    scream_error_if
+      (return (NULL), bunny_errno, PATTERN, "container", vec, nw);
   nw->array = &nw->data[0];
-  scream_log_if(PATTERN, vec, nw);
+  scream_log_if(PATTERN, "container", vec, nw);
   return ((t_bunny_vector*)nw);
 }
 
@@ -82,7 +129,8 @@ t_bunny_list		*bunny_vector_untie(const t_bunny_vector	*vec)
   size_t		i;
 
   if (lst == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, vec, lst);
+    scream_error_if
+      (return (NULL), bunny_errno, PATTERN, "container", vec, lst);
   for (i = 0; i < bunny_vector_size(vec); ++i)
     {
       if ((ptr = bunny_memdup(bunny_vector_address(vec, i), bunny_vector_elem_size(vec))) == NULL)
@@ -98,14 +146,14 @@ t_bunny_list		*bunny_vector_untie(const t_bunny_vector	*vec)
 	}
     }
 
-  scream_log_if(PATTERN, vec, lst);
+  scream_log_if(PATTERN, "container", vec, lst);
   return (lst);
 
  erase_lst:
   for (nod = bunny_list_begin(lst); nod != NULL; nod = bunny_list_next(nod))
     bunny_free(bunny_list_data(nod, void*));
   bunny_delete_list(lst);
-  scream_error_if(return (NULL), i, PATTERN, vec, lst);
+  scream_error_if(return (NULL), i, PATTERN, "container", vec, lst);
   return (NULL);
 }
 
@@ -135,7 +183,7 @@ void			bunny_vector_sort(t_bunny_vector		*vec,
   packet.cmp = cmp;
   packet.ptr = param;
   qsort_r((void*)vec->array, vec->nmemb, vec->elemsize, to_qsort, &packet);
-  scream_log_if("%p vector, %p cmp_func, %p param", vec, cmp, param);
+  scream_log_if("%p vector, %p cmp_func, %p param", "container", vec, cmp, param);
 }
 
 void			bunny_vector_foreach(t_bunny_vector	*vector,
@@ -171,10 +219,10 @@ bool			bunny_vector_fast_foreach(t_bunny_threadpool *pool,
 	    ++i;
 	  }
 	bunny_thread_wait_completion(pool);
-	scream_error_if(return (false), err, PATTERN, pool, vector, func, par, "false");
+	scream_error_if
+	  (return (false), err, PATTERN, "container", pool, vector, func, par, "false");
       }
   bunny_thread_wait_completion(pool);
-  scream_log_if(PATTERN, pool, vector, func, par, "true");
+  scream_log_if(PATTERN, "container", pool, vector, func, par, "true");
   return (true);
 }
-

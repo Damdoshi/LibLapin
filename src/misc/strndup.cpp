@@ -13,11 +13,13 @@ char			*bunny_strndup(const char	*str,
   size_t		i;
 
   if ((s = (char*)bunny_malloc(sizeof(*s) + (max + 1))) == NULL)
-    scream_error_if(return (s), bunny_errno, "%s string, %zu max_size -> %p", str, max, (void*)NULL);
+    scream_error_if
+      (return (s), bunny_errno, "%s string, %zu max_size -> %p", "misc",
+       str, max, (void*)NULL);
   for (i = 0; str[i] && i < max; ++i)
     s[i] = str[i];
   s[i] = '\0';
-  scream_log_if("%s string, %zu max_size -> %p", str, max, s);
+  scream_log_if("%s string, %zu max_size -> %p", "misc", str, max, s);
   return (s);
 }
 

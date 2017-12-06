@@ -13,8 +13,8 @@ void			*bunny_memdup(const void		*dat,
   void			*ptr;
 
   if ((ptr = bunny_malloc(len)) == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, dat, len, (void*)NULL);
-  scream_log_if(PATTERN, dat, len, ptr);
+    scream_error_if(return (NULL), bunny_errno, PATTERN, "misc", dat, len, (void*)NULL);
+  scream_log_if(PATTERN, "misc", dat, len, ptr);
   return (memcpy(ptr, dat, len));
 }
 

@@ -5,7 +5,7 @@
 
 #include			"lapin_private.h"
 
-void				bunny_delete_clipable(t_bunny_clipable	*clip)
+void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 {
   size_t			*type = (size_t*)clip;
 
@@ -21,13 +21,13 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
 	  delete pic->texture;
 	delete pic->sprite;
 	delete pic;
-	scream_log_if("%p", clip);
+	scream_log_if("%p", "graphics", clip);
 	return ;
       }
     case SYSTEM_RAM:
       {
 	struct bunny_pixelarray	*pic = (struct bunny_pixelarray*)clip;
-	
+
 	if (pic->res_id && !RessourceManager.disable_manager)
 	  {
 	    RessourceManager.TryRemove(ResManager::SF_TEXTURE, pic->res_id, pic);
@@ -42,7 +42,7 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
 	  }
 	delete pic->sprite;
 	delete pic;
-	scream_log_if("%p", clip);
+	scream_log_if("%p", "graphics", clip);
 	return ;
       }
     case TTF_TEXT:
@@ -57,7 +57,7 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
 	delete ttf->sprite;
 	delete ttf->texture;
 	delete ttf;
-	scream_log_if("%p", clip);
+	scream_log_if("%p", "graphics", clip);
 	return ;
       }
     case GRAPHIC_TEXT:
@@ -68,10 +68,33 @@ void				bunny_delete_clipable(t_bunny_clipable	*clip)
 	delete gfx->sprite;
 	delete gfx->texture;
 	delete gfx;
-	scream_log_if("%p", clip);
+	scream_log_if("%p", "graphics", clip);
+	return ;
+      }
+    case SPRITE:
+      {
+	struct bunny_sprite	*pic = (struct bunny_sprite*)clip;
+	size_t			i;
+
+	if (pic->res_id && !RessourceManager.disable_manager)
+	  RessourceManager.TryRemove(ResManager::SF_RENDERTEXTURE, pic->res_id, pic);
+	else
+	  delete pic->texture;
+	delete pic->sprite;
+	for (i = 0; i < bunny_vector_size(pic->animation); ++i)
+	  {
+	    t_bunny_animation	&a = bunny_vector_data(pic->animation, i, t_bunny_animation);
+
+	    if (a.frame_repetition)
+	      bunny_delete_vector(a.frame_repetition);
+	  }
+	bunny_delete_vector(pic->animation);
+	bunny_delete_map(pic->hashname_id);
+	delete pic;
+	scream_log_if("%p", "graphics", clip);
 	return ;
       }
     default:
-      scream_error_if(return, EINVAL, "%p", clip);
+      scream_error_if(return, EINVAL, "%p", "graphics", clip);
     }
 }

@@ -58,7 +58,7 @@ bool			bunny_thread_foreach(t_bunny_threadpool		*pol,
       if ((ptr = new (std::nothrow) _Launcher(func, data[i], add_ptr)) == NULL)
 	{
 	  _ClearWorkers();
-	  scream_error_if(return (false), ENOMEM, PATTERN, pol, func, data, len, add_ptr, "false");
+	  scream_error_if(return (false), ENOMEM, PATTERN, "thread", pol, func, data, len, add_ptr, "false");
 	}
       try
 	{
@@ -68,24 +68,24 @@ bool			bunny_thread_foreach(t_bunny_threadpool		*pol,
       catch (...)
 	{
 	  _ClearWorkers();
-	  scream_error_if(return (false), ENOMEM, PATTERN, pol, func, data, len, add_ptr, "false");
+	  scream_error_if(return (false), ENOMEM, PATTERN, "thread", pol, func, data, len, add_ptr, "false");
 	}
     }
   if (work->Add(task) == false)
     {
       _ClearWorkers();
-      scream_error_if(return (false), bunny_errno, PATTERN, pol, func, data, len, add_ptr, "false");
+      scream_error_if(return (false), bunny_errno, PATTERN, "thread", pol, func, data, len, add_ptr, "false");
     }
-  scream_log_if(PATTERN, pol, func, data, len, add_ptr, "true");
+  scream_log_if(PATTERN, "thread", pol, func, data, len, add_ptr, "true");
   return (true);
-  
+
 #else
   size_t		i;
 
   (void)pol;
   for (i = 0; i < len; ++i)
     func(data[i], add_ptr);
-  scream_log_if(PATTERN, pol, func, data, len, add_ptr, "true");
+  scream_log_if(PATTERN, "thread", pol, func, data, len, add_ptr, "true");
   return (true);
 #endif
 }

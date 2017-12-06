@@ -28,6 +28,7 @@ Decision		json_read_field(const char		*code,
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
        "A c-string key was expected on line %d",
+       "configuration,syntax",
        whichline(code, i)
        );
   newconf = &conf[&buffer[0]];
@@ -60,6 +61,7 @@ Decision		json_read_field(const char		*code,
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
        "A scope, array or value was expected on line %d",
+       "configuration,syntax",
        whichline(code, i)
        );
   */

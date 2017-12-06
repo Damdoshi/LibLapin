@@ -11,6 +11,6 @@ bool			bunny_client_packet_ready(const t_bunny_client	*clt)
   bool			ret;
 
   ret = (((bpt::NetCom::Client*)clt->_private[1])->CheckFullPacket());
-  scream_log_if("%p -> %s", clt, ret ? "true" : "false");
+  scream_log_if("%p -> %s", "network", clt, ret ? "true" : "false");
   return (ret);
 }

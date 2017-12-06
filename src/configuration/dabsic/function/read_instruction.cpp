@@ -11,11 +11,11 @@ Decision			dabsic_read_instruction(const char	*code,
 							SmallConf	&funcnode,
 							SmallConf	&root)
 {
-  (void)code;
-  (void)i;
-  (void)line;
   (void)funcnode;
   (void)root;
+  if (expr_read_expression
+      (code, i, line.value, Expression::BEOF_ASSIGNATION) == false)
+    return (BD_ERROR);
   return (BD_OK);
 }
 

@@ -119,7 +119,7 @@ uint64_t		bunny_hash(t_bunny_hash			hash,
     res = (bh_list[hash](ptr, len));
   else
     res = (gl_bunny_my_hash(hash, ptr, len));
-  scream_log_if("%d hash algorithm, %p data, %zu data length -> %lX", hash, ptr, len, res);
+  scream_log_if("%d hash algorithm, %p data, %zu data length -> %lX", "hash", hash, ptr, len, res);
   return (res);
 }
 

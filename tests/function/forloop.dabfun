@@ -1,0 +1,10 @@
+
+int i
+
+For i = 0 To i < 10 Step i = i + 1
+  "Loop ", 10 - i
+Next
+"Next loop!"
+For i = 0, i < 10, i = i + 1
+  "Loop ", i
+Next

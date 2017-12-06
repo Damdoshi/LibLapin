@@ -40,7 +40,7 @@ void			bunny_set_circle(t_bunny_buffer		*buffer,
 	struct bunny_window	*pic = (struct bunny_window*)buffer;
 
 	pic->window->draw(shape);
-	scream_log_if(PATTERN, buffer, pos.x, pos.y, siz.x, siz.y, (void*)(size_t)color);
+	scream_log_if(PATTERN, "graphics", buffer, pos.x, pos.y, siz.x, siz.y, (void*)(size_t)color);
 	return ;
       }
     case TTF_TEXT:
@@ -50,7 +50,7 @@ void			bunny_set_circle(t_bunny_buffer		*buffer,
 	struct bunny_picture	*pic = (struct bunny_picture*)buffer;
 
 	pic->texture->draw(shape);
-	scream_log_if(PATTERN, buffer, pos.x, pos.y, siz.x, siz.y, (void*)(size_t)color);
+	scream_log_if(PATTERN, "graphics", buffer, pos.x, pos.y, siz.x, siz.y, (void*)(size_t)color);
 	return ;
       }
     case SYSTEM_RAM:
@@ -61,10 +61,10 @@ void			bunny_set_circle(t_bunny_buffer		*buffer,
 	  fprintf(stderr, "gl_bunny_my_set_circle is not set.\n");
 	else
 	  gl_bunny_my_set_circle(pix, pos, siz, color);
-	scream_log_if(PATTERN, buffer, pos.x, pos.y, siz.x, siz.y, (void*)(size_t)color);
+	scream_log_if(PATTERN, "graphics", buffer, pos.x, pos.y, siz.x, siz.y, (void*)(size_t)color);
 	return ;
       }
     default:
-      scream_error_if(return, EINVAL, PATTERN, buffer, pos.x, pos.y, siz.x, siz.y, (void*)(size_t)color);
+      scream_error_if(return, EINVAL, PATTERN, "graphics", buffer, pos.x, pos.y, siz.x, siz.y, (void*)(size_t)color);
     }
 }

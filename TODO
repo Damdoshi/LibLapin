@@ -1,3 +1,7 @@
+Operateur ->= permettant de faire
+root ->= lol ====> root = root->lol
+
+
 => Pouvoir effectuer un cast en ecrivant une variable au lieu d'un type, un peu comme sizeof(*var) fonctionne au lieu de sizeof(int)
 de facon a permettre de dire "cast dans le meme type que telle variable"
 

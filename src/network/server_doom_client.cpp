@@ -12,6 +12,6 @@ bool			bunny_server_doom_client(t_bunny_server		*srv,
   bool			ret;
 
   ret = (((bpt::NetCom::Server*)srv->_private[1])->DoomClient(fd));
-  scream_log_if("%p server, %d fd -> %s", srv, fd, ret ? "true" : "false");
+  scream_log_if("%p server, %d fd -> %s", "network", srv, fd, ret ? "true" : "false");
   return (ret);
 }

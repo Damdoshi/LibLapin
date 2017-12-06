@@ -1,0 +1,8 @@
+
+int j
+
+for j = 0 to j < 6 step j += 1
+  if j % 2 then continue
+  "step ", j
+next
+

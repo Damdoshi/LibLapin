@@ -15,8 +15,8 @@ char			*bunny_write_ini(const t_bunny_ini	*ini)
   char			*str;
 
   if ((str = bunny_write_configuration(BC_INI, ini)) == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, ini, str);
-  scream_log_if(PATTERN, ini, str);
+    scream_error_if(return (NULL), bunny_errno, PATTERN, "ressource,configuration", ini, str);
+  scream_log_if(PATTERN, "ressource,configuration", ini, str);
   return (str);
 }
 

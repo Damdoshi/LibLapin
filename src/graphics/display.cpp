@@ -10,6 +10,6 @@ void			bunny_display(const t_bunny_window	*pic)
   struct bunny_window	*win = (struct bunny_window*)pic;
 
   win->window->display();
-  scream_log_if("%p", pic);
+  scream_log_if("%p", "window,graphics", pic);
 }
 

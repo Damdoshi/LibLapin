@@ -2,7 +2,7 @@
 ** Jason Brillante "Damdoshi"
 ** Hanged Bunny Studio 2014-2016
 **
-** 
+**
 */
 
 #include		<stdio.h>
@@ -80,7 +80,7 @@ int			main(void)
 
   color->scale.x = (double)win->buffer.width / color->buffer.width;
   color->scale.y = (double)win->buffer.height / color->buffer.height;
-  
+
   bunny_set_key_response(key);
   bunny_set_move_response(move);
   bunny_set_loop_main_function(loop);

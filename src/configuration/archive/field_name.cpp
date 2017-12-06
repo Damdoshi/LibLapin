@@ -12,7 +12,7 @@ const char		*bunny_ini_field_name(const t_bunny_ini_scope	*scope,
 
   (void)scope;
   str = bunny_configuration_get_name((t_bunny_configuration*)field);
-  scream_log_if("%p scope, %p field -> %s", scope, field, str);
+  scream_log_if("%p scope, %p field -> %s", "configuration", scope, field, str);
   return (str);
 }
 

@@ -104,4 +104,16 @@ void				bunny_set_log_descriptor(int		fd);
 */
 int				bunny_get_log_descriptor(void);
 
+/*!
+** Only print logs that contains label precised by parameter.
+** Labels must be separated by ',' comma without any whitespace.
+** LibLapin labels are:
+**
+**   system, ressource, graphics, sound, configuration, security,
+**   unix, syntax, network, hardware
+**
+** \param label A string containing comma separated labels.
+*/
+void				bunny_set_log_filter(const char		*label);
+
 #endif	/*			__LAPIN_ERROR_H__	*/

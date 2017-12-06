@@ -1,0 +1,8 @@
+
+int lel = 0
+
+If lel Then
+  "First"
+Else
+  "Second"
+EndIf

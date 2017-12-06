@@ -25,6 +25,7 @@ Decision		xml_read_between_markup(const char		*code,
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "A closing markup was expected to close the "
 	   "XML scope '%s' opened on line %zu, on line %d",
+	   "configuration,syntax",
 	   conf.name.c_str(), line, whichline(code, i)
 	   );
 
@@ -52,6 +53,7 @@ Decision		xml_read_between_markup(const char		*code,
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
 	       "Special markup end was expected on line %d",
+	       "configuration,syntax",
 	       whichline(code, i)
 	       );
 	  xml_read_separator(code, i);

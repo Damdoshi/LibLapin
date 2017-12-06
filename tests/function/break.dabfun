@@ -1,0 +1,19 @@
+
+
+
+int i
+int j
+
+for j = 0 to j < 3 step j += 1
+
+  for i = 0 to i < 3 step i += 1
+
+    if i == 1 && j == 1 then break
+    "i = ", i, " and j = ", j
+
+  next
+
+  "mainloop ", j
+
+next
+
