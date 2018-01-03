@@ -5,7 +5,7 @@
 
 #include	"lapin_private.h"
 
-void		restore_sequence(std::stringstream		&ss,
+void		restore_sequence(std::ostream			&ss,
 				 SmallConf			&conf,
 				 size_t				indent)
 {

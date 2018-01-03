@@ -23,9 +23,9 @@ Decision		dabsic_read_sequence(const char		*code,
   if (readtext(code, i, "]") == false)
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
-       "The token ']' was expected to close the sequence scope on line %d",
+       "The token ']' was expected to close the sequence scope on line %s:%d",
        "configuration,syntax",
-       whichline(code, i)
+       SmallConf::file_read.top().c_str(), whichline(code, i)
        );
   dabsic_read_separator(code, i);
   return (BD_OK);

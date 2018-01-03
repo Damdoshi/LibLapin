@@ -1,0 +1,8 @@
+
+Value=2
+
+CastFunction(string a, string b, string c) = [Function
+   Return real(a # b # c)
+]
+
+main = CastFunction("4", ".", "2") * 10 + real(string(Value) # ".5") + 0.5

@@ -221,6 +221,14 @@ void				bunny_swap(void				**a,
 					   void				**b);
 
 /*!
+** A nice curve for leveling.
+** \param lvl The current_level of your character
+** \return The experience required to achieve this level. You may multiply it
+** by 1000 to have more granularity.
+*/
+int				bunny_next_level_experience(int		lvl);
+
+/*!
 ** Create a smooth move between two points. Used by bunny_stabilize_headtrack
 ** and quite useful for camera on tile based graphics.
 ** \param target The coordinates the second point want to rejoin

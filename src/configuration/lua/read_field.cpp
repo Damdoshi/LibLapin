@@ -37,24 +37,24 @@ Decision		lua_read_field(const char		*code,
       else if (readstring(code, i, &buffer[0], sizeof(buffer)) == false)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "An integer or a CString was expected after the '[' key token on line %d",
+	   "An integer or a CString was expected after the '[' key token on line %s:%d",
 	   "configuration,syntax",
-	   whichline(code, i)
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
       if (readtext(code, i, "]") == false)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "The token ']' was expected after opening a integer key on line %d",
+	   "The token ']' was expected after opening a integer key on line %s:%d",
 	   "configuration,syntax",
-	   whichline(code, i)
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
     }
   else if (getfieldname(code, i, &buffer[0], sizeof(buffer), conf, true, true) == false)
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
-       "A field name or integer between '[]' was expected on line %d",
+       "A field name or integer between '[]' was expected on line %s:%d",
        "configuration,syntax",
-       whichline(code, i)
+       SmallConf::file_read.top().c_str(), whichline(code, i)
        );
 
   newconf = &conf[&buffer[0]];

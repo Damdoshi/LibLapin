@@ -1,0 +1,12 @@
+
+Fibo(int a) = [Function
+  If a <= 0 Then
+    Return 0
+  If a < 2 Then
+    Return 1
+  Return Fibo(a - 1) + Fibo(a - 2)
+]
+
+' Fibo(12) -> 144
+main = Fibo(12)
+

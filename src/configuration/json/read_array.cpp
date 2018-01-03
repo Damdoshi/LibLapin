@@ -25,9 +25,9 @@ Decision		json_read_array(const char		*code,
   if (readtext(code, i, "]") == false)
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
-       "The ']' token was expected to close the array opened on line %d, on line %d",
+       "The ']' token was expected to close the array opened on line %d, on line %s:%d",
        "ressource,configuration,syntax",
-       line, whichline(code, i)
+       line, SmallConf::file_read.top().c_str(), whichline(code, i)
        );
   return (BD_OK);
 }

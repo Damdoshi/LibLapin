@@ -1,0 +1,3 @@
+
+ThisIsRoot=42
+@include "subdir/subfile.dab"

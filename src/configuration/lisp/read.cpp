@@ -44,9 +44,9 @@ Decision		lisp_read_list(const char		*code,
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
 	       "The ')' token was expected to close the list opened "
-	       "on line %d, on line %d",
+	       "on line %d, on line %s:%d",
 	       "configuration,syntax",
-	       line, whichline(code, i)
+	       line, SmallConf::file_read.top().c_str(), whichline(code, i)
 	       );
 	}
       else if (code[i] == '@')
@@ -58,9 +58,9 @@ Decision		lisp_read_list(const char		*code,
       else if (readvalue(code, i, conf[conf.Size()], " )") == false)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "A value, list or directive was expected on line %d",
+	   "A value, list or directive was expected on line %s:%d",
 	   "configuration,syntax",
-	   whichline(code, i)
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
       lisp_read_separator(code, i);
     }

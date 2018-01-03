@@ -40,7 +40,16 @@ void			SmallConf::Clear(void)
     delete *itx;
   dupx.clear();
 
-  if (father != NULL && father->nodes.find(name) != father->nodes.end())
-    father->nodes.erase(name);
+  if (father != NULL)
+    {
+      if (father->nodes.find(name) != father->nodes.end())
+	father->nodes.erase(name);
+      for (itx = father->array.begin(); itx != father->array.end(); ++itx)
+	if (*itx == this)
+	  {
+	    father->array.erase(itx);
+	    return ;
+	  }
+    }
 }
 

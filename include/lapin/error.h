@@ -116,4 +116,15 @@ int				bunny_get_log_descriptor(void);
 */
 void				bunny_set_log_filter(const char		*label);
 
+/*!
+** Set a complete or incomplete log mode.
+** The complete log mode looks like:
+** FAILURE/LOG [tags][timestamp][file:line][Error type][Detailed message]
+** The incomplete log mode looks like:
+** Error type - Detailed message, if the log is an error
+** Or:
+** Detailed message, if is a simple log
+*/
+void				bunny_set_log_mode(bool			complete);
+
 #endif	/*			__LAPIN_ERROR_H__	*/

@@ -23,9 +23,9 @@ Decision		dabsic_read_scope(const char		*code,
 	  if (conf.given_name)
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
-	       "Setting a new name to an already named node on line %d",
+	       "Setting a new name to an already named node on line %s:%d",
 	       "ressource,configuration,syntax",
-	       whichline(code, i)
+	       SmallConf::file_read.top().c_str(), whichline(code, i)
 	       );
 	  if (conf.father->nodes.find(conf.name) != conf.father->nodes.end())
 	    {
@@ -48,9 +48,9 @@ Decision		dabsic_read_scope(const char		*code,
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
        "The token ']' was expected to close the dictionnary "
-       "scope opened on line %d, on line %d",
+       "scope opened on line %d, on line %s:%d",
        "ressource,configuration,syntax",
-       line, whichline(code, i)
+       line, SmallConf::file_read.top().c_str(), whichline(code, i)
        );
   dabsic_read_separator(code, i);
   return (BD_OK);

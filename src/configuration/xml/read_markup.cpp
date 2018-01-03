@@ -18,9 +18,9 @@ Decision		xml_read_markup(const char		*code,
   if (getfieldname(code, i, &buffer[0], sizeof(buffer), conf, true, true) == false)
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
-       "A name was expected line %d",
+       "A name was expected line %s:%d",
        "configuration,syntax",
-       whichline(code, i)
+       SmallConf::file_read.top().c_str(), whichline(code, i)
        );
   conf.name = &buffer[0];
   conf.given_name = true;
@@ -34,9 +34,9 @@ Decision		xml_read_markup(const char		*code,
       if (readvalue(code, i, conf, NULL) == false)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "An expression or value was expected on line %d",
+	   "An expression or value was expected on line %s:%d",
 	   "configuration,syntax",
-	   whichline(code, i)
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
       xml_read_separator(code, i);
     }
@@ -48,9 +48,9 @@ Decision		xml_read_markup(const char		*code,
       if (getfieldname(code, i, &buffer[0], sizeof(buffer), conf, true, true) == false)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "A markup property was expected line %d",
+	   "A markup property was expected line %s:%d",
 	   "configuration,syntax",
-	   whichline(code, i)
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
       newconf = &conf[&buffer[0]];
       xml_read_separator(code, i);
@@ -65,9 +65,9 @@ Decision		xml_read_markup(const char		*code,
 	      if (readvalue(code, i, (*newconf)[newconf->Size()], NULL) == false)
 		scream_error_if
 		  (return (BD_ERROR), BE_SYNTAX_ERROR,
-		   "An expression or value was expected on line %d",
+		   "An expression or value was expected on line %s:%d",
 		   "configuration,syntax",
-		   whichline(code, i)
+		   SmallConf::file_read.top().c_str(), whichline(code, i)
 		   );
 	      xml_read_separator(code, i);
 	    }
@@ -85,27 +85,30 @@ Decision		xml_read_markup(const char		*code,
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "A closing markup was expected to close the "
-	   "XML scope '%s' opened on line %zu, on line %d",
+	   "XML scope '%s' opened on line %zu, on line %s:%d",
 	   "configuration,syntax",
-	   conf.name.c_str(), line, whichline(code, i)
+	   conf.name.c_str(), line,
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
       xml_read_separator(code, i);
       if (readtext(code, i, conf.name.c_str()) == false)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "A closing markup was expected to close the "
-	   "XML scope '%s' opened on line %zu, on line %d",
+	   "XML scope '%s' opened on line %zu, on line %s:%d",
 	   "configuration,syntax",
-	   conf.name.c_str(), line, whichline(code, i)
+	   conf.name.c_str(), line,
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
       xml_read_separator(code, i);
       if (readtext(code, i, ">") == false)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "A closing markup was expected to close the "
-	   "XML scope '%s' opened on line %zu, on line %d",
+	   "XML scope '%s' opened on line %zu, on line %s:%d",
 	   "configuration,syntax",
-	   conf.name.c_str(), line, whichline(code, i)
+	   conf.name.c_str(), line,
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
       xml_read_separator(code, i);
       return (BD_OK);
@@ -113,9 +116,9 @@ Decision		xml_read_markup(const char		*code,
   if (readtext(code, i, "/>") == false)
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
-       "Markup end or additionnal property was expected on line %d",
+       "Markup end or additionnal property was expected on line %s:%d",
        "configuration,syntax",
-       whichline(code, i)
+       SmallConf::file_read.top().c_str(), whichline(code, i)
        );
   xml_read_separator(code, i);
   return (BD_OK);

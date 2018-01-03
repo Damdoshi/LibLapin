@@ -1,0 +1,30 @@
+Preparing call to RetVal(0)
+Executing RetVal
+Return 0(0)
+Returning from RetVal
+Add 0 to the accumulator
+Preparing call to RetVal(1)
+Executing RetVal
+Add 1 to the accumulator
+Preparing call to RetVal(a - 1)
+Add 1(a) to the accumulator
+Add 1 to the accumulator
+Accumulator result: 0
+Executing RetVal
+Return 0(0)
+Returning from RetVal
+Add 0 to the accumulator
+Accumulator result: 1
+Return 1(1 + RetVal(a - 1))
+Returning from RetVal
+Add 1 to the accumulator
+Preparing call to RetVal(2)
+Executing RetVal
+Add 1 to the accumulator
+Add 0 to the accumulator
+Accumulator result: 1
+Return 1(1 + RetVal(a - 1))
+Returning from RetVal
+Add 1 to the accumulator
+Accumulator result: 2
+Computed result is: 2.

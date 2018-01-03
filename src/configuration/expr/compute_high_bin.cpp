@@ -17,6 +17,9 @@ bool			expr_compute_high_bin(Expression	&exp,
   int			sum;
   size_t		i;
 
+  if (exp.is_const)
+    return (true);
+
   sum = 0;
   cnst = true;
   for (i = 0; i < exp.operand.size(); ++i)
@@ -25,7 +28,12 @@ bool			expr_compute_high_bin(Expression	&exp,
       SmallConf		*ope;
 
       if (x.optor_family == -1)
-	{} // Operand
+	{}
+      else if (x.optor_family == Expression::LAST_OPERATOR_FAMILY)
+	{
+	  if (expr_compute_function_call(x, dry, root, local, artif, param) == false)
+	    return (false);
+	}
       else if (gl_expr_computation[x.optor_family]
 	       (x, dry, root, local, artif, param) == false)
 	return (false);
@@ -38,9 +46,12 @@ bool			expr_compute_high_bin(Expression	&exp,
 	       (*ope, dry, root, local, artif, param)) == NULL)
 	    scream_error_if
 	      (return (false), BE_BAD_ADDRESS,
-	       "Undefined variable or unresolvable address %s on line %d",
+	       "Undefined variable or unresolvable address %s "
+	       "from context %s on line %s:%d",
 	       "configuration,syntax",
-	       exp.operand[i]->val.original_value.c_str(), exp.line);
+	       exp.operand[i]->val.original_value.c_str(),
+	       artif->address.c_str(),
+	       exp.file.c_str(), exp.line);
 	}
       else if (x.is_const == false)
 	cnst = false;
@@ -48,9 +59,9 @@ bool			expr_compute_high_bin(Expression	&exp,
       if (expr_test_type(*ope, SmallConf::INTEGER) == false)
 	scream_error_if
 	  (return (false), BE_TYPE_ERROR,
-	   "Operator '&' can only be used on integer on line %d",
+	   "Operator '&' can only be used on integer on line %s:%d",
 	   "configuration,syntax",
-	   exp.line);
+	    exp.file.c_str(), exp.line);
 
       ope->GetInt(&tmp);
       if (i == 0)

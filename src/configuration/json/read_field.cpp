@@ -27,9 +27,9 @@ Decision		json_read_field(const char		*code,
   if (readstring(code, i, &buffer[0], sizeof(buffer)) == false)
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
-       "A c-string key was expected on line %d",
+       "A c-string key was expected on line %s:%d",
        "configuration,syntax",
-       whichline(code, i)
+       SmallConf::file_read.top().c_str(), whichline(code, i)
        );
   newconf = &conf[&buffer[0]];
   json_read_separator(code, i);

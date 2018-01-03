@@ -64,6 +64,10 @@ bool				readtext(const char				*str,
 bool				readtextcase(const char				*str,
 					     ssize_t				&index,
 					     const char				*token);
+bool				readtextcasesep(const char			*str,
+						ssize_t				&index,
+						const char			*token,
+						const char			*forbidden);
 
 bool				readtext(const char				*str,
 					 ssize_t				&index,
@@ -118,7 +122,7 @@ bool				readaddress(const char				*code,
 					    SmallConf				&nod);
 int				whichline(const char				*code,
 					  int					i);
-void				writestring(std::stringstream			&ss,
+void				writestring(std::ostream			&ss,
 					    const std::string			&str);
 bool				read_data(const char				*code,
 					  ssize_t				&i,
@@ -129,7 +133,7 @@ bool				read_sequence(const char			*code,
 bool				read_function(const char			*code,
 					      ssize_t				&i,
 					      SmallConf				&config);
-void				writevalue(std::stringstream			&ss,
+void				writevalue(std::ostream				&ss,
 					   const SmallConf			&cnf);
 
 

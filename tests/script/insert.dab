@@ -1,0 +1,6 @@
+
+Scream = [Function
+  "I am ", Name, " and I am ", Height, "cm and ", Weight, "Kg !"
+  Return 0
+]
+

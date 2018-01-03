@@ -63,9 +63,10 @@ int			main(int		argc,
   signal(SIGALRM, sighandler);
   if (argc == 2)
     alarm(2);
-  refresh_test("single.expr");
-  refresh_test("very_simple.expr");
+
   refresh_test("simple.expr");
+  refresh_test("very_simple.expr");
+  refresh_test("single.expr");
   refresh_test("pow.expr");
   refresh_test("cat.expr");
   refresh_test("parenthesis.expr");

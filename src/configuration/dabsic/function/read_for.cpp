@@ -19,9 +19,9 @@ Decision		dabsic_read_for(const char	*code,
   if (readtextcase(code, i, "To") == false && readtextcase(code, i, ",") == false)
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
-       "Expected 'to' or ',' after the 'for' first parameter on line %d",
+       "Expected 'to' or ',' after the 'for' first parameter on line %s:%d",
        "ressource,configuration,syntax",
-       whichline(code, i)
+       SmallConf::file_read.top().c_str(), whichline(code, i)
        );
   dabsic_read_separator(code, i);
 
@@ -33,9 +33,9 @@ Decision		dabsic_read_for(const char	*code,
   if (readtextcase(code, i, "Step") == false && readtextcase(code, i, ",") == false)
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
-       "Expected 'Step' or ',' after the 'for' second parameter on line %d",
+       "Expected 'Step' or ',' after the 'for' second parameter on line %s:%d",
        "ressource,configuration,syntax",
-       whichline(code, i)
+       SmallConf::file_read.top().c_str(), whichline(code, i)
        );
   dabsic_read_separator(code, i);
 
@@ -55,8 +55,8 @@ Decision		dabsic_read_for(const char	*code,
     }
   scream_error_if
     (return (BD_ERROR), BE_SYNTAX_ERROR,
-     "EndFor or Next was expected on line %d",
-     "ressource,configuration,syntax",
+     "EndFor or Next was expected on line %s:%d",
+     SmallConf::file_read.top().c_str(), "ressource,configuration,syntax",
      whichline(code, i)
      );
   return (BD_ERROR);

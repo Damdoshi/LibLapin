@@ -69,17 +69,19 @@ SmallConf		*read_new_scope(const char			*code,
     scream_error_if
       (return (NULL), BE_SYNTAX_ERROR,
        "%s code, %p config -> %p "
-       "(Error while getting scope name or scope address on line %d)",
+       "(Error while getting scope name or scope address on line %s:%d)",
        "configuration,syntax",
-       code, &root, cnf, whichline(code, i));
+       code, &root, cnf,
+       SmallConf::file_read.top().c_str(), whichline(code, i));
   read_separator(code, i);
   if (readtext(code, i, "]") == false)
     scream_error_if
       (return (NULL), BE_SYNTAX_ERROR,
        "%s code, %p config -> %p "
-       "(The ']' token was expected after scope name on line %d)",
+       "(The ']' token was expected after scope name on line %s:%d)",
        "configuration,syntax",
-       code, &root, (void*)NULL, whichline(code, i));
+       code, &root, (void*)NULL,
+       SmallConf::file_read.top().c_str(), whichline(code, i));
   ((SmallConf*)cnf)->construct = SmallConf::MAP;
   read_separator(code, i);
   return ((SmallConf*)cnf);

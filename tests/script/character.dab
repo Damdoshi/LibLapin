@@ -1,0 +1,10 @@
+
+
+[Character
+  Name = "Damdoshi"
+  Weight = 110
+  Height = 180
+  @insert "insert.dab"
+]
+
+main = Character.Scream()

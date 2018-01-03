@@ -27,18 +27,22 @@ struct				Function
       BREAK,
       CONTINUE,
       RETURN,
-      // WITH
+      BRAKE,
+      WITH,
+      SELECT,
       LAST_COMMAND
     };
 
   Command			command;
   SmallConf			local_variables;
   SmallConf			value; // operation ;
+  SmallConf			result;
   SmallConf			additionnal_values[2];
   std::vector<Function>		lines;
   size_t			nbr_lines;
 
   int				line;
+  std::string			file;
 };
 
 typedef enum			e_compute_result
@@ -74,8 +78,11 @@ t_dabsic_compute_f		dabsic_compute_for;
 t_dabsic_compute_f		dabsic_compute_no_execution;
 t_dabsic_compute_f		dabsic_compute_print;
 t_dabsic_compute_f		dabsic_compute_break;
+t_dabsic_compute_f		dabsic_compute_brake;
 t_dabsic_compute_f		dabsic_compute_continue;
 t_dabsic_compute_f		dabsic_compute_return;
+t_dabsic_compute_f		dabsic_compute_with;
+t_dabsic_compute_f		dabsic_compute_select;
 t_dabsic_compute_f		dabsic_compute_scope;
 
 extern t_dabsic_compute		gl_dabsic_compute[Function::LAST_COMMAND];
@@ -96,9 +103,9 @@ Decision			dabsic_read_inside_function(const char	*code,
 							    Function	*func,
 							    SmallConf	&conf,
 							    SmallConf	&root);
-void				restore_function(std::stringstream	&ss,
-					       SmallConf		&conf,
-					       size_t			indent);
+void				restore_function(std::ostream		&ss,
+						 SmallConf		&conf,
+						 size_t			indent);
 Decision			dabsic_read_function_line(const char	*code,
 							  ssize_t	&i,
 							  Function	&line,
@@ -123,6 +130,16 @@ Decision			dabsic_read_if(const char		*code,
 					       Function			&line,
 					       SmallConf		&funcnode,
 					       SmallConf		&root);
+Decision			dabsic_read_with(const char		*code,
+						 ssize_t		&i,
+						 Function		&line,
+						 SmallConf		&funcnode,
+						 SmallConf		&root);
+Decision			dabsic_read_select(const char		*code,
+						   ssize_t		&i,
+						   Function		&line,
+						   SmallConf		&funcnode,
+						   SmallConf		&root);
 Decision			dabsic_read_break(const char		*code,
 						  ssize_t		&i,
 						  Function		&line,

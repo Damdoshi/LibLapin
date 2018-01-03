@@ -1,0 +1,8 @@
+
+RetVal(int a) = [Function
+  If a <= 0 Then
+    Return 0
+  Return 1 + RetVal(a - 1)
+]
+
+main = RetVal(0) + RetVal(1) + RetVal(2)

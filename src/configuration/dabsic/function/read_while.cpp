@@ -14,9 +14,9 @@ Decision		dabsic_read_while(const char	*code,
   if (dabsic_read_instruction(code, i, func, funcnode, root) == BD_ERROR)
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
-       "A value or expression was expected after 'while' on line %d",
+       "A value or expression was expected after 'while' on line %s:%d",
        "ressource,configuration,syntax",
-       whichline(code, i)
+       SmallConf::file_read.top().c_str(), whichline(code, i)
        );
 
   dabsic_read_separator(code, i);
@@ -31,9 +31,9 @@ Decision		dabsic_read_while(const char	*code,
     }
   scream_error_if
     (return (BD_ERROR), BE_SYNTAX_ERROR,
-     "EndWhile or WEnd was expected on line %d",
+     "EndWhile or WEnd was expected on line %s:%d",
      "ressource,configuration,syntax",
-     whichline(code, i)
+     SmallConf::file_read.top().c_str(), whichline(code, i)
      );
   return (BD_ERROR);
 }

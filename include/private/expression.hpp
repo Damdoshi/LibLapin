@@ -11,6 +11,13 @@
 
 struct				Expression
 {
+  enum				TypeCast
+    {
+      NO_CAST,
+      INT_CAST,
+      REAL_CAST,
+      STRING_CAST
+    };
   enum				OperatorFamily
     {
       BEOF_ASSIGNATION,
@@ -87,13 +94,16 @@ struct				Expression
   SmallConf			val;
   std::vector<Expression*>	operand;
   bool				is_const;
+  TypeCast			type_cast;
 
+  std::string			file;
   int				line;
 
   Expression(void)
     : optor_family(-1),
       optor(-1),
       is_const(false),
+      type_cast(NO_CAST),
       line(0)
   {}
   ~Expression(void)
@@ -132,6 +142,7 @@ t_expr_computation_func		expr_compute_low_math;
 t_expr_computation_func		expr_compute_high_math;
 t_expr_computation_func		expr_compute_pow;
 t_expr_computation_func		expr_compute_cat;
+t_expr_computation_func		expr_compute_function_call;
 
 SmallConf			*expr_get_variable(SmallConf		&variable,
 						   bool			dry,
@@ -140,6 +151,9 @@ SmallConf			*expr_get_variable(SmallConf		&variable,
 						   SmallConf		*artif,
 						   SmallConf		*params);
 
+bool				expr_read_function_call(const char	*code,
+							ssize_t		&i,
+							Expression	&expr);
 Expression			*expr_read_operator(const char		*code,
 						    ssize_t		&i,
 						    size_t		ope);
@@ -150,7 +164,7 @@ Decision			expr_read_expression(const char		*code,
 						     ssize_t		&i,
 						     SmallConf		&conf,
 						     int		operation);
-void				restore_expression(std::stringstream	&ss,
+void				restore_expression(std::ostream		&ss,
 						   Expression		&conf,
 						   bool			cmp = false);
 void				expr_read_separator(const char		*code,
@@ -158,6 +172,7 @@ void				expr_read_separator(const char		*code,
 
 
 bool				expr_compute(SmallConf			&expr,
+					     SmallConf			*proto,
 					     bool			dry,
 					     SmallConf			*root,
 					     SmallConf			*local,
@@ -171,6 +186,18 @@ char				*_bunny_write_expression(const
 extern "C" char			*_bunny_write_expression_prec(const
 							      t_bunny_configuration
 							      *config);
+bool				expr_compute_function_call(Expression	&exp,
+							   bool		dry,
+							   SmallConf	*root,
+							   SmallConf	*local,
+							   SmallConf	*artif,
+							   SmallConf	*param);
+bool				expr_compute_cast(Expression		&exp,
+						  bool			dry,
+						  SmallConf		*root,
+						  SmallConf		*local,
+						  SmallConf		*artif,
+						  SmallConf		*param);
 
 t_bunny_configuration		*_bunny_read_expression(const char	*code,
 							t_bunny_configuration *config);

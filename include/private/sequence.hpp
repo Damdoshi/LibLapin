@@ -23,7 +23,7 @@ struct				Sequence
   size_t			nbr_lines;
 };
 
-void				restore_sequence(std::stringstream	&ss,
+void				restore_sequence(std::ostream		&ss,
 						 SmallConf		&conf,
 						 size_t			indent);
 char *_bunny_write_dabsic_sequence(const t_bunny_configuration		*config);

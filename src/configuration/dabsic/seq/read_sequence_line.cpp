@@ -34,9 +34,9 @@ Decision		dabsic_read_sequence_line(const char		*code,
 	  if (it != 0)
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
-	       "A value was expected after ',' on line %d",
+	       "A value was expected after ',' on line %s:%d",
 	       "configuration,syntax",
-	       whichline(code, i)
+	       SmallConf::file_read.top().c_str(), whichline(code, i)
 	       );
 	  return (BD_OK);
 	}

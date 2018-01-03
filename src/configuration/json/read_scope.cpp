@@ -23,9 +23,9 @@ Decision		json_read_scope(const char		*code,
   if (readtext(code, i, "}") == false)
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
-       "The '}' token was expected to close the scope opened on line %d, on line %d",
+       "The '}' token was expected to close the scope opened on line %d, on line %s:%d",
        "configuration,syntax",
-       line, whichline(code, i)
+       line, SmallConf::file_read.top().c_str(), whichline(code, i)
        );
   return (BD_OK);
 }

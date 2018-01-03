@@ -1,0 +1,14 @@
+
+Fact(int a) = [Function
+  "Entering Fact(", a, ")"
+  If a <= 1
+    "Exiting Fact(a)"
+    Return 1
+  EndIf
+  "Recursively executing Fact"
+  Return a * Fact(a - 1)
+]
+
+inline_fact(int a) = a <= 1 ? 1 : a * inline_fact(a - 1)
+
+main = Fact(4) + inline_fact(4)

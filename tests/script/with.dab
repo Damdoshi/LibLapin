@@ -1,0 +1,29 @@
+
+Field = "[].Field"
+
+[Scope
+  Field = "[].Scope.Field"
+  [Scope
+    Field = "[].Scope.Scope.Field"
+  ]
+]
+
+main = [Function
+  "Field address is: ", Field, "!"
+
+  With Scope
+    "Scope.Field address is: ", Field, "!"
+  EndWith
+
+  With Scope.Scope
+    "Scope.Scope.Field address is: ", Field, "!"
+  EndWith
+
+  With Scope
+    With Scope
+      "Scope.Scope.Field address is: ", Field, "!"
+    EndWith
+  EndWith
+  Return 0
+]
+

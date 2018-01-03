@@ -127,6 +127,23 @@ bool			readtextcase(const char			*str,
   return (true);
 }
 
+bool			readtextcasesep(const char		*str,
+					ssize_t			&index,
+					const char		*token,
+					const char		*forbidden)
+{
+  ssize_t		i, l;
+
+  i = index;
+  if (bunny_strncasecmp(&str[index], token, l = strlen(token)) != 0)
+    return (false);
+  i += l;
+  if (readchar(str, i, forbidden))
+    return (false);
+  index = i;
+  return (true);
+}
+
 bool			checktextcase(const char		*str,
 				      ssize_t			&index,
 				      const char		*token)
@@ -222,6 +239,7 @@ bool			readdouble(const char			*code,
 {
   ssize_t		j = i;
 
+  readchar(code, j, "+-");
   if (readchar(code, j, numbers) == false)
     return (false);
   if (readtext(code, j, ".") == false)
@@ -379,7 +397,7 @@ bool			readstring(const char			*code,
   return (true);
 }
 
-void			writestring(std::stringstream		&ss,
+void			writestring(std::ostream		&ss,
 				    const std::string		&str)
 {
   size_t		i;
@@ -511,7 +529,7 @@ bool			readvalue(const char			*code,
   return (true);
 }
 
-void			writevalue(std::stringstream		&ss,
+void			writevalue(std::ostream			&ss,
 				   const SmallConf		&cnf)
 {
   if (cnf.last_type == SmallConf::DOUBLE)

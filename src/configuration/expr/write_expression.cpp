@@ -6,14 +6,38 @@
 #include		<string.h>
 #include		"lapin_private.h"
 
-void			restore_expression(std::stringstream		&ss,
-					   Expression			&expr,
-					   bool				complete)
+void			restore_expression(std::ostream		&ss,
+					   Expression		&expr,
+					   bool			complete)
 {
-  size_t		i;
+  size_t		i, j;
 
-  if (expr.val.have_value && expr.operand.size() == 0)
-    writevalue(ss, expr.val);
+  if ((expr.is_const && complete == false) || expr.optor_family == -1)
+    {
+      writevalue(ss, expr.val);
+      return ;
+    }
+  if (expr.optor_family == Expression::LAST_OPERATOR_FAMILY)
+    {
+      ss << expr.val.name;
+      ss << "(";
+      if (expr.type_cast == Expression::NO_CAST)
+	for (j = 0; j < expr.operand.size(); ++j)
+	  {
+	    if (expr.operand[j] != NULL)
+	      {
+		if (expr.operand[j]->val.name != "")
+		  ss << expr.operand[j]->val.name << " = ";
+		restore_expression(ss, *expr.operand[j], true);
+	      }
+	    if (j + 1 < expr.operand.size())
+	      ss << ", ";
+	  }
+      else
+	restore_expression(ss, *expr.operand[0], complete);
+      ss << ")";
+      return ;
+    }
   for (i = 0; i < expr.operand.size(); ++i)
     {
       if (i != 0)
@@ -23,13 +47,9 @@ void			restore_expression(std::stringstream		&ss,
 	    [expr.optor_family][expr.operand[i]->optor][0]
 	     << " ";
 	}
-      if (expr.operand[i]->val.have_value
-	  && (expr.operand[i]->operand.size() == 0
-	      || complete == false
-	      )
-	  )
-	writevalue(ss, expr.operand[i]->val);
-      else if (expr.optor_family > expr.operand[i]->optor_family)
+      if (expr.optor_family > expr.operand[i]->optor_family
+	  && expr.operand[i]->optor_family != Expression::LAST_OPERATOR_FAMILY
+	  && expr.operand[i]->optor_family != -1)
 	{
 	  ss << "(";
 	  restore_expression(ss, *expr.operand[i], complete);

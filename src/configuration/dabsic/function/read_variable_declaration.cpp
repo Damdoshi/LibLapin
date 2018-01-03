@@ -17,26 +17,36 @@ Decision		dabsic_read_variable_declaration(const char	*code,
   (void)func;
   (void)root;
   dabsic_read_separator(code, i);
-  if (readtext(code, i, "string"))
+  if (readtextcase(code, i, "string"))
     {
       dabsic_read_separator(code, i);
       if (getfieldname
 	  (code, i, &buffer[0], sizeof(buffer), funcnode, true, true) == false)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "Expected variable name after type 'string' on line %d",
+	   "Expected variable name after type 'string' on line %s:%d",
 	   "configuration,syntax",
-	   whichline(code, i)
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
+
       if (root_function.local_variables.Access(&buffer[0]))
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "Variable name %s already taken on line %d",
+	   "Variable name %s already taken on line %s:%d",
 	   "configuration,syntax",
-	   &buffer[0], whichline(code, i)
+	   &buffer[0], SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
+      if (strcasecmp(&buffer[0], "is") == 0)
+	scream_error_if
+	  (return (BD_ERROR), BE_SYNTAX_ERROR,
+	   "Name %s is reserved as keyword on line %s:%d",
+	   "configuration,syntax",
+	   &buffer[0], SmallConf::file_read.top().c_str(), whichline(code, i)
+	   );
+
       SmallConf		&nw = root_function.local_variables[&buffer[0]];
 
+      nw.name = &buffer[0];
       dabsic_read_separator(code, i);
       if (readtext(code, i, "="))
 	{
@@ -44,16 +54,16 @@ Decision		dabsic_read_variable_declaration(const char	*code,
 	  if (readvalue(code, i, nw, ";") == false)
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
-	       "Expected value after '=' token in variable assignment on line %d",
+	       "Expected value after '=' token in variable assignment on line %s:%d",
 	       "configuration,syntax",
-	       whichline(code, i)
+	       SmallConf::file_read.top().c_str(), whichline(code, i)
 	       );
 	  if (nw.last_type == SmallConf::INTEGER || nw.last_type == SmallConf::DOUBLE)
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
-	       "Invalid type for value assigned to %s: must be string, on line %d",
+	       "Invalid type for value assigned to %s: must be string, on line %s:%d",
 	       "configuration,syntax",
-	       &buffer[0], whichline(code, i)
+	       &buffer[0], SmallConf::file_read.top().c_str(), whichline(code, i)
 	       );
 	}
       else
@@ -61,19 +71,27 @@ Decision		dabsic_read_variable_declaration(const char	*code,
       return (BD_OK);
     }
 
-  if (readtext(code, i, "real"))
+  if (readtextcase(code, i, "real"))
     {
       dabsic_read_separator(code, i);
       if (getfieldname
 	  (code, i, &buffer[0], sizeof(buffer), funcnode, true, true) == false)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "Expected variable name after type 'real' on line %d",
+	   "Expected variable name after type 'real' on line %s:%d",
 	   "configuration,syntax",
-	   whichline(code, i)
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
+	   );
+      if (strcasecmp(&buffer[0], "is") == 0)
+	scream_error_if
+	  (return (BD_ERROR), BE_SYNTAX_ERROR,
+	   "Name %s is reserved as keyword on line %s:%d",
+	   "configuration,syntax",
+	   &buffer[0], SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
       SmallConf		&nw = root_function.local_variables[&buffer[0]];
 
+      nw.name = &buffer[0];
       dabsic_read_separator(code, i);
       if (readtext(code, i, "="))
 	{
@@ -81,16 +99,16 @@ Decision		dabsic_read_variable_declaration(const char	*code,
 	  if (readvalue(code, i, nw, ";") == false)
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
-	       "Expected value after '=' token in variable assignment on line %d",
+	       "Expected value after '=' token in variable assignment on line %s:%d",
 	       "configuration,syntax",
-	       whichline(code, i)
+	       SmallConf::file_read.top().c_str(), whichline(code, i)
 	       );
 	  if (nw.last_type != SmallConf::DOUBLE)
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
-	       "Invalid type for value assigned to %s: must be string, on line %d",
+	       "Invalid type for value assigned to %s: must be string, on line %s:%d",
 	       "configuration,syntax",
-	       &buffer[0], whichline(code, i)
+	       &buffer[0], SmallConf::file_read.top().c_str(), whichline(code, i)
 	       );
 	}
       else
@@ -98,19 +116,27 @@ Decision		dabsic_read_variable_declaration(const char	*code,
       return (BD_OK);
     }
 
-  if (readtext(code, i, "integer") || readtext(code, i, "int"))
+  if (readtextcase(code, i, "integer") || readtextcase(code, i, "int"))
     {
       dabsic_read_separator(code, i);
       if (getfieldname
 	  (code, i, &buffer[0], sizeof(buffer), funcnode, true, true) == false)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "Expected variable name after type 'real' on line %d",
+	   "Expected variable name after type 'real' on line %s:%d",
 	   "configuration,syntax",
-	   whichline(code, i)
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
+	   );
+      if (strcasecmp(&buffer[0], "is") == 0)
+	scream_error_if
+	  (return (BD_ERROR), BE_SYNTAX_ERROR,
+	   "Name %s is reserved as keyword on line %s:%d",
+	   "configuration,syntax",
+	   &buffer[0], SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
       SmallConf		&nw = root_function.local_variables[&buffer[0]];
 
+      nw.name = &buffer[0];
       dabsic_read_separator(code, i);
       if (readtext(code, i, "="))
 	{
@@ -118,16 +144,16 @@ Decision		dabsic_read_variable_declaration(const char	*code,
 	  if (readvalue(code, i, nw, ";") == false)
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
-	       "Expected value after '=' token in variable assignment on line %d",
+	       "Expected value after '=' token in variable assignment on line %s:%d",
 	       "configuration,syntax",
-	       whichline(code, i)
+	       SmallConf::file_read.top().c_str(), whichline(code, i)
 	       );
 	  if (nw.last_type != SmallConf::INTEGER)
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
-	       "Invalid type for value assigned to %s: must be string, on line %d",
+	       "Invalid type for value assigned to %s: must be string, on line %s:%d",
 	       "configuration,syntax",
-	       &buffer[0], whichline(code, i)
+	       &buffer[0], SmallConf::file_read.top().c_str(), whichline(code, i)
 	       );
 	}
       else

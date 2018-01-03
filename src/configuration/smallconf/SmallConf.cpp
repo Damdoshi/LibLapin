@@ -15,6 +15,7 @@ SmallConf::SmallConf(void)
     is_converted(false),
     father(NULL),
     last_type(INTEGER),
+    symbol(false),
     sequence(NULL),
     function(NULL),
     expression(NULL),

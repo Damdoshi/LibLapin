@@ -63,9 +63,9 @@ Decision		dabsic_read_field_value(const char		*code,
 
   scream_error_if
     (return (BD_ERROR), BE_SYNTAX_ERROR,
-     "A scope, value or directive was expected after '=' on line %d",
+     "A scope, value or directive was expected after '=' on line %s:%d",
      "ressource,configuration,syntax",
-     whichline(code, i)
+     SmallConf::file_read.top().c_str(), whichline(code, i)
      );
   return (BD_ERROR);
 }

@@ -10,6 +10,8 @@
 # define			__LAPIN_PRIVATE_SMALLCONF_HPP__
 # include			<iomanip>
 # include			<sstream>
+# include			<stack>
+# include			<list>
 
 struct				Sequence;
 struct				Expression;
@@ -50,8 +52,11 @@ struct				SmallConf
   mutable int			converted_2;
   mutable bool			is_converted;
   static bool			create_mode;
+  static std::stack<std::string> file_read;
+  static std::list<std::string> file_path;
   SmallConf			*father;
   Type				last_type;
+  bool				symbol;
 
   Sequence			*sequence;
   Function			*function;
@@ -133,6 +138,9 @@ struct				SmallConf
   SmallConf			&operator[](size_t			i);
   const SmallConf		&operator[](const std::string		&str) const;
   const SmallConf		&operator[](size_t			i) const;
+
+  void				Remove(const std::string		&str);
+  void				Remove(size_t				i);
 
   bool				Access(const std::string		&str) const;
   bool				Access(ssize_t				i) const;

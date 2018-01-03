@@ -1,0 +1,15 @@
+
+Display(int a, real b, string c) = [Function
+  "int ", a, ", real ", b, ", string '", c, "'"
+  Return 0
+]
+
+main = [Function
+  integer i
+
+  For i = -5 To i < 5 Step i += 1
+    Display(i, i / 2.0, "param")
+  Next
+  Return 2
+]
+

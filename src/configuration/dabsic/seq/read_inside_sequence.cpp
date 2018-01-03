@@ -21,9 +21,9 @@ Decision		dabsic_read_inside_sequence(const char		*code,
       {
 	scream_error_if
 	  (return (BD_ERROR), ENOMEM,
-	   "Memory exhausted while processing sequence on line %d",
+	   "Memory exhausted while processing sequence on line %s:%d",
 	   "configuration,syntax",
-	   whichline(code, i)
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
       }
   Sequence		&seq = *conf.sequence;
@@ -36,9 +36,9 @@ Decision		dabsic_read_inside_sequence(const char		*code,
       if (i == rep)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "Cannot understand what is written on line %d",
+	   "Cannot understand what is written on line %s:%d",
 	   "configuration,syntax",
-	   whichline(code, i)
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
       rep = i;
       if (seq.nbr_lines >= seq.lines.size())
@@ -50,9 +50,10 @@ Decision		dabsic_read_inside_sequence(const char		*code,
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
 	       "Address %zu is already covered by a label so %s is excessive, "
-	       "on line %d",
+	       "on line %s:%d",
 	       "configuration,syntax",
-	       seq.nbr_lines, label.c_str(), whichline(code, i)
+	       seq.nbr_lines, label.c_str(),
+	       SmallConf::file_read.top().c_str(), whichline(code, i)
 	       );
 	  seq.labels[seq.nbr_lines] = label;
 	}

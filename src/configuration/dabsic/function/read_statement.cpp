@@ -13,7 +13,9 @@ Decision		dabsic_read_statement(const char	*code,
 {
   dabsic_read_separator(code, i);
   func.line = whichline(code, i);
-  if (readtextcase(code, i, "If"))
+  func.file = SmallConf::file_read.top();
+
+  if (readtextcasesep(code, i, "If", fieldname))
     {
       dabsic_read_separator(code, i);
       func.command = Function::IF;
@@ -22,7 +24,7 @@ Decision		dabsic_read_statement(const char	*code,
       return (BD_OK);
     }
 
-  if (readtextcase(code, i, "While"))
+  if (readtextcasesep(code, i, "While", fieldname))
     {
       dabsic_read_separator(code, i);
       func.command = Function::WHILE;
@@ -31,7 +33,7 @@ Decision		dabsic_read_statement(const char	*code,
       return (BD_OK);
     }
 
-  if (readtextcase(code, i, "For"))
+  if (readtextcasesep(code, i, "For", fieldname))
     {
       dabsic_read_separator(code, i);
       func.command = Function::FOR;
@@ -40,7 +42,7 @@ Decision		dabsic_read_statement(const char	*code,
       return (BD_OK);
     }
 
-  if (readtextcase(code, i, "Do"))
+  if (readtextcasesep(code, i, "Do", fieldname))
     {
       dabsic_read_separator(code, i);
       func.command = Function::DO_WHILE;
@@ -49,7 +51,7 @@ Decision		dabsic_read_statement(const char	*code,
       return (BD_OK);
     }
 
-  if (readtextcase(code, i, "Repeat"))
+  if (readtextcasesep(code, i, "Repeat", fieldname))
     {
       dabsic_read_separator(code, i);
       func.command = Function::REPEAT;
@@ -58,21 +60,39 @@ Decision		dabsic_read_statement(const char	*code,
       return (BD_OK);
     }
 
-  if (readtextcase(code, i, "Return"))
+  if (readtextcasesep(code, i, "Select", fieldname))
+    {
+      dabsic_read_separator(code, i);
+      func.command = Function::SELECT;
+      if (dabsic_read_select(code, i, func, funcnode, root) == BD_ERROR)
+	return (BD_ERROR);
+      return (BD_OK);
+    }
+
+  if (readtextcasesep(code, i, "With", fieldname))
+    {
+      dabsic_read_separator(code, i);
+      func.command = Function::WITH;
+      if (dabsic_read_with(code, i, func, funcnode, root) == BD_ERROR)
+	return (BD_ERROR);
+      return (BD_OK);
+    }
+
+  if (readtextcasesep(code, i, "Return", fieldname))
     {
       dabsic_read_separator(code, i);
       func.command = Function::RETURN;
       if (dabsic_read_instruction(code, i, func, funcnode, root) == BD_ERROR)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "A value or expression was expected after 'while' on line %d",
+	   "A value or expression was expected after 'while' on line %s:%d",
 	   "ressource,configuration,syntax",
-	   whichline(code, i)
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
       return (BD_OK);
     }
 
-  if (readtextcase(code, i, "Leave"))
+  if (readtextcasesep(code, i, "Leave", fieldname))
     {
       dabsic_read_separator(code, i);
       func.command = Function::RETURN;
@@ -81,14 +101,21 @@ Decision		dabsic_read_statement(const char	*code,
       return (BD_OK);
     }
 
-  if (readtextcase(code, i, "Break"))
+  if (readtextcasesep(code, i, "Break", fieldname))
     {
       dabsic_read_separator(code, i);
       func.command = Function::BREAK;
       return (BD_OK);
     }
 
-  if (readtextcase(code, i, "Continue"))
+  if (readtextcasesep(code, i, "Brake", fieldname))
+    {
+      dabsic_read_separator(code, i);
+      func.command = Function::BRAKE;
+      return (BD_OK);
+    }
+
+  if (readtextcasesep(code, i, "Continue", fieldname))
     {
       dabsic_read_separator(code, i);
       func.command = Function::CONTINUE;

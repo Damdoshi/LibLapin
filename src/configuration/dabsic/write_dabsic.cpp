@@ -5,9 +5,9 @@
 
 #include		"lapin_private.h"
 
-static void		restore_value(std::stringstream				&ss,
-				      SmallConf					&conf,
-				      ssize_t					ind)
+static void		restore_value(std::ostream			&ss,
+				      SmallConf				&conf,
+				      ssize_t				ind)
 {
   ssize_t		i;
 
@@ -19,17 +19,25 @@ static void		restore_value(std::stringstream				&ss,
 	ss << " ";
       ss << "]";
     }
+  else if (conf.function)
+    {
+      ss << "[Function" << std::endl;
+      restore_function(ss, conf, ind + 2);
+      for (i = 0; i < ind; ++i)
+	ss << " ";
+      ss << "]";
+    }
   else if (conf.expression)
     restore_expression(ss, *conf.expression, true);
   else if (conf.have_value)
     writevalue(ss, conf);
 }
 
-static void		restore_dabsic(std::stringstream			&ss,
-				       SmallConf				&conf,
-				       ssize_t					indent);
+static void		restore_dabsic(std::ostream			&ss,
+				       SmallConf			&conf,
+				       ssize_t				indent);
 
-static bool		got_real_field(SmallConf				&conf)
+static bool		got_real_field(SmallConf			&conf)
 {
   std::map<std::string, SmallConf*>::iterator it;
 
@@ -39,8 +47,8 @@ static bool		got_real_field(SmallConf				&conf)
   return (false);
 }
 
-static void		restore_prototype(std::stringstream			&ss,
-					  SmallConf				&conf)
+static void		restore_prototype(std::ostream			&ss,
+					  SmallConf			&conf)
 {
   ssize_t		i;
 
@@ -51,16 +59,27 @@ static void		restore_prototype(std::stringstream			&ss,
   ss << "(";
   for (i = 0; i < (ssize_t)params.Size(); ++i)
     {
-      ss << params[i].original_value; // Il faut utiliser name et non original_value
+      if (params[i].last_type == SmallConf::STRING)
+	ss << "string ";
+      else if (params[i].last_type == SmallConf::INTEGER)
+	ss << "integer ";
+      else if (params[i].last_type == SmallConf::DOUBLE)
+	ss << "real ";
+      ss << params[i].name;
+      if (params[i].expression)
+	{
+	  ss << " = ";
+	  restore_expression(ss, *params[i].expression, true);
+	}
       if (i + 1 < (ssize_t)params.Size())
 	ss << ", ";
     }
   ss << ")";
 }
 
-static void		dabsic_array(std::stringstream				&ss,
-				     SmallConf					&conf,
-				     ssize_t					indent)
+static void		dabsic_array(std::ostream			&ss,
+				     SmallConf				&conf,
+				     ssize_t				indent)
 {
   ssize_t		i, j;
 
@@ -114,15 +133,15 @@ static void		dabsic_array(std::stringstream				&ss,
     }
 }
 
-static void		restore_dabsic(std::stringstream			&ss,
-				       SmallConf				&conf,
-				       ssize_t					indent)
+static void		restore_dabsic(std::ostream			&ss,
+				       SmallConf			&conf,
+				       ssize_t				indent)
 {
   std::map<std::string, SmallConf*>::iterator it;
   ssize_t		i;
 
   restore_prototype(ss, conf);
-  if (conf.have_value || conf.Size() > 0 || conf.expression)
+  if (conf.have_value || conf.Size() > 0 || conf.expression || conf.function)
     {
       ss <<  " = ";
       if (conf.Size() > 0)
@@ -168,6 +187,7 @@ static void		restore_dabsic(std::stringstream			&ss,
 	  if (it->second->have_value
 	      || it->second->Size()
 	      || it->second->expression
+	      || it->second->function
 	      || it->second->sequence)
 	    {
 	      ss << " = ";
@@ -181,7 +201,7 @@ static void		restore_dabsic(std::stringstream			&ss,
     }
 }
 
-char			*_bunny_write_dabsic(const t_bunny_configuration	*config)
+char			*_bunny_write_dabsic(const t_bunny_configuration *config)
 {
   std::stringstream	ss;
   char			*ret;

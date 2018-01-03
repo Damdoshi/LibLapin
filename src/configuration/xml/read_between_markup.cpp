@@ -24,9 +24,10 @@ Decision		xml_read_between_markup(const char		*code,
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "A closing markup was expected to close the "
-	   "XML scope '%s' opened on line %zu, on line %d",
+	   "XML scope '%s' opened on line %zu, on line %s:%d",
 	   "configuration,syntax",
-	   conf.name.c_str(), line, whichline(code, i)
+	   conf.name.c_str(), line,
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
 
       // Register raw value
@@ -52,9 +53,9 @@ Decision		xml_read_between_markup(const char		*code,
 	  if (readtext(code, i, "/>") == false)
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
-	       "Special markup end was expected on line %d",
+	       "Special markup end was expected on line %s:%d",
 	       "configuration,syntax",
-	       whichline(code, i)
+	       SmallConf::file_read.top().c_str(), whichline(code, i)
 	       );
 	  xml_read_separator(code, i);
 	}

@@ -23,7 +23,7 @@ bool			_bunny_handle_directive(const char		*code,
       if (readstring(code, i, &buffer[0], sizeof(buffer)) == false)
 	return (false);
       if (bunny_load_configuration
-	  (bunny_which_format(&buffer[0]), &buffer[0], fileroot) == false)
+	  (bunny_which_format(&buffer[0]), &buffer[0], fileroot) == NULL)
 	scream_error_if(return (false), BE_SYNTAX_ERROR, PATTERN,
 			"ressource,configuration",
 			code, i, node, fileroot, "false", "Error while loading ",
@@ -35,7 +35,7 @@ bool			_bunny_handle_directive(const char		*code,
       if (readstring(code, i, &buffer[0], sizeof(buffer)) == false)
 	return (false);
       if (bunny_load_configuration
-	  (bunny_which_format(&buffer[0]), &buffer[0], node) == false)
+	  (bunny_which_format(&buffer[0]), &buffer[0], node) == NULL)
 	scream_error_if(return (false), BE_SYNTAX_ERROR, PATTERN,
 			"ressource,configuration",
 			code, i, node, fileroot, "false", "Error while loading ",

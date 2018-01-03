@@ -9,6 +9,7 @@ bool			bunny_configuration_execute(t_bunny_configuration	*cnf,
 						    bool			rec,
 						    t_bunny_configuration	*par)
 {
+  bool			ret;
   SmallConf		*root = (SmallConf*)cnf;
   SmallConf		*artif = (SmallConf*)cnf;
   SmallConf		*param = (SmallConf*)par;
@@ -22,24 +23,16 @@ bool			bunny_configuration_execute(t_bunny_configuration	*cnf,
     proto = &(*artif)[".parameters"];
 
   if (artif->expression)
-    return (expr_compute
-	    (*artif,
-	     false,
-	     root,
-	     NULL,
-	     artif,
-	     param
-	     ));
+    {
+      ret = expr_compute(*artif, NULL, false, root, NULL, artif->father, param);
+      return (ret);
+    }
 
   if (artif->function)
-    return (dabsic_compute
-	    (*artif,
-	     proto,
-	     false,
-	     root,
-	     artif,
-	     param
-	     ));
+    {
+      ret = dabsic_compute(*artif, proto, false, root, artif->father, param);
+      return (ret);
+    }
 
   if (rec)
     {

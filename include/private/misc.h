@@ -20,6 +20,7 @@ extern t_bunny_joystick		gl_joystick[LAST_BUNNY_JOYSTICK];
 extern t_bunny_window		*gl_window;
 extern bool			gl_full_blit;
 extern size_t			gl_bunny_frequency;
+extern bool			gl_complete_log;
 
 t_bunny_response		network_event(unsigned int		v,
 					      void			*dat);
@@ -47,13 +48,21 @@ bool				bunny_filter_label(const char		*labels);
     {									\
       if (bunny_get_error_descriptor() >= 0 &&				\
 	  bunny_filter_label(lab))					\
-	dprintf(bunny_get_error_descriptor(),				\
-		"FAILURE [%s][%016lu][%16s:%d][%s][" patt "].\n",	\
-		lab,							\
-		(long unsigned int)time(NULL),				\
-		__FUNCTION__, __LINE__,					\
-		bunny_strerror(err),					\
-		__VA_ARGS__);						\
+	{								\
+	  if (gl_complete_log)					\
+	    dprintf(bunny_get_error_descriptor(),			\
+		    "FAILURE [%s][%016lu][%16s:%d][%s][" patt "]\n",	\
+		    lab,						\
+		    (long unsigned int)time(NULL),			\
+		    __FILE__, __LINE__,					\
+		    bunny_strerror(err),				\
+		    __VA_ARGS__);					\
+	  else								\
+	    dprintf(bunny_get_error_descriptor(),			\
+		    "%s - " patt ".\n",					\
+		    bunny_strerror(err),				\
+		    __VA_ARGS__);					\
+	}								\
       bunny_errno = err;						\
       out;								\
     }									\
@@ -69,12 +78,19 @@ bool				bunny_filter_label(const char		*labels);
     {									\
       if (bunny_get_log_descriptor() >= 0 &&				\
 	  bunny_filter_label(lab))					\
-	dprintf(bunny_get_log_descriptor(),				\
-		"LOG     [%s][%016lu][%16s:%d][" pattern "].\n",	\
-		lab,							\
-		(long unsigned int)time(NULL),				\
-		__FUNCTION__, __LINE__,					\
-		__VA_ARGS__);						\
+	{								\
+	  if (gl_complete_log)					\
+	    dprintf(bunny_get_log_descriptor(),				\
+		    "LOG     [%s][%016lu][%16s:%d][" pattern "].\n",	\
+		    lab,						\
+		    (long unsigned int)time(NULL),			\
+		    __FILE__, __LINE__,					\
+		    __VA_ARGS__);					\
+	  else								\
+	    dprintf(bunny_get_log_descriptor(),				\
+		    pattern ".\n",					\
+		    __VA_ARGS__);					\
+	}								\
       /* bunny_errno = 0; */						\
     }									\
   while (0)

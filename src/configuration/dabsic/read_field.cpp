@@ -25,9 +25,9 @@ Decision		dabsic_read_field(const char			*code,
       if (readtext(code, i, "]") == false)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "The token ']' was expected to close the dictionnary scope on line %d",
+	   "The token ']' was expected to close the dictionnary scope on line %s:%d",
 	   "ressource,configuration,syntax",
-	   whichline(code, i)
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
       dabsic_read_separator(code, i);
       return (BD_OK);
@@ -44,9 +44,9 @@ Decision		dabsic_read_field(const char			*code,
       if (readtext(code, i, "}") == false)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
-	   "The token '}' was expected to close the array scope on line %d",
+	   "The token '}' was expected to close the array scope on line %s:%d",
 	   "ressource,configuration,syntax",
-	   whichline(code, i)
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
       dabsic_read_separator(code, i);
       return (BD_OK);

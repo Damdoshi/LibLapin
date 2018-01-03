@@ -1,0 +1,6 @@
+
+Square(int a) = [Function
+  Return a * a
+]
+
+main = Square(2) + 1

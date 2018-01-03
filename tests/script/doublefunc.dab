@@ -1,0 +1,6 @@
+
+Double(int a) = [Function
+  Return a
+]
+
+main = Double(1 + 1) + Double(2 + 2)

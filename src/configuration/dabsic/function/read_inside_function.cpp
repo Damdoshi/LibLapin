@@ -23,9 +23,9 @@ Decision		dabsic_read_inside_function(const char	*code,
 	  {
 	    scream_error_if
 	      (return (BD_ERROR), ENOMEM,
-	       "Memory exhausted while processing function on line %d",
+	       "Memory exhausted while processing function on line %s:%d",
 	       "ressource,configuration",
-	       whichline(code, i)
+	       SmallConf::file_read.top().c_str(), whichline(code, i)
 	       );
 	  }
       funcx = funcnode.function;
@@ -43,6 +43,9 @@ Decision		dabsic_read_inside_function(const char	*code,
 	 && checktextcase(code, i, "Else") == false
 	 && checktextcase(code, i, "EndIf") == false
 	 && checktextcase(code, i, "EndWhile") == false
+	 && checktextcase(code, i, "EndWith") == false
+	 && checktextcase(code, i, "EndSelect") == false
+	 && checktextcase(code, i, "Case") == false
 	 && checktextcase(code, i, "WEnd") == false
 	 && checktextcase(code, i, "EndFor") == false
 	 && checktextcase(code, i, "Next") == false

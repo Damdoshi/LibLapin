@@ -1,0 +1,6 @@
+
+CastFunction(string a) = [Function
+  Return integer(a)
+]
+
+main = CastFunction("40") + 2 + real("42.5")

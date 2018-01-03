@@ -1,0 +1,27 @@
+
+Selection(int a) = [Function
+  "Parameter value is ", a, " so select value will be ", a + 1
+  Select a + 1
+    Case Is > 3
+      "--- Result is greater than 3 (hardcoded)"
+    Case 3
+      "--- Result is 3 (hardcoded)"
+    Case -2 <= Is <= 2
+      "--- Result is ", Is, " (softcoded)"
+    Case -3
+      "--- Result is -3 (hardcoded)"
+    Case Is < -3
+      "--- Result is lesser than -3 (hardcoded)"
+  EndSelect
+  Return 0
+]
+
+main = [Function
+  integer i
+
+  For i = -5 To i < 5 Step i += 1
+    Selection(i)
+  Next
+  Return 0
+]
+

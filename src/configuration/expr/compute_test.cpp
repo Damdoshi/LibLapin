@@ -16,6 +16,9 @@ bool			expr_compute_test(Expression		&exp,
   size_t		i;
   bool			res;
 
+  if (exp.is_const)
+    return (true);
+
   if (exp.operand.size() > 0 && exp.operand[0]->optor_family != -1)
     {
       cnst = exp.operand[0]->is_const;
@@ -23,6 +26,8 @@ bool			expr_compute_test(Expression		&exp,
 	  (*exp.operand[0], dry, root, local, artif, param) == false)
 	return (false);
     }
+  else if (exp.operand[0]->val.symbol)
+    cnst = exp.operand[0]->is_const;
   else
     cnst = true;
 
@@ -35,7 +40,12 @@ bool			expr_compute_test(Expression		&exp,
       int		optor = exp.operand[i + 1]->optor;
 
       if (x.optor_family == -1)
-	{} // Operand
+	{}
+      else if (x.optor_family == Expression::LAST_OPERATOR_FAMILY)
+	{
+	  if (expr_compute_function_call(x, dry, root, local, artif, param) == false)
+	    return (false);
+	}
       else if (gl_expr_computation[x.optor_family]
 	       (x, dry, root, local, artif, param) == false)
 	return (false);
@@ -47,9 +57,12 @@ bool			expr_compute_test(Expression		&exp,
 	       (*left, dry, root, local, artif, param)) == NULL)
 	    scream_error_if
 	      (return (false), BE_BAD_ADDRESS,
-	       "Undefined variable or unresolvable address %s on line %d",
+	       "Undefined variable or unresolvable address %s "
+	       "from context %s on line %s:%d",
 	       "ressource,configuration,syntax",
-	       left->original_value.c_str(), exp.line);
+	       left->original_value.c_str(),
+	       artif->address.c_str(),
+	       exp.file.c_str(), exp.line);
 	}
       else if (exp.operand[i]->is_const == false)
 	cnst = false;
@@ -61,9 +74,12 @@ bool			expr_compute_test(Expression		&exp,
 	       (*right, dry, root, local, artif, param)) == NULL)
 	    scream_error_if
 	      (return (false), BE_BAD_ADDRESS,
-	       "Undefined variable or unresolvable address %s on line %d",
+	       "Undefined variable or unresolvable address %s "
+	       "from context %s on line %s:%d",
 	       "ressource,configuration,syntax",
-	       right->original_value.c_str(), exp.line);
+	       right->original_value.c_str(),
+	       artif->address.c_str(),
+	       exp.file.c_str(), exp.line);
 	}
       else if (exp.operand[i + 1]->is_const == false)
 	cnst = false;

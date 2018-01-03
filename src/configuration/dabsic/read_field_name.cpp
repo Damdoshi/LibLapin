@@ -21,18 +21,18 @@ SmallConf		*dabsic_field_name(const char			*code,
       if (manda)
 	scream_error_if
 	  (return (NULL), BE_SYNTAX_ERROR,
-	   "A name was expected line %d",
+	   "A name was expected line %s:%d",
 	   "configuration,syntax",
-	   whichline(code, i)
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
       return (NULL);
     }
   if ((newnode = &config[&buffer[0]]) == NULL)
     scream_error_if
       (return (NULL), ENOMEM,
-       "Memory exhausted while processing line %d",
+       "Memory exhausted while processing line %s:%d",
        "configuration,syntax",
-       whichline(code, i)
+       SmallConf::file_read.top().c_str(), whichline(code, i)
        );
   dabsic_read_separator(code, i);
 
@@ -47,19 +47,49 @@ SmallConf		*dabsic_field_name(const char			*code,
       iteration = 0;
       do
 	{
+	  SmallConf::Type	type;
+
+	  dabsic_read_separator(code, i);
+	  if (readtext(code, i, "string"))
+	    type = SmallConf::STRING;
+	  else if (readtext(code, i, "real"))
+	    type = SmallConf::DOUBLE;
+	  else if (readtext(code, i, "integer") || readtext(code, i, "int"))
+	    type = SmallConf::INTEGER;
+	  else
+	    scream_error_if
+	      (return (NULL), BE_SYNTAX_ERROR,
+	       "A parameter type was expected on line %s:%d",
+	       "configuration,syntax",
+	       SmallConf::file_read.top().c_str(), whichline(code, i)
+	       );
 	  dabsic_read_separator(code, i);
 	  if (getfieldname(code, i, &buffer[0], sizeof(buffer), *newnode, true, true) == false)
 	    {
 	      delete newnode;
 	      scream_error_if
 		(return (NULL), BE_SYNTAX_ERROR,
-		 "The token ')' was expected to close the prototype on line %d",
+		 "The token ')' was expected to close the prototype on line %s:%d",
 		 "configuration,syntax",
-		 whichline(code, i)
+		 SmallConf::file_read.top().c_str(), whichline(code, i)
 		 );
 	    }
-	  (*newnode)[".parameters"][iteration++].SetString(&buffer[0]);
+	  SmallConf		&pr = (*newnode)[".parameters"][iteration++];
+
+	  pr.name = &buffer[0];
+	  pr.last_type = type;
 	  dabsic_read_separator(code, i);
+	  if (readtext(code, i, "="))
+	    {
+	      dabsic_read_separator(code, i);
+	      if (expr_read_expression
+		  (code, i, pr, Expression::BEOF_TERNARY) == BD_ERROR)
+		{
+		  delete newnode;
+		  return (NULL);
+		}
+	      dabsic_read_separator(code, i);
+	    }
 	}
       while (readtext(code, i, ","));
       dabsic_read_separator(code, i);
@@ -67,9 +97,9 @@ SmallConf		*dabsic_field_name(const char			*code,
 	{
 	  scream_error_if
 	    (return (NULL), BE_SYNTAX_ERROR,
-	     "The token ')' was expected to close the prototype on line %d",
+	     "The token ')' was expected to close the prototype on line %s:%d",
 	     "configuration,syntax",
-	     whichline(code, i)
+	     SmallConf::file_read.top().c_str(), whichline(code, i)
 	     );
 	  delete newnode;
 	}
