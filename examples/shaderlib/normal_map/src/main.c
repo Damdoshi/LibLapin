@@ -66,7 +66,7 @@ int			main(void)
     (shader, "WindowSize", BVT_2_FLOAT,
      (double)win->buffer.width, (double)win->buffer.height);
   bunny_shader_set_variable
-    (shader, "LightPos", BVT_3_FLOAT, 0.0, 0.0, 0.1);
+    (shader, "LightPos", BVT_3_FLOAT, 0.0, 0.0, 1.0);
   bunny_shader_set_variable
     (shader, "LightColor", BVT_FULL_COLOR, WHITE);
   bunny_shader_set_variable

@@ -1,0 +1,6 @@
+' Hanged Bunny Studio 2014-2018
+' Standard system header
+
+StdIn = 0
+StdOut = 1
+StdErr = 2

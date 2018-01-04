@@ -1,0 +1,12 @@
+
+
+Second=42
+First=Second
+
+Print = [Function
+  "This is ", [First], "!"
+  Return "lol"
+]
+
+main = Print()
+

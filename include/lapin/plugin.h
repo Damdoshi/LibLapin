@@ -27,7 +27,7 @@
 */
 typedef enum			e_bunny_value_type
   {
-    VOID			= 'v', 
+    VOID			= 'v',
     INTEGER			= 'i', /* int64_t */
     DOUBLE			= 'd',
     STRING			= 's', /* const char * */
@@ -66,7 +66,11 @@ typedef struct			s_bunny_prototype
   const void *			function_ptr;
   t_bunny_value_type		return_value;
   size_t			nbrparam;
-  t_bunny_value_type		parameters[8];
+# ifndef			__ANSI__
+  t_bunny_value_type		parameters[0];
+# else
+  t_bunny_value_type		parameters[1];
+# endif
 }				t_bunny_prototype;
 
 /*!

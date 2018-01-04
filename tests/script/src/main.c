@@ -67,8 +67,7 @@ int			main(int		argc,
   if (argc == 2)
     alarm(2);
 
-  refresh_test("operation_cast.dab");
-  refresh_test("complex_cast.dab");
+  refresh_test("address.dab");
   return (EXIT_SUCCESS);
 
   refresh_test("select.dab");
@@ -85,6 +84,8 @@ int			main(int		argc,
   refresh_test("classic_func_call.dab");
   refresh_test("named_func_call.dab");
   refresh_test("simple_cast.dab");
+  refresh_test("operation_cast.dab");
+  refresh_test("complex_cast.dab");
 
   return (EXIT_SUCCESS);
 }

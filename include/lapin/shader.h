@@ -176,5 +176,33 @@ typedef struct		s_bunny_screen_tweak
 
 t_bunny_shader		*bunny_screen_tweak_shader(const t_bunny_screen_tweak *bst);
 
+typedef struct		s_bunny_normal_light
+{
+  bool			active;
+  float			x;
+  float			y;
+  float			z;
+  t_bunny_color		light_color;
+  float			light_attenuation;
+
+  t_bunny_color		ambient_color;
+  float			ambient_depth;
+  float			ambient_attenuation;
+
+  t_bunny_color		specular_color;
+  float			specular_depth;
+  float			specular_attenuation;
+}			t_bunny_normal_light;
+
+typedef struct		s_bunny_normal_map
+{
+  t_bunny_position	window_size;
+  t_bunny_picture	*normal_map;
+  t_bunny_picture	*specular_map;
+  t_bunny_normal_light	lights[8];
+}			t_bunny_normal_map;
+
+t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm);
+
 #endif	/*		__LAPIN_SHADER_H__				*/
 

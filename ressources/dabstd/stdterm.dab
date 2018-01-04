@@ -1,0 +1,11 @@
+' Hanged Bunny Studio 2014-2018
+' Standard terminal header
+
+[Terminal
+  [Color
+    Reset = "\033[00m"
+    Red = "\033[0;31m"
+    Blue = "\033[1;34m"
+    White = "\033[1;37m"
+  ]
+]

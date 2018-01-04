@@ -10,7 +10,6 @@ Expression		*expr_read_operand(const char		*code,
 					   ssize_t		&i)
 {
   Expression		*last;
-  ssize_t		j;
 
   if (readtext(code, i, "("))
     {

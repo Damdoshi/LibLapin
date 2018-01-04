@@ -11,7 +11,7 @@ static const std::string gl_screen_tweak_code =
 #include		"screen_tweak.frag"
   ;
 
-void			_clean_shader(void)
+static void		_clean_shader(void)
 {
   bunny_delete_shader(gl_screen_tweak_shader);
 }
