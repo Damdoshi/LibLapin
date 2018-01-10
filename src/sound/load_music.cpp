@@ -38,6 +38,7 @@ t_bunny_music		*bunny_load_music(const char		*file)
   mus->attenuation = 5;
   mus->playing = false;
   mus->pause = false;
+  mus->sound_manager = NULL;
 
   scream_log_if(PATTERN, "ressource,sound", file, mus);
   return ((t_bunny_music*)mus);

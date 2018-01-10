@@ -30,6 +30,7 @@ t_bunny_effect		*bunny_new_effect(double		duration)
   eff->playing = false;
   eff->pause = false;
 
+  eff->sound_manager = NULL;
   eff->sample_per_second = SAMPLE_PER_SECONDS;
   eff->duration = duration;
   eff->sound.setBuffer(*eff->effect);

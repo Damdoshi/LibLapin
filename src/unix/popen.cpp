@@ -81,20 +81,34 @@ int			bunny_popen(t_bunny_subprocess		*subproc,
       bunny_freea(params);
       return (0);
     }
+
   if (pip[0][0] != -1) // stdin pipe
     close(pip[0][0]);
+  subproc->stdin = pip[0][1];
+
   if (pip[1][1] != -1) // stdout pipe
     close(pip[1][1]);
+  subproc->stdout = pip[1][0];
+
   if (pip[2][1] != -1) // stderr pipe
     close(pip[2][1]);
+  subproc->stderr = pip[2][0];
+
   if (pip[3][0] != -1) // data input
     close(pip[3][0]);
+  subproc->custom_data_input = pip[3][1];
+
   if (pip[4][1] != -1) // data output
     close(pip[4][1]);
+  subproc->custom_data_output = pip[4][0];
+
   if (pip[5][0] != -1) // command input
     close(pip[5][0]);
+  subproc->custom_command_input = pip[5][1];
+
   if (pip[6][1] != -1) // command output
     close(pip[6][1]);
+  subproc->custom_command_output = pip[6][0];
 
   subproc->pid = pid;
   scream_log_if(PATTERN, "unix", subproc, env, nbr, pid);

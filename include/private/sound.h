@@ -9,6 +9,8 @@
 #ifndef				__LAPIN_PRIVATE_SOUND_H__
 # define			__LAPIN_PRIVATE_SOUND_H__
 # include			<SFML/Audio.hpp>
+# include			<map>
+# include			<array>
 
 enum				_music_or_sound
   {
@@ -43,6 +45,7 @@ struct				bunny_music
 
   double			duration;
   sf::Music			music;
+  void				*sound_manager;
 };
 
 struct				bunny_effect
@@ -63,7 +66,30 @@ struct				bunny_effect
   size_t			res_id;
   sf::SoundBuffer		*effect;
   sf::Sound			sound;
+  void				*sound_manager;
 };
 
+typedef struct			s_bunny_managed_sound
+{
+  double			proper_volume;
+  double			proper_pitch;
+}				t_bunny_managed_sound;
+
+struct				bunny_sound_manager
+{
+  t_bunny_sound			*current_music[BST_LAST_TRACK];
+  double			general_volume;
+  double			volumes[BST_LAST_SOUND_TYPE];
+  double			general_pitch;
+  double			pitches[BST_LAST_SOUND_TYPE];
+  std::map<
+    t_bunny_sound*,
+    t_bunny_sound_type
+    >				sound_to_type;
+  std::array<
+    std::map<t_bunny_sound*, t_bunny_managed_sound>,
+    BST_LAST_SOUND_TYPE
+    >				sounds;
+};
 
 #endif	/*			__LAPIN_PRIVATE_SOUND_H__	*/

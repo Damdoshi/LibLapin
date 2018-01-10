@@ -1,0 +1,225 @@
+T_BUNNY_SPRITE EXTERNAL CONFIGURATION
+=====================================
+
+You can set properties of a t_bunny_sprite thanks to a file at runtime.
+This allow you to get rid of a lot of configuration and to create space
+for any outside editor.
+
+DABSIC format and complete field description
+--------------------------------------------
+
+### Fields inherited from t_bunny_clipable
+
+* All mandatory fields of t_bunny_clipable configuration format are mandatory
+  in t_bunny_sprite configuration file. So, basically, RessourceFile is
+  mandatory.
+
+* Any optionnal fields of t_bunny_clipable configuration format are optionnal
+  in t_bunny_sprite configuration file.
+
+* Additionnaly, the Clip.Size field present in clipable and which is optionnal
+  for a simple clipable is *mandatory* for a sprite.
+
+### Mandatory fields
+
+* The Animations node is mandatory. The Animations node is a hashmap node
+  (it contains named fields) that contains every animation available for
+  the sprite:
+
+  [Animations
+    [Running
+       '... Animation description ...
+    ]
+    [Jumping
+       '... Animation description ...
+    ]
+  ]
+
+* The InitialAnimation field is mandatory. Its purpose is to indicates
+  which animation must be set at the beginning, before any manipulation
+  is made in your program:
+
+  InitialAnimation = "Running"
+
+* The Frequency field is not completly mandatory inside the root scope
+  of the sprite: it must be defined globaly, or at least, localy, inside
+  the animation description node.
+  The Frequency node indicates at how many frame per second the animation
+  is running, its unit is the Hertz. Example:
+
+  [Animations
+    '... Animations
+  ]
+  Frequency = 3
+
+  Or
+
+  [Animations
+    [Running
+      '...
+      Frequency = 3
+    ]
+    [Jumping
+      '...
+      Frequency = 3
+    ]
+  ]
+
+  Or
+
+  [Animations
+     [Running
+       '...
+       Frequency = 3
+     ]
+     [Jumping
+       '...
+     ]
+  ]
+  Frequency = 3
+
+  A global Frequency may be precised for all nodes.
+  It a node precise itself a Frequency value, it is the one that is used.
+
+* Inside the Animations node should be at least one node describing an
+  animation. In these node, there is several mandatory fields:
+
+  - The Frame field is mandatory. It indicates how many picture clips are
+    being used by the animation.
+
+  - The Position array is composed of two cases: 0 and 1 and it indicates
+    respectively the coordinates as X and Y of the first picture clip
+    that compose the animation:
+
+    [Animlations
+      [Running
+        '...
+	Position=100,200
+      ]
+    ]
+
+### Optionnal fields
+
+* Inside the Animations node should be at least one node describing an
+  animation. In these node, there is several optionnal fields:
+
+  - The AnimationPlay or RepeatAnimation field tells how many time
+    the full animation must loop before being stopped. Note that
+    AnimationPlay and RepeatAnimation are the same field, it is just
+    an alternative name. By default, this field value is -1, which means
+    infinit repeatition if there is no next animation:
+
+    [Animations
+      [Running
+        '...
+	RepeatAnimation=3 'Repeat three times the animation
+      ]
+    ]
+
+  - The FramePlay array must have same length as the animation.
+    This length match the value given in the Frame field. The
+    FramePlay array describe, case after case, how many time
+    length frames. For example:
+
+    [Animations
+      [Idle
+        Frame=5
+	Frequency=4
+	{FramePlay
+          20, 1, 1, 1, 1
+        }
+      ]
+    ]
+
+    This animation show a still character on frame 0, which
+    brush its hair on frame 1, 2, 3 and 4. The frame 0
+    last 20 times more than other frame and as written with
+    Frequency=4, there is 4 frames per seconds.
+    Write 0 as frame repeat have the same effect as writing 1.
+
+  - The Browsing field can value "LeftToRight", "RightToLeft" or
+    "BackAndForth" and indicates the way the clips composing the
+    animation are played:
+
+    [Animations
+      [Running
+        '...
+        Browsing="LeftToRight"
+      ]
+    ]
+
+    By default, this field value is "LeftToRight"
+
+  - The NextAnimation field indicates which animation will
+    follow the described one after its termination. It allows
+    animation to follow eachother, and even to cycle them:
+
+    [Animations
+       [Jumping
+         '...
+         NextAnimation="Idle"
+       ]
+       [Running
+         '...
+         NextAnimation="Idle"
+       ]
+       [Idle
+         '...
+       ]
+    ]
+
+    By default, there is no next animation, and the animation stop
+    or loop depending of other fields.
+
+* Here is a complete working example:
+
+  RessourceFile="./ressource/pinkman.png"
+  Frequency=5
+  InitialAnimation="Running"
+  [Clip
+    Size=100,100 'Size of a single frame
+  ]
+  [Animations
+     [Running
+       Position=0,0
+       Frame=5
+       RepeatAnimation=5
+       NextAnimation="Idle"
+     ]
+     [Idle
+       Position=0,100 'Note that Clip.Size[1] is 100. so this is the line under
+       Frame=5
+       Browsing="BackAndForth"
+       {FramePlay
+         20, 1, 1, 1, 1
+       }
+       Frequency=3
+     ]
+  ]
+
+INI format and complete field description
+-----------------------------------------
+
+This is the architecture of the INI format by example, with the same script
+as for Dabsic:
+
+RessourceFile="./ressource/pinkman.png"
+Frequency=5
+InitialAnimation="Running"
+
+[Clip]
+Size=100,100
+
+[Animations.Running]
+Position=0,0
+Frame=5
+RepeatAnimation=5
+NextAnimation="Idle"
+
+[Animations.Idle]
+Position=0,100
+Frame=5
+Browsing="BackAndForth"
+FramePlay=20,1,1,1,1
+Frequency=3
+

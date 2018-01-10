@@ -40,7 +40,8 @@ t_bunny_response	key(t_bunny_event_state		state,
     bunny_pool_clear(elements);
   if (state == GO_DOWN)
     {
-      if (sym >= BKS_F1 && sym < BKS_F1 + LAST_COLLISION_TYPE)
+      if ((sym >= BKS_F1 && sym < BKS_F1 + LAST_COLLISION_TYPE)
+	  || sym == BKS_F8)
 	{
 	  if ((shape = bunny_pool_new(elements, t_shape)) == NULL)
 	    {
@@ -54,6 +55,23 @@ t_bunny_response	key(t_bunny_event_state		state,
 	{
 	  shape->col.dot.coord.x = rand() % siz.x + off.x;
 	  shape->col.dot.coord.y = rand() % siz.y + off.y;
+	}
+      else if (sym == BKS_F8)
+	{ // Two points at the same position
+	  siz.x = rand() % siz.x + off.x;
+	  siz.y = rand() % siz.y + off.y;
+	  shape->col.type = 0;
+	  shape->col.dot.coord.x = siz.x;
+	  shape->col.dot.coord.y = siz.y;
+	  if ((shape = bunny_pool_new(elements, t_shape)) == NULL)
+	    {
+	      printf("Maximum element limit reached.\n");
+	      return (GO_ON);
+	    }
+	  shape->touch = false;
+	  shape->col.type = 0;
+	  shape->col.dot.coord.x = siz.x;
+	  shape->col.dot.coord.y = siz.y;
 	}
       else if (sym == BKS_F2)
 	{
@@ -80,10 +98,10 @@ t_bunny_response	key(t_bunny_event_state		state,
 	}
       else if (sym == BKS_F5)
 	{
-	  shape->col.rectangular.coord[0].x = rand() % siz.x + off.x;
-	  shape->col.rectangular.coord[0].y = rand() % siz.y + off.y;
-	  shape->col.rectangular.coord[1].x = shape->col.rectangular.coord[0].x + rand() % off.x;
-	  shape->col.rectangular.coord[1].y = shape->col.rectangular.coord[0].y + rand() % off.y;
+	  shape->col.rectangular.coord[0].x = rand() % siz.x + off.x / 2;
+	  shape->col.rectangular.coord[0].y = rand() % siz.y + off.y / 2;
+	  shape->col.rectangular.coord[1].x = rand() % off.x * 4;
+	  shape->col.rectangular.coord[1].y = rand() % off.y * 4;
 	}
       else if (sym == BKS_F6)
 	{
@@ -98,10 +116,10 @@ t_bunny_response	key(t_bunny_event_state		state,
 	}
       else if (sym == BKS_F7)
 	{
-	  shape->col.equation.coord[0].x = rand() % siz.x + 100;
-	  shape->col.equation.coord[0].y = rand() % siz.y + 100;
-	  shape->col.equation.coord[1].x = 100;
-	  shape->col.equation.coord[1].y = 100;
+	  shape->col.equation.coord[0].x = rand() % siz.x + 50;
+	  shape->col.equation.coord[0].y = rand() % siz.y + 50;
+	  shape->col.equation.coord[1].x = 300;
+	  shape->col.equation.coord[1].y = 300;
 
 	  shape->col.equation.origin_at_center = rand() % 2;
 	  shape->col.equation.flipx = rand() % 2;

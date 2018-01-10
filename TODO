@@ -5,11 +5,6 @@ root ->= lol ====> root = root->lol
 => Pouvoir effectuer un cast en ecrivant une variable au lieu d'un type, un peu comme sizeof(*var) fonctionne au lieu de sizeof(int)
 de facon a permettre de dire "cast dans le meme type que telle variable"
 
-
-Dans readvalue... S'arranger pour pouvoir lire des expressions. Le "rawstring" ne servant qu'en dernier recours, si il s'avère que
-l'operation n'est pas une expression (il n'y a pas un seul operateur, et donc, l'operateur mono operande rentrera bien dans rawstring...)
-=> En fait, il faut faire ca, meme avant de tester int et double, pour le coup...
-
 Generaliser la fonction "is_last" permettant de savoir si l'element actuel est le dernier.
 Il faudrait aussi faire un "is_first" dans le cas ou on parcoure a l'envers une configuration ou un conteneur.
 
@@ -17,10 +12,6 @@ Il faudrait aussi faire un "is_first" dans le cas ou on parcoure a l'envers une 
 
 => Faire le chargeur de conf pour font. ( + Ecrire ce ticket sur github)
 
- => Ajouter un offset configurable pour le joystick en dessous duquel un mouvement d'un axe
-    n'est pas remonté comme event. Par defaut, il vaut zero pour conserver le comportement precedent.
-
  => Integrer le dechiffrement des ressources aux fonctions de chargement,
     de facon a ce que rien ne soit neccessaire pour le faire ensuite.
 
-Etendre le path de include et import en fonction des includes et import...

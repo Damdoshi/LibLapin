@@ -93,7 +93,8 @@ t_bunny_response	display(void			*unused)
   return (GO_ON);
 }
 
-int			main(void)
+int			main(int	argc,
+			     char	**argv)
 {
   t_shape		*shape;
 
@@ -109,16 +110,36 @@ int			main(void)
   shape->col.equation.coord[1].x = 600;
   shape->col.equation.coord[1].y = 600;
 
-  shape->col.equation.origin_at_center = false;
-  shape->col.equation.flipx = false;
-  shape->col.equation.flipy = false;
+  shape->col.equation.origin_at_center = true;
 
   shape->col.equation.amplitude.x = 10;
   shape->col.equation.amplitude.y = 10;
 
-  shape->col.equation.a = -0.1;
-  shape->col.equation.b = 0;
-  shape->col.equation.c = 0;
+  if (argc >= 2)
+    shape->col.equation.a = atoi(argv[1]);
+  else
+    shape->col.equation.a = 0;
+
+  if (argc >= 3)
+    shape->col.equation.b = atoi(argv[2]);
+  else
+    shape->col.equation.b = 0;
+
+  if (argc >= 4)
+    shape->col.equation.c = atoi(argv[3]);
+  else
+    shape->col.equation.c = 0;
+
+  if (argc >= 5)
+    shape->col.equation.flipx = atoi(argv[4]);
+  else
+    shape->col.equation.flipx = false;
+
+  if (argc >= 6)
+    shape->col.equation.flipy = atoi(argv[5]);
+  else
+    shape->col.equation.flipy = false;
+
 
   bunny_clear(&window->buffer, BLACK);
   bunny_set_key_response(key);

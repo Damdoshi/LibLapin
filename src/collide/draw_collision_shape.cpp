@@ -57,6 +57,7 @@ static void		draw_line(t_bunny_buffer				*tar,
 {
   t_bunny_accurate_position cof;
   t_bunny_accurate_position tmp;
+  t_bunny_position	siz = { 10, 10 };
   t_bunny_position	t[2];
   unsigned int		c[2];
   int			i;
@@ -68,6 +69,7 @@ static void		draw_line(t_bunny_buffer				*tar,
   t[1].x = pos[1].x;
   t[1].y = pos[1].y;
   bunny_set_line(tar, &t[0], &c[0]);
+  bunny_set_circle(tar, t[0], siz, c[0]);
 
   cof.x = (pos[1].x - pos[0].x) / (ip + 1);
   cof.y = (pos[1].y - pos[0].y) / (ip + 1);
@@ -313,8 +315,9 @@ static void		draw_equation(t_bunny_buffer				*tar,
       if (equ->origin_at_center)
 	{
 	  if (equ->flipx)
-	    pos.x *= -1;
-	  pos.x = beg + equ->coord[0].x + equ->coord[1].x / 2;
+	    pos.x = end + equ->coord[0].x - beg;
+	  else
+	    pos.x = beg + equ->coord[0].x + equ->coord[1].x / 2;
 	  if (equ->flipy)
 	    pos.y *= -1;
 	  pos.y = pos.y + equ->coord[0].y + equ->coord[1].y / 2;

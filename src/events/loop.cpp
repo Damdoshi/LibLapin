@@ -204,16 +204,23 @@ t_bunny_response	bunny_loop(t_bunny_window	*window,
 		      {
 			if (event.type == sf::Event::JoystickMoved)
 			  {
-			    gl_joy_axis
-			      [event.joystickMove.joystickId][event.joystickMove.axis] =
-			      event.joystickMove.position;
-			    scream_log_if(PATTERN "joymove)", "event", window, freq, data);
-			    if ((rep = gl_callback.axis
-				 (event.joystickMove.joystickId,
-				  (t_bunny_axis)event.joystickMove.axis,
-				  event.joystickMove.position,
-				  data)) != GO_ON)
-			      goto end;
+			    if (fabs(gl_joy_axis
+				     [event.joystickMove.joystickId]
+				     [event.joystickMove.axis]
+				     - event.joystickMove.position)
+				> gl_axis_offset[event.joystickMove.axis])
+			      {
+				gl_joy_axis
+				  [event.joystickMove.joystickId][event.joystickMove.axis] =
+				  event.joystickMove.position;
+				scream_log_if(PATTERN "joymove)", "event", window, freq, data);
+				if ((rep = gl_callback.axis
+				     (event.joystickMove.joystickId,
+				      (t_bunny_axis)event.joystickMove.axis,
+				      event.joystickMove.position,
+				      data)) != GO_ON)
+				  goto end;
+			      }
 			  }
 		      }
 		  }

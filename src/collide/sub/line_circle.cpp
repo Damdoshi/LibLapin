@@ -65,29 +65,31 @@ bool			bunny_collision_line_circle(const t_bunny_collision	*_a,
   yoff = line->coord[1].y - line->coord[0].y;
 
   a = xoff * xoff + yoff * yoff;
-  b = 2 *
-    (xoff * (line->coord[0].x - circle->coord.x)
-     + yoff * (line->coord[0].y - circle->coord.y));
-  c = line->coord[0].x * line->coord[0].x
-    + line->coord[0].y * line->coord[0].y
-    + circle->coord.x * circle->coord.x
-    + circle->coord.y * circle->coord.y
-    - 2 * (line->coord[0].x * circle->coord.x + line->coord[0].y * circle->coord.y)
-    - circle->radius * circle->radius;
+  b = 2 * (xoff * (line->coord[0].x - circle->coord.x)
+	   + yoff * (line->coord[0].y - circle->coord.y));
+  c = pow(line->coord[0].x - circle->coord.x, 2)
+    + pow(line->coord[0].y - circle->coord.y, 2)
+    - pow(circle->radius, 2)
+    ;
 
   if ((delta = b * b - 4 * a * c) < 0)
     return (false);
-  coef = (line->coord[1].y - line->coord[0].y) / (line->coord[1].x - line->coord[0].x);
+  coef = (line->coord[1].y - line->coord[0].y)
+    / (line->coord[1].x - line->coord[0].x)
+    ;
   offset = -line->coord[0].x * coef + line->coord[0].y;
-  if (delta < 0.001 && delta > -0.00001)
+
+  if (delta < 0.001)
     {
       res = -b / (2 * a);
       return (_test_interval(line, res, res * coef + offset));
     }
-  res = (-b + sqrt(delta)) / (2 * a);
+  delta = sqrt(delta);
+  a *= 2;
+  res = (-b + delta) / a + line->coord[0].x;
   if (_test_interval(line, res, res * coef + offset))
     return (true);
-  res = (-b - sqrt(delta)) / (2 * a);
+  res = (-b - delta) / a + line->coord[0].x;
   return (_test_interval(line, res, res * coef + offset));
 }
 

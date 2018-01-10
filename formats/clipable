@@ -34,7 +34,7 @@ INI format and complete field description
 * Origin move the spot used to place the clipable, turn or scale it.
   It is two int or double long.
   Usage:
-  
+
     Origin=XPosition,YPosition
 
 * Rotation is a float that represent the rotation in degree of the clipable.

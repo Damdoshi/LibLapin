@@ -24,6 +24,7 @@ t_bunny_position		gl_mouse;
 bool				gl_button[sf::Mouse::ButtonCount];
 bool				gl_joy_button[sf::Joystick::Count][sf::Joystick::ButtonCount];
 float				gl_joy_axis[sf::Joystick::Count][sf::Joystick::AxisCount];
+float				gl_axis_offset[LAST_BUNNY_AXIS];
 t_bunny_joystick		gl_joystick[sf::Joystick::Count];
 t_bunny_window			*gl_window;
 bool				gl_full_blit;

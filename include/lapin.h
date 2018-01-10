@@ -118,6 +118,7 @@
 # include			"lapin/events.h"
 # include			"lapin/plugin.h"
 # include			"lapin/sound.h"
+# include			"lapin/sound_manager.h"
 # include			"lapin/threads.h"
 # include			"lapin/asynclock.h"
 # include			"lapin/security.h"

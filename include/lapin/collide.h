@@ -255,21 +255,19 @@ typedef union	u_bunny_collision
 }		t_bunny_collision;
 
 /*!
-**
-**
-**
-**
-**
+** Return if the two shapes collides, whatever they are.
+** \param a A shape to test the collision with
+** \param a A shape to test the collision with
+** \return True if shapes collides
 */
 bool		bunny_collide(const t_bunny_collision				*a,
 			      const t_bunny_collision				*b);
 
 /*!
-**
-**
-**
-**
-**
+** Draw the collision shape on the sent buffer.
+** \param tar The surface where to draw the collision
+** \param x The collision to draw
+** \param col The color that will be used to draw the collision
 */
 void		bunny_draw_collision_shape(t_bunny_buffer			*tar,
 					   const t_bunny_collision		*x,

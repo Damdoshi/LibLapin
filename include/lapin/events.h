@@ -215,7 +215,7 @@ const t_bunny_joystick		*bunny_get_joy_info(int				id);
 ** The tpye of the function that will handle any changing on a joystick axis.
 ** joyid is the id of the joystick that got a changing axis
 ** t_bunny_axis is the axis that changed
-** value is the new value of the axis
+** value is the new value of the axis [-100; +100]
 ** The void* pointer can be anything: it is what you sent to bunny_loop or bunny_loop_mw
 ** as last parameter.
 ** Return a t_bunny_response in order to keep the loop or break it.
@@ -230,6 +230,15 @@ typedef t_bunny_response	(*t_bunny_joy_axis)(int				joyid,
 ** \param axis The function to call.
 */
 void				bunny_set_joy_axis_response(t_bunny_joy_axis	axis);
+
+/*!
+** Set a minimum offset between the previous value and the new one to trigger
+** the joystick axis response.
+** \param axis The axis concerne by the offset
+** \param offset The offset [0; +100]
+*/
+void				bunny_set_joy_axis_minimum_offset(t_bunny_axis	axis,
+								  float		offset);
 
 /*!
 ** Get an array of array of axis. The first dimension is the joystick, the second

@@ -1,6 +1,6 @@
 /*
 ** Jason Brillante "Damdoshi"
-** Hanged Bunny Studio 2014-2016
+** Hanged Bunny Studio 2014-2018
 **
 ** Bibliotheque Lapin
 */
@@ -233,7 +233,25 @@ bool				bunny_set_sound_attribute(const char		*conf_file,
 ** Delete the sent sound.
 ** \param The sound to destroy
 */
-void				bunny_delete_sound(t_bunny_sound		*sound);
+void				_bunny_delete_sound(t_bunny_sound		*sound);
+
+# if				defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+/*!
+** Delete the sent sound.
+** \param The sound to destroy
+*/
+#  define			bunny_delete_sound(snd)				\
+  _bunny_delete_sound								\
+  (_Generic((snd),								\
+	    t_bunny_music*: (t_bunny_sound*)(snd),				\
+	    t_bunny_effect*: (t_bunny_sound*)(snd),				\
+	    t_bunny_sound*: (snd)						\
+	    ))
+# else
+#  define			bunny_delete_sound(snd)				\
+  _bunny_delete_sound(snd)
+# endif
+
 
 /*!
 ** The effect loading function use a ressource manager to avoid loading several

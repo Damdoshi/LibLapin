@@ -92,14 +92,14 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 		    if (event.type == sf::Event::Resized && gl_callback.resize)
 		      {
 			t_bunny_position	siz;
-			
+
 			siz.x = event.size.width;
 			siz.y = event.size.height;
 			scream_log_if(PATTERN "reisze %p)", "event", window, nwin, freq, data, gl_window);
 			if ((rep = gl_callback.resize(gl_window, &siz, data)) != GO_ON)
 			  goto end;
 		      }
-		    
+
 		    ///////
 		    //////		KEYBOARD
 		    /////
@@ -136,14 +136,14 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			if ((rep = gl_callback.type(event.text.unicode, data)) != GO_ON)
 			  goto end;
 		      }
-		    
+
 		    ///////
 		    //////		JOYSTICK
 		    /////
 		    if (gl_callback.connect != NULL)
 		      {
 			bool				connect;
-			
+
 			////
 			/// JOYSTICK CONNECT
 			//
@@ -153,7 +153,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			    sf::Joystick::Identification	id;
 			    int				joyid;
 			    int				i;
-			    
+
 			    joyid = event.joystickConnect.joystickId;
 			    if (connect)
 			      {
@@ -177,9 +177,9 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			    if ((rep = gl_callback.connect
 				 (connect ? CONNECTED : DISCONNECTED,
 				  joyid, &gl_joystick[joyid], data)) != GO_ON)
-			      goto end;      
+			      goto end;
 			  }
-			
+
 			////
 			/// JOYSTICK BUTTON
 			//
@@ -210,7 +210,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 				  goto end;
 			      }
 			  }
-			
+
 			////
 			/// JOYSTICK AXIS
 			//
@@ -218,20 +218,27 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			  {
 			    if (event.type == sf::Event::JoystickMoved)
 			      {
-				gl_joy_axis
-				  [event.joystickMove.joystickId][event.joystickMove.axis] =
-				  event.joystickMove.position;
-				scream_log_if(PATTERN "joymove)", "event", window, nwin, freq, data);
-				if ((rep = gl_callback.axis
-				     (event.joystickMove.joystickId,
-				      (t_bunny_axis)event.joystickMove.axis,
-				      event.joystickMove.position,
-				      data)) != GO_ON)
-				  goto end;
+				if (fabs(gl_joy_axis
+					 [event.joystickMove.joystickId]
+					 [event.joystickMove.axis]
+					 - event.joystickMove.position)
+				    > gl_axis_offset[event.joystickMove.axis])
+				  {
+				    gl_joy_axis
+				      [event.joystickMove.joystickId][event.joystickMove.axis] =
+				      event.joystickMove.position;
+				    scream_log_if(PATTERN "joymove)", "event", window, nwin, freq, data);
+				    if ((rep = gl_callback.axis
+					 (event.joystickMove.joystickId,
+					  (t_bunny_axis)event.joystickMove.axis,
+					  event.joystickMove.position,
+					  data)) != GO_ON)
+				      goto end;
+				  }
 			      }
 			  }
 		      }
-		    
+
 		    ///////
 		    //////		MOUSE
 		    /////
@@ -253,7 +260,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			else if (event.type == sf::Event::MouseButtonReleased)
 			  {
 			    gl_mouse.x = event.mouseButton.x;
-			    gl_mouse.y = event.mouseButton.y;		    
+			    gl_mouse.y = event.mouseButton.y;
 			    gl_button[event.mouseButton.button] = false;
 			    scream_log_if(PATTERN "mouseup)", "event", window, nwin, freq, data);
 			    if ((rep = gl_callback.click
@@ -284,7 +291,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 		    if (event.type == sf::Event::MouseMoved)
 		      {
 			t_bunny_position	pos;
-			
+
 			pos.x = event.mouseMove.x - gl_mouse.x;
 			pos.y = event.mouseMove.y - gl_mouse.y;
 			gl_mouse.x = event.mouseMove.x;
@@ -346,4 +353,3 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
   scream_log_if("%p window, %zu nbr_window, %u frequency, %p parameter -> %d (Exiting)", "event", window, nwin, freq, data, rep);
   return (rep);
 }
-
