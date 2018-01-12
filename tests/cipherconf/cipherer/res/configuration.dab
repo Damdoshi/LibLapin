@@ -1,0 +1,8 @@
+
+[Configuration
+  Field = "Lel"
+  [Node = 42
+    Field = 1.2
+  ]
+]
+

@@ -109,7 +109,7 @@ extern t_bunny_key_twist	gl_bunny_my_key_twist;
 
 /*!
 ** Create a new key of the given size. The key is filled with random values.
-** \param len The size of the key. Should be greater than 0.
+** \param len The size of the key. Should be greater than 0. Should be pair.
 ** \return The generated key or NULL on error.
 */
 t_bunny_cipher_key		*bunny_new_key(size_t			len);
@@ -201,6 +201,34 @@ typedef void			(*t_bunny_my_uncipher)(t_bunny_ciphering ciphering,
 ** algorithm.
 */
 extern t_bunny_my_uncipher	gl_bunny_my_uncipher;
+
+/*!
+** This function pointer type is used by the ressource cipher/uncipher
+** global function pointers to cipher/uncipher ressources when loaded or
+** saved.
+** \param buffer The data to cipher or uncipher
+** \param len The length of buffer in byte.
+** \param data The gl_bunny_ressource_data pointer transmitted.
+** \param cipher True if we need to cipher, false to uncipher.
+*/
+typedef void			(*t_bunny_ressource_cipher)(char	*buffer,
+							    size_t	len,
+							    void	*data,
+							    bool	cipher);
+
+/*!
+** This function pointer is set to NULL by default.
+** If set to a function, the function will be called when a bunny_load_*
+** function is called to uncipher the content of the ressource, except
+** bunny_load_music.
+*/
+extern t_bunny_ressource_cipher gl_bunny_ressource_ciphering;
+
+/*!
+** Any data you wish it to be passed to gl_bunny_ressource_* functions pointers.
+** NULL by default.
+*/
+extern void			*gl_bunny_ressource_data;
 
 #endif	/*			__LAPIN_SECURITY_H__			*/
 

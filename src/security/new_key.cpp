@@ -12,6 +12,7 @@ t_bunny_cipher_key		*bunny_new_key(size_t		len)
   t_bunny_cipher_key		*key;
   size_t			i;
 
+  len = len % 2 ? len + 1 : len;
   if (len == 0)
     scream_error_if(return (NULL), EINVAL, PATTERN, "security", len, (void*)NULL);
   if ((key = (t_bunny_cipher_key*)bunny_malloc(sizeof(key->length) + len)) == NULL)

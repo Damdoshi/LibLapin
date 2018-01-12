@@ -21,6 +21,22 @@ t_bunny_pixelarray	*bunny_load_pixelarray(const char		*file)
       return (px);
     }
   hash = bunny_hash(BH_FNV, file, strlen(file));
+
+  if (gl_bunny_ressource_ciphering)
+    {
+      void		*data;
+      size_t		siz;
+
+      if (bunny_load_file(file, &data, &siz) == -1)
+	return (NULL);
+      gl_bunny_ressource_ciphering((char*)data, siz, gl_bunny_ressource_data, false);
+      if ((pa = (struct bunny_pixelarray*)
+	   bunny_read_pixelarray_id(data, siz, file)) == NULL)
+	return (NULL);
+      bunny_delete_file(data, file);
+      return ((t_bunny_pixelarray*)pa);
+    }
+
   if ((pa = new (std::nothrow) struct bunny_pixelarray) == NULL)
     goto ReturnNull;
   if ((pa->sprite = new (std::nothrow) sf::Sprite) == NULL)

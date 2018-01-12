@@ -23,12 +23,18 @@ t_bunny_configuration	*bunny_load_configuration(t_bunny_configuration_type		type
 
   for (it = SmallConf::file_path.rbegin(); it != SmallConf::file_path.rend(); ++it)
     {
+      size_t		siz;
+
       if (*it != "")
 	snprintf(&buffer[0], sizeof(buffer), "%s/%s", it->c_str(), file);
       else
 	snprintf(&buffer[0], sizeof(buffer), "%s", file);
-      if (bunny_load_file(&buffer[0], (void**)&code, NULL) != -1)
-	break ;
+      if (bunny_load_file(&buffer[0], (void**)&code, &siz) != -1)
+	{
+	  if (gl_bunny_ressource_ciphering)
+	    gl_bunny_ressource_ciphering(code, siz, gl_bunny_ressource_data, false);
+	  break ;
+	}
     }
   if (it == SmallConf::file_path.rend())
     scream_error_if

@@ -1,0 +1,9 @@
+
+The purpose of this binary is to test the efficiency of ciphers.
+A single bunny cipher will certainly be really insufficient for different types of data.
+It may depend of it heavily: a png does not store clearly its picture for example, so
+mixing it a little with a ciphering will not allow ultra simple display of pictures,
+but a BMP file may be sensible.
+
+This program does not cipher the whole file, only the picture inside, allowing you
+to see how chaos/entropy is generated inside the picture with different algorithm.

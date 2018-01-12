@@ -5,6 +5,9 @@
 
 #include			"lapin_private.h"
 
+t_bunny_ressource_cipher	gl_bunny_ressource_ciphering;
+void				*gl_bunny_ressource_data;
+
 t_bunny_my_cipher		gl_bunny_my_cipher = NULL;
 t_bunny_my_cipher		gl_bunny_my_uncipher = NULL;
 t_bunny_key_twist		gl_bunny_my_key_twist = NULL;

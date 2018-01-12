@@ -30,6 +30,7 @@ bool			bunny_save_pixelarray(const t_bunny_pixelarray	*pix,
 	    )
 	   );
       }
+#warning How to cipher when writing?
   if (pic->image->saveToFile(file) == false)
     scream_error_if(return (false), errno, PATTERN, "ressource,graphics", pix, file, "false");
   scream_log_if(PATTERN, "ressource,graphics", pix, file, "true");

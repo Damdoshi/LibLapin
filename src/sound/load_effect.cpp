@@ -23,6 +23,22 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
       return ((t_bunny_effect*)pc);
     }
   hash = bunny_hash(BH_FNV, file, strlen(file));
+
+  if (gl_bunny_ressource_ciphering)
+    {
+      void		*data;
+      size_t		siz;
+
+      if (bunny_load_file(file, &data, &siz) == -1)
+	return (NULL);
+      gl_bunny_ressource_ciphering((char*)data, siz, gl_bunny_ressource_data, false);
+      if ((eff = (struct bunny_effect*)
+	   bunny_read_effect_id(data, siz, file)) == NULL)
+	return (NULL);
+      bunny_delete_file(data, file);
+      return ((t_bunny_effect*)eff);
+    }
+
   if ((eff = new (std::nothrow) struct bunny_effect) == NULL)
     goto Fail;
   if ((eff->effect = (sf::SoundBuffer*)RessourceManager.TryGet(ResManager::SF_SOUNDBUFFER, hash)) == NULL)

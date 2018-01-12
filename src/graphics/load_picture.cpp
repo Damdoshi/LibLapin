@@ -24,6 +24,22 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
       return (pc);
     }
   hash = bunny_hash(BH_FNV, file, strlen(file));
+
+  if (gl_bunny_ressource_ciphering)
+    {
+      void		*data;
+      size_t		siz;
+
+      if (bunny_load_file(file, &data, &siz) == -1)
+	return (NULL);
+      gl_bunny_ressource_ciphering((char*)data, siz, gl_bunny_ressource_data, false);
+      if ((pic = (struct bunny_picture*)
+	   bunny_read_picture_id(data, siz, file)) == NULL)
+	return (NULL);
+      bunny_delete_file(data, file);
+      return ((t_bunny_picture*)pic);
+    }
+
   if ((pic = new (std::nothrow) struct bunny_picture) == NULL)
     goto ReturnNull;
   if ((pic->sprite = new (std::nothrow) sf::Sprite) == NULL)

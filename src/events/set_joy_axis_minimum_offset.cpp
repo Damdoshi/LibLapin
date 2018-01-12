@@ -11,7 +11,7 @@ void		bunny_set_joy_axis_minimum_offset(t_bunny_axis		_axis,
   int		axis = _axis;
   int		i;
 
-  for (i = 0; i < LAST_BUNNY_AXIS && axis & 0x1 == 0; ++i)
+  for (i = 0; i < LAST_BUNNY_AXIS && (axis & 0x1) == 0; ++i)
     axis >>= 1;
   if (i == LAST_BUNNY_AXIS)
     return ;

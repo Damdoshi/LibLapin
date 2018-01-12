@@ -21,12 +21,19 @@ void				__bunny_shaker(char			*cnt,
 					       bool			cipher)
 {
   ssize_t			i;
+  int16_t			v;
 
   if (cipher)
     for (i = 0; i < (ssize_t)len; ++i)
-      swap(&cnt[i], &cnt[(i + key->key[i % key->length]) % len]);
+      {
+	v = ((int16_t*)&key->key[0])[i % key->length / 2];
+	swap(&cnt[i], &cnt[(i + v) % len]);
+      }
   else
     for (i = len - 1; i >= 0; --i)
-      swap(&cnt[i], &cnt[(i + key->key[i % key->length]) % len]);
+      {
+	v = ((int16_t*)&key->key[0])[i % key->length / 2];
+	swap(&cnt[i], &cnt[(i + v) % len]);
+      }
 }
 

@@ -13,12 +13,17 @@ bool			bunny_save_configuration(t_bunny_configuration_type		type,
 {
   char			*code;
   bool			out;
+  int			len;
 
   if ((code = bunny_write_configuration(type, config)) == NULL)
     scream_error_if
       (return (false), bunny_errno, PATTERN, "ressource,configuration",
        type, file, config, "false");
-  out = bunny_save_file(file, code, strlen(code));
+  len = strlen(code);
+  if (gl_bunny_ressource_ciphering)
+    gl_bunny_ressource_ciphering
+      (code, len, gl_bunny_ressource_data, true);
+  out = bunny_save_file(file, code, len);
   bunny_free(code);
   if (!out)
     scream_error_if

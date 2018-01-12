@@ -101,6 +101,20 @@ t_bunny_effect			*bunny_new_effect(double			duration);
 t_bunny_effect			*bunny_load_effect(const char			*file);
 
 /*!
+** The bunny_read_effect_id function read in memory a sound file and return
+** a matching t_bunny_effect.
+** The reserved memory to handle it is inside the bunny_malloc space.
+** Supported formats are .wav and .ogg.
+** \param data The chunk of memory to read
+** \param len The size of the memory chunk
+** \param file The original sound file name, or any unique label.
+** \return A t_bunny_effect pointer or NULL on error.
+*/
+t_bunny_effect			*bunny_read_effect_id(const void		*data,
+						      size_t			len,
+						      const char		*file);
+
+/*!
 ** The bunny_save_effect function save into a sound file the given sound.
 ** Supported formats are .wav and .ogg
 ** \param effect The sound to save
