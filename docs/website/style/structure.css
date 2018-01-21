@@ -1,0 +1,353 @@
+/*
+** Jason Brillante "Damdoshi"
+** Hanged Bunny Studio 2014-2018
+**
+** La Caverne Aux Lapins Noirs
+*/
+
+#Cover
+{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    opacity: 1.0;
+    z-index: 99;
+}
+
+#LoadingLogo
+{
+    position: absolute;
+    display: none;
+}
+
+header
+{
+    position: fixed;
+    top: 0px;
+    height: 52px;
+    width: 100%;
+    overflow: hidden;
+}
+
+header div, header h1
+{
+    float: left;
+}
+
+header a
+{
+    position: fixed;
+    z-index: 1;
+}
+
+
+header h1
+{
+    padding-top: 10px;
+    padding-left: 10px;
+    margin-left: 50px;
+    font-size: 30px;
+}
+
+nav
+{
+    position: fixed;
+    top: 50px;
+    width: 100%;
+    height: 45px;
+}
+
+nav div
+{
+    width: 200px;
+    height: 35px;
+    padding-top: 10px;
+    font-size: 20px;
+    float: left;
+    text-align: center;
+}
+
+footer
+{
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    padding-top: 17px;
+    height: 33px;
+    text-align: center;
+}
+
+footer .language
+{
+    position: relative;
+    top: -17px;
+    float: right;
+    margin-top: 10px;
+    margin-right: 20px;
+}
+
+#Body
+{
+    position: fixed;
+    top: 95px;
+    padding-top: 10px;
+    padding-bottom: 100px;
+    width: 90%;
+    height: calc(100% - 255px);
+    overflow-y: scroll;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+.huge_list
+{
+    column-count: 3;
+    column-gap: 1px;
+}
+
+.prime_list h2
+{
+    font-size: 30px;
+    margin-left: 40px;
+}
+
+.prime_list_item img
+{
+    margin-left: 10px;
+    margin-top: 10px;
+    float: left;
+}
+
+.second_list
+{
+    text-align: left;
+    margin-top: 30px;
+    margin-bottom: 40px;
+    margin-left: 20px;
+}
+
+.second_list li
+{
+    height: 50px;
+    display: inline-block;
+}
+
+.second_list h3
+{
+    font-size: 20px;
+}
+
+.second_list_entry
+{
+    width: 400px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+h1
+{
+    font-size: 50px;
+}
+
+.control_button
+{
+    padding-top: 10px;
+    font-size: 20px;
+    width: 300px;
+    height: 35px;
+}
+
+.roll_button
+{
+    float: right;
+    margin: 0px 10px 10px 10px;
+}
+
+.doc_entry
+{
+    width: 70%;
+    margin-left: 10%;
+    margin-bottom: 50px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+.doc_entry div
+{
+    margin-bottom: 30px;
+}
+
+.doc_entry h3
+{
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.doc_entry h4
+{
+    font-size: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.doc_entry ul
+{
+    margin-left: 20px;
+}
+
+.doc_entry li
+{
+    margin-bottom: 20px;
+}
+
+.doc_entry li p
+{
+    margin-left: 20px;
+}
+
+.index a
+{
+    font-size: 30px;
+}
+
+.index_item
+{
+    text-align: left;
+    padding-top: 5px;
+    padding-left: 20px;
+    padding-bottom: 10px;
+}
+
+.prime_list_item
+{
+    text-align: left;
+    width: calc(100% - 360px);
+}
+
+.download
+{
+    margin-left: 30px;
+    margin-bottom: 30px;
+}
+
+.download h3
+{
+    font-size: 30px;
+    margin-bottom: 30px;
+}
+
+.download li
+{
+    margin-bottom: 20px;
+}
+
+.download ul
+{
+    margin-left: 30px;
+}
+
+.download .button
+{
+    width: 500px;
+    text-align: left;
+    font-size: 20px;
+    padding: 10px 10px 10px 10px;
+    padding-left: 20px;
+}
+
+.download .button:hover
+{
+    text-align: left;
+}
+
+.home
+{
+    text-align: center;
+}
+
+.home h3
+{
+    font-size: 30px;
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.home p
+{
+    margin-left: 30px;
+    margin-right: 30px;
+    width: calc(100% - 60px);
+    text-align: justify;
+    font-size: 20px;
+}
+
+.home > div
+{
+    float: left;
+    /*display: inline-block;*/
+    margin: 20px 20px 20px 20px;
+    width: 400px;
+    height: 400px;
+}
+
+.icon
+{
+    /*float: left;*/
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    margin: 10px 10px 10px 10px;
+}
+
+.doc_symbol
+{
+}
+
+.doc_keyword
+{
+}
+
+.doc_type
+{
+}
+
+.prototype
+{
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.resume
+{
+}
+
+.parameters
+{
+}
+
+.return
+{
+}
+
+.details
+{
+}
+
+.error_and_log
+{
+}
+
+.go_up
+{
+    text-align: center;
+}
+

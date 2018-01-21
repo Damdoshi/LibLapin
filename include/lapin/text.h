@@ -42,7 +42,7 @@ typedef enum			e_bunny_align
 typedef struct			s_bunny_font
 {
   t_bunny_clipable		clipable;
-  size_t			_private[3];
+  const size_t			_private[3];
   const char			*string;
   size_t			string_offset;
   size_t			string_len;
@@ -52,8 +52,8 @@ typedef struct			s_bunny_font
   unsigned int			outline;
   double			outline_size;
   t_bunny_position		offset;
-  t_bunny_position		glyph_size;
-  t_bunny_position		interglyph_space;
+  t_bunny_size  		glyph_size;
+  t_bunny_size  		interglyph_space;
 }				t_bunny_font;
 
 t_bunny_font			*bunny_load_font(unsigned int			width,
@@ -91,6 +91,52 @@ typedef struct			s_bunny_letter
   int				nb_edge;
   t_bunny_vector_font_line_coord edge[5];
 }				t_bunny_letter;
+
+/*!
+** The vector font symbol tab.
+*/
+typedef enum			e_bunny_letter_tab
+  {
+    BFT_A,
+    BFT_B,
+    BFT_C,
+    BFT_D,
+    BFT_E,
+    BFT_F,
+    BFT_G,
+    BFT_H,
+    BFT_I,
+    BFT_J,
+    BFT_K,
+    BFT_L,
+    BFT_M,
+    BFT_N,
+    BFT_O,
+    BFT_P,
+    BFT_Q,
+    BFT_R,
+    BFT_S,
+    BFT_T,
+    BFT_U,
+    BFT_V,
+    BFT_W,
+    BFT_X,
+    BFT_Y,
+    BFT_Z,
+    BFT_0,
+    BFT_1,
+    BFT_2,
+    BFT_3,
+    BFT_4,
+    BFT_5,
+    BFT_6,
+    BFT_7,
+    BFT_8,
+    BFT_9,
+    BFT_EXCLAMATION,
+    LAST_BUNNY_FONT
+  }				t_bunny_letter_tab;
+
 
 /*!
 ** The gl_vector constant is a collection of letters, which are a collection of

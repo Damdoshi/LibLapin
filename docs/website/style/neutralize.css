@@ -1,0 +1,46 @@
+/*
+** Jason Brillante "Damdoshi"
+** Hanged Bunny Studio 2014-2018
+**
+** La Caverne Aux Lapins Noirs
+*/
+
+*
+{
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    border-collapse: collapse;
+    -webkit-touch-callout:none;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}
+
+h1, h2, h3, h4, h5
+{
+    font-size: medium;
+    font-weight: normal;
+}
+
+a
+{
+    text-decoration: none;
+    color: black;
+}
+
+textarea:*, input:*,
+{
+    outline: none;
+    -webkit-touch-callout:default;
+    -webkit-user-select:text;
+    -moz-user-select:text;
+    -ms-user-select:text;
+    user-select:text;
+}
+
+ul
+{
+    list-style-type: none;
+}
+

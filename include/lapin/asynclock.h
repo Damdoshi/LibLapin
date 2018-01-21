@@ -22,7 +22,7 @@
 # endif
 
 /*!
-** An hour in nanoseconds.
+** A timestamp with nanosecond precision.
 */
 typedef uint64_t	t_bunny_time;
 
@@ -93,7 +93,7 @@ typedef struct		s_bunny_trap
 ** If duration is superior to 0:
 ** - Each loop if the current time is between start_time and start_time + duration
 **
-** If duration is 0 or really close to 0 (gl_bunny_play_it_once):
+** If duration is 0 or really close to 0:
 ** - The function will be called only one time if the current time is after start_time
 **   and the function was never called
 **
@@ -107,7 +107,7 @@ typedef struct		s_bunny_trap
 **
 ** The function is called with the elapsed time, the returned t_bunny_trap and the
 ** sent param as parameter.
-** 
+**
 ** \param func The function to call under specified conditions
 ** \param order The function will be called
 ** \return Return the structure that incarnates the trap. NULL on error.
@@ -146,7 +146,7 @@ void			bunny_delete_trap(t_bunny_trap			*trap);
 ** \return How many traps are still registered. Useful to stack tasks to end,
 ** make a cartoon or things like that.
 */
-int			bunny_asynclock(double				elasped_time,
+int			bunny_asynclock(double				elapsed_time,
 					t_bunny_call_order		order);
 
 /*!

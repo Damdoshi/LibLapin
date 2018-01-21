@@ -24,7 +24,7 @@ extern size_t		border0;
 extern size_t		border1;
 
 void			*bunny_realloc(void		*ptr,
-				       size_t		data)
+                         size_t		data)
 {
   void			*rel;
 

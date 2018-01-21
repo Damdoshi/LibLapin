@@ -29,7 +29,7 @@ void			initial_blink(double			elapsed,
   t_bunny_color		col;
 
   printf("Initial_blink!\n");
-  
+
   (void)elapsed;
   (void)trp;
   col.full = BLACK;

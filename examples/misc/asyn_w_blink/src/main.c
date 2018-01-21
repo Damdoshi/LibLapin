@@ -48,7 +48,7 @@ int			main(void)
 
   assert(trap != NULL);
 
-  printf("Must wait 5 seconds, and then change color every second.");
+  printf("Must wait 5 seconds, and then blink during a second.");
 
   bunny_clear((t_bunny_buffer*)win, BLACK);
   bunny_display(win);

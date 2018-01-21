@@ -106,8 +106,10 @@ typedef struct s_bunny_font	t_bunny_font;
 */
 #  define			bunny_real_width(clip)		\
   _Generic((clip),						\
+	   t_bunny_buffer*:					\
+	   clip->width,						\
 	   t_bunny_window*:					\
-	   clip->buffer.width					\
+	   clip->buffer.width,					\
 	   t_bunny_clipable*:					\
 	   ((clip)->clip_width * (clip)->scale.x),		\
 	   t_bunny_pixelarray*:					\
@@ -127,6 +129,8 @@ typedef struct s_bunny_font	t_bunny_font;
 */
 #  define			bunny_real_height(clip)		\
   _Generic((clip),						\
+	   t_bunny_buffer*:					\
+	   clip->height,					\
 	   t_bunny_window*:					\
 	   clip->buffer.height,					\
 	   t_bunny_clipable*:					\

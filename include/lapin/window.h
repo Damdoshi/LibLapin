@@ -101,9 +101,9 @@ t_bunny_window			*bunny_start_style(unsigned int			wid,
 /*!
 ** bunny_get_fullscreen_modes return an array of valid full screen modes.
 ** The array is terminated by a pair of 0.
-** \return An array of t_bunny_position terminated by a 0 structure.
+R** \return An array of t_bunny_position terminated by a 0 structure.
 */
-const t_bunny_position		*bunny_get_fullscreen_modes(void);
+const t_bunny_size		*bunny_get_fullscreen_modes(void);
 
 /*!
 ** The bunny_set_key_repeat function activate or deactivate the key repetition

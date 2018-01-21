@@ -24,6 +24,7 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
     }
   hash = bunny_hash(BH_FNV, file, strlen(file));
 
+  /*
   if (gl_bunny_ressource_ciphering)
     {
       void		*data;
@@ -38,6 +39,7 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
       bunny_delete_file(data, file);
       return ((t_bunny_effect*)eff);
     }
+  */
 
   if ((eff = new (std::nothrow) struct bunny_effect) == NULL)
     goto Fail;

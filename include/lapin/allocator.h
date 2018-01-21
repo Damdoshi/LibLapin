@@ -36,7 +36,7 @@ void				*bunny_malloc(size_t				siz);
 ** \return The address of the first byte of the first allocated element. NULL if an error happened.
 */
 void				*bunny_calloc(size_t				num,
-					      size_t				siz);
+                          size_t				siz);
 /*!
 ** Resize the space previously reserved at the sent address. The new size is given.
 ** If ptr is NULL, then calling bunny_realloc is the same as calling bunny_malloc with
@@ -53,7 +53,7 @@ void				*bunny_calloc(size_t				num,
 ** is left unchanged if this happen.
 */
 void				*bunny_realloc(void				*ptr,
-					       size_t				siz);
+                           size_t				siz);
 /*!
 ** Make the given chunk of memory available again for a future call of bunny_malloc,
 ** bunny_calloc or bunny_realloc. Validity of the pointer is checked during this function,

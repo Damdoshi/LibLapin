@@ -5,9 +5,9 @@
 
 #include		"lapin_private.h"
 
-const t_bunny_position			*bunny_get_fullscreen_modes(void)
+const t_bunny_size			*bunny_get_fullscreen_modes(void)
 {
-  static t_bunny_position		array[1024 / sizeof(t_bunny_position)] = {0, 0};
+  static t_bunny_size			array[1024 / sizeof(t_bunny_position)] = {0, 0};
   const std::vector<sf::VideoMode>	&modes = sf::VideoMode::getFullscreenModes();
   std::vector
     <sf::VideoMode>::const_iterator	it;

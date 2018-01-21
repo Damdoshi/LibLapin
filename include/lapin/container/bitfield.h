@@ -32,7 +32,17 @@ typedef uint8_t			t_bunny_auto_bitfield8;
 ** \return A bitfield or NULL on error
 */
 # define			bunny_new_bitfield(bit)			\
-  (t_bunny_bitfield*)bunny_malloc					\
+  (t_bunny_bitfield*)bunny_calloc					\
+  (((size_t)(bit) / 8 + ((size_t)(bit) % 8 ? 1 : 0)) * sizeof(uint8_t), 1)
+
+/*!
+** Create a bitfield on stack that can handle at least bit bits.
+** Do not try to release this bitfield with bunny_delete_bitfield.
+** \param bit The amount of bit the bitfield will contains
+** \return A bitfield
+*/
+# define			bunny_new_abitfield(bit)    \
+  (t_bunny_bitfield*)bunny_alloca					\
   (((size_t)(bit) / 8 + ((size_t)(bit) % 8 ? 1 : 0)) * sizeof(uint8_t))
 
 /*!
@@ -91,5 +101,5 @@ typedef uint8_t			t_bunny_auto_bitfield8;
 */
 # define			bunny_auto_bitfield_get(bf, bit)	\
   bunny_bitfield_get(&bf, bit)
-  
+
 #endif	/*			__LAPIN_BITFIELD_H__			*/

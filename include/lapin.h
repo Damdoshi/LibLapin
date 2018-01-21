@@ -1,6 +1,6 @@
 /*
 ** Jason Brillante "Damdoshi"
-** Hanged Bunny Studio 2014-2017
+** Hanged Bunny Studio 2014-2018
 **
 ** Bibliotheque Lapin
 */
@@ -94,7 +94,7 @@
 /*!
 ** LAPIN_MINOR_VERSION expands into an integer that contains the current revision of the library
 */
-# define			LAPIN_MINOR_VERSION	11
+# define			LAPIN_MINOR_VERSION	12
 
 # include			"lapin/placement.h"
 # ifdef				__cplusplus

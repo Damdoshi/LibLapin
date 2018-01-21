@@ -56,7 +56,7 @@ void			bunny_delete_capture(t_bunny_capture		*capture);
 **            of the capture.
 */
 void			bunny_capture_get_size(const t_bunny_capture	*capture,
-					       t_bunny_position		*out);
+					       t_bunny_size		*out);
 
 /*!
 ** Capture a video frame from the sent device and store it in the sent capture.

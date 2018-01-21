@@ -1,0 +1,179 @@
+/*
+** Jason Brillante "Damdoshi"
+** Hanged Bunny Studio 2014-2018
+**
+** La Caverne Aux Lapins Noirs
+*/
+
+@font-face
+{
+    font-family: "Futura";
+    src: url("../res/futura.ttf");
+}
+
+body
+{
+    font-family: Futura;
+    background-color: gray;
+}
+
+header
+{
+    background-color: green;
+}
+
+header div
+{
+    background-color: white;
+}
+
+header h1
+{
+    background-color: blue;
+}
+
+nav
+{
+    background-color: red;
+}
+
+nav div
+{
+    background-color: purple;
+}
+
+footer
+{
+    background-color: teal;
+}
+
+#Body
+{
+    background-color: white;
+}
+
+.prime_list
+{
+    padding-left: 50px;
+    list-style-type: none;
+}
+
+.second_list
+{
+    list-style-type: none;
+}
+
+.second_list h3
+{
+
+}
+
+.button
+{
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.25);
+    text-align: center;
+}
+
+.button:hover
+{
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    background-color: rgba(0, 0, 0, 0.125);
+    text-align: center;
+}
+
+.button:active
+{
+    border: 1px solid rgba(255, 0, 0, 0.5);
+    background-color: rgba(255, 0, 0, 0.25);
+    text-align: center;
+}
+
+.doc_entry
+{
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
+.home div
+{
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
+.doc_symbol
+{
+    color: darkblue;
+    font-weight: bold;
+}
+
+.doc_keyword
+{
+    color: teal;
+    font-weight: bold;
+}
+
+.doc_type
+{
+    color: green;
+}
+
+.doc_constant
+{
+    color: purple;
+    font-weight: bold;
+}
+
+.doc_strong
+{
+    font-weight: bold;
+}
+
+.doc_litteral
+{
+    color: green;
+}
+
+.doclink
+{
+    color: gray;
+}
+
+.doclink:hover
+{
+    text-decoration: underline;
+}
+
+.prototype
+{
+}
+
+.resume
+{
+}
+
+.parameters
+{
+}
+
+.return
+{
+}
+
+.details
+{
+}
+
+.error_and_log
+{
+}
+
+.go_up a
+{
+    color: gray;
+}
+
+.go_up a:hover
+{
+    text-decoration: underline;
+}

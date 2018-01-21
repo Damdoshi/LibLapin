@@ -164,49 +164,4 @@ typedef enum			e_bunny_keysym
     BKS_LAST_KEY
 }				t_bunny_keysym;
 
-/*!
-** The vector font symbol tab.
-*/
-typedef enum			e_bunny_letter_tab
-  {
-    BFT_A,
-    BFT_B,
-    BFT_C,
-    BFT_D,
-    BFT_E,
-    BFT_F,
-    BFT_G,
-    BFT_H,
-    BFT_I,
-    BFT_J,
-    BFT_K,
-    BFT_L,
-    BFT_M,
-    BFT_N,
-    BFT_O,
-    BFT_P,
-    BFT_Q,
-    BFT_R,
-    BFT_S,
-    BFT_T,
-    BFT_U,
-    BFT_V,
-    BFT_W,
-    BFT_X,
-    BFT_Y,
-    BFT_Z,
-    BFT_0,
-    BFT_1,
-    BFT_2,
-    BFT_3,
-    BFT_4,
-    BFT_5,
-    BFT_6,
-    BFT_7,
-    BFT_8,
-    BFT_9,
-    BFT_EXCLAMATION,
-    LAST_BUNNY_FONT
-  }				t_bunny_letter_tab;
-
 #endif	/*			__LAPIN_ENUM_H__	*/
