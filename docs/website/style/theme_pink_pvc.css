@@ -1,0 +1,294 @@
+/*
+** Jason Brillante "Damdoshi"
+** Hanged Bunny Studio 2014-2018
+**
+** La Caverne Aux Lapins Noirs
+*/
+
+@font-face
+{
+    font-family: "Futura";
+    src: url("../res/futura.ttf");
+}
+
+body
+{
+    font-family: Futura;
+    background-color: white;
+}
+
+header
+{
+    background-image: url("../res/pink_pvc/header.png");
+}
+
+.HeaderOverlay
+{
+    background: linear-gradient(to right, transparent, white);
+}
+
+header div
+{
+}
+
+header h1
+{
+    color: white;
+    text-shadow:
+    0px 0px 8px white,
+    0px 0px 8px white,
+    0px 0px 8px white,
+    0px 0px 8px #FF69B4,
+    0px 0px 8px #FF69B4,
+
+    0px 3px 8px white,
+    0px 3px 8px white,
+    0px 3px 8px white
+    ;
+}
+
+nav
+{
+    background-image: url("../res/pink_pvc/menu.png");
+}
+
+nav a div
+{
+    background-image: url("../res/pink_pvc/button_menu.png");
+}
+
+nav a div:hover
+{
+    background-image: url("../res/pink_pvc/button_menu_down.png");
+}
+
+nav a
+{
+    color: #FF69B4;
+    font-weight: bold;
+    text-shadow:
+    0px 0px 8px white,
+    0px 0px 8px white,
+    0px 0px 8px white
+    ;
+}
+
+nav a:hover
+{
+    color: white;
+    font-weight: bold;
+    text-shadow:
+    0px 0px 8px white,
+    0px 0px 8px white,
+    0px 0px 8px #FF69B4,
+    0px 0px 8px #FF69B4,
+
+    0px 0px 30px #FF69B4,
+    0px 0px 30px #FF69B4
+    ;
+}
+
+footer
+{
+    background-image: url("../res/pink_pvc/footer.png");
+    color: white;
+    text-shadow:
+    0px 0px 8px white,
+    0px 0px 8px white,
+    0px 0px 8px #FF69B4,
+    0px 0px 8px #FF69B4,
+    0px 0px 8px white
+    ;
+}
+
+#Body
+{
+    /* background-color: white;*/
+    background:
+    linear-gradient(to bottom,
+		    white, white, white, white, white,
+		    pink);
+}
+
+#Body::-webkit-scrollbar-track
+{
+    background: linear-gradient(to right, transparent, transparent, #FF77FF);
+}
+
+#Body::-webkit-scrollbar
+{
+    width: 24px;
+    background: linear-gradient(to right, white, #FF69B4, #FF69B4);
+}
+
+#Body::-webkit-scrollbar-thumb
+{
+    background: linear-gradient(to right, white, #FF90D0, #FF90D0);
+    border: 2px solid white;
+    border-radius: 12px;
+}
+
+
+.prime_list
+{
+    padding-left: 50px;
+    list-style-type: none;
+}
+
+.second_list
+{
+    list-style-type: none;
+}
+
+.second_list h3
+{
+
+}
+
+.button, .roll_button input
+{
+    border: 1px solid rgba(0, 0, 0, 0.0);
+    background-color: rgba(255, 104, 180, 0.125);
+    text-align: center;
+}
+
+.altbutton
+{
+    background-color: rgba(255, 104, 180, 0.3);
+}
+
+.button:hover, .roll_button input:hover
+{
+    border: 1px solid rgba(255, 119, 255, 0.25);
+    background-color: rgba(255, 104, 180, 0.125);
+    text-align: center;
+}
+
+.altbutton:hover
+{
+    border: 1px solid rgba(255, 119, 255, 0.25);
+    background-color: rgba(255, 104, 180, 0.3);
+}
+
+.button:active, .altbutton:active
+{
+    border: 1px solid rgba(255, 0, 0, 0.5);
+    background-color: rgba(255, 0, 0, 0.25);
+    text-align: center;
+}
+
+.doc_entry
+{
+    border: 1px solid rgba(0, 0, 0, 0.0);
+    background-color: rgba(255, 104, 180, 0.125);
+}
+
+.index
+{
+    background-color: white;
+}
+
+.index_item
+{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.home div
+{
+    border: 1px solid rgba(0, 0, 0, 0.0);
+    background-color: rgba(255, 104, 180, 0.125);
+}
+
+.doc_symbol
+{
+    color: rgb(128, 128, 0);
+}
+
+.doc_keyword
+{
+    color: rgb(0, 200, 200);
+    font-weight: bold;
+}
+
+.doc_type, .doc_type .doclink
+{
+    color: rgb(0, 128, 64);
+}
+
+.doc_constant, .doc_constant .doclink
+{
+    color: rgb(128, 0, 128);
+    font-weight: bold;
+}
+
+.doc_strong
+{
+    font-weight: bold;
+}
+
+.doc_litteral
+{
+    color: rgb(0, 128, 0);
+}
+
+.doc_comment
+{
+    color: red;
+    font-weight: bold;
+}
+
+.doclink
+{
+    color: rgb(0, 64, 128);
+    font-weight: bold;
+}
+
+.doclink:hover
+{
+    text-decoration: underline;
+}
+
+.prototype
+{
+    font-family: arial;
+    /*font-size: 30px;*/
+    color: black;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: white;
+    /*background: linear-gradient(to right, black, black, transparent);*/
+    /*box-shadow: 0px 0px 10px black;*/
+    border-bottom-left-radius: 30px;
+    border-top-right-radius: 30px;
+}
+
+.resume
+{
+}
+
+.parameters
+{
+}
+
+.return
+{
+}
+
+.details
+{
+}
+
+.error_and_log
+{
+}
+
+.go_up a
+{
+    color: red;
+}
+
+.go_up a:hover
+{
+    text-decoration: underline;
+}

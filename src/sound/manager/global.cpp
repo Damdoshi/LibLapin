@@ -19,8 +19,8 @@ extern "C"
   struct bunny_sound_manager gl_bunny_sound_manager =
     {
       { NULL, NULL, NULL },
-      100,
-      { 100.0, 100.0, 100.0 },
+      50,
+      { 70.0, 80.0, 90.0 },
       1.0,
       {   1.0,   1.0,   1.0 },
       {},

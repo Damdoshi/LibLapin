@@ -26,7 +26,10 @@ $sym = get_all_symbols("$language/$doctype");
 if (file_exists("$language/$doctype/$mod/main.php"))
 {
   echo '<div class="doc_entry">';
+  ob_start();
   require_once ("$language/$doctype/$mod/main.php");
+  $content = ob_get_clean();
+  echo color_template(4, $doctype, $sym, $content);
   echo "</div>";
 }
 ?>
@@ -36,7 +39,7 @@ if (file_exists("$language/$doctype/$mod/main.php"))
   $entries = [];
   foreach (scandir("$language/$doctype/$mod/") as $dir)
   {
-    if ($dir[0] != "." && $dir != "main.php" && $dir[strlen($dir) - 1] != "~" && $dir[0] != "#")
+    if ($dir[0] != "." && $dir != "main.php" && $dir[strlen($dir) - 1] != "~" && $dir[0] != "#" && strstr($dir, ".php") != false)
     {
       $dirx = skip_int_label($dir);
       $entries[] = [
@@ -46,11 +49,13 @@ if (file_exists("$language/$doctype/$mod/main.php"))
       ];
     }
   }
+  $i = 0;
   foreach ($entries as $ent)
   {
   ?>
   <a href="#<?=base64_encode($ent['label']); ?>">
-    <li class="button index_item" style="text-align: left;">
+    <li class="button index_item <?=$i++ %2 ? 'altbutton' : ''; ?>"
+        style="text-align: left;">
       <?=$ent['title']; ?>
     </li>
   </a>

@@ -64,6 +64,7 @@
     $Tbool@ $S_bunny_stack_push@($Tt_bunny_stack@ *$Sstack@, $Tvoid@ *$Sdata@);
   </p>
 </div>
+<hr />
 
 <div class="related_functions">
   <h3>Related functions</h3>

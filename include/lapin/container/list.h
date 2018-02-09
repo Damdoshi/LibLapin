@@ -227,7 +227,6 @@ struct s_bunny_vector;
 ** Chunks are copied with memcpy.
 ** \param list The list to transform
 ** \param elemsize The size in byte of elements inside list
-** \param add The parameter to send to ctor
 ** \return A vector that contains duplicated datas from the list, in the
 **         the same order.
 */
@@ -243,7 +242,7 @@ struct s_bunny_vector		*_bunny_list_tie(const t_bunny_list	*list,
 **         same order.
 */
 # define			bunny_list_tie(lst, typ)		\
-  _bunny_list_tie(lst, sizeof(typ), add)
+  _bunny_list_tie(lst, sizeof(typ))
 
 typedef void			(*t_bunny_list_foreach)(void		*node,
 							void		*param);

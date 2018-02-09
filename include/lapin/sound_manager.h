@@ -60,6 +60,10 @@ typedef struct		s_bunny_sound_manager
   const double		pitches[BST_LAST_SOUND_TYPE];
 }			t_bunny_sound_manager;
 
+/*
+** This define here is only present for inside needs.
+** The symbol inside will always be available.
+*/
 # ifndef		__SRC_SOUND_MANAGER_GLOBAL_CPP__
 /*!
 ** The global sound manager. It is pretty useful to allow

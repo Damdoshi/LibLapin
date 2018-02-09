@@ -27,7 +27,11 @@ t_bunny_plugin			*bunny_new_plugin(const char			*libfile)
       bunny_errno = EINVAL;
       goto closelib;
     }
-  list = func();
+  if ((list = func()) == NULL)
+    {
+      bunny_errno = EINVAL;
+      goto closelib;
+    }
 
   // Allocate space for function array
   for (nbrfunc = 0; list[nbrfunc].function_ptr != NULL; ++nbrfunc);
@@ -46,9 +50,15 @@ t_bunny_plugin			*bunny_new_plugin(const char			*libfile)
       t_bunny_prototype		*proto = &plug->prototypes[nbrfunc];
 
       if ((proto->function_ptr = dlsym(handler, list[nbrfunc].name)) == NULL)
+        {
+          bunny_errno = BE_CONFIGURED_FUNCTION_NOT_FOUND;
 	goto freename;
+        }
       if ((proto->nbrparam = list[nbrfunc].nbrparam) > 4)
+        {
+          bunny_errno = BE_TOO_MANY_PARAMETERS;
 	goto unsupported_format;
+        }
       proto->name = list[nbrfunc].name;
       proto->return_value = list[nbrfunc].return_value;
       memcpy(&proto->parameters[0], &list[nbrfunc].parameters[0], sizeof(proto->parameters));

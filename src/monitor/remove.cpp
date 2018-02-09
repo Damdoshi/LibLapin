@@ -15,7 +15,10 @@ bool			bunny_remove_monitored_value(const char		*name)
       return (true);
     }
   if ((it = gl_monitor.find(std::string(name))) == gl_monitor.end())
-    return (false);
+    {
+      bunny_errno = BE_CANNOT_FIND_ELEMENT;
+      return (false);
+    }
   gl_monitor.erase(it);
   return (true);
 }

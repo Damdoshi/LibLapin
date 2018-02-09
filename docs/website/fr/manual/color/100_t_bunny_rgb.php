@@ -1,10 +1,10 @@
-<div class="prototype">
+k<div class="prototype">
   $Ktypedef enum@ $Te_bunny_rgb@<br />
   {<br />
-  $A $S RED_CMP @,<br />
-  $A $S GREEN_CMP @,<br />
-  $A $S BLUE_CMP @,<br />
-  $A $S ALPHA_CMP @<br />
+  $A $S RED_CMP@,<br />
+  $A $S GREEN_CMP@,<br />
+  $A $S BLUE_CMP@,<br />
+  $A $S ALPHA_CMP@<br />
   <br />
   } $Tt_bunny_rgb@;
 </div>

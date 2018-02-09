@@ -1,4 +1,4 @@
-k<div class="prototype">
+<div class="prototype">
   Macro
   $Tsize_t@ $Sbunny_stack_size@($Kconst@ $Tt_bunny_stack@ *$Sstack@);
 </div>

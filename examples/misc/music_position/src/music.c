@@ -10,6 +10,7 @@ t_bunny_response	loop(t_bunny_sound		*music)
 
   i += 0.1;
   bunny_sound_position(music, cos(i) * 2, sin(i) * 2, 0);
+  // bunny_sound_position(music, cos(i) * 5, 0, 0);
   return (GO_ON);
 }
 
@@ -18,7 +19,7 @@ int			main(void)
   t_bunny_effect	*music;
 
   puts("CTRL-C pour quitter");
-  
+
   bunny_set_maximum_ram(100 * 1024 * 1024);
 
   if ((music = bunny_load_effect("videogame.ogg")) == NULL)
@@ -36,4 +37,3 @@ int			main(void)
   bunny_delete_sound(&music->sound);
   return (0);
 }
-

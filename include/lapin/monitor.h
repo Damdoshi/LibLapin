@@ -94,5 +94,5 @@ void			bunny_display_monitored_value(t_bunny_font	*textarea,
 */
 ssize_t			bunny_print_monitored_value(int			fd,
 						    const char		*n);
-  
+
 #endif	/*		__LAPIN_MONITOR_H__			*/

@@ -13,11 +13,19 @@ static const std::string gl_screen_tweak_code =
 
 static void		_clean_shader(void)
 {
-  bunny_delete_shader(gl_screen_tweak_shader);
+  if (gl_screen_tweak_shader)
+    bunny_delete_shader(gl_screen_tweak_shader);
 }
 
 t_bunny_shader		*bunny_screen_tweak_shader(const t_bunny_screen_tweak *bst)
 {
+  if (bst == NULL)
+    {
+      if (gl_screen_tweak_shader)
+        bunny_delete_shader(gl_screen_tweak_shader);
+      gl_screen_tweak_shader = NULL;
+      return (NULL);
+    }
   if (gl_screen_tweak_shader == NULL)
     {
       if ((gl_screen_tweak_shader = bunny_new_shader()) == NULL)
@@ -45,21 +53,21 @@ t_bunny_shader		*bunny_screen_tweak_shader(const t_bunny_screen_tweak *bst)
     (gl_screen_tweak_shader,
      "Red",
      BVT_1_FLOAT,
-     bst->color.argb[RED_CMP] / 255.0
+     bst->color[RED_CMP]
      );
 
   bunny_shader_set_variable
     (gl_screen_tweak_shader,
      "Green",
      BVT_1_FLOAT,
-     bst->color.argb[GREEN_CMP] / 255.0
+     bst->color[GREEN_CMP]
      );
 
   bunny_shader_set_variable
     (gl_screen_tweak_shader,
      "Blue",
      BVT_1_FLOAT,
-     bst->color.argb[BLUE_CMP] / 255.0
+     bst->color[BLUE_CMP]
      );
 
   bunny_shader_set_variable
@@ -73,14 +81,7 @@ t_bunny_shader		*bunny_screen_tweak_shader(const t_bunny_screen_tweak *bst)
     (gl_screen_tweak_shader,
      "GrayScale",
      BVT_1_FLOAT,
-     bst->gray_scale ? 1.0 : 0.0
-     );
-
-  bunny_shader_set_variable
-    (gl_screen_tweak_shader,
-     "BlackNWhite",
-     BVT_1_FLOAT,
-     bst->black_white ? 1.0 : 0.0
+     (float)bst->gray_scale
      );
 
   bunny_shader_set_variable

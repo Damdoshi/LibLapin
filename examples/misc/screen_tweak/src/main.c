@@ -15,11 +15,10 @@ t_bunny_screen_tweak	tweak =
   {
     .blur_level = 1.0,
     .luminosity = 1.0,
-    .color = { .full = WHITE },
+    .color = { 1, 1, 1 },
     .color_blind = BCBT_RED_GREEN_BLUE,
     .invert_color = false,
-    .gray_scale = false,
-    .black_white = false,
+    .gray_scale = 0,
     .noise_color = BNC_COLOR_NOISE,
     .noise_type = BNT_NO_NOISE,
     .noise_strenght = 0.5
@@ -47,29 +46,35 @@ t_bunny_response	key(t_bunny_event_state			state,
     tweak.luminosity += 0.1;
 
   if (sym == BKS_F3)
-    tweak.color.argb[RED_CMP] -= 0.25;
+    tweak.color[RED_CMP] -= 0.25;
   if (sym == BKS_F4)
-    tweak.color.argb[RED_CMP] += 0.25;
+    tweak.color[RED_CMP] += 0.25;
 
   if (sym == BKS_F5)
-    tweak.color.argb[GREEN_CMP] -= 0.25;
+    tweak.color[GREEN_CMP] -= 0.25;
   if (sym == BKS_F6)
-    tweak.color.argb[GREEN_CMP] += 0.25;
+    tweak.color[GREEN_CMP] += 0.25;
 
   if (sym == BKS_F7)
-    tweak.color.argb[BLUE_CMP] -= 0.25;
+    tweak.color[BLUE_CMP] -= 0.25;
   if (sym == BKS_F8)
-    tweak.color.argb[BLUE_CMP] += 0.25;
+    tweak.color[BLUE_CMP] += 0.25;
 
   if (sym == BKS_I)
     tweak.invert_color = !tweak.invert_color;
 
-
   if (sym == BKS_G)
-    tweak.gray_scale = !tweak.gray_scale;
-
+    {
+      if ((tweak.gray_scale -= 1) < 0)
+	tweak.gray_scale = 0;
+      printf("Gray scale level: %d.\n", tweak.gray_scale);
+    }
   if (sym == BKS_B)
-    tweak.black_white = !tweak.black_white;
+    {
+      if ((tweak.gray_scale += 1) > 255)
+	tweak.gray_scale = 255;
+      printf("Gray scale level: %d.\n", tweak.gray_scale);
+    }
 
   if (sym == BKS_F)
     {
@@ -112,9 +117,13 @@ t_bunny_response	loop(void				*dat)
   return (GO_ON);
 }
 
-int			main(void)
+int			main(int				argc,
+			     char				**argv)
 {
-  assert(picture = bunny_load_picture("test_picture.png"));
+  if (argc == 1)
+    assert(picture = bunny_load_picture("waterfall.png"));
+  else
+    assert(picture = bunny_load_picture(argv[1]));
   assert(win = bunny_start(picture->clip_width, picture->clip_height, false, "ScreenTweak"));
 
   printf("o/p : Blur.\n");
@@ -124,8 +133,7 @@ int			main(void)
   printf("F7/F8 : Blue.\n");
   printf("i : Invert color.\n");
   printf("f : Color switch for color blind.\n");
-  printf("g : Grayscale.\n");
-  printf("b : Black and white.\n");
+  printf("g / b : Gray scale level (0: color, 255: full grayscale).\n");
   printf("c : Switch noise color.\n");
   printf("t : Switch noise type.\n");
   printf("a/z : Noise strenght.\n");

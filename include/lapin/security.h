@@ -84,11 +84,11 @@ const t_bunny_cipher_key	*bunny_default_key(void);
 ** the cipher/unciphering capacity of the bunny security module (because
 ** the key used won't be 0 anymore)
 ** \param bunny_program A binary file, designed with LibLapin, to modify
-** \param key The key to insert inside the binary. If NULL, a key is generated.
+** \param key The key to insert inside the binary. If NULL, a key is generated
 ** \return True if every thing went well.
 */
 bool				bunny_fill_default_key(const char	*bunny_program,
-						       t_bunny_cipher_key *key);
+						       const t_bunny_cipher_key *key);
 
 /*!
 ** The t_bunny_key_twist function type is the type of the function that will be
@@ -109,7 +109,7 @@ extern t_bunny_key_twist	gl_bunny_my_key_twist;
 
 /*!
 ** Create a new key of the given size. The key is filled with random values.
-** \param len The size of the key. Should be greater than 0. Should be pair.
+** \param len The size of the key. Should be greater than 0. Must be pair.
 ** \return The generated key or NULL on error.
 */
 t_bunny_cipher_key		*bunny_new_key(size_t			len);

@@ -19,7 +19,7 @@ bool				bunny_set_sound_attribute(const char		*conf_file,
   int				tmp;
 
   if (sound == NULL || (cnf = _get_good_conf(conf_file, config)) == NULL)
-    scream_error_if(return (false), EINVAL, PATTERN, "ressource,sound", conf_file, sound, config, is_mus ? "true" : "false", "false", "");
+    scream_error_if(return (false), bunny_errno, PATTERN, "ressource,sound", conf_file, sound, config, is_mus ? "true" : "false", "false", "");
 
   if (*sound == NULL)
     {

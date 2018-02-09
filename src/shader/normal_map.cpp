@@ -130,7 +130,8 @@ const std::string	BodyEnd =
 
 static void		_clean_shader(void)
 {
-  bunny_delete_shader(gl_normal_map_shader);
+  if (gl_normal_map_shader)
+    bunny_delete_shader(gl_normal_map_shader);
 }
 
 t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
@@ -138,6 +139,13 @@ t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
   char			buffer[4096];
   unsigned int		i;
 
+  if (nm == NULL)
+    {
+      if (gl_normal_map_shader)
+        bunny_delete_shader(gl_normal_map_shader);
+      gl_normal_map_shader = NULL;
+      return (NULL);
+    }
   if (gl_normal_map_shader == NULL)
     {
       std::stringstream	ss;
@@ -161,7 +169,6 @@ t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
 	}
       ss << BodyEnd;
 
-      std::cerr << ss.str() << std::endl;
       if (bunny_read_shader(gl_normal_map_shader, NULL, ss.str().c_str()) == false)
 	return (NULL);
       atexit(_clean_shader);

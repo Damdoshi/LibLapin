@@ -33,7 +33,10 @@ void			main()
   vec2			x = vec2(Blur, 0.0);
   vec2			y = vec2(0.0, Blur);
   vec3			noise;
+  float     gray_final;
+  int  			gray_count;
   float			avg;
+  int       avg_i;
 
   vec4			Pixel =
     texture2D(Picture, gl_TexCoord[0].xy) * 4.0 +
@@ -89,24 +92,20 @@ void			main()
   Pixel.y = swi.y;
   Pixel.z = swi.z;
 
-  if (BlackNWhite > 0.5)
+  if (GrayScale > 0.9)
     {
-      avg = (Pixel.x + Pixel.y + Pixel.z) / 3.0;
-      if (avg < 0.15)
-	Pixel.xyz = vec3(0.0, 0.0, 0.0);
-      else if (avg < 0.5)
-	Pixel.xyz = vec3(0.3, 0.3, 0.3);
-      else if (avg < 0.85)
-	Pixel.xyz = vec3(0.7, 0.7, 0.7);
+      avg_i = int(((Pixel.x + Pixel.y + Pixel.z) / 3.0) * 255.0);
+      if (GrayScale > 254.5)
+      {
+         gray_final = float(avg_i) / 255.0;
+      }
       else
-	Pixel.xyz = vec3(1.0, 1.0, 1.0);
-    }
-  else if (GrayScale > 0.5)
-    {
-      avg = (Pixel.x + Pixel.y + Pixel.z) / 3.0;
-      Pixel.x = avg;
-      Pixel.y = avg;
-      Pixel.z = avg;
+      {
+        gray_count = int(255.0 / GrayScale);
+        gray_count = gray_count * (avg_i / gray_count);
+        gray_final = float(gray_count) / 255.0;
+      }
+      Pixel.xyz = vec3(gray_final, gray_final, gray_final);
     }
 
   if (NoiseType > 0.5)

@@ -78,7 +78,7 @@ bool			bunny_base64_decode(const char		*data,
       id_ok = 1;
       for (i = 0, j = strlen(gl_dictionnary); i < j; ++i)
 	gl_id[(int)gl_dictionnary[i]] = i;
-    }  
+    }
 
   if (outlen == NULL)
     {
@@ -110,7 +110,7 @@ bool			bunny_base64_decode(const char		*data,
 
 	// Generate a 24 bit integer
 	merge = a << 18 | b << 12 | c << 6 | d;
-	
+
 	if (j < *outlen)
 	  (*out)[j++] = (merge >> 16) & 0xFF;
 	if (j < *outlen)

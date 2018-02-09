@@ -19,14 +19,11 @@ body
 
 header
 {
-    background-image: url("../res/granit_header.png");
+    background-image: url("../res/granit/header.png");
 }
 
 .HeaderOverlay
 {
-    position: absolute;
-    width: 100%;
-    height: 100%;
     background: linear-gradient(to right, transparent, white);
 }
 
@@ -52,12 +49,12 @@ header h1
 
 nav
 {
-    background-image: url("../res/granit_menu.png");
+    background-image: url("../res/granit/menu.png");
 }
 
-nav div
+nav a div
 {
-    background-image: url("../res/granit_button_menu.png");
+    background-image: url("../res/granit/button_menu.png");
 }
 
 nav a:hover
@@ -70,7 +67,7 @@ nav a:hover
 
 footer
 {
-    background-image: url("../res/granit_footer.png");
+    background-image: url("../res/granit/footer.png");
     color: white;
     text-shadow:
     0px 0px 8px black,
@@ -83,7 +80,11 @@ footer
 
 #Body
 {
-    background-color: white;
+    /* background-color: white;*/
+    background:
+    linear-gradient(to bottom,
+		    white, white, white, white, white,
+		    lightgray);
 }
 
 #Body::-webkit-scrollbar-track
@@ -122,21 +123,32 @@ footer
 
 }
 
-.button
+.button, .roll_button input
 {
-    border: 1px solid rgba(0, 0, 0, 0.5);
-    background-color: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(0, 0, 0, 0.0);
+    background-color: rgba(0, 0, 0, 0.125);
     text-align: center;
 }
 
-.button:hover
+.altbutton
+{
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.button:hover, .roll_button input:hover
 {
     border: 1px solid rgba(0, 0, 0, 0.25);
     background-color: rgba(0, 0, 0, 0.125);
     text-align: center;
 }
 
-.button:active
+.altbutton:hover
+{
+    background-color: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.button:active, .altbutton:active
 {
     border: 1px solid rgba(255, 0, 0, 0.5);
     background-color: rgba(255, 0, 0, 0.25);
@@ -145,36 +157,45 @@ footer
 
 .doc_entry
 {
-    border: 1px solid rgba(0, 0, 0, 0.5);
-    background-color: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(0, 0, 0, 0.0);
+    background-color: rgba(0, 0, 0, 0.125);
+}
+
+.index
+{
+    background-color: white;
+}
+
+.index_item
+{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 .home div
 {
-    border: 1px solid rgba(0, 0, 0, 0.5);
-    background-color: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(0, 0, 0, 0.0);
+    background-color: rgba(0, 0, 0, 0.125);
 }
 
 .doc_symbol
 {
-    color: darkblue;
-    font-weight: bold;
+    color: rgb(128, 128, 0);
 }
 
 .doc_keyword
 {
-    color: teal;
+    color: rgb(0, 200, 200);
     font-weight: bold;
 }
 
-.doc_type
+.doc_type, .doc_type .doclink
 {
-    color: green;
+    color: rgb(0, 128, 64);
 }
 
-.doc_constant
+.doc_constant, .doc_constant .doclink
 {
-    color: purple;
+    color: rgb(128, 0, 128);
     font-weight: bold;
 }
 
@@ -185,12 +206,19 @@ footer
 
 .doc_litteral
 {
-    color: green;
+    color: rgb(0, 128, 0);
+}
+
+.doc_comment
+{
+    color: red;
+    font-weight: bold;
 }
 
 .doclink
 {
-    color: gray;
+    color: rgb(0, 64, 128);
+    font-weight: bold;
 }
 
 .doclink:hover
@@ -200,6 +228,17 @@ footer
 
 .prototype
 {
+    font-family: arial;
+    /*font-size: 30px;*/
+    color: black;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: white;
+    /*background: linear-gradient(to right, black, black, transparent);*/
+    /*box-shadow: 0px 0px 10px black;*/
+    border-bottom-left-radius: 30px;
+    border-top-right-radius: 30px;
 }
 
 .resume

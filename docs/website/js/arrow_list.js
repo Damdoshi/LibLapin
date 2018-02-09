@@ -12,7 +12,6 @@ function roll_unroll(mod, all = 0)
   var list = document.getElementById(mod + "_sublist");
   var arrow = document.getElementById(mod + "_arrow");
 
-  console.log("all => " + all);
   if (all == 0)
   {
     if (list.style.display == "none")

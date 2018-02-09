@@ -19,7 +19,7 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
   int				tmp[4];
 
   if (clipable == NULL || (cnf = _get_good_conf(conf_file, config)) == NULL)
-    scream_error_if(return (false), EINVAL, PATTERN, "resource,graphics", conf_file, clipable, config, is_pxarray ? "true" : "false", "false", "");
+    scream_error_if(return (false), EINVAL, PATTERN, "ressource,graphics", conf_file, clipable, config, is_pxarray ? "true" : "false", "false", "");
 
   if (*clipable == NULL)
     {

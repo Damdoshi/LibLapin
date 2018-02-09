@@ -3,6 +3,7 @@
 //
 // BPT NetCom
 
+#include    "lapin_private.h"
 #include		"Server.hpp"
 
 bool			bpt::NetCom::Server::DoomClient(unsigned int	clt)
@@ -15,5 +16,6 @@ bool			bpt::NetCom::Server::DoomClient(unsigned int	clt)
       (*it)->doomed = true;
       return (true);
     }
+  bunny_errno = BE_CANNOT_FIND_ELEMENT;
   return (false);
 }

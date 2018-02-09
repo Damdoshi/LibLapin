@@ -57,3 +57,10 @@
   </p>
 </div>
 
+<div class="related_functions">
+  <h3>Related functions</h3>
+  <ul>
+    <li>bunny_list_tie</li>
+    <li>bunny_delete_list</li>
+  </ul>
+</div>

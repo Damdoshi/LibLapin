@@ -164,11 +164,10 @@ typedef struct		s_bunny_screen_tweak
 {
   float			blur_level;
   float			luminosity;
-  t_bunny_color		color;
+  double		color[3];
   t_bunny_color_blind_tweak color_blind;
   bool			invert_color;
-  bool			gray_scale;
-  bool			black_white;
+  int 			gray_scale;
   t_bunny_noise_color	noise_color;
   t_bunny_noise_type	noise_type;
   double		noise_strenght;
@@ -196,7 +195,7 @@ typedef struct		s_bunny_normal_light
 
 typedef struct		s_bunny_normal_map
 {
-  t_bunny_position	window_size;
+  t_bunny_size	window_size;
   t_bunny_picture	*normal_map;
   t_bunny_picture	*specular_map;
   t_bunny_normal_light	lights[8];

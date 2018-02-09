@@ -1,7 +1,7 @@
 <div class="prototype">
   Macro
   $Tt_bunny_stack@ *$Sbunny_new_stack@($Tvoid@);
-g</div>
+</div>
 <hr />
 
 <div class="resume">
@@ -14,9 +14,22 @@ g</div>
   <h3>Return value</h3>
   <ul>
     <li>
-      The function returns the address of the created Stack.<br />
-      This function cannot fail without crashing your program by
-      stack overflow.
+      The function returns the address of the created Stack or $CNULL
+      if an error occured.
+    </li>
+  </ul>
+</div>
+
+<div class="error_and_log">
+  <h3>Error values and logs</h3>
+  <p>
+    On error, $Vbunny_errno@ is set to:
+  </p>
+  <br />
+  <ul>
+    <li>
+      $CENOMEM@:<br />
+      Out of memory.
     </li>
   </ul>
 </div>

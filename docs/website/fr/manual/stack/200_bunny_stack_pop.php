@@ -59,6 +59,7 @@
     $Tvoid@ *$S_bunny_stack_pop@($Tt_bunny_stack@ *$Sstack@);
   </p>
 </div>
+<hr />
 
 <div class="related_functions">
   <h3>Related functions</h3>

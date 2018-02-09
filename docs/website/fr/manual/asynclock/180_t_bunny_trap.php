@@ -1,11 +1,11 @@
 <div class="prototype">
   $Ktypedef struct@ $Ts_bunny_trap@<br />
   {<br />
-  $Kconst@ $Tchar@ $S_private@[3 * $Ksizeof@($Tvoid@*)];<br />
-  $Kconst@ $Tdouble@ $Sstart_time@;<br />
-  $Kconst@ $Tdouble@ $Sduration@;<br />
-  $Tt_bunny_trap_function@ $Sfunction@;<br />
-  $Tvoid@ *$Sadditional_param@;<br />
+  $A $Kconst@ $Tchar@ $S_private@[3 * $Ksizeof@($Tvoid@*)];<br />
+  $A $Kconst@ $Tdouble@ $Sstart_time@;<br />
+  $A $Kconst@ $Tdouble@ $Sduration@;<br />
+  $A $Tt_bunny_trap_function@ $Sfunction@;<br />
+  $A $Tvoid@ *$Sadditional_param@;<br />
   <br />
   } $Tt_bunny_trap@;
 </div>

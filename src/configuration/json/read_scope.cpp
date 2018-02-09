@@ -17,6 +17,8 @@ Decision		json_read_scope(const char		*code,
   if (readtext(code, i, "{") == false)
     return (BD_NOT_FOUND);
   json_read_separator(code, i);
+  if (readtext(code, i, "}"))
+    return (BD_OK);
   if (json_read_inside_scope(code, i, conf, root) == BD_ERROR)
     return (BD_ERROR);
   json_read_separator(code, i);

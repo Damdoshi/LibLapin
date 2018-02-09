@@ -9,6 +9,7 @@ function color_template($page, $doc, $symbols, $cnt)
   $cnt = str_replace('$C', '<span class="doc_constant">', $cnt);
   $cnt = str_replace('$B', '<span class="doc_strong">', $cnt);
   $cnt = str_replace('$L', '<span class="doc_litteral">', $cnt);
+  $cnt = str_replace('$M', '<span class="doc_comment">', $cnt);
   $cnt = str_replace('$A', '&nbsp;&nbsp;&nbsp&nbsp;', $cnt);
   $cnt = str_replace('@', '</span>', $cnt);
   foreach ($symbols as $cpl)

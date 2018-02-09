@@ -101,6 +101,7 @@ t_bunny_effect			*bunny_new_effect(double			duration);
 t_bunny_effect			*bunny_load_effect(const char			*file);
 
 /*!
+** This function is not implemented.
 ** The bunny_read_effect_id function read in memory a sound file and return
 ** a matching t_bunny_effect.
 ** The reserved memory to handle it is inside the bunny_malloc space.
@@ -211,7 +212,7 @@ void				bunny_sound_set_cursor(t_bunny_sound		*snd,
 /*!
 ** Get the position in seconds of the sent sound.
 ** \param snd The sound to know where the cursor is
-** \reutrn The position in seconds between the beginning and the current cursor.
+** \return The position in seconds between the beginning and the current cursor.
 */
 double				bunny_sound_get_cursor(t_bunny_sound		*snd);
 
@@ -280,8 +281,8 @@ void				_bunny_delete_sound(t_bunny_sound		*sound);
 **
 ** This function is the effect equivalent of bunny_make_clipable_unique in graphics.
 **
-** \param clipable The clipable that will be turned unique
-** \return True if everything went well. If the clipable was already unique,
+** \param eff The effect that will be turned unique
+** \return True if everything went well. If the effect was already unique,
 ** everything went well.
 */
 bool				bunny_make_effect_unique(t_bunny_effect		*eff);

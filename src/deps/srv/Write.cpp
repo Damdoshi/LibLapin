@@ -4,6 +4,7 @@
 // BPT NetCom
 
 #include		<string.h>
+#include    "lapin_private.h"
 #include		"Server.hpp"
 
 bool			bpt::NetCom::Server::Write(const void		*buffer,
@@ -19,7 +20,10 @@ bool			bpt::NetCom::Server::Write(const void		*buffer,
     return (false);
   for (it = client.begin(); it != client.end() && (*it)->info->socket != user; ++it);
   if (it == client.end())
-    return (false);
+    {
+      bunny_errno = BE_CANNOT_FIND_ELEMENT;
+      return (false);
+    }
   if (this->protocol == RAW)
     i = strlen(EOC);
   if ((wr = new WriteRequest(buffer, size + i, size)) == NULL)

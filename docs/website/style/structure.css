@@ -16,6 +16,15 @@
     z-index: 99;
 }
 
+.HeaderOverlay
+{
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
 #LoadingLogo
 {
     position: absolute;
@@ -59,6 +68,11 @@ nav
     height: 45px;
 }
 
+nav a
+{
+    position: relative;
+}
+
 nav div
 {
     width: 200px;
@@ -77,6 +91,18 @@ footer
     padding-top: 17px;
     height: 33px;
     text-align: center;
+}
+
+footer .style
+{
+    float: left;
+    padding-left: 20px;
+}
+
+footer .style select
+{
+    font-size: 16px;
+    width: 150px;
 }
 
 footer .language
@@ -106,6 +132,18 @@ footer .language
     column-count: 3;
     column-gap: 1px;
 }
+
+/*
+.prime_list ul
+{
+    text-align: center;
+}
+
+.prime_list li
+{
+    display: inline-block;
+}
+*/
 
 .prime_list h2
 {
@@ -165,6 +203,16 @@ h1
     margin: 0px 10px 10px 10px;
 }
 
+.roll_button input
+{
+    border: 1px solid rgba(0, 0, 0, 0.0);
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 20px;
+    width: 300px;
+    height: 35px;
+}
+
 .doc_entry
 {
     width: 70%;
@@ -183,7 +231,7 @@ h1
 
 .doc_entry h3
 {
-    font-size: 20px;
+    font-size: 25px;
     margin-top: 20px;
     margin-bottom: 20px;
     font-weight: bold;
@@ -191,7 +239,15 @@ h1
 
 .doc_entry h4
 {
-    font-size: 15px;
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.doc_entry h5
+{
+    font-size: 17px;
     margin-top: 10px;
     margin-bottom: 10px;
     font-weight: bold;
@@ -199,12 +255,19 @@ h1
 
 .doc_entry ul
 {
-    margin-left: 20px;
+    margin-left: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .doc_entry li
 {
     margin-bottom: 20px;
+}
+
+.doc_entry+.index li
+{
+    margin-bottom: 0px;
 }
 
 .doc_entry li p
@@ -215,6 +278,8 @@ h1
 .index a
 {
     font-size: 30px;
+    margin: 0px 0px 0xp 0px;
+    padding: 0px 0px 0px 0px;
 }
 
 .index_item
@@ -317,6 +382,10 @@ h1
 }
 
 .doc_type
+{
+}
+
+.doc_comment
 {
 }
 

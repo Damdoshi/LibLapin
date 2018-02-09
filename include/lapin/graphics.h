@@ -158,7 +158,8 @@ typedef t_bunny_pixelarray	*(*t_bunny_my_load_pixelarray)(const char	*file);
 ** The self test function does not currently evaluate the function you would assign to
 ** gl_bunny_my_read_pixelarray.
 */
-typedef t_bunny_pixelarray	*(*t_bunny_my_read_pixelarray)(const void	*buf);
+typedef t_bunny_pixelarray	*(*t_bunny_my_read_pixelarray)(const void	*buf,
+                                                           size_t length);
 
 /*!
 ** The gl_bunny_my_load_pixelarray is supposed to be the function pointer to set

@@ -72,7 +72,7 @@ typedef struct		s_bunny_animation
 typedef struct		s_bunny_sprite
 {
   t_bunny_clipable	clipable;
-  size_t		_private[3];
+  const size_t		_private[3];
   t_bunny_vector	*animation;	// [int -> anim]
   t_bunny_map		*hashname_id;	// [hash("") -> int]
   int32_t		current_animation;
@@ -170,7 +170,7 @@ bool			bunny_sprite_set_animation_id(t_bunny_sprite *sprite,
 ** \param sprite The sprite to inspect
 ** \return The name under its hash format.
 */
-uint64_t		bunny_sprite_get_animation(t_bunny_sprite *sprite);
+uint64_t		bunny_sprite_get_animation(const t_bunny_sprite *sprite);
 
 /*!
 ** Return the hash format of the sent name.

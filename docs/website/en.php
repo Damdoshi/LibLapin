@@ -8,6 +8,7 @@ $MainPage = "Home";
 $Tutorials = "Tutorials";
 $Manuals = "Manuals";
 $Download = "Download";
+$Gallery = "Gallery";
 
 $AllInOne = "This package includes all dependencies.";
 $OnlyLib = "Library only.";
@@ -22,3 +23,4 @@ $On = "on";
 $Dependencies = "Dependencies";
 
 $RollUnrollAll = "Roll/Unroll all";
+$Search = "Search";

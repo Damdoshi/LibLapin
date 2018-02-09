@@ -18,6 +18,10 @@ Decision		json_read_array(const char		*code,
     return (BD_NOT_FOUND);
 
   json_read_separator(code, i);
+
+  if (readtext(code, i, "]"))
+    return (BD_OK);
+
   if (json_read_inside_array(code, i, conf, root) == BD_ERROR)
     return (BD_ERROR);
   json_read_separator(code, i);

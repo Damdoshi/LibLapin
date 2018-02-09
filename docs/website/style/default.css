@@ -134,6 +134,12 @@ footer
     color: green;
 }
 
+.doc_comment
+{
+    color: red;
+    font-weight: bold;
+}
+
 .doclink
 {
     color: gray;

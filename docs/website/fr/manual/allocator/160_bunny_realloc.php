@@ -53,7 +53,7 @@
   <h3>Error values, errors and logs</h3>
   <p>
     If the sent address is invalid, a SIGSEGV signal will be sent to your
-    program if $CBUNNY_ALLOCATOR_DEACTIVATED was set at compile time.
+    program if $CBUNNY_ALLOCATOR_DEACTIVATED@ was set at compile time.
   </p>
   <br />
   <p>

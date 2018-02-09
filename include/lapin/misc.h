@@ -38,7 +38,7 @@
 /*!
 ** Print the current file and line in code. Useful for debugging.
 */
-# define			bunny_trace()				printf("%s:%d\n", __PRETTY_FUNCTION__, __LINE__)
+# define			bunny_trace()				printf("%s-%d:%d\n", __PRETTY_FUNCTION__, __FILE__, __LINE__)
 
 /*!
 ** Load an entire file.

@@ -11,7 +11,7 @@
 #define				PATTERN		"%s program, %p key -> %s"
 
 bool				bunny_fill_default_key(const char	*bunny_prog,
-						       t_bunny_cipher_key *key)
+                                   const t_bunny_cipher_key *key)
 {
   int32_t			buflen;
   const t_bunny_cipher_key	*def;

@@ -6,9 +6,10 @@
 
 require_once ("tools/tools.php");
 
+// Language
+
 if (isset($_GET['lan']))
   $_COOKIE['lan'] = $_GET['lan'];
-
 $language = ["fr", "en"];
 if (!isset($_COOKIE['lan']) || !in_array($_COOKIE['lan'], $language))
   $language = "fr";
@@ -19,10 +20,20 @@ else
 }
 require_once ("$language.php");
 
-if (!isset($_COOKIE['theme']) || !filter_chars($_COOKIE['theme'], "abcdefghijklmnopqrstuvwxyz"))
-  $theme = "granit";
+// Theme
+if (isset($_POST['theme'])
+    && filter_chars($_POST['theme'], "abcdefghijklmnopqrstuvwxyz_"))
+{
+  $theme = $_POST['theme'];
+  setcookie("theme", $theme, time() + 60 * 60 * 24 * 365);
+}
+else if (!isset($_COOKIE['theme'])
+    || !filter_chars($_COOKIE['theme'], "abcdefghijklmnopqrstuvwxyz_"))
+  $theme = "theme_granit";
 else
   $theme = $_COOKIE['theme'];
+if (file_exists("./style/$theme.css") == false)
+  $theme = "theme_granit";
 
 ?>
 <!DOCTYPE html>
@@ -87,23 +98,35 @@ else
     </header>
 
     <nav>
-      <a href="index.php?pag=0">
-        <div><?=$MainPage; ?></div>
-      </a>
-      <a href="index.php?pag=1">
-        <div><?=$Tutorials; ?></div>
-      </a>
-      <a href="index.php?pag=2">
-        <div><?=$Manuals; ?></div>
-      </a>
-      <a href="index.php?pag=3">
-        <div><?=$Download; ?></div>
-      </a>
+      <div class="HeaderOverlay">
+        <a href="index.php?pag=0">
+          <div><?=$MainPage; ?></div>
+        </a>
+        <a href="index.php?pag=1">
+          <div><?=$Tutorials; ?></div>
+        </a>
+        <a href="index.php?pag=2">
+          <div><?=$Manuals; ?></div>
+        </a>
+        <a href="index.php?pag=3">
+          <div><?=$Download; ?></div>
+        </a>
+        <a href="index.php?pag=5">
+          <div><?=$Gallery; ?></div>
+        </a>
+      </div>
     </nav>
 
     <div id="Body">
       <?php
-      $page = ["main.php", "tuto.php", "manual.php", "download.php", "docpage.php"];
+      $page = [
+        "main.php",
+        "tuto.php",
+        "manual.php",
+        "download.php",
+        "docpage.php",
+        "gallery.php"
+      ];
       if (!isset($_GET['pag']) || (int)$_GET['pag'] < 0 || (int)$_GET['pag'] >= count($page))
         $_GET['pag'] = 0;
       require_once ($page[(int)$_GET['pag']]);
@@ -111,7 +134,33 @@ else
     </div>
 
     <footer>
+      <form method="post" class="style">
+        <select name="theme" onChange="this.form.submit();">
+          <?php
+          foreach(scandir("./style/") as $css)
+          {
+            if (strncmp($css, "theme_", 6) == 0
+                && strstr($css, ".css") != false
+                && $css[strlen($css) - 1] != -1)
+            {
+              $css = str_replace(".css", "", $css);
+              $name = substr($css, 6);
+          ?>
+            <option
+                value="<?=$css; ?>"
+                <?=$theme == $css ? "selected" : ""; ?>
+            >
+              Style: <?=pretty_name($name); ?>
+            </option>
+          <?php
+            }
+          }
+          ?>
+        </select>
+      </form>
+
       Hanged Bunny Studio 2014-2018
+
       <a href="index.php?lan=fr">
         <div class="language">
           <img src="res/fr.png" alt="Francais" />
