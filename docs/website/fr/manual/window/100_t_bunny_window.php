@@ -1,5 +1,10 @@
 <div class="prototype">
-  $Tt_bunny_window@
+  $Ktypedef struct@ $Ts_bunny_window@<br />
+  {<br />
+  $A $Tt_bunny_buffer@ $Sbuffer@;<br />
+  $A $Kconst@ $Tchar@ * $Kconst@ $Sname@;<br />
+  <br />
+  } $Tt_bunny_window@;
 </div>
 <hr />
 

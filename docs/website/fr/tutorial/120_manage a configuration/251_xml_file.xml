@@ -1,0 +1,10 @@
+@include "another_file.xml"
+<conf_node named_children="data">
+  ArrayInput
+  <array_input named_children="data","second_data" />
+  <array_input="extensions" named_children="data">
+    <!-- Magic -->
+    Data
+    @insert "another_file2.xml"
+  </array_input>
+</conf_node>

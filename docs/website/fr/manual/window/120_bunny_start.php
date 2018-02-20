@@ -35,7 +35,9 @@
   This function perform a joystick scan. So when opening
   a window, all joysticks will be recognized. After opening
   the window, you will have to handle the connection and
-  disconnection by yourself with events.
+  disconnection by yourself with events.<br />
+  <br />
+  By default, the window is filled with PINK2.
 </div>
 <hr />
 

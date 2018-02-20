@@ -20,6 +20,19 @@ else
 }
 require_once ("$language.php");
 
+// Ads
+if (isset($_POST['ads'])
+    && filter_chars($_POST['ads'], "abcdefghijklmnopqrstuvwxyz_"))
+{
+  $ads = $_POST['ads'];
+  setcookie("ads", $ads, time() + 60 * 60 * 24 * 365);
+}
+else if (!isset($_COOKIE['ads'])
+    || !filter_chars($_COOKIE['ads'], "abcdefghijklmnopqrstuvwxyz_"))
+  $ads = "ads";
+else
+  $ads = $_COOKIE['ads'];
+
 // Theme
 if (isset($_POST['theme'])
     && filter_chars($_POST['theme'], "abcdefghijklmnopqrstuvwxyz_"))
@@ -156,6 +169,12 @@ if (file_exists("./style/$theme.css") == false)
             }
           }
           ?>
+        </select>
+      </form>
+      <form method="post" class="style">
+        <select name="ads" onChange="this.form.submit();">
+          <option value="ads" <?=$ads == "ads" ? "selected" : ""; ?>>Ads</option>
+          <option value="no_ads" <?=$ads == "no_ads" ? "selected" : ""; ?>>No ads</option>
         </select>
       </form>
 

@@ -391,7 +391,12 @@ h1
 
 .prototype
 {
-    font-size: 20px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.code
+{
     margin-bottom: 20px;
 }
 
@@ -420,3 +425,16 @@ h1
     text-align: center;
 }
 
+.youtube
+{
+    margin-left: 20px;
+    float: right;
+    width: 430px;
+    height: 240px;
+    background-color: black;
+}
+
+.maintext 
+{
+    min-height: 240px;
+}

@@ -71,5 +71,6 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
       }
 
   scream_log_if(PATTERN, "window", width, height, winstyle, window_name, win);
+  bunny_fill((t_bunny_buffer*)win, PINK2);
   return ((t_bunny_window*)win);
 }

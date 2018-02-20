@@ -162,6 +162,6 @@ typedef enum			e_bunny_keysym
     BKS_F15,
     BKS_PAUSE,
     BKS_LAST_KEY
-}				t_bunny_keysym;
+  }				t_bunny_keysym;
 
 #endif	/*			__LAPIN_ENUM_H__	*/

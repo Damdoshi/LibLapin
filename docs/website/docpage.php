@@ -7,17 +7,19 @@
 if (!isset($_GET["doc"])
     || ($_GET["doc"] != "tutorial" && $_GET["doc"] != "manual")
     || !isset($_GET["mod"])
-    || !filter_chars($_GET["mod"], "abcdefghijklmnopqrstuvwxyz")
+    || !filter_chars(strtolower($_GET["mod"]), "abcdefghijklmnopqrstuvwxyz _1234567890")
 )
 {
   exit(1);
 }
 $doctype = $_GET["doc"];
 $mod = $_GET["mod"];
-$sym = get_all_symbols("$language/$doctype");
+$sym = get_all_symbols("$language/$doctype", $doctype);
+if ($doctype == "tutorial")
+  $sym = get_all_symbols("$language/manual", "manual", $sym);
 ?>
 
-<h1 id="Index"><?=pretty_name($mod); ?></h1>
+<h1 id="Index"><?=pretty_name(skip_int_label($mod)); ?></h1>
 <br />
 <br />
 <br />
@@ -39,7 +41,12 @@ if (file_exists("$language/$doctype/$mod/main.php"))
   $entries = [];
   foreach (scandir("$language/$doctype/$mod/") as $dir)
   {
-    if ($dir[0] != "." && $dir != "main.php" && $dir[strlen($dir) - 1] != "~" && $dir[0] != "#" && strstr($dir, ".php") != false)
+    if ($dir[0] != "."
+        && $dir != "main.php"
+        && $dir != "meta.php"
+        && $dir[strlen($dir) - 1] != "~"
+        && $dir[0] != "#"
+        && strstr($dir, ".php") != false)
     {
       $dirx = skip_int_label($dir);
       $entries[] = [

@@ -1,0 +1,31 @@
+Field = "Value" 'This is an inline comment
+
+[*
+ Block comment
+*]
+
+[Scope = "Value2"
+  [Scope
+    DeepField = "ValueX"
+  ]
+  Array=800,600
+]
+
+AnotherScope = [Scope
+  Field = "Val"
+]
+
+{Array = "Value3"
+  Entry0,
+  Entry1
+}
+
+AnotherArray = {
+  { = "Even here"
+    Entry00, Entry01
+  },
+  [
+    Field = "We are in a scope"
+  ]
+  Entry10
+}

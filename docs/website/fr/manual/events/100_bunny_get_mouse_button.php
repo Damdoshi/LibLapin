@@ -6,6 +6,11 @@
 <div class="resume">
   <h3>Description</h3>
   $A This function returns the mouse button status.
+  <b>
+    In the bunny library, mouse button status is updated only if a mouse button
+    response function is set.
+  </b>
+
 </div>
 <hr />
 

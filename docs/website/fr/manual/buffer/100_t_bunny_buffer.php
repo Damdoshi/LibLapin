@@ -1,5 +1,11 @@
 <div class="prototype">
-  $Tt_bunny_buffer@
+  $Ktypedef struct@ $Ts_bunny_buffer@<br />
+  {<br />
+  $A $Kconst@ $Tsize_t@ $S_private@[3];<br />
+  $A $Tssize_t@ $Swidth@;<br />
+  $A $Tssize_t@ $Sheight@;<br />
+  <br />
+  } $Tt_bunny_buffer@;
 </div>
 <hr />
 

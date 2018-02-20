@@ -72,7 +72,8 @@ bool			bunny_configuration_go_set_string_va(t_bunny_configuration	*config,
 }
 
 t_bunny_configuration	*_bunny_configuration_go_get_node(const t_bunny_configuration	*config,
-							  const char			*addr);
+							  const char			*addr,
+							  ssize_t			&i);
 
 #undef			PATTERN
 #define			PATTERN		"%p config, %s value, %s address -> %s"
@@ -83,7 +84,7 @@ bool			bunny_configuration_go_set_string(t_bunny_configuration		*config,
 {
   t_bunny_configuration	*cnf;
 
-  if ((cnf = _bunny_configuration_go_get_node(config, addr)) == NULL)
+  if ((cnf = bunny_configuration_go_get_node(config, addr)) == NULL)
     scream_error_if
       (return (false), bunny_errno, PATTERN, "configuration", config, val, addr, "false");
   bunny_configuration_set_string(cnf, val);
@@ -100,7 +101,7 @@ bool			bunny_configuration_go_set_double(t_bunny_configuration		*config,
 {
   t_bunny_configuration	*cnf;
 
-  if ((cnf = _bunny_configuration_go_get_node(config, addr)) == NULL)
+  if ((cnf = bunny_configuration_go_get_node(config, addr)) == NULL)
     scream_error_if
       (return (false), bunny_errno, PATTERN, "configuration", config, val, addr, "false");
   bunny_configuration_set_double(cnf, val);
@@ -117,7 +118,7 @@ bool			bunny_configuration_go_set_int(t_bunny_configuration		*config,
 {
   t_bunny_configuration	*cnf;
 
-  if ((cnf = _bunny_configuration_go_get_node(config, addr)) == NULL)
+  if ((cnf = bunny_configuration_go_get_node(config, addr)) == NULL)
     scream_error_if
       (return (false), bunny_errno, PATTERN, "configuration", config, val, addr, "false");
   bunny_configuration_set_int(cnf, val);

@@ -4,13 +4,14 @@
 //
 // LibLapin
 
-$MainPage = "Acceuil";
+$MainPage = "Accueil";
 $Tutorials = "Apprendre";
 $Manuals = "Documentation";
 $Download = "Téléchargement";
 $Gallery = "Galerie";
 
 $AllInOne = "Ce paquet incluant toutes les dépendances.";
+$Allocator = "Allocateur Lapin activé.";
 $OnlyLib = "Bibliothèque seulement.";
 $WatchDependencies = "Voir quelles sont les dépendances";
 
@@ -24,3 +25,5 @@ $Dependencies = "Dépendances";
 
 $RollUnrollAll = "Tout dérouler/enrouler";
 $Search = "Rechercher";
+
+$ChapterWithExercices = "Chapitre avec exercices";

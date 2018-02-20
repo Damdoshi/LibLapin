@@ -16,7 +16,7 @@ function color_template($page, $doc, $symbols, $cnt)
   {
     $cnt = str_replace(
       $cpl["sym"],
-      urlforge($page, $doc, $cpl["mod"], $cpl["sym"]),
+      urlforge($page, $cpl["typ"], $cpl["mod"], $cpl["sym"]),
       $cnt
     );
   }

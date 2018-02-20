@@ -11,7 +11,9 @@ $all_mods = "[ ";
 foreach (scandir("$language/$doctype/") as $mod)
 {
   if ($mod[0] != "." && strstr($mod, ".php") == false)
+  {
     $all_mods .= "'$mod',";
+  }
 }
 $all_mods[strlen($all_mods) - 1] = "]";
 
@@ -24,13 +26,27 @@ $all_mods[strlen($all_mods) - 1] = "]";
   <a>
     <input type="text" placeholder="<?=$Search; ?>" id="SearchButton" />
   </a>
+  <?php
+  if ($ads == "ads")
+  {
+    echo "<br /><br />";
+    echo "<a>";
+    require_once ("pub.php");
+    echo "</a>";
+  }
+  ?>
 </div>
 
 <ul class="prime_list">
 <?php
 $i = 0;
-foreach (scandir("$language/$doctype/") as $mod)
+foreach (scandir("$language/$doctype/") as $dir)
 {
+  $mod = $dir;
+  if (file_exists("$language/$doctype/$dir/meta.php"))
+    require_once ("$language/$doctype/$dir/meta.php");
+  else
+    $meta = "";
   if ($mod[0] != "." && strstr($mod, ".php") == false)
   {
 ?>
@@ -39,18 +55,19 @@ foreach (scandir("$language/$doctype/") as $mod)
       <a onClick="roll_unroll('<?=$mod; ?>');">
         <img id="<?=$mod; ?>_arrow" src="res/arrow_right.png" />
       </a>
-      <a href="index.php?pag=4&amp;doc=<?=$doctype; ?>&amp;mod=<?=$mod; ?>">
-        <h2><?=pretty_name($mod); ?></h2>
+      <a href="index.php?pag=4&amp;doc=<?=$doctype; ?>&amp;mod=<?=$dir; ?>">
+        <h2><?=$meta; ?><?=pretty_name(skip_int_label($mod)); ?></h2>
       </a>
     </div>
     <ul id="<?=$mod; ?>_sublist" class="second_list" style="display: none;">
     <?php
     $entries = [];
-    foreach (scandir("$language/$doctype/$mod/") as $sym)
+    foreach (scandir("$language/$doctype/$dir/") as $sym)
     {
       if ($sym[0] != "."
           && $sym[0] != "#"
           && $sym != "main.php"
+          && $sym != "meta.php"
           && strstr($sym, ".php") != false
           && $sym[strlen($sym) - 1] != "~")
       {

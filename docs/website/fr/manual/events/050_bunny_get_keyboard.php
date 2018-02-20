@@ -6,6 +6,10 @@
 <div class="resume">
   <h3>Description</h3>
   $A This function returns the keyboard status.
+  <b>
+    In the bunny library, keyboard status is updated only if a keyboard response
+    function is set.
+  </b>
 </div>
 <hr />
 

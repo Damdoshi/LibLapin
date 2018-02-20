@@ -226,9 +226,9 @@ footer
     text-decoration: underline;
 }
 
-.prototype
+.prototype, .code
 {
-    font-family: arial;
+    font-family: monospace;
     /*font-size: 30px;*/
     color: black;
     padding-left: 20px;

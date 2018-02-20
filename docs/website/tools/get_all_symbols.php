@@ -4,10 +4,13 @@
 //
 // LibLapin
 
-function get_all_symbols($root)
+function get_all_symbols($root, $type, $base = null)
 {
-  $sym = [];
-  $i = 0;
+  if ($base)
+    $sym = $base;
+  else
+    $sym = [];
+  $i = count($sym);
   foreach (scandir("$root/") as $mod)
   {
     if ($mod[0] != "."
@@ -23,6 +26,7 @@ function get_all_symbols($root)
         )
         {
           $s = skip_int_label(str_replace(".php", "", $s));
+          $sym[$i]["typ"] = $type;
           $sym[$i]["mod"] = $mod;
           $sym[$i]["sym"] = $s;
           $i += 1;
@@ -45,7 +49,6 @@ function get_all_symbols($root)
     }
   }
   while ($sorted == false);
-  file_put_contents("/tmp/merde", print_r($sym, true));
   return ($sym);
 }
 

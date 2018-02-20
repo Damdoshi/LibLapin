@@ -7,6 +7,10 @@
   <h3>Description</h3>
   $A This function returns the cursor position, relatively to the top left corner
   of the window.
+  <b>
+    In the bunny library, mouse position is updated only if a mouse move response
+    function is set.
+  </b>
 </div>
 <hr />
 

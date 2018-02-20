@@ -7,6 +7,10 @@
   <h3>Description</h3>
   $A This function returns an array with two dimensions, the first one
   being the joystick id, the second one being the axis.
+  <b>
+    In the bunny library, joystick axis status is updated only if a joystick
+    axis response function is set.
+  </b>
 </div>
 <hr />
 

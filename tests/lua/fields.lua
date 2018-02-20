@@ -1,6 +1,7 @@
 {
   string = "value", --commentaries
   integer = 42,
+  -- another comment
 #! commentary
   ["double field"] = 5.6,
   --[[
