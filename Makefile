@@ -96,3 +96,5 @@ fclean:			clean erase
 re:			fclean all
 erase:
 			@$(RM) -r $(LOGDIR)/*.*
+
+.POSIX:

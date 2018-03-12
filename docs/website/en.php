@@ -26,4 +26,4 @@ $Dependencies = "Dependencies";
 $RollUnrollAll = "Roll/Unroll all";
 $Search = "Search";
 
-$ChapterWithExercices = "Chapter avec exercises";
+$ChapterWithExercices = "Chapter with exercises";
