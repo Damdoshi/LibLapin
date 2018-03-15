@@ -1,88 +1,196 @@
 liblapin-dev (1.12) UNRELEASED; urgency=low
 
-  * Empty the event stack when leaving bunny_loop or bunny_loop_mw.
-  * Add the bunny_camera module with headtracking capability and associated example.
-  * Open bunny_plugin_get_function to unlisted functions.
-  * Fix bunny_call and bunny_callv, move the bunny_plugin module from working/ to lapin/
-  * Edit t_bunny_value to simplify it and use int64_t instead of ssize_t.
-  * Use avcall to bind any scripted function call to a C function.
-  * Add on_entering_context and on_leaving_context response function for bunny_loop.
-  * Add support for CSV files in bunny_configuration
-  * Add bunny_get_frequency that return the current frequency of the bunny_loop,
-    value is undefined when outside the bunny loop.
-  * Add bunny_sound_set/get_cursor and turn bunny_music_get_cursor into compat.h
-    as a macro.
-  * Add bunny_sound_pause
-  * Add sound attributes like volume, pitch, loop, etc. in t_bunny_sound
-  * Edit bunny_soud_play to apply every structure attributes to the sound.
-  * Improve bunny_load_music and bunny_load_effect thanks to the new function
-    bunny_set_sound_attribute with the ability to load sounds and set attributes
-    by giving to them a configuration file instead of a sound file.
-    Supported formats for ressources are describded in formats/. For this one, formats/sound
-  * bunny_configuration_go_get_* functions can now use a value from another field
-    with the operator [] in addr. For example: node.field[node.case]
-  * Scope in INI can now use full address as name instead of simple fieldname.
-    It places the scope at the written address.
-  * Add bunny_real_width & bunny_real_height macros in placement.h for C11.
-    They compute the real size on screen of window and clipable elements.
-  * Add a parsing module consisting in bindings to the private/ parsing functions.
+  * Edit the repository and build system:
+    - Switch from a single file errors~ to a directory with errors and
+      warnings associated to files.
 
-  * t_bunny_display now take a non const pointer.
-    **Compatibility break!**
+  * General
+    - All functions now set errno on error.
+    - All functions now write error logs on stderr if activated, disabled by default.
+    - All functions now write logs on stdout, if activated, disabled by default.
+    - Remove log printing commanded by the DEBUG macro.
+    - Use bunny_alloca instead of directly alloca and bring a bunny_freea for systems
+      that does not support alloca.
+    - Add a transparent ressource manager working behind most loading functions
+      of the library, making copy on write (or copy on call to make_unique), meaning
+      now structures of bunny library may only be handler to real data instead
+      of being real datas. The purpose of this is to save memory without having you
+      to change anything in your code.
 
-  * t_bunny_error become t_bunny_network_error in network.h
-    **Compatibility break!**
+  * Edit allocator module
+    - Add bunny_allocator_reset to restart completly the allocator and invalidate
+      all pointers.
 
-  * LAST_ERROR become LAST_NETWORK_ERROR in network.h
-    **Compatibility break!**
+  * Add error module
+    - Bring the t_bunny_error type that complete errno error codes.
+      **Compatibility break!** as t_bunny_error was used by the network module.
+    - Bring associated human readable description.
+    - Bring bunny_perror, bunny_strerror, bunny_errno, etc.
 
-  * Change array field to data in t_bunny_pool.
-    **Compatibility break!**
+  * Edit event module
+    - Empty the event stack when leaving bunny_loop or bunny_loop_mw.
+    - Add on_entering_context and on_leaving_context response function.
+    - Add bunny_get_frequency to get the frequency of the main loop.
+    - The t_bunny_display response function now take a non const pointer. **Compatibility break!**
+    - Add a minimal movement value to call joystick axis event, to improve
+      support of analogic joystick, especially in menus.
 
-  * Add ctor and dtor to bunny_vector and t_bunny_list for item build and destroy.
-  * Additionnal third parameter to bunny_vector_resize and bunny_list_tie.
-    **Compatibility break!**
+  * Edit graphic module
+    - Add to bunny_load_picture and bunny_load_pixelarray the ability to load
+      configuration file presetting fields of their returned structure.
+    - Uncipher picture files when loading them if a loading cipher function is set.
 
-  * Put pool_get/getv and pool_release in compat.h, bring a better way to alloc/free,
-    with bunny_pool_new and bunny_pool_free. No id is required anymore.
-  * Bunny_pool_size is now bunny_pool_capacity, which return the max amount of element in pool.
-    The new bunny_pool_size return how many busy elements there is in pool.
-    **Compatibility break!**
-  * Put bunny_pool_free_elem and bunny_pool_occupied_elem in compat.h
-  * User data in pool are not constant anymore.
-  * You don't need to use bunny_thread_wait_completion anymore after a list/map/vector/pool_fast_foreach.
-  * You don't need to send a index variable to bunny_pool_foreach anymore.
-    Same for vector and list.
-    **Compatibility break!**
-  * Fix GREY macro to GRAY, same for ALPHA_GREY. Old version available in compat.h
-  * Remove the const specifier in every fast_foreach functions for the additional parameter..
-  * Remove the const specifier in thread_foreach and thread_push for the additional parameter.
-  * Use the entire node for map foreach instead of the value only so you can have the key too, and use map functions in the sent function.
+  * Add sprite module
+    - Bring an automatically animated picture, configured by script and specific
+      orders.
 
-  * A new t_bunny_error type appeir and is an enumeration of errors that can be made by bunny functions. The type is in error.h.
-  * A new enumeration value LAST_ERROR appeir and is a value of t_bunny_error in error.h
-  * Every functions of the bunny library now set errno on error.
-  * Every functions of the bunny library now write error log on stderr if activated (not by default)
-  * Every functions of the bunny library now write success log on stdout if activated (not by default)
-  * Improve bunny_load_picture and bunny_load_pixelarray thanks to the new function
-    bunny_set_clipable_attribute with the ability to load pictures and set attribute
-    by giving to them a configuration file instead of a picture file.
-    Supported formats for ressources are describded in formats/. For this one, formats/clipable.
+  * Add context module
+    - Bring structure to normalize context and allow the design of reusable contexts.
+    - Bring the bunny splash screen context
 
-  * Remove the log printing commanded by the DEBUG macro, replaced by the new system on lapin/error.h.
-  * Switch from a single file errors~ to a directory with errors and warnings associated to files.
-  * Instead of having a "@" node inside bunny_configuration to store field in default scope,
-    consider that those fields are on scope level, to improve compatibility with other
-    formats.
+  * Edit placement module
+    - Add bunny_real_width and bunny_real_height C11 macro to compute the displayed
+      size of window and clipable elements.
 
-  * Use bunny_alloca instead of alloca. On Windows, bunny_alloca becomes bunny_malloc, on linux
-    it becomes alloca. bunny_freea free on Windows, and nothing on Linux.
-  * Add bunny_allocator_reset to restart completly the allocator and deprecate all
-    pointers.
-  * Change bunny_configuration_access on string to make it call go_get_node instead of get_child,
-    and so handle address as parameter.
+  * Edit color module
+    - Fix GREY macro to GRAY, same for ALPHA_GREY. Old version are still available in
+      compat.h and are deprecated.
 
- -- Jason Brillante <damdoshi@hotmail.com>  Tue, 01 Jun 2017 12:00:00 +0100
+  * Add a parsing module, bringing generic parsing tools.
+
+  * Add camera module
+    - Bring camera capture.
+    - Bring heatracking capability.
+
+  * Add plugin module
+    - Bring the ability to load specificaly formated libraries.
+    - Bring bunny_call and bunny_callv to call a dynamically resolved symbol and
+      prototype. **Add a dependency: libffcall**.
+    - Bring the ability to get unformated functions from a library.
+    - Bring a t_bunny_value type to transact with modules.
+
+  * Edit sound module
+    - Add bunny_sound_set/get_cursor.
+    - Move bunny_music_get_cursor into compat.h as a macro, it is deprecated.
+    - Add bunny_sound_pause
+    - Add sound attriutes like volume, pitch, loop, etc. in t_bunny_sound
+    - Edit bunny_sound_play to apply every structure attribute to the sound.
+    - Add to bunny_load_music and bunny_load_effect the ability to load configuration
+      file presetting fields of their returned structure.
+
+  * Add sound manager module
+    - Bring a global manager that allow a video game programmer to centralize its
+      sound management.
+    - Globalize volume and pitch of all sounds, stored in categories.
+    - Prevent multiple unrelated music tracks to be played at the same time.
+
+  * Edit pool module
+    - Rename the "array" field to "data" in t_bunny_pool structure. **Compatibility break!**
+    - Move bunny_pool_get, bunny_pool_getv and bunny_pool_release in compat.h, it is deprecated.
+    - Bring a better way to allocate and free with bunny_pool_new and bunny_pool_free.
+    - Remove the need for item id.
+    - Rename bunny_pool_size to bunny_pool_capacity, which returns the maximum amount
+      of elements inside the pool. bunny_pool_size now returns how many elements
+      there is currently. **Compatibility break!**
+    - Move bunny_pool_free_elem and bunny_pool_occupied_elem in compat.h, it is deprecated.
+    - User data in pool is not constant anymore.
+    - Remove the need of using bunny_thread_wait_completion after a fast foreach.
+    - Remove the need of sending an index variable to foreach. **Compatibility break!**
+    - Remove the const specifier for the additionnal parameter of fast foreach.
+
+  * Edit vector module
+    - Add ctor and dtor to build and destroy items when require in t_bunny_vector.
+    - Add a third parameter, the ctor parameter, to bunny_vector_resize. **Compatibility break!**
+    - Remove the need of using bunny_thread_wait_completion after a fast foreach.
+    - Remove the need of sending an index variable to foreach. **Compatibility break!**
+    - Remove the const specifier for the additionnal parameter of fast foreach.
+
+  * Edit list module
+    - Add ctor and dtor to build and destroy items when require in t_bunny_list.
+    - Add a third parameter, the ctor parameter, to bunny_list_tie. **Compatibility break!**
+    - Remove the need of using bunny_thread_wait_completion after a fast foreach.
+    - Remove the need of sending an index variable to foreach. **Compatibility break!**
+    - Remove the const specifier for the additionnal parameter of fast foreach.
+
+  * Edit map module
+    - Remove the need of using bunny_thread_wait_completion after a fast foreach.
+    - Remove the const specifier for the additionnal parameter of fast foreach.
+    - Send the entire node when using foreach insteda of the value only, so the key
+      is also available.
+
+  * Edit thread module
+    - Remove the const specifier in threa_foreach and thread_push for the additional
+      parameter.
+
+  * Edit configuration module
+    - Switch from having a "@" node inside bunny_configuration to store field in the
+      default scope for INI format to simply act intelligently to recognize those who
+      are in the default scope.
+    - Edit bunny_configuration_access on string to make it call go_get_node instead of
+      get_child and so handle address as parameter.
+    - Edit bunny_configuration_go_get_* so they can now use a value from another
+      field with the operator [] in addr. For example: node.Field[node.case].
+    - Edit INI parser so scopes can now use full address as name instead of simple
+      fieldname, breaking the depth limitation of INI.
+    - Add CSV support.
+    - Add support in DABSIC parser for functions, parameters, variables, loops, ifs,
+      etc. Making it a real programming language. Support for hashmap and arrays.
+      Reference are currently supported but *cannot be written*.
+    - Extend PATH when using @insert and @include.
+    - Add functions to manually extend or shrink path (push_path, pop_path).
+    - Add DABSIC Sequence support.
+    - Add LUA data structure support.
+    - Add JSON support.
+    - Add XML support.
+    - Add LISP syntax support.
+
+  * Edit network module
+    - Rename t_bunny_error to t_bunny_network_error. **Compatibility break!**
+    - Rename LAST_ERROR to LAST_NETWORK_ERROR. **Compatibility break!** as LAST_ERROR
+      is now used by the error module.
+
+  * Add unix module
+    - bunny_popen and bunny_pclose allow complex bidirectionnal communication between
+      two process.
+
+  * Add monitor module
+    - Bring a system in which register memory space to print or draw them later.
+
+  * Add asynclock module
+    - This module allow the user to register function call request for a specific
+      time or pace.
+
+  * Edit shader module
+    - Bring automatically generated normal map shader with custom amount of lights.
+
+  * Edit collision module
+    - Bring dot-dot collision.
+    - Bring rectangle-dot collision.
+    - Bring quad-dot collision.
+    - Bring rectangle-rectangle collision.
+    - Bring triangle-dot collision.
+    - Bring triangle-circle collision.
+    - Bring circle-circle collision.
+    - Bring circle-dot collision.
+    - Bring equation-dot collision.
+    - Bring equation-equation collision.
+    - Bring quad-equation collision.
+    - Bring quad-quad collision.
+    - Bring rectangle-equation collision.
+    - Bring triangle-equation collision.
+    - Bring triangle-quad collision.
+    - Bring triangle-rectangle collision.
+    - Bring triangle-triangle collision.
+    - Bring circle-equation collision.
+    - Bring circle-quad collision.
+    - Bring circle-rectangle collision.
+    - Bring circle-line collision.
+
+  * Edit misc module
+    - Add support for base64.
+    - Use the environment parameter in bunny_evaluate.
+
+ -- Jason Brillante <damdoshi@hotmail.com>  Tue, 12 March 2018 12:00:00 +0100
 
 liblapin-dev (1.11) stable; urgency=low
 

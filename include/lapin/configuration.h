@@ -622,5 +622,15 @@ bool			bunny_configuration_is_last(t_bunny_configuration		*config);
 */
 t_bunny_configuration_type bunny_which_format(const char				*file);
 
+/*!
+**
+*/
+void			bunny_configuration_push_path(const char			*file);
+
+/*!
+**
+*/
+void			bunny_configuration_pop_path(void);
+
 #endif	/*			__LAPIN_CONFIGURATION_H__				*/
 
