@@ -1,11 +1,11 @@
 <div class="prototype">
   $Ktypedef enum@ $Te_bunny_value_type@<br />
   {<br />
-  $A $S VOID@ = $L'v'@,<br />
-  $A $S INTEGER@ = $L'i'@,<br />
-  $A $S DOUBLE@ = $L'd'@,<br />
-  $A $S STRING@ = $L's'@,<br />
-  $A $S POINTER@ = $L'p'@,<br />
+  $A $S BVT_VOID@ = $L'v'@,<br />
+  $A $S BVT_INTEGER@ = $L'i'@,<br />
+  $A $S BVT_DOUBLE@ = $L'd'@,<br />
+  $A $S BVT_STRING@ = $L's'@,<br />
+  $A $S BVT_POINTER@ = $L'p'@,<br />
   <br />
   } $Tt_bunny_value_type@;
 </div>

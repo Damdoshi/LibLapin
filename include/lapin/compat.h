@@ -132,7 +132,7 @@ extern const void		*last_scope;
 #  define			bunny_alloca(a)			_alloca(a)
 #  define			bunny_freea(a)
 #  define			dprintf(fd, format, ...)	\
-  bunny_dprintf(fd, format, __VA_ARGS__)
+  bunny_dprintf(fd, format, ##__VA_ARGS__)
 
 # else
 #  define			bunny_alloca(a)			bunny_malloc(a)

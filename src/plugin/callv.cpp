@@ -26,7 +26,7 @@ bool			bunny_plugin_callv(t_bunny_plugin		*plugin,
       {
 	for (j = 0, len = plugin->prototypes[i].nbrparam; j < len; ++j)
 	  {
-	    if (plugin->prototypes[i].parameters[j] == DOUBLE)
+	    if (plugin->prototypes[i].parameters[j] == BVT_DOUBLE)
 	      {
 		rel = va_arg(lst, double);
 		val[j].real = rel;

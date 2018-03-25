@@ -27,11 +27,11 @@
 */
 typedef enum			e_bunny_value_type
   {
-    VOID			= 'v',
-    INTEGER			= 'i', /* int64_t */
-    DOUBLE			= 'd',
-    STRING			= 's', /* const char * */
-    POINTER			= 'p'  /* void * */
+    BVT_VOID			= 'v',
+    BVT_INTEGER			= 'i', /* int64_t */
+    BVT_DOUBLE			= 'd',
+    BVT_STRING			= 's', /* const char * */
+    BVT_POINTER			= 'p'  /* void * */
   }				t_bunny_value_type;
 
 /*!

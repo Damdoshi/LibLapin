@@ -3,7 +3,11 @@
 //
 //
 
-#include			<sys/select.h>
+#if				_WIN32 || __WIN32__
+# include			<Winsock2.h>
+#else
+# include			<sys/select.h>
+#endif
 #include			<iostream>
 #include			"ANetAccess.hpp"
 

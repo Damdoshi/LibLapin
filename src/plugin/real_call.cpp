@@ -16,35 +16,35 @@ void			_real_call(const t_bunny_prototype	*function,
 
   switch (function->return_value)
     {
-    case VOID:
+    case BVT_VOID:
       av_start_void(lst, function->function_ptr);
       break ;
-    case INTEGER:
+    case BVT_INTEGER:
       av_start_longlong(lst, function->function_ptr, &return_value->integer);
       break ;
-    case DOUBLE:
+    case BVT_DOUBLE:
       av_start_double(lst, function->function_ptr, &return_value->real);
       break ;
-    case STRING:
+    case BVT_STRING:
       av_start_ptr(lst, function->function_ptr, char*, &return_value->any);
       break ;
-    case POINTER:
+    case BVT_POINTER:
       av_start_ptr(lst, function->function_ptr, void*, &return_value->any);
       break ;
     }
   for (i = 0; i < nbr; ++i)
     switch (function->parameters[i])
       {
-      case INTEGER:
+      case BVT_INTEGER:
 	av_longlong(lst, params[i].integer);
 	break ;
-      case DOUBLE:
+      case BVT_DOUBLE:
 	av_double(lst, params[i].real);
 	break ;
-      case STRING:
+      case BVT_STRING:
 	av_ptr(lst, char*, params[i].string);
 	break ;
-      case POINTER:
+      case BVT_POINTER:
 	av_ptr(lst, void*, params[i].any);
 	break ;
       default:

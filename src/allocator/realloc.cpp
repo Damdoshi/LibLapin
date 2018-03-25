@@ -53,8 +53,12 @@ void			*bunny_realloc(void		*ptr,
       check_memory_state();
       scream_error_if(dprintf(bunny_get_error_descriptor(), "Sending SIGSEGV"),
 		      errno, PATTERN, "allocator", ptr, data, rel);
+#ifdef			__linux__
       kill(getpid(), SIGSEGV); /* die Die DIE! */
       while (1);
+#else
+      exit(EXIT_FAILURE);
+#endif
     }
 
   if ((rel = bunny_malloc(data)) == NULL)

@@ -159,7 +159,9 @@ void			check_memory_state(void)
   sysfree(memory_head());
   if (i)
     {
+#ifdef			__linux__
       kill(getpid(), SIGSEGV);
+#endif
       usleep(2e6);
       exit(EXIT_FAILURE);
     }

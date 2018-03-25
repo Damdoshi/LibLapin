@@ -165,6 +165,7 @@ struct			qsort_packet
   void			*ptr;
 };
 
+#if			!(_WIN32 || __WIN32__)
 static int		to_qsort(const void			*a,
 				 const void			*b,
 				 void				*param)
@@ -173,6 +174,27 @@ static int		to_qsort(const void			*a,
 
   return (pq->cmp(*(void**)a, *(void**)b, pq->ptr));
 }
+#else
+
+void			qsort_s(void				*base,
+				size_t				num,
+				size_t				width,
+				int				(*x)
+				(void				*,
+				 const void			*,
+				 const void			*),
+				void				*context);
+
+static int		to_qsort(void				*param,
+				 const void			*a,
+				 const void			*b)
+{
+  struct qsort_packet	*pq = (struct qsort_packet*)param;
+
+  return (pq->cmp(*(void**)a, *(void**)b, pq->ptr));
+}
+
+#endif
 
 void			bunny_vector_sort(t_bunny_vector		*vec,
 					  t_bunny_comparator		cmp,
@@ -182,7 +204,11 @@ void			bunny_vector_sort(t_bunny_vector		*vec,
 
   packet.cmp = cmp;
   packet.ptr = param;
+#if			_WIN32 || __WIN32__
+  qsort_s((void*)vec->array, vec->nmemb, vec->elemsize, to_qsort, &packet);
+#else
   qsort_r((void*)vec->array, vec->nmemb, vec->elemsize, to_qsort, &packet);
+#endif
   scream_log_if("%p vector, %p cmp_func, %p param", "container", vec, cmp, param);
 }
 

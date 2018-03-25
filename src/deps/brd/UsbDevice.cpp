@@ -5,12 +5,12 @@
 
 #include		"UsbDevice.hpp"
 
-struct usb_bus		*hbs::UsbDevice::usb_busses = NULL;
+struct usb_bus		*hbs::UsbDevice::_usb_busses = 0;
 
 hbs::UsbDevice::UsbDevice(void)
 
 {
-  if (usb_busses == NULL)
+  if (_usb_busses == NULL)
     {
       usb_init();
 
@@ -19,7 +19,7 @@ hbs::UsbDevice::UsbDevice(void)
       (void)usb_find_busses();
       (void)usb_find_devices();
 
-      usb_busses = usb_get_busses();
+      _usb_busses = usb_get_busses();
     }
 }
 

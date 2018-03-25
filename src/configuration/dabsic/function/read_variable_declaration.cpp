@@ -36,7 +36,7 @@ Decision		dabsic_read_variable_declaration(const char	*code,
 	   "configuration,syntax",
 	   &buffer[0], SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
-      if (strcasecmp(&buffer[0], "is") == 0)
+      if (bunny_strcasecmp(&buffer[0], "is") == 0)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "Name %s is reserved as keyword on line %s:%d",
@@ -82,7 +82,7 @@ Decision		dabsic_read_variable_declaration(const char	*code,
 	   "configuration,syntax",
 	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
-      if (strcasecmp(&buffer[0], "is") == 0)
+      if (bunny_strcasecmp(&buffer[0], "is") == 0)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "Name %s is reserved as keyword on line %s:%d",
@@ -127,7 +127,7 @@ Decision		dabsic_read_variable_declaration(const char	*code,
 	   "configuration,syntax",
 	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
-      if (strcasecmp(&buffer[0], "is") == 0)
+      if (bunny_strcasecmp(&buffer[0], "is") == 0)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR,
 	   "Name %s is reserved as keyword on line %s:%d",

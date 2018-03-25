@@ -32,9 +32,9 @@
 typedef struct		s_bunny_subprocess
 {
   pid_t			pid;
-  int			stdin;
-  int			stdout;
-  int			stderr;
+  int			_stdin;
+  int			_stdout;
+  int			_stderr;
   int			custom_data_input;
   int			custom_data_output;
   int			custom_command_input;

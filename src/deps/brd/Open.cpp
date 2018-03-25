@@ -12,7 +12,7 @@ bool			hbs::PVM110N::Open(CardId	id)
   int			board_addr;
 
   board_addr = id + VM110N_IPID;
-  for (bus = usb_busses; bus != NULL; bus = bus->next)
+  for (bus = _usb_busses; bus != NULL; bus = bus->next)
     for (dev = bus->devices; dev != NULL; dev = dev->next)
       if (dev->descriptor.idVendor == VELLEMAN_VENDOR_ID
 	  && dev->descriptor.idProduct == board_addr)

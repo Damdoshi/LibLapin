@@ -13,7 +13,7 @@ namespace			hbs
   class				UsbDevice
   {
   protected:
-    static struct usb_bus	*usb_busses;
+    static struct usb_bus	*_usb_busses;
 
     //! Return the state of the bit pos in range.
     /*!

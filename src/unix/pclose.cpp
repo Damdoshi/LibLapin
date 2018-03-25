@@ -19,7 +19,7 @@ int			bunny_pclose(t_bunny_subprocess		*subproc,
 {
   sighandler_t		handler;
   int			status;
-  int			*ptr = &subproc->stdin;
+  int			*ptr = &subproc->_stdin;
   int			i, l;
 
   for (i = 0, l = (sizeof(*subproc) - sizeof(subproc->pid)) / sizeof(*ptr); i < l; ++i)

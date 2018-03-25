@@ -26,8 +26,8 @@ int			bunny_popen(t_bunny_subprocess		*subproc,
 {
   pid_t			pid;
   int			pip[7][2];
-  int			*ptr = &subproc->stdin;
-  size_t		len = (sizeof(*subproc) - sizeof(subproc->pid)) / sizeof(subproc->stdin);
+  int			*ptr = &subproc->_stdin;
+  size_t		len = (sizeof(*subproc) - sizeof(subproc->pid)) / sizeof(subproc->_stdin);
   size_t		i;
 
   to_neg(&pip[0][0], sizeof(pip) / sizeof(pip[0][0]));
@@ -84,15 +84,15 @@ int			bunny_popen(t_bunny_subprocess		*subproc,
 
   if (pip[0][0] != -1) // stdin pipe
     close(pip[0][0]);
-  subproc->stdin = pip[0][1];
+  subproc->_stdin = pip[0][1];
 
   if (pip[1][1] != -1) // stdout pipe
     close(pip[1][1]);
-  subproc->stdout = pip[1][0];
+  subproc->_stdout = pip[1][0];
 
   if (pip[2][1] != -1) // stderr pipe
     close(pip[2][1]);
-  subproc->stderr = pip[2][0];
+  subproc->_stderr = pip[2][0];
 
   if (pip[3][0] != -1) // data input
     close(pip[3][0]);
