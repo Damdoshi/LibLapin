@@ -24,6 +24,7 @@ int			bunny_popen(t_bunny_subprocess		*subproc,
 				    size_t			nbr,
 				    ...)
 {
+#if			!(_WIN32 || __WIN32__)
   pid_t			pid;
   int			pip[7][2];
   int			*ptr = &subproc->_stdin;
@@ -123,5 +124,8 @@ int			bunny_popen(t_bunny_subprocess		*subproc,
       }
   scream_error_if(return (-1), errno, PATTERN, "unix", subproc, env, nbr, -1);
   return (-1);
+#else
+  return (-1);
+#endif
 }
 

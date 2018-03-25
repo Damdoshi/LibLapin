@@ -14,10 +14,16 @@ t_bunny_time		bunny_get_time(void)
   clock_gettime(CLOCK_MONOTONIC, &x);
   return (x.tv_sec * 1e9 + x.tv_nsec);
 #else
-  struct timeval	x;
+  FILETIME		ft;
+  unsigned long long	tt;
 
-  gettimeofday(&x, NULL);
-  return (x.tv_sec * 1e6 + x.tv_usec);
+  GetSystemTimeAsFileTime(&ft);
+  tt = ft.dwHighDateTime;
+  tt <<= 32;
+  tt |= ft.dwLowDateTime;
+  tt /= 10;
+  tt -= 11644473600000000ULL;
+  return (tt * 1e3);
 #endif
 }
 

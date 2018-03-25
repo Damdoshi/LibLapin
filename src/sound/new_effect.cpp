@@ -19,7 +19,7 @@ t_bunny_effect		*bunny_new_effect(double		duration)
   if ((eff->sample = (int16_t*)bunny_malloc(sizeof(*eff->sample) * duration * 44100)) == NULL)
     goto FailEffect;
 
-  eff->file = strdup("");
+  eff->file = bunny_strdup("");
   eff->volume = 50;
   eff->pitch = 1;
   eff->loop = false;

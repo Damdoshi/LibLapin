@@ -146,6 +146,8 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
 
   * Edit network module
     - Rename t_bunny_error to t_bunny_network_error. **Compatibility break!**
+    - Add BCT_ as prefix before t_bunny_comtype symbols. **Compatibility break!**
+    - Add BCE_ as prefix before t_bunny_comerror symbols. **Compatibility break!**
     - Rename LAST_ERROR to LAST_NETWORK_ERROR. **Compatibility break!** as LAST_ERROR
       is now used by the error module.
 

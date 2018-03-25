@@ -62,7 +62,7 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
 
   eff->res_id = hash;
 
-  eff->file = strdup(file);
+  eff->file = bunny_strdup(file);
   eff->volume = 50;
   eff->pitch = 1;
   eff->loop = false;

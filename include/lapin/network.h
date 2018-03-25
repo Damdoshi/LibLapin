@@ -31,11 +31,11 @@ typedef void			t_bunny_network;
 */
 typedef enum			e_bunny_comtype
   {
-    ERROR			= 0,
-    EXPIRED			= 1,
-    NETCONNECTED		= 2,
-    NETDISCONNECTED		= 3,
-    MESSAGE			= 4
+    BCT_ERROR			= 0,
+    BCT_EXPIRED			= 1,
+    BCT_NETCONNECTED		= 2,
+    BCT_NETDISCONNECTED		= 3,
+    BCT_MESSAGE			= 4
   }				t_bunny_comtype;
 
 /*!
@@ -43,13 +43,13 @@ typedef enum			e_bunny_comtype
 */
 typedef enum			e_bunny_comerror
   {
-    SYSTEM_FAIL			= 0,
-    SELECT_FAIL			= 1,
-    ACCEPT_FAIL			= 2,
-    WRITE_FAIL			= 3,
-    READ_FAIL			= 4,
-    ALLOC_FAIL			= 5,
-    GETTIME_FAIL		= 6,
+    BCE_SYSTEM_FAIL		= 0,
+    BCE_SELECT_FAIL		= 1,
+    BCE_ACCEPT_FAIL		= 2,
+    BCE_WRITE_FAIL		= 3,
+    BCE_READ_FAIL		= 4,
+    BCE_ALLOC_FAIL		= 5,
+    BCE_GETTIME_FAIL		= 6,
     LAST_NETWORK_ERROR
   }				t_bunny_comerror;
 

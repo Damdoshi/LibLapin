@@ -25,7 +25,7 @@ t_bunny_music		*bunny_load_music(const char		*file)
   if ((mus->music.openFromFile(file)) == false)
     goto FailStruct;
 
-  mus->file = strdup(file);
+  mus->file = bunny_strdup(file);
   mus->type = MUSIC;
   mus->duration = mus->music.getDuration().asSeconds();
 

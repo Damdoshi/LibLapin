@@ -8,6 +8,11 @@
 
 #ifndef				__LAPIN_PRIVATE_PLUGIN_H__
 # define			__LAPIN_PRIVATE_PLUGIN_H__
+# if				_WIN32 || __WIN32__
+#  include			<Windows.h>
+# else
+#  include			<dlfcn.h>
+# endif
 
 typedef struct			s_bunny_buttplug
 {

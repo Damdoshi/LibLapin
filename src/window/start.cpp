@@ -44,7 +44,7 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
 		      width, height, winstyle, window_name, (void*)NULL);
     }
 
-  win->window_name = strdup(window_name);
+  win->window_name = bunny_strdup(window_name);
   if (winstyle & ANTIALIASING)
     settings.antialiasingLevel = 2;
   else
@@ -61,7 +61,7 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
 	int				j;
 
 	gl_joystick[i].connected = true;
-	gl_joystick[i].name = strdup(id.name.toAnsiString().c_str());
+	gl_joystick[i].name = bunny_strdup(id.name.toAnsiString().c_str());
 	gl_joystick[i].vendor = id.vendorId;
 	gl_joystick[i].product = id.productId;
 	gl_joystick[i].nb_button = sf::Joystick::getButtonCount(i);

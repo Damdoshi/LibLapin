@@ -26,7 +26,7 @@ extern size_t		border1;
 void			*bunny_realloc(void		*ptr,
                          size_t		data)
 {
-  void			*rel;
+  void			*rel = NULL;
 
 #ifdef			LAPIN_ALLOCATOR_DEACTIVATED
   if ((rel = realloc(ptr, data)) == NULL)

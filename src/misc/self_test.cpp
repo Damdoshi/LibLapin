@@ -12,6 +12,15 @@
 typedef int		(*t_bunny_test)(t_bunny_picture			*pic,
 					t_bunny_pixelarray		*pix);
 
+static void		failure(void)
+{
+#ifdef			__linux__
+  kill(getpid(), SIGINT);
+#else
+  exit(EXIT_FAILURE);
+#endif
+}
+
 static bool		compare_color(t_color				*a,
 				      t_color				*b)
 {
@@ -328,21 +337,23 @@ void			bunny_self_test(void)
       return ;
     }
 
+
+
   if (do_a_test("bunny_clear", clear_test, pic, pix) == false)
-    kill(getpid(), SIGINT);
+    failure();
   if (do_a_test("bunny_set_pixel", pixel_test, pic, pix) == false)
-    kill(getpid(), SIGINT);
+    failure();
   if (do_a_test("bunny_fill", fill_test, pic, pix) == false)
-    kill(getpid(), SIGINT);
+    failure();
   if (do_a_test("bunny_set_line", line_test, pic, pix) == false)
-    kill(getpid(), SIGINT);
+    failure();
   if (do_a_test("bunny_set_polygon", polygon_test, pic, pix) == false)
-    kill(getpid(), SIGINT);
+    failure();
 
   return ;
   if (do_a_test("bunny_set_geometry", pixel_test, pic, pix) == false)
-    kill(getpid(), SIGINT);
+    failure();
   if (do_a_test("bunny_load_pixelarray", pixel_test, pic, pix) == false)
-    kill(getpid(), SIGINT);
+    failure();
 }
 

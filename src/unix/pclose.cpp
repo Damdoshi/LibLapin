@@ -3,7 +3,9 @@
 //
 // Lapin library
 
-#include		<sys/wait.h>
+#if			!(_WIN32 || __WIN32__)
+# include		<sys/wait.h>
+#endif
 #include		<stdlib.h>
 #include		<signal.h>
 #include		<unistd.h>
@@ -17,6 +19,7 @@ static void		alarmhandler(int			x)
 int			bunny_pclose(t_bunny_subprocess		*subproc,
 				     int			delay)
 {
+#if			!(_WIN32 || __WIN32__)
   sighandler_t		handler;
   int			status;
   int			*ptr = &subproc->_stdin;
@@ -36,9 +39,13 @@ int			bunny_pclose(t_bunny_subprocess		*subproc,
 	  return (status);
 	}
       signal(SIGALRM, handler);
+      usleep(delay * 1e6);
     }
   kill(subproc->pid, SIGINT);
   scream_log_if("%p subprocess, %d delay -> %d (Killed)", "unix", subproc, delay, 0);
   return (0);
+#else
+  return (-1);
+#endif
 }
 

@@ -10,7 +10,7 @@
 static t_bunny_response	notify(const t_bunny_communication	*com,
 			       void				*data)
 {
-  if (com->comtype == MESSAGE && gl_callback.netmessage)
+  if (com->comtype == BCT_MESSAGE && gl_callback.netmessage)
     {
       scream_log_if(PATTERN "network_message)", "even,network", com, data);
       return (gl_callback.netmessage
@@ -19,13 +19,13 @@ static t_bunny_response	notify(const t_bunny_communication	*com,
 
   if (gl_callback.netconnect)
     {
-      if (com->comtype == NETCONNECTED)
+      if (com->comtype == BCT_NETCONNECTED)
 	{
 	  scream_log_if(PATTERN "network_connect)", "even,network", com, data);
 	  return (gl_callback.netconnect(com->connected.fd, CONNECTED, data));
 	}
 
-      if (com->comtype == NETDISCONNECTED)
+      if (com->comtype == BCT_NETDISCONNECTED)
 	{
 	  scream_log_if(PATTERN "network_connect)", "even,network", com, data);
 	  return (gl_callback.netconnect(com->connected.fd, DISCONNECTED, data));

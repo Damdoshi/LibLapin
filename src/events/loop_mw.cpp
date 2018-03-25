@@ -159,7 +159,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			      {
 				id = sf::Joystick::getIdentification(joyid);
 				gl_joystick[joyid].connected = true;
-				gl_joystick[joyid].name = strdup(id.name.toAnsiString().c_str());
+				gl_joystick[joyid].name = bunny_strdup(id.name.toAnsiString().c_str());
 				gl_joystick[joyid].vendor = id.vendorId;
 				gl_joystick[joyid].product = id.productId;
 				gl_joystick[joyid].nb_button = sf::Joystick::getButtonCount(joyid);
