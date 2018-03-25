@@ -1,5 +1,5 @@
 <div class="prototype">
-  $Tdouble@ $Sbunny_sound_get_cursor@(
+  $Tdouble@ $Sbunny_sound_get_duration@(
   $Kconst@ $Tt_bunny_sound@ *$Ssound@
   );
 </div>
@@ -7,7 +7,7 @@
 
 <div class="resume">
   <h3>Description</h3>
-  $A Get the current read position of the sent sound.
+  $A Get the duration of the sent sound.
 </div>
 <hr />
 
@@ -25,18 +25,15 @@
 <div class="return">
   <h3>Return value</h3>
   <p>
-    Returns the position in seconds in the sound that match the currently being
-    read part.
+    Returns the length in seconds of the sound.
   </p>
 </div>
 <hr />
 
-
 <div class="related_functions">
   <h3>Related functions</h3>
   <ul>
-    <li>bunny_sound_set_cursor</li>
-    <li>bunny_sound_set_duration</li>
+    <li>bunny_sound_get_cursor</li>
   </ul>
 </div>
 

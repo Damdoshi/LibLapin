@@ -1,5 +1,5 @@
 <div class="prototype">
-  $Tdouble@ $Sbunny_sound_get_cursor@(
+  $Tbool@ $Sbunny_sound_is_playing@(
   $Kconst@ $Tt_bunny_sound@ *$Ssound@
   );
 </div>
@@ -7,7 +7,7 @@
 
 <div class="resume">
   <h3>Description</h3>
-  $A Get the current read position of the sent sound.
+  $A Return $Ctrue@ if the sent sound is being played right now.
 </div>
 <hr />
 
@@ -25,18 +25,7 @@
 <div class="return">
   <h3>Return value</h3>
   <p>
-    Returns the position in seconds in the sound that match the currently being
-    read part.
+    Returns if the sound is being played right now or not.
   </p>
-</div>
-<hr />
-
-
-<div class="related_functions">
-  <h3>Related functions</h3>
-  <ul>
-    <li>bunny_sound_set_cursor</li>
-    <li>bunny_sound_set_duration</li>
-  </ul>
 </div>
 

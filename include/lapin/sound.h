@@ -214,9 +214,21 @@ void				bunny_sound_set_cursor(t_bunny_sound		*snd,
 ** \param snd The sound to know where the cursor is
 ** \return The position in seconds between the beginning and the current cursor.
 */
-double				bunny_sound_get_cursor(t_bunny_sound		*snd);
+double				bunny_sound_get_cursor(const t_bunny_sound	*snd);
 
 /*!
+**
+**
+*/
+double				bunny_sound_get_duration(const t_bunny_sound	*snd);
+
+/*!
+**
+**
+*/
+bool				bunny_sound_is_playing(const t_bunny_sound	*snd);
+
+/*
 ** Load the sent configuration file (must be accepted by the bunny_configuration module)
 ** and set all values accordingly to what is inside the file.
 **
