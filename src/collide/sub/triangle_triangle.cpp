@@ -14,7 +14,7 @@ bool			bunny_collision_triangle_triangle(const t_bunny_collision *a,
   const t_bunny_triangle_collision *btri = &b->triangle;
   t_bunny_line_collision tmp;
   size_t		i;
-  
+
   tmp.type = BCT_LINE;
   tmp.intermediate_points = 2;
 

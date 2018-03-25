@@ -3,7 +3,6 @@
 //
 // Bibliothèque Lapin
 
-#include		<alloca.h>
 #include		"lapin_private.h"
 
 #define			PATTERN			"%p quad, %p dot -> %s"

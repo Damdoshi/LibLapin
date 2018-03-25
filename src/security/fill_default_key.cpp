@@ -4,7 +4,6 @@
 // Lapin library
 
 #include			<fcntl.h>
-#include			<alloca.h>
 #include			<string.h>
 #include			"lapin_private.h"
 

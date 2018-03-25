@@ -31,7 +31,7 @@ bool		bunny_collision_rectangle_triangle(const t_bunny_collision	*a,
   rline.coord[0].y = rectangle->coord[0].y;
   rline.coord[1].x = rectangle->coord[0].x + rectangle->coord[1].x;
   rline.coord[1].y = rectangle->coord[0].y;
-  
+
   tline.coord[0] = triangle->coord[0];
   tline.coord[1] = triangle->coord[1];
   if (bunny_collision_line_line((t_bunny_collision*)&rline, (t_bunny_collision*)&tline))

@@ -10,11 +10,11 @@
 int IntersectionPlanCercleDroite(float A[2], float B[2], float C[2], float Rayon)
 {
     float Alpha, Beta, Gamma, Delta;
-    
+
     Alpha = (B[0] - A[0]) * (B[0] - A[0]) + (B[1] - A[1]) * (B[1] - A[1]);
     Beta  = 2 * ((B[0] - A[0]) * (A[0] - C[0]) + (B[1] - A[1]) * (A[1] - C[1]));
     Gamma = A[0] * A[0] + A[1] * A[1] + C[0] * C[0] + C[1] * C[1] - 2 * (A[0] * C[0] + A[1] * C[1]) - Rayon * Rayon;
-    
+
     return (Beta * Beta - 4 * Alpha * Gamma) >= 0;
 }
 
@@ -92,4 +92,3 @@ bool			bunny_collision_line_circle(const t_bunny_collision	*_a,
   res = (-b - delta) / a + line->coord[0].x;
   return (_test_interval(line, res, res * coef + offset));
 }
-

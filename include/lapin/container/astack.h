@@ -23,7 +23,6 @@
 # endif
 # if				__GNUC__ || _WIN32 || __WIN32__
 #  include			<string.h>
-#  include			<alloca.h>
 #  include			"stack.h"
 
 /*!

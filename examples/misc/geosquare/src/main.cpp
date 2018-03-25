@@ -2,7 +2,6 @@
 #include		<iostream>
 #include		<time.h>
 #include		<math.h>
-#include		<alloca.h>
 #include		<time.h>
 #include		<stdlib.h>
 #include		"lapin.h"

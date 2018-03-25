@@ -3,13 +3,12 @@
 //
 // Bibliothèque Lapin
 
-#include	<alloca.h>
 #include	"lapin_private.h"
 
 bool		bunny_collision_quad_circle(const t_bunny_collision	*a,
 					    const t_bunny_collision	*b)
 {
-  t_bunny_vertex_array *arr = (t_bunny_vertex_array*)alloca(sizeof(arr->length) + 4 * sizeof(arr->vertex[0]));
+  t_bunny_vertex_array *arr = (t_bunny_vertex_array*)bunny_alloca(sizeof(arr->length) + 4 * sizeof(arr->vertex[0]));
   const t_bunny_quad_collision *quad = &a->quad;
   const t_bunny_circle_collision *circle = &b->circle;
   t_bunny_accurate_position tmp;

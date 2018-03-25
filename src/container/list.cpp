@@ -4,7 +4,6 @@
 // Lapin library
 
 #include		<stdlib.h>
-#include		<alloca.h>
 #include		"lapin_private.h"
 
 struct			bunny_node

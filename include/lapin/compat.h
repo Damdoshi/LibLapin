@@ -53,6 +53,10 @@ int				bunny_strncasecmp(const char	*a,
 						  const char	*b,
 						  size_t	l);
 
+int				bunny_dprintf(int		fd,
+					      const char	*format,
+					      ...);
+
 
 /*!
 ** Get the position in seconds of the sent music.
@@ -118,12 +122,18 @@ extern const void		*last_scope;
 # define			GREY(g)				\
   COLOR(255, g, g, g)
 
-# ifdef				__GNUC__
+# ifdef				__linux__
+#  include			<alloca.h>
 #  define			bunny_alloca(a)			alloca(a)
 #  define			bunny_freea(a)
+
 # elif				_WIN32 || __WIN32__
+#  include			<malloc.h>
 #  define			bunny_alloca(a)			_alloca(a)
 #  define			bunny_freea(a)
+#  define			dprintf(fd, format, ...)	\
+  bunny_dprintf(fd, format, __VA_ARGS__)
+
 # else
 #  define			bunny_alloca(a)			bunny_malloc(a)
 #  define			bunny_freea(a)			bunny_free(a)

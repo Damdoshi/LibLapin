@@ -3,7 +3,6 @@
 //
 // Bibliothèque Lapin
 
-#include	<alloca.h>
 #include	"lapin_private.h"
 
 bool		bunny_collision_quad_dot(const t_bunny_collision	*a,

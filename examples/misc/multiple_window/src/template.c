@@ -7,7 +7,6 @@
 
 #include		<stdio.h>
 #include		<lapin.h>
-#include		<alloca.h>
 
 t_bunny_window		**win;
 int			r;

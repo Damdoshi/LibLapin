@@ -10,6 +10,7 @@
 # if				!defined(__LAPIN_H__)
 #  error			You cannot include this file directly.
 # endif
+# include			<sys/types.h>
 # ifdef				__APPLE__
 #  include			<sys/_types/_ssize_t.h>
 # endif
