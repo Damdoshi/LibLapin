@@ -3,7 +3,6 @@
 //
 // Lapin library
 
-#include		<dlfcn.h>
 #include		"lapin_private.h"
 
 #define			PATTERN		"%s library file -> %p"
@@ -27,7 +26,7 @@ t_bunny_plugin		*bunny_new_plugin(const char			*libfile)
     scream_error_if(return (NULL), EINVAL, PATTERN, "ressource,plugin", libfile, handler);
 
 #if			_WIN32 || __WIN32__
-  if ((func = (t_bunny_get_function_list)GetProcAddress((HMODULE*)handler, "__get_function_list")) == NULL)
+  if ((func = (t_bunny_get_function_list)GetProcAddress((HMODULE)handler, "__get_function_list")) == NULL)
 #else
   if ((func = (t_bunny_get_function_list)dlsym(handler, "__get_function_list")) == NULL)
 #endif
@@ -47,7 +46,7 @@ t_bunny_plugin		*bunny_new_plugin(const char			*libfile)
     goto closelib;
 
   // Init structure
-  if ((plug->name = strdup(libfile)) == NULL)
+  if ((plug->name = bunny_strdup(libfile)) == NULL)
     goto freeplug;
   plug->library_handler = handler;
   plug->nbr_function = nbrfunc;
@@ -58,7 +57,7 @@ t_bunny_plugin		*bunny_new_plugin(const char			*libfile)
       t_bunny_prototype	*proto = &plug->prototypes[nbrfunc];
 
 #if			_WIN32 || __WIN32__
-      if ((proto->function_ptr = GetProcAddress((HMODULE*)handler, list[nbrfunc].name)) == NULL)
+      if ((proto->function_ptr = (void*)GetProcAddress((HMODULE)handler, list[nbrfunc].name)) == NULL)
 #else
       if ((proto->function_ptr = dlsym(handler, list[nbrfunc].name)) == NULL)
 #endif
@@ -89,7 +88,7 @@ t_bunny_plugin		*bunny_new_plugin(const char			*libfile)
   bunny_errno = err;
  closelib:
 #if			_WIN32 || __WIN32__
-  FreeLibrary((HMODULE*)handler);
+  FreeLibrary((HMODULE)handler);
 #else
   dlclose(handler);
 #endif
@@ -104,7 +103,7 @@ void			bunny_delete_plugin(t_bunny_plugin	*plugin)
 {
   free((void*)plugin->name);
 #if			_WIN32 || __WIN32__
-  FreeLibrary((HMODULE*)plugin->library_handler);
+  FreeLibrary((HMODULE)plugin->library_handler);
 #else
   dlclose((void*)plugin->library_handler);
 #endif

@@ -13,7 +13,7 @@ void			*bunny_plugin_get_function(const t_bunny_plugin	*plugin,
   void			*ret;
 
 #if			_WIN32 || __WIN32__
-  if ((ret = (GetProcAddress((HMODULE*)plugin->library_handler, name))) == NULL)
+  if ((ret = ((void*)GetProcAddress((HMODULE)plugin->library_handler, name))) == NULL)
 #else
   if ((ret = (dlsym((void*)plugin->library_handler, name))) == NULL)
 #endif

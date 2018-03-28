@@ -10,8 +10,6 @@
 ** The Asynclock module is useful to insert functions that will be called
 ** later, for a specific duration or regulary.
 **
-** /!\ DOES NOT WORK YET /!\
-**
 ** This module is quite complex! Pay attention to what you read.
 */
 
@@ -31,6 +29,18 @@ typedef uint64_t	t_bunny_time;
 ** \return The system hour in ns.
 */
 t_bunny_time		bunny_get_time(void);
+
+/*!
+** Sleep a specific duration in microseconds.
+** Returns the duration that was skipped if a signal occurs
+*/
+unsigned long long	bunny_usleep(unsigned long long			delay);
+
+/*!
+** Sleep a specific duration in nanoseconds.
+** Returns the duration that was skipped if a signal occurs
+*/
+t_bunny_time		bunny_sleep(t_bunny_time			delay);
 
 /*!
 ** Get the difference between two hours.

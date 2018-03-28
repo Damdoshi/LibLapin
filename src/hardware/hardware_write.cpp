@@ -4,6 +4,10 @@
 // Bibliotheque Lapin
 
 #include		"PVM110N.hpp"
+/*
+** For MinGW
+*/
+#undef			TRANSPARENT
 #include		"lapin_private.h"
 
 #define			PATTERN		"%p -> %s"

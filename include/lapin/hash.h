@@ -15,7 +15,7 @@
 # define			__LAPIN_HASH_H__
 
 /*!
-** t_unny_hash's value are hash algorithm.
+** t_bunny_hash's value are hash algorithm.
 ** BH_MULTIPLIER works well with ASCII strings
 ** BH_FNV with bytes
 ** Any value equal or greater than BH_CUSTOM will call the gl_bunny_my_hash function pointer.
@@ -32,7 +32,7 @@ typedef enum			e_bunny_hash
   }				t_bunny_hash;
 
 /*!
-** Compute a short hash. 
+** Compute a short hash.
 ** \param hash The algorithm to use.
 ** \param ptr The data to hash
 ** \param len The size of the data to hash

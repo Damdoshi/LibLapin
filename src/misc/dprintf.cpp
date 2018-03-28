@@ -6,17 +6,6 @@
 #include		<stdlib.h>
 #include		"lapin_private.h"
 
-static FILE		*f[1024];
-
-void			close_all_outputs(void)
-{
-  int			i;
-
-  for (i = 0; i < 1024; ++i)
-    if (f[i] != NULL)
-      fclose(f[i]);
-}
-
 int			bunny_dprintf(int		fd,
 				      const char	*format,
 				      ...)
@@ -26,20 +15,11 @@ int			bunny_dprintf(int		fd,
 
   va_start(lst, format);
 #if			_WIN32 || __WIN32__
-  static bool		s;
+  char			buffer[1024 * 4];
 
-  if (f[fd] == NULL)
-    {
-      if (s == false)
-	{
-	  atexit(close_all_outputs);
-	  s = true;
-	}
-      if ((f[fd] = fdopen(fd, "w")) == NULL)
-	return (-1);
-    }
-
-  cnt = vfprintf(f[fd], format, lst);
+  cnt = vsnprintf(&buffer[0], sizeof(buffer), format, lst);
+  if (write(fd, &buffer[0], cnt) == -1)
+    return (-1);
 #else
   cnt = vdprintf(fd, format, lst);
 #endif

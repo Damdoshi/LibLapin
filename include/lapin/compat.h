@@ -128,6 +128,7 @@ extern const void		*last_scope;
 #  define			bunny_freea(a)
 
 # elif				_WIN32 || __WIN32__
+
 #  include			<malloc.h>
 #  define			bunny_alloca(a)			_alloca(a)
 #  define			bunny_freea(a)
@@ -135,8 +136,18 @@ extern const void		*last_scope;
   bunny_dprintf(fd, format, ##__VA_ARGS__)
 
 # else
+
 #  define			bunny_alloca(a)			bunny_malloc(a)
 #  define			bunny_freea(a)			bunny_free(a)
+
+# endif
+
+/*
+** For MinGW
+*/
+# include			<unistd.h>
+# ifndef			EWOULDBLOCK
+#  define			EWOULDBLOCK				EAGAIN
 # endif
 
 #endif	/*			__LAPIN_COMPAT_H__		*/
