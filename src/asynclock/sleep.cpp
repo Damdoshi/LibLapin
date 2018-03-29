@@ -27,7 +27,7 @@ t_bunny_time		bunny_sleep(t_bunny_time	delay)
   t_bunny_time		elap;
 
   prev = bunny_get_time();
-  sf::Sleep(sf::microseconds(delay / 1000));
+  sf::sleep(sf::microseconds(delay / 1000));
   if ((elap = bunny_get_time() - prev) > delay)
     return (0);
   return (delay - elap);
