@@ -9,6 +9,8 @@ char			*ini_last_error;
 
 const char		*bunny_ini_get_error(void)
 {
+  if (ini_last_error == NULL)
+    return ("");
   return (ini_last_error);
 }
 

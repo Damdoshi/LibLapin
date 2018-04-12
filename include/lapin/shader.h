@@ -195,13 +195,41 @@ typedef struct		s_bunny_normal_light
 
 typedef struct		s_bunny_normal_map
 {
-  t_bunny_size	window_size;
+  t_bunny_size		window_size;
   t_bunny_picture	*normal_map;
   t_bunny_picture	*specular_map;
   t_bunny_normal_light	lights[8];
 }			t_bunny_normal_map;
 
 t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm);
+
+typedef struct		s_bunny_spreading
+{
+  // Configuration
+  t_bunny_color		color[2];
+  int			speed;
+  t_bunny_picture	*layout;
+  size_t		source_len;
+  t_bunny_position	sources[128];
+  bool			random;
+
+  // Private. You must set those fields to 0 at the beginning.
+  t_bunny_picture	*alpha_buffer;
+  t_bunny_picture	*spread_buffer[2];
+  int			current_buffer;
+}			t_bunny_spreading;
+
+t_bunny_shader		*bunny_spreading_shader(t_bunny_spreading	*spread);
+
+void			bunny_blit_spreading(t_bunny_buffer		*buffer,
+					     const t_bunny_position	*pos,
+					     t_bunny_spreading		*spread);
+
+void			bunny_fill_spreading(t_bunny_spreading		*spread);
+void			bunny_flip_spreading(t_bunny_spreading		*spread);
+void			bunny_draw_spreading_source(t_bunny_spreading	*spread);
+void			bunny_clear_spreading(t_bunny_spreading		*spread);
+void			bunny_delete_spreading(t_bunny_spreading	*spread);
 
 #endif	/*		__LAPIN_SHADER_H__				*/
 

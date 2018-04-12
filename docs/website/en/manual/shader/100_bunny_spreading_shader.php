@@ -1,6 +1,6 @@
 <div class="prototype">
-  $Tt_bunny_shader@ *$Sbunny_normal_map_shader@(
-  $Kconst@ $Tt_bunny_normal_map@ *$Snm@,
+  $Tt_bunny_shader@ *$Sbunny_spreading_shader@(
+  $Tt_bunny_spreading@ *$Sspread@,
   );
 </div>
 <hr />
@@ -8,10 +8,14 @@
 <div class="resume">
   <h3>Description</h3>
   $A Read the sent structure and generate the associated shader.
-  Multiples calls to bunny_normal_map_shader will not generate
+  Multiples calls to bunny_spreading_shader will not generate
   several shader: the returned one is kept in memory and reconfigured
   each time. It is automatically freed when your program exit, but
-  you can force its release by sending $CNULL@ as $Sbst@.
+  you can force its release by sending $CNULL@ as $Sspread@.<br />
+  <br />
+  This function also reserve memory inside the t_bunny_spreading itself
+  if fields $Salpha_buffer@ or $Sspread_buffer@ are $CNULL@. To release
+  those fields, use $Sbunny_delete_spreading@.
 </div>
 <hr />
 
@@ -19,8 +23,8 @@
   <h3>Parameters</h3>
   <ul>
     <li>
-      $Kconst@ $Tt_bunny_normal_map@ *$Snm@:<br />
-      $A The shader configuration structure. See t_bunny_normal_map
+      $Tt_bunny_spreading@ *$Sspread@:<br />
+      $A The shader configuration structure. See t_bunny_spreading
       for more information.<br />
       If you send $CNULL@, the inside shader handled by the function
       will be freed.
@@ -68,9 +72,8 @@
 <div class="related_functions">
   <h3>Related functions</h3>
   <ul>
-    <li>t_bunny_normal_map</li>
-    <li>bunny_blit_shader</li>
-    <li>bunny_delete_shader</li>
+    <li>t_bunny_spreading</li>
+    <li>bunny_blit_spreading</li>
   </ul>
 </div>
 

@@ -41,10 +41,15 @@ bool			SmallConf::GetDouble(double		*v,
     }
   if (is_converted == false)
     {
+      int		tmp;
       ssize_t		i = 0;
 
       if (readdouble(original_value.c_str(), i, converted) == false)
-	return (false);
+	{
+	  if (readinteger(original_value.c_str(), i, tmp) == false)
+	    return (false);
+	  converted = tmp;
+	}
       is_converted = true;
     }
   *v = converted;
