@@ -76,7 +76,7 @@ t_bunny_sprite		*bunny_load_sprite(const char		*file)
   sprite->color_mask.full = WHITE;
 
   if (bunny_set_clipable_attribute
-      (NULL, (t_bunny_clipable**)&sprite, &conf, false) == false)
+      (NULL, (t_bunny_clipable**)&sprite, &conf, BCT_SPRITE) == false)
     goto DeleteConf;
   if (_bunny_set_sprite_attribute
       (*sprite, *(SmallConf*)conf) == false)

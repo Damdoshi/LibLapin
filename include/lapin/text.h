@@ -56,6 +56,8 @@ typedef struct			s_bunny_font
   t_bunny_size  		interglyph_space;
 }				t_bunny_font;
 
+t_bunny_font			*bunny_load_text(const char			*file);
+
 t_bunny_font			*bunny_load_font(unsigned int			width,
 						 unsigned int			height,
 						 const char			*file,
@@ -64,10 +66,9 @@ t_bunny_font			*bunny_load_font(unsigned int			width,
 /*!
 **
 */
-bool				bunny_set_text_attribute(const char		*conf_file,
+bool				bunny_set_font_attribute(const char		*conf_file,
 							 t_bunny_font		**font,
-							 t_bunny_configuration **config,
-							 bool			is_ttf);
+							 t_bunny_configuration **config);
 
 /*!
 ** The t_bunny_vector_font_line_coord contains two sets of coordinates that

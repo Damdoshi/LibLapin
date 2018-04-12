@@ -19,7 +19,7 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
     {
       t_bunny_picture	*pc = NULL;
 
-      if (bunny_set_clipable_attribute(file, &pc, NULL, false) == false)
+      if (bunny_set_clipable_attribute(file, &pc, NULL, BCT_PICTURE) == false)
 	return (NULL);
       return (pc);
     }

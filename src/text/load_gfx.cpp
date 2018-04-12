@@ -58,6 +58,7 @@ t_bunny_font			*__bunny_load_gfx(unsigned int		width,
   gfx->gfx->clip_height = size->y;
   gfx->glyph_size.x = size->x;
   gfx->glyph_size.y = size->y;
+  gfx->conf_string = NULL;
 
   scream_log_if(PATTERN, "ressource,graphics", width, height, file, size, size->x, size->y, gfx);
   return ((t_bunny_font*)gfx);

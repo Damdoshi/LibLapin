@@ -45,6 +45,7 @@ bool			bunny_make_clipable_unique(t_bunny_clipable	*clip)
 	rtex->display();
 	pic->texture = rtex;
 	scream_log_if(PATTERN, "graphics", clip, "true");
+	pic->res_id = 0;
 	return (true);
       }
     case SYSTEM_RAM:
@@ -90,11 +91,12 @@ bool			bunny_make_clipable_unique(t_bunny_clipable	*clip)
 	pic->image = img;
 	pic->tex = tex;
 	pic->sprite->setTexture(*pic->tex);
+	pic->res_id = 0;
 	scream_log_if(PATTERN, "graphics", clip, "true");
 	return (true);
       }
     default:
-      scream_error_if(return (false), EINVAL, PATTERN, "graphics", clip, "false");
+      return (false);
     }
   // Never
   return (true);

@@ -47,6 +47,7 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
   ttf->tex = &ttf->texture->getTexture();
   ttf->sprite->setTexture(*ttf->tex);
   ttf->type = TTF_TEXT;
+  ttf->conf_string = NULL;
   ttf->text->setFont(*ttf->font);
   /*
   if (bunny_which_format(file) != BC_CUSTOM)

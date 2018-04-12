@@ -40,6 +40,10 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
       configuration file presetting fields of their returned structure.
     - Uncipher picture files when loading them if a loading cipher function is set.
 
+  * Edit text module
+    - Add to bunny_load_font (and add bunny_load_text) the ability to load
+      configuration file presetting fields of their returned structure.
+
   * Add sprite module
     - Bring an automatically animated picture, configured by script and specific
       orders.

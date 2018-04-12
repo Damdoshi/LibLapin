@@ -144,16 +144,16 @@
     </li>
 
     <li>
-      Color is a collection of integer between 0 and 255 used as color mask.<br />
+      ColorMask is a collection of integer between 0 and 255 used as color mask.<br />
       It can be one field long to create a grey mask.<br />
       It can be three fields long to create a RGB mask with no transparency.<br />
       It can be four fields long to create a RGBA mask.<br />
       About transparency, 0 is transparent.<br />
       Usage:<br />
       <br />
-      $SColor@=GreyLevel<br />
-      $SColor@=Red,Green,Blue<br />
-      $SColor@=Red,Green,Blue,Alpha<br />
+      $SColorMask@=GreyLevel<br />
+      $SColorMask@=Red,Green,Blue<br />
+      $SColorMask@=Red,Green,Blue,Alpha<br />
     </li>
 
     <li>
@@ -194,86 +194,87 @@
       $SSize@=Width,Height<br />
       $SSelected@=NbrCase<br />
     </li>
+  </ul>
 
-    <h4>DABSIC format</h4>
+  <h4>DABSIC format</h4>
 
-    <p>
-      The Dabsic format follow the same architecture as the INI one.
-      Here is a complete usage:<br />
-      <br />
-      $SRessourceFile@=$L"PathToRessourceFile"@<br />
-      $SPosition@=XPosition,YPosition<br />
-      $SScale@=XScale,YScale<br />
-      $SScale@=XYScale<br />
-      $SOrigin@=XPosition,YPosition<br />
-      $SRotation@=Degree<br />
-      $SColor@=GreyLevel<br />
-      $SColor@=Red,Green,Blue<br />
-      $SColor@=Red,Green,Blue,Alpha<br />
-      $STransparency@=TransparencyLevel<br />
-      [$TClip@<br />
-      $A $SSize@=Width,Height<br />
-      $A $SPosition@=XPosition,YPosition<br />
-      $A $SSelected@=NbrCase<br />
-      ]<br />
-    </p>
+  <p>
+    The Dabsic format follow the same architecture as the INI one.
+    Here is a complete usage:<br />
+    <br />
+    $SRessourceFile@=$L"PathToRessourceFile"@<br />
+    $SPosition@=XPosition,YPosition<br />
+    $SScale@=XScale,YScale<br />
+    $SScale@=XYScale<br />
+    $SOrigin@=XPosition,YPosition<br />
+    $SRotation@=Degree<br />
+    $SColorMask@=GreyLevel<br />
+    $SColorMask@=Red,Green,Blue<br />
+    $SColorMask@=Red,Green,Blue,Alpha<br />
+    $STransparency@=TransparencyLevel<br />
+    [$TClip@<br />
+    $A $SSize@=Width,Height<br />
+    $A $SPosition@=XPosition,YPosition<br />
+    $A $SSelected@=NbrCase<br />
+    ]<br />
+  </p>
 
-    <p>
-      Note that the ability of Dabsic to create array with the following fashion:
-      <br />
-      <br />
-      $SColor@ = [$TArray@<br />
-      $A Red<br />
-      $A Green<br />
-      $A Blue<br />
-      ]<br />
-      <br />
-      Does not interfere with the way the value is get. It is perfectly equivalent.
-    </p>
+  <p>
+    Note that the ability of Dabsic to create array with the following fashion:
+    <br />
+    <br />
+    $SColorMask@ = [$TArray@<br />
+    $A Red<br />
+    $A Green<br />
+    $A Blue<br />
+    ]<br />
+    <br />
+    Does not interfere with the way the value is get. It is perfectly equivalent.
+  </p>
 
-    <h4>CSV format</h4>
+  <h4>CSV format</h4>
 
-    <p>
-      The CSV format does not follow the same architecture as the INI one.
-      Here is its architecture:<br />
-      <br />
-      $L"ressourcefile"@;$L"path_to_ressource_file"@<br />
-      $L"position"@;xposition;ypostition<br />
-      $L"scale"@;xscale;yscale<br />
-      $L"scale"@;xscale<br />
-      $L"origin"@;xposition;yposition<br />
-      $L"rotation"@;degree<br />
-      $L"color"@;greylevel<br />
-      $L"color"@;red;green;blue<br />
-      $L"color"@;red;green;blue;alpha<br />
-      $L"transparency"@;transparency<br />
-      $L"clip"@<br />
-      ;$L"size"@;width;height<br />
-      ;$L"position"@;xposition;yposition<br />
-      ;$L"selected"@;nbrcase<br />
-      <br />
-      <b>Note that fields inside clip does not start on the first column!</b>
-    </p>
+  <p>
+    The CSV format does not follow the same architecture as the INI one.
+    Here is its architecture:<br />
+    <br />
+    $L"RessourceFile"@;$L"path_to_ressource_file"@<br />
+    $L"Position"@;xposition;ypostition<br />
+    $L"Scale"@;xscale;yscale<br />
+    $L"Scale"@;xscale<br />
+    $L"Origin"@;xposition;yposition<br />
+    $L"Rotation"@;degree<br />
+    $L"ColorMask"@;greylevel<br />
+    $L"ColorMask"@;red;green;blue<br />
+    $L"ColorMask"@;red;green;blue;alpha<br />
+    $L"Transparency"@;transparency<br />
+    $L"Clip"@<br />
+    ;$L"Size"@;width;height<br />
+    ;$L"Position"@;xposition;yposition<br />
+    ;$L"Selected"@;nbrcase<br />
+    <br />
+    <b>Note that fields inside clip does not start on the first column!</b>
+  </p>
 
-    <h4>XML format</h4>
+  <h4>XML format</h4>
 
-    <p>Not documented yet.</p>
+  <p>Not documented yet.</p>
 
-    <h4>LUA format</h4>
+  <h4>LUA format</h4>
 
-    <p>Not documented yet.</p>
+  <p>Not documented yet.</p>
 
-    <h4>JSON format</h4>
+  <h4>JSON format</h4>
 
-    <p>Not documented yet.</p>
+  <p>Not documented yet.</p>
 
-    <h4>YAML format</h4>
+  <h4>YAML format</h4>
 
-    <p>Not documented yet.</p>
+  <p>Not documented yet.</p>
 
-    <h4>LISP format</h4>
+  <h4>LISP format</h4>
 
-    <p>Not documented yet.</p>
+  <p>Not documented yet.</p>
 
 </div>
 

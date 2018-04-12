@@ -83,7 +83,7 @@ public:
 					void			*t_bunny_thing) const
   {
     std::unordered_map<uint64_t, Ressource>::const_iterator	it;
-    
+
     if ((it = ressources[typ].find(id)) == ressources[typ].end())
       return (false);
     if (it->second.user_side_ressource.size() != 1)
@@ -97,7 +97,7 @@ public:
 					uint64_t		id) const
   {
     std::unordered_map<uint64_t, Ressource>::const_iterator	it;
-    
+
     if ((it = ressources[typ].find(id)) == ressources[typ].end())
       return (0);
     return (it->second.user_side_ressource.size());
@@ -182,4 +182,3 @@ public:
 extern ResManager		RessourceManager;
 
 #endif	//			__LAPIN_PRIVATE_RESSOURCE_MANAGER_HPP__
-

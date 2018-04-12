@@ -8,6 +8,11 @@
 
 #define				PATTERN		"%u width, %u height, %s file, %p (%d, %d) size -> %p"
 
+t_bunny_font			*bunny_load_text(const char		*file)
+{
+  return (bunny_load_font(0, 0, file, NULL));
+}
+
 t_bunny_font			*bunny_load_font(unsigned int		width,
 						 unsigned int		height,
 						 const char		*file,
@@ -15,7 +20,14 @@ t_bunny_font			*bunny_load_font(unsigned int		width,
 {
   t_bunny_font			*final;
 
-  if (strstr(file, ".ttf"))
+  if (bunny_which_format(file) != BC_CUSTOM)
+    {
+      final = NULL;
+      if (bunny_set_font_attribute(file, &final, NULL) == false)
+	return (NULL);
+      return (final);
+    }
+  else if (strstr(file, ".ttf"))
     final = __bunny_load_ttf(width, height, file, size);
   else
     final = __bunny_load_gfx(width, height, file, size);

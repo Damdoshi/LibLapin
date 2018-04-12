@@ -5,12 +5,12 @@
 
 #include			"lapin_private.h"
 
-#define				PATTERN		"%s conf_file, %p clipable, %p target_conf, %s is_pixelarray -> %s (%s)"
+#define				PATTERN		"%s conf_file, %p clipable, %p target_conf, %d type -> %s (%s)"
 
 bool				bunny_set_clipable_attribute(const char		*conf_file,
 							     t_bunny_clipable	**clipable,
 							     t_bunny_configuration **config,
-							     bool		is_pxarray)
+							     t_bunny_clipable_type	typ)
 {
   t_bunny_clipable		*pic;
   const char			*missing_field;
@@ -19,7 +19,9 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
   int				tmp[4];
 
   if (clipable == NULL || (cnf = _get_good_conf(conf_file, config)) == NULL)
-    scream_error_if(return (false), EINVAL, PATTERN, "ressource,graphics", conf_file, clipable, config, is_pxarray ? "true" : "false", "false", "");
+    scream_error_if
+      (return (false), EINVAL, PATTERN, "ressource,graphics",
+       conf_file, clipable, config, typ, "false", "");
 
   if (*clipable == NULL)
     {
@@ -28,7 +30,7 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
 	  missing_field = "Missing field RessourceFile";
 	  goto InvalidField;
 	}
-      if (is_pxarray == false)
+      if (typ == BCT_PICTURE)
 	{
 	  if ((*clipable = bunny_load_picture(str)) == NULL)
 	    {
@@ -36,7 +38,7 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
 	      goto InvalidField;
 	    }
 	}
-      else
+      else if (typ == BCT_PIXELARRAY)
 	{
 	  if ((*clipable = (t_bunny_picture*)bunny_load_pixelarray(str)) == NULL)
 	    {
@@ -73,32 +75,32 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
 
   bunny_configuration_go_get_double(cnf, &pic->rotation, "Rotation[0]");
 
-  if (bunny_configuration_go_get_int(cnf, &tmp[0], "Color[0]"))
+  if (bunny_configuration_go_get_int(cnf, &tmp[0], "ColorMask[0]"))
     {
       if (tmp[0] < 0 || tmp[0] > 255)
 	{
-	  missing_field = "Invalid value for a color (Color[0]) (must be [0;255])";
+	  missing_field = "Invalid value for a color (ColorMask[0]) (must be [0;255])";
 	  goto InvalidField;
 	}
-      if (bunny_configuration_go_get_int(cnf, &tmp[1], "Color[1]"))
+      if (bunny_configuration_go_get_int(cnf, &tmp[1], "ColorMask[1]"))
 	{
 	  if (tmp[1] < 0 || tmp[1] > 255)
 	    {
-	      missing_field = "Invalid value for a color (Color[1]) (must be [0;255])";
+	      missing_field = "Invalid value for a color (ColorMask[1]) (must be [0;255])";
 	      goto InvalidField;
 	    }
-	  if (bunny_configuration_go_get_int(cnf, &tmp[2], "Color[2]"))
+	  if (bunny_configuration_go_get_int(cnf, &tmp[2], "ColorMask[2]"))
 	    {
 	      if (tmp[2] < 0 || tmp[2] > 255)
 		{
-		  missing_field = "Invalid value for a color (Color[2]) (must be [0;255])";
+		  missing_field = "Invalid value for a color (ColorMask[2]) (must be [0;255])";
 		  goto InvalidField;
 		}
-	      if (bunny_configuration_go_get_int(cnf, &tmp[3], "Color[3]"))
+	      if (bunny_configuration_go_get_int(cnf, &tmp[3], "ColorMask[3]"))
 		{
 		  if (tmp[3] < 0 || tmp[3] > 255)
 		    {
-		      missing_field = "Invalid value for a color (Color[3]) (must be [0;255])";
+		      missing_field = "Invalid value for a color (ColorMask[3]) (must be [0;255])";
 		      goto InvalidField;
 		    }
 		  pic->color_mask.argb[ALPHA_CMP] = tmp[3];
@@ -111,7 +113,7 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
 	    }
 	  else
 	    {
-	      missing_field = "Missing field Color[2]";
+	      missing_field = "Missing field ColorMask[2]";
 	      goto InvalidField;
 	    }
 	}
@@ -156,13 +158,13 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
     bunny_delete_configuration(cnf);
   else
     *config = cnf;
-  scream_log_if(PATTERN, "graphics", conf_file, clipable, config, is_pxarray ? "true" : "false", "true", "");
+  scream_log_if(PATTERN, "graphics", conf_file, clipable, config, typ, "true", "");
   return (true);
 
  InvalidField:
   if (config == NULL || *config == NULL)
     bunny_delete_configuration(cnf);
-  scream_error_if(return (false), EINVAL, PATTERN, "ressource,graphics,syntax", conf_file, clipable, config, is_pxarray ? "true" : "false", "false", missing_field);
+  scream_error_if(return (false), EINVAL, PATTERN, "ressource,graphics,syntax", conf_file, clipable, config, typ, "false", missing_field);
   return (false);
 }
 

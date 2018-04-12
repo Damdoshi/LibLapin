@@ -16,7 +16,7 @@ t_bunny_pixelarray	*bunny_load_pixelarray(const char		*file)
     {
       t_bunny_pixelarray	*px;
 
-      if (bunny_set_clipable_attribute(file, (t_bunny_picture**)&px, NULL, true) == false)
+      if (bunny_set_clipable_attribute(file, (t_bunny_picture**)&px, NULL, BCT_PIXELARRAY) == false)
 	return (NULL);
       return (px);
     }

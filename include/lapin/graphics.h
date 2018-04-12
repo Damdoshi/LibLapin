@@ -248,6 +248,18 @@ t_bunny_picture			*bunny_read_picture_id(const void		*pic,
   bunny_read_picture_id(buffer, len, NULL)
 
 /*!
+**
+**
+*/
+typedef enum			t_bunny_clipable_type
+  {
+    BCT_PIXELARRAY,
+    BCT_PICTURE,
+    BCT_SPRITE			= BCT_PICTURE,
+    BCT_FONT
+  }				t_bunny_clipable_type;
+
+/*!
 ** Load the sent configuration file (must be accepted by the bunny_configuration module)
 ** and set all values accordingly to what is inside the file.
 **
@@ -267,13 +279,13 @@ t_bunny_picture			*bunny_read_picture_id(const void		*pic,
 ** \param conf_file The configuration file that contains attributes.
 ** \param clipable The clipable to configure, or where to store the new one
 ** \param config The configuration file to use, or where to store the new loaded one,
-** \param is_px Is the clipable a pixelarray or a picture/bunny_font.
+** \param typ Is the clipable a pixelarray or a picture or bunny_font.
 ** \return True if the loading, reading and setting were done properly.
 */
 bool				bunny_set_clipable_attribute(const char		*conf_file,
 							     t_bunny_clipable	**clipable,
 							     t_bunny_configuration **config,
-							     bool		is_px);
+							     t_bunny_clipable_type typ);
 
 # if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 /*!

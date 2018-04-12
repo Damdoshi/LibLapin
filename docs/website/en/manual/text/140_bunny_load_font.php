@@ -1,4 +1,4 @@
-<div class="prototype">
+k<div class="prototype">
   $Tt_bunny_font@ *$Sbunny_load_font@(
   $T unsigned int @ $S width @,
   $T unsigned int @ $S height @,
@@ -37,8 +37,8 @@
       $Kconst@ $Tchar@ *$Sfile@:<br />
       $A The file to load that will be used to build the t_bunny_font.
       <b>
-        Configuration file are not supported yet. Only plain ressource files
-        can be currently used.
+        Configuration file can be used.<br />In this case, width, height and size
+        are ignored so you should use bunny_load_text instead for more simplicity.
       </b>
     </li>
     <li>

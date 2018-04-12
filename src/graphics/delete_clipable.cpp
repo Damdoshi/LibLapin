@@ -49,6 +49,8 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
       {
 	struct bunny_ttf_font	*ttf = (struct bunny_ttf_font*)clip;
 
+	if (ttf->conf_string)
+	  bunny_free(ttf->conf_string);
 	if (!RessourceManager.disable_manager)
 	  RessourceManager.TryRemove(ResManager::SF_FONT, ttf->res_id, ttf);
 	else
@@ -64,6 +66,8 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
       {
 	struct bunny_gfx_font	*gfx = (struct bunny_gfx_font*)clip;
 
+	if (gfx->conf_string)
+	  bunny_free(gfx->conf_string);
 	bunny_delete_clipable(gfx->gfx);
 	delete gfx->sprite;
 	delete gfx->texture;

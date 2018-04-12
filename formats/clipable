@@ -43,16 +43,16 @@ INI format and complete field description
 
     Rotation=Degree
 
-* Color is a collection of integer between 0 and 255 used as color mask.
+* ColorMask is a collection of integer between 0 and 255 used as color mask.
   It can be one field long to create a grey mask.
   It can be three fields long to create a RGB mask with no transparency.
   It can be four fields long to create a RGBA mask.
   About transparency, 0 is transparent.
   Usage:
 
-    Color=GreyLevel
-    Color=Red,Green,Blue
-    Color=Red,Green,Blue,Alpha
+    ColorMask=GreyLevel
+    ColorMask=Red,Green,Blue
+    ColorMask=Red,Green,Blue,Alpha
 
 * Transparency is a single integer between 0 and 255 used as color mask.
   It is redundant with the Color field and will override it.
@@ -96,9 +96,9 @@ Scale=XScale,YScale
 Scale=XYScale
 Origin=XPosition,YPosition
 Rotation=Degree
-Color=GreyLevel
-Color=Red,Green,Blue
-Color=Red,Green,Blue,Alpha
+ColorMask=GreyLevel
+ColorMask=Red,Green,Blue
+ColorMask=Red,Green,Blue,Alpha
 Transparency=TransparencyLevel
 [Clip
   Size=Width,Height
@@ -108,7 +108,7 @@ Transparency=TransparencyLevel
 
 Note that the ability of Dabsic to create array with the following fashion:
 
-Color = [Array
+ColorMask = [Array
       Red
       Green
       Blue
@@ -122,20 +122,20 @@ CSV format
 The CSV format does not follow the same architecture as the INI one.
 Here is its architecture:
 
-"ressourcefile";"path_to_ressource_file"
-"position";xposition;ypostition
-"scale";xscale;yscale
-"scale";xscale
-"origin";xposition;yposition
-"rotation";degree
-"color";greylevel
-"color";red;green;blue
-"color";red;green;blue;alpha
-"transparency";transparency
-"clip"
-;"size";width;height
-;"position";xposition;yposition
-;"selected";nbrcase
+"RessourceFile";"path_to_ressource_file"
+"Position";xposition;ypostition
+"Scale";xscale;yscale
+"Scale";xscale
+"Origin";xposition;yposition
+"Rotation";degree
+"ColorMask";greylevel
+"ColorMask";red;green;blue
+"ColorMask";red;green;blue;alpha
+"Transparency";transparency
+"Clip"
+;"Size";width;height
+;"Position";xposition;yposition
+;"Selected";nbrcase
 
 *Note that fields inside clip does not start on the first column!*
 

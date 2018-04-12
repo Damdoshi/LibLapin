@@ -149,6 +149,10 @@ struct				bunny_gfx_font
   t_bunny_position		glyph_size;
   t_bunny_position		interglyph_space;
 
+  // Private
+  char				*conf_string;
+
+  // Private, specific to gfx font
   t_bunny_picture		*gfx;
 };
 
@@ -182,6 +186,10 @@ struct				bunny_ttf_font
   t_bunny_position		glyph_size;
   t_bunny_position		interglyph_space;
 
+  // Private
+  char				*conf_string;
+
+  // Private, specific to ttf font
   sf::Font			*font;
   sf::Text			*text;
 };
