@@ -164,6 +164,7 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
 
   * Edit shader module
     - Bring automatically generated normal map shader with custom amount of lights.
+    - Add the spreading color shader effect.
 
   * Edit collision module
     - Bring dot-dot collision.
