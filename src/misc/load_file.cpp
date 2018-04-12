@@ -43,7 +43,7 @@ ssize_t			bunny_load_file(const char		*file,
   RessourceManager.AddToPool
     (ResManager::LOADED_FILE,
      hash,
-     (void*)RessourceManager.NbrLoad(ResManager::SIZE_LOADED_FILE, hash),
+     (void*)RessourceManager.NbrLoad(ResManager::LOADED_FILE, hash),
      *data);
   RessourceManager.AddToPool
     (ResManager::SIZE_LOADED_FILE,
