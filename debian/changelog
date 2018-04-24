@@ -194,6 +194,7 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
     - Bring circle-line collision.
 
   * Edit misc module
+    - Add bunny_reach function.
     - Add support for base64.
     - Use the environment parameter in bunny_evaluate.
 

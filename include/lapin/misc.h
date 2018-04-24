@@ -242,6 +242,14 @@ void				bunny_smooth_move(const t_bunny_position *target,
 						  double		speed);
 
 /*
+**
+**
+*/
+bool				bunny_reach(double			*value,
+					    double			limit,
+					    double			step);
+
+/*
 ** Self evaluation.
 ** Test public/privates structures consistancy.
 ** List all managed ressource.
