@@ -68,6 +68,10 @@ typedef t_bunny_response	(*t_bunny_key)(t_bunny_event_state		sta,
 					       t_bunny_keysym			sym,
 					       void				*dat);
 
+typedef t_bunny_response	t_bunny_key_function(t_bunny_event_state	sta,
+						     t_bunny_keysym		sym,
+						     void			*dat);
+
 /*!
 ** Register the sent function in order to call it when a keyboard event occurs.
 ** \param key The function to call
@@ -94,6 +98,9 @@ const bool			*bunny_get_keyboard(void);
 typedef t_bunny_response	(*t_bunny_type)(uint32_t			unicode,
 						void				*data);
 
+typedef t_bunny_response	t_bunny_type_function(uint32_t			unicode,
+						      void			*data);
+
 /*!
 ** Register the sent function in order to call it when a type event occurs.
 ** \param type The function to call
@@ -111,6 +118,10 @@ void				bunny_set_text_response(t_bunny_type		type);
 typedef t_bunny_response	(*t_bunny_click)(t_bunny_event_state		sta,
 						 t_bunny_mouse_button		but,
 						 void				*dat);
+
+typedef t_bunny_response	t_bunny_click_function(t_bunny_event_state	sta,
+						       t_bunny_mouse_button	but,
+						       void			*dat);
 
 /*!
 ** Register the sent function in order to call it when a mouse blick event occurs.
@@ -135,6 +146,9 @@ const bool			*bunny_get_mouse_button(void);
 typedef t_bunny_response	(*t_bunny_move)(const t_bunny_position		*relative,
 						void				*dat);
 
+typedef t_bunny_response	t_bunny_move_function(const t_bunny_position	*relative,
+						      void			*dat);
+
 /*!
 ** Register the sent function in order to call it when a mouse movement event occurs.
 ** \param mov The function to call
@@ -158,6 +172,10 @@ const t_bunny_position		*bunny_get_mouse_position(void);
 typedef t_bunny_response	(*t_bunny_wheel)(int				wheelid,
 						 int				delta,
 						 void				*data);
+
+typedef t_bunny_response	t_bunny_wheel_function(int			wheelid,
+						       int			delta,
+						       void			*data);
 
 /*!
 ** Register the sent function in order to call it when a mouse wheel event occurs.
@@ -198,6 +216,11 @@ typedef t_bunny_response	(*t_bunny_joy_connect)(t_bunny_event_state	state,
 						       int			joyid,
 						       const t_bunny_joystick	*joyinfo,
 						       void			*data);
+
+typedef t_bunny_response	t_bunny_joy_connect_function(t_bunny_event_state state,
+							     int		joyid,
+							     const t_bunny_joystick *joyinfo,
+							     void		*data);
 /*!
 ** Register the sent function in order to call it when a joystick connection event occurs.
 ** \param joy The function to call
@@ -224,6 +247,11 @@ typedef t_bunny_response	(*t_bunny_joy_axis)(int				joyid,
 						    t_bunny_axis		axis,
 						    float			value,
 						    void			*data);
+
+typedef t_bunny_response	t_bunny_joy_axis_function(int			joyid,
+							  t_bunny_axis		axis,
+							  float			value,
+							  void			*data);
 
 /*!
 ** Register the sent function in order to call it when a joystick axis event occurs.
@@ -264,6 +292,11 @@ typedef t_bunny_response	(*t_bunny_joy_button)(t_bunny_event_state	state,
 						      int			button,
 						      void			*data);
 
+typedef t_bunny_response	t_bunny_joy_button_function(t_bunny_event_state	state,
+							    int			joyid,
+							    int			button,
+							    void		*data);
+
 /*!
 ** Register the sent function in order to call it when a joystick button event occurs.
 ** \param button The function to call.
@@ -290,6 +323,9 @@ const bool			(*bunny_get_joy_button(void))[LAST_BUNNY_BUTTON];
 typedef t_bunny_response	(*t_bunny_get_focus)(const t_bunny_window	*win,
 						     void			*data);
 
+typedef t_bunny_response	t_bunny_get_focus_function(const t_bunny_window	*win,
+							   void			*data);
+
 /*!
 ** Register the sent function in order to call it when a get focus event occurs.
 ** \param getf The function to call
@@ -305,6 +341,9 @@ void				bunny_set_get_focus_response(t_bunny_get_focus	getf);
 */
 typedef t_bunny_response	(*t_bunny_lost_focus)(const t_bunny_window	*win,
 						      void			*data);
+
+typedef t_bunny_response	t_bunny_lost_focus_function(const t_bunny_window *win,
+							    void		*data);
 
 /*!
 ** Register the sent function in order to call it when a lost focus event occurs.
@@ -324,6 +363,10 @@ typedef t_bunny_response	(*t_bunny_resize)(const t_bunny_window		*win,
 						  const t_bunny_position	*siz,
 						  void				*data);
 
+typedef t_bunny_response	t_bunny_resize_function(const t_bunny_window	*win,
+							const t_bunny_position	*siz,
+							void			*data);
+
 /*!
 ** Register the sent function in order to call it when a window resize event occurs.
 ** \param getf The function to call
@@ -341,6 +384,9 @@ void				bunny_set_resize_response(t_bunny_resize	resize);
 */
 typedef t_bunny_response	(*t_bunny_close)(const t_bunny_window		*win,
 						 void				*data);
+
+typedef t_bunny_response	t_bunny_close_function(const t_bunny_window	*win,
+						       void			*data);
 
 /*!
 ** Register the sent function in order to call it when a window close event occurs.
@@ -364,6 +410,8 @@ const t_bunny_window	       *bunny_get_window(void);
 */
 typedef t_bunny_response	(*t_bunny_display)(void				*data);
 
+typedef t_bunny_response	t_bunny_display_function(void			*data);
+
 /*!
 ** Register the sent function in order to call it under certain circumstances.
 ** \param display The function to call.
@@ -379,6 +427,8 @@ void				bunny_set_display_function(t_bunny_display	display);
 ** Return a t_bunny_response in order to keep the loop or break it.
 */
 typedef t_bunny_response	(*t_bunny_loop)(void				*dat);
+
+typedef t_bunny_response	t_bunny_loop_function(void			*dat);
 
 /*!
 ** Register the sent function in order to call it at the given frequency (throught the
@@ -480,6 +530,11 @@ typedef t_bunny_response	(*t_bunny_message_response)(int			fd,
 							    size_t		size,
 							    void		*data);
 
+typedef t_bunny_response	t_bunny_message_response_function(int		fd,
+								  const void	*buffer,
+								  size_t	size,
+								  void		*data);
+
 /*!
 ** Set the function that will be called whe you receive a message.
 ** \param func The function that will be called.
@@ -498,6 +553,10 @@ typedef t_bunny_response	(*t_bunny_connect_response)(int			fd,
 							    t_bunny_event_state	state,
 							    void		*data);
 
+typedef t_bunny_response	t_bunny_connect_response_function(int		fd,
+								  t_bunny_event_state state,
+								  void		*data);
+
 /*!
 ** Set the function that will be called when a connection is opened or closed.
 ** \param func The function to call
@@ -510,6 +569,8 @@ void				bunny_set_connect_response(t_bunny_connect_response func);
 */
 void				bunny_set_entering_context_response(t_bunny_loop func);
 
+typedef t_bunny_response	t_bunny_entering_context_function(void		*dat);
+
 /*!
 ** The type of the function that will be called when the bunny_loop is exited.
 ** It receives what will be the return value.
@@ -518,6 +579,9 @@ void				bunny_set_entering_context_response(t_bunny_loop func);
 */
 typedef void			(*t_bunny_leaving_context)(t_bunny_response	returned,
 							   void			*data);
+
+typedef void			t_bunny_leaving_context_function(t_bunny_response returned,
+								 void		*data);
 
 /*!
 ** Set the function that will be called when you leave the bunny loop.
