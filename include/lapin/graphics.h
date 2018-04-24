@@ -84,7 +84,7 @@ typedef struct			s_bunny_clipable
 ** pointers that will activate bunny_set_* pixelarray functionnalities if
 ** correct functions are set to them:
 ** gl_bunny_my_set_pixel
-** gl_bunny_my_set_circle
+** gl_bunny_my_set_disk
 ** gl_bunny_my_set_line
 ** gl_bunny_my_set_polygon
 ** gl_bunny_my_fill
@@ -397,7 +397,7 @@ typedef void			(*t_bunny_my_set_pixel)(t_bunny_pixelarray	*pix,
 extern t_bunny_my_set_pixel	gl_bunny_my_set_pixel;
 
 /*!
-** The bunny_set_pixel function draw a circle (1 pixel thick) on the sent t_bunny_buffer.
+** The bunny_set_circle function draw a circle (1 pixel thick) on the sent t_bunny_buffer.
 **
 ** This funtion will not work on t_bunny_pixelarray if you did not have set a
 ** correct function to its associated gl_bunny_my_set_circle function pointer.
@@ -409,28 +409,48 @@ extern t_bunny_my_set_pixel	gl_bunny_my_set_pixel;
 ** \param rad The radius of the circle
 ** \param col The color of the pixel to draw
 */
-void				bunny_set_circle(t_bunny_buffer			*buf,
-						 t_bunny_position		pos,
-						 t_bunny_position		rad,
-						 unsigned int			color);
+# define			bunny_set_circle(buf, pos, rad, col)		\
+  bunny_set_disk(buf, pos, rad, TRANSPARENT, col, 1)
 
 /*!
-** The t_bunny_my_set_circle type is the type you have to respect if you wish to expand
-** the bunny library with your own circle drawing function. Set your function to the
-** gl_bunny_my_set_circle function pointer to add it to the library.
+** The bunny_set_disk function draw a disk on the sent t_bunny_buffer.
+
+** This funtion will not work on t_bunny_pixelarray if you did not have set a
+** correct function to its associated gl_bunny_my_set_circle function pointer.
+** You can test your function with the bunny_self_test function.
+** /!\ It will also test the alpha management and gradiants
+**
+** \param buf The t_bunny_buffer where to draw
+** \param pos The position of the middle of the circle
+** \param rad The radius of the circle
+** \param col The color of the pixel to draw
 */
-typedef void			(*t_bunny_my_set_circle)(t_bunny_pixelarray	*pix,
-							 t_bunny_position	pos,
-							 t_bunny_position	radius,
-							 unsigned int		color);
+void				bunny_set_disk(t_bunny_buffer			*buf,
+					       t_bunny_position			pos,
+					       t_bunny_position			rad,
+					       unsigned int			icol,
+					       unsigned int			ocol,
+					       int				thik);
 
 /*!
-** The gl_bunny_my_set_circle pointer is used when you call bunny_set_circle with
+** The t_bunny_my_set_disk type is the type you have to respect if you wish to expand
+** the bunny library with your own disk drawing function. Set your function to the
+** gl_bunny_my_set_disk function pointer to add it to the library.
+*/
+typedef void			(*t_bunny_my_set_disk)(t_bunny_pixelarray	*pix,
+						       t_bunny_position		pos,
+						       t_bunny_position		rad,
+						       unsigned int		icol,
+						       unsigned int		ocol,
+						       int			thik);
+
+/*!
+** The gl_bunny_my_set_disk pointer is used when you call bunny_set_disk with
 ** a t_bunny_pixelarray. By default, this function pointer's value is NULL and so does
-** not work. By setting your function to it, you can make bunny_set_circle works for
+** not work. By setting your function to it, you can make bunny_set_disk works for
 ** pixelarrays.
 */
-extern t_bunny_my_set_circle	gl_bunny_my_set_circle;
+extern t_bunny_my_set_disk	gl_bunny_my_set_disk;
 
 /*!
 ** The bunny_set_line function draw a single line on the sent t_bunny_buffer.

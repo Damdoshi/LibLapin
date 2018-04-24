@@ -1,18 +1,20 @@
 <div class="prototype">
-  Macro
-  $Tvoid@ $Sbunny_set_circle@(
+  $Tvoid@ $Sbunny_set_disk@(
   $Tt_bunny_buffer@ *$Starget@,
   $Tt_bunny_position@ $Sposition@,
   $Tt_bunny_size@ $Sradius@,
-  $Tunsigned int@ $Scolor@
+  $Tunsigned int@ $Sinside_color@,
+  $Tunsigned int@ $Slining_color@,
+  $Tint@ $Slining_thickness@
   );
 </div>
 <hr />
 
 <div class="resume">
   <h3>Description</h3>
-  $A This function draws a circle of $Scolor@ in $Starget@ at the sent $Sposition@
-  and of size $Sradius@.
+  $A This function draws a disk of $Sinside_color@ in $Starget@ at the sent
+  $Sposition@ and of size $Sradius@. This disk have a lining of $Slining_thickness@
+  pixels and of color $Slining_color@.
   <br />
   <br />
   This function can be quite slow: made on GPU side picture like t_bunny_picture
@@ -23,7 +25,7 @@
   <br />
   <br />
   This function will work on t_bunny_pixelarray only if a pointer of type
-  t_bunny_my_set_disk is set to gl_bunny_my_set_disk..
+  t_bunny_my_set_circle is set to gl_bunny_my_set_circle.
 </div>
 <hr />
 
@@ -44,8 +46,16 @@
       $A The size of the circle.
     </li>
     <li>
-      $Tunsigned int@ $Scolor@:<br />
-      $A The color of the drawing.
+      $Tunsigned int@ $Sinside_color@:<br />
+      $A The color of the disk. Can be transparent.
+    </li>
+    <li>
+      $Tunsigned int@ $Slining_color@:<br />
+      $A The color of the disk lining. Can be transparent.
+    </li>
+    <li>
+      $Tint@ $Slining_thickness@:<br />
+      $A The thickness of the lining in pixels.
     </li>
   </ul>
 </div>
@@ -57,7 +67,7 @@
     <li>bunny_set_pixel</li>
     <li>bunny_set_line</li>
     <li>bunny_set_polygon</li>
-    <li>bunny_set_disk</li>
+    <li>bunny_set_circle</li>
     <li>bunny_set_geometry</li>
     <li>bunny_fill</li>
     <li>bunny_clear</li>

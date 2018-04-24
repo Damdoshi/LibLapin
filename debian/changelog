@@ -41,6 +41,9 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
     - Add to bunny_load_picture and bunny_load_pixelarray the ability to load
       configuration file presetting fields of their returned structure.
     - Uncipher picture files when loading them if a loading cipher function is set.
+    - Turn bunny_set_circle to a macro targeting the new function bunny_set_disk.
+    - Migrate gl_bunny_my_set_circle and t_bunny_my_set_circle to
+      gl_bunny_my_set_disk and t_bunny_my_set_disk. **Compatibility break!**
 
   * Edit text module
     - Add to bunny_load_font (and add bunny_load_text) the ability to load

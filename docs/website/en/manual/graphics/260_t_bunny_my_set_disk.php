@@ -1,16 +1,18 @@
 <div class="prototype">
-  $Ktypedef@ $Tvoid@ *(*$St_bunny_my_set_circle@)(
+  $Ktypedef@ $Tvoid@ *(*$St_bunny_my_set_disk@)(
   $Tt_bunny_circlearray@ *$Starget@,
   $Tt_bunny_position@ $Sposition@,
   $Tt_bunny_size@ $Sradius@,
-  $Tunsigned int@ $Scolor@
+  $Tunsigned int@ $Sinside_color@,
+  $Tunsigned int@ $Slining_color@,
+  $Tint@ $Slining_thickness@
   );
 </div>
 <hr />
 
 <div class="resume">
   <h3>Description</h3>
-  $A This type is the one used by gl_bunny_my_set_circle function pointer
+  $A This type is the one used by gl_bunny_my_set_disk function pointer
   that may be used to complete bunny_set_circle by giving it the ability to
   draw on a t_bunny_pixelarray.
 </div>
@@ -32,8 +34,16 @@
       $A The size of the shape.
     </li>
     <li>
-      $Tunsigned int@ $Scolor@:<br />
-      $A The color of the shape.
+      $Tunsigned int@ $Sinside_color@:<br />
+      $A The color of the disk.
+    </li>
+    <li>
+      $Tunsigned int@ $Slining_color@:<br />
+      $A The color of the lining.
+    </li>
+    <li>
+      $Tint@ $Slinint_thickness@:<br />
+      $A The thickness in pixel of the lining.
     </li>
   </ul>
 </div>
@@ -42,13 +52,12 @@
 <div class="related_functions">
   <h3>Related functions</h3>
   <ul>
-    <li>t_bunny_my_set_circle</li>
     <li>t_bunny_my_set_line</li>
     <li>t_bunny_my_set_polygon</li>
     <li>t_bunny_my_geometry</li>
 
     <li>gl_bunny_my_set_pixel</li>
-    <li>gl_bunny_my_set_circle</li>
+    <li>gl_bunny_my_set_disk</li>
     <li>gl_bunny_my_set_line</li>
     <li>gl_bunny_my_set_polygon</li>
     <li>gl_bunny_my_geometry</li>

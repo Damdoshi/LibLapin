@@ -12,7 +12,7 @@ size_t				gl_bunny_frequency;
 
 t_bunny_my_set_pixel		gl_bunny_my_set_pixel = NULL;
 t_bunny_my_set_line		gl_bunny_my_set_line = NULL;
-t_bunny_my_set_circle		gl_bunny_my_set_circle = NULL;
+t_bunny_my_set_disk		gl_bunny_my_set_disk = NULL;
 t_bunny_my_set_polygon		gl_bunny_my_set_polygon = NULL;
 t_bunny_my_fill			gl_bunny_my_fill = NULL;
 t_bunny_my_clear		gl_bunny_my_clear = NULL;
