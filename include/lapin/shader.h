@@ -173,6 +173,7 @@ typedef struct		s_bunny_screen_tweak
   double		noise_strenght;
 }			t_bunny_screen_tweak;
 
+void			bunny_default_screen_tweak(t_bunny_screen_tweak *bst);
 t_bunny_shader		*bunny_screen_tweak_shader(const t_bunny_screen_tweak *bst);
 
 typedef struct		s_bunny_normal_light

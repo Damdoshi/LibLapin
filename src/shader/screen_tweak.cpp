@@ -129,3 +129,18 @@ t_bunny_shader		*bunny_screen_tweak_shader(const t_bunny_screen_tweak *bst)
   return (gl_screen_tweak_shader);
 }
 
+void			bunny_default_screen_tweak(t_bunny_screen_tweak	*x)
+{
+  x->blur_level = 1.0;
+  x->luminosity = 1.0;
+  x->color[0] = 1.0;
+  x->color[1] = 1.0;
+  x->color[2] = 1.0;
+  x->color_blind = BCBT_RED_GREEN_BLUE;
+  x->invert_color = false;
+  x->gray_scale = 0;
+  x->noise_strenght = BNC_COLOR_NOISE;
+  x->noise_type = BNT_NO_NOISE;
+  x->noise_strenght = 0.5;
+}
+

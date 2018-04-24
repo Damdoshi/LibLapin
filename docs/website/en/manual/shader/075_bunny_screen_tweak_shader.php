@@ -1,6 +1,6 @@
 <div class="prototype">
   $Tt_bunny_shader@ *$Sbunny_screen_tweak_shader@(
-  $Kconst@ $Tt_bunny_screen_tweak@ *$Sbst@,
+  $Kconst@ $Tt_bunny_screen_tweak@ *$Sbst@
   );
 </div>
 <hr />
