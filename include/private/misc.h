@@ -9,7 +9,19 @@
 #ifndef				__LAPIN_PRIVATE_MISC_H__
 # define			__LAPIN_PRIVATE_MISC_H__
 # include			<SFML/Window.hpp>
+# include			<queue>
 
+typedef struct			s_async_order
+{
+  t_bunny_function		func;
+  void				*data_to_compute;
+  void				*add_ptr;
+}				t_async_order;
+
+void				async_wrap(void			*data,
+					   void			*add);
+
+extern std::queue<void*>	gl_completed_tasks;
 extern void			*gl_self_plugin;
 extern t_bunny_context		gl_callback;
 extern bool			gl_keyboard[BKS_LAST_KEY];
@@ -23,6 +35,9 @@ extern t_bunny_window		*gl_window;
 extern bool			gl_full_blit;
 extern size_t			gl_bunny_frequency;
 extern bool			gl_complete_log;
+extern void			*gl_loop_data;
+
+extern t_bunny_threadpool	*gl_bunny_loop_threadpool;
 
 t_bunny_response		network_event(unsigned int		v,
 					      void			*dat);

@@ -34,6 +34,7 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
     - The t_bunny_display response function now take a non const pointer. **Compatibility break!**
     - Add a minimal movement value to call joystick axis event, to improve
       support of analogic joystick, especially in menus.
+    - Add a completed asynchronous computation request event.
 
   * Edit graphic module
     - Add to bunny_load_picture and bunny_load_pixelarray the ability to load
@@ -125,6 +126,7 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
   * Edit thread module
     - Remove the const specifier in threa_foreach and thread_push for the additional
       parameter.
+    - Add asynchronous computation functions linked to the bunny loop event resolver.
 
   * Edit configuration module
     - Switch from having a "@" node inside bunny_configuration to store field in the

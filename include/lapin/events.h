@@ -590,6 +590,25 @@ typedef void			t_bunny_leaving_context_function(t_bunny_response returned,
 void				bunny_set_leaving_context_response(t_bunny_leaving_context func);
 
 /*!
+** The type of the callback function to call when asynchronous computation set with
+** bunny_async_computation is done.
+** \param cmt The computed value
+** \param data The data parameter of bunny loop
+*/
+typedef t_bunny_response	(*t_bunny_async_computation_response)(void	*cmt,
+								      void	*data);
+
+typedef t_bunny_response	t_bunny_async_computation_response_function(void *cmt,
+									    void *data);
+
+/*!
+** Set a callback function to be called when asynchronous computation set with
+** bunny_async_computation is done.
+** \param func The function to call.
+*/
+void				bunny_set_async_computation_response(t_bunny_async_computation_response func);
+
+/*!
 ** The t_bunny_context structure is a collection of function pointer of various types.
 ** These types match all function pointer that can be sent with bunny_set_*_response,
 ** buny_set_loop_main_function or bunny_set_display_function.
@@ -619,6 +638,7 @@ typedef struct			s_bunny_context
   t_bunny_connect_response	netconnect;
   t_bunny_loop			entering_context;
   t_bunny_leaving_context	leaving_context;
+  t_bunny_async_computation_response async_computation_response;
 }				t_bunny_context;
 
 /*!
@@ -655,6 +675,7 @@ typedef struct			s_bunny_anonymous_context
   void				*netconnect;
   void				*entering_context;
   void				*leaving_context;
+  void				*async_computation_response;
 }				t_bunny_anonymous_context;
 
 /*!

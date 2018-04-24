@@ -6,6 +6,7 @@
 #include			<limits.h>
 #include			"lapin_private.h"
 
+std::queue<void*>		gl_completed_tasks;
 ResManager			RessourceManager;
 size_t				gl_bunny_frequency;
 
@@ -18,6 +19,8 @@ t_bunny_my_clear		gl_bunny_my_clear = NULL;
 t_bunny_my_blit			gl_bunny_my_blit = NULL;
 t_bunny_my_geometry		gl_bunny_my_geometry = NULL;
 
+t_bunny_threadpool		*gl_bunny_loop_threadpool = NULL;
+
 t_bunny_context			gl_callback;
 bool				gl_keyboard[BKS_LAST_KEY];
 t_bunny_position		gl_mouse;
@@ -28,6 +31,7 @@ float				gl_axis_offset[LAST_BUNNY_AXIS];
 t_bunny_joystick		gl_joystick[sf::Joystick::Count];
 t_bunny_window			*gl_window;
 bool				gl_full_blit;
+void				*gl_loop_data;
 
 const char			*DEFAULT_SCOPE = "";
 const char			*default_scope = "";

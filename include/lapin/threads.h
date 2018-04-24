@@ -90,5 +90,44 @@ bool				bunny_thread_push(t_bunny_threadpool		*pol,
 */
 void				bunny_thread_wait_completion(t_bunny_threadpool	*pol);
 
+/*!
+** This function allow you to define how many threads will be working
+** behind the bunny_loop to achieve asynchronous computation sent with
+** bunny_async_computation_push and bunny_async_computation_foreach.
+** The previous threadpool if it exists will be destroyed if it manages a different
+** amount of threads.
+** This threadpool is automatically freed at the end of the program if it was
+** not freed manually before.
+** \param nbr The amount of threads. 0 to only destroy it.
+** \return If the creation of the threadpool succeed or not. True if 0 was sent.
+*/
+bool				bunny_set_async_computation(size_t		nbr);
+
+/*!
+** This function push a single task inside the bunny loop thread pool.
+** When it will be complete, it will trigger an event.
+** \param func The function to call.
+** \param dt The data that will be treated by the function.
+** \param ad An additional pointer that will be transmited to func.
+*/
+bool				bunny_async_computation_push(t_bunny_function	func,
+							     void		*dt);
+
+/*!
+** Make every threads inside the bunny_loop threadpool call func with a part of
+** data and add_ptr as parameter.
+** \param func The function that threads will call
+** \param data An array of pointer to data that will be splitted in order to be sent
+** to the t_bunny_function as first parameter.
+** \param len The length of the data array
+** \param A pointer that will be transmitted to t_bunny_function as second parameter.
+** \return False if not enough memory was available to launch the foreach or
+** if a critical error happened in the thread launching system. True if everything went
+** well.
+*/
+bool				bunny_async_computation_foreach(t_bunny_function func,
+								void		**data,
+								size_t		len);
+
 #endif	/*			__LAPIN_THREADS_H__	*/
 

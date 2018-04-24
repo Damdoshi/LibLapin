@@ -319,5 +319,6 @@ const t_bunny_context		gl_bunny_splash_context =
     NULL,
     NULL,
     (t_bunny_loop)splash_entering,
-    (t_bunny_leaving_context)splash_leaving
+    (t_bunny_leaving_context)splash_leaving,
+    NULL
   };

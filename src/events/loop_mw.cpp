@@ -24,6 +24,8 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
   size_t		i;
   int			display_cnt;
 
+  gl_loop_data = data;
+
   scream_log_if(PATTERN "Entering)", "event", window, nwin, freq, data);
 
   /// How many microseconds
@@ -305,6 +307,18 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 		      }
 		  }
 	    }
+
+	  /// ASYNCHRONOUS COMPUTATION
+	  if (gl_callback.async_computation_response)
+	    while (gl_completed_tasks.empty() == false)
+	      if ((gl_callback.async_computation_response(gl_completed_tasks.front(), data)) != GO_ON)
+		{
+		  gl_completed_tasks.pop();
+		  goto end;
+		}
+	      else
+		gl_completed_tasks.pop();
+
 	  bunny_asynclock(delay, BCO_BEFORE_LOOP_MAIN_FUNCTION);
 	  if (gl_callback.loop != NULL)
 	    {
@@ -350,6 +364,10 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
       if (win)
 	while (win->window->pollEvent(event));
     }
+
+  while (gl_completed_tasks.empty() == false)
+    gl_completed_tasks.pop();
+
   scream_log_if("%p window, %zu nbr_window, %u frequency, %p parameter -> %d (Exiting)", "event", window, nwin, freq, data, rep);
   return (rep);
 }
