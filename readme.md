@@ -41,10 +41,10 @@ For Windows (May need some tweaks - will be fixed soon):
 
 ## Links
 
- * The [manual] (http://hangedbunnystudio.com/sub/liblapin/)
- * The [tutorials] (http://)
- * The [LibLapin Facebook page] (https://www.facebook.com/LeGrandLapinNoir/)
- * The [Hanged Bunny Studio forum]
+ * The [manual](http://hangedbunnystudio.com/sub/liblapin/index.php?pag=2)
+ * The [tutorials](http://hangedbunnystudio.com/sub/liblapin/index.php?pag=1)
+ * The [LibLapin Facebook page](https://www.facebook.com/LeGrandLapinNoir/)
+ * The [Hanged Bunny Studio forum](http://hangedbunny.forumactif.com/)
 
 ## Contribute
 
