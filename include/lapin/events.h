@@ -490,7 +490,7 @@ t_bunny_response		bunny_loop_mw(t_bunny_window			**win,
 ** \return The number of call to the loop callback per seconds, under good
 ** condition of performences.
 */
-size_t				bunny_get_frequency(void);
+int				bunny_get_frequency(void);
 
 /*
 ** Network event

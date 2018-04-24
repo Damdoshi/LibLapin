@@ -28,6 +28,7 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
     - Bring bunny_perror, bunny_strerror, bunny_errno, etc.
 
   * Edit event module
+    - Switch from size_t to int as return type of bunny_get_frequency.
     - Empty the event stack when leaving bunny_loop or bunny_loop_mw.
     - Add on_entering_context and on_leaving_context response function.
     - Add bunny_get_frequency to get the frequency of the main loop.

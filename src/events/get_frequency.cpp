@@ -5,7 +5,7 @@
 
 #include		"lapin_private.h"
 
-size_t			bunny_get_frequency(void)
+int			bunny_get_frequency(void)
 {
   return (gl_bunny_frequency);
 }
