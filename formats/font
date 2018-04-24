@@ -1,0 +1,80 @@
+T_BUNNY_FONT EXTERNAL CONFIGURATION
+===================================
+
+You can set properties of a t_bunny_front thanks to a file at runtime.
+This allow you to get rid of a lot of configuration and to create space
+for any outside editor.
+
+INI format and complete field description
+-----------------------------------------
+
+The t_bunny_font configuration file extend the t_bunny_clipable configuration file
+format. You should read it before going on if you do not know it yet.
+
+### Mandatory fields
+
+* RessourceFile, as for t_bunny_clipable is mandatory. It contains
+  in this case not the picture that will be painted inside the clipable but
+  the font that will be used to write. It can be a true type font or a bitmap
+  font.
+
+    RessourceFile="Font file or picture file that will be loaded and used a font."
+
+* BoxSize is an array of two integers. It define the size in pixel of the
+  drawing surface of the t_bunny_font.
+
+    BoxSize=XSize,YSize
+
+* GlyphSize is an array of one or two integers.
+  It define the size of a single character.
+  For true type font, a single value is enough: it will be used as height.
+  For bitmap font, two values are required for width and height of the glyph
+  inside the RessourceFile. If a single value is used, then it will be used
+  for both width and height, so it could fit for square characters.
+
+    GlyphSize=XSize,YSize
+    GlyphSize=Size
+
+### Optionnal fields
+
+* The String field is the one that will contains the text to display.
+  Default value of String is "".
+
+    String="This is the Bunny Library!"
+
+* StringOffset allow you to define a subpart of the string to be displayed.
+  Characters before StringOffset in String will not be drawn.
+  Default value for StringOffset is 0.
+
+* StringLength allow you to define a subpart of the string to be displayed.
+  Characters after StringLength + StringOffset in String will not be drawn.
+  DefaultValue for StringOffset is the length of String.
+
+* HorizontalAlign allow you to precise if the text will be aligned on the left
+  with "Left", the center with "Middle", the right with "Right" or justified with
+  "Justify".
+
+* VerticalAlign allow you to precise if the text will be aligned on the top
+  with "Top", the center with "Middle", the bottom with "Bottom" or justified with
+  "Justify".
+
+* Color define the color of the text that will be written. It is a collection
+  of integer between 0 and 255 used as color component.
+  It can be one field long to create a grey color.
+  It can be three fields long to create a RGB color with no transparency.
+  It can be four fields long to create a RGBA mask.
+
+    Color=GreyLevel
+    Color=Red,Green,Blue
+    Color=Red,Green,Blue,Alpha
+
+* OutlineColor define the color of the lining of the text that will be written.
+  It works the same way as Color.
+
+* OutlineSize is the thickness of the lining of the text.
+
+* Interglyph is an array of one or two elements matching the space between
+  each characters on X and Y.
+
+* Scrolling is an offset that affect the drawing of the text. It is an array
+  of two values for X and Y.
