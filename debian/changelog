@@ -147,6 +147,8 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
       etc. Making it a real programming language. Support for hashmap and arrays.
       Reference are currently supported but *cannot be written*.
     - Extend PATH when using @insert and @include.
+    - Handle directories in @insert and @include to load all non hidden files
+      with valid extensions.
     - Add functions to manually extend or shrink path (push_path, pop_path).
     - Add DABSIC Sequence support.
     - Add LUA data structure support.

@@ -17,7 +17,8 @@
   <br />
   All those formats are extended with $T&#64;insert@ and $T&#64;include@ directives
   that allow while loading a file to load some others, inserting them in place
-  or at root.
+  or at root. Parameters of those directives can be file or directory.
+  If it is directory, then it is not recursive.
   <br />
   <br />
   Configurations of bunny library are trees. Each node can have at the same time
