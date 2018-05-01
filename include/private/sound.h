@@ -61,7 +61,7 @@ struct				bunny_effect
   bool				pause;
 
   size_t			sample_per_second;
-  size_t			duration;
+  double			duration;
   int16_t *			sample;
   size_t			res_id;
   sf::SoundBuffer		*effect;

@@ -16,12 +16,6 @@
 # if				!defined(__LAPIN_H__)
 #  error			You cannot include this file directly.
 # endif
-# if				defined(__MINGW32__) || defined(__GNUC__)
-#  undef			PACKED
-#  define			PACKED				__attribute__((packed))
-# else
-#  pragma			packed
-# endif
 
 /*!
 ** The t_bunny_position structure represents a position in a 2D space.
