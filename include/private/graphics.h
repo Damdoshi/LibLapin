@@ -9,9 +9,7 @@
 #ifndef				__LAPIN_PRIVATE_GRAPHICS_H__
 # define			__LAPIN_PRIVATE_GRAPHICS_H__
 # include			<SFML/Graphics.hpp>
-# ifdef				__WIN32
-#  pragma			packed
-# endif
+
 /*
 typedef void			(*method_delete)(void			*clp);
 typedef void			(*method_blit)(void			*target,

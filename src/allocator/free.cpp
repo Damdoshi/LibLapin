@@ -41,7 +41,7 @@ void			bunny_free(void		*data)
       fprintf(stderr, "Bad pointer or altered memory detected while freeing 0x%p.\n", data);
       check_memory_state();
       freexit(getpid(), SIGSEGV); /* die Die DIE! (my darling) */
-      usleep(2e6);
+      bunny_usleep(2e6);
       exit(EXIT_FAILURE);
     }
   struct memtree	*tree;

@@ -26,7 +26,7 @@ void			bunny_thread_wait_completion(t_bunny_threadpool	*pol)
   hbs::Workers::Message	msg;
 
   while (w->GetHowManyTasks())
-    usleep(300);
+    bunny_usleep(300);
   while (w->GetMessage(msg));
   _ClearWorkers();
   scream_log_if("%p", "thread", pol);

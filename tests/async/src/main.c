@@ -29,7 +29,7 @@ void			workf(void		*data,
 {
   (void)un;
   printf("Processing %zu.\n", (size_t)data);
-  usleep(1e6 * 0.33);
+  bunny_usleep(1e6 * 0.33);
 }
 
 t_bunny_response	loop(void		*un)

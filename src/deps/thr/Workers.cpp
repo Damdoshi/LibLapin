@@ -8,6 +8,7 @@
 # include		<unistd.h>
 # include		<string.h>
 # include		"Threads.hpp"
+# include		"lapin_private.h"
 
 hbs::Workers::Workers(size_t		_nbr_thread)
   : nbr_worker(0),
@@ -28,7 +29,7 @@ hbs::Workers::~Workers(void)
 
   for (it = threads.begin(); it != threads.end(); ++it)
     it->state = ASK_TO_DIE;
-  usleep(1e6);
+  bunny_usleep(1e6);
   for (it = threads.begin(); it != threads.end(); )
     if (it->state != DEAD)
       {

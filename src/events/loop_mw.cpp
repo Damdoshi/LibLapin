@@ -346,7 +346,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
       if (gl_callback.netcom == NULL)
 	{
 	  if (delay > now - prev)
-	    usleep(delay - (now - prev));
+	    bunny_usleep(delay - (now - prev));
 	}
       else
 	network_event(delay - (now - prev), data);

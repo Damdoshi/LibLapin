@@ -9,9 +9,6 @@
 #ifndef				__LAPIN_PRIVATE_CONTEXT_H__
 # define			__LAPIN_PRIVATE_CONTEXT_H__
 # include			<SFML/Graphics.hpp>
-# ifdef				__WIN32
-#  pragma			packed
-# endif
 
 struct				bunny_splash_screen
 {

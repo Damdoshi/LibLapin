@@ -39,7 +39,7 @@ int			bunny_pclose(t_bunny_subprocess		*subproc,
 	  return (status);
 	}
       signal(SIGALRM, handler);
-      usleep(delay * 1e6);
+      bunny_usleep(delay * 1e6);
     }
   kill(subproc->pid, SIGINT);
   scream_log_if("%p subprocess, %d delay -> %d (Killed)", "unix", subproc, delay, 0);

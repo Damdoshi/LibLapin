@@ -116,7 +116,7 @@ int			main(void)
   bunny_delete_pool(elements);
   bunny_delete_threadpool(threadpool);
   bunny_stop(window);
-  usleep(1e6);
+  bunny_usleep(1e6);
   return (0);
 }
 

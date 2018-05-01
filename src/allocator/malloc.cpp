@@ -162,7 +162,7 @@ void			check_memory_state(void)
 #ifdef			__linux__
       kill(getpid(), SIGSEGV);
 #endif
-      usleep(2e6);
+      bunny_usleep(2e6);
       exit(EXIT_FAILURE);
     }
 }

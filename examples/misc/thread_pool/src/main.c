@@ -2,7 +2,7 @@
 ** Jason Brillante "Damdoshi"
 ** Hanged Bunny Studio 2014-2016
 **
-** 
+**
 */
 
 #include		<locale.h>
@@ -17,7 +17,7 @@ void			print_data(void		*data,
   const char		*str = (const char*)add;
 
   fprintf(stderr, "%s:%d\n", str, *n);
-  usleep(1e3);
+  bunny_usleep(1e3);
 }
 
 int			main(int		argc,
@@ -28,7 +28,7 @@ int			main(int		argc,
   t_bunny_threadpool	*pool;
   int			**collection;
   size_t		i, len;
-  
+
   if (argc != 2)
     {
       puts("Please preecise of many threads you wish to use.");
@@ -36,7 +36,7 @@ int			main(int		argc,
     }
 
   len = 4096;
-  
+
   if ((pool = bunny_new_threadpool(atoi(argv[1]))) == NULL)
     return (EXIT_FAILURE);
   if ((collection = bunny_malloc(len * sizeof(*collection))) == NULL)
@@ -67,4 +67,3 @@ int			main(int		argc,
   bunny_delete_threadpool(pool);
   return (EXIT_SUCCESS);
 }
-

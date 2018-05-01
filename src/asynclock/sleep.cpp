@@ -6,11 +6,6 @@
 #include		<time.h>
 #include		"lapin_private.h"
 
-unsigned long long	bunny_usleep(unsigned long long	delay)
-{
-  return (bunny_sleep(delay * 1e3));
-}
-
 t_bunny_time		bunny_sleep(t_bunny_time	delay)
 {
 #if			!( _WIN32 || __WIN32__ )
@@ -34,3 +29,7 @@ t_bunny_time		bunny_sleep(t_bunny_time	delay)
 #endif
 }
 
+unsigned long long	bunny_usleep(unsigned long long	delay)
+{
+  return (bunny_sleep(delay * 1e3));
+}
