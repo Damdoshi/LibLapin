@@ -36,6 +36,8 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
     - Add a minimal movement value to call joystick axis event, to improve
       support of analogic joystick, especially in menus.
     - Add a completed asynchronous computation request event.
+    - Add a C++ class to ease context integration in C++: the Bunny::Context
+      and the function SetContext
 
   * Edit graphic module
     - Add to bunny_load_picture and bunny_load_pixelarray the ability to load

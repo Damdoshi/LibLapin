@@ -6,7 +6,9 @@
 <div class="resume">
   <h3>Description</h3>
   $A Set all callbacks of bunny loop in a single call with function pointers
-  from $Scontext@.
+  from $Scontext@.<br />
+  <br />
+  A C++ version, Bunny::SetContext is available in the Context module.
 </div>
 <hr />
 

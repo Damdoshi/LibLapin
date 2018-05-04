@@ -157,5 +157,8 @@
 #  include			"lapin/cpp_guard_end.hpp"
 #  include			"lapin/cpp_tools.hpp"
 # endif
+# ifdef				__cplusplus
+#  include			"lapin/context/Context.hpp"
+# endif
 #endif	/*			__LAPIN_H__					*/
 
