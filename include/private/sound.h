@@ -18,6 +18,9 @@ enum				_music_or_sound
     EFFECT
   };
 
+# ifdef				__MINGW32__
+#  pragma			pack(1)
+# endif
 struct				bunny_sound
 {
   size_t			type;
@@ -68,6 +71,7 @@ struct				bunny_effect
   sf::Sound			sound;
   void				*sound_manager;
 };
+# pragma			pack()
 
 typedef struct			s_bunny_managed_sound
 {

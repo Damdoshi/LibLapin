@@ -7,9 +7,7 @@
 ## ----------------------------------------------------------------------------
 ## Configuration --------------------------------------------------------------
 
-  MOD		=	`pwd | rev | cut -d "/" -f3 | rev`
-
-  BIN		=	`pwd | rev | cut -d "/" -f1 | rev`
+  BIN		=	consistancy
   FLAG		=	-W -Wall -g -g3 -ggdb
 
   INCLUDE	=	-I./include/ -I../../include/

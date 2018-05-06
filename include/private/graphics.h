@@ -77,6 +77,9 @@ struct				bunny_window
   const char			*window_name;
 };
 
+# ifdef				__MINGW32__
+#  pragma			pack(1)
+# endif
 struct				bunny_picture
 {
   size_t			type;
@@ -219,6 +222,7 @@ struct				bunny_sprite
   double			current_time;
   bool				stop_repeat;
 };
+# pragma			pack()
 
 t_bunny_font			*__bunny_load_ttf(unsigned int		width,
 						  unsigned int		height,
