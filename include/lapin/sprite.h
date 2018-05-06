@@ -69,6 +69,9 @@ typedef struct		s_bunny_animation
 ** It contains an animation array and informations about which
 ** frame is currently being used to display.
 */
+# ifdef			__MINGW32__
+#  pragma		pack(1)
+# endif
 typedef struct		s_bunny_sprite
 {
   t_bunny_clipable	clipable;
@@ -82,6 +85,7 @@ typedef struct		s_bunny_sprite
   double		current_time;
   bool			stop_repeat;
 }			t_bunny_sprite;
+# pragma		pack()
 
 /*!
 ** bunny_load_sprite takes a configuration file as parameter.

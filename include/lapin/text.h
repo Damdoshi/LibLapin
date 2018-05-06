@@ -39,6 +39,9 @@ typedef enum			e_bunny_align
 ** halign and valign are useful to set the root of the text, horizontaly
 ** and verticaly.
 */
+# ifdef				__MINGW32__
+#  pragma			pack(1)
+# endif
 typedef struct			s_bunny_font
 {
   t_bunny_clipable		clipable;
@@ -55,6 +58,7 @@ typedef struct			s_bunny_font
   t_bunny_size  		glyph_size;
   t_bunny_size  		interglyph_space;
 }				t_bunny_font;
+# pragma			pack()
 
 t_bunny_font			*bunny_load_text(const char			*file);
 

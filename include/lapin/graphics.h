@@ -46,6 +46,9 @@
 ** it is WHITE (0xFFFFFFFF)
 **
 */
+# ifdef				__MINGW32__
+#  pragma			pack(1)
+# endif
 typedef struct			s_bunny_clipable
 {
   t_bunny_buffer		buffer;
@@ -92,6 +95,7 @@ typedef struct			s_bunny_pixelarray
   t_bunny_clipable		clipable;
   void * const			pixels;
 }				t_bunny_pixelarray;
+# pragma			pack()
 
 /*!
 ** The bunny_new_pixelarray creates a manual access picture. The t_bunny_pixelarray

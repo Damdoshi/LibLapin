@@ -23,6 +23,9 @@
 ** the file from which the sound was loaded or NULL if it was generated.
 ** It also contents private fields.
 */
+# ifdef				__MINGW32__
+#  pragma			pack(1)
+# endif
 typedef struct			s_bunny_sound
 {
   const char			_private[sizeof(size_t)];
@@ -65,6 +68,7 @@ typedef struct			s_bunny_effect
   const double			duration;
   int16_t * const		sample;
 }				t_bunny_effect;
+# pragma			pack()
 
 /*!
 ** The bunny_load_music function load a sound file and return a matching t_bunny_music.
