@@ -168,30 +168,19 @@ static int		to_qsort(const void			*a,
 
 #else
 
-void			qsort_s(void				*base,
-				size_t				num,
-				size_t				width,
-				int				(*x)
-				(void				*,
-				 const void			*,
-				 const void			*),
-				void				*context);
-
-static int		to_qsort(void				*param,
-				 const void			*a,
-				 const void			*b)
-{
-  struct qsort_packet	*pq = (struct qsort_packet*)param;
-
-  return (pq->cmp(*(void**)a, *(void**)b, pq->ptr));
-}
+void			bunny_shitty_sort(void			*data,
+					  size_t		nmemb,
+					  size_t		elmsiz,
+					  void			*param,
+					  t_bunny_comparator	cmp);
 
 #endif
 
 void			bunny_list_sort(t_bunny_list		*list,
-					int			(*cmp)(const void	*a,
-								       const void	*b,
-								       void		*param),
+					int			(*cmp)
+					(const void		*a,
+					 const void		*b,
+					 void			*param),
 					void			*param)
 {
   struct qsort_packet	packet;
@@ -204,9 +193,9 @@ void			bunny_list_sort(t_bunny_list		*list,
   packet.cmp = cmp;
   packet.ptr = param;
 #if			_WIN32 || __WIN32__
-  qsort_s(&array[0], bunny_list_size(list), sizeof(*array), to_qsort, &packet);
+  bunny_shitty_sort(*array, bunny_list_size(list), sizeof(*array), param, cmp);
 #else
-  qsort_r(&array[0], bunny_list_size(list), sizeof(*array), to_qsort, &packet);
+  qsort_r(*array, bunny_list_size(list), sizeof(*array), to_qsort, &packet);
 #endif
   for (node = bunny_list_begin(list), i = 0; node != NULL; node = bunny_list_next(node), ++i)
     node->data = (void*)array[i];

@@ -176,22 +176,35 @@ static int		to_qsort(const void			*a,
 }
 #else
 
-void			qsort_s(void				*base,
-				size_t				num,
-				size_t				width,
-				int				(*x)
-				(void				*,
-				 const void			*,
-				 const void			*),
-				void				*context);
-
-static int		to_qsort(void				*param,
-				 const void			*a,
-				 const void			*b)
+void			bunny_shitty_sort(void				*data,
+					  size_t			nmemb,
+					  size_t			elmsiz,
+					  void				*param,
+					  t_bunny_comparator		cmp)
 {
-  struct qsort_packet	*pq = (struct qsort_packet*)param;
+  char			*buffer = bunny_alloca(elmsiz);
+  char			*ptr;
+  bool			sorted;
+  size_t		i;
+  int			x;
 
-  return (pq->cmp(*(void**)a, *(void**)b, pq->ptr));
+  for (sorted = false; sorted == false; )
+    {
+      sorted = true;
+      for (i = 0; i < nmemb - 1; ++i)
+	{
+	  ptr = (char*)data;
+	  x = cmp(ptr + i * elmsiz, ptr + (i + 1) * elmsiz, param);
+	  if (x < 0)
+	    {
+	      memcpy(&buffer[0], ptr + i * elmsiz, elmsiz);
+	      memcpy(ptr + i * elmsiz, ptr + (i + 1) * elmsiz, elmsiz);
+	      memcpy(ptr + (i + 1) * elmsiz, &buffer[0], elmsiz);
+	      sorted = false;
+	    }
+	}
+    }
+  bunny_freea(buffer);
 }
 
 #endif
@@ -205,7 +218,7 @@ void			bunny_vector_sort(t_bunny_vector		*vec,
   packet.cmp = cmp;
   packet.ptr = param;
 #if			_WIN32 || __WIN32__
-  qsort_s((void*)vec->array, vec->nmemb, vec->elemsize, to_qsort, &packet);
+  bunny_shitty_sort((void*)vec->array, vec->nmemb, vec->elmsiz, param, cmp);
 #else
   qsort_r((void*)vec->array, vec->nmemb, vec->elemsize, to_qsort, &packet);
 #endif
