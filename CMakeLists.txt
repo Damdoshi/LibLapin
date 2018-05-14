@@ -53,7 +53,7 @@ endif()
 # Headers --------------------------------------------------------------------- #
 
 set(HEADER_DIR
-  ./include/ ./include/deps/
+  ./include/ ./include/deps/ ./extlibs/headers/
   )
 
 # Source ---------------------------------------------------------------------- #
@@ -69,7 +69,7 @@ file(
 file(
   GLOB_RECURSE
   LIBRARIES_HEADER
-  extlibs/headers/*
+  ./extlibs/headers/*
   )
 
 if (MSVC)
