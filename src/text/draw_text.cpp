@@ -232,12 +232,14 @@ void			_bunny_draw_text(t_bunny_font	*font)
       vpitch = font->glyph_size.y + font->interglyph_space.y;
       if (font->valign == BAL_TOP)
 	startpos.y = font->offset.y;
-      if (font->valign == BAL_MIDDLE)
+      else if (font->valign == BAL_MIDDLE)
 	startpos.y = (font->clipable.buffer.height - (lines + 1.5) * font->glyph_size.y) / 2
 	  + font->offset.y;
       else if (font->valign == BAL_BOTTOM)
 	startpos.y = font->clipable.buffer.height - (lines + 1) * font->glyph_size.y
 	  + font->offset.y;
+      else
+	startpos.y = 0; // Never happen
 
       iterat.y = startpos.y;
     }
@@ -269,6 +271,8 @@ void			_bunny_draw_text(t_bunny_font	*font)
 	    startpos.x = (font->clipable.buffer.width - space) / 2 + font->offset.x;
 	  else if (font->halign == BAL_RIGHT)
 	    startpos.x = font->clipable.buffer.width - space + font->offset.x;
+	  else
+	    startpos.x = 0; // Never happen
 	}
 
       iterat.x = startpos.x;

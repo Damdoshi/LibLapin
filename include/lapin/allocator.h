@@ -125,4 +125,4 @@ void				bunny_malloc_failure(bool			f);
 #  define			bunny_free(a)					free(a)
 # endif
 
-#endif	/*		__LAPIN_ALLOCATOR_H__	*/
+#endif	/*			__LAPIN_ALLOCATOR_H__	*/

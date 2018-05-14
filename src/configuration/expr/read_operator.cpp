@@ -20,6 +20,8 @@ static int		get_operator_priority(const char	*code,
 
   family = -1;
   longest = 0;
+  optor = 0;
+  format = 0;
   for (i = 0; i < NBRCELL
 	 (Expression::OperatorToken);
        ++i)
