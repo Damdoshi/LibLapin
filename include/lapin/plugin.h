@@ -1,4 +1,4 @@
-/*
+o/*
 ** Jason Brillante "Damdoshi"
 ** Hanged Bunny Studio 2014-2016
 **
@@ -66,11 +66,7 @@ typedef struct			s_bunny_prototype
   const void *			function_ptr;
   t_bunny_value_type		return_value;
   size_t			nbrparam;
-# ifndef			__ANSI__
-  t_bunny_value_type		parameters[0];
-# else
-  t_bunny_value_type		parameters[1];
-# endif
+  t_bunny_value_type		parameters[__ZERO_LENGTH__];
 }				t_bunny_prototype;
 
 /*!
@@ -96,11 +92,7 @@ typedef struct			s_bunny_plugin
   const char * const		name;
   const void * const		library_handler;
   const size_t			nbr_functions;
-# ifndef			__ANSI__
-  const t_bunny_prototype	prototypes[0];
-# else
-  const t_bunny_prototype	prototypes[1];
-# endif
+  const t_bunny_prototype	prototypes[__ZERO_LENGTH__];
 }				t_bunny_plugin;
 
 /*!

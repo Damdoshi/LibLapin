@@ -623,11 +623,7 @@ typedef struct			s_bunny_vertex
 typedef struct			s_bunny_vertex_array
 {
   size_t			length;
-# ifndef			__ANSI__
-  t_bunny_vertex  		vertex[0];
-# else
-  t_bunny_vertex		vertex[1];
-# endif
+  t_bunny_vertex  		vertex[__ZERO_LENGTH__];
 }				t_bunny_vertex_array;
 
 /*!

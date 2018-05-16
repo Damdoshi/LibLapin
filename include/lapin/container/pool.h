@@ -30,11 +30,7 @@ typedef struct			s_bunny_pool
   const size_t			nmemb;
   const size_t			elemsize;
   const size_t			nbr_occupied;
-#ifndef				__ANSI__
-  void * const			data[0];
-#else
-  void * const			data[1];
-#endif
+  void * const			data[__ZERO_LENGTH__];
 }				t_bunny_pool;
 
 /*!

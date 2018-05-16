@@ -62,11 +62,7 @@ t_bunny_ciphering		bunny_get_ciphering(const char		*name);
 typedef struct			s_bunny_cipher_key
 {
   int32_t			length;
-# ifndef			__ANSI__
-  char				key[0];
-# else
-  char				key[1];
-# endif
+  char				key[__ZERO_LENGTH__];
 }				t_bunny_cipher_key;
 
 /*!

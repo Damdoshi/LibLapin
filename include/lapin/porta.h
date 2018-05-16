@@ -14,5 +14,10 @@
 # ifdef				__APPLE__
 #  include			<sys/_types/_ssize_t.h>
 # endif
+# if				defined(__ANSI__) || !defined(__GNUC__)
+#  define			__ZERO_LENGTH__			1
+# else
+#  define			__ZERO_LENGTH__			0
+# endif
 #endif	/*			__LAPIN_PORTA_H__		*/
 
