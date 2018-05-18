@@ -1,0 +1,19 @@
+
+ Les cercles co-centrique de la LibLapin sont des sous sets de la LibLapin.
+ Le premier cercle, le plus petit, contient un ensemble de fonctionnalités
+ extremement simple permettant aux plus débutants d'utiliser la LibLapin
+ et de parcourir la documentation sans pollution excessive.
+
+ Chaque nouveau cercle, plus grand que le precedent, contient les precedents
+ en y ajoutant son contenu propre: ainsi, on peut ajouter aux connaissances
+ acquises de ceux qui utilisaient les fonctions du cercle co-centrique
+ precedent de nouvelles.
+
+ Les cercles co-centriques de la LibLapin doivent être modelisées sur
+ le site de la documentation afin de limiter l'accès à certaines
+ fonctions en accord avec le niveau du visiteur. L'idée étant qu'aucun
+ système vaste, même composés d'elements très simples ne peut etre
+ compris sans difficulté: a la manière d'un circuit electronique, il
+ faut partir d'un sous ensemble et considerer l'integralité au fur et
+ a mesure.
+
