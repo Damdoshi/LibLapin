@@ -21,6 +21,9 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
     - Add bunny_allocator_reset to restart completly the allocator and invalidate
       all pointers.
 
+  * Edit window module
+    - Add bunny_vertical_sync function to enable or disable vsync.
+
   * Add error module
     - Bring the t_bunny_error type that complete errno error codes.
       **Compatibility break!** as t_bunny_error was used by the network module.

@@ -167,4 +167,7 @@ void				bunny_move_window(t_bunny_window		*win,
 void				bunny_resize_window(t_bunny_window		*win,
 						    t_bunny_size		siz);
 
+void				bunny_vertical_sync(t_bunny_window		*win,
+						    bool			enabled);
+
 #endif	/*			__LAPIN_WINDOW_H__		*/

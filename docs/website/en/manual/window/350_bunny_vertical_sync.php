@@ -1,14 +1,15 @@
 <div class="prototype">
-  $Tvoid@ $Sbunny_resize_window@(
+  $Tvoid@ $Sbunny_vertical_sync@(
   $Tt_bunny_window@ *$Swindow@
-  $Tt_bunny_size@ $Ssize@
+  $Tbool@ $Senabled@
   );
 </div>
 <hr />
 
 <div class="resume">
   <h3>Description</h3>
-  $A Resize the sent window to match the sent size.
+  $A Enable or disable vertical synchronization with screen refresh.
+  Disabled by default.
 </div>
 <hr />
 
@@ -16,11 +17,11 @@
   <h3>Parameters</h3>
   <ul>
     <li>
-      $Tt_bunny_window@ *$Swindow@:<br />
+      $Tt_bunny_window@ *$Swindow:<br />
       $A The window you want to resize.
     </li>
     <li>
-      $Tt_bunny_size@ $Ssize@:<br />
+      $Tbool@ $Senabled@:<br />
       $A The new size of the sent window.
     </li>
   </ul>
