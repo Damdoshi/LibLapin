@@ -37,7 +37,7 @@ t_bunny_response	loop(void		*un)
   (void)un;
   if (worknbr == 0)
     for (worknbr = 0; worknbr < 6; ++worknbr)
-      assert(bunny_async_computation_push(workf, (void*)worknbr, un));
+      assert(bunny_async_computation_push(workf, (void*)worknbr));
   printf("--------\n");
   return (GO_ON);
 }
