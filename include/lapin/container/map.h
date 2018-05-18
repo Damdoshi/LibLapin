@@ -70,6 +70,11 @@ t_bunny_map			*bunny_new_map(t_bunny_map_cmp		cmp,
 */
 size_t				bunny_delete_map(t_bunny_map		*map);
 
+/*
+**
+*/
+size_t				bunny_map_clear(t_bunny_map		*map);
+
 /*!
 ** Get how many elements there is in the map.
 ** \param map The map to get the length

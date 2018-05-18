@@ -6,20 +6,6 @@
 #include		<stdlib.h>
 #include		"lapin_private.h"
 
-struct			bunny_map
-{
-  void			*data;
-  void			*key;
-  size_t		nbr_children;
-  struct bunny_map	*up;
-  struct bunny_map	*right;
-  struct bunny_map	*left;
-  t_bunny_map_cmp	cmp;
-  t_bunny_map_dup	dup;
-  t_bunny_map_del	del;
-  void			*param;
-};
-
 #define			PATTERN		"%p cmp_func, %p dup_func, %p del_func, %p parameter -> %p"
 
 t_bunny_map		*bunny_new_map(t_bunny_map_cmp		cmp,
@@ -68,6 +54,19 @@ size_t			bunny_delete_map(t_bunny_map		*_map)
     map->del(map->key, map->param);
   bunny_free(map);
   scream_log_if("%p -> %zu", "container", _map, n);
+  return (n);
+}
+
+size_t			bunny_map_clear(t_bunny_map		*_map)
+{
+  struct bunny_map	*map = (struct bunny_map*)_map;
+  size_t		n = map->nbr_children;
+
+  if (map->right)
+    bunny_delete_map((t_bunny_map*)map->right);
+  if (map->left)
+    bunny_delete_map((t_bunny_map*)map->left);
+  map->nbr_children = 0;
   return (n);
 }
 

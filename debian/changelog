@@ -128,6 +128,7 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
     - Remove the const specifier for the additionnal parameter of fast foreach.
     - Send the entire node when using foreach insteda of the value only, so the key
       is also available.
+    - Add a clear function to clear the sent node.
 
   * Edit thread module
     - Remove the const specifier in threa_foreach and thread_push for the additional
