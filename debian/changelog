@@ -47,6 +47,12 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
     - Migrate gl_bunny_my_set_circle and t_bunny_my_set_circle to
       gl_bunny_my_set_disk and t_bunny_my_set_disk. **Compatibility break!**
 
+  * Add history module
+    - The history module is useful to snapshot structures and associate
+      them with a specific time index. It may be especially useful when
+      you need to implement a cancel/redo mechanism or chronology revision
+      (lag compensation) on online games.
+
   * Edit text module
     - Add to bunny_load_font (and add bunny_load_text) the ability to load
       configuration file presetting fields of their returned structure.

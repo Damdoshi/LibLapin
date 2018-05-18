@@ -136,6 +136,7 @@
 # include			"lapin/sprite.h"
 # include			"lapin/tilemap.h"
 
+# include			"lapin/history.h"
 # include			"lapin/monitor.h"
 # include			"lapin/misc.h"
 

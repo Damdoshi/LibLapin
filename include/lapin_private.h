@@ -27,5 +27,6 @@
 # include			"private/manager.h"
 # include			"private/monitor.h"
 # include			"private/context.h"
+# include			"private/history.h"
 
 #endif	/*			__LAPIN_PRIVATE_H__	*/
