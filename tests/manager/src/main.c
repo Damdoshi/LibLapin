@@ -9,12 +9,16 @@
 #include		<stdio.h>
 #include		<lapin.h>
 
-int			main(void)
+int			main(int	argc,
+			     char	**argv)
 {
   t_bunny_picture	*pic[200];
   t_bunny_effect	*eff[200];
   void			*fil[200];
   size_t		i;
+
+  if (argc == 2 && argv[1][0] == 'd')
+    bunny_set_ressource_management(false);
 
   printf("LOADING ---------------------------------------------\n");
   for (i = 0; i < 200; ++i)
