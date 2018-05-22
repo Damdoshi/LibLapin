@@ -26,5 +26,7 @@ typedef bool			(*t_bunny_destructor)(void		*data);
 # include			"container/pool.h"
 # include			"container/bitfield.h"
 
+void				bunny_foreach_map_bunny_free(t_bunny_map *nod,
+							     void	*d);
 
 #endif	/*			__LAPIN_CONTAINER_H__			*/
