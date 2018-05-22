@@ -28,7 +28,8 @@ t_bunny_font			*__bunny_load_gfx(unsigned int		width,
     goto DeleteTexture;
 
   hash = bunny_hash(BH_FNV, file, strlen(file));
-  if ((gfx->gfx = (t_bunny_picture*)RessourceManager.TryGet(ResManager::BUNNY_PICTURE, hash)) == NULL)
+  if (RessourceManager.disable_manager ||
+      (gfx->gfx = (t_bunny_picture*)RessourceManager.TryGet(ResManager::BUNNY_PICTURE, hash)) == NULL)
     {
       if ((gfx->gfx = bunny_load_picture(file)) == NULL)
 	{
@@ -36,6 +37,9 @@ t_bunny_font			*__bunny_load_gfx(unsigned int		width,
 	  goto DeleteTexture;
 	}
     }
+
+  if (RessourceManager.disable_manager == false)
+    RessourceManager.AddToPool(ResManager::BUNNY_PICTURE, file, hash, gfx, gfx->gfx);
 
   gfx->res_id = hash;
   gfx->texture->clear(sf::Color(0, 0, 0, 0));

@@ -25,6 +25,7 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
   hash = bunny_hash(BH_FNV, file, strlen(file));
 
   /*
+***** READ EFFECT IS NOT IMPLEMENTED
   if (gl_bunny_ressource_ciphering)
     {
       void		*data;
@@ -43,7 +44,8 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
 
   if ((eff = new (std::nothrow) struct bunny_effect) == NULL)
     goto Fail;
-  if ((eff->effect = (sf::SoundBuffer*)RessourceManager.TryGet(ResManager::SF_SOUNDBUFFER, hash)) == NULL)
+  if (RessourceManager.disable_manager ||
+      (eff->effect = (sf::SoundBuffer*)RessourceManager.TryGet(ResManager::SF_SOUNDBUFFER, hash)) == NULL)
     {
       if ((eff->effect = new (std::nothrow) sf::SoundBuffer) == NULL)
 	goto FailStruct;
@@ -57,8 +59,11 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
   else
     eff->sample = (int16_t*)RessourceManager.TryGet(ResManager::BUNNY_SAMPLE, hash);
 
-  RessourceManager.AddToPool(ResManager::SF_SOUNDBUFFER, hash, eff, eff->effect);
-  RessourceManager.AddToPool(ResManager::BUNNY_SAMPLE, hash, eff, eff->sample);
+  if (RessourceManager.disable_manager == false)
+    {
+      RessourceManager.AddToPool(ResManager::SF_SOUNDBUFFER, file, hash, eff, eff->effect);
+      RessourceManager.AddToPool(ResManager::BUNNY_SAMPLE, file, hash, eff, eff->sample);
+    }
 
   eff->res_id = hash;
 

@@ -12,7 +12,8 @@ void			bunny_delete_file(void		*data,
 
   if (file)
     hash = bunny_hash(BH_FNV, file, strlen(file));
-  if (!file || RessourceManager.NbrLoad(ResManager::LOADED_FILE, hash) == 0)
+  if (RessourceManager.disable_manager ||
+      !file || RessourceManager.NbrLoad(ResManager::LOADED_FILE, hash) == 0)
     {
       bunny_free(data);
       return ;

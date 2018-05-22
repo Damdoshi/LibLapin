@@ -30,7 +30,8 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
     goto DeleteTexture;
 
   hash = bunny_hash(BH_FNV, file, strlen(file));
-  if ((ttf->font = (sf::Font*)RessourceManager.TryGet(ResManager::SF_FONT, hash)) == NULL)
+  if (RessourceManager.disable_manager ||
+      (ttf->font = (sf::Font*)RessourceManager.TryGet(ResManager::SF_FONT, hash)) == NULL)
     {
       if ((ttf->font = new (std::nothrow) sf::Font) == NULL)
 	goto DeleteTexture;
@@ -40,6 +41,9 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
 	  goto DeleteFont;
 	}
     }
+
+  if (RessourceManager.disable_manager == false)
+    RessourceManager.AddToPool(ResManager::SF_FONT, file, hash, ttf, ttf->font);
 
   ttf->res_id = hash;
   ttf->texture->clear(sf::Color(0, 0, 0, 0));

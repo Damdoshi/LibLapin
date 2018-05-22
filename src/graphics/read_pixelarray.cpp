@@ -19,7 +19,8 @@ t_bunny_pixelarray	*bunny_read_pixelarray_id(const void		*buf,
     goto ReturnNull;
   if ((pa->sprite = new (std::nothrow) sf::Sprite) == NULL)
     goto DeleteStructure;
-  if (file == NULL ||
+  if (RessourceManager.disable_manager ||
+      file == NULL ||
       (pa->tex = (sf::Texture*)RessourceManager.TryGet(ResManager::SF_TEXTURE, hash)) == NULL)
     {
       if ((pa->tex = new (std::nothrow) sf::Texture) == NULL)
@@ -47,9 +48,12 @@ t_bunny_pixelarray	*bunny_read_pixelarray_id(const void		*buf,
       pa->rawpixels = (unsigned int*)RessourceManager.TryGet(ResManager::BUNNY_PIXELS, hash);
     }
 
-  RessourceManager.AddToPool(ResManager::SF_IMAGE, hash, pa, pa->image);
-  RessourceManager.AddToPool(ResManager::SF_TEXTURE, hash, pa, pa->tex);
-  RessourceManager.AddToPool(ResManager::BUNNY_PIXELS, hash, pa, pa->rawpixels);
+  if (RessourceManager.disable_manager == false)
+    {
+      RessourceManager.AddToPool(ResManager::SF_IMAGE, file, hash, pa, pa->image);
+      RessourceManager.AddToPool(ResManager::SF_TEXTURE, file, hash, pa, pa->tex);
+      RessourceManager.AddToPool(ResManager::BUNNY_PIXELS, file, hash, pa, pa->rawpixels);
+    }
 
   pa->res_id = hash;
   pa->sprite->setTexture(*pa->tex);

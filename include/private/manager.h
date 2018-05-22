@@ -46,6 +46,7 @@ public:
       >, LAST_TYPE>		 ressources;
 
   void				*AddToPool(Type			typ,
+					   const char		*file,
 					   uint64_t		id,
 					   void			*t_bunny_thing,
 					   void			*sf_thing)
@@ -55,8 +56,13 @@ public:
     try
       {
 	res = &ressources[typ][id];
-	if (!res->real_ressource) // Supposed to be the same, still...
-	  res->real_ressource = sf_thing;
+	if (!res->real_ressource)
+	  {
+	    res->real_ressource = sf_thing;
+	    scream_log_if("%s %s:%lu - *Real* loading", "manager", TypeName[typ].c_str(), file, id);
+	  }
+	else
+	  scream_log_if("%s %s:%lu - Shallow loading", "manager", TypeName[typ].c_str(), file, id);
 	res->user_side_ressource.insert(t_bunny_thing);
       }
     catch (...)

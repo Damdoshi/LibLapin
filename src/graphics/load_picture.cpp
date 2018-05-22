@@ -44,7 +44,8 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
     goto ReturnNull;
   if ((pic->sprite = new (std::nothrow) sf::Sprite) == NULL)
     goto DeleteStructure;
-  if ((pic->texture = (sf::RenderTexture*)
+  if (RessourceManager.disable_manager ||
+      (pic->texture = (sf::RenderTexture*)
        RessourceManager.TryGet(ResManager::SF_RENDERTEXTURE, hash)) == NULL)
     {
       // We use a temporary texture because RenderTexture cannot load files.
@@ -62,7 +63,8 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
       pic->texture->display();
     }
 
-  RessourceManager.AddToPool(ResManager::SF_RENDERTEXTURE, hash, pic, pic->texture);
+  if (RessourceManager.disable_manager == false)
+    RessourceManager.AddToPool(ResManager::SF_RENDERTEXTURE, file, hash, pic, pic->texture);
 
   pic->res_id = hash;
   pic->tex = &pic->texture->getTexture();

@@ -29,7 +29,8 @@ t_bunny_sprite		*bunny_load_sprite(const char		*file)
        file, (void*)NULL);
 
   hash = bunny_hash(BH_FNV, res, strlen(res));
-  if ((sprite->texture = (sf::RenderTexture*)
+  if (RessourceManager.disable_manager ||
+      (sprite->texture = (sf::RenderTexture*)
        RessourceManager.TryGet(ResManager::SF_RENDERTEXTURE, hash)) == NULL)
     {
       if (txt.loadFromFile(res) == false)
@@ -49,8 +50,9 @@ t_bunny_sprite		*bunny_load_sprite(const char		*file)
       sprite->texture->display();
     }
 
-  RessourceManager.AddToPool
-    (ResManager::SF_RENDERTEXTURE, hash, sprite, sprite->texture);
+  if (RessourceManager.disable_manager == false)
+    RessourceManager.AddToPool
+      (ResManager::SF_RENDERTEXTURE, file, hash, sprite, sprite->texture);
 
   sprite->res_id = hash;
 

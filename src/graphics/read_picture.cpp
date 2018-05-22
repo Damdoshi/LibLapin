@@ -21,7 +21,8 @@ t_bunny_picture		*bunny_read_picture_id(const void	*_pic,
     goto ReturnNull;
   if ((pic->sprite = new (std::nothrow) sf::Sprite) == NULL)
     goto DeleteStructure;
-  if (file == NULL ||
+  if (RessourceManager.disable_manager ||
+      file == NULL ||
       (pic->texture = (sf::RenderTexture*)
        RessourceManager.TryGet(ResManager::SF_RENDERTEXTURE, hash)) == NULL)
     {
@@ -40,7 +41,8 @@ t_bunny_picture		*bunny_read_picture_id(const void	*_pic,
       pic->texture->display();
     }
 
-  RessourceManager.AddToPool(ResManager::SF_RENDERTEXTURE, hash, pic, pic->texture);
+  if (RessourceManager.disable_manager == false)
+    RessourceManager.AddToPool(ResManager::SF_RENDERTEXTURE, file, hash, pic, pic->texture);
 
   pic->res_id = hash;
   pic->tex = &pic->texture->getTexture();

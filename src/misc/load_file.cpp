@@ -19,7 +19,8 @@ ssize_t			bunny_load_file(const char		*file,
   int			sk, sz;
 
   hash = bunny_hash(BH_FNV, file, strlen(file));
-  if ((buf = (char*)RessourceManager.TryGet(ResManager::LOADED_FILE, hash)) != NULL)
+  if (RessourceManager.disable_manager == false &&
+      (buf = (char*)RessourceManager.TryGet(ResManager::LOADED_FILE, hash)) != NULL)
     sk = (size_t)RessourceManager.TryGet(ResManager::SIZE_LOADED_FILE, hash);
   else
     {
@@ -40,16 +41,19 @@ ssize_t			bunny_load_file(const char		*file,
   if (size)
     *size = sk;
   *data = buf;
-  RessourceManager.AddToPool
-    (ResManager::LOADED_FILE,
-     hash,
-     (void*)RessourceManager.NbrLoad(ResManager::LOADED_FILE, hash),
-     *data);
-  RessourceManager.AddToPool
-    (ResManager::SIZE_LOADED_FILE,
-     hash,
-     (void*)RessourceManager.NbrLoad(ResManager::SIZE_LOADED_FILE, hash),
-     (void*)(size_t)sk);
+  if (RessourceManager.disable_manager == false)
+    {
+      RessourceManager.AddToPool
+	(ResManager::LOADED_FILE, file,
+	 hash,
+	 (void*)RessourceManager.NbrLoad(ResManager::LOADED_FILE, hash),
+	 *data);
+      RessourceManager.AddToPool
+	(ResManager::SIZE_LOADED_FILE, file,
+	 hash,
+	 (void*)RessourceManager.NbrLoad(ResManager::SIZE_LOADED_FILE, hash),
+	 (void*)(size_t)sk);
+    }
   scream_log_if(PATTERN, "ressource,file", file, data, size, (ssize_t)sk);
   return (sk);
 
