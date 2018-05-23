@@ -39,6 +39,14 @@ if (file_exists("$language/$doctype/$mod/main.php"))
 <ul class="doc_entry index">
   <?php
   $entries = [];
+
+  if (file_exists("$language/$doctype/$mod/meta.php"))
+    require_once ("$language/$doctype/$mod/meta.php");
+  if (!isset($circle_level))
+    $circle_level = [];
+  if (!isset($meta))
+    $meta = "";
+
   foreach (scandir("$language/$doctype/$mod/") as $dir)
   {
     if ($dir[0] != "."
@@ -49,11 +57,15 @@ if (file_exists("$language/$doctype/$mod/main.php"))
         && strstr($dir, ".php") != false)
     {
       $dirx = skip_int_label($dir);
-      $entries[] = [
-        'file' => $dir,
-        'label' => ($label = str_replace(".php", "", $dirx)),
-        'title' => $label
-      ];
+      $label = str_replace(".php", "", $dirx);
+      if (!isset($circle_level[$label]) || $circle_level[$label] <= $circle)
+      {
+        $entries[] = [
+          'file' => $dir,
+          'label' => $label,
+          'title' => $label
+        ];
+      }
     }
   }
   $i = 0;

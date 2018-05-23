@@ -7,9 +7,9 @@
 
 <div class="resume">
   <h3>Description</h3>
-  $A Switch to readwrite mode or create mode. While being in create mode,
+  $A Switch to read/write mode or to read/write/create mode. While being in create mode,
   nodes are automatically generated when accessed. While being in
-  readwrite mode, values can only be read or written, but nodes cannot be
+  read/write mode, values can only be read or written, but nodes cannot be
   created.
 </div>
 <hr />

@@ -45,12 +45,15 @@ foreach (scandir("$language/$doctype/") as $dir)
   $mod = $dir;
   if (file_exists("$language/$doctype/$dir/meta.php"))
     require_once ("$language/$doctype/$dir/meta.php");
-  else
+  if (!isset($circle_level))
+    $circle_level = [];
+  if (!isset($meta))
     $meta = "";
+
   if ($mod[0] != "." && strstr($mod, ".php") == false)
   {
 ?>
-  <li id="<?=$mod; ?>_list" class="button prime_list_item <?=$i++ % 2 ? 'altbutton' : ''; ?>">
+  <li id="<?=$mod; ?>_list" class="button prime_list_item <?=$i % 2 ? 'altbutton' : ''; ?>">
     <div class="prime_list_item">
       <a onClick="roll_unroll('<?=$mod; ?>');">
         <img id="<?=$mod; ?>_arrow" src="res/arrow_right.png" />
@@ -69,14 +72,19 @@ foreach (scandir("$language/$doctype/") as $dir)
           && $sym != "main.php"
           && $sym != "meta.php"
           && strstr($sym, ".php") != false
-          && $sym[strlen($sym) - 1] != "~")
+          && $sym[strlen($sym) - 1] != "~"
+      )
       {
         $sym = str_replace(".php", "", $sym);
-        $entries[] = skip_int_label($sym);
+        $label = skip_int_label($sym);
+        if (!isset($circle_level[$label]) || $circle_level[$label] <= $circle)
+          $entries[] = $label;
       }
     }
+    $inside = 0;
     foreach ($entries as $sym)
     {
+      $inside += 1;
     ?>
       <script language="javascript">
        symbols["<?=$sym; ?>"] = "<?=base64_encode($sym); ?>";
@@ -88,6 +96,8 @@ foreach (scandir("$language/$doctype/") as $dir)
       </li>
     <?php
     }
+    if ($inside > 0)
+      $i += 1;
     ?>
     </ul>
   </li>

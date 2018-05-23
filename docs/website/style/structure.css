@@ -14,6 +14,25 @@
     height: 100%;
     opacity: 1.0;
     z-index: 99;
+    text-align: center;
+}
+
+#Cover p
+{
+    background-color: rgba(255, 255, 255, 0.9);
+    position: fixed;
+    top: 67%;
+    font-size: xx-large;
+    font-weight: bold;
+    width: 100%;
+}
+
+#Cover input
+{
+    width: 400px;
+    height: 50px;
+    font-size: xx-large;
+    font-weight: bold;
 }
 
 .HeaderOverlay
@@ -99,7 +118,7 @@ footer .style
     padding-left: 20px;
 }
 
-footer .style select
+footer .style select, footer .style label
 {
     font-size: 16px;
     width: 150px;

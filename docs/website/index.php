@@ -33,6 +33,17 @@ else if (!isset($_COOKIE['ads'])
 else
   $ads = $_COOKIE['ads'];
 
+// Learning circle
+if (isset($_POST['circle']))
+{
+  $circle = (int)$_POST['circle'];
+  setcookie("circle", $circle, time() + 60 * 60 * 24 * 365);
+}
+else if (!isset($_COOKIE['circle']))
+  $circle = 50;
+else
+  $circle = (int)$_COOKIE['circle'];
+
 // Theme
 if (isset($_POST['theme'])
     && filter_chars($_POST['theme'], "abcdefghijklmnopqrstuvwxyz_"))
@@ -47,6 +58,9 @@ else
   $theme = $_COOKIE['theme'];
 if (file_exists("./style/$theme.css") == false)
   $theme = "theme_granit";
+
+if (!isset($_COOKIE["first_visit"]))
+  setcookie("first_visit", "1", time() + 60 * 60 * 24 * 365);
 
 ?>
 <!DOCTYPE html>
@@ -65,7 +79,7 @@ if (file_exists("./style/$theme.css") == false)
 ---- Jason Brillante "Damdoshi"
 ----   Hanged Bunny Studio 2014-<?=date("Y", time()); ?>
 
-----     La  Caverne  Aux  Lapins  Noirs
+----     La  Caverne  Aux  Lapins  Noirs - LibLapin
 --->
 
 <html>
@@ -91,12 +105,24 @@ if (file_exists("./style/$theme.css") == false)
     }
     ?>
   </head>
+  <?php if (isset($_COOKIE["first_visit"])) { ?>
   <body onLoad="Reveal('Cover');">
     <div id="Cover">
+  <?php } else { ?>
+  <body>
+    <div id="Cover" onClick="Reveal('Cover');">
+  <?php } ?>
       <img src="res/coverlogo.png" alt="..." id="LoadingLogo" />
       <script type="text/javascript">
        LogoDance('Cover', 'LoadingLogo');
       </script>
+      <?php
+      // First visit
+      if (!isset($_COOKIE["first_visit"]))
+      {
+        echo "<p><br />$FirstVisitMessage<br /><br /></p>";
+      }
+      ?>
     </div>
 
     <header>
@@ -177,8 +203,30 @@ if (file_exists("./style/$theme.css") == false)
           <option value="no_ads" <?=$ads == "no_ads" ? "selected" : ""; ?>>No ads</option>
         </select>
       </form>
+      <form method="post" class="style">
+        <label for="circle">
+          <?=$UserLevel; ?>
+        </label>
+        <select name="circle" onChange="this.form.submit();">
+          <?php
+          $rings = [
+            00 => "Beginner's manual",
+            10 => "Rookie's manual",
+            20 => "Intermediate's manual",
+            30 => "Skillful's manual",
+            40 => "Expert's manual",
+            50 => "Full manual",
+          ];
+          foreach ($rings as $k => $v) {
+          ?>
+            <option value="<?=$k; ?>" <?=$k == $circle ? "selected" : ""; ?>>
+              <?=$LevelRing[$v]; ?>
+            </option>
+          <?php } ?>
+        </select>
+      </form>
 
-      Hanged Bunny Studio 2014-2018
+      Hanged Bunny Studio 2014-<?=date("Y"); ?>
 
       <a href="index.php?lan=fr">
         <div class="language">

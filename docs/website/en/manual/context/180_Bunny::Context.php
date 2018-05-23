@@ -1,5 +1,5 @@
 <div class="prototype">
-  $Kclass $CBunny@::$SContext@;<$TT@>
+  $Kclass $CBunny@::$SContext@<$TT@>;
 </div>
 <hr />
 
@@ -92,7 +92,7 @@
 <div class="related_functions">
   <h3>Related functions</h3>
   <ul>
-    <li>Bunny::Context</li>
+    <li>Bunny::SetContext</li>
   </ul>
 </div>
 

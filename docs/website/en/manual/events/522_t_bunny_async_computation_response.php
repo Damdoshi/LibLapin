@@ -1,6 +1,6 @@
-k<div class="prototype">
-  $Ktypedef@ $Tvoid@ (*$Tt_bunny_leaving_context@)(
-  $Tt_bunny_response@ $Sreturned@,
+<div class="prototype">
+  $Ktypedef@ $Tvoid@ (*$Tt_bunny_async_computation_response@)(
+  $Tvoid@ *$Scomputed@,
   $Tvoid@ *$Sdata@
   );
 </div>
@@ -8,7 +8,7 @@ k<div class="prototype">
 
 <div class="resume">
   <h3>Description</h3>
-  $A The type of function called when bunny_loop or bunny_loop_mw is exited.
+  $A The type of function called when an asynchronous computation requested is terminated.
 </div>
 <hr />
 
@@ -16,8 +16,8 @@ k<div class="prototype">
   <h3>Parameters</h3>
   <ul>
     <li>
-      $Tt_bunny_response@ $Sreturned@:<br />
-      $A The value that will be returned by bunny_loop or bunny_loop_mw.
+      $Tvoid@ *$Scomputed@:<br />
+      $A The result of the asynchronous operation.
     </li>
     <li>
       $Tvoid@ *$Sdata@:<br />
@@ -29,7 +29,8 @@ k<div class="prototype">
 <div class="related_functions">
   <h3>Related functions</h3>
   <ul>
-    <li>bunny_set_leaving_context_response</li>
+    <li>bunny_set_async_computation_response</li>
+    <li>bunny_set_async_computation</li>
   </ul>
 </div>
 
