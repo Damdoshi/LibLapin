@@ -8,6 +8,20 @@
 
 #define			PATTERN		"%p cmp_func, %p dup_func, %p del_func, %p parameter -> %p"
 
+struct                 bunny_map
+{
+  void                 *data;
+  void                 *key;
+  size_t               nbr_children;
+  struct bunny_map     *up;
+  struct bunny_map     *right;
+  struct bunny_map     *left;
+  t_bunny_map_cmp      cmp;
+  t_bunny_map_dup      dup;
+  t_bunny_map_del      del;
+  void                 *param;
+};
+
 t_bunny_map		*bunny_new_map(t_bunny_map_cmp		cmp,
 				       t_bunny_map_dup		dup,
 				       t_bunny_map_del		del,
