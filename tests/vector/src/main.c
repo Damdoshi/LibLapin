@@ -45,7 +45,7 @@ static void		test(void)
   for (i = 0; i < bunny_vector_size(vector); ++i)
     bunny_vector_data(vector, i, size_t) = i * i;
 
-  assert(vector = bunny_vector_resize(vector, 100));
+  assert(vector = bunny_vector_resize(vector, 100, NULL));
 
   for (i = 0; i < 50; ++i)
     assert(bunny_vector_data(vector, i, size_t) == i * i);
@@ -60,7 +60,7 @@ static void		test(void)
   for (i = 0; i < bunny_vector_size(vector) - 1; ++i)
     assert(bunny_vector_data(vector, i, size_t) <= bunny_vector_data(vector, i + 1, size_t));
 
-  assert(vector = bunny_vector_resize(vector, 50));
+  assert(vector = bunny_vector_resize(vector, 50, NULL));
   assert(vector = bunny_vector_crop(vector));
 
   assert(list = bunny_vector_untie(vector));
