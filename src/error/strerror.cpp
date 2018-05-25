@@ -17,7 +17,8 @@ static const char	*bunny_errors[LAST_ERROR - BE_CANT_GENERATE_RESSOURCE] =
     "No embedded key found. The program was not made with LibLapin or its key is already prepared.",
     "No display device specified in environment",
     "A function described in the plugin table cannot be found.",
-    "Too many parameters for a bunny plugin function. Maximum is 4."
+    "Too many parameters for a bunny plugin function. Maximum is 4.",
+    "Something in the current context or environment is missing."
   };
 
 const char		*bunny_strerror(int		errorid)

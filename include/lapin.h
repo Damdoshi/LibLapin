@@ -134,6 +134,7 @@
 # include			"lapin/context.h"
 
 # include			"lapin/sprite.h"
+# include			"lapin/sound_sprite.h"
 # include			"lapin/tilemap.h"
 
 # include			"lapin/history.h"

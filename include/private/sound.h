@@ -47,6 +47,11 @@ struct				bunny_music
   bool				pause;
 
   double			duration;
+  t_bunny_map			*sound_areas; // only in t_bunny_sound_sprite
+  void				*last_played_slice; // only in t_bunny_sound_sprite
+  t_bunny_music_track		track; // only in t_bunny_sound_sprite
+
+  //
   sf::Music			music;
   void				*sound_manager;
 };

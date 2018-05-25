@@ -269,6 +269,7 @@ void				_bunny_delete_sound(t_bunny_sound		*sound);
   _bunny_delete_sound								\
   (_Generic((snd),								\
 	    t_bunny_music*: (t_bunny_sound*)(snd),				\
+	    t_bunny_sound_sprite*: (t_bunny_sound*)(snd),			\
 	    t_bunny_effect*: (t_bunny_sound*)(snd),				\
 	    t_bunny_sound*: (snd)						\
 	    ))
@@ -276,7 +277,6 @@ void				_bunny_delete_sound(t_bunny_sound		*sound);
 #  define			bunny_delete_sound(snd)				\
   _bunny_delete_sound(snd)
 # endif
-
 
 /*!
 ** The effect loading function use a ressource manager to avoid loading several

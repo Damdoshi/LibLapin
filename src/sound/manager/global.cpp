@@ -8,6 +8,7 @@
 #include	<stdint.h>
 
 typedef void	t_bunny_configuration;
+typedef void	t_bunny_map;
 
 #define		__SRC_SOUND_MANAGER_GLOBAL_CPP__
 #include	"lapin/sound.h"

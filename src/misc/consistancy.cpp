@@ -69,7 +69,22 @@ void				bunny_consistancy(void)
   do_assert(&usr_eff->duration, &prv_eff->duration);
   do_assert(&usr_eff->sample, &prv_eff->sample);
 
-  puts("If this text appeir, all tests were successful.");
+  t_bunny_sound_sprite		*usr_spr = NULL;
+  struct bunny_music		*prv_spr = NULL;
 
-  
+  do_assert(&usr_spr->soundset.sound._private[0], &prv_spr->type);
+  do_assert(&usr_spr->soundset.sound.file, &prv_spr->file);
+  do_assert(&usr_spr->soundset.sound.volume, &prv_spr->volume);
+  do_assert(&usr_spr->soundset.sound.pitch, &prv_spr->pitch);
+  do_assert(&usr_spr->soundset.sound.loop, &prv_spr->loop);
+  do_assert(&usr_spr->soundset.sound.position[0], &prv_spr->position[0]);
+  do_assert(&usr_spr->soundset.sound.attenuation, &prv_spr->attenuation);
+  do_assert(&usr_spr->soundset.sound.playing, &prv_spr->playing);
+  do_assert(&usr_spr->soundset.sound.pause, &prv_spr->pause);
+  do_assert(&usr_spr->soundset.duration, &prv_spr->duration);
+  do_assert(&usr_spr->sound_areas, &prv_spr->sound_areas);
+  do_assert(&usr_spr->last_played_slice, &prv_spr->last_played_slice);
+  do_assert(&usr_spr->track, &prv_spr->track);
+
+  bunny_printl("If this text appeir, all tests were successful.");
 }

@@ -43,6 +43,7 @@ typedef enum			e_bunny_error
     BE_UNKNOWN_DISPLAY_DEVICE,
     BE_CONFIGURED_FUNCTION_NOT_FOUND,
     BE_TOO_MANY_PARAMETERS,
+    BE_MISSING_CONTEXT,
     LAST_ERROR
   }				t_bunny_error;
 

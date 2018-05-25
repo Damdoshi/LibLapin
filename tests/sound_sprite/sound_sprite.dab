@@ -1,0 +1,58 @@
+RessourceFile="./sound_sprite.ogg"
+
+[Slices
+  [f1
+    Index=0
+    Duration=1
+    ActiveDuration=0.2
+    Volume=100
+  ]
+  [f2
+    Index=1
+    Duration=1
+    ActiveDuration=0.2
+    Volume=30
+  ]
+  [f3
+    Index=2
+    Duration=1
+    ActiveDuration=0.5
+    Pitch=2
+  ]
+  [f4
+    Index=3
+    Duration=1
+    ActiveDuration=0.2
+    Pitch=0.5
+  ]
+
+  [f5
+    Index=0
+    Duration=1
+    ActiveDuration=0.2
+    Volume=100
+    Loop=true
+  ]
+  [f6
+    Index=1
+    Duration=1
+    ActiveDuration=0.2
+    Volume=30
+    Loop=true
+  ]
+  [f7
+    Index=2
+    Duration=1
+    ActiveDuration=0.2
+    Pitch=2
+    Loop=true
+  ]
+  [f8
+    Index=3
+    Duration=1
+    ActiveDuration=0.2
+    Pitch=0.5
+    Loop=true
+  ]
+]
+

@@ -14,6 +14,11 @@ void			_bunny_delete_sound(t_bunny_sound		*sound)
     {
       struct bunny_music *mus = (struct bunny_music*)sound;
 
+      if (mus->sound_areas)
+	{
+	  bunny_map_foreach(mus->sound_areas, bunny_foreach_map_bunny_free, NULL);
+	  bunny_delete_map(mus->sound_areas);
+	}
       if (mus->sound_manager)
 	_bunny_sound_manager_remove((t_bunny_sound_manager*)mus->sound_manager, sound);
       delete ((struct bunny_music*)sound);
@@ -26,7 +31,7 @@ void			_bunny_delete_sound(t_bunny_sound		*sound)
 	_bunny_sound_manager_remove((t_bunny_sound_manager*)snd->sound_manager, sound);
       if (RessourceManager.disable_manager)
 	{
-	  delete snd->effect;
+	  delete (sf::SoundBuffer*)snd->effect;
 	  bunny_free(snd->sample);
 	}
       else

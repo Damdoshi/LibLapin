@@ -24,6 +24,10 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
   * Edit window module
     - Add bunny_vertical_sync function to enable or disable vsync.
 
+  * Add a sound sprite module
+    - Play subpart of a sound file to save memory, streaming it from your
+      drive instead of filling your memory with t_bunny_effect.
+
   * Add error module
     - Bring the t_bunny_error type that complete errno error codes.
       **Compatibility break!** as t_bunny_error was used by the network module.

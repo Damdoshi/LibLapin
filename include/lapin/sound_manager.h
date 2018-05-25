@@ -26,9 +26,10 @@
 typedef enum		e_bunny_music_track
   {
     BST_ALL		= -1,
-    BST_TRACK_01,
-    BST_TRACK_02,
-    BST_TRACK_03,
+    BST_TRACK_01,	// FOR EXAMPLE: MUSIC
+    BST_TRACK_02,	// FOR EXAMPLE: MOOD (Waterfall, wind, etc.)
+    BST_TRACK_03,	// FOR EXAMPLE: VOICES
+    BST_TRACK_04,
     BST_LAST_TRACK
   }			t_bunny_music_track;
 
@@ -102,6 +103,7 @@ bool			_bunny_sound_manager_add(t_bunny_sound_manager		*sm,
   _bunny_sound_manager_add							\
   (sm, _Generic((snd),								\
 		t_bunny_music*: (t_bunny_sound*)(snd),				\
+		t_bunny_sound_sprite*: (t_bunny_sound*)(snd),			\
 		t_bunny_effect*: (t_bunny_sound*)(snd),				\
 		t_bunny_sound*: (snd)						\
 		), typ)
@@ -128,6 +130,7 @@ void			_bunny_sound_manager_remove(t_bunny_sound_manager	*sm,
   _bunny_sound_manager_remove							\
   (sm, _Generic((snd),								\
 		t_bunny_music*: (t_bunny_sound*)(snd),				\
+		t_bunny_sound_sprite*: (t_bunny_sound*)(snd),			\
 		t_bunny_effect*: (t_bunny_sound*)(snd),				\
 		t_bunny_sound*: (snd)						\
 		))
@@ -220,6 +223,7 @@ bool			_bunny_managed_sound_volume(t_bunny_sound_manager	*sm,
   (sm, _Generic((snd),								\
 		t_bunny_music*: (t_bunny_sound*)(snd),				\
 		t_bunny_effect*: (t_bunny_sound*)(snd),				\
+		t_bunny_sound_sprite*: (t_bunny_sound*)(snd),			\
 		t_bunny_sound*: (snd)						\
 		), vol)
 # else
