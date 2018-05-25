@@ -1,6 +1,6 @@
 <div class="prototype">
   Macro
-  $Tbool@ $Sbunny_sound_sprite_play_slice_name@(
+  $Tbool@ $Sbunny_sound_sprite_play_slice@(
   $Tt_bunny_sound_sprite@ *$Ssprite@,
   $Tt_bunny_music_track@ $Strack@,
   $Sname@);
