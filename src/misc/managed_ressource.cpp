@@ -29,7 +29,8 @@ void			bunny_managed_ressource(void)
   for (auto &&mp : RessourceManager.ressources)
     {
       if (mp.size())
-	std::cout << "TYPE :" << ResManager::TypeName[j] << std::endl;
+	std::cout << "TYPE :" << ResManager::TypeName[j]
+		  << " (" << mp.size() << ")" << std::endl;
       for (auto &&res : mp)
 	{
 	  std::cout << "ID " << res.first
