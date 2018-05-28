@@ -86,5 +86,5 @@ void				bunny_consistancy(void)
   do_assert(&usr_spr->last_played_slice, &prv_spr->last_played_slice);
   do_assert(&usr_spr->track, &prv_spr->track);
 
-  bunny_printl("If this text appeir, all tests were successful.");
+  bunny_printl("If this text appears, all tests were successful.");
 }
