@@ -1,3 +1,7 @@
+liblapin-dev (1.13) UNRELEASED; urgency=low
+
+  * Fix the list container.
+
 liblapin-dev (1.12) UNRELEASED; urgency=low
 
   * Edit the repository and build system:
@@ -130,7 +134,6 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
     - Remove the const specifier for the additionnal parameter of fast foreach.
 
   * Edit list module
-    - Add ctor and dtor to build and destroy items when require in t_bunny_list.
     - Add a third parameter, the ctor parameter, to bunny_list_tie. **Compatibility break!**
     - Remove the need of using bunny_thread_wait_completion after a fast foreach.
     - Remove the need of sending an index variable to foreach. **Compatibility break!**

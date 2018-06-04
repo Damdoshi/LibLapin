@@ -15,8 +15,6 @@ struct			bunny_node
 
 struct			bunny_list
 {
-  t_bunny_constructor	ctor;
-  t_bunny_constructor	dtor;
   size_t		length;
   struct bunny_node	*front;
   struct bunny_node	*back;
