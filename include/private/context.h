@@ -42,6 +42,30 @@ struct				bunny_splash_screen
   t_bunny_effect		*falling;
 };
 
+struct				bunny_loading_screen
+{
+  t_bunny_context_runtime_info	head;
+  t_bunny_list			*pictures;
+  t_bunny_list			*pixelarrays;
+  t_bunny_list			*sprites;
+  t_bunny_list			*musics;
+  t_bunny_list			*effects;
+  t_bunny_list			*sound_sprites;
+  t_bunny_list			*texts;
+  t_bunny_list			*files;
+  t_bunny_list			*configurations;
+  double			smooth_cursor; // fake percentage with smooth
+  bool				terminated;
+  int				count;
+  int				total_ressources;
+  bool				local_threadpool;
+  int				list_cnt;
+  t_bunny_node			*node;
+  bool				failure;
+};
+
+///////////////////////
+
 struct				depth_layer
 {
   std::vector<t_bunny_picture*>	color_layers;

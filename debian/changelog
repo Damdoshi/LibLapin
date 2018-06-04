@@ -1,6 +1,7 @@
 liblapin-dev (1.13) UNRELEASED; urgency=low
 
   * Fix the list container.
+  * Add a loading context.
 
 liblapin-dev (1.12) UNRELEASED; urgency=low
 
