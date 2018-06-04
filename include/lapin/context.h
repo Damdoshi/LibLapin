@@ -56,20 +56,47 @@ typedef struct			s_bunny_context_runtime_info
   size_t			next_context;
 }				t_bunny_context_runtime_info;
 
-/*!
-**
-*/
-t_bunny_response		bunny_context_key(t_bunny_event_state	state,
-						  t_bunny_keysym	sym,
-						  void			*data);
+t_bunny_key_function		bunny_context_key;
+t_bunny_type_function		bunny_context_type;
+t_bunny_click_function		bunny_context_click;
+t_bunny_move_function		bunny_context_move;
+t_bunny_wheel_function		bunny_context_wheel;
+t_bunny_joy_connect_function	bunny_context_joy_connect;
+t_bunny_joy_axis_function	bunny_context_joy_axis;
+t_bunny_joy_button_function	bunny_context_joy_button;
+t_bunny_get_focus_function	bunny_context_get_focus;
+t_bunny_lost_focus_function	bunny_context_lost_focus;
+t_bunny_resize_function		bunny_context_resize;
+t_bunny_close_function		bunny_context_close;
+t_bunny_loop_function		bunny_context_loop;
+t_bunny_display_function	bunny_context_display;
+t_bunny_message_response_function bunny_context_message;
+t_bunny_connect_response_function bunny_context_connect;
+t_bunny_entering_context_function bunny_context_entering;
+t_bunny_leaving_context_function bunny_context_leaving;
+t_bunny_async_computation_response_function bunny_context_async_computation;
 
-/*!
-**
-*/
-t_bunny_response		bunny_context_click(t_bunny_event_state	state,
-						    t_bunny_mouse_button sym,
-						    void		*data);
+t_bunny_key_function		bunny_subcontext_key;
+t_bunny_type_function		bunny_subcontext_type;
+t_bunny_click_function		bunny_subcontext_click;
+t_bunny_move_function		bunny_subcontext_move;
+t_bunny_wheel_function		bunny_subcontext_wheel;
+t_bunny_joy_connect_function	bunny_subcontext_joy_connect;
+t_bunny_joy_axis_function	bunny_subcontext_joy_axis;
+t_bunny_joy_button_function	bunny_subcontext_joy_button;
+t_bunny_get_focus_function	bunny_subcontext_get_focus;
+t_bunny_lost_focus_function	bunny_subcontext_lost_focus;
+t_bunny_resize_function		bunny_subcontext_resize;
+t_bunny_close_function		bunny_subcontext_close;
+t_bunny_loop_function		bunny_subcontext_loop;
+t_bunny_display_function	bunny_subcontext_display;
+t_bunny_message_response_function bunny_subcontext_message;
+t_bunny_connect_response_function bunny_subcontext_connect;
+t_bunny_entering_context_function bunny_subcontext_entering;
+t_bunny_leaving_context_function bunny_subcontext_leaving;
+t_bunny_async_computation_response_function bunny_subcontext_async_computation;
 
 # include			"context/splash.h"
+# include			"context/loading.h"
 # include			"context/depth.h"
 #endif	/*			__LAPIN_CONTEXT_H__			*/
