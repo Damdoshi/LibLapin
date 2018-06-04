@@ -2,6 +2,7 @@ liblapin-dev (1.13) UNRELEASED; urgency=low
 
   * Fix the list container.
   * Add a loading context.
+  * Add Splash context now use placeholders to fully support subcontext.
 
 liblapin-dev (1.12) UNRELEASED; urgency=low
 
