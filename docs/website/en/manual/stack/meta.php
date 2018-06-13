@@ -19,3 +19,15 @@ foreach ($functions as $f => $l)
     $circle_level[$k] = $f;
   }
 }
+
+$version_that_support = [
+  "t_bunny_stack" => [11, $latest_version],
+  "t_bunny_stack_node" => [11, $latest_version],
+  "bunny_new_stack" => [11, $latest_version],
+  "bunny_delete_stack" => [11, $latest_version],
+  "bunny_stack_size" => [11, $latest_version],
+  "bunny_stack_empty" => [11, $latest_version],
+  "bunny_stack_top" => [11, $latest_version],
+  "bunny_stack_push" => [11, $latest_version],
+  "bunny_stack_pop" => [11, $latest_version],
+];

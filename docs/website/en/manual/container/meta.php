@@ -13,3 +13,7 @@ foreach ($functions as $f => $l)
   }
 }
 
+$version_that_support = [
+  "t_bunny_constructor" => [11, $latest_version],
+  "t_bunny_destructor" => [11, $latest_version],
+];

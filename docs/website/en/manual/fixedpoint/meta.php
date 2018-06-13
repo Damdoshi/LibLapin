@@ -12,3 +12,8 @@ foreach ($functions as $f => $l)
     $circle_level[$k] = $f;
   }
 }
+
+$version_that_support = [
+  "bunny_to_fixed_decimal" => [12, $latest_version],
+  "bunny_to_floating_decimal" => [12, $latest_version],
+];

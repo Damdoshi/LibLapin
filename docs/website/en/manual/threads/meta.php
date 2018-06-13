@@ -22,3 +22,18 @@ foreach ($functions as $f => $l)
     $circle_level[$k] = $f;
   }
 }
+
+$version_that_support = [
+  "t_bunny_threadpool" => [11, $latest_version],
+  "bunny_new_threadpool" => [11, $latest_version],
+  "bunny_delete_threadpool" => [11, $latest_version],
+  "t_bunny_function" => [11, $latest_version],
+  "bunny_thread_push" => [11, $latest_version],
+  "bunny_thread_foreach" => [11, $latest_version],
+  "bunny_thread_wait_completion" => [11, $latest_version],
+
+  "bunny_set_async_computation" => [12, $latest_version],
+  "bunny_async_computation_push" => [12, $latest_version],
+  "bunny_async_computation_foreach" => [12, $latest_version],
+];
+

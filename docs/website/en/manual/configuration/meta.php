@@ -75,3 +75,77 @@ foreach ($functions as $f => $l)
   }
 }
 
+$version_that_support = [
+  "t_bunny_configuration_type" => [11, $latest_version],
+  "t_bunny_configuration" => [11, $latest_version],
+  "bunny_new_configuration" => [11, $latest_version],
+  "bunny_load_configuration" => [11, $latest_version],
+  "bunny_open_configuration" => [12, $latest_version],
+  "bunny_save_configuration" => [11, $latest_version],
+  "bunny_read_configuration" => [11, $latest_version],
+  "t_bunny_my_read_configuration" => [11, $latest_version],
+  "gl_bunny_my_read_configuration" => [11, $latest_version],
+  "bunny_write_configuration" => [11, $latest_version],
+  "t_bunny_my_write_configuration" => [11, $latest_version],
+  "gl_bunny_my_write_configuration" => [11, $latest_version],
+  "bunny_delete_configuration" => [11, $latest_version],
+  "bunny_delete_node" => [11, $latest_version],
+  "bunny_configuration_create_mode" => [11, $latest_version],
+  "bunny_configuration_get_parent" => [11, $latest_version],
+  "bunny_configuration_get_root" => [11, $latest_version],
+  "bunny_configuration_get_name" => [11, $latest_version],
+  "bunny_configuration_get_address" => [11, $latest_version],
+  "bunny_configuration_get_nbr_child" => [11, $latest_version],
+  "bunny_configuration_get_nbr_case" => [11, $latest_version],
+
+  "bunny_configuration_access" => [11, 12],
+  "bunny_configuration_get_child" => [11, 12],
+  "bunny_configuration_get_case" => [11, 12],
+
+  "bunny_configuration_get_int" => [11, 12],
+  "bunny_configuration_get_string" => [11, 12],
+  "bunny_configuration_get_double" => [11, 12],
+  "bunny_configuration_get" => [11, 12],
+
+  "bunny_configuration_go_get_int" => [11, 12],
+  "bunny_configuration_go_get_string" => [11, 12],
+  "bunny_configuration_go_get_double" => [11, 12],
+  "bunny_configuration_go_get_node" => [11, 12],
+  "bunny_configuration_go_get" => [11, 12],
+
+  "bunny_configuration_go_get_int_va" => [11, 12],
+  "bunny_configuration_go_get_string_va" => [11, 12],
+  "bunny_configuration_go_get_double_va" => [11, 12],
+  "bunny_configuration_go_get_node_va" => [11, 12],
+  "bunny_configuration_go_get_va" => [11, 12],
+
+  "bunny_configuration_set_int" => [11, 12],
+  "bunny_configuration_set_string" => [11, 12],
+  "bunny_configuration_set_double" => [11, 12],
+  "bunny_configuration_set" => [11, 12],
+
+  "bunny_configuration_go_set_int" => [11, 12],
+  "bunny_configuration_go_set_string" => [11, 12],
+  "bunny_configuration_go_set_double" => [11, 12],
+  "bunny_configuration_go_set_node" => [11, 12],
+  "bunny_configuration_go_set" => [11, 12],
+
+  "bunny_configuration_go_set_int_va" => [11, 12],
+  "bunny_configuration_go_set_string_va" => [11, 12],
+  "bunny_configuration_go_set_double_va" => [11, 12],
+  "bunny_configuration_go_set_node_va" => [11, 12],
+  "bunny_configuration_go_set_va" => [11, 12],
+
+  "bunny_configuration_execute" => [12, $latest_version],
+
+  "bunny_configuration_first" => [11, $latest_version],
+  "bunny_configuration_next" => [11, $latest_version],
+  "bunny_configuration_end" => [11, $latest_version],
+  "bunny_configuration_is_last" => [11, $latest_version],
+  "bunny_which_format" => [11, $latest_version],
+  "bunny_configuration_push_path" => [12, $latest_version],
+  "bunny_configuration_pop_path" => [12, $latest_version],
+  "bunny_configuration_getf" => [13, $latest_version],
+  "bunny_configuration_setf" => [13, $latest_version],
+];
+

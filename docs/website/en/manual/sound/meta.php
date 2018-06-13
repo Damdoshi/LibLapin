@@ -38,3 +38,32 @@ foreach ($functions as $f => $l)
     $circle_level[$k] = $f;
   }
 }
+
+$version_that_support = [
+  "t_bunny_sound" => [0, $latest_version],
+  "t_bunny_music" => [0, $latest_version],
+  "t_bunny_effect" => [0, $latest_version],
+  "bunny_load_music" => [0, $latest_version],
+  "bunny_load_effect" => [0, $latest_version],
+  "bunny_sound_volume" => [0, $latest_version],
+  "bunny_sound_loop" => [0, $latest_version],
+  "bunny_sound_play" => [0, $latest_version],
+  "bunny_sound_pause" => [12, $latest_version],
+  "bunny_sound_stop" => [0, $latest_version],
+  "bunny_delete_sound" => [0, $latest_version],
+
+  "bunny_sound_pitch" => [12, $latest_version],
+  "bunny_sound_position" => [12, $latest_version],
+  "bunny_sound_attenuation" => [12, $latest_version],
+  "bunny_sound_set_cursor" => [12, $latest_version],
+  "bunny_sound_get_cursor" => [12, $latest_version],
+  "bunny_music_get_cursor" => [7, 11],
+  "bunny_sound_get_duration" => [7, $latest_version],
+  "bunny_sound_is_playing" => [11, $latest_version],
+
+  "bunny_new_effect" => [7, $latest_version],
+  "bunny_compute_effect" => [7, $latest_version],
+  "SAMPLE_PER_SECONDS" => [7, $latest_version],
+
+  "bunny_make_effect_unique" => [12, $latest_version],
+];

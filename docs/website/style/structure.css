@@ -180,8 +180,8 @@ footer .language
 .second_list
 {
     text-align: left;
-    margin-top: 30px;
-    margin-bottom: 40px;
+    margin-top: 20px;
+    margin-bottom: 30px;
     margin-left: 20px;
 }
 
@@ -199,8 +199,10 @@ footer .language
 .second_list_entry
 {
     width: 400px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 h1

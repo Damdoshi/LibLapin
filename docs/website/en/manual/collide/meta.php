@@ -35,3 +35,31 @@ foreach ($functions as $f => $l)
     $circle_level[$k] = $f;
   }
 }
+
+$version_that_support = [
+  // 11
+  "bunny_circle_collision_dot" => [11, $latest_version],
+  "bunny_circle_collision" => [11, $latest_version],
+  "bunny_rectangular_collision_dot" => [11, $latest_version],
+  "bunny_rectangular_collision" => [11, $latest_version],
+  "bunny_clip_collision_dot" => [11, $latest_version],
+  "bunny_clip_collision" => [11, $latest_version],
+  "bunny_triangle_collision_dot" => [11, $latest_version],
+  "bunny_quad_collision_dot" => [11, $latest_version],
+
+  // 12
+  "t_bunny_collision_type" => [12, $latest_version],
+  "t_bunny_collision" => [12, $latest_version],
+  "t_bunny_collide_point" => [12, $latest_version],
+  "t_bunny_dot_collision" => [12, $latest_version],
+  "t_bunny_circle_collision" => [12, $latest_version],
+  "t_bunny_line_collision" => [12, $latest_version],
+  "t_bunny_triangle_collision" => [12, $latest_version],
+  "t_bunny_rectangular_collision" => [12, $latest_version],
+  "t_bunny_quad_collision" => [12, $latest_version],
+  "t_bunny_equation_collision" => [12, $latest_version],
+  "bunny_collision_equation_dot" => [12, $latest_version],
+  "bunny_collide" => [12, $latest_version],
+  "bunny_draw_collision_shape" => [12, $latest_version],
+];
+

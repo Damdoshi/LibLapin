@@ -37,3 +37,32 @@ foreach ($functions as $f => $l)
     $circle_level[$k] = $f;
   }
 }
+
+$version_that_support = [
+  "t_bunny_node" => [11, $latest_version],
+  "t_bunny_list" => [11, $latest_version],
+  "bunny_new_list" => [11, $latest_version],
+  "bunny_delete_list" => [11, $latest_version],
+  "bunny_list_size" => [11, $latest_version],
+  "bunny_list_empty" => [11, $latest_version],
+  "bunny_list_front" => [11, $latest_version],
+  "bunny_list_back" => [11, $latest_version],
+  "bunny_list_push_front" => [11, $latest_version],
+  "bunny_list_push_back" => [11, $latest_version],
+  "bunny_list_pop_front" => [11, $latest_version],
+  "bunny_list_pop_back" => [11, $latest_version],
+  "bunny_list_clear" => [11, $latest_version],
+  "bunny_list_data" => [11, $latest_version],
+  "bunny_list_begin" => [11, $latest_version],
+  "bunny_list_end" => [11, $latest_version],
+  "bunny_list_next" => [11, $latest_version],
+  "bunny_list_prev" => [11, $latest_version],
+  "bunny_list_filter" => [11, $latest_version],
+  "bunny_list_sort" => [11, $latest_version],
+  "bunny_list_tie" => [11, $latest_version],
+  "bunny_list_foreach" => [11, $latest_version],
+  "bunny_list_fast_foreach" => [11, $latest_version],
+  "bunny_list_all" => [11, $latest_version],
+  "bunny_list_all_rev" => [11, $latest_version]
+];
+

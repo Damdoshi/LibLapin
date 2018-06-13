@@ -6,8 +6,10 @@
 
 require_once ("tools/tools.php");
 
-// Language
+$latest_version = 13;
+$latest_release = 12;
 
+// Language
 if (isset($_GET['lan']))
   $_COOKIE['lan'] = $_GET['lan'];
 $language = ["fr", "en"];
@@ -43,6 +45,17 @@ else if (!isset($_COOKIE['circle']))
   $circle = 50;
 else
   $circle = (int)$_COOKIE['circle'];
+
+// Learning circle
+if (isset($_POST['version']))
+{
+  $version = (int)$_POST['version'];
+  setcookie("version", $version, time() + 60 * 60 * 24 * 365);
+}
+else if (!isset($_COOKIE['version']))
+  $version = $latest_version;
+else
+  $version = (int)$_COOKIE['version'];
 
 // Theme
 if (isset($_POST['theme'])
@@ -223,6 +236,26 @@ if (!isset($_COOKIE["first_visit"]))
               <?=$LevelRing[$v]; ?>
             </option>
           <?php } ?>
+        </select>
+      </form>
+      <form method="post" class="style">
+        <label for="version">
+          <?=$LibraryVersion; ?>
+        </label>
+        <select name="version" onChange="this.form.submit();">
+          <?php
+          for ($i = $latest_version; $i >= 0; --$i) {
+          ?>
+            <option value="<?=$i; ?>" <?=$i == $version ? "selected" : ""; ?>>
+              1.<?=$i ?>
+              <?php if ($i == $latest_release) echo "(".$LatestVersion.")"; ?>
+              <?php if ($i == 9) echo "(".$LastEpitechVersion.")"; ?>
+              <?php if ($i == 2) echo "(".$FirstEpitechVersion.")"; ?>
+            </option>
+          <?php } ?>
+          <option value="-1" <?=$version == "-1" ? "selected" : "" ?>>
+            <?=$DisplayAllSymbols; ?>
+          </option>
         </select>
       </form>
 

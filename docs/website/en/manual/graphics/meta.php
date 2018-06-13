@@ -71,3 +71,72 @@ foreach ($functions as $f => $l)
     $circle_level[$k] = $f;
   }
 }
+
+$version_that_support = [
+  "t_bunny_clipable" => [0, $latest_version],
+  "t_bunny_pixelarray" => [0, $latest_version],
+  "bunny_new_pixelarray" => [0, $latest_version],
+
+  "bunny_load_pixelarray" => [5, $latest_version],
+  "bunny_read_pixelarray_id" => [12, $latest_version],
+  "bunny_read_pixelarray" => [5, $latest_version],
+  "t_bunny_my_load_pixelarray" => [5, $latest_version],
+  "t_bunny_my_read_pixelarray" => [5, $latest_version],
+  "gl_bunny_my_load_pixelarray" => [5, $latest_version],
+  "gl_bunny_my_read_pixelarray" => [5, $latest_version],
+
+  "bunny_save_pixelarray" => [5, $latest_version],
+
+  "t_bunny_picture" => [0, $latest_version],
+  "bunny_new_picture" => [0, $latest_version],
+  "bunny_load_picture" => [5, $latest_version],
+  "bunny_read_picture_id" => [12, $latest_version],
+  "bunny_read_picture" => [5, $latest_version],
+  "bunny_delete_clipable" => [0, $latest_version],
+
+  "bunny_blit" => [0, $latest_version],
+  "t_bunny_my_blit" => [1, $latest_version],
+  "bunny_draw" => [0, $latest_version],
+
+  "bunny_set_pixel" => [0, $latest_version],
+  "t_bunny_my_set_pixel" => [1, $latest_version],
+  "gl_bunny_my_set_pixel" => [1, $latest_version],
+
+  "bunny_set_line" => [0, $latest_version],
+  "t_bunny_my_set_line" => [1, $latest_version],
+  "gl_bunny_my_set_line" => [1, $latest_version],
+
+  "bunny_set_polygon" => [0, $latest_version],
+  "t_bunny_my_set_polygon" => [1, $latest_version],
+  "gl_bunny_my_set_polygon" => [1, $latest_version],
+
+  "bunny_set_circle" => [8, $latest_version],
+  "t_bunny_my_set_circle" => [8, 10],
+  "gl_bunny_my_set_circle" => [8, 10],
+
+  "bunny_set_disk" => [11, $latest_version],
+  "t_bunny_my_set_disk" => [11, $latest_version],
+  "gl_bunny_my_set_disk" => [11, $latest_version],
+
+  "bunny_fill" => [0, $latest_version],
+  "t_bunny_my_fill" => [1, $latest_version],
+  "gl_bunny_my_fill" => [1, $latest_version],
+
+  "bunny_clear" => [0, $latest_version],
+  "t_bunny_my_clear" => [1, $latest_version],
+  "gl_bunny_my_clear" => [1, $latest_version],
+
+  "t_bunny_geometry" => [7, $latest_version],
+  "t_bunny_vertex" => [7, $latest_version],
+  "t_bunny_vertex_array" => [7, $latest_version],
+  "bunny_set_geometry" => [7, $latest_version],
+  "t_bunny_my_geometry" => [7, $latest_version],
+  "gl_bunny_my_geometry" => [7, $latest_version],
+
+  "bunny_enable_full_blit" => [9, $latest_version],
+  "bunny_GL_reset_states" => [11, $latest_version],
+  "bunny_GL_push_states" => [11, $latest_version],
+  "bunny_GL_pop_states" => [11, $latest_version],
+
+  "bunny_make_clipable_unique" => [12, $latest_version],
+];

@@ -19,3 +19,15 @@ foreach ($functions as $f => $l)
     $circle_level[$k] = $f;
   }
 }
+
+$version_that_support = [
+  "t_bunny_history" => [12, $latest_version],
+  "bunny_new_history" => [12, $latest_version],
+  "bunny_delete_history" => [12, $latest_version],
+  "bunny_history_add_frame" => [12, $latest_version],
+  "bunny_history_get_frame" => [12, $latest_version],
+  "bunny_history_erase_frame" => [12, $latest_version],
+  "bunny_history_erase_before" => [12, $latest_version],
+  "bunny_history_erase_after" => [12, $latest_version],
+  "bunny_history_clear" => [12, $latest_version],
+];

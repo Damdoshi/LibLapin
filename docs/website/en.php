@@ -37,10 +37,16 @@ $LevelRing = [
   "Full manual" => "Full manual",
 ];
 
+$LibraryVersion = "Library version";
 $UserLevel = "Choose your documentation";
 $FirstVisitMessage =
   "Welcome on the Bunny library's website.<br />".
   "Take a look at the bottom of the page to choose the documentation that match your skills in Bunny Library.<br >".
-  "Right now, it is set to 'Full manual'. If it is your first time with the Bunny Library, you better choose 'Beginner'."
+  "Right now, it is set to 'Full manual'. If it is your first time with the Bunny Library, you better choose 'Beginner'.<br />".
+  "Also, do not forget to set the library version."
   ;
 
+$LatestVersion = "Latest";
+$LastEpitechVersion = "Last Epitech version";
+$FirstEpitechVersion = "First Epitech version";
+$DisplayAllSymbols = "Display all";

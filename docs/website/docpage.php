@@ -44,6 +44,8 @@ if (file_exists("$language/$doctype/$mod/main.php"))
     require_once ("$language/$doctype/$mod/meta.php");
   if (!isset($circle_level))
     $circle_level = [];
+  if (!isset($version_that_support))
+    $version_that_support = [];
   if (!isset($meta))
     $meta = "";
 
@@ -60,11 +62,24 @@ if (file_exists("$language/$doctype/$mod/main.php"))
       $label = str_replace(".php", "", $dirx);
       if (!isset($circle_level[$label]) || $circle_level[$label] <= $circle)
       {
-        $entries[] = [
-          'file' => $dir,
-          'label' => $label,
-          'title' => $label
-        ];
+        if ((
+          !isset($version_that_support[$label]) ||
+          (($version >= $version_that_support[$label][0] ||
+            $version_that_support[$label][0] == -1))
+          &&
+          ($version <= $version_that_support[$label][1] ||
+           $version_that_support[$label][1] == -1))
+            ||
+            $version == -1
+        )
+        {
+          $entries[] = [
+            'file' => $dir,
+            'label' => $label,
+            'title' => $label,
+            'version' => $version_that_support[$label]
+          ];
+        }
       }
     }
   }
@@ -76,6 +91,11 @@ if (file_exists("$language/$doctype/$mod/main.php"))
     <li class="button index_item <?=$i++ %2 ? 'altbutton' : ''; ?>"
         style="text-align: left;">
       <?=$ent['title']; ?>
+      <?php if ($version == -1) { ?>
+        <div style="float: right; position: relative; height: 1px;">
+          <?="[1.".$ent['version'][0]."-1.".$ent['version'][1]."]"; ?>
+        </div>
+      <?php } ?>
     </li>
   </a>
   <?php

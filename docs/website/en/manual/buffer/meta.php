@@ -11,3 +11,7 @@ foreach ($functions as $f => $l)
     $circle_level[$k] = $f;
   }
 }
+
+$version_that_support = [
+  "t_bunny_buffer" => [0, $latest_version],
+];

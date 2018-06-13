@@ -15,3 +15,11 @@ foreach ($functions as $f => $l)
     $circle_level[$k] = $f;
   }
 }
+
+$version_that_support = [
+  "t_bunny_hash" => [11, $latest_version],
+  "bunny_hash" => [11, $latest_version],
+  "t_bunny_my_hash" => [11, $latest_version],
+  "gl_bunny_my_hash" => [11, $latest_version],
+  "bunny_wide_hash" => [11, $latest_version],
+];

@@ -47,6 +47,8 @@ foreach (scandir("$language/$doctype/") as $dir)
     require_once ("$language/$doctype/$dir/meta.php");
   if (!isset($circle_level))
     $circle_level = [];
+  if (!isset($version_that_support))
+    $version_that_support = [];
   if (!isset($meta))
     $meta = "";
 
@@ -78,7 +80,19 @@ foreach (scandir("$language/$doctype/") as $dir)
         $sym = str_replace(".php", "", $sym);
         $label = skip_int_label($sym);
         if (!isset($circle_level[$label]) || $circle_level[$label] <= $circle)
-          $entries[] = $label;
+        {
+          if (
+            !isset($version_that_support[$label]) ||
+            (
+              $version >= $version_that_support[$label][0]
+              &&
+              $version <= $version_that_support[$label][1]
+            )
+            || $version == -1)
+          {
+            $entries[] = $label;
+          }
+        }
       }
     }
     $inside = 0;
@@ -91,7 +105,14 @@ foreach (scandir("$language/$doctype/") as $dir)
       </script>
       <li id="<?=base64_encode($sym); ?>">
         <a href="index.php?pag=4&amp;doc=<?=$doctype; ?>&amp;mod=<?=$mod; ?>#<?=base64_encode($sym); ?>">
-          <h3 class="button second_list_entry"><?=$sym; ?></h3>
+          <h3 class="button second_list_entry">
+            <?=$sym; ?>
+            <?php
+            if ($version == -1)
+              echo "<br />[1.".$version_that_support[$sym][0].
+                   "-1.".$version_that_support[$sym][1]."]";
+            ?>
+          </h3>
         </a>
       </li>
     <?php

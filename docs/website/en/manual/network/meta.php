@@ -37,3 +37,32 @@ foreach ($functions as $f => $l)
     $circle_level[$k] = $f;
   }
 }
+
+$version_that_support = [
+  "t_bunny_comtype" => [9, $latest_version],
+  "t_bunny_comerror" => [9, $latest_version],
+  "t_bunny_network_error" => [9, $latest_version],
+  "t_bunny_expired" => [9, $latest_version],
+  "t_bunny_connected" => [9, $latest_version],
+  "t_bunny_disconnected" => [9, $latest_version],
+  "t_bunny_message" => [9, $latest_version],
+  "t_bunny_communication" => [9, $latest_version],
+  "t_bunny_server" => [9, $latest_version],
+  "t_bunny_protocol" => [9, $latest_version],
+  "bunny_new_server" => [9, $latest_version],
+  "bunny_delete_server" => [9, $latest_version],
+  "bunny_server_poll" => [9, $latest_version],
+  "bunny_server_write" => [9, $latest_version],
+  "bunny_server_packet_ready" => [9, $latest_version],
+  "bunny_server_doom_client" => [9, $latest_version],
+  "t_bunny_client" => [9, $latest_version],
+  "bunny_new_client" => [9, $latest_version],
+  "bunny_delete_client" => [9, $latest_version],
+  "bunny_client_poll" => [9, $latest_version],
+  "bunny_client_packet_ready" => [9, $latest_version],
+  "bunny_client_write" => [9, $latest_version],
+  "t_bunny_network" => [9, $latest_version],
+  "bunny_new_server_opt" => [9, $latest_version],
+  "bunny_new_client_opt" => [9, $latest_version],
+];
+

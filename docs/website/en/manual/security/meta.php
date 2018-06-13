@@ -33,3 +33,28 @@ foreach ($functions as $f => $l)
     $circle_level[$k] = $f;
   }
 }
+
+$version_that_support = [
+  "t_bunny_ciphering" => [11, $latest_version],
+  "gl_bunny_ciphering_table" => [11, $latest_version],
+  "t_bunny_cipher_key" => [11, $latest_version],
+  "bunny_get_ciphering" => [11, $latest_version],
+  "bunny_new_key" => [11, $latest_version],
+  "bunny_delete_key" => [11, $latest_version],
+  "bunny_cipher_file" => [11, $latest_version],
+  "bunny_uncipher_file" => [11, $latest_version],
+  "bunny_cipher_data" => [11, $latest_version],
+  "bunny_uncipher_data" => [11, $latest_version],
+  "bunny_default_key" => [11, $latest_version],
+  "bunny_fill_default_key" => [11, $latest_version],
+  "t_bunny_key_twist" => [11, $latest_version],
+  "gl_bunny_my_key_twist" => [11, $latest_version],
+  "t_bunny_my_cipher" => [11, $latest_version],
+  "gl_bunny_my_cipher" => [11, $latest_version],
+  "t_bunny_my_uncipher" => [11, $latest_version],
+  "gl_bunny_my_uncipher" => [11, $latest_version],
+  "t_bunny_ressource_cipher" => [11, $latest_version],
+  "gl_bunny_ressource_ciphering" => [11, $latest_version],
+  "gl_bunny_ressource_data" => [11, $latest_version],
+];
+

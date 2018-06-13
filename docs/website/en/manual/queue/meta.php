@@ -18,3 +18,15 @@ foreach ($functions as $f => $l)
     $circle_level[$k] = $f;
   }
 }
+
+$version_that_support = [
+  "t_bunny_queue" => [11, $latest_version],
+  "bunny_new_queue" => [11, $latest_version],
+  "bunny_delete_queue" => [11, $latest_version],
+  "bunny_queue_size" => [11, $latest_version],
+  "bunny_queue_empty" => [11, $latest_version],
+  "bunny_queue_front" => [11, $latest_version],
+  "bunny_queue_push" => [11, $latest_version],
+  "bunny_queue_pop" => [11, $latest_version],
+];
+

@@ -13,3 +13,10 @@ foreach ($functions as $f => $l)
     $circle_level[$k] = $f;
   }
 }
+
+$version_that_support = [
+    "t_bunny_subprocess" => [11, $latest_version],
+    "bunny_popen" => [11, $latest_version],
+    "bunny_pclose" => [11, $latest_version],
+];
+

@@ -81,3 +81,87 @@ foreach ($functions as $f => $l)
     $circle_level[$k] = $f;
   }
 }
+
+$version_that_support = [
+
+  "t_bunny_response" => [0, $latest_version],
+  "t_bunny_event_state" => [0, $latest_version],
+
+  "t_bunny_keysym" => [2, $latest_version],
+  "t_bunny_key" => [0, $latest_version],
+  "bunny_set_key_response" => [0, $latest_version],
+  "bunny_get_keyboard" => [2, $latest_version],
+
+  "t_bunny_type" => [5, $latest_version],
+  "bunny_set_text_response" => [5, $latest_version],
+
+  "t_bunny_mouse_button" => [2, $latest_version],
+  "t_bunny_click" => [0, $latest_version],
+  "bunny_set_click_response" => [0, $latest_version],
+  "bunny_get_mouse_button" => [2, $latest_version],
+
+  "t_bunny_move" => [0, $latest_version],
+  "bunny_set_move_response" => [0, $latest_version],
+  "bunny_get_mouse_position" => [2, $latest_version],
+
+  "t_bunny_wheel" => [5, $latest_version],
+  "bunny_set_wheel_response" => [5, $latest_version],
+
+  "t_bunny_joystick" => [5, $latest_version],
+  "t_bunny_joy_connect" => [5, $latest_version],
+  "bunny_set_joy_connect_response" => [5, $latest_version],
+  "bunny_get_joy_info" => [5, $latest_version],
+  "t_bunny_axis" => [5, $latest_version],
+  "t_bunny_joy_axis" => [5, $latest_version],
+  "bunny_set_joy_axis_response" => [5, $latest_version],
+  "bunny_set_joy_axis_minimum_offset" => [12, $latest_version],
+  "bunny_get_joy_axis" => [5, $latest_version],
+
+  "t_bunny_joy_button" => [5, $latest_version],
+  "bunny_set_joy_button_response" => [5, $latest_version],
+  "bunny_get_joy_button" => [5, $latest_version],
+
+  "t_bunny_get_focus" => [7, $latest_version],
+  "bunny_set_get_focus_response" => [7, $latest_version],
+  "t_bunny_lost_focus" => [7, $latest_version],
+  "bunny_set_lost_focus_response" => [7, $latest_version],
+
+  "t_bunny_resize" => [7, $latest_version],
+  "bunny_set_resize_response" => [7, $latest_version],
+
+  "t_bunny_close" => [7, $latest_version],
+  "bunny_set_close_response" => [7, $latest_version],
+
+  "bunny_get_window" => [6, $latest_version],
+
+  "t_bunny_display" => [7, $latest_version],
+  "bunny_set_display_function" => [7, $latest_version],
+
+  "t_bunny_loop" => [0, $latest_version],
+  "bunny_set_loop_main_function" => [0, $latest_version],
+  "bunny_loop" => [0, $latest_version],
+  "bunny_loop_mw" => [6, $latest_version],
+
+  "bunny_set_client_to_scheduler" => [11, $latest_version],
+  "bunny_set_server_to_scheduler" => [11, $latest_version],
+  "bunny_remove_network_from_scheduler" => [11, $latest_version],
+  "t_bunny_message_response" => [11, $latest_version],
+  "bunny_set_message_response" => [11, $latest_version],
+  "t_bunny_connect_response" => [11, $latest_version],
+  "bunny_set_connect_response" => [11, $latest_version],
+  "t_bunny_message_response" => [11, $latest_version],
+
+  "bunny_set_entering_context_response" => [12, $latest_version],
+  "t_bunny_leaving_context" => [12, $latest_version],
+  "bunny_set_leaving_context_response" => [12, $latest_version],
+
+  "t_bunny_async_computation_response" => [12, $latest_version],
+  "bunny_set_async_computation_response" => [12, $latest_version],
+
+  "t_bunny_context" => [5, $latest_version],
+  "t_bunny_anonymous_context" => [5, $latest_version],
+  "bunny_set_context" => [5, $latest_version],
+  "bunny_get_context" => [5, $latest_version],
+
+];
+
