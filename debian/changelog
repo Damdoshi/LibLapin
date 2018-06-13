@@ -4,6 +4,10 @@ liblapin-dev (1.13) UNRELEASED; urgency=low
   * Add a loading context.
   * Add Splash context now use placeholders to fully support subcontext.
 
+  * Edit Configuration module
+    - Move set, get, go_set_, go_get, _va and access function to compat
+    - Add a setf, getf API with printf like pattern to replace them all.
+
 liblapin-dev (1.12) UNRELEASED; urgency=low
 
   * Edit the repository and build system:

@@ -1,0 +1,7 @@
+[*Comment*]
+
+Source="This is the source"
+
+Integer=128
+Double=75.5
+String="This is the string"
