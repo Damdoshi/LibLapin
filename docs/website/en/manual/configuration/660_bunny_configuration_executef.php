@@ -1,21 +1,24 @@
 <div class="prototype">
-  $Tbool@ $Sbunny_configuration_execute@(
+  $Tbool@ $Sbunny_configuration_executef@(
   $Tt_bunny_configuration@ *$Sconfiguration@,
   $Tbool@ $Srecursive@,
-  $Tt_bunny_configuration@ *$Sparameters@
+  $Tt_bunny_configuration@ *$Sparameters@,
+  $Kconst@ $Tchar@ *$Spattern@,
+  ...
   );
 </div>
 <hr />
 
 <div class="resume">
   <h3>Description</h3>
-  $A Execute scripts and expressions located in the sent node or behind.<br />
+  $A Execute scripts and expressions located at the sent address from the sent node
+  or behind.<br />
   Every scripts and expressions will be executed.<br />
   They will consider the root of the sent node as the root context.<br />
   The local context as the one containing local variables.<br />
   The parameter context as the sent one for parameters.<br />
-  The artifical context is the context where the node is located, but can be
-  modified by the "with" statement.
+  The artifical context is the context where the node at the sent address is located,
+  but can be  modified by the "with" statement.
 </div>
 <hr />
 
@@ -23,7 +26,7 @@
   <h3>Parameters</h3>
   <ul>
     <li>
-      $Tt_bunny_configuration@ *S$configuration@:<br />
+      $Tt_bunny_configuration@ *$Sconfiguration@:<br />
       $A The configuration node that serves as artifical context and that will be executed.
     </li>
     <li>
@@ -33,6 +36,15 @@
     <li>
       $Tt_bunny_configuration@ *$Sparameters@:<br />
       $A Parameters sent to the function inside $Sconfiguration@.
+    </li>
+    <li>
+      $Kconst@ $Tchar@ *$Sfpattern@:<br />
+      $A The pattern to be combined with variadic parameters to create the address
+      of the node to reach.
+    </li>
+    <li>
+      ...:<br />
+      $A Any valid printf-pattern valid parameter.
     </li>
   </ul>
 </div>

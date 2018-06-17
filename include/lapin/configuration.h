@@ -183,21 +183,6 @@ const char		*bunny_configuration_get_name(const t_bunny_configuration	*config);
 */
 const char		*bunny_configuration_get_address(const t_bunny_configuration	*config);
 
-/*!
-** Return how many children the node have.
-** \param config The node to inspect
-** \return The amount of children
-*/
-size_t			bunny_configuration_get_nbr_child(const t_bunny_configuration	*config);
-
-/*!
-** Return how many case the node have.
-** \param config The node to inspect
-** \return The amount of cases
-*/
-size_t			bunny_configuration_get_nbr_case(const t_bunny_configuration	*config);
-
-
 bool			bunny_configuration_getf_node(t_bunny_configuration		*config,
 						      t_bunny_configuration		**node,
 						      const char			*format,
@@ -227,6 +212,7 @@ bool			bunny_configuration_getf_int(t_bunny_configuration		*config,
 */
 #  define		bunny_configuration_getf(cnf, data, fmt, ...)			\
   _Generic((data),									\
+	   void*: bunny_configuration_getf_node, \
 	   const t_bunny_configuration**: bunny_configuration_getf_node,		\
 	   t_bunny_configuration**: bunny_configuration_getf_node,			\
 	   const char**: bunny_configuration_getf_string,				\
@@ -271,25 +257,18 @@ bool			bunny_configuration_setf_int(t_bunny_configuration		*config,
 	   int: bunny_configuration_setf_int)(cnf, data, fmt, ##__VA_ARGS__)
 # endif
 
+ssize_t			bunny_configuration_childrenf(const t_bunny_configuration	*c,
+						      const char			*pat,
+						      ...);
+ssize_t			bunny_configuration_casesf(const t_bunny_configuration		*c,
+						   const char				*pat,
+						   ...);
 
-/*!
-** Execute scripts and expressions located in the sent node or behind.
-**
-** Every script and expressions will be executed and consider the root of the
-** sent node as root context.  The local context as the one containing local variable.
-** The parameter context as the sent one for parameters.
-** The artificial context is the context where the node is located, but can be
-** modified by the "with" statement.
-**
-** \param config The node to compute.
-** \param recursive True to execute all fields recursively
-** \param parameters Parameters to send to every script and expression
-** \return True if everything went well. Results of the executions will be
-** stored inside executed nodes theiselves.
-*/
-bool			bunny_configuration_execute(t_bunny_configuration		*config,
-						    bool				rec,
-						    t_bunny_configuration		*parameters);
+bool			bunny_configuration_executef(t_bunny_configuration		*config,
+						     bool				rec,
+						     t_bunny_configuration		*parameters,
+						     const char				*pattern,
+						     ...);
 
 /*!
 ** Return the first children of the sent node.

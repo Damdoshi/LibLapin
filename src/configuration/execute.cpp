@@ -53,3 +53,28 @@ bool			bunny_configuration_execute(t_bunny_configuration	*cnf,
   return (true);
 }
 
+bool			bunny_configuration_executef(t_bunny_configuration		*conf,
+						     bool				rec,
+						     t_bunny_configuration		*params,
+						     const char				*pat,
+						     ...)
+{
+  t_bunny_configuration *got;
+  char		buffer[1024 * 4];
+  va_list	lst;
+  bool		cmode;
+
+  cmode = SmallConf::create_mode;
+  SmallConf::create_mode = false;
+
+  va_start(lst, pat);
+  vsnprintf(&buffer[0], sizeof(buffer), pat, lst);
+  if ((got = bunny_configuration_go_get_node(conf, &buffer[0])) == NULL)
+    {
+      SmallConf::create_mode = cmode;
+      return (false);
+    }
+  SmallConf::create_mode = cmode;
+  return (bunny_configuration_execute(got, rec, params));
+}
+

@@ -5,8 +5,8 @@ liblapin-dev (1.13) UNRELEASED; urgency=low
   * Add Splash context now use placeholders to fully support subcontext.
 
   * Edit Configuration module
-    - Move set, get, go_set_, go_get, _va and access function to compat
-    - Add a setf, getf API with printf like pattern to replace them all.
+    - Move set, get, go_set_, go_get, _va, get_nbr_, execute and access function to compat
+    - Add a setf, getf, childrenf, casesf, executef API with printf like pattern to replace them all.
 
 liblapin-dev (1.12) UNRELEASED; urgency=low
 

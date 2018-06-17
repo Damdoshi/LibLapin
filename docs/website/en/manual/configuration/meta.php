@@ -95,8 +95,9 @@ $version_that_support = [
   "bunny_configuration_get_root" => [11, $latest_version],
   "bunny_configuration_get_name" => [11, $latest_version],
   "bunny_configuration_get_address" => [11, $latest_version],
-  "bunny_configuration_get_nbr_child" => [11, $latest_version],
-  "bunny_configuration_get_nbr_case" => [11, $latest_version],
+
+  "bunny_configuration_get_nbr_child" => [11, 12],
+  "bunny_configuration_get_nbr_case" => [11, 12],
 
   "bunny_configuration_access" => [11, 12],
   "bunny_configuration_get_child" => [11, 12],
@@ -136,7 +137,7 @@ $version_that_support = [
   "bunny_configuration_go_set_node_va" => [11, 12],
   "bunny_configuration_go_set_va" => [11, 12],
 
-  "bunny_configuration_execute" => [12, $latest_version],
+  "bunny_configuration_execute" => [12, 12],
 
   "bunny_configuration_first" => [11, $latest_version],
   "bunny_configuration_next" => [11, $latest_version],
@@ -147,5 +148,8 @@ $version_that_support = [
   "bunny_configuration_pop_path" => [12, $latest_version],
   "bunny_configuration_getf" => [13, $latest_version],
   "bunny_configuration_setf" => [13, $latest_version],
+  "bunny_configuration_childrenf" => [13, $latest_version],
+  "bunny_configuration_casesf" => [13, $latest_version],
+  "bunny_configuration_executef" => [13, $latest_version],
 ];
 

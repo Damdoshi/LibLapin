@@ -18,7 +18,8 @@ bool		bunny_configuration_getf_node(t_bunny_configuration	*cnf,
   vsnprintf(&buffer[0], sizeof(buffer), pat, lst);
   if ((got = bunny_configuration_go_get_node(cnf, &buffer[0])) == NULL)
     return (false);
-  *data = got;
+  if (data)
+    *data = got;
   return (true);
 }
 
@@ -35,7 +36,8 @@ bool		bunny_configuration_getf_string(t_bunny_configuration	*cnf,
   vsnprintf(&buffer[0], sizeof(buffer), pat, lst);
   if (bunny_configuration_go_get_string(cnf, &got, &buffer[0]) == false)
     return (false);
-  *data = got;
+  if (data)
+    *data = got;
   return (true);
 }
 
@@ -52,7 +54,8 @@ bool		bunny_configuration_getf_int(t_bunny_configuration	*cnf,
   vsnprintf(&buffer[0], sizeof(buffer), pat, lst);
   if (bunny_configuration_go_get_int(cnf, &got, &buffer[0]) == false)
     return (false);
-  *data = got;
+  if (data)
+    *data = got;
   return (true);
 }
 
@@ -69,7 +72,8 @@ bool		bunny_configuration_getf_double(t_bunny_configuration	*cnf,
   vsnprintf(&buffer[0], sizeof(buffer), pat, lst);
   if (bunny_configuration_go_get_double(cnf, &got, &buffer[0]) == false)
     return (false);
-  *data = got;
+  if (data)
+    *data = got;
   return (true);
 }
 

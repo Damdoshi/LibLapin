@@ -382,5 +382,37 @@ bool			bunny_configuration_go_set_int(t_bunny_configuration		*config,
 						       int				val,
 						       const char			*addr);
 
+/*!
+** Return how many children the node have.
+** \param config The node to inspect
+** \return The amount of children
+*/
+size_t			bunny_configuration_get_nbr_child(const t_bunny_configuration	*config);
+
+/*!
+** Return how many case the node have.
+** \param config The node to inspect
+** \return The amount of cases
+*/
+size_t			bunny_configuration_get_nbr_case(const t_bunny_configuration	*config);
+
+/*!
+** Execute scripts and expressions located in the sent node or behind.
+**
+** Every script and expressions will be executed and consider the root of the
+** sent node as root context.  The local context as the one containing local variable.
+** The parameter context as the sent one for parameters.
+** The artificial context is the context where the node is located, but can be
+** modified by the "with" statement.
+**
+** \param config The node to compute.
+** \param recursive True to execute all fields recursively
+** \param parameters Parameters to send to every script and expression
+** \return True if everything went well. Results of the executions will be
+** stored inside executed nodes theiselves.
+*/
+bool			bunny_configuration_execute(t_bunny_configuration		*config,
+						    bool				rec,
+						    t_bunny_configuration		*parameters);
 
 #endif
