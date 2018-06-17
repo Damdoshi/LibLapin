@@ -7,7 +7,7 @@
 
 void			bunny_perror(const char		*str)
 {
-  if (!str || *str)
+  if (!str || !*str)
     fprintf(stderr, "%s\n", bunny_strerror(bunny_errno));
   else
     fprintf(stderr, "%s: %s\n", str, bunny_strerror(bunny_errno));
