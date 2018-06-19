@@ -45,6 +45,7 @@ $functions = [
   20 => [
     "bunny_read_picture_id",
     "bunny_read_pixelarray_id",
+    "bunny_clipable_copy",
   ],
   30 => [
     "t_bunny_geometry",
@@ -74,6 +75,7 @@ foreach ($functions as $f => $l)
 
 $version_that_support = [
   "t_bunny_clipable" => [0, $latest_version],
+  "bunny_clipable_copy" => [13, $latest_version],
   "t_bunny_pixelarray" => [0, $latest_version],
   "bunny_new_pixelarray" => [0, $latest_version],
 

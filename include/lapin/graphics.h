@@ -63,6 +63,20 @@ typedef struct			s_bunny_clipable
   t_bunny_color			color_mask;
 }				t_bunny_clipable;
 
+# define			bunny_clipable_copy(dest, ori) do {	\
+    (dest)->clip_x_position = (ori)->clip_x_position;			\
+    (dest)->clip_y_position = (ori)->clip_y_position;			\
+    (dest)->clip_width = (ori)->clip_width;				\
+    (dest)->clip_height = (ori)->clip_height;				\
+    (dest)->position.x = (ori)->position.x;				\
+    (dest)->position.y = (ori)->position.y;				\
+    (dest)->origin.x = (ori)->origin.x;					\
+    (dest)->origin.y = (ori)->origin.y;					\
+    (dest)->scale.x = (ori)->scale.x;					\
+    (dest)->scale.y = (ori)->scale.y;					\
+    (dest)->rotation = (ori)->rotation;					\
+    (dest)->color_mask.full = (ori)->color_mask.full;
+
 /*!
 ** The t_bunny_pixelarray is a graphic element that is convenient to
 ** access pixels per pixel. It contains a t_bunny_clipable attribute that does not
