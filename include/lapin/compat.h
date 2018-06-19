@@ -93,7 +93,7 @@ void				*bunny_pool_getv(t_bunny_pool		*pol,
 ** \param pol The pool to browse.
 ** \param id The element to release
 */
-# define			buxnny_pool_release(pol, id)		\
+# define			bunny_pool_release(pol, id)		\
   bunny_pool_free(pol, (pol)->data[id])
 
 /*!
