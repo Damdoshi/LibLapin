@@ -6,6 +6,11 @@ liblapin-dev (1.13) UNRELEASED; urgency=low
 
   * Fix the badly used parameter of bunny_perror.
 
+  * Add Tilemap module
+    - The tilemap module bring a structure which inherit from clipable and heavily linked
+      with a configuration format. It display tiles and can be used as target for in-tiles
+      sprites.
+
   * Edit Graphics module
     - Add bunny_clipable_copy macro to copy all proper fields of a clipable to another one.
 

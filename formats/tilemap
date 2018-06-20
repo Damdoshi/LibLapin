@@ -1,0 +1,14 @@
+T_BUNNY_TILEMAP EXTERNAL CONFIGURATION
+======================================
+
+To use the t_bunny_tilemap system, you must configure it fully
+outside your program throught a configuration file that can
+be a different format.
+
+DABSIC format
+-------------
+
+### Mandatory fields
+
+* The TileSets array contains one or more scopes that define the use
+  of one picture file as tileset.

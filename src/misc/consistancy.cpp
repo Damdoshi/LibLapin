@@ -86,5 +86,19 @@ void				bunny_consistancy(void)
   do_assert(&usr_spr->last_played_slice, &prv_spr->last_played_slice);
   do_assert(&usr_spr->track, &prv_spr->track);
 
-  bunny_printl("If this text appears, all tests were successful.");
+  t_bunny_tilemap		*usr_tmap = NULL;
+  struct bunny_tilemap		*prv_tmap = NULL;
+
+  do_assert(&usr_tmap->_private[0], &prv_tmap->res_id);
+  do_assert(&usr_tmap->_private[1], &prv_tmap->tex);
+  do_assert(&usr_tmap->_private[2], &prv_tmap->sprite);
+  do_assert(&usr_tmap->map_size, &prv_tmap->map_size);
+  do_assert(&usr_tmap->tiles, &prv_tmap->tiles);
+  do_assert(&usr_tmap->tile_size, &prv_tmap->tile_size);
+  do_assert(&usr_tmap->camera, &prv_tmap->camera);
+  do_assert(&usr_tmap->zoom, &prv_tmap->zoom);
+  do_assert(&usr_tmap->rotation, &prv_tmap->tile_rotation);
+  do_assert(&usr_tmap->lock_borders, &prv_tmap->lock_borders);
+
+  bunny_printl("If this text appears, it menas that all tests were successful.");
 }

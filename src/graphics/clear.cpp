@@ -28,6 +28,13 @@ void			bunny_clear(t_bunny_buffer		*picture,
 	scream_log_if(PATTERN, "graphics", picture, (void*)(size_t)_color);
 	return ;
       }
+    case TILEMAP:
+      {
+	struct bunny_tilemap	*pic = (struct bunny_tilemap*)picture;
+
+	if (pic->working != NULL)
+	  bunny_clear(&pic->working->buffer, _color);
+      }
     case TTF_TEXT:
     case GRAPHIC_TEXT:
     case GRAPHIC_RAM:

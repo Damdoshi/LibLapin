@@ -313,6 +313,7 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
   _bunny_delete_clipable							\
   (_Generic((a),								\
             t_bunny_clipable*: (t_bunny_clipable*)(a),				\
+	    t_bunny_tilemap*: (t_bunny_clipable*)(a),				\
 	    t_bunny_sprite*: (t_bunny_clipable*)(a),				\
 	    t_bunny_pixelarray*: (t_bunny_clipable*)(a),			\
 	    t_bunny_font*: (t_bunny_clipable*)(a)				\

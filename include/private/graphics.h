@@ -60,6 +60,7 @@ enum				_buffer_type
     GRAPHIC_TEXT		= 3,
     TTF_TEXT			= 4,
     SPRITE			= 5,
+    TILEMAP			= 6,
     LAST_BUFFER_TYPE
   };
 
@@ -80,6 +81,7 @@ struct				bunny_window
 # ifdef				__MINGW32__
 #  pragma			pack(1)
 # endif
+
 struct				bunny_picture
 {
   size_t			type;
@@ -223,8 +225,71 @@ struct				bunny_sprite
   bool				stop_repeat;
 };
 
+typedef struct			s_bunny_tileset
+{
+  t_bunny_picture		*tileset;
+  t_bunny_size			tile_size;
+  t_bunny_size			intertile;
+  t_bunny_size			tileset_size;
+  size_t			nbr_tiles;
+
+  t_bunny_sprite		**animated_tiles;
+  size_t			nbr_animated_tiles;
+
+  int				last_tile;
+}				t_bunny_tileset;
+
+struct				bunny_tilemap
+{
+  size_t			type;
+  sf::RenderTexture		*texture;
+  t_copy_on_write_gfx		duplicate;
+  ssize_t			width;
+  ssize_t			height;
+  t_bunny_area			rect;
+  t_bunny_accurate_position	position;
+  t_bunny_accurate_position	origin;
+  t_bunny_accurate_position	scale;
+  double			rotation;
+  t_bunny_color			color_mask;
+
+  // Private fields of t_bunny_clipable
+
+  size_t			res_id;
+  const sf::Texture		*tex; // Displayed shape
+  sf::Sprite			*sprite;
+
+  // Public fields of t_bunny_tilemap
+
+  int				layer_clip[2];
+  int				nbr_layers;
+  t_bunny_size			map_size;
+  int				*tiles;
+  t_bunny_size			tile_size;
+  t_bunny_accurate_position	camera;
+  t_bunny_accurate_position	zoom;
+  double			tile_rotation;
+  int				lock_borders;
+  bool				loop[2];
+
+  // Private fields of t_bunny_tilemap
+
+  t_bunny_picture		*working;
+  t_bunny_tileset		*tilesets;
+  size_t			nbr_tilesets;
+  t_bunny_position		working_target_diff;
+  double			last_step;
+};
+
 struct bunny_sprite		*_bunny_new_sprite(void);
 
+t_bunny_tilemap			*__bunny_load_dabsic_tilemap(t_bunny_configuration *,
+							     struct bunny_tilemap *);
+void				__bunny_draw_tilemap(struct bunny_tilemap *);
+void				__bunny_blit_tilemap(struct bunny_tilemap *tmap,
+						     const t_bunny_clipable *pic,
+						     const t_bunny_position *pos,
+						     const t_bunny_shader *shader);
 # pragma			pack()
 
 t_bunny_font			*__bunny_load_ttf(unsigned int		width,

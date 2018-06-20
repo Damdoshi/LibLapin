@@ -20,7 +20,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 						  const t_bunny_position *pos,
 						  const t_bunny_shader	*_shader)
 {
-  static t_bunny_position	defaul = {0, 0};
+  t_bunny_position		defaul = {0, 0};
 
   if (pos == NULL)
     {
@@ -49,6 +49,16 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	scream_log_if
 	  (PATTERN, "graphics", output, picture, pos, pos->x, pos->y, _shader);
 	return ;
+      }
+    case TILEMAP:
+      {
+	struct bunny_tilemap	*tmap = (struct bunny_tilemap*)picture;
+
+	tmap->working->rotation = tmap->tile_rotation;
+	tmap->type = GRAPHIC_RAM;
+	bunny_blit((t_bunny_buffer*)tmap, tmap->working, NULL);
+	tmap->type = TILEMAP;
+	// NO BREAK -> Graphic ram scope is needed too.
       }
     case SPRITE:
     case GRAPHIC_RAM:
@@ -145,6 +155,13 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	  out->window->draw(*spr);
 	scream_log_if
 	  (PATTERN, "graphics", output, picture, pos, pos->x, pos->y, _shader);
+	return ;
+      }
+    case TILEMAP:
+      {
+	struct bunny_tilemap	*out = (struct bunny_tilemap*)output;
+
+	__bunny_blit_tilemap(out, picture, pos, _shader);
 	return ;
       }
     case TTF_TEXT:
