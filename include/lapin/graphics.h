@@ -49,6 +49,7 @@
 # ifdef				__MINGW32__
 #  pragma			pack(1)
 # endif
+
 typedef struct			s_bunny_clipable
 {
   t_bunny_buffer		buffer;
@@ -75,7 +76,8 @@ typedef struct			s_bunny_clipable
     (dest)->scale.x = (ori)->scale.x;					\
     (dest)->scale.y = (ori)->scale.y;					\
     (dest)->rotation = (ori)->rotation;					\
-    (dest)->color_mask.full = (ori)->color_mask.full;
+    (dest)->color_mask.full = (ori)->color_mask.full;			\
+  } while (0)
 
 /*!
 ** The t_bunny_pixelarray is a graphic element that is convenient to
