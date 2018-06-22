@@ -11,6 +11,9 @@ liblapin-dev (1.13) UNRELEASED; urgency=low
       with a configuration format. It display tiles and can be used as target for in-tiles
       sprites.
 
+  * Edit Buffer module
+    - Add a freely interpreted data area in t_bunny_buffer.
+
   * Edit Graphics module
     - Add bunny_clipable_copy macro to copy all proper fields of a clipable to another one.
 

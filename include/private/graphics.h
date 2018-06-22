@@ -75,6 +75,7 @@ struct				bunny_window
   size_t			unused;
   ssize_t			width;
   ssize_t			height;
+  t_bunny_extended_data		data[BUNNY_EXTENDED_DATA_LENGTH];
   const char			*window_name;
 };
 
@@ -89,6 +90,7 @@ struct				bunny_picture
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;
+  t_bunny_extended_data		data[BUNNY_EXTENDED_DATA_LENGTH];
   t_bunny_area			rect;
   t_bunny_accurate_position	position;
   t_bunny_accurate_position	origin;
@@ -108,6 +110,7 @@ struct				bunny_pixelarray
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;
+  t_bunny_extended_data		data[BUNNY_EXTENDED_DATA_LENGTH];
   t_bunny_area			rect;
   t_bunny_accurate_position	position;
   t_bunny_accurate_position	origin;
@@ -129,6 +132,7 @@ struct				bunny_gfx_font
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;
+  t_bunny_extended_data		data[BUNNY_EXTENDED_DATA_LENGTH];
   t_bunny_area			rect;
   t_bunny_accurate_position	position;
   t_bunny_accurate_position	origin;
@@ -166,6 +170,7 @@ struct				bunny_ttf_font
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;
+  t_bunny_extended_data		data[BUNNY_EXTENDED_DATA_LENGTH];
   t_bunny_area			rect;
   t_bunny_accurate_position	position;
   t_bunny_accurate_position	origin;
@@ -204,6 +209,7 @@ struct				bunny_sprite
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;
+  t_bunny_extended_data		data[BUNNY_EXTENDED_DATA_LENGTH];
   t_bunny_area			rect;
   t_bunny_accurate_position	position;
   t_bunny_accurate_position	origin;
@@ -246,6 +252,7 @@ struct				bunny_tilemap
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;
+  t_bunny_extended_data		data[BUNNY_EXTENDED_DATA_LENGTH];
   t_bunny_area			rect;
   t_bunny_accurate_position	position;
   t_bunny_accurate_position	origin;

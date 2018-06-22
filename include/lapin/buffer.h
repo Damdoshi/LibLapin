@@ -17,6 +17,20 @@
 #  error			You cannot include this file directly.
 # endif
 # include			<sys/types.h>
+# ifndef			BUNNY_EXTENDED_DATA_LENGTH
+#  define			BUNNY_EXTENDED_DATA_LENGTH		4
+# endif
+
+typedef union			s_bunny_extended_data
+{
+  char				space[sizeof(void*)];
+  t_bunny_position		position;
+  t_bunny_configuration		*configuration;
+  const char			*string;
+  void				*data;
+  int				int_data;
+  float				float_data;
+}				t_bunny_extended_data;
 
 /*!
 ** The t_bunny_buffer is a structure that contains foundamental
@@ -34,6 +48,7 @@ typedef struct			s_bunny_buffer
   const size_t			_private[3];
   ssize_t			width;
   ssize_t			height;
+  t_bunny_extended_data		data[BUNNY_EXTENDED_DATA_LENGTH];
 }				t_bunny_buffer;
 
 #endif	/*			__LAPIN_BUFFER_H__		*/
