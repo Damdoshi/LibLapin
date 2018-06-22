@@ -212,6 +212,9 @@ typedef const char * const *	t_bunny_split;
 void				*bunny_memdup(const void		*ptr,
 					      size_t			len);
 
+void				bunny_randomize(void			*data,
+						size_t			len);
+
 /*!
 ** Swap two pointers of any type
 ** \param a The pointer to swap with b

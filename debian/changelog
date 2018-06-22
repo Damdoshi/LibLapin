@@ -21,6 +21,9 @@ liblapin-dev (1.13) UNRELEASED; urgency=low
     - Move set, get, go_set_, go_get, _va, get_nbr_, execute and access function to compat
     - Add a setf, getf, childrenf, casesf, executef API with printf like pattern to replace them all.
 
+  * Edit Misc module
+    - Add a bunny_randomize function to randomize a memory chunk
+
 liblapin-dev (1.12) UNRELEASED; urgency=low
 
   * Edit the repository and build system:
