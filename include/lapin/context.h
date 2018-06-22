@@ -96,7 +96,30 @@ t_bunny_entering_context_function bunny_subcontext_entering;
 t_bunny_leaving_context_function bunny_subcontext_leaving;
 t_bunny_async_computation_response_function bunny_subcontext_async_computation;
 
+# define			bunny_declare_context(name)	\
+  t_bunny_key_function		name ## _key;			\
+  t_bunny_type_function		name ## _type;			\
+  t_bunny_click_function	name ## _click;			\
+  t_bunny_move_function		name ## _move;			\
+  t_bunny_wheel_function	name ## _wheel;			\
+  t_bunny_joy_connect_function	name ## _joy_connect;		\
+  t_bunny_joy_axis_function	name ## _joy_axis;		\
+  t_bunny_joy_button_function	name ## _joy_button;		\
+  t_bunny_get_focus_function	name ## _get_focus;		\
+  t_bunny_lost_focus_function	name ## _lost_focus;		\
+  t_bunny_resize_function	name ## _resize;		\
+  t_bunny_close_function	name ## _close;			\
+  t_bunny_loop_function		name ## _loop;			\
+  t_bunny_display_function	name ## _display;		\
+  t_bunny_message_response_function name ## _message;		\
+  t_bunny_connect_response_function name ## _connect;		\
+  t_bunny_entering_context_function name ## _entering;		\
+  t_bunny_leaving_context_function name ## _leaving;		\
+  t_bunny_async_computation_response_function name ## _async_computation
+
 # include			"context/splash.h"
 # include			"context/loading.h"
+# include			"context/dressing.h"
 # include			"context/depth.h"
+
 #endif	/*			__LAPIN_CONTEXT_H__			*/
