@@ -57,6 +57,7 @@ typedef struct		s_bunny_animation
   double		delay;
   uint32_t		nbr_frame;
   t_bunny_position	position;
+  t_bunny_size		intertile;
   t_bunny_vector	*frame_repetition;
   t_bunny_frame_browsing browsing;
   int32_t		animation_repeat;
@@ -95,6 +96,12 @@ typedef struct		s_bunny_sprite
 ** \return A valid t_bunny_sprite or NULL on error.
 */
 t_bunny_sprite		*bunny_load_sprite(const char		*file);
+
+t_bunny_sprite		*_bunny_read_sprite(t_bunny_configuration *cnf,
+					    const char		*file);
+
+# define		bunny_read_sprite(cnf)			\
+  _bunny_read_sprite(cnf, NULL)
 
 /*!
 ** The bunny_sprite_animate function animates the sent sprite, taking

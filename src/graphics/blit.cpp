@@ -50,6 +50,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	  (PATTERN, "graphics", output, picture, pos, pos->x, pos->y, _shader);
 	return ;
       }
+    case SPRITE:
     case GRAPHIC_RAM:
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)picture;
@@ -147,6 +148,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	return ;
       }
     case TTF_TEXT:
+    case SPRITE:
     case GRAPHIC_TEXT:
     case GRAPHIC_RAM:
       {

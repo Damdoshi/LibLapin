@@ -10,12 +10,28 @@ static void		_set_frame(struct bunny_sprite			&spr,
 {
   if (anim.browsing == BFB_LEFT_TO_RIGHT ||
       (anim.browsing == BFB_BACK_AND_FORTH && spr.current_frame < anim.nbr_frame))
-    spr.rect.x = anim.position.x + spr.rect.w * spr.current_frame;
+    spr.rect.x =
+      anim.position.x +
+      (spr.rect.w + anim.intertile.x)
+      * spr.current_frame
+      + anim.intertile.x
+      ;
   else if (anim.browsing == BFB_RIGHT_TO_LEFT)
-    spr.rect.x = anim.position.x + (spr.rect.w * (anim.nbr_frame - spr.current_frame - 1));
+    spr.rect.x =
+      anim.position.x +
+      ((spr.rect.w + anim.intertile.x) *
+       (anim.nbr_frame - spr.current_frame - 1))
+      + anim.intertile.x
+      ;
   else if (anim.browsing == BFB_BACK_AND_FORTH && spr.current_frame >= anim.nbr_frame)
-    spr.rect.x = anim.position.x + (spr.rect.w * (2 * anim.nbr_frame - spr.current_frame - 1));
-  spr.rect.y = anim.position.y;
+    spr.rect.x =
+      anim.position.x +
+      ((spr.rect.w + anim.intertile.x) *
+       (2 * anim.nbr_frame - spr.current_frame - 1))
+      + anim.intertile.x
+      ;
+
+  spr.rect.y = anim.position.y + anim.intertile.y;
 }
 
 void			bunny_sprite_animate(t_bunny_sprite		*spr,
@@ -32,7 +48,8 @@ void			bunny_sprite_animate(t_bunny_sprite		*spr,
     }
 
   sprite.current_time += elapsed;
-  anim = &bunny_vector_data(sprite.animation, sprite.current_animation, t_bunny_animation);
+  anim = &bunny_vector_data
+    (sprite.animation, sprite.current_animation, t_bunny_animation);
   while (sprite.current_time > anim->delay)
     {
       sprite.current_time -= anim->delay;
@@ -52,15 +69,15 @@ void			bunny_sprite_animate(t_bunny_sprite		*spr,
 	      if (sprite.stop_repeat || anim->animation_repeat == -1 || ++sprite.current_repeat >= anim->animation_repeat)
 		{
 		  sprite.current_repeat = 0;
-		  sprite.current_animation = anim->next_animation;
+		  if (anim->animation_repeat != -1)
+		    sprite.current_animation = anim->next_animation;
 		  if (sprite.stop_repeat == false)
 		    {
 		      if (sprite.current_animation != -1)
-			anim = &bunny_vector_data
-			  (sprite.animation,
-			   sprite.current_animation,
-			   t_bunny_animation
-			   );
+			{
+			  anim = &bunny_vector_data
+			    (sprite.animation, sprite.current_animation, t_bunny_animation);
+			}
 		      else
 			{
 			  // Stay still on the last frame

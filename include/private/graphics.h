@@ -222,6 +222,9 @@ struct				bunny_sprite
   double			current_time;
   bool				stop_repeat;
 };
+
+struct bunny_sprite		*_bunny_new_sprite(void);
+
 # pragma			pack()
 
 t_bunny_font			*__bunny_load_ttf(unsigned int		width,

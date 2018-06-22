@@ -7,21 +7,32 @@
 
 #define			PATTERN		"%s file -> %p"
 
-t_bunny_sprite		*bunny_load_sprite(const char		*file)
+struct bunny_sprite	*_bunny_new_sprite(void)
+{
+  struct bunny_sprite	*sprite;
+
+  if ((sprite = new (std::nothrow) bunny_sprite) == NULL)
+    return (NULL);
+  if ((sprite->sprite = new (std::nothrow) sf::Sprite) == NULL)
+    {
+      delete sprite;
+      return (NULL);
+    }
+  return (sprite);
+}
+
+t_bunny_sprite		*_bunny_read_sprite(t_bunny_configuration *conf,
+					    const char		*file)
 {
   sf::Texture		txt;
   sf::Sprite		spr;
-  t_bunny_configuration	*conf;
   struct bunny_sprite	*sprite;
   const char		*res;
   uint64_t		hash;
 
-  if ((conf = bunny_open_configuration(file, NULL)) == NULL)
+  if ((sprite = _bunny_new_sprite()) == NULL)
     goto ExitDirectly;
-  if ((sprite = new (std::nothrow) bunny_sprite) == NULL)
-    goto DeleteConf;
-  if ((sprite->sprite = new (std::nothrow) sf::Sprite) == NULL)
-    goto DeleteBunnySprite;
+
   if (bunny_configuration_go_get_string(conf, &res, "RessourceFile[0]") == false)
     scream_error_if
       (goto DeleteSfSprite, BE_SYNTAX_ERROR,
@@ -34,11 +45,11 @@ t_bunny_sprite		*bunny_load_sprite(const char		*file)
        RessourceManager.TryGet(ResManager::SF_RENDERTEXTURE, hash)) == NULL)
     {
       if (txt.loadFromFile(res) == false)
-	goto DeleteSfSprite;
+	goto DeleteBunnySprite;
       spr.setTexture(txt);
 
       if ((sprite->texture = new (std::nothrow) sf::RenderTexture) == NULL)
-	goto DeleteSfSprite;
+	goto DeleteBunnySprite;
       if (sprite->texture->create(txt.getSize().x, txt.getSize().y) == false)
 	{
 	  delete sprite->texture;
@@ -79,23 +90,40 @@ t_bunny_sprite		*bunny_load_sprite(const char		*file)
 
   if (bunny_set_clipable_attribute
       (NULL, (t_bunny_clipable**)&sprite, &conf, BCT_SPRITE) == false)
-    goto DeleteConf;
+    goto DeleteSfSprite;
   if (_bunny_set_sprite_attribute
       (*sprite, *(SmallConf*)conf) == false)
-    goto DeleteConf;
+    goto DeleteSfSprite;
 
   bunny_delete_configuration(conf);
   scream_log_if(PATTERN, "ressource,sprite", file, sprite);
-  bunny_sprite_set_animation_id((t_bunny_sprite*)sprite, sprite->current_animation);
+  bunny_sprite_set_animation_id
+    ((t_bunny_sprite*)sprite,
+     bunny_vector_data
+     (sprite->animation, sprite->current_animation, t_bunny_animation).hash
+     );
   return ((t_bunny_sprite*)sprite);
 
  DeleteSfSprite:
   delete sprite->sprite;
  DeleteBunnySprite:
   delete sprite;
- DeleteConf:
-  bunny_delete_configuration(conf);
  ExitDirectly:
   return (NULL);
+}
+
+t_bunny_sprite		*bunny_load_sprite(const char		*file)
+{
+  t_bunny_configuration	*conf;
+  t_bunny_sprite	*spr;
+
+  if ((conf = bunny_open_configuration(file, NULL)) == NULL)
+    return (NULL);
+  if ((spr = _bunny_read_sprite(conf, file)) == NULL)
+    {
+      bunny_delete_configuration(conf);
+      return (NULL);
+    }
+  return (spr);
 }
 

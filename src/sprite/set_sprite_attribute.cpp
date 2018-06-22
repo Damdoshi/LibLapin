@@ -12,6 +12,7 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 					    SmallConf		&config)
 {
   std::map<std::string, SmallConf*>::iterator it;
+  t_bunny_position intertile;
   SmallConf	*repet, *aconf, *animnode;
   double	default_delay;
   t_bunny_animation *anim;
@@ -19,10 +20,13 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
   unsigned int	i, j;
   int		tmp;
 
+  intertile.x = intertile.y = 0;
+
   sprite.current_frame = 0;
   sprite.current_time = 0;
   sprite.current_repeat = 0;
   sprite.current_frame_repeat = 0;
+  sprite.stop_repeat = false;
 
   // MANDATORY FIELDS //
 
@@ -49,6 +53,7 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
       (return (false), BE_SYNTAX_ERROR,
        PATTERN ": Unknown animation %s",
        "sprite,syntax", &sprite, &config, "false", str);
+
   sprite.current_animation = bunny_hash(BH_DJB2, str, strlen(str));
 
   // ALLOC
@@ -70,6 +75,11 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	   "sprite,syntax", &sprite, &config, "false");
       default_delay = 1 / default_delay;
     }
+
+  bunny_configuration_getf_int
+    ((t_bunny_configuration*)&config, &intertile.x, "Intertile[0]");
+  bunny_configuration_getf_int
+    ((t_bunny_configuration*)&config, &intertile.y, "Intertile[1]");
 
   // ANIMATION FIELDS
   animnode = &config["Animations"];
@@ -118,6 +128,13 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	  (goto DeleteMap, BE_SYNTAX_ERROR,
 	   PATTERN ": Invalid or absent 'Position' field for animation '%s'",
 	   "sprite,syntax", &sprite, &config, "false", it->first.c_str());
+
+      anim->intertile.x = intertile.x;
+      anim->intertile.y = intertile.y;
+      bunny_configuration_getf_int
+	((t_bunny_configuration*)aconf, &anim->intertile.x, "Intertile[0]");
+      bunny_configuration_getf_int
+	((t_bunny_configuration*)aconf, &anim->intertile.y, "Intertile[1]");
 
       // REPETITION
       if ((*aconf).Access("FramePlay"))
@@ -170,6 +187,7 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	anim->browsing = BFB_LEFT_TO_RIGHT;
 
       // ANIMATION REPEAT
+      anim->animation_repeat = -1;
       if ((*aconf).Access("AnimationPlay"))
 	{
 	  if ((*aconf)["AnimationPlay"].GetInt(&tmp) == false || tmp < -1)
@@ -179,8 +197,6 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	       "sprite,syntax", &sprite, &config, "false", it->first.c_str());
 	  anim->animation_repeat = tmp;
 	}
-      else
-	anim->animation_repeat = -1;
 
       // NEXT ANIMATION
       if ((*aconf).Access("RepeatAnimation"))
@@ -192,8 +208,6 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	       "sprite,syntax", &sprite, &config, "false", it->first.c_str());
 	  anim->animation_repeat = tmp;
 	}
-      else
-	anim->animation_repeat = -1;
 
       // NEXT ANIMATION
       if ((*aconf).Access("NextAnimation"))
@@ -220,6 +234,9 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	anim->next_animation = bunny_map_get_data
 	  (sprite.hashname_id, anim->next_animation, int);
     }
+
+  sprite.current_animation = bunny_map_get_data
+    (sprite.hashname_id, sprite.current_animation, int);
 
   return (true);
 

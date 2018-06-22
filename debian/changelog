@@ -9,6 +9,9 @@ liblapin-dev (1.13) UNRELEASED; urgency=low
   * Edit Graphics module
     - Add bunny_clipable_copy macro to copy all proper fields of a clipable to another one.
 
+  * Edit Sprite module
+    - Fix the hashid/int discrepency for current animation and next animation.
+
   * Edit Configuration module
     - Move set, get, go_set_, go_get, _va, get_nbr_, execute and access function to compat
     - Add a setf, getf, childrenf, casesf, executef API with printf like pattern to replace them all.
