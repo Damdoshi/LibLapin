@@ -23,6 +23,8 @@ liblapin-dev (1.13) UNRELEASED; urgency=low
 
   * Edit Misc module
     - Add a bunny_randomize function to randomize a memory chunk
+    - Add a bunny_memswap function to swap memory chunk content
+    - Add a bunny_shuffle function to shuffle a memory chunk
 
 liblapin-dev (1.12) UNRELEASED; urgency=low
 

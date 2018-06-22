@@ -215,6 +215,14 @@ void				*bunny_memdup(const void		*ptr,
 void				bunny_randomize(void			*data,
 						size_t			len);
 
+void				bunny_shuffle(void			*data,
+					      size_t			datalen,
+					      size_t			nmemb);
+
+void				bunny_memswap(void			*a,
+					      void			*b,
+					      size_t			datalen);
+
 /*!
 ** Swap two pointers of any type
 ** \param a The pointer to swap with b
