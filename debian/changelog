@@ -24,6 +24,9 @@ liblapin-dev (1.13) UNRELEASED; urgency=low
     - Move set, get, go_set_, go_get, _va, get_nbr_, execute and access function to compat
     - Add a setf, getf, childrenf, casesf, executef API with printf like pattern to replace them all.
 
+  * Edit collision module
+    - Add bunny_pixel_collision, which is -very- slow on t_bunny_picture.
+
   * Edit Misc module
     - Add a bunny_randomize function to randomize a memory chunk
     - Add a bunny_memswap function to swap memory chunk content

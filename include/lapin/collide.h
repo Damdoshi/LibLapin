@@ -273,4 +273,8 @@ void		bunny_draw_collision_shape(t_bunny_buffer			*tar,
 					   const t_bunny_collision		*x,
 					   unsigned int				col);
 
+bool		bunny_pixel_collision(t_bunny_clipable				*pic,
+				      const t_bunny_position			*pos,
+				      double					amgn);
+
 #endif	/*	__LAPIN_COLLIDE_H__						*/
