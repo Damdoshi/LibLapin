@@ -102,6 +102,7 @@
 # endif
 
 # include			"lapin/porta.h"
+# include			"lapin/attribute.h"
 
 # include			"lapin/enum.h"
 # include			"lapin/error.h"

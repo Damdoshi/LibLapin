@@ -13,10 +13,10 @@
 ** and since the 1.11, to handle wave allocation.
 */
 
-#ifndef				__LAPIN_ALLOCATOR_H__
-# define			__LAPIN_ALLOCATOR_H__
-# if				!defined(__LAPIN_H__)
-#  error			You cannot include this file directly.
+#ifndef		__LAPIN_ALLOCATOR_H__
+# define	__LAPIN_ALLOCATOR_H__
+# if		!defined(__LAPIN_H__)
+#  error	You cannot include this file directly.
 # endif
 
 /*!
@@ -25,7 +25,7 @@
 ** \param siz The amount, in bytes, of data to reserve
 ** \return The address of the first byte of the allocated data. NULL if an error happened.
 */
-void				*bunny_malloc(size_t				siz);
+void		*bunny_malloc(size_t		siz) _BMALLOC();
 
 /*!
 ** Reserve a quantity of chunk of memories and return a pointer to the first of them.
@@ -35,8 +35,8 @@ void				*bunny_malloc(size_t				siz);
 ** \param siz The size of one single element.
 ** \return The address of the first byte of the first allocated element. NULL if an error happened.
 */
-void				*bunny_calloc(size_t				num,
-                          size_t				siz);
+void		*bunny_calloc(size_t		num,
+			      size_t		siz) _BMALLOC();
 /*!
 ** Resize the space previously reserved at the sent address. The new size is given.
 ** If ptr is NULL, then calling bunny_realloc is the same as calling bunny_malloc with
@@ -52,15 +52,15 @@ void				*bunny_calloc(size_t				num,
 ** \return The new address of the data. NULL if an error happened. The original buffer
 ** is left unchanged if this happen.
 */
-void				*bunny_realloc(void				*ptr,
-                           size_t				siz);
+void		*bunny_realloc(void		*ptr,
+			       size_t		siz) _BMALLOC();
 /*!
 ** Make the given chunk of memory available again for a future call of bunny_malloc,
 ** bunny_calloc or bunny_realloc. Validity of the pointer is checked during this function,
 ** so if your pointer is invalid, your program will crash.
 ** \param ptr The address of the first byte of the memory space to free.
 */
-void				bunny_free(void					*ptr);
+void		bunny_free(void			*ptr);
 
 /*!
 ** This function allow you to ask a memory checkup at the end of your program.
@@ -69,7 +69,7 @@ void				bunny_free(void					*ptr);
 ** occured previously.
 ** \param chk Activate or deactivate the memory check.
 */
-void				bunny_set_memory_check(bool			chk);
+void		bunny_set_memory_check(bool	chk);
 
 /*!
 ** This function takes an amount of byte that will be the maximum amount of memory
@@ -77,22 +77,22 @@ void				bunny_set_memory_check(bool			chk);
 ** This function must be called before any other allocation.
 ** \param byt The quantity of bytes the program will be allowed to use.
 */
-void				bunny_set_maximum_ram(size_t			byt);
+void		bunny_set_maximum_ram(size_t	byt);
 
 /*!
 ** Erase the allocator space. Make all pointers deprecate.
 ** Use with caution.
 */
-void				bunny_allocator_reset(void);
+void		bunny_allocator_reset(void);
 
 /*!
 ** Make allocation functions fail.
 ** Use with caution.
 */
-void				bunny_malloc_failure(bool			f);
+void		bunny_malloc_failure(bool	f);
 
-# ifdef				BUNNY_ALLOCATOR_OVERLOAD
-#  define			LAPIN_ALLOCATOR_OVERLOAD
+# ifdef		BUNNY_ALLOCATOR_OVERLOAD
+#  define	LAPIN_ALLOCATOR_OVERLOAD
 # endif
 
 /*!
@@ -100,15 +100,15 @@ void				bunny_malloc_failure(bool			f);
 ** for GCC. The purpose of this macro is to transform every calls to malloc, calloc, realloc
 ** and free into calls to their bunny equivalent without having to change your code.
 */
-# ifdef				LAPIN_ALLOCATOR_OVERLOAD
-#  define			malloc(a)					bunny_malloc(a)
-#  define			calloc(a, b)					bunny_calloc(a, b)
-#  define			realloc(a, b)					bunny_realloc(a, b)
-#  define			free(a)						bunny_free(a)
+# ifdef		LAPIN_ALLOCATOR_OVERLOAD
+#  define	malloc(a)			bunny_malloc(a)
+#  define	calloc(a, b)			bunny_calloc(a, b)
+#  define	realloc(a, b)			bunny_realloc(a, b)
+#  define	free(a)				bunny_free(a)
 # endif
 
-# ifdef				BUNNY_ALLOCATOR_DEACTIVATED
-#  define			LAPIN_ALLOCATOR_DEACTIVATED
+# ifdef		BUNNY_ALLOCATOR_DEACTIVATED
+#  define	LAPIN_ALLOCATOR_DEACTIVATED
 # endif
 
 /*!
@@ -118,11 +118,11 @@ void				bunny_malloc_failure(bool			f);
 ** Considering that tools like valgrind cannot help you to debug if you use the bunny allocator,
 ** deactivating it may help you during your debugging.
 */
-# ifdef				LAPIN_ALLOCATOR_DEACTIVATED
-#  define			bunny_malloc(a)					malloc(a)
-#  define			bunny_calloc(a, b)				calloc(a, b)
-#  define			bunny_realloc(a, b)				realloc(a, b)
-#  define			bunny_free(a)					free(a)
+# ifdef		LAPIN_ALLOCATOR_DEACTIVATED
+#  define	bunny_malloc(a)			malloc(a)
+#  define	bunny_calloc(a, b)		calloc(a, b)
+#  define	bunny_realloc(a, b)		realloc(a, b)
+#  define	bunny_free(a)			free(a)
 # endif
 
-#endif	/*			__LAPIN_ALLOCATOR_H__	*/
+#endif	/*	__LAPIN_ALLOCATOR_H__		*/

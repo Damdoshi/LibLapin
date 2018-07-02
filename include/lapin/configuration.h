@@ -186,22 +186,22 @@ const char		*bunny_configuration_get_address(const t_bunny_configuration	*config
 bool			bunny_configuration_getf_node(t_bunny_configuration		*config,
 						      t_bunny_configuration		**node,
 						      const char			*format,
-						      ...);
+						      ...) _BFMT(3, 4);
 
 bool			bunny_configuration_getf_string(t_bunny_configuration		*config,
 							const char			**string,
 							const char			*format,
-							...);
+							...) _BFMT(3, 4);
 
 bool			bunny_configuration_getf_double(t_bunny_configuration		*config,
 							double				*dbl,
 							const char			*format,
-						      ...);
+						      ...) _BFMT(3, 4);
 
 bool			bunny_configuration_getf_int(t_bunny_configuration		*config,
 						     int				*integer,
 						     const char				*format,
-						     ...);
+						     ...) _BFMT(3, 4);
 
 # if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 /*!
@@ -223,22 +223,22 @@ bool			bunny_configuration_getf_int(t_bunny_configuration		*config,
 bool			bunny_configuration_setf_node(t_bunny_configuration		*config,
 						      const t_bunny_configuration	*node,
 						      const char			*format,
-						      ...);
+						      ...) _BFMT(3, 4);
 
 bool			bunny_configuration_setf_string(t_bunny_configuration		*config,
 							const char			*string,
 							const char			*format,
-							...);
+							...) _BFMT(3, 4);
 
 bool			bunny_configuration_setf_double(t_bunny_configuration		*config,
 							double				dbl,
 							const char			*format,
-						      ...);
+						      ...) _BFMT(3, 4);
 
 bool			bunny_configuration_setf_int(t_bunny_configuration		*config,
 						     int				integer,
 						     const char				*format,
-						     ...);
+						     ...) _BFMT(3, 4);
 
 # if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 /*!
@@ -259,16 +259,16 @@ bool			bunny_configuration_setf_int(t_bunny_configuration		*config,
 
 ssize_t			bunny_configuration_childrenf(const t_bunny_configuration	*c,
 						      const char			*pat,
-						      ...);
+						      ...) _BFMT(2, 3);
 ssize_t			bunny_configuration_casesf(const t_bunny_configuration		*c,
 						   const char				*pat,
-						   ...);
+						   ...) _BFMT(2, 3);
 
 bool			bunny_configuration_executef(t_bunny_configuration		*config,
 						     bool				rec,
 						     t_bunny_configuration		*parameters,
 						     const char				*pattern,
-						     ...);
+						     ...) _BFMT(4, 5);
 
 /*!
 ** Return the first children of the sent node.
