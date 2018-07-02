@@ -132,7 +132,6 @@
 # include			"lapin/fixedpoint.h"
 
 # include			"lapin/container.h"
-# include			"lapin/context.h"
 
 # include			"lapin/sprite.h"
 # include			"lapin/sound_sprite.h"
@@ -141,6 +140,8 @@
 # include			"lapin/history.h"
 # include			"lapin/monitor.h"
 # include			"lapin/misc.h"
+
+# include			"lapin/context.h"
 
 # include			"lapin/compat.h"
 

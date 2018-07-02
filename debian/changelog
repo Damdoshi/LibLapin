@@ -2,6 +2,7 @@ liblapin-dev (1.13) UNRELEASED; urgency=low
 
   * Fix the list container.
   * Add a loading context.
+  * Add a dressing game context.
   * Add Splash context now use placeholders to fully support subcontext.
 
   * Fix the badly used parameter of bunny_perror.

@@ -1,0 +1,38 @@
+[*Dressing*]
+
+{Characters
+  [
+    [Name
+      RessourceFile="./font.ttf"
+      GlyphSize=32
+      String="Damdoshota"
+      ColorMask=255,0,0
+      VerticalAlign="Middle"
+      HorizontalAlign="Middle"
+    ]
+
+    Background = "background.png"
+    Character = "character.dab"
+
+    {Dressings
+      [
+        [Name
+	  RessourceFile="./font.ttf"
+      	  GlyphSize=32
+      	  String="Shirt"
+      	  ColorMask=255,0,0
+          VerticalAlign="Middle"
+          HorizontalAlign="Middle"
+	]
+	'Position on character, not on screen
+	ClothePosition=X,Y,Z
+	{Clothes
+	  [
+	    Icon="shirticon.dab"
+	    OnCharacter="shirt.dab"
+	  ]
+	}
+      ]
+    }
+  ]
+}
