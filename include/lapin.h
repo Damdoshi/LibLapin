@@ -158,6 +158,7 @@
 # ifdef				__cplusplus
 #  include			"lapin/cpp_guard_end.hpp"
 #  include			"lapin/cpp_tools.hpp"
+#  include			"lapin/cpp_idstring.hpp"
 # endif
 # ifdef				__cplusplus
 #  include			"lapin/context/Context.hpp"
