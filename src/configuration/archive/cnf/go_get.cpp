@@ -122,6 +122,10 @@ t_bunny_configuration	*_bunny_configuration_go_get_node(const t_bunny_configurat
   int			tmp;
 
   j = i;
+  if (addr == NULL || *addr == 0 || strcmp(addr, ".") == 0)
+    return (cnf);
+  if (strncmp(addr, "[]", 2) == 0)
+    cnf = bunny_configuration_get_root(cnf);
   while (addr[i] && addr[i] != ']')
     {
       if (addr[i] != '[')
