@@ -295,14 +295,16 @@ t_bunny_response	bunny_loop(t_bunny_window	*window,
 
 	  /// ASYNCHRONOUS COMPUTATION
 	  if (gl_callback.async_computation_response)
-	    while (gl_completed_tasks.empty() == false)
-	      if ((gl_callback.async_computation_response(gl_completed_tasks.front(), data)) != GO_ON)
-		{
+	    {
+	      while (gl_completed_tasks.empty() == false)
+		if ((gl_callback.async_computation_response(gl_completed_tasks.front(), data)) != GO_ON)
+		  {
+		    gl_completed_tasks.pop();
+		    goto end;
+		  }
+		else
 		  gl_completed_tasks.pop();
-		  goto end;
-		}
-	      else
-		gl_completed_tasks.pop();
+	    }
 
 	  bunny_asynclock(delay, BCO_BEFORE_LOOP_MAIN_FUNCTION);
 	  if (gl_callback.loop != NULL)
