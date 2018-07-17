@@ -1,0 +1,3 @@
+[submodule "extlibs/fluidsynth"]
+	path = extlibs/fluidsynth
+	url = https://github.com/Damdoshi/fluidsynth.git
