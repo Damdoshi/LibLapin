@@ -16,7 +16,13 @@ void			bunny_sound_volume(t_bunny_sound	*sound,
     vol = 100;
 
   sound->volume = vol;
-  if (*type == MUSIC)
+  if (*type == MIDI)
+    {
+      //struct bunny_midi *mid = (struct bunny_midi*)sound;
+
+#warning must set the midi volume here
+    }
+  else if (*type == MUSIC)
     ((struct bunny_music*)sound)->music.setVolume(vol);
   else
     ((struct bunny_effect*)sound)->sound.setVolume(vol);

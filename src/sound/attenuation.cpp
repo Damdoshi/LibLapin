@@ -12,7 +12,13 @@ void			bunny_sound_attenuation(t_bunny_sound		*sound,
 
   sound->attenuation = att;
   scream_log_if("%p sound, %f attenuation", "ressource,sound", sound, att);
-  if (*type == MUSIC)
+  if (*type == MIDI)
+    {
+      //struct bunny_midi *mid = (struct bunny_midi*)sound;
+
+#warning set the midi attenuation here
+    }
+  else if (*type == MUSIC)
     ((struct bunny_music*)sound)->music.setAttenuation(att);
   else
     ((struct bunny_effect*)sound)->sound.setAttenuation(att);

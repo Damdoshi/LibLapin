@@ -14,7 +14,13 @@ void			bunny_sound_pitch(t_bunny_sound		*sound,
     pit = 0;
 
   sound->pitch = pit;
-  if (*type == MUSIC)
+  if (*type == MIDI)
+    {
+      //struct bunny_midi *mid = (struct bunny_midi*)sound;
+
+#warning set the midi pitch here
+    }
+  else if (*type == MUSIC)
     ((struct bunny_music*)sound)->music.setPitch(pit);
   else
     ((struct bunny_effect*)sound)->sound.setPitch(pit);

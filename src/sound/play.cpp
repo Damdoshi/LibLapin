@@ -21,7 +21,13 @@ void			bunny_sound_play(t_bunny_sound		*sound)
   else
     *((bool*)&sound->playing) = true;
 
-  if (*type == MUSIC)
+  if (*type == MIDI)
+    {
+      struct bunny_midi *mid = (struct bunny_midi*)sound;
+
+      fluid_player_play(mid->player);
+    }
+  else if (*type == MUSIC)
     ((struct bunny_music*)sound)->music.play();
   else
     ((struct bunny_effect*)sound)->sound.play();

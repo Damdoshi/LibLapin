@@ -10,7 +10,17 @@ void			_bunny_delete_sound(t_bunny_sound		*sound)
   enum _music_or_sound	*type = (enum _music_or_sound*)sound;
 
   free((void*)sound->file);
-  if (*type == MUSIC)
+  if (*type == MIDI)
+    {
+      struct bunny_midi *mus = (struct bunny_midi*)sound;
+
+      if (mus->sound_manager)
+	_bunny_sound_manager_remove((t_bunny_sound_manager*)mus->sound_manager, sound);
+      RessourceManager.TryRemove(ResManager::FLUID_FONT, mus->res_id, mus);
+      RessourceManager.TryRemove(ResManager::FLUID_PLAYER, mus->res_id, mus);
+      delete ((struct bunny_midi*)sound);
+    }
+  else if (*type == MUSIC)
     {
       struct bunny_music *mus = (struct bunny_music*)sound;
 

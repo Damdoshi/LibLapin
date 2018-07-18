@@ -79,6 +79,9 @@ typedef struct			s_bunny_effect
 */
 t_bunny_music			*bunny_load_music(const char			*file);
 
+t_bunny_music			*bunny_load_midi(const char			*midfile,
+						 const char			*soundfont);
+
 /*!
 ** The bunny_load_effect function create in the bunny_malloc memory space a sample
 ** of duration seconds. bunny_new_effect create SAMPLE_PER_SECONDS int16_t inside

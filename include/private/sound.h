@@ -11,10 +11,12 @@
 # include			<SFML/Audio.hpp>
 # include			<map>
 # include			<array>
+# include			"fluidsynth.h"
 
 enum				_music_or_sound
   {
     MUSIC,
+    MIDI,
     EFFECT
   };
 
@@ -55,6 +57,33 @@ struct				bunny_music
   sf::Music			music;
   void				*sound_manager;
 };
+
+struct				bunny_midi
+{
+  size_t			type;
+  char				*file;
+  double			volume;
+  double			pitch;
+  bool				loop;
+  double			position[3];
+  double			attenuation;
+  bool				playing;
+  bool				pause;
+
+  double			duration;
+
+  //
+  size_t			res_id;
+  fluid_sfont_t			*font;
+  int				font_id;
+  fluid_player_t		*player;
+  void				*sound_manager;
+};
+
+extern fluid_settings_t		*gl_fluid_settings;
+extern fluid_synth_t		*gl_fluid_synth;
+extern fluid_audio_driver_t	*gl_fluid_driver;
+extern fluid_midi_router_t	*gl_fluid_router;
 
 struct				bunny_effect
 {

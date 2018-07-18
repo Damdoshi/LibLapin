@@ -3,6 +3,7 @@
 //
 // Bibliothèque Lapin
 
+#include			<string.h>
 #include			"lapin_private.h"
 
 #define				PATTERN		"%s conf_file, %p sound, %p target_conf, %s is_music -> %s (%s)"
@@ -15,7 +16,7 @@ bool				bunny_set_sound_attribute(const char		*conf_file,
   t_bunny_sound			*snd;
   const char			*missing_field;
   t_bunny_configuration		*cnf;
-  const char			*str;
+  const char			*str, *tmps;
   int				tmp;
 
   if (sound == NULL || (cnf = _get_good_conf(conf_file, config)) == NULL)
@@ -36,11 +37,24 @@ bool				bunny_set_sound_attribute(const char		*conf_file,
 	      goto InvalidField;
 	    }
 	}
-      else
+      else if ((tmps = strstr(str, ".mid")) == NULL || strlen(tmps) != 4)
 	{
 	  if ((*sound = (t_bunny_sound*)bunny_load_music(str)) == NULL)
 	    {
 	      missing_field = "Cannot load file given by RessourceFile field";
+	      goto InvalidField;
+	    }
+	}
+      else // MIDI file
+	{
+	  if (bunny_configuration_go_get_string(cnf, &tmps, "RessourceFile[1]") == false)
+	    {
+	      missing_field = "Missing field RessourceFile[1] for soundfont";
+	      goto InvalidField;
+	    }
+	  if ((*sound = (t_bunny_sound*)bunny_load_midi(str, tmps)) == NULL)
+	    {
+	      missing_field = "Cannot load file given by RessourceFile fields";
 	      goto InvalidField;
 	    }
 	}

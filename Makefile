@@ -46,7 +46,9 @@
 
   HEADER	=	-I./include						\
 			-I./include/deps/					\
-			-I./external/include/
+			-I./external/include/					\
+			-I./extlibs/fluidsynth/build/include/			\
+			-I./extlibs/fluidsynth/include/
 
   DEFAULT	=	"\033[00m"
   PINK		=	"\033[1;35m"

@@ -11,6 +11,7 @@
 # include			<unordered_map>
 # include			<array>
 # include			<list>
+# include			"fluidsynth.h"
 
 class				ResManager
 {
@@ -28,6 +29,8 @@ public:
     BUNNY_SAMPLE,
     LOADED_FILE,
     SIZE_LOADED_FILE,
+    FLUID_FONT,
+    FLUID_PLAYER,
     LAST_TYPE
   };
   static const std::string	TypeName[LAST_TYPE];
@@ -157,6 +160,10 @@ public:
 	  bunny_free(it->second.real_ressource);
 	else if (typ == SIZE_LOADED_FILE)
 	  {}
+	else if (typ == FLUID_FONT)
+	  fluid_synth_sfunload(gl_fluid_synth, (int)(size_t)it->second.real_ressource, 0);
+	else if (typ == FLUID_PLAYER)
+	  delete_fluid_player((fluid_player_t*)it->second.real_ressource);
 	ressources[typ].erase(id);
       }
     return(true);

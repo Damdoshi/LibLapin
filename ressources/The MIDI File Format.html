@@ -1,0 +1,615 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!-- saved from url=(0045)https://www.csie.ntu.edu.tw/~r92092/ref/midi/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>The MIDI File Format</title>
+</head>
+<body>
+<h1>The MIDI File Format</h1>
+<h2>MIDI File Structure</h2>
+<h3>Chunks</h3>
+<p>MIDI files are structured into <em>chunks</em>.
+</p><p>Each chunk consists of:
+</p><p>
+<table border="2" cellpadding="2">
+<tbody><tr align="CENTER"><th>type</th><th>length</th><th>data
+</th></tr><tr align="CENTER">
+	<td rowspan="1">4 bytes
+	</td><td rowspan="1">4 bytes
+	</td><td><em>length</em> bytes
+</td></tr></tbody></table>
+</p><ul>
+<li>A 4-byte <em>chunk type</em> (ascii)
+</li><li>A 4-byte <em>length</em> (32 bits, msb first)
+</li><li><em>length</em> bytes of data
+</li></ul>
+
+<p>There are two types of chunks:
+</p><dl>
+<dt>Header Chunks
+</dt><dd>which have a chunk type of "MThd"
+</dd><dt>Track Chunks
+</dt><dd>which have a chunk type of "MTrk"
+</dd></dl>
+<p>A MIDI file consists of a single header chunk followed by
+one or more track chunks.
+</p><p>Since the length-field is mandatory in the structure of chunks, it is
+possible to accomodate chunks other than "MThd" or "MTrk" in a MIDI file, by
+skipping over their contents.
+The MIDI specification <em>requires</em> that software be able to
+handle unexpected chunk-types by ignoring the entire chunk.
+</p><p>
+<table border="2" cellpadding="2">
+<tbody><tr align="CENTER"><th></th><th colspan="5">&lt;---Chunk---&gt;
+</th></tr><tr align="CENTER"><th></th><th>type</th><th>length</th><th colspan="3">Data
+</th></tr><tr align="CENTER"><th rowspan="7" valign="TOP">MIDI<br>File<br>:
+	</th><td rowspan="1"><tt>MThd</tt>
+	</td><td rowspan="1">6
+	</td><td><i>&lt;format&gt;</i>
+	</td><td><i>&lt;tracks&gt;</i>
+	</td><td><i>&lt;division&gt;</i>
+</td></tr><tr align="CENTER">
+	<td rowspan="1"><tt>MTrk</tt>
+	</td><td rowspan="1"><i>&lt;length&gt;</i>
+	</td><td colspan="3"><i>&lt;delta_time&gt;</i> <i>&lt;event&gt;</i>
+	...
+</td></tr><tr align="CENTER">
+	<td colspan="5">:
+</td></tr><tr align="CENTER">
+	<td rowspan="1"><tt>MTrk</tt>
+	</td><td rowspan="1"><i>&lt;length&gt;</i>
+	</td><td colspan="3"><i>&lt;delta_time&gt;</i> <i>&lt;event&gt;</i>
+	...
+</td></tr></tbody></table>
+
+
+</p><h3>Value Representations</h3>
+<p>Within a MIDI file, there is a variety of information in addition
+to the basic MIDI data, such as delta-times and meta-events.
+</p><p>Where such information contains numeric values, these
+are generally represented in one
+of two formats:
+</p><ul>
+<li><a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/#binary">binary</a>
+</li><li><a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/#vlq">variable length quantity</a>
+</li></ul>
+<h4><a name="binary">Binary</a></h4>
+<p>Binary values are stored:
+</p><ul>
+<li>8-bits per byte
+</li><li>MSB first (Most Significant Byte first)
+</li></ul>
+(unless otherwise specified)
+<h4><a name="vlq">Variable Length Quantities</a></h4>
+<p>The <em>variable-length quantity</em> provides a convenient means
+of representing arbitrarily large integers, without creating
+needlessly large fixed-width integers.
+</p><p>A <em>variable-length quantity</em> is a represented as a
+series of 7-bit values, from most-significant to least-significant.
+where the last byte of the series bit 7 (the most significant bit) set to 0,
+and the preceding bytes have bit 7 set to 1.
+</p><p>Examples:
+<table border="2" cellpadding="2">
+<tbody><tr align="CENTER"><th colspan="3">Value</th><th colspan="2">Variable Length representation
+</th>
+</tr><tr align="CENTER"><td>Decimal</td><td>Hex</td><td>Binary</td><td>Binary</td><td>Hex
+</td></tr><tr align="CENTER"><td>-</td><td>abcd</td><td nowrap=""><tt>aaaabbbbccccdddd</tt></td><td nowrap=""><tt>100000aa 1aabbbbc 0cccdddd</tt></td><td>-
+</td></tr><tr align="CENTER"><td>0<br>:<br>127</td><td>00<br>:<br>7F</td><td nowrap=""><tt>0000 0000<br>:<br>0111 1111</tt></td><td nowrap=""><tt>0000 0000<br>:<br>0111 1111</tt></td><td>00<br>:<br>7F
+</td></tr><tr align="CENTER"><td>128<br>:<br>16383</td><td>80<br>:<br>3FFF</td><td nowrap=""><tt>00000000 10000000<br>:<br>00111111 11111111</tt></td><td nowrap=""><tt>10000001 00000000<br>:<br>11111111 01111111</tt></td><td>81 00<br>:<br>FF 7F
+</td></tr><tr align="CENTER"><td>1000</td><td>03E8</td><td nowrap=""><tt>11 1110 1000</tt></td><td nowrap=""><tt>10000111 01101000</tt></td><td>87 68
+</td></tr><tr align="CENTER"><td>100000</td><td>0F4240</td><td nowrap=""><tt>1111 0100 0010 0100 0000</tt></td><td nowrap=""><tt>10111101 10000100 01000000</tt></td><td nowrap="">BD 84 40
+</td></tr></tbody></table>
+</p><p>As you can see from the above examples, small values (0-127) can be
+represented by a single byte, while larger values are also accomodated.
+</p><p>The largest value allowed within a MIDI file
+is <tt>0FFFFFFF</tt>.
+This limit is set to allow variable-length quantities
+to be manipulated as 32-bit integers.
+
+
+</p><h2>Header Chunks</h2>
+<p>The data part of a header chunk contains three 16-bit fields.
+These fields specify the format, number of tracks, and timing
+for the MIDI file.
+</p><p>The length of the header chunk is 6-bytes. However, software
+which reads MIDI files is <em>required</em> to honour the length
+field, even if it is greater than expected. Any unexpected
+data must be ignored.
+
+</p><p>
+<table border="2" cellpadding="2">
+<tbody><tr align="CENTER"><th colspan="5">Header Chunk
+</th></tr><tr align="CENTER"><th>Chunk Type</th><th>length</th><th colspan="3">Data
+</th></tr><tr align="CENTER">
+		 <td rowspan="2">4 bytes
+		 <br>(ascii)
+		 </td><td rowspan="2">4 bytes
+		 <br>(32-bit binary)
+		 </td><td colspan="3">&lt;-- <i>length</i> (= 6 bytes) --&gt;
+</td></tr><tr align="CENTER">
+		 <td>16-bit</td><td>16-bit</td><td>16-bit 
+</td></tr><tr align="CENTER"><td><tt>MThd</tt></td><td><i>&lt;length&gt;</i></td><td><i>&lt;format&gt;</i>
+</td><td><i>&lt;tracks&gt;</i></td><td><i>&lt;division&gt;</i>
+</td></tr></tbody></table>
+</p><dl>
+<dt><i>&lt;length&gt;</i>
+</dt><dd>length in bytes of the chunk data part.
+<br>This is a 32-bit binary number, MSB first.
+<br>This will be exactly 6 (bytes) for any MIDI file created under
+the MIDI&nbsp;1.0 specification.
+Nevertheless, any MIDI file reader should be able to cope with larger header-chunks,
+to allow for future expansion.
+<p>
+</p></dd><dt><i>&lt;format&gt;</i>
+</dt><dd>The MIDI file format.
+<br>This is a 16-bit binary number, MSB first.
+<br>The only valid formats are <a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/#mff0">0</a>, 
+<a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/#mff1">1</a> and <a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/#mff2">2</a>.
+<p>
+</p></dd><dt><i>&lt;tracks&gt;</i>
+</dt><dd>The number of track chunks contained in this MIDI file.
+<br>This is a 16-bit binary number, MSB first.
+<p>
+</p></dd><dt><i>&lt;division&gt;</i>
+</dt><dd>This defines the default unit of delta-time for this MIDI file.
+<br>This is a 16-bit binary value, MSB first.
+<p>This may be in either of two formats, depending on the value of MS bit:
+</p><p>
+<table border="2" cellpadding="2">
+<tbody><tr align="CENTER"><th>Bit:</th><td><tt>15</tt></td><td><tt>14  ...  8</tt></td><td><tt>7  ...  0</tt></td>
+</tr><tr align="CENTER"><th rowspan="2"><i>&lt;division&gt;</i></th><td><code>0</code></td><td colspan="2"><i>ticks per quarter note</i>
+</td></tr><tr align="CENTER"><td><code>1</code></td><td><i>-frames/second</i></td><td><i>ticks / frame</i>
+</td></tr></tbody></table>
+</p><p>
+</p><dl>
+<dt>bit 15 = 0:
+</dt><dd><dl>
+<dt>bits 0-14
+</dt><dd>number of delta-time units
+in each a quarter-note.
+</dd></dl>
+<p>
+</p></dd><dt>bit 15 = 1:
+</dt><dd><dl>
+<dt>bits 0-7</dt><dd>number of delta-time units per SMTPE frame
+</dd><dt>bits 8-14</dt><dd>form a negative number,
+representing the number of SMTPE frames per second.
+Valid values correspond to those in the
+<a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/midi_system_common.html#mtc_qframe">MTC Quarter Frame</a> message.
+<p>
+</p><pre>   -24 = 24 frames per second
+   -25 = 25 frames per second
+   -29 = 30 frames per second, drop frame
+   -30 = 30 frames per second, non-drop frame
+</pre>
+</dd></dl>
+</dd></dl>
+</dd></dl>
+
+<h3>MIDI File Formats</h3>
+<p>MIDI files come in 3 variations:
+</p><ul>
+<li>Format 0
+<br>...which contain a single track
+<p>
+</p></li><li>Format 1
+<br>... which contain one or more simultaneous tracks
+<br>(ie all tracks are to be played simultaneously).
+<p>
+</p></li><li>Format 2
+<br>...which contain one or more independant tracks
+<br>(ie each track is to be played independantly of the others).
+<p>
+</p></li></ul>
+<h4><a name="mff0">Format 0 MIDI Files</a></h4>
+<p>Format 0 MIDI files consist of a header-chunk and a single
+track-chunk.
+</p><p>The single track chunk will contain all the note and tempo information.
+</p><h4><a name="mff1">Format 1 MIDI Files</a></h4>
+<p>Format 1 MIDI files consist of a header-chunk
+and one or more track-chunks, with all tracks being played
+simultaneously.
+</p><p>The first track of a Format 1 file is special, and is also known
+as the 'Tempo Map'. It should contain all meta-events of the
+types 
+<a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/#timesig">Time Signature</a>, and
+<a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/#settempo">Set Tempo</a>.
+The meta-events
+<a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/#trackname">Sequence/Track Name</a>,
+<a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/#seqnum">Sequence Number</a>,
+<a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/#marker">Marker</a>,
+and
+<a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/#smtpeoff">SMTPE Offset</a>.
+should also be on the first track of a Format 1 file.
+
+
+</p><h4><a name="mff2">Format 2 MIDI Files</a></h4>
+<p>Format 2 MIDI files consist of a header-chunk
+and one or more track-chunks, where each track represents
+an independant sequence.
+
+</p><h2>Track Chunks</h2>
+<p>The data part of a track chunk contains one or more
+<i>&lt;delta_time&gt;</i> <i>&lt;event&gt;</i> pairs.
+The <i>&lt;delta_time&gt;</i> is not optional,
+but zero is a valid delta-time.
+</p><p>
+<table border="2" cellpadding="2">
+<tbody><tr align="CENTER"><th colspan="3">Track Chunk
+</th></tr><tr align="CENTER"><th>type</th><th>length</th><th>data
+</th></tr><tr align="CENTER">
+	<td>4 bytes
+	<br>(ascii)
+	</td><td>4 bytes
+	<br>(32-bit binary)
+	</td><td>&lt;-- <i>length</i> bytes --&gt;
+	<br>(binary data)
+</td></tr><tr align="CENTER">
+	<td><tt>MTrk</tt>
+	</td><td><i>&lt;length&gt;</i>
+	</td><td><i>&lt;delta_time&gt;</i> <i>&lt;event&gt;</i>
+		     ...
+</td></tr></tbody></table>
+</p><p>
+</p><dl>
+<dt><i>&lt;delta_time&gt;</i>
+</dt><dd>is the number of 'ticks' from the previous event,
+and is represented as a variable length quantity
+<p>
+</p></dd><dt><i>&lt;event&gt;</i>
+</dt><dd>is one of:
+<ul>
+<li><a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/#midi_event"><i>&lt;midi_event&gt;</i></a>
+</li><li><a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/#sysex_event"><i>&lt;sysex_event&gt;</i></a>
+</li><li><a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/#meta_event"><i>&lt;meta_event&gt;</i></a>
+</li></ul>
+</dd></dl>
+<h3>Events</h3>
+<p>Notice that there are no explicit delimiters between the
+<i>&lt;delta_time&gt;</i> and <i>&lt;event&gt;</i> instances.
+<br>This is possible because both the delta-times and events
+have clearly defined lengths:
+</p><ul>
+<li>The last byte of a delta-time is identified by having MSbit=0;
+</li><li>MIDI Channel messages have a pre-defined length (even when running status
+is used);
+</li><li>and sysex-events and meta-events contain an explicit length field.
+</li></ul>
+<h4><a name="midi_event">MIDI Events</a></h4>
+<p>A <i>&lt;midi_event&gt;</i> is any MIDI Channel message.
+This includes:
+</p><ul>
+<li><a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/midi_channel_voice.html">Channel Voice messages</a>
+</li><li><a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/midi_channel_mode.html">Channel Mode messages</a>
+</li></ul>
+<p><a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/midi_messages.html#running">Running status</a>
+is applicable within MIDI files in the same manner as usual.
+Running status is cancelled by any <i>&lt;sysex_event&gt;</i>
+or <i>&lt;meta_event&gt;</i>
+</p><p>
+
+</p><h4><a name="sysex_event">Sysex Events</a></h4>
+<p>Where is is desirable to include messages other than
+MIDI Channel messages in a MIDI file (System Exclusive messages in particular),
+the <i>&lt;sysex_event&gt;</i>
+can be used.
+</p><p>Sysex events come in two flavors:
+<table border="2" cellpadding="2">
+<caption><strong>Sysex Events</strong></caption>
+<tbody><tr valign="TOP">
+    <td nowrap=""><tt>F0</tt> <i>&lt;length&gt;</i> <i>&lt;sysex_data&gt;</i>
+    </td><td colspan="2"><b>F0 Sysex Event</b>
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2"><p>This results in a <tt>F0</tt> being sent (Start-Of-Exclusive),
+	followed by <i>&lt;sysex_data&gt;</i>
+</p></td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>&lt;length&gt;</i>
+    </td><td>is a variable length quantity, specifying the length of 
+	<i>&lt;sysex_data&gt;</i>
+</td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>&lt;sysex_data&gt;</i>
+    </td><td><tt>F0</tt> <i>&lt;sysex_data&gt;</i>
+	<br>is sent as a MIDI message.
+</td></tr><tr valign="TOP">
+    <td nowrap=""><tt>F7</tt> <i>&lt;length&gt;</i> <i>&lt;any_data&gt;</i>
+    </td><td colspan="2"><b>F7 Sysex Event</b> (or 'escape')
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2">This results in exactly <i>&lt;any_data&gt;</i> being sent,
+	without anything else being added.
+</td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>&lt;length&gt;</i>
+    </td><td>is a variable length quantity, specifying the length of
+	<i>&lt;any_data&gt;</i>
+</td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>&lt;any_data&gt;</i>
+    </td><td><i>&lt;any_data&gt;</i>
+	<br>is sent as a MIDI message.
+</td></tr></tbody></table>
+</p><p>In both cases, the End-Of-Exclusive message, <tt>F7</tt>, is not sent
+automatically. It must be  specified explicitly within <i>&lt;sysex_data&gt;</i>
+or <i>&lt;any_data&gt;</i>.
+
+</p><p>Most System Exclusive messages are quite simple, and are sent
+as a single packet of bytes, starting with <tt>F0</tt> and ending with
+<tt>F7</tt>. These are easily accomodated using the <tt>F0</tt> form of
+the <i>&lt;sysex_event&gt;</i>
+</p><p>However, some System Exclusive messages are used
+to control device parameters in real-time, and what is syntactically
+a single System Exclusive message may consist
+of a series of small parts which must be sent with appropriate delays.
+Hence it is necessary to be able to break up a single message into
+a number of events, with appropriate delta-times.
+This can be accomodated by using the <tt>F7</tt> form of the
+<i>&lt;sysex_event&gt;</i>.
+</p><p>In fact, the F7 Sysex Event can be used to included any
+data into the MIDI stream, such as MIDI System Real-Time
+messages (though this is generally not desirable).
+</p><dl>
+<dt>Example 1:
+</dt><dd>To generate the message:
+<br><tt>F0 7E 09 03 01 01 F7</tt>
+<br>(Sample Dump Request - Device 9, sample number 257)
+<br>the <i>&lt;sysex_event&gt;</i> would be:
+<br><tt>F0 06 7E 09 03 01 01 F7</tt>
+<br>or alternately:
+<br><tt>F7 07 F0 7E 09 03 01 01 F7</tt>
+</dd><dt>Example 2:
+</dt><dd>The MIDI System Real-Time message 'stop' can be inserted using
+<br>the <i>&lt;event&gt;</i> <tt>F7 01 FC</tt>, while 'continue'.
+would be <tt>F7 01 FB</tt>.
+<p>Suppose you wanted to pause an external drum machine by
+sending a 'stop', followed 48 delta-time units later by 'continue'.
+The complete delta-time/event sequence would look something like this:
+</p><pre>  00 F7 01 FC 30 F7 01 FB
+</pre>
+</dd></dl>
+<p>
+</p><h4><a name="meta_event">Meta Events</a></h4>
+<p>Meta Events are used for things like
+track-names, lyrics and cue-points, which don't 
+result in MIDI messages being sent,
+but are still useful components of a MIDI file.
+</p><p>Meta Events have the general form:
+</p><dl>
+<dt><tt>FF</tt> <i>&lt;type&gt;</i> <i>&lt;length&gt;</i> <i>&lt;data&gt;</i>
+</dt><dd><p>where:
+</p><dl>
+<p>
+</p><dt><i>&lt;type&gt;</i>
+</dt><dd>is a single byte, specifying the type of meta-event.
+<br>The possible range is <tt>00-7F</tt>.
+Not all values in this range are defined, but programs must be able
+to cope with (ie ignore) unexpected values by examining the length and
+skipping over the data portion.
+<p>
+</p></dd><dt><i>&lt;length&gt;</i>
+</dt><dd>is the number of bytes of <i>&lt;data&gt;</i> following.
+<br>This is a variable length quantity
+<br>0 is a valid <i>&lt;length&gt;</i>
+<p>
+</p></dd><dt><i>&lt;data&gt;</i>
+</dt><dd>zero or more bytes of data
+</dd></dl>
+</dd></dl>
+<table border="2" cellpadding="2">
+<caption><strong>Meta Events</strong></caption>
+<tbody><tr valign="TOP">
+    <td nowrap=""><tt>FF 00 02</tt> <i>ss ss</i>
+    </td><td colspan="2"><b><a name="seqnum">Sequence Number</a></b>
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2">This is an optional event, which must occur only at the
+        start of a track, before any non-zero delta-time.
+    <p>For Format 2 MIDI files, this is used to identify each
+        track. If omitted, the sequences are numbered sequentially
+        in the order the tracks appear.
+    </p><p>For Format 1 files, this event should occur on the
+        first track only.
+</p></td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>ss ss</i>
+    </td><td>Sequence Number, 16 bit binary
+</td></tr><tr valign="TOP">
+    <td nowrap=""><tt>FF 01</tt> <i>&lt;len&gt;</i> <i>&lt;text&gt;</i>
+    </td><td colspan="2"><b>Text Event</b>
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2">This event is used for annotating the track with arbitrary text.
+    <br>Arbitrary 8-bit data (other than ascii text) is also permitted.
+</td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>&lt;len&gt;</i>
+    </td><td>length of <i>&lt;text&gt;</i> (variable length quantity)
+</td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>&lt;text&gt;</i>
+    </td><td><i>&lt;len&gt;</i> bytes of ascii text, or 8-bit binary data
+</td></tr><tr valign="TOP">
+    <td nowrap=""><tt>FF 02</tt> <i>&lt;len&gt;</i> <i>&lt;text&gt;</i>
+    </td><td colspan="2"><b>Copyright Notice</b>
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2">This event is for a Copyright notice in ascii text.
+    <br>This should be of the form "(C) 1850 J.Strauss"
+    <p>This event should be the first event on the first track.
+</p></td></tr><tr valign="TOP">
+    <td nowrap=""><tt>FF 03</tt> <i>&lt;len&gt;</i> <i>&lt;text&gt;</i>
+    </td><td colspan="2"><b><a name="trackname">Sequence/Track Name</a></b>
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2">Name of the sequence or track
+</td></tr><tr valign="TOP">
+    <td nowrap=""><tt>FF 04</tt> <i>&lt;len&gt;</i> <i>&lt;text&gt;</i>
+    </td><td colspan="2"><b>Instrument Name</b>
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2">A description of the instrument(s) used on this track.
+    <br>This can also be used to describe instruments on a
+        particular MIDI Channel within a track, by preceding
+        this event with the meta-event MIDI Channel Prefix.
+        (or specifying the channel(s) within the text).
+</td></tr><tr valign="TOP">
+    <td nowrap=""><tt>FF 05</tt> <i>&lt;len&gt;</i> <i>&lt;text&gt;</i>
+    </td><td colspan="2"><b>Lyric</b>
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2">Lyrics for the song.
+    <br>Normally, each syllable will have it's own lyric-event,
+        which occurs at the time the lyric is to be sung.
+</td></tr><tr valign="TOP">
+    <td nowrap=""><tt>FF 06</tt> <i>&lt;len&gt;</i> <i>&lt;text&gt;</i>
+    </td><td colspan="2"><b><a name="marker">Marker</a></b>
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2">Normally on the first track of a format 1 or format 0 file.
+    <br>Marks a significant point in the sequence (eg "Verse 1")
+</td></tr><tr valign="TOP">
+    <td nowrap=""><tt>FF 07</tt> <i>&lt;len&gt;</i> <i>&lt;text&gt;</i>
+    </td><td colspan="2"><b>Cue Point</b>
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2">Used to include cues for events happening on-stage, such
+        as "curtain rises", "exit, stage left", etc.
+</td></tr><tr valign="TOP">
+    <td nowrap=""><tt>FF 20 01</tt> <i>cc</i>
+    </td><td colspan="2"><b>MIDI Channel Prefix</b>
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2">Associate all following meta-events and sysex-events
+        with the specified MIDI channel, until the next <i>&lt;midi_event&gt;</i>
+        (which must contain MIDI channel information).
+</td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>cc</i>
+    </td><td>MIDI channel 1-16 <br>Range: <tt>00-0F</tt>
+</td></tr><tr valign="TOP">
+    <td nowrap=""><tt>FF 2F 00</tt>
+    </td><td colspan="2"><b>End of Track</b>
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2">This event is <em>not</em> optional.
+    <br>It is used to give the track a clearly defined length, which is
+        essential information if the track is looped or concatenated with
+        another track.
+</td></tr><tr valign="TOP">
+    <td nowrap=""><tt>FF 51 03</tt> <i>tt tt tt</i>
+    </td><td colspan="2"><b><a name="settempo">Set Tempo</a></b>
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2">This sets the tempo in microseconds per quarter note.
+	This means a change in the unit-length of a delta-time tick.
+	<a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/#note1">(note 1)</a>
+
+    <p>If not specified, the default tempo is 120 beats/minute,
+        which is equivalent to <i>tttttt</i>=500000
+</p></td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>tt tt tt</i>
+    </td><td colspan="2">New tempo, in us/quarter-note<br>24-bit binary
+
+</td></tr><tr valign="TOP">
+    <td nowrap=""><tt>FF 54 05</tt> <i>hh mm ss fr ff</i>
+    </td><td colspan="2"><b><a name="smtpeoff">SMTPE Offset</a></b>
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2">This (optional) event specifies the SMTPE time
+	at which the track is to start.
+	<br>This event must occur before any non-zero delta-times,
+	and before any MIDI events.
+	<p>In a format 1 MIDI file, this event must be on the first track
+	(the tempo map).
+</p></td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER" nowrap=""><i>hh mm ss fr</i>
+    </td><td>hours/minutes/seconds/frames in SMTPE format
+	<br>this must be consistant with the message
+	<a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/midi_system_common.html#mtc_qframe">MIDI Time Code Quarter Frame</a>
+	(in a particular, the time-code type must be present in <i>hh</i>)
+</td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>ff</i>
+    </td><td>Fractional frame, in hundreth's of a frame
+
+</td></tr><tr valign="TOP">
+    <td nowrap=""><tt>FF 58 04</tt> <i>nn dd cc bb</i>
+    </td><td colspan="2"><b><a name="timesig">Time Signature</a></b>
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2">Time signature of the form:
+	<br><i>nn</i>/2^<i>dd</i>
+	<br>eg: 6/8 would be specified using <i>nn</i>=6, <i>dd</i>=3
+	<p>The parameter <i>cc</i> is the number of MIDI Clocks
+	per metronome tick.
+	</p><p>Normally, there are 24 MIDI Clocks per quarter note.
+	However, some software allows this to be set by the user.
+	The parameter <i>bb</i> defines this in terms of the
+	number of 1/32 notes which make up the usual 24 MIDI Clocks
+	(the 'standard' quarter note).
+</p></td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>nn</i>
+    </td><td>Time signature, numerator 
+</td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>dd</i>
+    </td><td>Time signature, denominator expressed as a
+	power of 2.
+	<br>eg a denominator of 4 is expressed as <i>dd</i>=2
+</td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>cc</i>
+    </td><td>MIDI Clocks per metronome tick
+</td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>bb</i>
+    </td><td>Number of 1/32 notes per 24 MIDI clocks (8 is standard)
+</td></tr><tr valign="TOP">
+    <td nowrap=""><tt>FF 59 02</tt> <i>sf mi</i>
+    </td><td colspan="2"><b>Key Signature</b>
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2">Key Signature, expressed as the number of
+	sharps or flats, and a major/minor flag.
+	<p>0 represents a key of C, negative numbers represent
+	'flats', while positive numbers represent 'sharps'.
+</p></td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>sf</i>
+    </td><td>number of sharps or flats
+	<br>-7 = 7 flats
+	<br> 0 = key of C
+	<br>+7 = 7 sharps
+</td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>mi</i>
+    </td><td>0 = major key
+	<br>1 = minor key
+</td></tr><tr valign="TOP">
+    <td nowrap=""><tt>FF 7F</tt> <i>&lt;len&gt;</i> <i>&lt;id&gt;</i> <i>&lt;data&gt;</i>
+    </td><td colspan="2"><b>Sequencer-Specific Meta-event</b>
+</td></tr><tr valign="TOP"><td>
+    </td><td colspan="2">This is the MIDI-file equivalent of the System Exclusive
+	Message.
+	<p>A manufacturer may incorporate sequencer-specific directives into
+	a MIDI file using this event.
+</p></td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>&lt;len&gt;</i>
+    </td><td>length of <i>&lt;id&gt;</i>+<i>&lt;data&gt;</i> (variable length quantity)
+</td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>&lt;id&gt;</i>
+    </td><td>1 or 3 bytes representing the Manufacturer's ID
+	<br>This value is the same as is used for 
+	<a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/midi_system_exclusive.html">MIDI System Exclusive messages</a>
+</td></tr><tr><td>
+    </td><td valign="TOP" align="CENTER"><i>&lt;data&gt;</i>
+    </td><td>8-bit binary data
+</td></tr></tbody></table>
+
+
+
+
+
+
+
+
+
+
+<hr>
+<h2>Footnotes</h2>
+<dl>
+<dt><a name="note1">Note 1</a></dt><dd>In the case where the value of 
+<i>&lt;division&gt;</i> (in the header chunk) defines
+delta-time units in 'ticks per quarter note' (MSbit=0),
+a change in tempo means a change in the length of a unit of delta-time.
+<p>In the case where <i>&lt;division&gt;</i> MSbit=1, and the 'ticks'
+are defined in absolute terms (ticks/frame and frames/second),
+it is not clear from the specification
+what effect a new tempo should have.
+</p><p>
+</p></dd></dl>
+
+<hr>
+<p><a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/midi_system_exclusive.html">
+<img src="./The MIDI File Format_files/left.gif" align="top" alt="Previous">&nbsp;midi_system_exclusive.html</a>
+<a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/contents.html"><img src="./The MIDI File Format_files/up.gif" align="top" alt="Up">
+Contents</a>
+<a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/further_reading.html">
+<img src="./The MIDI File Format_files/right.gif" align="top" alt="Next">
+further_reading.html</a>
+</p><p>Please note this <a href="https://www.csie.ntu.edu.tw/~r92092/ref/midi/preface.html">Disclaimer</a>
+</p><hr>
+
+
+</body></html>

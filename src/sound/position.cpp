@@ -16,7 +16,13 @@ void			bunny_sound_position(t_bunny_sound		*sound,
   sound->position[1] = y;
   sound->position[2] = z;
 
-  if (*type == MUSIC)
+  if (*type == MIDI)
+    {
+      //struct bunny_midi *mid = (struct bunny_midi*)sound;
+
+#warning set the midi position
+    }
+  else if (*type == MUSIC)
     ((struct bunny_music*)sound)->music.setPosition(x, y, z);
   else
     ((struct bunny_effect*)sound)->sound.setPosition(x, y, z);
