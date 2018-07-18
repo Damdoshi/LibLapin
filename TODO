@@ -1,3 +1,35 @@
+Dans le gestionnaire de ressource, créer un "prepare to record" qui pre enregistre
+les valeurs (ou garde dans un coin lesquelles ont été ajoutées) et un "record"
+qui enregistre pour de vrai. l'idée étant de "cancel" en cas d'erreur.
+
+Lecteur de midi avec fluidsynth (sf::midi?)
+Lecteur de video avec libtheoraplayer (sf::theora?)
+Lecteur de mod avec ? (sf::mod?)
+
+
+En Dabsic, une comparaison avec des elements séparés par des virules signifie de tester avec chaque element de la liste?
+Ca pourrait etre sympa, meme si cela implique de deplacer la priorité de la virgule depuis
+le haut jusqu'au litteral... ce qui serait pas plus mal.
+Exemple:
+
+  a < b, c, d
+  a == b, c, d
+  a, b >= c, d    veut dire a >= c && a >= d && b >= c && b >= d
+
+
+Ajouter la repetition des sprites situés sur un tileset bouclant
+
+
+Un systeme de conversion configuration->struct a partir d'un descriptif facon
+printf. il resoud les offset tout seul ou prend ne paramètre les addresse des champs
+
+ Ajouter la doc de tilemap dans le site web et dans formats/
+
+ Ajouter les informations d'erreur dans sprite/tilemap/dressing en
+ cas d'erreur de chargement de fichier (le minimum quoi...)
+
+=> dress up context
+
 Fonction "make it fit" pour scaler un clipable pour qu'il occupe 100% d'un buffer.
 Des fonctions similiares prenant des % en parametre pour prendre un pourcentage de la taille.
 Ou juste une seul... celle avec le parametre
@@ -7,9 +39,11 @@ avec une option pour le faire *recursivement*
 
 
 Faire un module pour faire des IA de jeux... capable de faire des analyses à la première personne.
+=> Que faire? J'ai du mal a comprendre comment une lib pourrait aider ce qui ressemble
+beaucoup a une fonction.
+Ou alors il s'agirait d'une facon de relier le jeu a de la conf.
 
-Ajouter dans bunny configuration des accesseurs type go get prenant un pattern type printf...
-Utiliser les builtins de GCC pour la sécurisation du pattern.
+
 
 Operateur ->= permettant de faire
 root ->= lol ====> root = root->lol
@@ -20,6 +54,4 @@ de facon a permettre de dire "cast dans le meme type que telle variable"
 
 Generaliser la fonction "is_last" permettant de savoir si l'element actuel est le dernier.
 Il faudrait aussi faire un "is_first" dans le cas ou on parcoure a l'envers une configuration ou un conteneur.
-
-=> Nouvelles callbacks pour "KeyIsDown", "ButtonIsDown", etc.
 
