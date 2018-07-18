@@ -75,6 +75,7 @@ t_bunny_connect_response_function bunny_context_connect;
 t_bunny_entering_context_function bunny_context_entering;
 t_bunny_leaving_context_function bunny_context_leaving;
 t_bunny_async_computation_response_function bunny_context_async_computation;
+t_bunny_event_response_function	bunny_context_event_response;
 
 t_bunny_key_function		bunny_subcontext_key;
 t_bunny_type_function		bunny_subcontext_type;
@@ -95,6 +96,7 @@ t_bunny_connect_response_function bunny_subcontext_connect;
 t_bunny_entering_context_function bunny_subcontext_entering;
 t_bunny_leaving_context_function bunny_subcontext_leaving;
 t_bunny_async_computation_response_function bunny_subcontext_async_computation;
+t_bunny_event_response_function	bunny_subcontext_event_response;
 
 # define			bunny_declare_context(name)	\
   t_bunny_key_function		name ## _key;			\
@@ -115,7 +117,8 @@ t_bunny_async_computation_response_function bunny_subcontext_async_computation;
   t_bunny_connect_response_function name ## _connect;		\
   t_bunny_entering_context_function name ## _entering;		\
   t_bunny_leaving_context_function name ## _leaving;		\
-  t_bunny_async_computation_response_function name ## _async_computation
+  t_bunny_async_computation_response_function name ## _async_computation; \
+  t_bunny_event_response_function name ## _event_response
 
 # include			"context/splash.h"
 # include			"context/loading.h"

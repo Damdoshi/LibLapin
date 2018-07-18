@@ -204,3 +204,13 @@ t_bunny_response	bunny_context_async_computation(void	*cmt,
   return (GO_ON);
 }
 
+t_bunny_response	bunny_context_event_response(const t_bunny_event *event,
+						     void *data)
+{
+  t_bunny_context_runtime_info *x = (t_bunny_context_runtime_info*)data;
+
+  if (x->subcontext.event)
+    return (x->subcontext.event(event, data));
+  return (GO_ON);
+}
+

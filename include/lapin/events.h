@@ -608,6 +608,122 @@ typedef t_bunny_response	t_bunny_async_computation_response_function(void *cmt,
 */
 void				bunny_set_async_computation_response(t_bunny_async_computation_response func);
 
+/*
+** It miss touch event and sensor event (as the main loop) that are also
+** available throught SFML. It should be added later.
+** It also miss mouse entered and mouse left
+*/
+typedef enum			e_bunny_event_type
+  {
+    BET_CLOSE_WINDOW,
+    BET_RESIZE_WINDOW,
+    BET_LOST_FOCUS,
+    BET_GAIN_FOCUS,
+    BET_TEXT_ENTERED,
+    BET_KEY_PRESSED,
+    BET_KEY_RELEASED,
+    __BET_UNUSED0,
+    BET_MOUSE_WHEEL,
+    BET_MOUSE_BUTTON_PRESSED,
+    BET_MOUSE_BUTTON_RELEASED,
+    BET_MOUSE_MOVED,
+    BET_MOUSE_ENTERED,
+    BET_MOUSE_LEFT,
+    BET_JOYSTICK_BUTTON_PRESSED,
+    BET_JOYSTICK_BUTTON_RELEASED,
+    BET_JOYSTICK_MOVED,
+    BET_JOYSTICK_CONNECTED,
+    BET_JOYSTICK_DISCONNECTED,
+    BET_TOUCH_BEGAN,
+    BET_TOUCH_MOVED,
+    BET_TOUCH_ENDED,
+    BET_SENSOR
+  }				t_bunny_event_type;
+
+typedef struct			s_bunny_size_event
+{
+  unsigned int			width;
+  unsigned int			height;
+}				t_bunny_size_event;
+
+typedef struct			s_bunny_key_event
+{
+  t_bunny_keysym		sym;
+  bool				alt;
+  bool				control;
+  bool				shift;
+  bool				system;
+}				t_bunny_key_event;
+
+typedef struct			s_bunny_text_event
+{
+  uint32_t			unicode;
+}				t_bunny_text_event;
+
+typedef struct			s_bunny_mouse_move_event
+{
+  int				x;
+  int				y;
+}				t_bunny_mouse_move_event;
+
+typedef struct			s_bunny_mouse_button_event
+{
+  t_bunny_mouse_button		button;
+  int				x;
+  int				y;
+}				t_bunny_mouse_button_event;
+
+typedef struct			s_bunny_mouse_wheel_event
+{
+  int				wheel;
+  int				delta;
+  int				x;
+  int				y;
+}				t_bunny_mouse_wheel_event;
+
+typedef struct			s_bunny_joystick_connect_event
+{
+  unsigned int			joystick_id;
+}				t_bunny_joystick_connect_event;
+
+typedef struct			s_bunny_joystick_move_event
+{
+  unsigned int			joystick_id;
+  t_bunny_joy_axis		axis;
+  float				position;
+}				t_bunny_joystick_move_event;
+
+typedef struct			s_bunny_joystick_button_event
+{
+  unsigned int			joystick_id;
+  unsigned int			button;
+}				t_bunny_joystick_button_event;
+
+typedef union			u_bunny_event
+{
+  t_bunny_event_type		type;
+  union
+  {
+    t_bunny_size_event		size;
+    t_bunny_key_event		key;
+    t_bunny_text_event		text;
+    t_bunny_mouse_move_event	mouse_moved;
+    t_bunny_mouse_button_event	mouse_button;
+    t_bunny_mouse_wheel_event	wheel;
+    t_bunny_joystick_connect_event joy_connect;
+    t_bunny_joystick_move_event	joy_move;
+    t_bunny_joystick_button_event joy_button;
+  };
+}				t_bunny_event;
+
+typedef t_bunny_response	(*t_bunny_event_response)(const t_bunny_event	*event,
+							  void			*data);
+
+typedef t_bunny_response	t_bunny_event_response_function(const t_bunny_event *event,
+								void		*data);
+
+void				bunny_set_event_response(t_bunny_event_response	resp);
+
 /*!
 ** The t_bunny_context structure is a collection of function pointer of various types.
 ** These types match all function pointer that can be sent with bunny_set_*_response,
@@ -639,6 +755,7 @@ typedef struct			s_bunny_context
   t_bunny_loop			entering_context;
   t_bunny_leaving_context	leaving_context;
   t_bunny_async_computation_response async_computation_response;
+  t_bunny_event_response	event;
 }				t_bunny_context;
 
 /*!
@@ -676,6 +793,7 @@ typedef struct			s_bunny_anonymous_context
   void				*entering_context;
   void				*leaving_context;
   void				*async_computation_response;
+  void				*event;
 }				t_bunny_anonymous_context;
 
 /*!

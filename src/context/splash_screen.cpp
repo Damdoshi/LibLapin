@@ -320,5 +320,6 @@ const t_bunny_context		gl_bunny_splash_context =
     bunny_context_connect,
     (t_bunny_loop)splash_entering,
     (t_bunny_leaving_context)splash_leaving,
-    bunny_context_async_computation
+    bunny_context_async_computation,
+    bunny_context_event_response
   };

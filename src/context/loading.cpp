@@ -254,7 +254,8 @@ const t_bunny_context	gl_bunny_loading_context =
     bunny_context_connect,
     (t_bunny_loop)loading_entering,
     (t_bunny_leaving_context)loading_leaving,
-    (t_bunny_async_computation_response)loading_async_response
+    (t_bunny_async_computation_response)loading_async_response,
+    bunny_context_event_response
   };
 
 bool			bunny_init_loading_context(t_bunny_loading_screen *_ld)

@@ -9,6 +9,8 @@
 
 #define			PATTERN		"%p window, %u frequency, %p parameter ("
 
+const t_bunny_event	*__bunny_event_convert(const sf::Event	&);
+
 t_bunny_response	bunny_loop(t_bunny_window	*window,
 				   unsigned char	freq,
 				   void			*data)
@@ -54,6 +56,15 @@ t_bunny_response	bunny_loop(t_bunny_window	*window,
 	      {
 		if (event.type == sf::Event::Closed)
 		  return (EXIT_ON_CROSS);
+
+		// Generic event handler
+		if (gl_callback.event)
+		  {
+		    scream_log_if(PATTERN "event)", "event", window, freq, data);
+		    if ((rep = gl_callback.event(__bunny_event_convert(event), data)) != GO_ON)
+		      goto end;
+		  }
+
 		//////
 		/////		WINDOW
 		////
