@@ -187,5 +187,38 @@ bool			bunny_read_rawstring(const char		*str,
 int			bunny_which_line(const char		*str,
 					 int			index);
 
+size_t			bunny_read_until_it_is_full(int		fd,
+						    void	*rd,
+						    size_t	len);
+
+# ifdef				__MINGW32__
+#  pragma			pack(1)
+# endif
+typedef struct		s_bunny_box
+{
+  char			key[4];
+  uint32_t		box_size;
+  char			data[__ZERO_LENGTH__];
+}			t_bunny_box;
+# define		bunny_box_size(x)			\
+  ((size_t)(sizeof(char[4]) + sizeof(uint32_t) + x))
+# pragma		pack()
+
+bool			bunny_test_box(const void		*data,
+				       off_t			offset,
+				       const char		*str);
+
+off_t			bunny_skip_box(const void		*data,
+				       off_t			offset,
+				       off_t			maxlen);
+
+t_bunny_box		*bunny_read_box(const void		*data,
+					off_t			*offset,
+					off_t			maxlen);
+
+t_bunny_box		*bunny_load_box(int			fd);
+
+t_bunny_box		*bunny_create_box(size_t		len);
+
 #endif	/*		__LAPIN_PARSING_H__			*/
 
