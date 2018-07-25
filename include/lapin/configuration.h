@@ -152,6 +152,8 @@ void			bunny_delete_node(t_bunny_configuration				*config,
 */
 void			bunny_configuration_create_mode(bool				cmode);
 
+bool			bunny_configuration_get_create_mode(void);
+
 /*!
 ** Get the parent of the sent configuration node.
 ** \param config The config we want to parent

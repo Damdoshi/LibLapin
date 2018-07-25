@@ -11,3 +11,8 @@ void			bunny_configuration_create_mode(bool			cmode)
   scream_log_if("%s", "configuration", cmode ? "true" : "false");
 }
 
+bool			bunny_configuration_get_create_mode(void)
+{
+  return (SmallConf::create_mode);
+}
+
