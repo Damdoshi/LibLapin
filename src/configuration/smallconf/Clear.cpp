@@ -13,21 +13,12 @@ void			SmallConf::Clear(void)
   std::vector<SmallConf*> dupx = array;
   std::vector<SmallConf*>::iterator itx;
 
-  if (sequence)
-    {
-      delete sequence;
-      sequence = NULL;
-    }
-  if (expression)
-    {
-      delete expression;
-      expression = NULL;
-    }
-  if (function)
-    {
-      delete function;
-      function = NULL;
-    }
+  delete sequence;
+  sequence = NULL;
+  delete expression;
+  expression = NULL;
+  delete function;
+  function = NULL;
 
   for (it = dup.begin(); it != dup.end(); ++it)
     {
