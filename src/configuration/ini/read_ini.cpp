@@ -22,15 +22,27 @@ static bool		read_inside_scope(t_bunny_configuration		*fileroot,
 					  ssize_t			&i,
 					  SmallConf			&conf)
 {
+  t_bunny_configuration	*cnf;
   char			buffer[512];
 
   read_separator(code, i);
-  if (getfieldname(code, i, &buffer[0], sizeof(buffer), conf, false) == false)
+  if ((cnf = _bunny_configuration_go_get_node
+       ((t_bunny_configuration*)&conf, code, i)) == NULL)
+    scream_error_if
+      (return (false), BE_SYNTAX_ERROR,
+       "%p fileroot, %s code, %d i, %p config -> %s "
+       "(Error while getting field name on line %s:%d)",
+       "configuration,syntax",
+       fileroot, code, i, &conf, "false",
+       SmallConf::file_read.top().c_str(), whichline(code, i));
+  /*
+    if (getfieldname(code, i, &buffer[0], sizeof(buffer), conf, false) == false)
     return (false);
+  */
   read_separator(code, i);
   if (readtext(code, i, "=") == false)
     return (false);
-  SmallConf		&newnode = conf[&buffer[0]];
+  SmallConf		&newnode = *(SmallConf*)cnf;//conf[&buffer[0]];
   int			iteration = 0;
 
   newnode.construct = SmallConf::ARRAY;
