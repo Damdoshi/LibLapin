@@ -23,8 +23,7 @@ int			bpt::NetCom::Server::RawRead(Client		&clt)
       nbuff = new char[clt.size_received + this->chunk_size + 1];
       memcpy(nbuff, tbuff.unknown, clt.size_received);
       clt.size_received += this->chunk_size;
-      if (clt.buffer != NULL)
-	delete[] clt.buffer;
+      delete[] clt.buffer;
       clt.buffer = nbuff;
       clt.cursor = &clt.buffer[al];
     }
