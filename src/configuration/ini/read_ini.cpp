@@ -34,14 +34,10 @@ static bool		read_inside_scope(t_bunny_configuration		*fileroot,
        "configuration,syntax",
        fileroot, code, (int)i, &conf, "false",
        SmallConf::file_read.top().c_str(), whichline(code, i));
-  /*
-    if (getfieldname(code, i, &buffer[0], sizeof(buffer), conf, false) == false)
-    return (false);
-  */
   read_separator(code, i);
   if (readtext(code, i, "=") == false)
     return (false);
-  SmallConf		&newnode = *(SmallConf*)cnf;//conf[&buffer[0]];
+  SmallConf		&newnode = *(SmallConf*)cnf;
   int			iteration = 0;
 
   newnode.construct = SmallConf::ARRAY;
