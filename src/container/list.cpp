@@ -153,7 +153,7 @@ struct			qsort_packet
   void			*ptr;
 };
 
-#if			!(_WIN32 || __WIN32__)
+#if			!(_WIN32 || __WIN32__ || __APPLE__)
 
 static int		to_qsort(const void			*a,
 				 const void			*b,
@@ -190,7 +190,7 @@ void			bunny_list_sort(t_bunny_list		*list,
     array[i] = (void*)node->data;
   packet.cmp = cmp;
   packet.ptr = param;
-#if			_WIN32 || __WIN32__
+#if			_WIN32 || __WIN32__ || __APPLE__
   bunny_shitty_sort(*array, bunny_list_size(list), sizeof(*array), param, cmp);
 #else
   qsort_r(*array, bunny_list_size(list), sizeof(*array), to_qsort, &packet);

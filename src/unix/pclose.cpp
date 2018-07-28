@@ -3,7 +3,7 @@
 //
 // Lapin library
 
-#if			!(_WIN32 || __WIN32__)
+#if			!(_WIN32 || __WIN32__ || __APPLE__)
 # include		<sys/wait.h>
 #endif
 #include		<stdlib.h>
@@ -19,7 +19,7 @@ static void		alarmhandler(int			x)
 int			bunny_pclose(t_bunny_subprocess		*subproc,
 				     int			delay)
 {
-#if			!(_WIN32 || __WIN32__)
+#if			!(_WIN32 || __WIN32__ || __APPLE__)
   sighandler_t		handler;
   int			status;
   int			*ptr = &subproc->_stdin;

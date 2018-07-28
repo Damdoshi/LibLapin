@@ -5,7 +5,11 @@
 
 #ifndef				__HBS_MISC_USBDEVICE_HPP__
 # define			__HBS_MISC_USBDEVICE_HPP__
-# include			<usb.h>
+# if				defined(__APPLE__)
+#  include			<libusb-legacy/usb.h>
+# else
+#  include			<usb.h>
+# endif
 
 namespace			hbs
 {

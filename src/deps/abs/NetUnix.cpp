@@ -39,7 +39,7 @@ bool			bpt::NetAbs::NetUnix::OpenSocket(Protocol		protocol,
   else
     master_info.ip = htonl(INADDR_ANY);
   type = 1;
-#ifndef             __WIN32
+#if			!(defined(__WIN32) || defined(__APPLE__))
   if (setsockopt(master_info.socket, SOL_SOCKET, SO_REUSEADDR, &type, sizeof(type)) == -1)
     return (false);
 #else
@@ -123,7 +123,7 @@ unsigned int		bpt::NetAbs::NetUnix::SendTo(const Info			&master_info,
   struct sockaddr_in	sockaddr;
   unsigned int		l;
 
-#ifndef			__WIN32
+#if			!(defined(__WIN32) || defined(__APPLE__))
 # define		_LOCALFLAG		MSG_NOSIGNAL
 #else
 # define		_LOCALFLAG		0

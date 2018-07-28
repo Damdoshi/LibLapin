@@ -165,7 +165,7 @@ struct			qsort_packet
   void			*ptr;
 };
 
-#if			!(_WIN32 || __WIN32__)
+#if			!(_WIN32 || __WIN32__ || __APPLE__)
 static int		to_qsort(const void			*a,
 				 const void			*b,
 				 void				*param)
@@ -182,7 +182,7 @@ void			bunny_shitty_sort(void				*data,
 					  void				*param,
 					  t_bunny_comparator		cmp)
 {
-  char			*buffer = bunny_alloca(elmsiz);
+  char			*buffer = (char *) bunny_alloca(elmsiz);
   char			*ptr;
   bool			sorted;
   size_t		i;
@@ -217,8 +217,8 @@ void			bunny_vector_sort(t_bunny_vector		*vec,
 
   packet.cmp = cmp;
   packet.ptr = param;
-#if			_WIN32 || __WIN32__
-  bunny_shitty_sort((void*)vec->array, vec->nmemb, vec->elmsiz, param, cmp);
+#if			_WIN32 || __WIN32__ || __APPLE__
+  bunny_shitty_sort((void*)vec->array, vec->nmemb, vec->elemsize, param, cmp);
 #else
   qsort_r((void*)vec->array, vec->nmemb, vec->elemsize, to_qsort, &packet);
 #endif
