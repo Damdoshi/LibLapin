@@ -15,7 +15,7 @@ bool			bunny_test_box(const void	*_data,
 
   if (offset + 4 >= maxlen)
     return (false);
-  if (strnlen(str, 4) != 4)
+  if (bunny_strnlen(str, 4) != 4)
     return (false);
   return (strncmp(&data[offset], str, 4) == 0);
 }
