@@ -141,6 +141,7 @@
 # include			"lapin/history.h"
 # include			"lapin/monitor.h"
 # include			"lapin/misc.h"
+# include			"lapin/steam.h"
 
 # include			"lapin/compat.h"
 
