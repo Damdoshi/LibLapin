@@ -317,6 +317,9 @@ t_bunny_response	bunny_loop(t_bunny_window	*window,
 		  gl_completed_tasks.pop();
 	    }
 
+	  if (once && gl_steam_callback != NULL)
+	    gl_steam_callback();
+
 	  bunny_asynclock(delay, BCO_BEFORE_LOOP_MAIN_FUNCTION);
 	  if (gl_callback.loop != NULL)
 	    {

@@ -40,5 +40,7 @@ const unsigned int		erase_field = UINT_MAX;
 const char			*erase_index = NULL;
 const void			*last_scope = NULL;
 
+t_steam_callback		gl_steam_callback = NULL;
+
 char				bunny_big_buffer[16 * 1024 * 1024];
 std::map<std::string, struct bunny_monitored_value> gl_monitor;
