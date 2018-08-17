@@ -20,6 +20,9 @@ typedef struct		s_bunny_sound_slice
   double		active_duration; // The "talk time"
 }			t_bunny_sound_slice;
 
+# ifdef			__MINGW32__
+#  pragma		pack(1)
+# endif
 typedef struct		s_bunny_sound_sprite
 {
   t_bunny_music		soundset;
@@ -27,6 +30,7 @@ typedef struct		s_bunny_sound_sprite
   const t_bunny_sound_slice * const last_played_slice;
   const t_bunny_music_track track;
 }			t_bunny_sound_sprite;
+# pragma		pack()
 
 t_bunny_sound_sprite	*bunny_load_sound_sprite(const char		*file);
 
