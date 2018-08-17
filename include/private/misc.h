@@ -37,8 +37,8 @@ extern size_t			gl_bunny_frequency;
 extern bool			gl_complete_log;
 extern void			*gl_loop_data;
 
-typedef void			(*t_steam_callbacks)(void);
-t_steam_callback		gl_steam_callback;
+typedef void			(*t_steam_callback)(void);
+extern t_steam_callback		gl_steam_callback;
 
 extern t_bunny_threadpool	*gl_bunny_loop_threadpool;
 

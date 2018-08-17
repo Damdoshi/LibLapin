@@ -3,15 +3,19 @@
 //
 // Lapin library
 
-#include	"steam_api.h"
+#include	<steam_api.h>
+#undef		BUNNY_CAMERA
 #include	"lapin_private.h"
 
 extern bool	gl_bunny_init_steam;
 
 void		bunny_close_steam(t_bunny_steam		*steam)
 {
-  if (gl_bunny_init_system)
-    SteamAPI_Shutdown();
+  if (gl_bunny_init_steam)
+    {
+      SteamAPI_Shutdown();
+      gl_bunny_init_steam = false;
+    }
   if (steam)
-    bunny_free(steam);
+    delete steam;
 }

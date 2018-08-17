@@ -35,7 +35,8 @@
   CONFIG	=	-W -Wall -fPIC -std=c++14 -Wno-write-strings		\
 			-Wno-unused-result -Wno-invalid-offsetof		\
 			-DBUNNY_ALLOCATOR_DEACTIVATED				\
-			-DBUNNY_DEBUG
+			-DBUNNY_DEBUG						\
+			-DBUNNY_STEAM
 
   DEBUG		=	-O0 -g -g3 -ggdb
 #  OPTIM		=	-O2

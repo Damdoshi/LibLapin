@@ -1,0 +1,10 @@
+
+A=1
+B=2
+[C
+  D=3
+]
+
+Field0=A
+Field1=C.D
+Field2=[].C.D

@@ -128,7 +128,6 @@
 # include			"lapin/hash.h"
 # include			"lapin/text.h"
 # include			"lapin/unix.h"
-# include			"lapin/camera.h"
 # include			"lapin/fixedpoint.h"
 
 # include			"lapin/container.h"
@@ -141,9 +140,15 @@
 # include			"lapin/history.h"
 # include			"lapin/monitor.h"
 # include			"lapin/misc.h"
-# include			"lapin/steam.h"
-
 # include			"lapin/compat.h"
+
+# ifdef				BUNNY_CAMERA
+#  include			"lapin/camera.h"
+# endif
+
+# ifdef				BUNNY_STEAM
+#  include			"lapin/steam.h"
+# endif
 
 # ifdef				BUNNY_DATABASE
 #  include			"working/database.h"

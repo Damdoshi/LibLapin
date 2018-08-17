@@ -89,7 +89,7 @@ bool			bunny_write_cstring(const char		*cstr,
       if ((x = (char*)bunny_malloc(str.size() + 1)) == NULL)
 	return (false);
       strcpy(x, str.c_str());
-      *out = x; 
+      *out = x;
     }
   else
     strncpy(*out, str.c_str(), siz);

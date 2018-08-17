@@ -5,6 +5,10 @@
 //
 
 #include		<opencv2/opencv.hpp>
+#ifndef			BUNNY_CAMERA
+# define		BUNNY_CAMERA
+#endif
+#undef			BUNNY_STEAM
 #include		"lapin_private.h"
 
 #define			PATTERN			"%p capture, %p picture -> %s"

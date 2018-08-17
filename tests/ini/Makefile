@@ -15,7 +15,7 @@
   INCLUDE	=	-I./include/ -I../../include/
   SRC		=	$(wildcard src/*.c)
   OBJ		=	$(SRC:.c=.o)
-  LIBPATH	=	-L../../
+  LIBPATH	=	-L../../ -L${HOME}/.froot/lib/
   LIB		=	-llapin -lsfml-graphics -lsfml-audio -lsfml-window	\
 			-lsfml-system -lstdc++ -lm -ldl -lpthread
 

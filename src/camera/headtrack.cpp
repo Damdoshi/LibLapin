@@ -7,6 +7,10 @@
 #include		<opencv2/opencv.hpp>
 #include		<fcntl.h>
 #include		<unistd.h>
+#ifndef			BUNNY_CAMERA
+# define		BUNNY_CAMERA
+#endif
+#undef			BUNNY_STEAM
 #include		"lapin_private.h"
 
 struct			FileDumper

@@ -28,6 +28,9 @@
 # include			"private/monitor.h"
 # include			"private/context.h"
 # include			"private/history.h"
-# include			"private/steam.h"
+
+# ifdef				BUNNY_STEAM
+#  include			"private/steam.hpp"
+# endif
 
 #endif	/*			__LAPIN_PRIVATE_H__	*/
