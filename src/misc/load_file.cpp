@@ -33,9 +33,9 @@ ssize_t			bunny_load_file(const char		*file,
       sz = sk + 1;
       if ((buf = (char*)bunny_malloc(sz * sizeof(*buf))) == NULL)
 	goto close_and_quit;
-      if ((sz = read(fd, buf, sk)) != sk)
+      if ((sz = read(fd, buf, sk)) == -1)
 	goto free_close_and_quit;
-      buf[sk] = '\0';
+      buf[sz] = '\0';
     }
 
   if (size)
