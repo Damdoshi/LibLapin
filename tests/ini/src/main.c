@@ -67,5 +67,7 @@ int			main(int		argc,
   refresh_test("base.ini");
   refresh_test("simple.ini");
 
+  refresh_test("crlf.ini");
+
   return (EXIT_SUCCESS);
 }
