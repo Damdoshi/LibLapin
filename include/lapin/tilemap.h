@@ -31,7 +31,7 @@ typedef struct			s_bunny_tilemap
   int				layer_clip[2];
   const int			nbr_layers;
   const t_bunny_size		map_size;
-  int				*tiles;
+  int * const			tiles;
   const t_bunny_size		tile_size;
   t_bunny_accurate_position	camera;
   t_bunny_accurate_position	zoom;
@@ -52,5 +52,40 @@ int				bunny_tilemap_get_tile_from_px(const t_bunny_tilemap *tmap,
 
 int				bunny_tilemap_get_tile(const t_bunny_tilemap *tmap,
 						       const t_bunny_position *pos);
+
+/*
+** Does not exploit all properties of light: it only serves to product a *shadow*
+** drawing on dest.
+**
+** It only exploits active, x, y and ligth_attenuation.
+** Light color could be exploited too, as ambient color properties, but I do not
+** want to decide how yet.
+**
+** Two colors are currently supported by tilemap raytrace: opaque black and
+** else. alpha full white may be used later to create reflexion.
+** Tiles that are zero are considered full transparent. Other are tested pixel
+** per pixel.
+**
+** bunny_tilemap_raytrace does not blacken the sent pixelarray at start.
+** It is up to you to do it.
+**
+**
+** Technically, this function only increase pixel transparency after light
+** emission...
+** This function also render the tilemap. This is why tmap is not const.
+*/
+bool				bunny_tilemap_raytrace(t_bunny_tilemap *tmap,
+						       int		layer,
+						       const t_bunny_normal_light *lights,
+						       size_t		nbr_light,
+						       t_bunny_picture	*dest,
+						       double		light_str);
+
+typedef bool			(*t_my_tile_collide)(int		tile,
+						     int		x,
+						     int		y,
+						     int		tx,
+						     int		ty);
+extern t_my_tile_collide	gl_bunny_my_tile_collide;
 
 #endif	/*			__LAPIN_TILEMAP_H__			*/

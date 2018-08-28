@@ -12,7 +12,17 @@
 
 t_bunny_window		*win;
 t_bunny_tilemap		*tmap;
+t_bunny_picture		*shadows;
 t_bunny_sprite		*spr;
+
+t_bunny_normal_light	lights =
+  {
+    .active = true,
+    .x = 0,
+    .y = 0,
+    .light_color = {.full = WHITE},
+    .light_attenuation = 1.0
+  };
 
 t_bunny_response	key(t_bunny_event_state		state,
 			    t_bunny_keysym		sym,
@@ -64,12 +74,15 @@ t_bunny_response	loop(void			*unused)
   return (GO_ON);
 }
 
-
 t_bunny_response	display(void			*unused)
 {
   static int		x;
 
   (void)unused;
+  bunny_clear(&shadows->buffer, BLACK);
+  bunny_tilemap_raytrace
+    (tmap, 3, &lights, 1, shadows, tmap->clipable.buffer.width);
+
   if ((x += 1) / 100 % 2)
     bunny_fill(&win->buffer, PINK2);
   else
@@ -90,6 +103,7 @@ t_bunny_response	display(void			*unused)
   //
 
   bunny_blit(&win->buffer, &tmap->clipable, NULL);
+  bunny_blit(&win->buffer, shadows, NULL);
   bunny_display(win);
   return (GO_ON);
 }
@@ -101,6 +115,7 @@ int			main(void)
   bunny_enable_full_blit(true);
 
   assert(win = bunny_start(800, 800, false, "TileMap!"));
+  assert(shadows = bunny_new_picture(win->buffer.width, win->buffer.height));
   //bunny_set_error_descriptor(2);
   if (!(tmap = bunny_load_tilemap("./tilemap.dab")))
     {
