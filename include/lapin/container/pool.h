@@ -11,12 +11,14 @@
 ** Pay attention while using it, it is really more complex to use than it appeirs,
 ** if you try to build not foreach-like applications.
 **
-** Limitations are: it is for simple browing!
-** Releasing an element breaks the id of the last reserved data, so storing it
-** is dangerous.
-** Considering the data is swapped, you may nevertheless restore any id you were
-** storing by reassigning it: if the freed data was not the last, then its id
-** is now the id of the data that was freed.
+** Limitations are: only simple browsing is possible and size must
+** be knowned at the beginning.
+** Advantages:
+**   complexity of allocation is 1
+**   complexity of release is 1
+**   full browsing complexity is N
+**
+** Pretty useful for video game bullet/monster pools, for example.
 */
 
 #ifndef				__LAPIN_POOL_H__
