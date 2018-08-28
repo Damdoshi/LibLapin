@@ -127,6 +127,7 @@
 # include			"lapin/collide.h"
 # include			"lapin/hash.h"
 # include			"lapin/text.h"
+# include			"lapin/third_dimension.h"
 # include			"lapin/unix.h"
 # include			"lapin/fixedpoint.h"
 
