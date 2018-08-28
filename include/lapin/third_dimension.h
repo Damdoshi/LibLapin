@@ -13,10 +13,10 @@
 
 typedef struct			s_bunny_3d_coordinate
 {
-  double			ox;
-  double			oy;
-  double			oz;
-
+  double			x;
+  double			y;
+  double			z;
+  // To store calculated positions after transformations
   double			mx;
   double			my;
   double			mz;

@@ -85,26 +85,26 @@ static bool		read_values(const char			*code,
   char			*x;
 
   skipspace_inline(code, i);
-  coord.mx = coord.ox = strtod(&code[i], &x);
+  coord.mx = coord.x = strtod(&code[i], &x);
   if (x == &code[i])
     return (min < 1);
-  if (isnan(coord.ox))
+  if (isnan(coord.x))
     return (false);
 
   i += x - code;
   skipspace_inline(code, i);
-  coord.my = coord.oy = strtod(&code[i], &x);
+  coord.my = coord.y = strtod(&code[i], &x);
   if (x == &code[i])
     return (min < 2);
-  if (isnan(coord.oy))
+  if (isnan(coord.y))
     return (false);
 
   i += x - code;
   skipspace_inline(code, i);
-  coord.mz = coord.oz = strtod(&code[i], &x);
+  coord.mz = coord.z = strtod(&code[i], &x);
   if (x == &code[i])
     return (min < 3);
-  if (isnan(coord.oz))
+  if (isnan(coord.z))
     return (false);
 
   return (true);
