@@ -1,5 +1,5 @@
 // Jason Brillante "Damdoshi"
-// Hanged Bunny Studio 2014-2016
+// Hanged Bunny Studio 2014-2018
 //
 // Bibliotheque Lapin
 

@@ -191,4 +191,39 @@ uint64_t		bunny_sprite_get_animation(const t_bunny_sprite *sprite);
 # define		bunny_sprite_animation_name(name)	\
   bunny_hash(BH_DJB2, name, strlen(name))
 
+/*
+**
+**
+**
+*/
+typedef struct		s_bunny_closet
+{
+  const char		*name;
+  t_bunny_vector	*clothes; // [int -> t_bunny_sprite*]
+  t_bunny_position	position;
+  int			depth;
+}			t_bunny_closet;
+
+t_bunny_closet		*bunny_load_closet(const char		*file);
+void			bunny_delete_closet(t_bunny_closet	*closet);
+
+/*
+**
+**
+**
+*/
+typedef struct		s_bunny_dressed_sprite
+{
+  t_bunny_sprite	sprite;
+  t_bunny_vector	*closets; // [int -> t_bunny_closet*]
+  t_bunny_vector	*clothes; // [int -> t_bunny_sprite*]
+}			t_bunny_dressed_sprite;
+
+t_bunny_dressed_sprite	*bunny_load_dressed_sprite(const char	*file);
+void			bunny_delete_dressed_sprite(t_bunny_dressed_sprite* sprite);
+
+bool			bunny_tie_closet_and_sprite(t_bunny_dressed_sprite* sprite,
+						    size_t	nbr_param,
+						    ...);
+
 #endif	/*		__LAPIN_SPRITE_H__			*/

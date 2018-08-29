@@ -60,7 +60,8 @@ enum				_buffer_type
     GRAPHIC_TEXT		= 3,
     TTF_TEXT			= 4,
     SPRITE			= 5,
-    TILEMAP			= 6,
+    DRESSED_SPRITE		= 6,
+    TILEMAP			= 7,
     LAST_BUFFER_TYPE
   };
 
@@ -229,6 +230,38 @@ struct				bunny_sprite
   uint32_t			current_frame;
   double			current_time;
   bool				stop_repeat;
+};
+
+struct				bunny_dressed_sprite
+{
+  size_t			type;
+  sf::RenderTexture		*texture;
+  t_copy_on_write_gfx		duplicate;
+  ssize_t			width;
+  ssize_t			height;
+  t_bunny_extended_data		data[BUNNY_EXTENDED_DATA_LENGTH];
+  t_bunny_area			rect;
+  t_bunny_accurate_position	position;
+  t_bunny_accurate_position	origin;
+  t_bunny_accurate_position	scale;
+  double			rotation;
+  t_bunny_color			color_mask;
+
+  size_t			res_id;
+  const sf::Texture		*tex;
+  sf::Sprite			*sprite;
+
+  t_bunny_vector		*animation;
+  t_bunny_map			*hashname_id;
+  int32_t			current_animation;
+  uint32_t			current_frame_repeat;
+  int32_t			current_repeat;
+  uint32_t			current_frame;
+  double			current_time;
+  bool				stop_repeat;
+
+  t_bunny_vector		*closets;
+  t_bunny_vector		*clothes;
 };
 
 typedef struct			s_bunny_tileset

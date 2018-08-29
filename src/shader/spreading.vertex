@@ -1,7 +1,7 @@
 R"XXX(
 /*
 ** Jason Brillante "Damdoshi"
-** Hanged Bunny Studio 2014-2017
+** Hanged Bunny Studio 2014-2018
 **
 ** Spreading
 */
