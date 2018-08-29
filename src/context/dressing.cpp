@@ -28,7 +28,8 @@ const t_bunny_context	gl_bunny_dressing_context =
     bunny_context_connect,
     (t_bunny_loop)dressing_entering,
     (t_bunny_leaving_context)dressing_leaving,
-    bunny_context_async_computation
+    bunny_context_async_computation,
+    bunny_context_event_response
   };
 
 #define			PATTERN	"%p dressing character, %p configuration, %d nbr -> %s. %s"

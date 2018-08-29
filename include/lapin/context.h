@@ -123,5 +123,6 @@ t_bunny_event_response_function	bunny_subcontext_event_response;
 # include			"context/splash.h"
 # include			"context/loading.h"
 # include			"context/depth.h"
+# include			"context/dressing.h"
 
 #endif	/*			__LAPIN_CONTEXT_H__			*/
