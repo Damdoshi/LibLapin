@@ -23,7 +23,6 @@ static bool		read_inside_scope(t_bunny_configuration		*fileroot,
 					  SmallConf			&conf)
 {
   t_bunny_configuration	*cnf;
-  char			buffer[512];
 
   read_separator(code, i);
   if ((cnf = _bunny_configuration_go_get_node
@@ -33,7 +32,7 @@ static bool		read_inside_scope(t_bunny_configuration		*fileroot,
        "%p fileroot, %s code, %d i, %p config -> %s "
        "(Error while getting field name on line %s:%d)",
        "configuration,syntax",
-       fileroot, code, i, &conf, "false",
+       fileroot, code, (int)i, &conf, "false",
        SmallConf::file_read.top().c_str(), whichline(code, i));
   /*
     if (getfieldname(code, i, &buffer[0], sizeof(buffer), conf, false) == false)
