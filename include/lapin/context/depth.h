@@ -45,19 +45,26 @@
 typedef struct			s_bunny_depth_engine
 {
   t_bunny_context_runtime_info	head;
-  // Launch only parameters
-  const char			*configuration_file;
-  const char			*shader_file;
-  // Runtime parameter
-  bool				enable_shadows;
-  t_bunny_color			back_color;
-  t_bunny_color			light_color;
-  t_bunny_position		camera;
-  int				camera_height;
-  double			camera_angle;
+
+  // The configuratio from which everything is extracted. (Not all at one)
+  // Its hierarchy is described in formats/
+  t_bunny_configuration		*configuration;
+
+  // The view
+  t_bunny_accurate_position	camera;
+  double			zindex;
+  t_bunny_accurate_position	zoom;
+  double			rotation;
+
+  // Pool on pointers on anything that derive from clipable
+  t_bunny_pool			*sprites;
+
   const char			_private[512];
 }				t_bunny_depth_engine;
 
 extern const t_bunny_context	gl_bunny_depth_context;
+
+// TODO: Functions to load levels and ressources that is compatible with
+// The loading context
 
 #endif	/*			__LAPIN_DEPTH_H__		*/

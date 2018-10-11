@@ -3,9 +3,9 @@
 //
 // Bibliothèque Lapin
 
-#include			"lapin_private.h"
+#include		"lapin_private.h"
 
-const t_bunny_context		gl_bunny_depth_context =
+const t_bunny_context	gl_bunny_depth_context =
   {
     bunny_context_key,
     NULL,
@@ -29,3 +29,15 @@ const t_bunny_context		gl_bunny_depth_context =
     NULL,
     NULL
   };
+
+bool			bunny_init_depth_context(t_bunny_depth_engine	*engine,
+						 const char		*file)
+{
+  struct bunny_depth_engine *depth = (struct bunny_depth_engine*)engine;
+
+  if ((depth->configurations = bunny_load_configuration(file)) == NULL)
+    return (false);
+
+
+}
+

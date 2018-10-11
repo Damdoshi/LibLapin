@@ -66,75 +66,68 @@ struct				bunny_loading_screen
 
 ///////////////////////
 
-struct				depth_layer
-{
-  std::vector<t_bunny_picture*>	color_layers;
-  std::vector<t_bunny_picture*>	normal_layers;
-  std::vector<int>		tile;
-  int				height;
-
-  depth_layer(void)
-  {}
-  ~depth_layer(void)
-  {
-    for (size_t i = 0; i < color_layers.size(); ++i)
-      if (color_layers[i])
-	bunny_delete_clipable(color_layers[i]);
-    for (size_t i = 0; i < normal_layers.size(); ++i)
-      if (color_layers[i])
-	bunny_delete_clipable(normal_layers[i]);
-  }
-};
-
 struct				bunny_depth_engine
 {
   t_bunny_context_runtime_info	head;
-  const char			*configuration_file;
-  const char			*shader_file;
 
-  bool				shadows;
-  t_bunny_color			back_color;
-  t_bunny_color			light_color;
-  t_bunny_position		camera;
-  int				camera_height;
-  double			camera_angle;
+  ////////////////////////////
+  // PROVIDED CONFIGURATION //
+  ///////////////////////////
 
-  //
+  t_bunny_configuration		*configuration;
 
-  SmallConf			configuration;
-  t_bunny_picture		*final_screen;
-  t_bunny_shader		*normal_shader;
-  t_bunny_position		screen_tile_size;
-  t_bunny_position		screen_pixel_size;
-  t_bunny_position		screen_configured_size;
+  ////////////////////
+  // RUNTIME STATUS //
+  ////////////////////
 
-  t_bunny_picture		*color_screen;
-  t_bunny_picture		*normal_screen;
+  t_bunny_accurate_position	camera;
+  double			zindex;
+  t_bunny_accurate_position	zoom;
+  double			rotation;
 
-  t_bunny_position		pixel_map_size;
-  t_bunny_position		tile_map_size;
-  std::vector<depth_layer>	map_layers;
+  // Pool on t_bunny_clipable*
+  t_bunny_pool			*sprites;
 
-  const char			*color_tileset_file;
-  const char			*normal_tileset_file;
-  t_bunny_picture		*color_tileset;
-  t_bunny_picture		*normal_tileset;
-  t_bunny_position		tileset_size;
-  t_bunny_position		tile_size;
+  /////////////////////////////
+  // EXTRACTED CONFIGURATION //
+  /////////////////////////////
+
+  // Is there any normal mapping?
+  bool				normal_map;
+  // Is there any raytraced shadows?
+  bool				raytraced_shadows;
+  // How many layer there is for a single level
+  int				depth_layer_count;
+  // How strong is the zoom between two layers
+  double			depth_ratio;
+  // The map node
+  t_bunny_configuration		*levels;
+
+  //////////////////////////
+  // PERMANENT RESSOURCES //
+  //////////////////////////
+
+  // NULL means no normal map
+  // If there is a normal map, it is used both as render target (to generated the depthed
+  // normal map) and as normal map (when rendering the final result)
+  t_bunny_normal_map		*normal_map_renderer;
+
+  // The collide map is used for raytraced shadows (black mean collide)
+  // But can also  have other purpose (currently, I don't have any precise idea.)
+  t_bunny_picture		*collide_map_renderer;
+
+  // The tilemap to draw. It is not a standard tilemap, it has to respect
+  // the depth tilemap format which is described in formats/ and in documentation.
+  // Any amount of tilemap can be loaded (defined by configuration), depending on
+  // the level you have loaded. (Only interesting tilemaps are really rendered)
+  t_bunny_tilemap		**tilemap_color_renderer;
+  t_bunny_tilemap		**tilemap_normal_renderer;
+  t_bunny_tilemap		**tilemap_collide_renderer;
+
+  // TODO:
+  // Intermediate raytraced shadow tileset
+  // RAYTRACED SHADOW SHOULD HAVE A LEVEL, SO A CHARACTER PROJECTED SHADOW IS NOT ONY
+  // ON FLOOR AND NOT FULL WALL EITHER
 };
-
-bool				depth_load_levels(struct bunny_depth_engine &eng);
-bool				depth_load_configuration(struct bunny_depth_engine &eng);
-bool				depth_load_shader(struct bunny_depth_engine &eng);
-bool				depth_load_tilesets(struct bunny_depth_engine &eng);
-t_bunny_response		depth_entering(struct bunny_depth_engine &eng);
-void				depth_leaving(t_bunny_response		resp,
-					      struct bunny_depth_engine	&eng);
-t_bunny_response		depth_display(struct bunny_depth_engine	&eng);
-t_bunny_response		depth_loop(struct bunny_depth_engine	&eng);
-void				display_single_tile(struct bunny_depth_engine &eng,
-						    struct depth_layer	&layer,
-						    t_bunny_position	&pos,
-						    int			height);
 
 #endif	/*			__LAPIN_PRIVATE_CONTEXT_H__		*/
