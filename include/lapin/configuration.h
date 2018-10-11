@@ -318,6 +318,18 @@ void			bunny_configuration_push_path(const char			*file);
 */
 void			bunny_configuration_pop_path(void);
 
+/*
+** To avoid having plenty of tmp variable of differentes types when fetching inside
+** a configuration sequentially
+*/
+typedef union		u_bunny_temporary_data
+{
+  t_bunny_configuration	*configuration;
+  int			integer;
+  double		real;
+  const char		*string;
+}			t_bunny_temporary_data;
+
 # include			"compat/configuration.h"
 #endif	/*			__LAPIN_CONFIGURATION_H__				*/
 
