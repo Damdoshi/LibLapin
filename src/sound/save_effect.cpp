@@ -8,12 +8,13 @@
 
 #define			PATTERN		"%s -> %p"
 
-bool			bunny_save_effect(const t_bunny_effect		*eff,
+bool			bunny_save_effect(const t_bunny_effect		*_eff,
 					  const char			*file)
 {
-#warning A faire
-  (void)eff;
-  (void)file;
-  return (false);
+  struct bunny_effect	*eff = (struct bunny_effect*)_eff;
+
+  if (bunny_compute_effect((t_bunny_effect*)_eff) == false)
+    return (false);
+  return (eff->effect->saveToFile(file));
 }
 

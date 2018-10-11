@@ -17,7 +17,8 @@ typedef struct		s_bunny_sound_slice
   uint64_t		id;
   double		index;
   double		duration;
-  double		active_duration; // The "talk time"
+  double		active_start; // The "talk time", start point
+  double		active_duration; // The "talk time", duration
 }			t_bunny_sound_slice;
 
 typedef struct		s_bunny_sound_sprite
@@ -29,6 +30,10 @@ typedef struct		s_bunny_sound_sprite
 }			t_bunny_sound_sprite;
 
 t_bunny_sound_sprite	*bunny_load_sound_sprite(const char		*file);
+t_bunny_sound_sprite	*bunny_read_sound_sprite(t_bunny_configuration	*cnf);
+t_bunny_configuration	*bunny_write_sound_sprite(t_bunny_sound_sprite	*sprite);
+t_bunny_configuration	*bunny_save_sound_sprite(t_bunny_configuration	*sprite,
+						 const char		*file);
 
 bool			bunny_sound_sprite_play_slice_name(t_bunny_sound_sprite *sprite,
 							   t_bunny_music_track track,
