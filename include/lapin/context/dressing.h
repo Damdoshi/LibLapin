@@ -25,7 +25,6 @@
 **
 **
 */
-
 typedef struct		s_bunny_dressing_configuration
 {
   t_bunny_font		*character_font;
@@ -42,9 +41,9 @@ typedef struct		s_bunny_dressing_configuration
 typedef struct		s_bunny_dressing_screen
 {
   t_bunny_context_runtime_info head;
-  t_bunny_dressing_drawer *drawers;
+  t_bunny_map		*wardrobe;
   size_t		nbr_drawers;
-  t_bunny_dressing_character *characters;
+  t_bunny_dressed_sprite *characters;
   size_t		nbr_characters;
   const char		_private[512];
 }			t_bunny_dressing_screen;

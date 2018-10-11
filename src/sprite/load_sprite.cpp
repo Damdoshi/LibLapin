@@ -18,24 +18,23 @@ struct bunny_sprite	*_bunny_new_sprite(void)
       delete sprite;
       return (NULL);
     }
+  sprite->texture = NULL;
   return (sprite);
 }
 
-t_bunny_sprite		*_bunny_read_sprite(t_bunny_configuration *conf,
+t_bunny_sprite		*_bunny_fill_sprite(t_bunny_sprite	*_spr,
+					    t_bunny_configuration *conf,
 					    const char		*file)
 {
+  struct bunny_sprite	*sprite = (struct bunny_sprite*)_spr;
   sf::Texture		txt;
   sf::Sprite		spr;
-  struct bunny_sprite	*sprite;
   const char		*res;
   uint64_t		hash;
 
-  if ((sprite = _bunny_new_sprite()) == NULL)
-    goto ExitDirectly;
-
   if (bunny_configuration_go_get_string(conf, &res, "RessourceFile[0]") == false)
     scream_error_if
-      (goto DeleteSfSprite, BE_SYNTAX_ERROR,
+      (return (NULL), BE_SYNTAX_ERROR,
        PATTERN ": A 'RessourceFile' field was expected", "ressource,sprite,syntax",
        file, (void*)NULL);
 
@@ -45,15 +44,15 @@ t_bunny_sprite		*_bunny_read_sprite(t_bunny_configuration *conf,
        RessourceManager.TryGet(ResManager::SF_RENDERTEXTURE, hash)) == NULL)
     {
       if (txt.loadFromFile(res) == false)
-	goto DeleteBunnySprite;
+	return (NULL);
       spr.setTexture(txt);
 
       if ((sprite->texture = new (std::nothrow) sf::RenderTexture) == NULL)
-	goto DeleteBunnySprite;
+	return (NULL);
       if (sprite->texture->create(txt.getSize().x, txt.getSize().y) == false)
 	{
 	  delete sprite->texture;
-	  goto DeleteSfSprite;
+	  return (NULL);
 	}
 
       sprite->texture->clear(sf::Color(0, 0, 0, 0));
@@ -90,10 +89,10 @@ t_bunny_sprite		*_bunny_read_sprite(t_bunny_configuration *conf,
 
   if (bunny_set_clipable_attribute
       (NULL, (t_bunny_clipable**)&sprite, &conf, BCT_SPRITE) == false)
-    goto DeleteSfSprite;
+    return (NULL);
   if (_bunny_set_sprite_attribute
       (*sprite, *(SmallConf*)conf) == false)
-    goto DeleteSfSprite;
+    return (NULL);
 
   bunny_delete_configuration(conf);
   scream_log_if(PATTERN, "ressource,sprite", file, sprite);
@@ -103,13 +102,23 @@ t_bunny_sprite		*_bunny_read_sprite(t_bunny_configuration *conf,
      (sprite->animation, sprite->current_animation, t_bunny_animation).hash
      );
   return ((t_bunny_sprite*)sprite);
+}
 
- DeleteSfSprite:
-  delete sprite->sprite;
- DeleteBunnySprite:
-  delete sprite;
- ExitDirectly:
-  return (NULL);
+t_bunny_sprite		*_bunny_read_sprite(t_bunny_configuration *conf,
+					    const char		*file)
+{
+  struct bunny_sprite	*sprite;
+
+  if ((sprite = _bunny_new_sprite()) == NULL)
+    return (NULL);
+  if (_bunny_fill_sprite((t_bunny_sprite*)sprite, conf, file) == NULL)
+    {
+      //delete sprite->texture;
+      delete sprite->sprite;
+      delete sprite;
+      return (NULL);
+    }
+  return ((t_bunny_sprite*)sprite);
 }
 
 t_bunny_sprite		*bunny_load_sprite(const char		*file)

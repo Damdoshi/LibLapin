@@ -33,7 +33,7 @@ const t_bunny_context	gl_bunny_dressing_context =
   };
 
 #define			PATTERN	"%p dressing character, %p configuration, %d nbr -> %s. %s"
-
+/*
 static bool		dressing_load_character(t_bunny_dressing_character	*d,
 						t_bunny_configuration		*c,
 						int				nbr)
@@ -298,3 +298,4 @@ void			bunny_clear_dressing_context(t_bunny_dressing_screen *cnt)
   bunny_free(cnt->characters);
   cnt->characters = NULL;
 }
+*/

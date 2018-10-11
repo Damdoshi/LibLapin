@@ -31,7 +31,7 @@ STRING
 ------
 
 Strings are supported between " tokens. You can use any C special char.
-UTF-8 characters are supported.	
+UTF-8 characters are supported.
 Here are a few examples:
 
 "I am fine."

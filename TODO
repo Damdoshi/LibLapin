@@ -1,3 +1,7 @@
+
+=> Dans Tilemap, associer une tilemap moins dense contenant une liste des elements
+situés dans la zone.
+
 Dans le gestionnaire de ressource, créer un "prepare to record" qui pre enregistre
 les valeurs (ou garde dans un coin lesquelles ont été ajoutées) et un "record"
 qui enregistre pour de vrai. l'idée étant de "cancel" en cas d'erreur.
@@ -5,7 +9,6 @@ qui enregistre pour de vrai. l'idée étant de "cancel" en cas d'erreur.
 Lecteur de midi avec fluidsynth (sf::midi?)
 Lecteur de video avec libtheoraplayer (sf::theora?)
 Lecteur de mod avec ? (sf::mod?)
-
 
 En Dabsic, une comparaison avec des elements séparés par des virules signifie de tester avec chaque element de la liste?
 Ca pourrait etre sympa, meme si cela implique de deplacer la priorité de la virgule depuis

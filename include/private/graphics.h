@@ -260,8 +260,9 @@ struct				bunny_dressed_sprite
   double			current_time;
   bool				stop_repeat;
 
-  t_bunny_vector		*closets;
-  t_bunny_vector		*clothes;
+  t_bunny_vector		*closets; // [int -> t_bunny_closet*]
+  t_bunny_vector		*clothes; // [int -> t_bunny_sprite*]
+  bool				have_wardrobe;
 };
 
 typedef struct			s_bunny_tileset

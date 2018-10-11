@@ -100,8 +100,14 @@ t_bunny_sprite		*bunny_load_sprite(const char		*file);
 t_bunny_sprite		*_bunny_read_sprite(t_bunny_configuration *cnf,
 					    const char		*file);
 
+t_bunny_sprite		*_bunny_fill_sprite(t_bunny_sprite	*spr,
+					    t_bunny_configuration *cnf,
+					    const char		*file);
+
 # define		bunny_read_sprite(cnf)			\
   _bunny_read_sprite(cnf, NULL)
+# define		bunny_fill_sprite(spr, cnf)		\
+  _bunny_fill_sprite(spr, cnf, NULL)
 
 /*!
 ** The bunny_sprite_animate function animates the sent sprite, taking
@@ -196,16 +202,31 @@ uint64_t		bunny_sprite_get_animation(const t_bunny_sprite *sprite);
 **
 **
 */
+typedef struct		s_bunny_clothe
+{
+  const char		*name;
+  t_bunny_sprite	*sprite;
+}			t_bunny_clothe;
+
 typedef struct		s_bunny_closet
 {
   const char		*name;
-  t_bunny_vector	*clothes; // [int -> t_bunny_sprite*]
+  t_bunny_vector	*clothes; // [int -> t_bunny_clothe*]
   t_bunny_position	position;
   int			depth;
 }			t_bunny_closet;
 
-t_bunny_closet		*bunny_load_closet(const char		*file);
+t_bunny_closet		*bunny_load_closet(const char		*file,
+					   t_bunny_map		*wardrobe);
+t_bunny_closet		*bunny_read_closet(t_bunny_configuration *cnf,
+					   t_bunny_map		*wardrobe);
 void			bunny_delete_closet(t_bunny_closet	*closet);
+# define		bunny_new_wardrobe()			\
+  bunny_new_map((t_bunny_map_cmp)strcmp,				\
+		(t_bunny_map_dup)bunny_strdup,				\
+		(t_bunny_map_del)bunny_free,				\
+		NULL)
+void			bunny_delete_wardrobe(t_bunny_map	*wardrobe);
 
 /*
 **
@@ -216,14 +237,14 @@ typedef struct		s_bunny_dressed_sprite
 {
   t_bunny_sprite	sprite;
   t_bunny_vector	*closets; // [int -> t_bunny_closet*]
-  t_bunny_vector	*clothes; // [int -> t_bunny_sprite*]
+  t_bunny_vector	*clothes; // [int -> t_bunny_clothe*]
 }			t_bunny_dressed_sprite;
 
-t_bunny_dressed_sprite	*bunny_load_dressed_sprite(const char	*file);
+t_bunny_dressed_sprite	*bunny_load_dressed_sprite(const char	*file,
+						   t_bunny_map	*wardrobe);
 void			bunny_delete_dressed_sprite(t_bunny_dressed_sprite* sprite);
 
-bool			bunny_tie_closet_and_sprite(t_bunny_dressed_sprite* sprite,
-						    size_t	nbr_param,
-						    ...);
+// Produce a sprite sheet with all clothes on (so it is faster to blit)
+t_bunny_sprite		*bunny_render_dressed_sprite(t_bunny_dressed_sprite* sprite);
 
 #endif	/*		__LAPIN_SPRITE_H__			*/
