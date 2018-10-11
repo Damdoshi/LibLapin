@@ -8,18 +8,30 @@
 
 #define			PATTERN		"%s -> %p"
 
+t_bunny_music		*bunny_read_music(t_bunny_configuration	*cnf)
+{
+  t_bunny_sound		*pc = NULL;
+
+  if (bunny_set_sound_attribute(NULL, &pc, &cnf, true) == false)
+    return (NULL);
+  return ((t_bunny_music*)pc);
+}
+
 t_bunny_music		*bunny_load_music(const char		*file)
 {
   struct bunny_music	*mus;
 
   if (bunny_which_format(file) != BC_CUSTOM)
     {
-      t_bunny_sound	*pc = NULL;
+      t_bunny_configuration *cnf;
 
-      if (bunny_set_sound_attribute(file, &pc, NULL, true) == false)
+      if ((cnf = bunny_open_configuration(file, NULL)) == NULL)
 	return (NULL);
-      return ((t_bunny_music*)pc);
+      mus = (struct bunny_music*)bunny_read_music(cnf);
+      bunny_delete_configuration(cnf);
+      return ((t_bunny_music*)mus);
     }
+
   if ((mus = new (std::nothrow) struct bunny_music) == NULL)
     goto Fail;
   if ((mus->music.openFromFile(file)) == false)

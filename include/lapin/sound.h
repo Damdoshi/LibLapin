@@ -78,6 +78,7 @@ typedef struct			s_bunny_effect
 ** \return A t_bunny_music pointer or NULL on error.
 */
 t_bunny_music			*bunny_load_music(const char			*file);
+t_bunny_music			*bunny_read_music(t_bunny_configuration		*cnf);
 
 /*!
 ** The bunny_load_effect function create in the bunny_malloc memory space a sample
