@@ -1,0 +1,32 @@
+
+[* THE BODY SPRITE *]
+RessourceFile="base.png"
+[Clip
+  Size=120,120
+]
+InitialAnimation="Base"
+Frequency=1
+[Animations
+  [Base
+    Position=0,0
+    Frame=3
+  ]
+]
+
+[* WHICH CLOTHES THE BODY WEAR *]
+[Clothes
+  Hat="Armor","Pink"
+]
+
+[*
+**   WARDROBE WITH CLOTHE THAT
+** MUST RESPECT THE BODY SPRITE
+**          ANIMATIONS!
+*]
+[Closets
+  {Armor
+    {"White", "white.dab"},
+    {"Pink", "pink.dab"}
+  }
+]
+

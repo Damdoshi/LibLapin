@@ -14,6 +14,20 @@ bool			bunny_sprite_set_animation_id(t_bunny_sprite	*spr,
   struct bunny_sprite	&sprite = *(struct bunny_sprite*)spr;
   t_bunny_map		*map;
 
+  if (sprite.type == DRESSED_SPRITE)
+    {
+      struct bunny_dressed_sprite &dressed = (struct bunny_dressed_sprite&)sprite;
+      size_t		i;
+
+      for (i = 0; i < dressed.clothes->nmemb; ++i)
+	{
+	  t_bunny_clothe *clothe = bunny_vector_data(dressed.clothes, i, t_bunny_clothe*);
+
+	  if (clothe && bunny_sprite_set_animation_id(clothe->sprite, hash) == false)
+	    return (false);
+	}
+    }
+
   if ((map = bunny_map_get_subtree(sprite.hashname_id, (void*)hash, false)) == NULL)
     return (false);
   sprite.current_animation = bunny_map_data(map, int32_t);

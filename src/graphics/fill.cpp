@@ -38,7 +38,10 @@ void			bunny_fill(t_bunny_buffer		*picture,
 
 	if (pic->working != NULL)
 	  bunny_fill(&pic->working->buffer, _color);
+	[[fallthrough]];
       }
+    case SPRITE:
+    case DRESSED_SPRITE:
     case TTF_TEXT:
     case GRAPHIC_TEXT:
     case GRAPHIC_RAM:

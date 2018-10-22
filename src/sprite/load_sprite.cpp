@@ -94,7 +94,6 @@ t_bunny_sprite		*_bunny_fill_sprite(t_bunny_sprite	*_spr,
       (*sprite, *(SmallConf*)conf) == false)
     return (NULL);
 
-  bunny_delete_configuration(conf);
   scream_log_if(PATTERN, "ressource,sprite", file, sprite);
   bunny_sprite_set_animation_id
     ((t_bunny_sprite*)sprite,

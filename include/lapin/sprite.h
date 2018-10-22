@@ -95,19 +95,20 @@ typedef struct		s_bunny_sprite
 ** \param file A configuration file of sprite format.
 ** \return A valid t_bunny_sprite or NULL on error.
 */
-t_bunny_sprite		*bunny_load_sprite(const char		*file);
+t_bunny_sprite		*bunny_load_sprite(const char			*file);
+t_bunny_sprite		*_bunny_read_sprite(t_bunny_configuration	*cnf,
+					    const char			*file);
 
-t_bunny_sprite		*_bunny_read_sprite(t_bunny_configuration *cnf,
-					    const char		*file);
+t_bunny_sprite		*_bunny_fill_sprite(t_bunny_sprite		*spr,
+					    t_bunny_configuration	*cnf,
+					    const char			*file);
 
-t_bunny_sprite		*_bunny_fill_sprite(t_bunny_sprite	*spr,
-					    t_bunny_configuration *cnf,
-					    const char		*file);
-
-# define		bunny_read_sprite(cnf)			\
+# define		bunny_read_sprite(cnf)				\
   _bunny_read_sprite(cnf, NULL)
-# define		bunny_fill_sprite(spr, cnf)		\
+# define		bunny_fill_sprite(spr, cnf)			\
   _bunny_fill_sprite(spr, cnf, NULL)
+
+t_bunny_sprite		*bunny_duplicate_sprite(t_bunny_sprite		*duplicate);
 
 /*!
 ** The bunny_sprite_animate function animates the sent sprite, taking
@@ -117,15 +118,15 @@ t_bunny_sprite		*_bunny_fill_sprite(t_bunny_sprite	*spr,
 ** \param sprite The sprite to animate
 ** \param elapsed The elapsed time in seconds.
 */
-void			bunny_sprite_animate(t_bunny_sprite	*sprite,
-					     double		elapsed);
+void			bunny_sprite_animate(t_bunny_sprite		*sprite,
+					     double			elapsed);
 
 /*!
 ** This function returns true if the animation is terminated.
 ** \param sprite The sprite to check.
 ** \return True if the animation is terminated.
 */
-bool			bunny_sprite_is_still(t_bunny_sprite	*sprite);
+bool			bunny_sprite_is_still(t_bunny_sprite		*sprite);
 
 # if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 /*!
@@ -138,12 +139,12 @@ bool			bunny_sprite_is_still(t_bunny_sprite	*sprite);
 ** \param anim The animation to set to the sprite.
 ** \return True if the animation was set. False if the animation does not exists.
 */
-#  define		bunny_sprite_set_animation(spr, anim)	\
-  _Generic((anim),						\
-	   const char*: bunny_sprite_set_animation_name,	\
-	   char*: bunny_sprite_set_animation_name,		\
-	   uint64_t: bunny_sprite_set_animation_id,		\
-	   int: bunny_sprite_set_animation_id			\
+#  define		bunny_sprite_set_animation(spr, anim)		\
+  _Generic((anim),							\
+	   const char*: bunny_sprite_set_animation_name,		\
+	   char*: bunny_sprite_set_animation_name,			\
+	   uint64_t: bunny_sprite_set_animation_id,			\
+	   int: bunny_sprite_set_animation_id				\
 	   )(spr, anim)
 # endif
 
@@ -156,8 +157,8 @@ bool			bunny_sprite_is_still(t_bunny_sprite	*sprite);
 ** \param anim The animation to set to the sprite.
 ** \return True if the animation was set. False if the animation does not exists.
 */
-bool			bunny_sprite_set_animation_name(t_bunny_sprite *sprite,
-							const char *anim);
+bool			bunny_sprite_set_animation_name(t_bunny_sprite	*sprite,
+							const char	*anim);
 
 /*!
 ** Indicates that the animation should not loop anymore. The repeatition
@@ -168,7 +169,7 @@ bool			bunny_sprite_set_animation_name(t_bunny_sprite *sprite,
 ** seing the landing animation could be very ugly and amateurish.
 ** \param sprite The sprite with the animation to stop.
 */
-void			bunny_sprite_stop_repeat(t_bunny_sprite *sprite);
+void			bunny_sprite_stop_repeat(t_bunny_sprite		*sprite);
 
 /*!
 ** Set the current sprite animation to the sent sprite.
@@ -179,8 +180,8 @@ void			bunny_sprite_stop_repeat(t_bunny_sprite *sprite);
 ** \param anim The animation to set to the sprite.
 ** \return True if the animation was set. False if the animation does not exists.
 */
-bool			bunny_sprite_set_animation_id(t_bunny_sprite *sprite,
-						      uint64_t	anim);
+bool			bunny_sprite_set_animation_id(t_bunny_sprite	*sprite,
+						      uint64_t		anim);
 
 /*!
 ** Return the current animation name under its hash format.
@@ -194,13 +195,11 @@ uint64_t		bunny_sprite_get_animation(const t_bunny_sprite *sprite);
 ** \param name The name under string format.
 ** \return The name under hash format.
 */
-# define		bunny_sprite_animation_name(name)	\
+# define		bunny_sprite_animation_name(name)		\
   bunny_hash(BH_DJB2, name, strlen(name))
 
 /*
-**
-**
-**
+** Simply a named sprite.
 */
 typedef struct		s_bunny_clothe
 {
@@ -208,6 +207,14 @@ typedef struct		s_bunny_clothe
   t_bunny_sprite	*sprite;
 }			t_bunny_clothe;
 
+/*
+** A closet is a collection of clothes associated with a name.
+** A closet contains clothes that share a position and a depth
+** on a dressed sprite. This position can visually change
+** by changing clothe origin.
+**
+** Some easy to understand name for closet: panties, stockings, bra, top, etc.
+*/
 typedef struct		s_bunny_closet
 {
   const char		*name;
@@ -216,17 +223,19 @@ typedef struct		s_bunny_closet
   int			depth;
 }			t_bunny_closet;
 
-t_bunny_closet		*bunny_load_closet(const char		*file,
-					   t_bunny_map		*wardrobe);
-t_bunny_closet		*bunny_read_closet(t_bunny_configuration *cnf,
-					   t_bunny_map		*wardrobe);
-void			bunny_delete_closet(t_bunny_closet	*closet);
-# define		bunny_new_wardrobe()			\
+/// If wardrobe is not NULL, the closet is added to wardrobe. Return the new closet.
+t_bunny_closet		*bunny_load_closet(const char			*file,
+					   t_bunny_map			*wardrobe);
+/// If wardrobe is not NULL, the closet is added to wardrobe. Return the new closet.
+t_bunny_closet		*bunny_read_closet(t_bunny_configuration	*cnf,
+					   t_bunny_map			*wardrobe);
+void			bunny_delete_closet(t_bunny_closet		*closet);
+# define		bunny_new_wardrobe()				\
   bunny_new_map((t_bunny_map_cmp)strcmp,				\
 		(t_bunny_map_dup)bunny_strdup,				\
 		(t_bunny_map_del)bunny_free,				\
 		NULL)
-void			bunny_delete_wardrobe(t_bunny_map	*wardrobe);
+void			bunny_delete_wardrobe(t_bunny_map		*wardrobe);
 
 /*
 **
@@ -240,11 +249,19 @@ typedef struct		s_bunny_dressed_sprite
   t_bunny_vector	*clothes; // [int -> t_bunny_clothe*]
 }			t_bunny_dressed_sprite;
 
-t_bunny_dressed_sprite	*bunny_load_dressed_sprite(const char	*file,
-						   t_bunny_map	*wardrobe);
-void			bunny_delete_dressed_sprite(t_bunny_dressed_sprite* sprite);
+t_bunny_dressed_sprite	*bunny_load_dressed_sprite(const char		*file,
+						   t_bunny_map		*wardrobe);
+t_bunny_dressed_sprite	*_bunny_read_dressed_sprite(t_bunny_configuration *cnf,
+						    t_bunny_map		*wardrobe,
+						    const char		*file);
+# define		bunny_read_dressed_sprite(cnf, wardrobe)	\
+  _bunny_read_dressed_sprite(cnf, wardrobe, NULL)
 
-// Produce a sprite sheet with all clothes on (so it is faster to blit)
-t_bunny_sprite		*bunny_render_dressed_sprite(t_bunny_dressed_sprite* sprite);
+/// Produce a sprite sheet with all clothes on (so it is faster to blit)
+t_bunny_sprite		*bunny_render_dressed_sprite(t_bunny_dressed_sprite *sprite);
+
+bool			bunny_dressed_sprite_wear(t_bunny_dressed_sprite *sprite,
+						  const char		*closet,
+						  const char		*clothe);
 
 #endif	/*		__LAPIN_SPRITE_H__			*/

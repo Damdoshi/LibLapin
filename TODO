@@ -1,6 +1,25 @@
+=> Passer de t_bunny_vector a t_bunny_map(string) dans t_bunny_dressed_sprite.
+
+=> Autoriser l'écriture de type:
+Clip.Size=20,20
+Pour eviter de se farcir tout ca:
+[Clip
+  Size=20,20
+]
+
+=> Autoriser les "bunny sprite" a n'etre que des images... en ce cas,il n'y a qu'une seule
+animation avec une seule frame. C'est plus pratique si onpermet ca pour les dressed sprite
+des clothing game très basique.
+
+=> Un contexte (devant pouvoir s'utiliser comme sous contexte), peut etre basé sur le contexte de GUI
+   offrant une boite de dialogue permettant de chercher un fichier sur le systeme.
 
 => Dans Tilemap, associer une tilemap moins dense contenant une liste des elements
 situés dans la zone.
+
+=> Dabsic, enumeration hierarchisé, exemple... un "dressed sprite" est un sprite.
+donc si on teste que "dressed sprite" vaut sprite, c'est vrai. En somme, l'enum hierarchisé
+implique un second niveau de verification (ou plus) et permet de generer des categories
 
 Dans le gestionnaire de ressource, créer un "prepare to record" qui pre enregistre
 les valeurs (ou garde dans un coin lesquelles ont été ajoutées) et un "record"

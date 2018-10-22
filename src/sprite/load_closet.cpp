@@ -48,59 +48,81 @@ static t_bunny_clothe	*bunny_read_clothe(const char	*name,
 t_bunny_closet		*bunny_read_closet(t_bunny_configuration *config,
 					   t_bunny_map	*wardrobe)
 {
-  t_bunny_configuration	*clothe;
-  t_bunny_closet	*closet;
+  const char		*name;
   const char		*tmps;
   int			tmp;
 
+  //////////////////////////////////////////////////
+  // Set data that are propers to the closet itself
+  t_bunny_closet	*closet;
+
   if ((closet = (t_bunny_closet*)bunny_malloc(sizeof(*closet))) == NULL)
     return (NULL);
-  if (bunny_configuration_getf_string(config, &tmps, "Name") == false)
+
+  // Get name from the specific node if present, else the conf node directly
+  if (bunny_configuration_getf_string(config, &name, "Name") == false)
+    name = bunny_configuration_get_name(config);
+  if ((closet->name = bunny_strdup(name)) == NULL)
     goto DeleteCloset;
-  if ((closet->name = bunny_strdup(tmps)) == NULL)
-    goto DeleteCloset;
+  // Get position
   if (bunny_configuration_getf_int(config, &closet->position.x, "Position[0]") == false)
     goto DeleteName;
   if (bunny_configuration_getf_int(config, &closet->position.y, "Position[1]") == false)
     goto DeleteName;
+  // Get depth
   if (bunny_configuration_getf_int(config, &closet->depth, "Depth") == false)
     goto DeleteName;
+
+  ///////////////////////////////
+  // Start to browse for clothes
+  t_bunny_configuration	*clothe;
+
+  // Allocate an array for how many clothes there is
   if ((tmp = bunny_configuration_casesf(config, "Sprites")) == 0)
     goto DeleteName;
   if ((closet->clothes = bunny_new_vector(tmp, t_bunny_sprite*)) == NULL)
     goto DeleteName;
+
+  // Browse clothe fields - An configuration array
   for (tmp = 0; tmp < (int)closet->clothes->nmemb; ++tmp)
     {
-      if (bunny_configuration_getf_string(config, &tmps, "Sprites[%d][0]", tmp) == false)
-	{
-	  const char *name;
+      /*
+      ** What is expected is:
+      ** {Sprites
+      **   {"Clothe_name", "Clothe_file"},
+      **   [* etc *]
+      ** }
+      ** or
+      ** {Sprites
+      **   {"Clothe_name", [t_bunny_sprite]}
+      **   [* etc *]
+      ** }
+      */
+      // Check if the name of the clothe is present
+      if (bunny_configuration_getf_string(config, &name, "Sprites[%d][0]", tmp) == false)
+	goto DeleteClothes;
 
-	  if (bunny_configuration_getf_string(config, &name, "Sprites[%d][1]", tmp) == false)
-	    goto DeleteClothes;
-	  if (bunny_configuration_getf_node(config, &clothe, "Sprites[%d][0]", tmp) == false)
+      // Check if the second case is a string (so it is a file name) or not
+      if (bunny_configuration_getf_string(config, &tmps, "Sprites[%d][1]", tmp) == false)
+	{
+	  // It is not a string, it is the clothe configuration.
+	  if (bunny_configuration_getf_node(config, &clothe, "Sprites[%d][1]", tmp) == false)
 	    goto DeleteClothes;
 	  if ((bunny_vector_data(closet->clothes, tmp, t_bunny_clothe*) =
 	       bunny_read_clothe(name, clothe)) == NULL)
 	    goto DeleteClothes;
 	}
-      else
-	{
-	  const char *name;
-
-	  if (bunny_configuration_getf_string(config, &name, "Sprites[%d][1]", tmp) == false)
-	    goto DeleteClothes;
-	  if ((bunny_vector_data(closet->clothes, tmp, t_bunny_clothe*) =
-	       bunny_load_clothe(name, tmps)) == NULL)
-	    goto DeleteClothes;
-	}
+      // It is a string, it must be a file name
+      else if ((bunny_vector_data(closet->clothes, tmp, t_bunny_clothe*) =
+		bunny_load_clothe(name, tmps)) == NULL)
+	goto DeleteClothes;
     }
   if (wardrobe)
     {
       t_bunny_closet	*previous;
 
-      previous = (t_bunny_closet*)
-	bunny_map_set_data(wardrobe, closet->name, closet, t_bunny_closet*);
-      if (previous == NULL)
+      if ((previous = (t_bunny_closet*)
+	   bunny_map_set_data(wardrobe, closet->name, closet, t_bunny_closet*)) == NULL)
 	goto DeleteClothes;
       if (previous != closet)
 	bunny_delete_closet(previous);

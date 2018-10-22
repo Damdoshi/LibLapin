@@ -1,0 +1,10 @@
+RessourceFile="./pinkpanties.png"
+InitialAnimation="Base"
+Frequency=3
+[Animations
+  [Base
+    Frame=1
+    Position=0,0
+  ]
+]
+

@@ -58,6 +58,8 @@ void			bunny_set_polygon(t_bunny_buffer		*buffer,
 	   color, (void*)(size_t)color[0], (void*)(size_t)color[1], (void*)(size_t)color[2]);
 	return ;
       }
+    case DRESSED_SPRITE:
+    case SPRITE:
     case TTF_TEXT:
     case GRAPHIC_TEXT:
     case GRAPHIC_RAM:

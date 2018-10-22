@@ -22,7 +22,7 @@ void			SmallConf::Clear(void)
 
   for (it = dup.begin(); it != dup.end(); ++it)
     {
-      it->second->father = NULL;
+      it->second->father = NULL; // Isolate the node from its tree so it does not destroy it
       delete it->second;
     }
   nodes.clear();

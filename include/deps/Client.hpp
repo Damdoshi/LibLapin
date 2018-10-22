@@ -42,10 +42,10 @@ namespace				bpt
       bool				Stop(void);
 
       Client(const std::string		&host = "",
-	     const std::string		&port = "") throw (int);
+	     const std::string		&port = "");
       Client(PacketProtocol		protocol,
 	     const std::string		&host = "",
-	     const std::string		&port = "") throw (int);
+	     const std::string		&port = "");
       virtual ~Client(void);
     };
   }

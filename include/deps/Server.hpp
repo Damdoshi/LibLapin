@@ -71,9 +71,9 @@ namespace				bpt
 					      = NetAbs::INetAccess::TCP);
       bool				Stop(void);
 
-      Server(const std::string		&port = "") throw (int);
+      Server(const std::string		&port = "");
       Server(PacketProtocol		protocol,
-	     const std::string		&port = "") throw (int);
+	     const std::string		&port = "");
       virtual ~Server(void);
     };
   }

@@ -67,6 +67,8 @@ void				bunny_set_geometry(t_bunny_buffer		*buffer,
 	scream_log_if(PATTERN, "graphics", buffer, geometry, array, picture);
 	return ;
       }
+    case DRESSED_SPRITE:
+    case SPRITE:
     case TTF_TEXT:
     case GRAPHIC_RAM:
     case GRAPHIC_TEXT:

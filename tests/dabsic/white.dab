@@ -1,0 +1,9 @@
+RessourceFile="white.png"
+InitialAnimation="Base"
+Frequency=1
+[Animations
+  [Base
+    Position=0,0
+    Frame=3
+  ]
+]

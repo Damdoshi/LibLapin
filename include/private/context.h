@@ -66,6 +66,14 @@ struct				bunny_loading_screen
 
 ///////////////////////
 
+struct				bunny_dressing_screen
+{
+  t_bunny_context_runtime_info	head;
+  t_bunny_map			*warddrobe;
+};
+
+///////////////////////
+
 struct				depth_layer
 {
   std::vector<t_bunny_picture*>	color_layers;

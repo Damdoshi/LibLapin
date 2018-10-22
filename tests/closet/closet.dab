@@ -1,0 +1,24 @@
+
+Name="Panties"
+Position=42, 84
+Depth=3
+
+{Sprites
+  {"PinkPanties", "./pinkpanties.dab"},
+  {"GreenPanties", @insert "./greenpanties.dab"},
+  {
+    "BluePanties",
+    [
+      RessourceFile="bluepanties.png"
+      InitialAnimation="Base"
+      Frequency=3
+      [Animations
+        [Base
+	  Frame=1
+	  Position=0,0
+	]
+      ]
+    ]
+  }
+}
+

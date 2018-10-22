@@ -41,7 +41,7 @@ bool		bpt::NetCom::Server::Stop(void)
   return (suc);
 }
 
-bpt::NetCom::Server::Server(const std::string	&port) throw (int)
+bpt::NetCom::Server::Server(const std::string	&port)
   : Communicator(port)
 {
   if (port != "")
@@ -50,7 +50,7 @@ bpt::NetCom::Server::Server(const std::string	&port) throw (int)
 }
 
 bpt::NetCom::Server::Server(bpt::NetCom::PacketProtocol	protocol,
-			    const std::string		&port) throw (int)
+			    const std::string		&port)
   : Communicator(protocol, port)
 {
   if (port != "")

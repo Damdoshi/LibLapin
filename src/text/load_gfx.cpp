@@ -67,8 +67,10 @@ t_bunny_font			*__bunny_load_gfx(unsigned int		width,
   scream_log_if(PATTERN, "ressource,graphics", width, height, file, size, size->x, size->y, gfx);
   return ((t_bunny_font*)gfx);
 
- DeletePicture:
-  bunny_delete_clipable(gfx->gfx);
+  /*
+    DeletePicture:
+    bunny_delete_clipable(gfx->gfx);
+  */
  DeleteTexture:
   delete gfx->texture;
  DeleteSprite:

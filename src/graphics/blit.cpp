@@ -59,7 +59,9 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	bunny_blit((t_bunny_buffer*)tmap, tmap->working, NULL);
 	tmap->type = TILEMAP;
 	// NO BREAK -> Graphic ram scope is needed too.
+	[[fallthrough]];
       }
+    case DRESSED_SPRITE:
     case SPRITE:
     case GRAPHIC_RAM:
       {
@@ -142,7 +144,10 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
       {
 	struct bunny_window	*out = (struct bunny_window*)output;
 
-	if (*input_type == GRAPHIC_RAM)
+	if (*input_type == GRAPHIC_RAM
+	    || *input_type == SPRITE
+	    || *input_type == TTF_TEXT
+	    || *input_type == DRESSED_SPRITE)
 	  {
 	    if (shader)
 	      out->window->draw(*spr, shader);
@@ -165,6 +170,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	return ;
       }
     case TTF_TEXT:
+    case DRESSED_SPRITE:
     case SPRITE:
     case GRAPHIC_TEXT:
     case GRAPHIC_RAM:
@@ -173,7 +179,10 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 
 	if (out->res_id != 0)
 	  bunny_make_clipable_unique((t_bunny_clipable*)out);
-	if (*input_type == GRAPHIC_RAM)
+	if (*input_type == GRAPHIC_RAM
+	    || *input_type == SPRITE
+	    || *input_type == TTF_TEXT
+	    || *input_type == DRESSED_SPRITE)
 	  {
 	    if (shader)
 	      out->texture->draw(*spr, shader);

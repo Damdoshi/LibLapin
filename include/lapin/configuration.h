@@ -185,6 +185,7 @@ const char		*bunny_configuration_get_name(const t_bunny_configuration	*config);
 */
 const char		*bunny_configuration_get_address(const t_bunny_configuration	*config);
 
+// The retrieving parameter can be NULL, so the function can be used only to check if the type is correct.
 bool			bunny_configuration_getf_node(t_bunny_configuration		*config,
 						      t_bunny_configuration		**node,
 						      const char			*format,
@@ -214,7 +215,7 @@ bool			bunny_configuration_getf_int(t_bunny_configuration		*config,
 */
 #  define		bunny_configuration_getf(cnf, data, fmt, ...)			\
   _Generic((data),									\
-	   void*: bunny_configuration_getf_node, \
+	   void*: bunny_configuration_getf_node,					\
 	   const t_bunny_configuration**: bunny_configuration_getf_node,		\
 	   t_bunny_configuration**: bunny_configuration_getf_node,			\
 	   const char**: bunny_configuration_getf_string,				\
@@ -292,6 +293,20 @@ t_bunny_configuration	*bunny_configuration_next(t_bunny_configuration			*config)
 ** \return Always NULL.
 */
 t_bunny_configuration	*bunny_configuration_end(t_bunny_configuration			*config);
+
+# define		bunny_configuration_all_children(conf, node)			\
+  node = bunny_configuration_first(conf);						\
+  node != bunny_configuration_end(conf);						\
+  node = bunny_configuration_next(node)
+
+# define		bunny_configuration_all_cases(conf, i)				\
+  i = 0; i < bunny_configuration_get_nbr_case(conf); ++i
+
+# define		bunny_configuration_all(conf, node)				\
+  _Generic((node),									\
+	   t_bunny_configuration*: bunny_configuration_all_children,			\
+           default: bunny_configuration_all_case					\
+	   )(conf, node)
 
 /*!
 ** Return if the sent configuration node is the last children of its local tree.

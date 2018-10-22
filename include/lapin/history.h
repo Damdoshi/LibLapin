@@ -27,7 +27,7 @@ size_t				bunny_delete_history(t_bunny_history	*h);
 size_t				bunny_history_add_frame(t_bunny_history	*h,
 							size_t		tim,
 							const void	*dt);
-const void	*bunny_history_get_frame(t_bunny_history *h,
+const void			*bunny_history_get_frame(t_bunny_history *h,
 							 size_t		tim);
 
 bool				bunny_history_erase_frame(t_bunny_history *h,

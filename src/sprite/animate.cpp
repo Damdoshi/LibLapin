@@ -41,6 +41,20 @@ void			bunny_sprite_animate(t_bunny_sprite		*spr,
   t_bunny_animation	*anim;
   unsigned int 		frep;
 
+  if (sprite.type == DRESSED_SPRITE)
+    {
+      struct bunny_dressed_sprite &dressed = (struct bunny_dressed_sprite&)sprite;
+      size_t		i;
+
+      for (i = 0; i < dressed.clothes->nmemb; ++i)
+	{
+	  t_bunny_clothe *clothe = bunny_vector_data(dressed.clothes, i, t_bunny_clothe*);
+
+	  if (clothe)
+	    bunny_sprite_animate(clothe->sprite, elapsed);
+	}
+    }
+
   if (sprite.current_animation == -1 || sprite.stop_repeat)
     {
       sprite.current_time = 0;

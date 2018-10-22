@@ -13,7 +13,7 @@ bool			expr_compute_assign(Expression		&exp,
 					    SmallConf		*artif,
 					    SmallConf		*param)
 {
-  SmallConf		*ope;
+  SmallConf		*ope = NULL;
   int			i;
 
   if (exp.is_const)

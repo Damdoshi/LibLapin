@@ -92,6 +92,9 @@ int			main(int		argc,
   refresh_test("./with_csv.dab");
   refresh_test("./sequence.dab");
   refresh_test("./root.dab");
+  refresh_test("./sprite.dab");
+  refresh_test("./white.dab");
+  refresh_test("./pink.dab");
 
   return (EXIT_SUCCESS);
 }

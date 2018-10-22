@@ -39,7 +39,7 @@ bool		bpt::NetCom::Client::Stop(void)
 }
 
 bpt::NetCom::Client::Client(const std::string		&host,
-			    const std::string		&port) throw (int)
+			    const std::string		&port)
   : Communicator(port),
     buffer(NULL),
     cursor(NULL)
@@ -52,7 +52,7 @@ bpt::NetCom::Client::Client(const std::string		&host,
 
 bpt::NetCom::Client::Client(bpt::NetCom::PacketProtocol	protocol,
 			    const std::string		&host,
-			    const std::string		&port) throw (int)
+			    const std::string		&port)
   : Communicator(protocol, port),
     buffer(NULL),
     cursor(NULL)
