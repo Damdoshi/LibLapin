@@ -5,7 +5,7 @@
 
 #include		"lapin_private.h"
 
-void			bunny_wide_hash(t_bunny_hash	hash,
+void			bunny_wide_hash(t_bunny_hash_algorithm hash,
 					const void	*to_hash,
 					size_t		hlen,
 					void		*storage,

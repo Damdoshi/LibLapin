@@ -5,18 +5,24 @@
 
 #include		"lapin_private.h"
 
-void			bunny_delete_closet(t_bunny_closet	*closet)
+static void		delete_clothe(t_bunny_map		*nod,
+				      void			*param)
 {
   t_bunny_clothe	*clo;
-  size_t		i;
 
-  for (i = 0; i < closet->clothes->nmemb; ++i)
-    if ((clo = bunny_vector_data(closet->clothes, i, t_bunny_clothe*)) != NULL)
-      {
-	bunny_free((void*)clo->name);
-	bunny_delete_clipable(&clo->sprite->clipable);
-	bunny_free(clo);
-      }
+  (void)param;
+  if ((clo = bunny_map_data(nod, t_bunny_clothe*)) != NULL)
+    {
+      bunny_free((void*)clo->name);
+      bunny_delete_clipable(&clo->sprite->clipable);
+      bunny_free(clo);
+    }
+}
+
+void			bunny_delete_closet(t_bunny_closet	*closet)
+{
+  bunny_map_foreach(closet->clothes, delete_clothe, NULL);
+  bunny_delete_map(closet->clothes);
   if (closet->name)
     bunny_free((void*)closet->name);
   bunny_free(closet);

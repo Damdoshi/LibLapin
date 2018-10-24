@@ -100,7 +100,7 @@ static uint64_t		loselose(const void			*ptr,
 typedef uint64_t	(*t_bunny_bh_hash)(const void		*ptr,
 					   size_t		len);
 
-uint64_t		bunny_hash(t_bunny_hash			hash,
+uint64_t		bunny_hash(t_bunny_hash_algorithm	hash,
 				   const void			*ptr,
 				   size_t			len)
 {

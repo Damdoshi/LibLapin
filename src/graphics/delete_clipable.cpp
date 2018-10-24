@@ -79,8 +79,8 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
       {
 	struct bunny_dressed_sprite *pic = (struct bunny_dressed_sprite*)clip;
 
-	bunny_delete_vector(pic->clothes);
-	bunny_delete_vector(pic->closets);
+	bunny_delete_map(pic->clothes);
+	bunny_delete_map(pic->closets);
 	[[fallthrough]];
       }
     case SPRITE:

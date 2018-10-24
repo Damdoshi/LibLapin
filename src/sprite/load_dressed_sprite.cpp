@@ -29,6 +29,7 @@ static bool		_bunny_load_closets(struct bunny_dressed_sprite	*sprite,
     return (true);
   for (i = 0, bunny_configuration_all_children(scope, node), ++i)
     {
+      t_bunny_hash	hs;
       const char	*file;
       t_bunny_closet	*closet;
 
@@ -36,10 +37,19 @@ static bool		_bunny_load_closets(struct bunny_dressed_sprite	*sprite,
       if (bunny_configuration_getf_string(node, &file, "."))
 	closet = bunny_load_closet(file, wardrobe);
       else
-	closet = bunny_read_closet(node, wardrobe);
+	{
+	  closet = bunny_read_closet(node, wardrobe);
+	  file = closet->name;
+	}
       if (closet == NULL)
 	return (false);
-      bunny_vector_data(sprite->closets, i, t_bunny_closet*) = closet;
+
+      hs = bunny_hash(BH_DJB2, file, strlen(file));
+      if (bunny_map_set_data(sprite->closets, hs, closet, t_bunny_closet*) == NULL)
+	{
+	  bunny_delete_closet(closet);
+	  return (false);
+	}
     }
   return (true);
 }
@@ -53,14 +63,16 @@ static bool		_bunny_load_clothes(struct bunny_dressed_sprite	*sprite,
 {
   t_bunny_configuration	*scope;
   t_bunny_configuration	*node;
-  int			i, j;
 
   // Clothes - sprites that are only reference to closets
   if (bunny_configuration_getf_node(config, &scope, "Clothes") == false)
     return (true);
   for (bunny_configuration_all_children(scope, node))
     {
+      t_bunny_closet	*clt;
+      t_bunny_clothe	*clo;
       const char	*tmp;
+      t_bunny_hash	hst, hso;
 
       /*
       ** Expected is:
@@ -72,25 +84,20 @@ static bool		_bunny_load_clothes(struct bunny_dressed_sprite	*sprite,
       // Find which closet is used
       if (bunny_configuration_getf_string(node, &tmp, "[0]") == false)
 	return (false);
-      for (i = 0; i < (int)sprite->closets->nmemb; ++i)
-	if (strcmp(bunny_vector_data(sprite->closets, i, t_bunny_closet*)->name, tmp) == 0)
-	  break ;
-      if (i == (int)sprite->closets->nmemb)
+      hst = bunny_hash(BH_DJB2, tmp, strlen(tmp));
+      if ((clt = bunny_map_get_data(sprite->closets, hst, t_bunny_closet*)) == NULL)
 	return (false);
-      t_bunny_closet *clt = bunny_vector_data(sprite->closets, i, t_bunny_closet*);
 
       // Find the clothe in the closet
       if (bunny_configuration_getf_string(node, &tmp, "[1]") == false)
 	return (false);
-      for (j = 0; j < (int)clt->clothes->nmemb; ++j)
-	if (strcmp(bunny_vector_data(clt->clothes, j, t_bunny_clothe*)->name, tmp) == 0)
-	  break ;
-      if (j == (int)clt->clothes->nmemb)
+      hso = bunny_hash(BH_DJB2, tmp, strlen(tmp));
+      if ((clo = bunny_map_get_data(clt->clothes, hso, t_bunny_clothe*)) == NULL)
 	return (false);
-      t_bunny_clothe *clo = bunny_vector_data(clt->clothes, j, t_bunny_clothe*);
 
       // Assign the clothe to the "clothe holder" in dsprite at the index of the found closet
-      bunny_vector_data(sprite->clothes, i, t_bunny_clothe*) = clo;
+      if (bunny_map_set_data(sprite->clothes, hst, clo, t_bunny_clothe*) == NULL)
+	return (false);
     }
   return (true);
 }
@@ -122,9 +129,9 @@ t_bunny_dressed_sprite	*_bunny_read_dressed_sprite(t_bunny_configuration	*config
       sprite->clothes = NULL;
       return ((t_bunny_dressed_sprite*)sprite);
     }
-  if ((sprite->closets = bunny_new_vector(len, t_bunny_closet*)) == NULL)
+  if ((sprite->closets = bunny_new_map(NULL, NULL, NULL, NULL)) == NULL)
     goto DeleteSfSprite;
-  if ((sprite->clothes = bunny_new_vector(len, t_bunny_clothe*)) == NULL)
+  if ((sprite->clothes = bunny_new_map(NULL, NULL, NULL, NULL)) == NULL)
     goto DeleteCloset;
 
   //////////////////////////////////
@@ -138,9 +145,9 @@ t_bunny_dressed_sprite	*_bunny_read_dressed_sprite(t_bunny_configuration	*config
  DeleteAllClosets:
   // TODO: Free clothes that were reserved for the dressed sprite...
   // OR maybe not, and leave the responsability to the user.
-  bunny_delete_vector(sprite->clothes);
+  bunny_delete_map(sprite->clothes);
  DeleteCloset:
-  bunny_delete_vector(sprite->closets);
+  bunny_delete_map(sprite->closets);
  DeleteSfSprite:
   delete sprite->sprite;
  DeleteDressedSprite:

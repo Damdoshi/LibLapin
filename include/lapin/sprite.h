@@ -218,7 +218,7 @@ typedef struct		s_bunny_clothe
 typedef struct		s_bunny_closet
 {
   const char		*name;
-  t_bunny_vector	*clothes; // [int -> t_bunny_clothe*]
+  t_bunny_map		*clothes; // [clothe name hash djb2 -> t_bunny_clothe*]
   t_bunny_position	position;
   int			depth;
 }			t_bunny_closet;
@@ -245,8 +245,8 @@ void			bunny_delete_wardrobe(t_bunny_map		*wardrobe);
 typedef struct		s_bunny_dressed_sprite
 {
   t_bunny_sprite	sprite;
-  t_bunny_vector	*closets; // [int -> t_bunny_closet*]
-  t_bunny_vector	*clothes; // [int -> t_bunny_clothe*]
+  t_bunny_map		*closets; // [closet name hash djb2 -> t_bunny_closet*]
+  t_bunny_map		*clothes; // [closet name hash djb2 -> t_bunny_clothe*]
 }			t_bunny_dressed_sprite;
 
 t_bunny_dressed_sprite	*bunny_load_dressed_sprite(const char		*file,

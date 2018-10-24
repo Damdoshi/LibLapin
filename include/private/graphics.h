@@ -260,8 +260,8 @@ struct				bunny_dressed_sprite
   double			current_time;
   bool				stop_repeat;
 
-  t_bunny_vector		*closets; // [int -> t_bunny_closet*]
-  t_bunny_vector		*clothes; // [int -> t_bunny_sprite*]
+  t_bunny_map			*closets; // [hash -> t_bunny_closet*]
+  t_bunny_map			*clothes; // [hash -> t_bunny_sprite*]
   bool				have_wardrobe;
 };
 

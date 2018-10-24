@@ -21,6 +21,8 @@ situés dans la zone.
 donc si on teste que "dressed sprite" vaut sprite, c'est vrai. En somme, l'enum hierarchisé
 implique un second niveau de verification (ou plus) et permet de generer des categories
 
+=> Un mode debug de la LibLapin ou la moindre erreur assert (une erreur de type syntaxe ou allocation) ?
+
 Dans le gestionnaire de ressource, créer un "prepare to record" qui pre enregistre
 les valeurs (ou garde dans un coin lesquelles ont été ajoutées) et un "record"
 qui enregistre pour de vrai. l'idée étant de "cancel" en cas d'erreur.

@@ -5,6 +5,24 @@
 
 #include		"lapin_private.h"
 
+static void		delete_clothe(t_bunny_clothe	*clothe)
+{
+  if (!clothe)
+    return ;
+  if (clothe->sprite)
+    bunny_delete_clipable(&clothe->sprite->clipable);
+  if (clothe->name)
+    bunny_free((void*)clothe->name);
+  bunny_free(clothe);
+}
+
+static void		fdelete_clothe(t_bunny_map	*nod,
+				       void		*p)
+{
+  (void)p;
+  delete_clothe(bunny_map_data(nod, t_bunny_clothe*));
+}
+
 static t_bunny_clothe	*bunny_load_clothe(const char	*name,
 					   const char	*file)
 {
@@ -50,7 +68,7 @@ t_bunny_closet		*bunny_read_closet(t_bunny_configuration *config,
 {
   const char		*name;
   const char		*tmps;
-  int			tmp;
+  int			tmp, i;
 
   //////////////////////////////////////////////////
   // Set data that are propers to the closet itself
@@ -80,11 +98,11 @@ t_bunny_closet		*bunny_read_closet(t_bunny_configuration *config,
   // Allocate an array for how many clothes there is
   if ((tmp = bunny_configuration_casesf(config, "Sprites")) == 0)
     goto DeleteName;
-  if ((closet->clothes = bunny_new_vector(tmp, t_bunny_sprite*)) == NULL)
+  if ((closet->clothes = bunny_new_map(NULL, NULL, NULL, NULL)) == NULL)
     goto DeleteName;
 
   // Browse clothe fields - An configuration array
-  for (tmp = 0; tmp < (int)closet->clothes->nmemb; ++tmp)
+  for (i = 0; i < tmp; ++i)
     {
       /*
       ** What is expected is:
@@ -98,24 +116,39 @@ t_bunny_closet		*bunny_read_closet(t_bunny_configuration *config,
       **   [* etc *]
       ** }
       */
-      // Check if the name of the clothe is present
-      if (bunny_configuration_getf_string(config, &name, "Sprites[%d][0]", tmp) == false)
-	goto DeleteClothes;
+      t_bunny_clothe *c;
+      t_bunny_hash hs;
 
+      // Check if the name of the clothe is present
+      if (bunny_configuration_getf_string(config, &name, "Sprites[%d][0]", i) == false)
+	goto DeleteClothes;
+      hs = bunny_hash(BH_DJB2, name, strlen(name));
       // Check if the second case is a string (so it is a file name) or not
-      if (bunny_configuration_getf_string(config, &tmps, "Sprites[%d][1]", tmp) == false)
+      if (bunny_configuration_getf_string(config, &tmps, "Sprites[%d][1]", i) == false)
 	{
 	  // It is not a string, it is the clothe configuration.
-	  if (bunny_configuration_getf_node(config, &clothe, "Sprites[%d][1]", tmp) == false)
+	  if (bunny_configuration_getf_node(config, &clothe, "Sprites[%d][1]", i) == false)
 	    goto DeleteClothes;
-	  if ((bunny_vector_data(closet->clothes, tmp, t_bunny_clothe*) =
-	       bunny_read_clothe(name, clothe)) == NULL)
+	  if ((c = bunny_read_clothe(name, clothe)) == NULL)
 	    goto DeleteClothes;
+	  if (bunny_map_set_data(closet->clothes, hs, c, t_bunny_clothe*) == NULL)
+	    {
+	      delete_clothe(c);
+	      goto DeleteClothes;
+	    }
 	}
       // It is a string, it must be a file name
-      else if ((bunny_vector_data(closet->clothes, tmp, t_bunny_clothe*) =
-		bunny_load_clothe(name, tmps)) == NULL)
-	goto DeleteClothes;
+      else
+	{
+	  if ((c = bunny_load_clothe(name, tmps)) == NULL)
+	    goto DeleteClothes;
+	  if (bunny_map_set_data(closet->clothes, hs, c, t_bunny_clothe*) == NULL)
+	    {
+	      delete_clothe(c);
+	      goto DeleteClothes;
+	    }
+	}
+
     }
   if (wardrobe)
     {
@@ -130,17 +163,8 @@ t_bunny_closet		*bunny_read_closet(t_bunny_configuration *config,
   return (closet);
 
  DeleteClothes:
-  for (tmp = 0; tmp < (int)closet->clothes->nmemb; ++tmp)
-    {
-      t_bunny_clothe *clo;
-
-      if ((clo = bunny_vector_data(closet->clothes, tmp, t_bunny_clothe*)) != NULL)
-	{
-	  bunny_delete_clipable(&clo->sprite->clipable);
-	  bunny_free((void*)clo->name);
-	}
-    }
-  bunny_delete_vector(closet->clothes);
+  bunny_map_foreach(closet->clothes, fdelete_clothe, NULL);
+  bunny_delete_map(closet->clothes);
  DeleteName:
   bunny_free((void*)closet->name);
  DeleteCloset:

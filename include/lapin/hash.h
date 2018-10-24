@@ -20,7 +20,7 @@
 ** BH_FNV with bytes
 ** Any value equal or greater than BH_CUSTOM will call the gl_bunny_my_hash function pointer.
 */
-typedef enum			e_bunny_hash
+typedef enum			e_bunny_hash_algorithm
   {
     BH_MULTIPLIER,
     BH_FNV,
@@ -29,7 +29,9 @@ typedef enum			e_bunny_hash
     BH_SDBM,
     BH_LOSELOSE,		// CHECKSUM
     BH_CUSTOM
-  }				t_bunny_hash;
+  }				t_bunny_hash_algorithm;
+
+typedef uint64_t		t_bunny_hash;
 
 /*!
 ** Compute a short hash.
@@ -38,7 +40,7 @@ typedef enum			e_bunny_hash
 ** \param len The size of the data to hash
 ** \return The data hash
 */
-uint64_t			bunny_hash(t_bunny_hash			hash,
+t_bunny_hash			bunny_hash(t_bunny_hash_algorithm	hash,
 					   const void			*ptr,
 					   size_t			len);
 
@@ -46,7 +48,7 @@ uint64_t			bunny_hash(t_bunny_hash			hash,
 ** The type of the function that will be called when BH_CUSTOM or greater is
 ** passed to bunny_hash.
 */
-typedef uint64_t		(*t_bunny_my_hash)(t_bunny_hash		hash,
+typedef uint64_t		(*t_bunny_my_hash)(t_bunny_hash_algorithm hash,
 						   const void		*ptr,
 						   size_t		len);
 
@@ -64,7 +66,7 @@ extern t_bunny_my_hash		gl_bunny_my_hash;
 ** \param storage A space where to store the digest, can be of any size
 ** \param storage_size The size of the storage space
 */
-void				bunny_wide_hash(t_bunny_hash		hash,
+void				bunny_wide_hash(t_bunny_hash_algorithm	hash,
 						const void		*to_hash,
 						size_t			to_hash_len,
 						void			*storage,

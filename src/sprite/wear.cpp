@@ -11,25 +11,17 @@ bool			bunny_dressed_sprite_wear(t_bunny_dressed_sprite	*sprite,
 {
   t_bunny_closet	*closet;
   t_bunny_clothe	*clothe;
-  size_t		i, j;
+  t_bunny_hash		hs_closet;
+  t_bunny_hash		hs_clothe;
 
-  for (i = 0; i < sprite->closets->nmemb; ++i)
-    {
-      closet = bunny_vector_data(sprite->closets, i, t_bunny_closet*);
-      if (strcmp(closet->name, closet_name) == 0)
-	break ;
-    }
-  if (i == sprite->closets->nmemb)
+  hs_closet = bunny_hash(BH_DJB2, closet_name, strlen(closet_name));
+  if ((closet = bunny_map_get_data(sprite->closets, hs_closet, t_bunny_closet*)) == NULL)
     return (false);
-  for (j = 0; j < closet->clothes->nmemb; ++j)
-    {
-      clothe = bunny_vector_data(closet->clothes, j, t_bunny_clothe*);
-      if (strcmp(clothe->name, clothe_name) == 0)
-	break ;
-    }
-  if (j == closet->clothes->nmemb)
+  hs_clothe = bunny_hash(BH_DJB2, clothe_name, strlen(clothe_name));
+  if ((clothe = bunny_map_get_data(closet->clothes, hs_clothe, t_bunny_clothe*)) == NULL)
     return (false);
-  bunny_vector_data(sprite->clothes, i, t_bunny_clothe*) = clothe;
+  if (bunny_map_set_data(sprite->clothes, hs_closet, clothe, t_bunny_clothe*) == NULL)
+    return (false);
   return (true);
 }
 

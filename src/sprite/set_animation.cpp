@@ -8,6 +8,15 @@
 
 #define			PATTERN		"%s file -> %p"
 
+static void		broadcast_set_animation(t_bunny_map		*nod,
+						void			*p)
+{
+  t_bunny_clothe	*clothe = bunny_map_data(nod, t_bunny_clothe*);
+
+  if (clothe)
+    bunny_sprite_set_animation_id(clothe->sprite, *(uint64_t*)p);
+}
+
 bool			bunny_sprite_set_animation_id(t_bunny_sprite	*spr,
 						      uint64_t		hash)
 {
@@ -17,15 +26,8 @@ bool			bunny_sprite_set_animation_id(t_bunny_sprite	*spr,
   if (sprite.type == DRESSED_SPRITE)
     {
       struct bunny_dressed_sprite &dressed = (struct bunny_dressed_sprite&)sprite;
-      size_t		i;
 
-      for (i = 0; i < dressed.clothes->nmemb; ++i)
-	{
-	  t_bunny_clothe *clothe = bunny_vector_data(dressed.clothes, i, t_bunny_clothe*);
-
-	  if (clothe && bunny_sprite_set_animation_id(clothe->sprite, hash) == false)
-	    return (false);
-	}
+      bunny_map_foreach(dressed.clothes, broadcast_set_animation, &hash);
     }
 
   if ((map = bunny_map_get_subtree(sprite.hashname_id, (void*)hash, false)) == NULL)
