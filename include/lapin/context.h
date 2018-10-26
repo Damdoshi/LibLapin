@@ -56,6 +56,9 @@ typedef struct			s_bunny_context_runtime_info
   size_t			next_context;
 }				t_bunny_context_runtime_info;
 
+/*
+** Context callback will call the event with the current context structure as data parameter
+*/
 t_bunny_key_function		bunny_context_key;
 t_bunny_type_function		bunny_context_type;
 t_bunny_click_function		bunny_context_click;
@@ -77,6 +80,9 @@ t_bunny_leaving_context_function bunny_context_leaving;
 t_bunny_async_computation_response_function bunny_context_async_computation;
 t_bunny_event_response_function	bunny_context_event_response;
 
+/*
+** Context callback will call the event with the "main structre" pointer as data parameter
+*/
 t_bunny_key_function		bunny_subcontext_key;
 t_bunny_type_function		bunny_subcontext_type;
 t_bunny_click_function		bunny_subcontext_click;
@@ -120,6 +126,7 @@ t_bunny_event_response_function	bunny_subcontext_event_response;
   t_bunny_async_computation_response_function name ## _async_computation; \
   t_bunny_event_response_function name ## _event_response
 
+# include			"context/box.h"
 # include			"context/splash.h"
 # include			"context/loading.h"
 # include			"context/depth.h"

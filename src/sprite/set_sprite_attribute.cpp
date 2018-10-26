@@ -32,10 +32,13 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 
   // ANIMATIONS MAP
   if (config.Access("Animations") == false)
-    scream_error_if
-      (return (false), BE_SYNTAX_ERROR,
-       PATTERN ": An 'Animations' scope was expected",
-       "sprite,syntax", &sprite, &config, "false");
+    {
+      sprite.animation = NULL;
+      scream_error_if                    ////////////////////////////////////////////
+	(return (true), BE_SYNTAX_ERROR, // RETURN TRUE => ALLOW NON ANIMATED SPRITE
+	 PATTERN ": An 'Animations' scope was expected",
+	 "sprite,syntax", &sprite, &config, "false");
+    }
 
   // INITIAL ANIMATION
   if (config.Access("InitialAnimation") == false)

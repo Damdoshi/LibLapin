@@ -57,7 +57,7 @@ void			bunny_sprite_animate(t_bunny_sprite		*spr,
       bunny_map_foreach(dressed.clothes, broadcast_animate, &elapsed);
     }
 
-  if (sprite.current_animation == -1 || sprite.stop_repeat)
+  if (sprite.animation == NULL || sprite.current_animation == -1 || sprite.stop_repeat)
     {
       sprite.current_time = 0;
       return ;

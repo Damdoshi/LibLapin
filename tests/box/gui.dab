@@ -1,0 +1,23 @@
+
+[TopLeftWindow
+  Type="Box"
+  Size=900,700
+  Position=100, 100
+  Color=128,128
+  [Children
+    [InnerBox
+      Type="Box"
+      Size=100,100
+      Position=100,100
+      Color=0
+    ]
+  ]
+]
+
+[TopRightWindow
+  Type="Box"
+  Size=200,100
+  'Position=Screen.X-Size[0], 100
+  Position=1140, 100
+  Color=255,0,255,128
+]

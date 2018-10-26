@@ -17,6 +17,7 @@
 # if				!defined(__LAPIN_H__)
 #  error			You cannot include this file directly.
 # endif
+# include			<string.h>
 
 typedef int			(*t_bunny_map_cmp)(const void		*a,
 						   const void		*b,
@@ -62,6 +63,8 @@ t_bunny_map			*bunny_new_map(t_bunny_map_cmp		cmp,
 					       t_bunny_map_dup		dup,
 					       t_bunny_map_del		del,
 					       void			*param);
+# define			string_map				\
+  (t_bunny_map_cmp)strcmp, (t_bunny_map_dup)bunny_strdup, (t_bunny_map_del)bunny_free, NULL
 
 /*!
 ** Delete the map.

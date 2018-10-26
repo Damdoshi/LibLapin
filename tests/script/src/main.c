@@ -40,6 +40,13 @@ void			refresh_test(const char	*str)
   /* */
   printf("\n--------------- test %s execution --------------\n", str);
 
+  if (strcmp(str, "env.dab") == 0)
+    {
+      bunny_configuration_create_mode(true);
+      assert(bunny_configuration_setf(a, 42, "DynamicValue"));
+      bunny_save_configuration(BC_DABSIC, "/dev/stdout", a);
+    }
+
   t_bunny_configuration	*mainf = bunny_configuration_go_get_node(a, "main");
   const char		*res;
 
@@ -68,14 +75,11 @@ int			main(int		argc,
     alarm(2);
 
   refresh_test("address.dab");
-  return (EXIT_SUCCESS);
-
   refresh_test("select.dab");
   refresh_test("simple_loop_call.dab");
   refresh_test("factoriel.dab");
   refresh_test("with.dab");
   refresh_test("character.dab");
-  refresh_test("env.dab");
   refresh_test("fibo.dab");
   refresh_test("getretval.dab");
   refresh_test("factoriel.dab");
@@ -86,6 +90,7 @@ int			main(int		argc,
   refresh_test("simple_cast.dab");
   refresh_test("operation_cast.dab");
   refresh_test("complex_cast.dab");
+  refresh_test("env.dab");
 
   return (EXIT_SUCCESS);
 }

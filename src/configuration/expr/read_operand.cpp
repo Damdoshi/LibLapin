@@ -35,6 +35,11 @@ Expression		*expr_read_operand(const char		*code,
     {
       if (readaddress(code, i, last->val) == false)
 	{
+	  /*
+	  ** Si l'expansion des variables
+	  ** doit attendre l'execution, alors
+	  ** cracher cette erreur ici l'empeche.
+	  */
 	  delete last;
 	  scream_error_if
 	    (return (NULL), BE_SYNTAX_ERROR,

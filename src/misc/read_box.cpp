@@ -5,13 +5,13 @@
 
 #include		"lapin_private.h"
 
-t_bunny_box		*bunny_read_box(const void	*_data,
-					off_t		*offset,
-					off_t		maxlen)
+t_bunny_binary_box	*bunny_read_binary_box(const void	*_data,
+					       off_t		*offset,
+					       off_t		maxlen)
 {
   const char		*data = (const char*)_data;
-  t_bunny_box		*tmp = (t_bunny_box*)&data[*offset];
-  t_bunny_box		*box;
+  t_bunny_binary_box	*tmp = (t_bunny_binary_box*)&data[*offset];
+  t_bunny_binary_box	*box;
   size_t		head;
   size_t		i;
 
@@ -21,7 +21,7 @@ t_bunny_box		*bunny_read_box(const void	*_data,
   for (i = 0; i < sizeof(tmp->key); ++i)
     if (isalnum(tmp->key[i]) == 0)
       return (NULL);
-  if ((box = (t_bunny_box*)bunny_malloc(head + tmp->box_size)) == NULL)
+  if ((box = (t_bunny_binary_box*)bunny_malloc(head + tmp->box_size)) == NULL)
     return (NULL);
   *offset += head;
   memcpy(&box->key[0], &tmp->key[0], sizeof(box->key));

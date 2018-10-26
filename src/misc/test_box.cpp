@@ -6,10 +6,10 @@
 #include		<string.h>
 #include		"lapin_private.h"
 
-bool			bunny_test_box(const void	*_data,
-				       off_t		offset,
-				       off_t		maxlen,
-				       const char	*str)
+bool			bunny_test_binary_box(const void	*_data,
+					      off_t		offset,
+					      off_t		maxlen,
+					      const char	*str)
 {
   const char		*data = (const char*)_data;
 
@@ -19,3 +19,4 @@ bool			bunny_test_box(const void	*_data,
     return (false);
   return (strncmp(&data[offset], str, 4) == 0);
 }
+

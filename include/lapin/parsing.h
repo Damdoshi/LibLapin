@@ -194,31 +194,31 @@ size_t			bunny_read_until_it_is_full(int		fd,
 # ifdef				__MINGW32__
 #  pragma			pack(1)
 # endif
-typedef struct		s_bunny_box
+typedef struct		s_bunny_binary_box
 {
   char			key[4];
   uint32_t		box_size;
   char			data[__ZERO_LENGTH__];
-}			t_bunny_box;
-# define		bunny_box_size(x)			\
+}			t_bunny_binary_box;
+# define		bunny_binary_box_size(x)		\
   ((size_t)(sizeof(char[4]) + sizeof(uint32_t) + x))
 # pragma		pack()
 
-bool			bunny_test_box(const void		*data,
-				       off_t			offset,
-				       const char		*str);
+bool			bunny_test_binary_box(const void	*data,
+					      off_t		offset,
+					      const char	*str);
 
-off_t			bunny_skip_box(const void		*data,
-				       off_t			offset,
-				       off_t			maxlen);
+off_t			bunny_skip_binary_box(const void	*data,
+					      off_t		offset,
+					      off_t		maxlen);
 
-t_bunny_box		*bunny_read_box(const void		*data,
-					off_t			*offset,
-					off_t			maxlen);
+t_bunny_binary_box	*bunny_read_binary_box(const void	*data,
+					       off_t		*offset,
+					       off_t		maxlen);
 
-t_bunny_box		*bunny_load_box(int			fd);
+t_bunny_binary_box	*bunny_load_binary_box(int		fd);
 
-t_bunny_box		*bunny_create_box(size_t		len);
+t_bunny_binary_box	*bunny_create_binary_box(size_t		len);
 
 #endif	/*		__LAPIN_PARSING_H__			*/
 

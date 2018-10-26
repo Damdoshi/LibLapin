@@ -10,12 +10,7 @@
 # define			__LAPIN_PRIVATE_CONFIGURATION_HPP__
 # include			<sstream>
 
-enum				Decision
-  {
-    BD_ERROR,
-    BD_NOT_FOUND,
-    BD_OK
-  };
+typedef t_bunny_decision	Decision;
 
 # include			"smallconf.hpp"
 # include			"dabsic.hpp"

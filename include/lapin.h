@@ -96,6 +96,14 @@
 */
 # define			LAPIN_MINOR_VERSION	12
 
+typedef void			t_bunny_configuration;
+typedef enum			s_bunny_decision
+  {
+    BD_ERROR,
+    BD_NOT_FOUND,
+    BD_OK
+  }				t_bunny_decision;
+
 # include			"lapin/placement.h"
 # ifdef				__cplusplus
 #  include			"lapin/cpp_guard.hpp"

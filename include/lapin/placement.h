@@ -98,20 +98,20 @@ typedef struct s_bunny_font	t_bunny_font;
 ** \param clip The clip or window to measure
 ** \return The width on screen of the clip
 */
-#  define			bunny_real_width(clip)		\
-  _Generic((clip),						\
-	   t_bunny_buffer*:					\
-	   clip->width,						\
-	   t_bunny_window*:					\
-	   clip->buffer.width,					\
-	   t_bunny_clipable*:					\
-	   ((clip)->clip_width * (clip)->scale.x),		\
-	   t_bunny_pixelarray*:					\
-	   ((clip)->clipable.clip_width				\
-	    * (clip)->clipable.scale.x),			\
-	   t_bunny_font*:					\
-	   ((clip)->clipable.clip_width				\
-	    * (clip)->clipable.scale.x)				\
+#  define			bunny_real_width(clip)				\
+  _Generic((clip),								\
+	   t_bunny_buffer*:							\
+	   clip->width,								\
+	   t_bunny_window*:							\
+	   clip->buffer.width,							\
+	   t_bunny_clipable*:							\
+	   ((clip)->clip_width * (clip)->scale.x),				\
+	   t_bunny_pixelarray*:							\
+	   ((clip)->clipable.clip_width						\
+	    * (clip)->clipable.scale.x),					\
+	   t_bunny_font*:							\
+	   ((clip)->clipable.clip_width						\
+	    * (clip)->clipable.scale.x)						\
 	   )
 
 /*!
@@ -121,21 +121,34 @@ typedef struct s_bunny_font	t_bunny_font;
 ** \param clip The clip or window to measure
 ** \return The height on screen of the clip
 */
-#  define			bunny_real_height(clip)		\
-  _Generic((clip),						\
-	   t_bunny_buffer*:					\
-	   clip->height,					\
-	   t_bunny_window*:					\
-	   clip->buffer.height,					\
-	   t_bunny_clipable*:					\
-	   ((clip)->clip_height * (clip)->scale.y),		\
-	   t_bunny_pixelarray*:					\
-	   ((clip)->clipable.clip_height			\
-	    * (clip)->clipable.scale.y),			\
-	   t_bunny_font*:					\
-	   ((clip)->clipable.clip_height			\
-	    * (clip)->clipable.scale.y)				\
+#  define			bunny_real_height(clip)				\
+  _Generic((clip),								\
+	   t_bunny_buffer*:							\
+	   clip->height,							\
+	   t_bunny_window*:							\
+	   clip->buffer.height,							\
+	   t_bunny_clipable*:							\
+	   ((clip)->clip_height * (clip)->scale.y),				\
+	   t_bunny_pixelarray*:							\
+	   ((clip)->clipable.clip_height					\
+	    * (clip)->clipable.scale.y),					\
+	   t_bunny_font*:							\
+	   ((clip)->clipable.clip_height					\
+	    * (clip)->clipable.scale.y)						\
 	   )
 # endif
-#endif	/*			__LAPIN_PLACEMENT_H__		*/
+
+# define	bunny_size_configuration(a, b, c)				\
+  bunny_position_configuration(a, b, c)
+t_bunny_decision bunny_position_configuration(const char			*field,
+					      t_bunny_position			*pos,
+					      t_bunny_configuration		*cnf);
+
+# define	bunny_accurate_size_configuration(a, b, c)			\
+  bunny_accurate_position_configuration(a, b, c)
+t_bunny_decision bunny_accurate_position_configuration(const char		*field,
+						       t_bunny_accurate_position *pos,
+						       t_bunny_configuration	*cnf);
+
+#endif	/*			__LAPIN_PLACEMENT_H__				*/
 

@@ -29,6 +29,8 @@ bool			bunny_sprite_set_animation_id(t_bunny_sprite	*spr,
 
       bunny_map_foreach(dressed.clothes, broadcast_set_animation, &hash);
     }
+  if (spr->animation == NULL)
+    return (false);
 
   if ((map = bunny_map_get_subtree(sprite.hashname_id, (void*)hash, false)) == NULL)
     return (false);

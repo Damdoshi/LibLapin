@@ -130,4 +130,8 @@ typedef union			u_bunny_color
   int8_t			mod[4];
 }				t_bunny_color;
 
+t_bunny_decision		bunny_color_configuration(const char		*fieldname,
+							  t_bunny_color		*col,
+							  t_bunny_configuration	*cnf);
+
 # endif	/*			__LAPIN_COLOR_H__		*/

@@ -5,11 +5,11 @@
 
 #include		"lapin_private.h"
 
-t_bunny_box		*bunny_create_box(size_t		len)
+t_bunny_binary_box	*bunny_create_binary_box(size_t		len)
 {
-  t_bunny_box		*box;
+  t_bunny_binary_box	*box;
 
-  if ((box = (t_bunny_box*)bunny_calloc(sizeof(box->key) + sizeof(box->box_size) + len, 1))
+  if ((box = (t_bunny_binary_box*)bunny_calloc(sizeof(box->key) + sizeof(box->box_size) + len, 1))
       == NULL)
     return (NULL);
   box->box_size = len;

@@ -1,4 +1,12 @@
-=> Passer de t_bunny_vector a t_bunny_map(string) dans t_bunny_dressed_sprite.
+Quand on recupere une information dans un arbre dont le noeud est une expression...
+executer l'expression au lieu de rien faire comme une merde.
+
+Dans tests/script, il y a env.dab qui fait "DynamicValue + X" et DynamicValue
+n'est pas defini au parsing... il faut donc conserver l'expression DynamicValue
+jusqu'à l'execution, sinon ca ne peut pas le faire avec GUI...
+car on compose la GUI au fur et a mesure et il peut y avoir des intrications
+interessante si on attend l'execution pour resoudre les symboles.
+
 
 => Autoriser l'écriture de type:
 Clip.Size=20,20
@@ -6,10 +14,6 @@ Pour eviter de se farcir tout ca:
 [Clip
   Size=20,20
 ]
-
-=> Autoriser les "bunny sprite" a n'etre que des images... en ce cas,il n'y a qu'une seule
-animation avec une seule frame. C'est plus pratique si onpermet ca pour les dressed sprite
-des clothing game très basique.
 
 => Un contexte (devant pouvoir s'utiliser comme sous contexte), peut etre basé sur le contexte de GUI
    offrant une boite de dialogue permettant de chercher un fichier sur le systeme.
@@ -39,9 +43,13 @@ Exemple:
   a < b, c, d
   a == b, c, d
   a, b >= c, d    veut dire a >= c && a >= d && b >= c && b >= d
+  ... donc changer le fonctionnement de "," pour passer de simple separateur
+  d'opération a generateur de paquet ayant pour objet d'être développé avec
+  les opérateurs concernés
 
 
 Ajouter la repetition des sprites situés sur un tileset bouclant
+=> Pour ca, il faudrait localiser dans des ensembles de case les tuiles positionnés.
 
 
 Un systeme de conversion configuration->struct a partir d'un descriptif facon
@@ -79,3 +87,7 @@ de facon a permettre de dire "cast dans le meme type que telle variable"
 Generaliser la fonction "is_last" permettant de savoir si l'element actuel est le dernier.
 Il faudrait aussi faire un "is_first" dans le cas ou on parcoure a l'envers une configuration ou un conteneur.
 
+Un "begin" et "end" pour bunny map.
+
+
+Créer un "begin/end" generique a tous les conteneurs utilisant les macros generique.

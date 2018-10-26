@@ -75,57 +75,10 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
 
   bunny_configuration_go_get_double(cnf, &pic->rotation, "Rotation[0]");
 
-  if (bunny_configuration_go_get_int(cnf, &tmp[0], "ColorMask[0]"))
+  if (bunny_color_configuration("ColorMask", &pic->color_mask, cnf) == BD_ERROR)
     {
-      if (tmp[0] < 0 || tmp[0] > 255)
-	{
-	  missing_field = "Invalid value for a color (ColorMask[0]) (must be [0;255])";
-	  goto InvalidField;
-	}
-      if (bunny_configuration_go_get_int(cnf, &tmp[1], "ColorMask[1]"))
-	{
-	  if (tmp[1] < 0 || tmp[1] > 255)
-	    {
-	      missing_field = "Invalid value for a color (ColorMask[1]) (must be [0;255])";
-	      goto InvalidField;
-	    }
-	  if (bunny_configuration_go_get_int(cnf, &tmp[2], "ColorMask[2]"))
-	    {
-	      if (tmp[2] < 0 || tmp[2] > 255)
-		{
-		  missing_field = "Invalid value for a color (ColorMask[2]) (must be [0;255])";
-		  goto InvalidField;
-		}
-	      if (bunny_configuration_go_get_int(cnf, &tmp[3], "ColorMask[3]"))
-		{
-		  if (tmp[3] < 0 || tmp[3] > 255)
-		    {
-		      missing_field = "Invalid value for a color (ColorMask[3]) (must be [0;255])";
-		      goto InvalidField;
-		    }
-		  pic->color_mask.argb[ALPHA_CMP] = tmp[3];
-		}
-	      else
-		pic->color_mask.argb[ALPHA_CMP] = 255;
-	      pic->color_mask.argb[RED_CMP] = tmp[0];
-	      pic->color_mask.argb[GREEN_CMP] = tmp[1];
-	      pic->color_mask.argb[BLUE_CMP] = tmp[2];
-	    }
-	  else
-	    {
-	      missing_field = "Missing field ColorMask[2]";
-	      goto InvalidField;
-	    }
-	}
-      else
-	{
-	  pic->color_mask.argb[ALPHA_CMP] = 255;
-	  pic->color_mask.argb[RED_CMP]
-	    = pic->color_mask.argb[GREEN_CMP]
-	    = pic->color_mask.argb[BLUE_CMP]
-	    = tmp[0]
-	    ;
-	}
+      missing_field = "Invalid ColorMask field";
+      goto InvalidField;
     }
 
   if (bunny_configuration_go_get_int(cnf, &tmp[0], "Transparency[0]"))

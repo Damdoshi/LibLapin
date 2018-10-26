@@ -32,8 +32,6 @@ typedef enum		e_bunny_configuration_type
     BC_CUSTOM
   }			t_bunny_configuration_type;
 
-typedef void		t_bunny_configuration;
-
 /*!
 ** Create an empty configuration node.
 ** \return NULL on error, if no more memory is available.

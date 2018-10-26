@@ -20,7 +20,12 @@ SmallConf::SmallConf(void)
     function(NULL),
     expression(NULL),
     line(0)
-{}
+{
+  if (file_read.empty())
+    file_read.push("");
+  if (file_path.empty())
+    file_path.push_back("");
+}
 
 SmallConf::~SmallConf(void)
 {
