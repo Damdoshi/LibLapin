@@ -23,6 +23,7 @@ int			main(void)
   t_bunny_configuration	*cnf;
   t_bunny_configuration	*screen;
 
+  //bunny_set_error_descriptor(2);
   assert(bs.head.screen = (t_bunny_buffer*)bunny_start(1440, 900, false, "Box System"));
   bs.head.main_structure = bs.head.screen;
 
@@ -41,6 +42,7 @@ int			main(void)
   bs.head.subcontext.display = general_display;
   bunny_loop((t_bunny_window*)bs.head.screen, 25, &bs);
   bunny_stop((t_bunny_window*)bs.head.screen);
+  bunny_save_configuration(BC_DABSIC, "/dev/stdout", cnf);
   return (EXIT_SUCCESS);
 }
 

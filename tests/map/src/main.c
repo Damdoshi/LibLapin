@@ -96,6 +96,24 @@ static void		test(void)
   bunny_delete_map(map);
 }
 
+void			test_loop(void)
+{
+  t_bunny_map		*map;
+  t_bunny_map		**it;
+  size_t		i;
+
+  map = bunny_new_map(NULL, NULL, NULL, NULL);
+
+  for (i = 1; i < 50; ++i)
+    bunny_map_set_data(map, i, (void*)i, int);
+
+  for (i = 1, bunny_map_all(map, it), ++i)
+    assert(i == bunny_map_data(*it, size_t));
+
+  assert(i == 50);
+  bunny_delete_map(map);
+}
+
 int			main(int		argc,
 			     char		**argv)
 {
@@ -106,6 +124,7 @@ int			main(int		argc,
     alarm(2);
 
   test();
+  test_loop();
   return (EXIT_SUCCESS);
 }
 

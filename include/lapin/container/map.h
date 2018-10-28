@@ -191,5 +191,18 @@ bool				bunny_map_fast_foreach(t_bunny_threadpool *pool,
 							void		*param),
 						       void		*param);
 
+t_bunny_map			**_bunny_map_begin(t_bunny_map		*map,
+						   void			*buf);
+
+# define			bunny_map_begin(map)			\
+  _bunny_map_begin((map), bunny_alloca(sizeof(*(map)) * (bunny_map_size(map) + 1)))
+# define			bunny_map_end(map)			\
+  NULL
+# define			bunny_map_next(nod)			\
+  (nod) + 1
+
+# define			bunny_map_all(map, nod)			\
+  nod = bunny_map_begin(map); *nod != bunny_map_end(nod); nod = bunny_map_next(nod)
+
 #endif	/*			__LAPIN_MAP_H__				*/
 

@@ -5,9 +5,9 @@
 
 #include		"lapin_private.h"
 
-t_bunny_decision	bunny_color_configuration(const char		*field,
-						  t_bunny_color		*col,
-						  t_bunny_configuration	*cnf)
+t_bunny_decision	bunny_color_configuration(const char			*field,
+						  t_bunny_color			*col,
+						  t_bunny_configuration		*cnf)
 {
   t_bunny_configuration	*nod;
   int			tmp;
@@ -70,3 +70,19 @@ t_bunny_decision	bunny_color_configuration(const char		*field,
   return (BD_OK);
 }
 
+t_bunny_decision	bunny_color_bind_configuration(const char		*field,
+						       t_bunny_color		*col,
+						       t_bunny_configuration	*cnf)
+{
+  t_bunny_decision	dec;
+  int			i;
+
+  if ((dec = bunny_color_configuration(field, col, cnf)) != BD_OK)
+    return (dec);
+  for (i = 0; i < 4; ++i)
+    {
+      bunny_configuration_setf_int(cnf, (int)(col->argb[i] & 0xFF), "%s[%d]", field, i);
+      bunny_configuration_bindf_char(cnf, (char*)&col->argb[i], "%s[%d]", field, i);
+    }
+  return (BD_OK);
+}

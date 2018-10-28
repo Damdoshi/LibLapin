@@ -23,7 +23,7 @@ const t_bunny_context	gl_bunny_box_context =
     bunny_context_key,
     bunny_context_type,
     bunny_box_click,
-    bunny_context_move,
+    bunny_box_move,
     bunny_context_wheel,
     bunny_context_joy_connect,
     bunny_context_joy_button,

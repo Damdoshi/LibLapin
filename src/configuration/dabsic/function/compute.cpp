@@ -465,9 +465,19 @@ bool			dabsic_compute(SmallConf		&func,
 	   "ressource,configuration,syntax",
 	   func.name.c_str(), func.line
 	   );
-      for (i = 0; i < prototype->Size(); ++i)
+      // test classic call by nbr
+      if (params->Size())
 	{
-	  if (params->Access((*prototype)[i].name) == false)
+	  if (params->Size() > prototype->Size())
+	    scream_error_if
+	      (return (false), BE_SYNTAX_ERROR,
+	       "Too many parameters for function or expression %s on line %d",
+	       "ressource,configuration,syntax",
+	       func.name.c_str(), func.line
+	       );
+	  for (i = 0; i < params->Size() && i < prototype->Size(); ++i)
+	    (*params)[(*prototype)[i].name] = (*params)[i];
+	  while (i < prototype->Size())
 	    {
 	      if ((*prototype)[i].have_value)
 		(*params)[(*prototype)[i].name] = (*prototype)[i];
@@ -478,8 +488,25 @@ bool			dabsic_compute(SmallConf		&func,
 		   "ressource,configuration,syntax",
 		   func.name.c_str(), func.line
 		   );
+	      ++i;
 	    }
 	}
+      else
+	for (i = 0; i < prototype->Size(); ++i)
+	  {
+	    if (params->Access((*prototype)[i].name) == false)
+	      {
+		if ((*prototype)[i].have_value)
+		  (*params)[(*prototype)[i].name] = (*prototype)[i];
+		else
+		  scream_error_if
+		    (return (false), BE_SYNTAX_ERROR,
+		     "Missing parameters for function or expression %s on line %d",
+		     "ressource,configuration,syntax",
+		     func.name.c_str(), func.line
+		     );
+	      }
+	  }
     }
   if (dabsic_compute_scope
       (*func.function, *func.function, dry, root,

@@ -15,6 +15,8 @@ void			SmallConf::SetDouble(double		v)
   is_converted = true;
   have_value = true;
   last_type = DOUBLE;
+  if (distant_double)
+    *distant_double = v;
 }
 
 bool			SmallConf::GetDouble(double		*v,
@@ -23,6 +25,12 @@ bool			SmallConf::GetDouble(double		*v,
 					     SmallConf		*artif,
 					     SmallConf		*param) const
 {
+  if (distant_double)
+    {
+      *v = *distant_double;
+      return (true);
+    }
+
   if (expression && (root || local || artif || param))
     {
       if (expr_compute((SmallConf&)*this, NULL, false, root, local, artif, param) == false)

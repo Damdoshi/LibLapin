@@ -137,6 +137,7 @@ extern const void		*last_scope;
 
 # else
 
+#  warning "bunny_alloca will use bunny_malloc"
 #  define			bunny_alloca(a)			bunny_malloc(a)
 #  define			bunny_freea(a)			bunny_free(a)
 

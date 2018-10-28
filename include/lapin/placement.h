@@ -140,15 +140,25 @@ typedef struct s_bunny_font	t_bunny_font;
 
 # define	bunny_size_configuration(a, b, c)				\
   bunny_position_configuration(a, b, c)
+# define	bunny_size_bind_configuration(a, b, c)				\
+  bunny_position_bind_configuration(a, b, c)
 t_bunny_decision bunny_position_configuration(const char			*field,
 					      t_bunny_position			*pos,
 					      t_bunny_configuration		*cnf);
+t_bunny_decision bunny_position_bind_configuration(const char			*field,
+						   t_bunny_position		*pos,
+						   t_bunny_configuration	*cnf);
 
 # define	bunny_accurate_size_configuration(a, b, c)			\
   bunny_accurate_position_configuration(a, b, c)
+# define	bunny_accurate_size_bind_configuration(a, b, c)			\
+  bunny_accurate_position_bind_configuration(a, b, c)
 t_bunny_decision bunny_accurate_position_configuration(const char		*field,
 						       t_bunny_accurate_position *pos,
 						       t_bunny_configuration	*cnf);
+t_bunny_decision bunny_accurate_position_bind_configuration(const char		*field,
+							    t_bunny_accurate_position *pos,
+							    t_bunny_configuration *cnf);
 
 #endif	/*			__LAPIN_PLACEMENT_H__				*/
 

@@ -15,6 +15,12 @@ void			SmallConf::SetString(const std::string	&in,
     last_type = RAWSTRING;
   else
     last_type = STRING;
+  if (distant_string)
+    {
+      if (*distant_string)
+	bunny_free(*distant_string);
+      *distant_string = bunny_strdup(original_value.c_str());
+    }
 }
 
 bool			SmallConf::GetString(const char		**out,
@@ -24,6 +30,12 @@ bool			SmallConf::GetString(const char		**out,
 					     SmallConf		*param) const
 
 {
+  if (distant_string)
+    {
+      *out = *distant_string;
+      return (true);
+    }
+
   if (expression && (root || local || artif || param))
     {
       if (expr_compute((SmallConf&)*this, NULL, false, root, local, artif, param) == false)

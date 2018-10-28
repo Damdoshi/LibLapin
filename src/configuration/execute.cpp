@@ -9,12 +9,14 @@ bool			bunny_configuration_execute(t_bunny_configuration	*cnf,
 						    bool			rec,
 						    t_bunny_configuration	*par)
 {
+  bool			cmode = SmallConf::create_mode;
   bool			ret;
   SmallConf		*root = (SmallConf*)cnf;
   SmallConf		*artif = (SmallConf*)cnf;
   SmallConf		*param = (SmallConf*)par;
   SmallConf		*proto;
 
+  SmallConf::create_mode = true;
   while (root->father)
     root = root->father;
   if (artif->Access(".parameters") == false)
@@ -25,12 +27,14 @@ bool			bunny_configuration_execute(t_bunny_configuration	*cnf,
   if (artif->expression)
     {
       ret = expr_compute(*artif, NULL, false, root, NULL, artif->father, param);
+      SmallConf::create_mode = cmode;
       return (ret);
     }
 
   if (artif->function)
     {
       ret = dabsic_compute(*artif, proto, false, root, artif->father, param);
+      SmallConf::create_mode = cmode;
       return (ret);
     }
 
@@ -43,13 +47,20 @@ bool			bunny_configuration_execute(t_bunny_configuration	*cnf,
 	if (bunny_configuration_execute
 	    ((t_bunny_configuration*)it->second, rec, par)
 	    == false)
-	  return (false);
+	  {
+	    SmallConf::create_mode = cmode;
+	    return (false);
+	  }
       for (i = 0; i < artif->Size(); ++i)
 	if (bunny_configuration_execute
 	    ((t_bunny_configuration*)&(*artif)[i], rec, par)
 	    == false)
-	  return (false);
+	  {
+	    SmallConf::create_mode = cmode;
+	    return (false);
+	  }
     }
+  SmallConf::create_mode = cmode;
   return (true);
 }
 

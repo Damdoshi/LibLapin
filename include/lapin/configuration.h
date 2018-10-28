@@ -271,6 +271,33 @@ bool			bunny_configuration_executef(t_bunny_configuration		*config,
 						     const char				*pattern,
 						     ...) _BFMT(4, 5);
 
+bool			bunny_configuration_bindf_int(t_bunny_configuration		*c,
+						      int				*i,
+						      const char			*pat,
+						      ...) _BFMT(3, 4);
+bool			bunny_configuration_bindf_char(t_bunny_configuration		*c,
+						       char				*i,
+						       const char			*pat,
+						       ...) _BFMT(3, 4);
+bool			bunny_configuration_bindf_double(t_bunny_configuration		*c,
+							 double				*i,
+							 const char			*pat,
+							 ...) _BFMT(3, 4);
+bool			bunny_configuration_bindf_string(t_bunny_configuration		*c,
+							 char				**i,
+							 const char			*pat,
+							 ...) _BFMT(3, 4);
+#  define		bunny_configuration_bindf(cnf, data, fmt, ...)			\
+  _Generic((data),									\
+	   char**: bunny_configuration_bindf_string,					\
+	   char*: bunny_configuration_bindf_char,					\
+	   double*: bunny_configuration_bindf_double,					\
+	   int*: bunny_configuration_bindf_int)(cnf, data, fmt, ##__VA_ARGS__)
+
+bool			bunny_configuration_unbindf(t_bunny_configuration		*c,
+						    const char				*fmt,
+						    ...) _BFMT(2, 3);
+
 /*!
 ** Return the first children of the sent node.
 ** \param The node to browse

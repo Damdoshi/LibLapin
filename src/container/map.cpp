@@ -292,4 +292,27 @@ bool			bunny_map_fast_foreach(t_bunny_threadpool *pol,
   return (true);
 }
 
+typedef struct		s_bunny_io
+{
+  size_t		index;
+  t_bunny_map		**map;
+}			t_bunny_io;
+
+static void		stack_map(t_bunny_map			*map,
+				  void				*_x)
+{
+  t_bunny_io		*x = (t_bunny_io*)_x;
+
+  x->map[x->index++] = map;
+}
+
+t_bunny_map		**_bunny_map_begin(t_bunny_map		*map,
+					   void			*buf)
+{
+  t_bunny_io		io = {0, (t_bunny_map**)buf};
+
+  bunny_map_foreach(map, stack_map, &io);
+  io.map[io.index] = NULL;
+  return ((t_bunny_map**)buf);
+}
 

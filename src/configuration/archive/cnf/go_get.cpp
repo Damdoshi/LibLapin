@@ -136,7 +136,11 @@ t_bunny_configuration	*_bunny_configuration_go_get_node(const t_bunny_configurat
 	    return (NULL);
 	  strncpy(&buffer[0], &addr[i], j - i);
 	  buffer[j - i] = '\0';
-	  if ((cnf = bunny_configuration_get_child(cnf, &buffer[0])) == NULL)
+	  if (strcmp(&buffer[0], "_") == 0)
+	    cnf = bunny_configuration_get_parent(cnf);
+	  else
+	    cnf = bunny_configuration_get_child(cnf, &buffer[0]);
+	  if (cnf == NULL)
 	    return (NULL);
 	}
       else

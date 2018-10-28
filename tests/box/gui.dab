@@ -4,12 +4,24 @@
   Size=900,700
   Position=100, 100
   Color=128,128
+  OnMouseButton(int state, int x, int y, int button) = [Function
+    "OnMouseButton called! Parameters are: ", state, " ", x, " ", y, " ", button
+    Color[0] = 0
+    Children.InnerBox.Color[0] = 255
+  ]
+  OnMouseMove(int x, int y) = [Function
+    "TopLeftWindow ", x, " ", y
+  ]
+
   [Children
     [InnerBox
       Type="Box"
       Size=100,100
       Position=100,100
       Color=0
+      OnMouseMove(int x, int y) = [Function
+        "InnerBox!"
+      ]
     ]
   ]
 ]
@@ -20,4 +32,7 @@
   'Position=Screen.X-Size[0], 100
   Position=1140, 100
   Color=255,0,255,128
+  OnMouseMove(int x, int y) = [Function
+    "TopRightWindow ", x, " ", y
+  ]
 ]

@@ -145,4 +145,9 @@ void				display_single_tile(struct bunny_depth_engine &eng,
 						    t_bunny_position	&pos,
 						    int			height);
 
+/// GUI BOX
+
+t_bunny_gui_box			*bunny_fetch_box(t_bunny_gui_box	*box,
+						 const t_bunny_position	*pos);
+
 #endif	/*			__LAPIN_PRIVATE_CONTEXT_H__		*/

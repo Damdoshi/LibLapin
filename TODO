@@ -7,7 +7,6 @@ jusqu'à l'execution, sinon ca ne peut pas le faire avec GUI...
 car on compose la GUI au fur et a mesure et il peut y avoir des intrications
 interessante si on attend l'execution pour resoudre les symboles.
 
-
 => Autoriser l'écriture de type:
 Clip.Size=20,20
 Pour eviter de se farcir tout ca:

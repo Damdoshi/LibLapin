@@ -15,6 +15,10 @@ void			SmallConf::SetInt(int			i)
   is_converted = true;
   have_value = true;
   last_type = INTEGER;
+  if (distant_int)
+    *distant_int = i;
+  if (distant_char)
+    *distant_char = (char)(i & 0xFF);
 }
 
 bool			SmallConf::GetInt(int			*i,
@@ -24,6 +28,17 @@ bool			SmallConf::GetInt(int			*i,
 					  SmallConf		*param) const
 {
   double		d;
+
+  if (distant_int)
+    {
+      *i = *distant_int;
+      return (true);
+    }
+  if (distant_char)
+    {
+      *i = *distant_char;
+      return (true);
+    }
 
   if (GetDouble(&d, root, local, artif, param) == false)
     {

@@ -17,14 +17,19 @@ static bool		_bunny_read_box(t_bunny_box_system	*bs,
 
   for (bunny_configuration_all_children(cnf, n))
     {
+      // Ignore the screen node
+      if (n == bs->screen.configuration)
+	continue ;
       // Ignore what is not a box.
       if (bunny_configuration_getf_string(n, &str, "Type") == false)
 	continue ;
+
       for (i = 0; i < BBT_CUSTOM_BOX && bunny_strcasecmp(gl_bunny_box_type[i], str); ++i);
       if (i == BBT_CUSTOM_BOX)
 	nw = gl_bunny_custom_new_box(parent, n);
       else
 	nw = gl_bunny_new_box[i](parent, n);
+
       if (nw == NULL)
 	return (false);
       if (bunny_map_set_data(parent->children, nw->id, nw, NULL) == NULL)
@@ -39,7 +44,6 @@ static bool		_bunny_read_box(t_bunny_box_system	*bs,
 bool			bunny_read_box(t_bunny_box_system	*bs,
 				       t_bunny_configuration	*cnf)
 {
-
   if (bunny_configuration_getf_node(cnf, &bs->screen.configuration, "Screen") == false)
     return (false);
   if ((bs->screen.id = bunny_strdup("Screen")) == NULL)

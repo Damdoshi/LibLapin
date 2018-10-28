@@ -32,7 +32,20 @@ typedef struct			s_bunny_gui_box
   const char			*id;
   struct s_bunny_gui_box	*parent;
   t_bunny_configuration		*configuration;
-  void				(*display)(struct s_bunny_box_system		*sys,
+
+  t_bunny_configuration		*mouse_button_node;
+  t_bunny_response		(*mouse_button)(t_bunny_event_state		state,
+						t_bunny_position		pos,
+						t_bunny_mouse_button		button,
+						struct s_bunny_box_system	*sys,
+						struct s_bunny_gui_box		*box);
+
+  t_bunny_configuration		*mouse_move_node;
+  t_bunny_response		(*mouse_move)(t_bunny_position			pos,
+					      struct s_bunny_box_system		*sys,
+					      struct s_bunny_gui_box		*box);
+
+  t_bunny_response		(*display)(struct s_bunny_box_system		*sys,
 					   struct s_bunny_gui_box		*bos,
 					   const t_bunny_accurate_position	*offset);
   void				(*destructor)(struct s_bunny_gui_box		*box);
@@ -76,9 +89,9 @@ typedef t_bunny_gui_box		*(*t_bunny_new_box)(t_bunny_gui_box		*parent,
 typedef struct			s_bunny_box_system
 {
   t_bunny_context_runtime_info	head;
-  t_bunny_context_runtime_info	*subcontext;
+  t_bunny_context_runtime_info	*subhead;
   t_bunny_gui_box		screen;
-
+  t_bunny_gui_box		*focus;
   const char			_private[512];
 }				t_bunny_box_system;
 

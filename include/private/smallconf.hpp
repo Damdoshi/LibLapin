@@ -50,6 +50,12 @@ struct				SmallConf
   mutable std::string		original_value;
   mutable double		converted;
   mutable int			converted_2;
+
+  mutable char			**distant_string;
+  mutable double		*distant_double;
+  mutable int			*distant_int;
+  mutable char			*distant_char;
+
   mutable bool			is_converted;
   static bool			create_mode;
   static std::stack<std::string> file_read;
@@ -67,12 +73,41 @@ struct				SmallConf
   {
     if (&o == this)
       return (*this);
-    have_value = o.have_value;
-    original_value = o.original_value;
-    converted = o.converted;
-    converted_2 = o.converted_2;
-    is_converted = o.is_converted;
-    last_type = o.last_type;
+    switch (o.last_type)
+      {
+      case INTEGER:
+	{
+	  int tmp;
+
+	  o.GetInt(&tmp);
+	  SetInt(tmp);
+	  break ;
+	}
+      case DOUBLE:
+	{
+	  double tmp;
+
+	  o.GetDouble(&tmp);
+	  SetDouble(tmp);
+	  break ;
+	}
+      case STRING:
+	{
+	  const char *tmp;
+
+	  o.GetString(&tmp);
+	  SetString(tmp, false);
+	  break ;
+	}
+      case RAWSTRING:
+	{
+	  const char *tmp;
+
+	  o.GetString(&tmp);
+	  SetString(tmp, true);
+	  break ;
+	}
+      }
     return (*this);
   }
 
@@ -164,6 +199,12 @@ struct				SmallConf
 					  SmallConf			*local = NULL,
 					  SmallConf			*artif = NULL,
 					  SmallConf			*param = NULL) const;
+
+  void				Bind(int				*v);
+  void				Bind(double				*v);
+  void				Bind(char				**v);
+  void				Bind(char				*v);
+  void				Unbind(void);
 
   void				Clear(void);
 

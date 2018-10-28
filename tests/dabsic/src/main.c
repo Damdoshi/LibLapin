@@ -69,6 +69,8 @@ int			main(int		argc,
 
   printf("--------------- manual test triple.dab --------------\n");
 
+  t_bunny_configuration *sub;
+
   assert(triple = bunny_load_configuration(BC_DABSIC, "triple.dab", NULL));
   assert(bunny_configuration_go_get(triple, &val, "SAV"));
   assert(val == 42);
@@ -84,6 +86,9 @@ int			main(int		argc,
   assert(val == 5);
   assert(bunny_configuration_go_get(triple, &val, "SAV.C"));
   assert(val == 6);
+  assert(bunny_configuration_getf(triple, &sub, "SAV.C"));
+  assert(bunny_configuration_getf(sub, &val, "_.B"));
+  assert(val == 5);
   bunny_delete_configuration(triple);
 
   refresh_test("./parameters.dab");

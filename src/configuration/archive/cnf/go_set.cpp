@@ -16,16 +16,22 @@ bool			bunny_configuration_go_set_int_va(t_bunny_configuration		*config,
 							  size_t			nbr,
 							  ...)
 {
+  bool			cmode = SmallConf::create_mode;
   t_bunny_configuration	*cnf;
   va_list		lst;
 
   va_start(lst, nbr);
+  SmallConf::create_mode = true;
   if ((cnf = _bunny_configuration_go_get_node_va(config, nbr, &lst)) == NULL)
-    scream_error_if
-      (return (false), bunny_errno, PATTERN, "configuration", config, val, nbr, "false");
+    {
+      SmallConf::create_mode = cmode;
+      scream_error_if
+	(return (false), bunny_errno, PATTERN, "configuration", config, val, nbr, "false");
+    }
   va_end(lst);
   bunny_configuration_set_int(cnf, val);
   scream_log_if(PATTERN, "configuration", config, val, nbr, "true");
+  SmallConf::create_mode = cmode;
   return (true);
 }
 
@@ -37,16 +43,22 @@ bool			bunny_configuration_go_set_double_va(t_bunny_configuration	*config,
 							     size_t			nbr,
 							     ...)
 {
+  bool			cmode = SmallConf::create_mode;
   t_bunny_configuration	*cnf;
   va_list		lst;
 
   va_start(lst, nbr);
+  SmallConf::create_mode = true;
   if ((cnf = _bunny_configuration_go_get_node_va(config, nbr, &lst)) == NULL)
-    scream_error_if
-      (return (false), bunny_errno, PATTERN, "configuration", config, val, nbr, "false");
+    {
+      SmallConf::create_mode = cmode;
+      scream_error_if
+	(return (false), bunny_errno, PATTERN, "configuration", config, val, nbr, "false");
+    }
   va_end(lst);
   bunny_configuration_set_double(cnf, val);
   scream_log_if(PATTERN, "configuration", config, val, nbr, "true");
+  SmallConf::create_mode = cmode;
   return (true);
 }
 
@@ -58,16 +70,22 @@ bool			bunny_configuration_go_set_string_va(t_bunny_configuration	*config,
 							     size_t			nbr,
 							     ...)
 {
+  bool			cmode = SmallConf::create_mode;
   t_bunny_configuration	*cnf;
   va_list		lst;
 
   va_start(lst, nbr);
+  SmallConf::create_mode = true;
   if ((cnf = _bunny_configuration_go_get_node_va(config, nbr, &lst)) == NULL)
-    scream_error_if
-      (return (false), bunny_errno, PATTERN, "configuration", config, val, nbr, "false");
+    {
+      SmallConf::create_mode = cmode;
+      scream_error_if
+	(return (false), bunny_errno, PATTERN, "configuration", config, val, nbr, "false");
+    }
   va_end(lst);
   bunny_configuration_set_string(cnf, val);
   scream_log_if(PATTERN, "configuration", config, val, nbr, "true");
+  SmallConf::create_mode = cmode;
   return (true);
 }
 
@@ -82,13 +100,19 @@ bool			bunny_configuration_go_set_string(t_bunny_configuration		*config,
 							  const char			*val,
 							  const char			*addr)
 {
+  bool			cmode = SmallConf::create_mode;
   t_bunny_configuration	*cnf;
 
+  SmallConf::create_mode = true;
   if ((cnf = bunny_configuration_go_get_node(config, addr)) == NULL)
-    scream_error_if
-      (return (false), bunny_errno, PATTERN, "configuration", config, val, addr, "false");
+    {
+      SmallConf::create_mode = cmode;
+      scream_error_if
+	(return (false), bunny_errno, PATTERN, "configuration", config, val, addr, "false");
+    }
   bunny_configuration_set_string(cnf, val);
   scream_log_if(PATTERN, "configuration", config, val, addr, "true");
+  SmallConf::create_mode = cmode;
   return (true);
 }
 
@@ -99,13 +123,19 @@ bool			bunny_configuration_go_set_double(t_bunny_configuration		*config,
 							  double			val,
 							  const char			*addr)
 {
+  bool			cmode = SmallConf::create_mode;
   t_bunny_configuration	*cnf;
 
+  SmallConf::create_mode = true;
   if ((cnf = bunny_configuration_go_get_node(config, addr)) == NULL)
-    scream_error_if
-      (return (false), bunny_errno, PATTERN, "configuration", config, val, addr, "false");
+    {
+      SmallConf::create_mode = cmode;
+      scream_error_if
+	(return (false), bunny_errno, PATTERN, "configuration", config, val, addr, "false");
+    }
   bunny_configuration_set_double(cnf, val);
   scream_log_if(PATTERN, "configuration", config, val, addr, "true");
+  SmallConf::create_mode = cmode;
   return (true);
 }
 
@@ -116,13 +146,19 @@ bool			bunny_configuration_go_set_int(t_bunny_configuration		*config,
 						       int				val,
 						       const char			*addr)
 {
+  bool			cmode = SmallConf::create_mode;
   t_bunny_configuration	*cnf;
 
+  SmallConf::create_mode = true;
   if ((cnf = bunny_configuration_go_get_node(config, addr)) == NULL)
-    scream_error_if
-      (return (false), bunny_errno, PATTERN, "configuration", config, val, addr, "false");
+    {
+      SmallConf::create_mode = cmode;
+      scream_error_if
+	(return (false), bunny_errno, PATTERN, "configuration", config, val, addr, "false");
+    }
   bunny_configuration_set_int(cnf, val);
   scream_log_if(PATTERN, "configuration", config, val, addr, "true");
+  SmallConf::create_mode = cmode;
   return (true);
 }
 
