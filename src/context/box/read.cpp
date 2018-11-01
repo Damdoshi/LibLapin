@@ -5,6 +5,12 @@
 
 #include		"lapin_private.h"
 
+t_bunny_response	bunny_mbutton_simple_box_transfer(t_bunny_event_state	state,
+							  t_bunny_position	pos,
+							  t_bunny_mouse_button	button,
+							  t_bunny_box_system	*sys,
+							  t_bunny_gui_box	*box);
+
 static bool		_bunny_read_box(t_bunny_box_system	*bs,
 					t_bunny_configuration	*cnf,
 					t_bunny_gui_box		*parent)
@@ -64,8 +70,14 @@ bool			bunny_read_box(t_bunny_box_system	*bs,
   bs->screen.color.full = 0;
   if (_bunny_read_box(bs, cnf, &bs->screen) == false)
     {
-      bunny_delete_box(&bs->screen);
+      t_bunny_map **node;
+
+      for (bunny_map_all(bs->screen.children, node))
+	bunny_delete_box(bunny_map_data(*node, t_bunny_gui_box*));
+      bunny_delete_map(bs->screen.children);
+      bunny_free((void*)bs->screen.id);
       return (false);
     }
   return (true);
 }
+

@@ -14,6 +14,7 @@ t_bunny_response	general_display(void		*d)
   t_bunny_window	*win = (t_bunny_window*)bs->head.screen;
 
   bunny_display(win);
+  bunny_clear(&win->buffer, PINK2);
   return (GO_ON);
 }
 
@@ -23,6 +24,7 @@ int			main(void)
   t_bunny_configuration	*cnf;
   t_bunny_configuration	*screen;
 
+  //bunny_set_log_mode(true);
   //bunny_set_error_descriptor(2);
   assert(bs.head.screen = (t_bunny_buffer*)bunny_start(1440, 900, false, "Box System"));
   bs.head.main_structure = bs.head.screen;

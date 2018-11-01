@@ -28,6 +28,9 @@ static t_bunny_response display_box(t_bunny_box_system			*sys,
 {
   t_bunny_response	ret;
 
+  if (box->hidden)
+    return (GO_ON);
+
   if (box->display)
     if ((ret = box->display(sys, box, off)) != GO_ON)
       return (ret);

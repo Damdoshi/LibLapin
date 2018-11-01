@@ -204,6 +204,11 @@ bool			bunny_configuration_getf_int(t_bunny_configuration		*config,
 						     const char				*format,
 						     ...) _BFMT(3, 4);
 
+bool			bunny_configuration_getf_bool(t_bunny_configuration		*config,
+						      bool				*boolean,
+						      const char			*format,
+						      ...) _BFMT(3, 4);
+
 # if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 /*!
 ** Get a value inside the configuration. Its type will match of the type of val.
@@ -218,8 +223,12 @@ bool			bunny_configuration_getf_int(t_bunny_configuration		*config,
 	   t_bunny_configuration**: bunny_configuration_getf_node,			\
 	   const char**: bunny_configuration_getf_string,				\
 	   double*: bunny_configuration_getf_double,					\
+	   bool*: bunny_configuration_getf_bool,					\
 	   int*: bunny_configuration_getf_int)(cnf, data, fmt, ##__VA_ARGS__)
 # endif
+
+#  define		bunny_configuration_existsf(cnf, fmt, ...)			\
+  bunny_configuration_getf_node(cnf, NULL, fmt, ##__VA_ARGS__)
 
 bool			bunny_configuration_setf_node(t_bunny_configuration		*config,
 						      const t_bunny_configuration	*node,
@@ -279,6 +288,10 @@ bool			bunny_configuration_bindf_char(t_bunny_configuration		*c,
 						       char				*i,
 						       const char			*pat,
 						       ...) _BFMT(3, 4);
+bool			bunny_configuration_bindf_bool(t_bunny_configuration		*c,
+						       bool				*i,
+						       const char			*pat,
+						       ...) _BFMT(3, 4);
 bool			bunny_configuration_bindf_double(t_bunny_configuration		*c,
 							 double				*i,
 							 const char			*pat,
@@ -291,12 +304,17 @@ bool			bunny_configuration_bindf_string(t_bunny_configuration		*c,
   _Generic((data),									\
 	   char**: bunny_configuration_bindf_string,					\
 	   char*: bunny_configuration_bindf_char,					\
+	   bool*: bunny_configuration_bindf_bool,					\
 	   double*: bunny_configuration_bindf_double,					\
 	   int*: bunny_configuration_bindf_int)(cnf, data, fmt, ##__VA_ARGS__)
 
 bool			bunny_configuration_unbindf(t_bunny_configuration		*c,
 						    const char				*fmt,
 						    ...) _BFMT(2, 3);
+
+bool			bunny_configuration_declarativef(t_bunny_configuration		*c,
+							 const char			*fmt,
+							 ...) _BFMT(2, 3);
 
 /*!
 ** Return the first children of the sent node.

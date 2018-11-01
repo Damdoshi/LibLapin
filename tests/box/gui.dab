@@ -1,17 +1,16 @@
-
 [TopLeftWindow
   Type="Box"
   Size=900,700
   Position=100, 100
   Color=128,128
   OnMouseButton(int state, int x, int y, int button) = [Function
-    "OnMouseButton called! Parameters are: ", state, " ", x, " ", y, " ", button
+    If state == 0 Then "MOUSE DOWN ON TOP LEFT WINDOW"
     Color[0] = 0
     Children.InnerBox.Color[0] = 255
   ]
-  OnMouseMove(int x, int y) = [Function
-    "TopLeftWindow ", x, " ", y
-  ]
+
+  Hidden
+  Inactive
 
   [Children
     [InnerBox
@@ -19,8 +18,16 @@
       Size=100,100
       Position=100,100
       Color=0
+      MouseOverColor=255,255,255
+      MouseDownColor=255,0,255
+      FocusedColor=0,0,255
+      Picture="./back.png"
+      Focusable
       OnMouseMove(int x, int y) = [Function
-        "InnerBox!"
+        "MouseMove on InnerBox"
+      ]
+      OnClick() = [Function
+        "InnerBox was clicked."
       ]
     ]
   ]
@@ -29,10 +36,53 @@
 [TopRightWindow
   Type="Box"
   Size=200,100
-  'Position=Screen.X-Size[0], 100
   Position=1140, 100
   Color=255,0,255,128
-  OnMouseMove(int x, int y) = [Function
-    "TopRightWindow ", x, " ", y
+  [Picture
+    RessourceFile="./back.png"
+    [Clip
+      Size=50,50
+      Position=150,0
+    ]
+  ]
+  OnClick() = [Function
+    _.TopLeftWindow.Hidden = _.TopLeftWindow.Hidden ? false : true
+    If _.TopLeftWindow.Hidden
+      "TopLeftWindow is now hidden"
+    Else
+      "TopLeftWindow is now displayed"
+    EndIf
+  ]
+  OnMouseIn() = [Function
+    "Mouse in!"
+  ]
+  OnMouseOut() = [Function
+    "Mouse out!"
+  ]
+]
+
+[BottomRightWindow
+  Type="Box"
+  Size=200,100
+  Position=1140, 600
+  Color=255,255,255
+  MouseOverColor=255,0,0
+  MouseDownColor=0,255,0
+  FocusedColor=0,0,255
+  Focusable
+  OnClick() = [Function
+    _.TopLeftWindow.Inactive = _.TopLeftWindow.Inactive ? false : true
+    If _.TopLeftWindow.Inactive
+      "TopLeftWindow is now inactive"
+    Else
+      "TopLeftWindow is now active"
+    EndIf
+  ]
+  OnFocusChange(int focus) = [Function
+    If focus
+      "Got focus!"
+    Else
+      "Lost focus!"
+    EndIf
   ]
 ]

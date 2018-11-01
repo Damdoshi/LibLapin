@@ -16,6 +16,7 @@ SmallConf::SmallConf(void)
     distant_double(NULL),
     distant_int(NULL),
     distant_char(NULL),
+    distant_bool(NULL),
     is_converted(false),
     father(NULL),
     last_type(INTEGER),

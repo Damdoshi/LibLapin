@@ -59,6 +59,24 @@ bool		bunny_configuration_getf_int(t_bunny_configuration	*cnf,
   return (true);
 }
 
+bool		bunny_configuration_getf_bool(t_bunny_configuration	*cnf,
+					      bool			*data,
+					      const char		*pat,
+					      ...)
+{
+  int		got;
+  char		buffer[1024 * 4];
+  va_list	lst;
+
+  va_start(lst, pat);
+  vsnprintf(&buffer[0], sizeof(buffer), pat, lst);
+  if (bunny_configuration_go_get_int(cnf, &got, &buffer[0]) == false)
+    return (false);
+  if (data)
+    *data = !!got;
+  return (true);
+}
+
 bool		bunny_configuration_getf_double(t_bunny_configuration	*cnf,
 						double			*data,
 						const char		*pat,

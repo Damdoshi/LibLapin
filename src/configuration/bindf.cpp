@@ -30,6 +30,31 @@ bool		bunny_configuration_bindf_int(t_bunny_configuration	*cnf,
   return (true);
 }
 
+bool		bunny_configuration_bindf_bool(t_bunny_configuration	*cnf,
+					       bool			*i,
+					       const char		*pat,
+					       ...)
+{
+  char		buffer[1024 * 4];
+  t_bunny_configuration *got;
+  va_list	lst;
+  bool		cmode;
+
+  cmode = SmallConf::create_mode;
+  SmallConf::create_mode = true;
+
+  va_start(lst, pat);
+  vsnprintf(&buffer[0], sizeof(buffer), pat, lst);
+  if ((got = bunny_configuration_go_get_node(cnf, &buffer[0])) == NULL)
+    {
+      SmallConf::create_mode = cmode;
+      return (false);
+    }
+  ((SmallConf*)got)->Bind(i);
+  SmallConf::create_mode = cmode;
+  return (true);
+}
+
 bool		bunny_configuration_bindf_char(t_bunny_configuration	*cnf,
 					       char			*i,
 					       const char		*pat,

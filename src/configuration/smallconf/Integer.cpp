@@ -19,6 +19,8 @@ void			SmallConf::SetInt(int			i)
     *distant_int = i;
   if (distant_char)
     *distant_char = (char)(i & 0xFF);
+  if (distant_bool)
+    *distant_bool = !!i;
 }
 
 bool			SmallConf::GetInt(int			*i,
@@ -29,6 +31,11 @@ bool			SmallConf::GetInt(int			*i,
 {
   double		d;
 
+  if (distant_bool)
+    {
+      *i = *distant_bool;
+      return (true);
+    }
   if (distant_int)
     {
       *i = *distant_int;

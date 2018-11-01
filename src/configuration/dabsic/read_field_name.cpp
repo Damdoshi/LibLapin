@@ -38,6 +38,7 @@ SmallConf		*dabsic_field_name(const char			*code,
 
   if (readtext(code, i, "("))
     {
+      (*newnode)[".parameters"].construct = SmallConf::ARRAY;
       dabsic_read_separator(code, i);
       if (readtext(code, i, ")"))
 	{

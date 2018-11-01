@@ -1,3 +1,4 @@
+
 Quand on recupere une information dans un arbre dont le noeud est une expression...
 executer l'expression au lieu de rien faire comme une merde.
 
@@ -90,3 +91,11 @@ Un "begin" et "end" pour bunny map.
 
 
 Créer un "begin/end" generique a tous les conteneurs utilisant les macros generique.
+
+
+
+
+Dans le contexte "Adventure"... Les lignes de texte choisies doivent changer de couleur
+si elles ont deja été dite.
+
+Dans le contexte "Depth"... de la pluie! = )

@@ -26,12 +26,20 @@ typedef enum			e_bunny_box_type
 
 extern const char		*gl_bunny_box_type[BBT_CUSTOM_BOX];
 
+typedef enum			e_bunny_picture_display_mode
+  {
+    BPDM_STRETCH
+  }				t_bunny_picture_display_mode;
+
+// Common base
 typedef struct			s_bunny_gui_box
 {
   t_bunny_box_type		type;
   const char			*id;
   struct s_bunny_gui_box	*parent;
   t_bunny_configuration		*configuration;
+  bool				inactive; // Do not respond to events, neither children
+  bool				hidden; // Is not displayed, neither children
 
   t_bunny_configuration		*mouse_button_node;
   t_bunny_response		(*mouse_button)(t_bunny_event_state		state,
@@ -49,10 +57,38 @@ typedef struct			s_bunny_gui_box
 					   struct s_bunny_gui_box		*bos,
 					   const t_bunny_accurate_position	*offset);
   void				(*destructor)(struct s_bunny_gui_box		*box);
+
   t_bunny_map			*children;
   t_bunny_accurate_position	position;
   t_bunny_accurate_size		size;
+
   t_bunny_color			color;
+  t_bunny_color			clicked_color;
+  t_bunny_color			hovered_color;
+  t_bunny_color			focused_color;
+
+  t_bunny_picture		*background;
+  t_bunny_picture		*clicked_background;
+  t_bunny_picture		*hovered_background;
+  t_bunny_picture		*focused_background;
+  t_bunny_picture_display_mode	background_mode;
+
+  t_bunny_configuration		*mouse_in_node;
+  t_bunny_response		(*mouse_in)(struct s_bunny_box_system		*sys,
+					    struct s_bunny_gui_box		*box);
+  t_bunny_configuration		*mouse_out_node;
+  t_bunny_response		(*mouse_out)(struct s_bunny_box_system		*sys,
+					     struct s_bunny_gui_box		*box);
+
+  t_bunny_configuration		*click_node;
+  t_bunny_response		(*click)(struct s_bunny_box_system		*sys,
+					 struct s_bunny_gui_box			*box);
+
+  t_bunny_configuration		*focus_node;
+  t_bunny_response		(*focus)(t_bunny_event_state			state,
+					 struct s_bunny_box_system		*sys,
+					 struct s_bunny_gui_box			*box);
+
 }				t_bunny_gui_box;
 
 typedef t_bunny_gui_box		*(*t_bunny_new_box)(t_bunny_gui_box		*parent,
@@ -92,6 +128,9 @@ typedef struct			s_bunny_box_system
   t_bunny_context_runtime_info	*subhead;
   t_bunny_gui_box		screen;
   t_bunny_gui_box		*focus;
+  t_bunny_gui_box		*hovered;
+  t_bunny_gui_box		*down_clicked;
+
   const char			_private[512];
 }				t_bunny_box_system;
 

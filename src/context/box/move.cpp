@@ -15,11 +15,14 @@ static t_bunny_response	search_box(void				*data,
 {
   t_bunny_gui_box	*fnd;
 
+  if (box->inactive)
+    return (NOTHING_HAPPENED);
+
   if (pos.x < box->position.x ||
       pos.y < box->position.y ||
       pos.x > box->position.x + box->size.x ||
       pos.y > box->position.y + box->size.y)
-    return (GO_ON);
+    return (NOTHING_HAPPENED);
   pos.x -= box->position.x;
   pos.y -= box->position.y;
 
@@ -27,7 +30,7 @@ static t_bunny_response	search_box(void				*data,
     {
       if (box->mouse_move)
 	return (box->mouse_move(pos, (t_bunny_box_system*)data, box));
-      return (GO_ON);
+      return (NOTHING_HAPPENED);
     }
   return (search_box(data, fnd, pos));
 }
@@ -41,15 +44,20 @@ t_bunny_response	bunny_box_move(const t_bunny_position	*rel,
   t_bunny_response	ret;
 
   (void)rel;
-  if ((ret = search_box(data, x, *mpos)) != GO_ON)
+  if ((ret = search_box(data, x, *mpos)) < GO_ON)
     return (ret);
-
-  if (box->head.subcontext.move)
-    if ((ret = box->head.subcontext.move(mpos, data)) != GO_ON)
-      return (ret);
-  if (box->subhead)
-    if ((ret = box->subhead->subcontext.move(mpos, data)) != GO_ON)
-      return (ret);
-  return (GO_ON);
+  if (ret == NOTHING_HAPPENED)
+    {
+      if (box->hovered && box->hovered->mouse_out)
+	box->hovered->mouse_out(box, box->hovered);
+      box->hovered = NULL;
+      if (box->head.subcontext.move)
+	if ((ret = box->head.subcontext.move(mpos, data)) < GO_ON)
+	  return (ret);
+      if (box->subhead)
+	if ((ret = box->subhead->subcontext.move(mpos, data)) < GO_ON)
+	  return (ret);
+    }
+  return (ret);
 }
 

@@ -8,13 +8,15 @@
 
 void		SmallConf::Bind(int	*v)
 {
-  GetInt(v);
+  if (GetInt(v) == false)
+    SetInt(*v);
   distant_int = v;
 }
 
 void		SmallConf::Bind(double	*v)
 {
-  GetDouble(v);
+  if (GetDouble(v) == false)
+    SetDouble(*v);
   distant_double = v;
 }
 
@@ -22,14 +24,28 @@ void		SmallConf::Bind(char	*v)
 {
   int		i;
 
-  GetInt(&i);
-  *v = i & 0xFF;
+  if (GetInt(&i) == false)
+    SetInt((int)*v & 0xFF);
+  else
+    *v = i & 0xFF;
   distant_char = v;
+}
+
+void		SmallConf::Bind(bool	*v)
+{
+  int		i;
+
+  if (GetInt(&i) == false)
+    SetInt(!!(int)*v);
+  else
+    *v = !!i;
+  distant_bool = v;
 }
 
 void		SmallConf::Bind(char	**v)
 {
-  GetString((const char**)v);
+  if (GetString((const char**)v) == false)
+    SetString(*v);
   distant_string = v;
 }
 

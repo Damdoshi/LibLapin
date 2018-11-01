@@ -55,6 +55,7 @@ struct				SmallConf
   mutable double		*distant_double;
   mutable int			*distant_int;
   mutable char			*distant_char;
+  mutable bool			*distant_bool;
 
   mutable bool			is_converted;
   static bool			create_mode;
@@ -201,6 +202,7 @@ struct				SmallConf
 					  SmallConf			*param = NULL) const;
 
   void				Bind(int				*v);
+  void				Bind(bool				*v);
   void				Bind(double				*v);
   void				Bind(char				**v);
   void				Bind(char				*v);
