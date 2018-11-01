@@ -32,6 +32,7 @@ bool			bunny_box_set_min_callback(t_bunny_gui_box		*nw);
 bool			bunny_set_background_image(t_bunny_gui_box		*box);
 bool			bunny_box_set_click_callback(t_bunny_gui_box		*nw);
 bool			bunny_box_set_focus_callback(t_bunny_gui_box		*nw);
+bool			bunny_box_set_loop_callback(t_bunny_gui_box		*nw);
 
 t_bunny_gui_box		*bunny_new_simple_box(t_bunny_gui_box			*parent,
 					      t_bunny_configuration		*cnf)
@@ -59,6 +60,8 @@ t_bunny_gui_box		*bunny_new_simple_box(t_bunny_gui_box			*parent,
   if (bunny_box_set_focus_callback(nw) == false)
     goto Error;
   if (bunny_box_set_click_callback(nw) == false)
+    goto Error;
+  if (bunny_box_set_loop_callback(nw) == false)
     goto Error;
   if (bunny_set_background_image(nw) == false)
     goto Error;

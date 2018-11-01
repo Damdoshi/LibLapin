@@ -18,7 +18,7 @@ static void		broadcast_box(t_bunny_map			*nod,
   t_bunny_gui_box	*box = bunny_map_data(nod, t_bunny_gui_box*);
   t_bunny_response	ret;
 
-  if ((ret = display_box(sys->first, box, &sys->second)) != GO_ON)
+  if ((ret = display_box(sys->first, box, &sys->second)) < GO_ON)
     throw ret;
 }
 

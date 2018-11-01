@@ -41,23 +41,6 @@ typedef struct			s_bunny_gui_box
   bool				inactive; // Do not respond to events, neither children
   bool				hidden; // Is not displayed, neither children
 
-  t_bunny_configuration		*mouse_button_node;
-  t_bunny_response		(*mouse_button)(t_bunny_event_state		state,
-						t_bunny_position		pos,
-						t_bunny_mouse_button		button,
-						struct s_bunny_box_system	*sys,
-						struct s_bunny_gui_box		*box);
-
-  t_bunny_configuration		*mouse_move_node;
-  t_bunny_response		(*mouse_move)(t_bunny_position			pos,
-					      struct s_bunny_box_system		*sys,
-					      struct s_bunny_gui_box		*box);
-
-  t_bunny_response		(*display)(struct s_bunny_box_system		*sys,
-					   struct s_bunny_gui_box		*bos,
-					   const t_bunny_accurate_position	*offset);
-  void				(*destructor)(struct s_bunny_gui_box		*box);
-
   t_bunny_map			*children;
   t_bunny_accurate_position	position;
   t_bunny_accurate_size		size;
@@ -73,22 +56,40 @@ typedef struct			s_bunny_gui_box
   t_bunny_picture		*focused_background;
   t_bunny_picture_display_mode	background_mode;
 
+  // Event responses
+  t_bunny_configuration		*mouse_button_node;
+  t_bunny_response		(*mouse_button)(t_bunny_event_state		state,
+						t_bunny_position		pos,
+						t_bunny_mouse_button		button,
+						struct s_bunny_box_system	*sys,
+						struct s_bunny_gui_box		*box);
+  t_bunny_configuration		*mouse_move_node;
+  t_bunny_response		(*mouse_move)(t_bunny_position			pos,
+					      struct s_bunny_box_system		*sys,
+					      struct s_bunny_gui_box		*box);
   t_bunny_configuration		*mouse_in_node;
   t_bunny_response		(*mouse_in)(struct s_bunny_box_system		*sys,
 					    struct s_bunny_gui_box		*box);
   t_bunny_configuration		*mouse_out_node;
   t_bunny_response		(*mouse_out)(struct s_bunny_box_system		*sys,
 					     struct s_bunny_gui_box		*box);
-
   t_bunny_configuration		*click_node;
   t_bunny_response		(*click)(struct s_bunny_box_system		*sys,
 					 struct s_bunny_gui_box			*box);
-
   t_bunny_configuration		*focus_node;
   t_bunny_response		(*focus)(t_bunny_event_state			state,
 					 struct s_bunny_box_system		*sys,
 					 struct s_bunny_gui_box			*box);
 
+  // Cyclic and misc
+  t_bunny_configuration		*loop_node;
+  t_bunny_response		(*loop)(struct s_bunny_box_system		*sys,
+					struct s_bunny_gui_box			*box,
+					double					delay);
+  t_bunny_response		(*display)(struct s_bunny_box_system		*sys,
+					   struct s_bunny_gui_box		*bos,
+					   const t_bunny_accurate_position	*offset);
+  void				(*destructor)(struct s_bunny_gui_box		*box);
 }				t_bunny_gui_box;
 
 typedef t_bunny_gui_box		*(*t_bunny_new_box)(t_bunny_gui_box		*parent,

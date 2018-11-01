@@ -22,8 +22,10 @@ const t_bunny_context	gl_bunny_box_context =
   {
     bunny_context_key,
     bunny_context_type,
+
     bunny_box_click,
     bunny_box_move,
+
     bunny_context_wheel,
     bunny_context_joy_connect,
     bunny_context_joy_button,
@@ -31,14 +33,18 @@ const t_bunny_context	gl_bunny_box_context =
     bunny_context_get_focus,
     bunny_context_lost_focus,
     bunny_context_resize,
-    bunny_context_loop,
+
+    bunny_box_loop,
     bunny_box_display,
+
     bunny_context_close,
     NULL,
     bunny_context_message,
     bunny_context_connect,
+
     bunny_box_entering,
     bunny_box_leaving,
+
     bunny_context_async_computation,
     bunny_context_event_response
   };

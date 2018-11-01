@@ -9,7 +9,11 @@
     Children.InnerBox.Color[0] = 255
   ]
 
-  Hidden
+  Loop(real delay) = [Function
+    Position[0] += 5 * delay 'Five pixels per second
+  ]
+
+  Hidden=false
   Inactive
 
   [Children
