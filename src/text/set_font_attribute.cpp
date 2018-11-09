@@ -36,14 +36,16 @@ bool			bunny_set_font_attribute(const char		*conf_file,
       missing_field = "Missing field RessourceFile";
       goto InvalidField;
     }
-  if (bunny_configuration_go_get_int(cnf, &siz.x, "BoxSize[0]") == false)
+  if (bunny_configuration_go_get_int(cnf, &siz.x, "BoxSize[0]") == false &&
+      bunny_configuration_go_get_int(cnf, &siz.x, "Size[0]") == false)
     {
-      missing_field = "Missing field BoxSize[0]";
+      missing_field = "Missing field BoxSize[0] or Size[0]";
       goto InvalidField;
     }
-  if (bunny_configuration_go_get_int(cnf, &siz.y, "BoxSize[1]") == false)
+  if (bunny_configuration_go_get_int(cnf, &siz.y, "BoxSize[1]") == false &&
+      bunny_configuration_go_get_int(cnf, &siz.y, "Size[1]") == false)
     {
-      missing_field = "Missing field BoxSize[1]";
+      missing_field = "Missing field BoxSize[1] or Size[1]";
       goto InvalidField;
     }
   if (bunny_configuration_go_get_int(cnf, &gly.x, "GlyphSize[0]") == false)
@@ -65,10 +67,10 @@ bool			bunny_set_font_attribute(const char		*conf_file,
     }
 
   fnt = (struct bunny_ttf_font*)ofnt;
-  if (bunny_configuration_go_get_string(cnf, &resfile, "String[0]"))
+  if (bunny_configuration_go_get_string(cnf, &resfile, "String[0]") ||
+      bunny_configuration_go_get_string(cnf, &resfile, "Text[0]"))
     {
       char cat[1024 * 16];
-      char buffer[128];
       int end;
 
       i = 0;
@@ -76,8 +78,8 @@ bool			bunny_set_font_attribute(const char		*conf_file,
       cat[0] = '\0';
       do
 	{
-	  snprintf(&buffer[0], sizeof(buffer), "String[%d]", i);
-	  if (bunny_configuration_go_get_string(cnf, &resfile, &buffer[0]) == false)
+	  if (!bunny_configuration_getf_string(cnf, &resfile, "String[%d]", i)
+	      && !bunny_configuration_getf_string(cnf, &resfile, "Text[%d]", i))
 	    break ;
 	  end += snprintf(&cat[end], sizeof(cat) - end, "%s", resfile);
 	  i += 1;
@@ -92,10 +94,12 @@ bool			bunny_set_font_attribute(const char		*conf_file,
 	}
     }
 
-  if (bunny_configuration_go_get_int(cnf, &tmp, "StringOffset[0]"))
+  if (bunny_configuration_go_get_int(cnf, &tmp, "StringOffset[0]") ||
+      bunny_configuration_go_get_int(cnf, &tmp, "TextOffset[0]"))
     fnt->string_offset = tmp;
 
-  if (bunny_configuration_go_get_int(cnf, &tmp, "StringLength[0]"))
+  if (bunny_configuration_go_get_int(cnf, &tmp, "StringLength[0]") ||
+      bunny_configuration_go_get_int(cnf, &tmp, "TextLength[0]"))
     fnt->string_len = tmp;
   else if (fnt->string)
     fnt->string_len = strlen(fnt->string);

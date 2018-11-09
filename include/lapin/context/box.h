@@ -21,6 +21,7 @@ struct s_bunny_box_system;
 typedef enum			e_bunny_box_type
   {
     BBT_SIMPLE_BOX,
+    BBT_LABEL_BOX,
     BBT_CUSTOM_BOX
   }				t_bunny_box_type;
 
@@ -28,7 +29,9 @@ extern const char		*gl_bunny_box_type[BBT_CUSTOM_BOX];
 
 typedef enum			e_bunny_picture_display_mode
   {
-    BPDM_STRETCH
+    BPDM_STRETCH,
+    BPDM_MAXIMIZE,
+    BPDM_FIT
   }				t_bunny_picture_display_mode;
 
 // Common base
@@ -54,7 +57,7 @@ typedef struct			s_bunny_gui_box
   t_bunny_picture		*clicked_background;
   t_bunny_picture		*hovered_background;
   t_bunny_picture		*focused_background;
-  t_bunny_picture_display_mode	background_mode;
+  t_bunny_picture_display_mode	display_mode;
 
   // Event responses
   t_bunny_configuration		*mouse_button_node;
@@ -91,6 +94,12 @@ typedef struct			s_bunny_gui_box
 					   const t_bunny_accurate_position	*offset);
   void				(*destructor)(struct s_bunny_gui_box		*box);
 }				t_bunny_gui_box;
+
+typedef struct			s_bunny_gui_label
+{
+  t_bunny_gui_box		box;
+  t_bunny_font			*text;
+}				t_bunny_gui_label;
 
 typedef t_bunny_gui_box		*(*t_bunny_new_box)(t_bunny_gui_box		*parent,
 						    t_bunny_configuration	*cnf);
@@ -149,6 +158,9 @@ bool				bunny_load_box(t_bunny_box_system	*bs,
 					       t_bunny_configuration	*env);
 bool				bunny_read_box(t_bunny_box_system	*bs,
 					       t_bunny_configuration	*cnf);
+t_bunny_gui_box			*bunny_read_simple_box(t_bunny_gui_box	*nw,
+						       t_bunny_gui_box	*parent,
+						       t_bunny_configuration *cnf);
 
 void				bunny_delete_box(t_bunny_gui_box	*box);
 

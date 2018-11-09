@@ -45,7 +45,11 @@ void		SmallConf::Bind(bool	*v)
 void		SmallConf::Bind(char	**v)
 {
   if (GetString((const char**)v) == false)
-    SetString(*v);
+    {
+      if (!*v)
+	*v = bunny_strdup("");
+      SetString(*v);
+    }
   distant_string = v;
 }
 

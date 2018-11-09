@@ -34,6 +34,7 @@ bool			bunny_box_set_min_callback(t_bunny_gui_box		*nw)
   if (prot.Size() != 0)
     return (false);
   nw->mouse_in = bunny_min_simple_box_dabsic;
+  return (true);
 }
 
 t_bunny_response	bunny_mout_simple_box_dabsic(t_bunny_box_system		*sys,
@@ -65,5 +66,6 @@ bool			bunny_box_set_mout_callback(t_bunny_gui_box		*nw)
   if (prot.Size() != 0)
     return (false);
   nw->mouse_out = bunny_mout_simple_box_dabsic;
+  return (true);
 }
 

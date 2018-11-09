@@ -27,7 +27,23 @@ static bool		set_image(t_bunny_gui_box				*box,
 
 bool			bunny_set_background_image(t_bunny_gui_box		*box)
 {
-  if (set_image(box, "Picture", &box->background) == false)
+  const char		*tmp;
+
+  if (bunny_configuration_getf_string(box->configuration, &tmp, "DisplayMode"))
+    {
+      if (strcmp(tmp, "Stretch") == 0)
+	box->display_mode = BPDM_STRETCH;
+      else if (strcmp(tmp, "Maximise") == 0)
+	box->display_mode = BPDM_MAXIMIZE;
+      else if (strcmp(tmp, "Fit") == 0)
+	box->display_mode = BPDM_FIT;
+      else
+	return (false);
+    }
+  else
+    box->display_mode = BPDM_STRETCH;
+
+  if (set_image(box, "BackgroundPicture", &box->background) == false)
     return (false);
   if (set_image(box, "MouseOverPicture", &box->hovered_background) == false)
     goto MouseOver;

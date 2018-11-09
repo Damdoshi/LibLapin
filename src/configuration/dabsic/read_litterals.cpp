@@ -13,7 +13,7 @@ Decision		dabsic_read_litterals(const char		*code,
 {
 
   (void)root;
-  if (conf.construct == SmallConf::ARRAY)
+  if (conf.construct == SmallConf::ARRAY && 0)
     {
       dabsic_read_separator(code, i);
       if (expr_read_expression(code, i, conf, Expression::BEOF_TERNARY) == BD_ERROR)

@@ -77,7 +77,7 @@ t_bunny_decision	bunny_color_bind_configuration(const char		*field,
   t_bunny_decision	dec;
   int			i;
 
-  if ((dec = bunny_color_configuration(field, col, cnf)) != BD_OK)
+  if ((dec = bunny_color_configuration(field, col, cnf)) == BD_ERROR)
     return (dec);
   for (i = 0; i < 4; ++i)
     {

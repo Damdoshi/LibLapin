@@ -1,0 +1,82 @@
+'Link with a C function! Pay attention to respect prototypes!
+rand():int = [Function
+  "Calling a C function!"
+  Link
+]
+
+[Randomized
+  Type="Label"
+
+  Position=1100,700
+  Size=200,100
+
+  Text="Random"
+  [Font @insert "font.ini"]
+  OnClick() = [Function
+    BackgroundColor[0] = rand()
+    BackgroundColor[1] = rand()
+    BackgroundColor[2] = rand()
+    BackgroundColor[3] = 255
+  ]
+]
+
+[Label0
+  Type="Label"
+  Position=100,100
+  Size=1200,100
+
+  Text="This is an external text."
+  Font="font.ini"
+
+  ClickCount = 0
+  OnClick() = [Function
+    Text = ClickCount
+    ClickCount += 1
+  ]
+]
+
+[Label1
+  Type="Label"
+  Position=100,300
+  Size=600,100
+  BackgroundColor=255,0,0
+
+  Text="This is a sub internal text."
+  [Font @insert "font.ini"]
+
+  ClickCount = 0
+  OnClick() = [Function
+    Text = ClickCount
+    ClickCount += 1
+  ]
+]
+
+[Label2
+  Type="Label"
+  Position=100,500
+  Size=600,100
+  BackgroundColor=255,0,0
+
+  [Font @insert "font.ini"]
+
+  ClickCount = 0
+  OnClick() = [Function
+    Text = ClickCount
+    ClickCount += 1
+  ]
+]
+
+[Label3
+  Type="Label"
+  @insert "font.ini"
+  BackgroundColor=0
+
+  Text="This is an internal text."
+
+  ClickCount = 0
+  OnClick() = [Function
+    Text = ClickCount
+    ClickCount += 1
+  ]
+]
+

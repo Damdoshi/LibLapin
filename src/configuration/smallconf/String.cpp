@@ -9,6 +9,11 @@
 void			SmallConf::SetString(const std::string	&in,
 					     bool		raw)
 {
+  if (alias_on)
+    {
+      alias_on->SetString(in, raw);
+      return;
+    }
   original_value = in;
   have_value = true;
   if (raw)
@@ -30,6 +35,9 @@ bool			SmallConf::GetString(const char		**out,
 					     SmallConf		*param) const
 
 {
+  if (alias_on)
+    return (alias_on->GetString(out, root, local, artif, param));
+
   if (distant_string)
     {
       *out = *distant_string;

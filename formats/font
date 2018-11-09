@@ -37,18 +37,20 @@ format. You should read it before going on if you do not know it yet.
 
 ### Optionnal fields
 
-* The String field is the one that will contains the text to display.
-  Default value of String is "".
+* The Text field is the one that will contains the text to display.
+  Default value of Text is "". The String field is equivalent to the Text
+  field but deprecated.
 
-    String="This is the Bunny Library!"
+    Text="This is the Bunny Library!"
 
-* StringOffset allow you to define a subpart of the string to be displayed.
-  Characters before StringOffset in String will not be drawn.
-  Default value for StringOffset is 0.
+* TextOffset allow you to define a subpart of the string to be displayed.
+  Characters before TextOffset in Text will not be drawn.
+  Default value for TextOffset is 0. StringOffset is a deprecated equivalent.
 
-* StringLength allow you to define a subpart of the string to be displayed.
-  Characters after StringLength + StringOffset in String will not be drawn.
-  DefaultValue for StringOffset is the length of String.
+* TextLength allow you to define a subpart of the string to be displayed.
+  Characters after TextLength + StringOffset in Text will not be drawn.
+  DefaultValue for TextOffset is the length of Text. TextLength is
+  a deprecated equivalent.
 
 * HorizontalAlign allow you to precise if the text will be aligned on the left
   with "Left", the center with "Middle", the right with "Right" or justified with

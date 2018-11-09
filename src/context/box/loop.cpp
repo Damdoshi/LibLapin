@@ -48,7 +48,6 @@ static t_bunny_response loop_box(t_bunny_box_system	*sys,
 t_bunny_response	bunny_box_loop(void		*d)
 {
   t_bunny_box_system	*sys = (t_bunny_box_system*)d;
-  double		delay;
   t_bunny_response	ret;
 
   if ((ret = loop_box(sys, &sys->screen, 1.0 / bunny_get_frequency())) < GO_ON)

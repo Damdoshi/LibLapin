@@ -115,6 +115,13 @@ Decision		dabsic_read_statement(const char	*code,
       return (BD_OK);
     }
 
+  if (readtextcasesep(code, i, "Link", fieldname))
+    {
+      dabsic_read_separator(code, i);
+      func.command = Function::LINK;
+      return (BD_OK);
+    }
+
   if (readtextcasesep(code, i, "Continue", fieldname))
     {
       dabsic_read_separator(code, i);

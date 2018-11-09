@@ -7,6 +7,12 @@
 
 void			SmallConf::SetDouble(double		v)
 {
+  if (alias_on)
+    {
+      alias_on->SetDouble(v);
+      return;
+    }
+
   std::stringstream	ss;
 
   ss << v;
@@ -25,6 +31,9 @@ bool			SmallConf::GetDouble(double		*v,
 					     SmallConf		*artif,
 					     SmallConf		*param) const
 {
+  if (alias_on)
+    return (alias_on->GetDouble(v, root, local, artif, param));
+
   if (distant_double)
     {
       *v = *distant_double;

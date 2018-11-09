@@ -72,39 +72,40 @@ bool			expr_compute_assign(Expression		&exp,
 
       if (i < (int)exp.operand.size() - 1 && dry == false)
 	{
+	  SmallConf *var;
+
+	  if ((var = expr_get_variable
+	       (exp.operand[i + 1]->val, dry, root, local, artif, param)) == NULL)
+	    var = &exp.operand[i + 1]->val;
+
 	  if (typ.optor == Expression::BEO_ASSIGN)
-	    *ope = exp.operand[i + 1]->val;
+	    *ope = *var;
 	  else if (typ.optor == Expression::BEO_REC_ASSIGN)
 	    {
-	      if (SmallConf::RecursiveAssign
-		  (*ope, exp.operand[i + 1]->val, true, true) == false)
+	      if (SmallConf::RecursiveAssign(*ope, *var, true, true) == false)
 		return (false);
 	    }
 	  else if (typ.optor == Expression::BEO_ARRAY_ASSIGN)
 	    {
-	      if (SmallConf::RecursiveAssign
-		  (*ope, exp.operand[i + 1]->val, false, true) == false)
+	      if (SmallConf::RecursiveAssign(*ope, *var, false, true) == false)
 		return (false);
 	    }
 	  else if (typ.optor == Expression::BEO_HASH_ASSIGN)
 	    {
-	      if (SmallConf::RecursiveAssign
-		  (*ope, exp.operand[i + 1]->val, true, false) == false)
+	      if (SmallConf::RecursiveAssign(*ope, *var, true, false) == false)
 		return (false);
 	    }
 	  else if (typ.optor == Expression::BEO_LOR_ASSIGN)
 	    {
 	      int	a, b;
 
-	      if (exp.operand[i + 1]->val.last_type == SmallConf::STRING
-		  || ope->last_type == SmallConf::STRING)
+	      if (var->last_type == SmallConf::STRING || ope->last_type == SmallConf::STRING)
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '||=' expect numeric types on line %s:%d",
 		   "ressource,configuration,syntax",
 		   exp.file.c_str(), exp.line);
-	      if (ope->GetInt(&a) == false
-		  || exp.operand[i + 1]->val.GetInt(&b) == false)
+	      if (ope->GetInt(&a) == false || var->GetInt(&b) == false)
 		return (false);
 	      a = !!a || !!b;
 	      ope->SetInt(a);
@@ -113,15 +114,13 @@ bool			expr_compute_assign(Expression		&exp,
 	    {
 	      int	a, b;
 
-	      if (exp.operand[i + 1]->val.last_type == SmallConf::STRING
-		  || ope->last_type == SmallConf::STRING)
+	      if (var->last_type == SmallConf::STRING || ope->last_type == SmallConf::STRING)
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '^^=' expect numeric types on line %s:%d",
 		   "ressource,configuration,syntax",
 		   exp.file.c_str(), exp.line);
-	      if (ope->GetInt(&a) == false
-		  || exp.operand[i + 1]->val.GetInt(&b) == false)
+	      if (ope->GetInt(&a) == false || var->GetInt(&b) == false)
 		return (false);
 	      a = (!!a != !!b);
 	      ope->SetInt(a);
@@ -130,15 +129,13 @@ bool			expr_compute_assign(Expression		&exp,
 	    {
 	      int	a, b;
 
-	      if (exp.operand[i + 1]->val.last_type == SmallConf::STRING
-		  || ope->last_type == SmallConf::STRING)
+	      if (var->last_type == SmallConf::STRING || ope->last_type == SmallConf::STRING)
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '&&=' expect numeric types on line %s:%d",
 		   "ressource,configuration,syntax",
 		   exp.file.c_str(), exp.line);
-	      if (ope->GetInt(&a) == false
-		  || exp.operand[i + 1]->val.GetInt(&b) == false)
+	      if (ope->GetInt(&a) == false || var->GetInt(&b) == false)
 		return (false);
 	      a = (!!a && !!b);
 	      ope->SetInt(a);
@@ -148,15 +145,13 @@ bool			expr_compute_assign(Expression		&exp,
 	    {
 	      int	a, b;
 
-	      if (exp.operand[i + 1]->val.last_type != SmallConf::INTEGER
-		  || ope->last_type != SmallConf::INTEGER)
+	      if (var->last_type != SmallConf::INTEGER || ope->last_type != SmallConf::INTEGER)
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '|=' expect integer types on line %s:%d",
 		   "ressource,configuration,syntax",
 		   exp.file.c_str(), exp.line);
-	      if (ope->GetInt(&a) == false
-		  || exp.operand[i + 1]->val.GetInt(&b) == false)
+	      if (ope->GetInt(&a) == false || var->GetInt(&b) == false)
 		return (false);
 	      a = a | b;
 	      ope->SetInt(a);
@@ -165,15 +160,13 @@ bool			expr_compute_assign(Expression		&exp,
 	    {
 	      int	a, b;
 
-	      if (exp.operand[i + 1]->val.last_type != SmallConf::INTEGER
-		  || ope->last_type != SmallConf::INTEGER)
+	      if (var->last_type != SmallConf::INTEGER || ope->last_type != SmallConf::INTEGER)
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '^=' expect integer types on line %s:%d",
 		   "ressource,configuration,syntax",
 		   exp.file.c_str(), exp.line);
-	      if (ope->GetInt(&a) == false
-		  || exp.operand[i + 1]->val.GetInt(&b) == false)
+	      if (ope->GetInt(&a) == false || var->GetInt(&b) == false)
 		return (false);
 	      a = (a ^ b);
 	      ope->SetInt(a);
@@ -182,15 +175,13 @@ bool			expr_compute_assign(Expression		&exp,
 	    {
 	      int	a, b;
 
-	      if (exp.operand[i + 1]->val.last_type != SmallConf::INTEGER
-		  || ope->last_type != SmallConf::INTEGER)
+	      if (var->last_type != SmallConf::INTEGER || ope->last_type != SmallConf::INTEGER)
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '&=' expect integer types on line %s:%d",
 		   "ressource,configuration,syntax",
 		   exp.file.c_str(), exp.line);
-	      if (ope->GetInt(&a) == false
-		  || exp.operand[i + 1]->val.GetInt(&b) == false)
+	      if (ope->GetInt(&a) == false || var->GetInt(&b) == false)
 		return (false);
 	      a = (a & b);
 	      ope->SetInt(a);
@@ -200,15 +191,13 @@ bool			expr_compute_assign(Expression		&exp,
 	    {
 	      int	a, b;
 
-	      if (exp.operand[i + 1]->val.last_type != SmallConf::INTEGER
-		  || ope->last_type != SmallConf::INTEGER)
+	      if (var->last_type != SmallConf::INTEGER || ope->last_type != SmallConf::INTEGER)
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '<<=' expect integer types on line %s:%d",
 		   "ressource,configuration,syntax",
 		   exp.file.c_str(), exp.line);
-	      if (ope->GetInt(&a) == false
-		  || exp.operand[i + 1]->val.GetInt(&b) == false)
+	      if (ope->GetInt(&a) == false || var->GetInt(&b) == false)
 		return (false);
 	      a = (a << b);
 	      ope->SetInt(a);
@@ -217,15 +206,13 @@ bool			expr_compute_assign(Expression		&exp,
 	    {
 	      int	a, b;
 
-	      if (exp.operand[i + 1]->val.last_type != SmallConf::INTEGER
-		  || ope->last_type != SmallConf::INTEGER)
+	      if (var->last_type != SmallConf::INTEGER || ope->last_type != SmallConf::INTEGER)
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '>>=' expect integer types on line %s:%d",
 		   "ressource,configuration,syntax",
 		   exp.file.c_str(), exp.line);
-	      if (ope->GetInt(&a) == false
-		  || exp.operand[i + 1]->val.GetInt(&b) == false)
+	      if (ope->GetInt(&a) == false || var->GetInt(&b) == false)
 		return (false);
 	      a = (a >> b);
 	      ope->SetInt(a);
@@ -235,19 +222,16 @@ bool			expr_compute_assign(Expression		&exp,
 	    {
 	      double	a, b;
 
-	      if (exp.operand[i + 1]->val.last_type == SmallConf::STRING
-		  || ope->last_type == SmallConf::STRING)
+	      if (var->last_type == SmallConf::STRING || ope->last_type == SmallConf::STRING)
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '+=' expect numeric types on line %s:%d",
 		   "ressource,configuration,syntax",
 		   exp.file.c_str(), exp.line);
-	      if (ope->GetDouble(&a) == false
-		  || exp.operand[i + 1]->val.GetDouble(&b) == false)
+	      if (ope->GetDouble(&a) == false || var->GetDouble(&b) == false)
 		return (false);
 	      a = (a + b);
-	      if (ope->last_type == SmallConf::DOUBLE
-		  || exp.operand[i + 1]->val.last_type == SmallConf::DOUBLE)
+	      if (ope->last_type == SmallConf::DOUBLE || var->last_type == SmallConf::DOUBLE)
 		ope->SetDouble(a);
 	      else
 		ope->SetInt(a);
@@ -256,19 +240,16 @@ bool			expr_compute_assign(Expression		&exp,
 	    {
 	      double	a, b;
 
-	      if (exp.operand[i + 1]->val.last_type == SmallConf::STRING
-		  || ope->last_type == SmallConf::STRING)
+	      if (var->last_type == SmallConf::STRING || ope->last_type == SmallConf::STRING)
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '-=' expect numeric types on line %s:%d",
 		   "ressource,configuration,syntax",
 		   exp.file.c_str(), exp.line);
-	      if (ope->GetDouble(&a) == false
-		  || exp.operand[i + 1]->val.GetDouble(&b) == false)
+	      if (ope->GetDouble(&a) == false || var->GetDouble(&b) == false)
 		return (false);
 	      a = (a - b);
-	      if (ope->last_type == SmallConf::DOUBLE
-		  || exp.operand[i + 1]->val.last_type == SmallConf::DOUBLE)
+	      if (ope->last_type == SmallConf::DOUBLE || var->last_type == SmallConf::DOUBLE)
 		ope->SetDouble(a);
 	      else
 		ope->SetInt(a);
@@ -277,19 +258,16 @@ bool			expr_compute_assign(Expression		&exp,
 	    {
 	      double	a, b;
 
-	      if (exp.operand[i + 1]->val.last_type == SmallConf::STRING
-		  || ope->last_type == SmallConf::STRING)
+	      if (var->last_type == SmallConf::STRING || ope->last_type == SmallConf::STRING)
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '*=' expect numeric types on line %s:%d",
 		   "ressource,configuration,syntax",
 		   exp.file.c_str(), exp.line);
-	      if (ope->GetDouble(&a) == false
-		  || exp.operand[i + 1]->val.GetDouble(&b) == false)
+	      if (ope->GetDouble(&a) == false || var->GetDouble(&b) == false)
 		return (false);
 	      a = (a * b);
-	      if (ope->last_type == SmallConf::DOUBLE
-		  || exp.operand[i + 1]->val.last_type == SmallConf::DOUBLE)
+	      if (ope->last_type == SmallConf::DOUBLE || var->last_type == SmallConf::DOUBLE)
 		ope->SetDouble(a);
 	      else
 		ope->SetInt(a);
@@ -298,19 +276,16 @@ bool			expr_compute_assign(Expression		&exp,
 	    {
 	      double	a, b;
 
-	      if (exp.operand[i + 1]->val.last_type == SmallConf::STRING
-		  || ope->last_type == SmallConf::STRING)
+	      if (var->last_type == SmallConf::STRING || ope->last_type == SmallConf::STRING)
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '/=' expect numeric types on line %s:%d",
 		   "ressource,configuration,syntax",
 		   exp.file.c_str(), exp.line);
-	      if (ope->GetDouble(&a) == false
-		  || exp.operand[i + 1]->val.GetDouble(&b) == false)
+	      if (ope->GetDouble(&a) == false || var->GetDouble(&b) == false)
 		return (false);
 	      a = (a / b);
-	      if (ope->last_type == SmallConf::DOUBLE
-		  || exp.operand[i + 1]->val.last_type == SmallConf::DOUBLE)
+	      if (ope->last_type == SmallConf::DOUBLE || var->last_type == SmallConf::DOUBLE)
 		ope->SetDouble(a);
 	      else
 		ope->SetInt(a);
@@ -319,19 +294,16 @@ bool			expr_compute_assign(Expression		&exp,
 	    {
 	      double	a, b;
 
-	      if (exp.operand[i + 1]->val.last_type == SmallConf::STRING
-		  || ope->last_type == SmallConf::STRING)
+	      if (var->last_type == SmallConf::STRING || ope->last_type == SmallConf::STRING)
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '%%=' expect numeric types on line %s:%d",
 		   "ressource,configuration,syntax",
 		   exp.file.c_str(), exp.line);
-	      if (ope->GetDouble(&a) == false
-		  || exp.operand[i + 1]->val.GetDouble(&b) == false)
+	      if (ope->GetDouble(&a) == false || var->GetDouble(&b) == false)
 		return (false);
 	      a = fmod(a, b);
-	      if (ope->last_type == SmallConf::DOUBLE
-		  || exp.operand[i + 1]->val.last_type == SmallConf::DOUBLE)
+	      if (ope->last_type == SmallConf::DOUBLE || var->last_type == SmallConf::DOUBLE)
 		ope->SetDouble(a);
 	      else
 		ope->SetInt(a);
@@ -340,19 +312,16 @@ bool			expr_compute_assign(Expression		&exp,
 	    {
 	      double	a, b;
 
-	      if (exp.operand[i + 1]->val.last_type == SmallConf::STRING
-		  || ope->last_type == SmallConf::STRING)
+	      if (var->last_type == SmallConf::STRING || ope->last_type == SmallConf::STRING)
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '**=' expect numeric types on line %s:%d",
 		   "ressource,configuration,syntax",
 		   exp.file.c_str(), exp.line);
-	      if (ope->GetDouble(&a) == false
-		  || exp.operand[i + 1]->val.GetDouble(&b) == false)
+	      if (ope->GetDouble(&a) == false || var->GetDouble(&b) == false)
 		return (false);
 	      a = pow(a, b);
-	      if (ope->last_type == SmallConf::DOUBLE
-		  || exp.operand[i + 1]->val.last_type == SmallConf::DOUBLE)
+	      if (ope->last_type == SmallConf::DOUBLE || var->last_type == SmallConf::DOUBLE)
 		ope->SetDouble(a);
 	      else
 		ope->SetInt(a);
@@ -362,15 +331,13 @@ bool			expr_compute_assign(Expression		&exp,
 	      std::stringstream ss;
 	      const char	*a, *b;
 
-	      if (exp.operand[i + 1]->val.last_type != SmallConf::STRING
-		  || ope->last_type != SmallConf::STRING)
+	      if (var->last_type != SmallConf::STRING || ope->last_type != SmallConf::STRING)
 		scream_error_if
 		  (return (false), BE_BAD_ADDRESS,
 		   "Operator '#=' expect string types on line %s:%d",
 		   "ressource,configuration,syntax",
 		   exp.file.c_str(), exp.line);
-	      if (ope->GetString(&a) == false
-		  || exp.operand[i + 1]->val.GetString(&b) == false)
+	      if (ope->GetString(&a) == false || var->GetString(&b) == false)
 		return (false);
 	      ss << a << b;
 	      ope->SetString(ss.str());

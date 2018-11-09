@@ -5,6 +5,11 @@
 ** Bibliotheque Lapin
 */
 
+/*
+** \file
+** The function API of this module is shitty.
+*/
+
 #ifndef				__LAPIN_TEXT_H__
 # define			__LAPIN_TEXT_H__
 # if				!defined(__LAPIN_H__)
@@ -61,11 +66,21 @@ typedef struct			s_bunny_font
 # pragma			pack()
 
 t_bunny_font			*bunny_load_text(const char			*file);
+t_bunny_font			*bunny_read_textbox(t_bunny_configuration	*cnf);
 
 t_bunny_font			*bunny_load_font(unsigned int			width,
 						 unsigned int			height,
 						 const char			*file,
 						 const t_bunny_position		*siz);
+
+t_bunny_font			*bunny_read_font(unsigned int			width,
+						 unsigned int			height,
+						 const char			*file,
+						 const t_bunny_position		*siz);
+
+bool				bunny_font_resize(t_bunny_font			*fnt,
+						  unsigned int			width,
+						  unsigned int			height);
 
 /*!
 **

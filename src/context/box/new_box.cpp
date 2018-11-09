@@ -11,7 +11,7 @@ void			*bunny_new_gui_box(size_t			siz,
   t_bunny_gui_box	*nw;
   const char		*s;
 
-  if ((nw = (t_bunny_gui_box*)bunny_calloc(siz, 1)) == NULL)
+  if ((nw = (t_bunny_gui_box*)bunny_calloc(1, siz)) == NULL)
     return (NULL);
   s = bunny_configuration_get_name(cnf);
   if ((nw->id = bunny_strdup(s)) == NULL)

@@ -50,26 +50,56 @@ bool			expr_compute(SmallConf			&exp,
 	   "ressource,configuration,syntax",
 	   exp.name.c_str(), exp.expression->file.c_str(), exp.line
 	   );
-      for (i = 0; i < prototype->Size(); ++i)
+      // test classic call by nbr
+      if (param->Size())
 	{
-	  if (param->Access((*prototype)[i].name) == false)
+	  if (param->Size() > prototype->Size())
+	    scream_error_if
+	      (return (false), BE_SYNTAX_ERROR,
+	       "Too many parameters for function or expression %s on line %d",
+	       "ressource,configuration,syntax",
+	       exp.name.c_str(), exp.line
+	       );
+	  for (i = 0; i < param->Size() && i < prototype->Size(); ++i)
+	    (*param)[(*prototype)[i].name] = (*param)[i];
+	  while (i < prototype->Size())
 	    {
 	      if ((*prototype)[i].have_value)
-		{
-		  cmode = SmallConf::create_mode;
-		  SmallConf::create_mode = true;
-		  (*param)[(*prototype)[i].name] = (*prototype)[i];
-		  SmallConf::create_mode = cmode;
-		}
+		(*param)[(*prototype)[i].name] = (*prototype)[i];
 	      else
 		scream_error_if
 		  (return (false), BE_SYNTAX_ERROR,
-		   "Missing parameters n=%zu (%s) for function or expression %s on line %s:%d",
+		   "Missing parameters for function or expression %s on line %d",
 		   "ressource,configuration,syntax",
-		   i, (*prototype)[i].name.c_str(), exp.name.c_str(), exp.expression->file.c_str(), exp.line
+		   exp.name.c_str(), exp.line
 		   );
+	      ++i;
 	    }
 	}
+      else
+	for (i = 0; i < prototype->Size(); ++i)
+	  {
+	    if (param->Access((*prototype)[i].name) == false)
+	      {
+		if ((*prototype)[i].have_value)
+		  {
+		    cmode = SmallConf::create_mode;
+		    SmallConf::create_mode = true;
+		    (*param)[(*prototype)[i].name] = (*prototype)[i];
+		    SmallConf::create_mode = cmode;
+		  }
+		else
+		  scream_error_if
+		    (return (false), BE_SYNTAX_ERROR,
+		     "Missing parameters n=%zu (%s) for function or expression %s on line %s:%d",
+		     "ressource,configuration,syntax",
+		     i, (*prototype)[i].name.c_str(), exp.name.c_str(),
+		     exp.expression->file.c_str(), exp.line
+		     );
+	      }
+	  }
+
+
     }
   if (exp.expression->optor_family == Expression::LAST_OPERATOR_FAMILY
       || exp.expression->optor_family == -1)
@@ -88,7 +118,7 @@ bool			expr_compute(SmallConf			&exp,
 	       exp.expression->val.original_value.c_str(),
 	       artif->address.c_str(),
 	       exp.expression->file.c_str(), exp.line);
-	  exp = *ope;
+	  exp.Assign(*ope, root, local, artif, param);
 	  return (true);
 	}
       if (expr_compute_function_call

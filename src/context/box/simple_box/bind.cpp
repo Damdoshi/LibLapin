@@ -16,7 +16,7 @@ bool			bunny_bind_simple_box(t_bunny_gui_box		*box)
     return (false);
 
   if (bunny_color_bind_configuration
-      ("Color", &box->color, box->configuration) == BD_ERROR)
+      ("BackgroundColor", &box->color, box->configuration) == BD_ERROR)
     return (false);
 
   if (bunny_color_bind_configuration
@@ -38,6 +38,5 @@ bool			bunny_bind_simple_box(t_bunny_gui_box		*box)
     return (false);
 
   return (true);
-
 }
 

@@ -1,3 +1,13 @@
+Les indirections sont deja gerée en Dabsic par [field] => Si field contient une raw string correspondant a un
+champ, ca marche. Le probleme c'est qu'on ne peut pas assigner un champ, seulement son contenu.
+Pour cela, il faut faire l'operateur uniaire '&'.
+
+Dans le script Dabsic, un moyen de créer des noeuds. (actuellement, ca crache une erreur "cannot get address X")
+
+Ajouter un warning type "Missing return in function X".
+
+Objet de GUI point, cercle, ligne, triangle, carré, forme libre, etc. avec une collision
+réelle et non carrée.
 
 Quand on recupere une information dans un arbre dont le noeud est une expression...
 executer l'expression au lieu de rien faire comme une merde.
@@ -68,6 +78,10 @@ Ou juste une seul... celle avec le parametre
 
 @insert/@include de dossier entier par ordre alphabetique mais cette fois,
 avec une option pour le faire *recursivement*
+@insert/@include avec precision des champs a integrer... soit en mode "keep hierarchy"
+soit en mode "bring it here".
+@insert/@include aavec precision des champs a *exclure*, et ajouter un mot clef pour
+preciser que les champs exclu sont les champs locaux pour @insert.
 
 
 Faire un module pour faire des IA de jeux... capable de faire des analyses à la première personne.

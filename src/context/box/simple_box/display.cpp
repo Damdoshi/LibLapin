@@ -9,8 +9,6 @@ t_bunny_response	bunny_display_simple_box(t_bunny_box_system		*sys,
 						 t_bunny_gui_box		*box,
 						 const t_bunny_accurate_position *off)
 {
-  //if (box->color.full == 0) // Changer par "hidden"/invisible, etc.
-    //return (GO_ON);
   t_bunny_accurate_position n = {off->x + box->position.x, off->y + box->position.y};
   t_bunny_vertex_array	*vx;
   t_bunny_picture	*pic;
@@ -54,18 +52,43 @@ t_bunny_response	bunny_display_simple_box(t_bunny_box_system		*sys,
   vx->vertex[3].color = col.full;
 
   if (pic)
-    if (box->background_mode == BPDM_STRETCH)
-      {
-	vx->vertex[0].tex.x = pic->clip_x_position;
-	vx->vertex[0].tex.y = pic->clip_y_position;
-	vx->vertex[1].tex.x = pic->clip_x_position + pic->clip_width;
-	vx->vertex[1].tex.y = pic->clip_y_position;
-	vx->vertex[2].tex.x = pic->clip_x_position + pic->clip_width;
-	vx->vertex[2].tex.y = pic->clip_y_position + pic->clip_height;
-	vx->vertex[3].tex.x = pic->clip_x_position;
-	vx->vertex[3].tex.y = pic->clip_y_position + pic->clip_height;
-      }
-  // else if other display mode
+    {
+      if (box->display_mode == BPDM_STRETCH)
+	{
+	  vx->vertex[0].tex.x = pic->clip_x_position;
+	  vx->vertex[0].tex.y = pic->clip_y_position;
+	  vx->vertex[1].tex.x = pic->clip_x_position + pic->clip_width;
+	  vx->vertex[1].tex.y = pic->clip_y_position;
+	  vx->vertex[2].tex.x = pic->clip_x_position + pic->clip_width;
+	  vx->vertex[2].tex.y = pic->clip_y_position + pic->clip_height;
+	  vx->vertex[3].tex.x = pic->clip_x_position;
+	  vx->vertex[3].tex.y = pic->clip_y_position + pic->clip_height;
+	}
+      else if (box->display_mode == BPDM_MAXIMIZE)
+	{
+	  // TODO
+	  vx->vertex[0].tex.x = pic->clip_x_position;
+	  vx->vertex[0].tex.y = pic->clip_y_position;
+	  vx->vertex[1].tex.x = pic->clip_x_position + pic->clip_width;
+	  vx->vertex[1].tex.y = pic->clip_y_position;
+	  vx->vertex[2].tex.x = pic->clip_x_position + pic->clip_width;
+	  vx->vertex[2].tex.y = pic->clip_y_position + pic->clip_height;
+	  vx->vertex[3].tex.x = pic->clip_x_position;
+	  vx->vertex[3].tex.y = pic->clip_y_position + pic->clip_height;
+	}
+      else if (box->display_mode == BPDM_FIT)
+	{
+	  // TODO
+	  vx->vertex[0].tex.x = pic->clip_x_position;
+	  vx->vertex[0].tex.y = pic->clip_y_position;
+	  vx->vertex[1].tex.x = pic->clip_x_position + pic->clip_width;
+	  vx->vertex[1].tex.y = pic->clip_y_position;
+	  vx->vertex[2].tex.x = pic->clip_x_position + pic->clip_width;
+	  vx->vertex[2].tex.y = pic->clip_y_position + pic->clip_height;
+	  vx->vertex[3].tex.x = pic->clip_x_position;
+	  vx->vertex[3].tex.y = pic->clip_y_position + pic->clip_height;
+	}
+    }
   bunny_set_geometry(sys->head.screen, BGY_QUADS, vx, pic);
   bunny_freea(vx);
 

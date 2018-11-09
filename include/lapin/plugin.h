@@ -162,5 +162,8 @@ bool				bunny_plugin_callv(t_bunny_plugin		*plugin,
 						   t_bunny_value		*return_value,
 						   ...);
 
+void				*bunny_plugin_self_open(void);
+void				*bunny_plugin_get_self_function(const char	*n);
+
 #endif	/*			__LAPIN_PLUGIN_H__	*/
 

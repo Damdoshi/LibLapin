@@ -34,15 +34,10 @@ bool			bunny_box_set_click_callback(t_bunny_gui_box		*nw);
 bool			bunny_box_set_focus_callback(t_bunny_gui_box		*nw);
 bool			bunny_box_set_loop_callback(t_bunny_gui_box		*nw);
 
-t_bunny_gui_box		*bunny_new_simple_box(t_bunny_gui_box			*parent,
-					      t_bunny_configuration		*cnf)
+t_bunny_gui_box		*bunny_read_simple_box(t_bunny_gui_box			*nw,
+					       t_bunny_gui_box			*parent,
+					       t_bunny_configuration		*cnf)
 {
-  t_bunny_gui_box	*nw;
-
-  if ((nw = (t_bunny_gui_box*)bunny_new_gui_box(sizeof(*nw), cnf)) == NULL)
-    return (NULL);
-  nw->type = BBT_SIMPLE_BOX;
-
   nw->display = bunny_display_simple_box;
   nw->destructor = NULL;
 
@@ -70,12 +65,29 @@ t_bunny_gui_box		*bunny_new_simple_box(t_bunny_gui_box			*parent,
 
   if (bunny_bind_simple_box(nw) == false)
     goto Error;
+
+  bunny_save_configuration(BC_DABSIC, "/dev/stdout", nw->configuration);
   return (nw);
 
  Error:
   if (nw->background)
     bunny_delete_clipable(nw->background);
-  bunny_delete_box(nw);
   return (NULL);
+}
+
+t_bunny_gui_box		*bunny_new_simple_box(t_bunny_gui_box			*parent,
+					      t_bunny_configuration		*cnf)
+{
+  t_bunny_gui_box	*nw;
+
+  if ((nw = (t_bunny_gui_box*)bunny_new_gui_box(sizeof(*nw), cnf)) == NULL)
+    return (NULL);
+  nw->type = BBT_SIMPLE_BOX;
+  if (bunny_read_simple_box(nw, parent, cnf) == NULL)
+    {
+      bunny_delete_box(nw);
+      return (NULL);
+    }
+  return (nw);
 }
 

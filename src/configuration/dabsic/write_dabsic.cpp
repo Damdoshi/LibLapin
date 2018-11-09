@@ -5,6 +5,16 @@
 
 #include		"lapin_private.h"
 
+static bool		is_short_and_litterals(SmallConf		&conf)
+{
+  if (conf.Size() > 4)
+    return (false);
+  for (size_t i = 0; i < conf.Size(); ++i)
+    if (conf[i].Size() != 0 || conf[i].NbrChild() != 0)
+      return (false);
+  return (true);
+}
+
 static void		restore_value(std::ostream			&ss,
 				      SmallConf				&conf,
 				      ssize_t				ind)
@@ -75,11 +85,22 @@ static void		restore_prototype(std::ostream			&ss,
 	ss << ", ";
     }
   ss << ")";
+  if (conf.last_type != SmallConf::NOTYPE)
+    {
+      ss << ":";
+      if (conf.last_type == SmallConf::STRING)
+	ss << "string";
+      else if (conf.last_type == SmallConf::INTEGER)
+	ss << "integer";
+      else if (conf.last_type == SmallConf::DOUBLE)
+	ss << "real";
+    }
 }
 
 static void		dabsic_array(std::ostream			&ss,
 				     SmallConf				&conf,
-				     ssize_t				indent)
+				     ssize_t				indent,
+				     bool				shortform)
 {
   ssize_t		i, j;
 
@@ -90,14 +111,15 @@ static void		dabsic_array(std::ostream			&ss,
       restore_value(ss, conf, indent + 2);
       ss << std::endl;
     }
-  else
+  else if (!shortform)
     ss << std::endl;
   for (i = 0; i < (ssize_t)conf.Size(); ++i)
     {
       if (conf[i].name[0] == '.')
 	continue ;
-      for (j = 0; j < indent; ++j)
-	ss << " ";
+      if (shortform == false)
+	for (j = 0; j < indent; ++j)
+	  ss << " ";
       if (got_real_field(conf[i]))
 	{
 	  ss << "[";
@@ -113,7 +135,7 @@ static void		dabsic_array(std::ostream			&ss,
 	  ss << "{";
 	  if (conf[i].given_name)
 	    ss << conf[i].name;
-	  dabsic_array(ss, conf[i], indent + 2);
+	  dabsic_array(ss, conf[i], indent + 2, false);
 	  for (j = 0; j < indent; ++j)
 	    ss << " ";
 	  ss << "}";
@@ -127,9 +149,11 @@ static void		dabsic_array(std::ostream			&ss,
       else
 	restore_value(ss, conf[i], indent + 2);
       if (i + 1 < (ssize_t)conf.Size())
-	ss << "," << std::endl;
-      else
+	ss << ",";
+      if (shortform == false)
 	ss << std::endl;
+      else
+	ss << " ";
     }
 }
 
@@ -146,11 +170,19 @@ static void		restore_dabsic(std::ostream			&ss,
       ss <<  " = ";
       if (conf.Size() > 0)
 	{
-	  ss << "{";
-	  dabsic_array(ss, conf, indent + 2);
-	  for (i = 0; i < indent; ++i)
-	    ss << " ";
-	  ss << "}" << std::endl;
+	  if (is_short_and_litterals(conf))
+	    {
+	      dabsic_array(ss, conf, indent + 2, true);
+	      ss << std::endl;
+	    }
+	  else
+	    {
+	      ss << "{";
+	      dabsic_array(ss, conf, indent + 2, false);
+	      for (i = 0; i < indent; ++i)
+		ss << " ";
+	      ss << "}" << std::endl;
+	    }
 	}
       else
 	restore_value(ss, conf, indent);
@@ -174,11 +206,20 @@ static void		restore_dabsic(std::ostream			&ss,
 	}
       else if (it->second->Size() > 0)
 	{
-	  ss << "{" << it->second->name;
-	  dabsic_array(ss, *it->second, indent + 2);
-	  for (i = 0; i < indent; ++i)
-	    ss << " ";
-	  ss << "}" << std::endl;
+	  if (is_short_and_litterals(*it->second))
+	    {
+	      ss << it->second->name << " = ";
+	      dabsic_array(ss, *it->second, indent + 2, true);
+	      ss << std::endl;
+	    }
+	  else
+	    {
+	      ss << "{" << it->second->name;
+	      dabsic_array(ss, *it->second, indent + 2, false);
+	      for (i = 0; i < indent; ++i)
+		ss << " ";
+	      ss << "}" << std::endl;
+	    }
 	}
       else
 	{

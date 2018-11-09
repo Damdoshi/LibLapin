@@ -8,11 +8,6 @@
 
 #define				PATTERN		"%u width, %u height, %s file, %p (%d, %d) size -> %p"
 
-t_bunny_font			*bunny_load_text(const char		*file)
-{
-  return (bunny_load_font(0, 0, file, NULL));
-}
-
 t_bunny_font			*bunny_load_font(unsigned int		width,
 						 unsigned int		height,
 						 const char		*file,
@@ -67,5 +62,19 @@ t_bunny_font			*bunny_load_font(unsigned int		width,
 
   scream_log_if(PATTERN, "ressource,text", width, height, file, size, size->x, size->y, final);
   return (final);
+}
+
+t_bunny_font			*bunny_read_textbox(t_bunny_configuration *cnf)
+{
+  t_bunny_font			*f;
+
+  if (bunny_set_font_attribute(NULL, &f, &cnf) == false)
+    return (NULL);
+  return (f);
+}
+
+t_bunny_font			*bunny_load_text(const char		*file)
+{
+  return (bunny_load_font(0, 0, file, NULL));
 }
 

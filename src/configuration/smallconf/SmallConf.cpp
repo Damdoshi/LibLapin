@@ -12,6 +12,7 @@ SmallConf::SmallConf(void)
     have_value(false),
     converted(0),
     converted_2(0),
+    alias_on(NULL),
     distant_string(NULL),
     distant_double(NULL),
     distant_int(NULL),

@@ -28,6 +28,7 @@ struct				Function
       CONTINUE,
       RETURN,
       BRAKE, // I don't remember what it is. Maybe just to debug, to have a break point.
+      LINK, // Call the C equivalent of the Dabsic function with the current parameters val
       WITH,
       SELECT,
       LAST_COMMAND
@@ -39,10 +40,15 @@ struct				Function
   SmallConf			result;
   SmallConf			additionnal_values[2];
   std::vector<Function>		lines;
-  size_t			nbr_lines;
+  size_t			nbr_lines = 0;
 
-  int				line;
+  t_bunny_prototype		*prototype = NULL;
+  int				line = 0;
   std::string			file;
+  SmallConf			*parent_node = NULL;
+
+  Function() = default;
+  ~Function();
 };
 
 typedef enum			e_compute_result
@@ -79,6 +85,7 @@ t_dabsic_compute_f		dabsic_compute_no_execution;
 t_dabsic_compute_f		dabsic_compute_print;
 t_dabsic_compute_f		dabsic_compute_break;
 t_dabsic_compute_f		dabsic_compute_brake;
+t_dabsic_compute_f		dabsic_compute_link;
 t_dabsic_compute_f		dabsic_compute_continue;
 t_dabsic_compute_f		dabsic_compute_return;
 t_dabsic_compute_f		dabsic_compute_with;

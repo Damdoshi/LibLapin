@@ -276,6 +276,20 @@ void		restore_brake(std::ostream			&ss,
   ss << "Brake" << std::endl;
 }
 
+void		restore_link(std::ostream			&ss,
+			     Function				&func,
+			     SmallConf				&conf,
+			     size_t				indent)
+{
+  size_t	i;
+
+  (void)func;
+  (void)conf;
+  for (i = 0; i < indent; ++i)
+    ss << " ";
+  ss << "Link" << std::endl;
+}
+
 void		restore_continue(std::ostream			&ss,
 				 Function			&func,
 				 SmallConf			&conf,
@@ -327,6 +341,7 @@ t_restore	gl_restore[Function::LAST_COMMAND] =
     &restore_continue,
     &restore_return,
     &restore_brake,
+    &restore_link,
     &restore_with,
     &restore_select
   };

@@ -317,6 +317,18 @@ bool			bunny_configuration_declarativef(t_bunny_configuration		*c,
 							 ...) _BFMT(2, 3);
 
 /*!
+** c[fmt] become a link on c.
+*/
+bool			bunny_configuration_linkf(t_bunny_configuration			*c,
+						  const char				*fmt,
+						  ...) _BFMT(2, 3);
+/*!
+** ori->dst
+*/
+void			bunny_configuration_link(t_bunny_configuration			*dst,
+						 t_bunny_configuration			*ori);
+
+/*!
 ** Return the first children of the sent node.
 ** \param The node to browse
 ** \return The first chil. Return NULL ("bunny_configuration_end") if there is no child.

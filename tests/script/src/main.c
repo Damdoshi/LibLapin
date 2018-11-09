@@ -90,6 +90,7 @@ int			main(int		argc,
   refresh_test("simple_cast.dab");
   refresh_test("operation_cast.dab");
   refresh_test("complex_cast.dab");
+  refresh_test("assign_cascade.dab");
   refresh_test("env.dab");
 
   return (EXIT_SUCCESS);

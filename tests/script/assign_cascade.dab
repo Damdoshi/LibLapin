@@ -1,0 +1,15 @@
+
+Origin=42
+Second
+Third
+Final
+
+main = [Function
+  Second=Origin
+  Third=Second + 1 '43
+  Final=5
+  Final+=Third '48
+  "This is final : ", Final
+  Return 0
+]
+

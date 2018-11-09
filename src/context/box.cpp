@@ -8,12 +8,15 @@
 typedef t_bunny_gui_box	*t_bunny_new_boxf(t_bunny_gui_box	*parent,
 					  t_bunny_configuration	*cnf);
 t_bunny_new_boxf	bunny_new_simple_box;
+t_bunny_new_boxf	bunny_new_label_box;
 
 const char		*gl_bunny_box_type[BBT_CUSTOM_BOX] = {
-  "box"
+  "box",
+  "label"
 };
 const t_bunny_new_box	gl_bunny_new_box[BBT_CUSTOM_BOX] = {
-  bunny_new_simple_box
+  bunny_new_simple_box,
+  bunny_new_label_box
 };
 t_bunny_new_box		gl_bunny_custom_new_box = NULL;
 

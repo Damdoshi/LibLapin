@@ -68,6 +68,9 @@ bool			bunny_read_box(t_bunny_box_system	*bs,
   bs->screen.size.x = bs->head.screen->width;
   bs->screen.size.y = bs->head.screen->height;
   bs->screen.color.full = 0;
+  bs->focus = NULL;
+  bs->hovered = NULL;
+  bs->down_clicked = NULL;
   if (_bunny_read_box(bs, cnf, &bs->screen) == false)
     {
       t_bunny_map **node;

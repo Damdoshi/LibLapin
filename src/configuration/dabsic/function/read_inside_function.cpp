@@ -17,6 +17,7 @@ Decision		dabsic_read_inside_function(const char	*code,
 	try
 	  {
 	    funcnode.function = new Function;
+	    funcnode.function->parent_node = &funcnode;
 	    funcnode.function->nbr_lines = 0;
 	  }
 	catch (...)

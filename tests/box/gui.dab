@@ -2,11 +2,11 @@
   Type="Box"
   Size=900,700
   Position=100, 100
-  Color=128,128
+  BackgroundColor=128,128
   OnMouseButton(int state, int x, int y, int button) = [Function
     If state == 0 Then "MOUSE DOWN ON TOP LEFT WINDOW"
-    Color[0] = 0
-    Children.InnerBox.Color[0] = 255
+    BackgroundColor[0] = 0
+    Children.InnerBox.BackgroundColor[0] = 255
   ]
 
   Loop(real delay) = [Function
@@ -21,7 +21,7 @@
       Type="Box"
       Size=100,100
       Position=100,100
-      Color=0
+      BackgroundColor=0
       MouseOverColor=255,255,255
       MouseDownColor=255,0,255
       FocusedColor=0,0,255
@@ -41,7 +41,7 @@
   Type="Box"
   Size=200,100
   Position=1140, 100
-  Color=255,0,255,128
+  BackgroundColor=255,0,255,128
   [Picture
     RessourceFile="./back.png"
     [Clip
@@ -69,7 +69,7 @@
   Type="Box"
   Size=200,100
   Position=1140, 600
-  Color=255,255,255
+  BackgroundColor=255,255,255
   MouseOverColor=255,0,0
   MouseDownColor=0,255,0
   FocusedColor=0,0,255

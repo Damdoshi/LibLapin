@@ -54,6 +54,7 @@ bool			expr_compute_function_call(Expression	&exp,
        exp.file.c_str(), exp.line);
   if (ope == &exp.val)
     return (true);
+
   SmallConf		temp_param;
   SmallConf		*parameters = NULL;
   SmallConf		*proto = NULL;

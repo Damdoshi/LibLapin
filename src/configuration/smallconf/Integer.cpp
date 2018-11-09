@@ -7,6 +7,11 @@
 
 void			SmallConf::SetInt(int			i)
 {
+  if (alias_on)
+    {
+      alias_on->SetInt(i);
+      return;
+    }
   std::stringstream	ss;
 
   ss << i;
@@ -31,6 +36,8 @@ bool			SmallConf::GetInt(int			*i,
 {
   double		d;
 
+  if (alias_on)
+    return (alias_on->GetInt(i, root, local, artif, param));
   if (distant_bool)
     {
       *i = *distant_bool;

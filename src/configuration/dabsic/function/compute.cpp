@@ -22,6 +22,7 @@ t_dabsic_compute	gl_dabsic_compute[Function::LAST_COMMAND] =
     &dabsic_compute_continue,
     &dabsic_compute_return,
     &dabsic_compute_brake,
+    &dabsic_compute_link,
     &dabsic_compute_with,
     &dabsic_compute_select
   };
@@ -142,6 +143,95 @@ t_compute_result	dabsic_compute_brake(Function		&func,
   (void)artif;
   (void)params;
   return (CR_OK);
+}
+
+t_compute_result	dabsic_compute_link(Function		&func,
+					    Function		&mainnod,
+					    bool		dry,
+					    SmallConf		*root,
+					    SmallConf		*local,
+					    SmallConf		*artif,
+					    SmallConf		*params)
+{
+  if (dry)
+    return (CR_OK);
+  static t_bunny_value_type lt_to_bvt[4] = { // Last type to Bunny value type
+    BVT_INTEGER, BVT_DOUBLE, BVT_STRING, BVT_STRING
+  };
+  SmallConf		&parameters = (*mainnod.parent_node)[".parameters"];
+  t_bunny_prototype	*proto;
+  t_bunny_value		retval;
+  t_bunny_value		*dyparams;
+  size_t		i;
+
+  (void)func;
+  (void)root;
+  (void)local;
+  (void)artif;
+
+  if (mainnod.prototype == NULL)
+    {
+      if ((mainnod.prototype = (t_bunny_prototype*)bunny_malloc
+	   (sizeof(*mainnod.prototype)
+	    + sizeof(mainnod.prototype->parameters) * params->NbrChild())) == NULL)
+	return (CR_ERROR);
+      proto = mainnod.prototype;
+      proto->name = mainnod.parent_node->name.c_str();
+      proto->function_ptr = bunny_plugin_get_self_function(proto->name);
+      proto->return_value = lt_to_bvt[mainnod.parent_node->last_type];
+      proto->nbrparam = parameters.Size();
+    }
+  else
+    proto = mainnod.prototype;
+
+  dyparams = (t_bunny_value*)bunny_alloca(proto->nbrparam * sizeof(*dyparams));
+  for (i = 0; i < proto->nbrparam; ++i)
+    {
+      if (params[i].last_type == SmallConf::STRING)
+	proto->parameters[i] = BVT_STRING;
+      else if (parameters[i].last_type == SmallConf::INTEGER)
+	proto->parameters[i] = BVT_INTEGER;
+      else if (parameters[i].last_type == SmallConf::DOUBLE)
+	proto->parameters[i] = BVT_DOUBLE;
+
+      switch (proto->parameters[i])
+	{
+	case BVT_INTEGER:
+	  int tmp;
+	  (*params)[parameters.name].GetInt(&tmp);
+	  dyparams[i].integer = tmp;
+	  break ;
+	case BVT_DOUBLE:
+	  (*params)[parameters.name].GetDouble(&dyparams[i].real);
+	  break ;
+	case BVT_STRING:
+	  (*params)[parameters.name].GetString(&dyparams[i].string);
+	  break ;
+	default:
+	  // No pointer type.
+	  break ;
+	}
+    }
+  _real_call(proto, &retval, proto->nbrparam, dyparams);
+
+  switch (mainnod.prototype->return_value)
+    {
+    case BVT_STRING:
+      mainnod.result.SetString(retval.string);
+      break ;
+    case BVT_DOUBLE:
+      mainnod.result.SetDouble(retval.real);
+      break ;
+    case BVT_INTEGER:
+      mainnod.result.SetInt(retval.integer);
+      break ;
+    default:
+      if (mainnod.parent_node->have_value)
+	fprintf(stderr, "Return used in a void function\n");
+      mainnod.result.SetString("");
+    }
+  bunny_freea((void*)dyparams);
+  return (CR_RETURN);
 }
 
 t_compute_result	dabsic_compute_return(Function		&func,

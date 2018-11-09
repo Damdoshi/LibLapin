@@ -29,6 +29,7 @@ struct				SmallConf
 
   enum				Type
     {
+      NOTYPE			= -1, // "void"
       INTEGER,
       DOUBLE,
       STRING,
@@ -51,6 +52,7 @@ struct				SmallConf
   mutable double		converted;
   mutable int			converted_2;
 
+  mutable SmallConf		*alias_on;
   mutable char			**distant_string;
   mutable double		*distant_double;
   mutable int			*distant_int;
@@ -62,7 +64,7 @@ struct				SmallConf
   static std::stack<std::string> file_read;
   static std::list<std::string> file_path;
   SmallConf			*father;
-  Type				last_type;
+  Type				last_type = NOTYPE;
   bool				symbol;
 
   Sequence			*sequence;
@@ -70,48 +72,12 @@ struct				SmallConf
   Expression			*expression;
   int				line;
 
-  SmallConf			&operator=(const SmallConf			&o)
-  {
-    if (&o == this)
-      return (*this);
-    switch (o.last_type)
-      {
-      case INTEGER:
-	{
-	  int tmp;
-
-	  o.GetInt(&tmp);
-	  SetInt(tmp);
-	  break ;
-	}
-      case DOUBLE:
-	{
-	  double tmp;
-
-	  o.GetDouble(&tmp);
-	  SetDouble(tmp);
-	  break ;
-	}
-      case STRING:
-	{
-	  const char *tmp;
-
-	  o.GetString(&tmp);
-	  SetString(tmp, false);
-	  break ;
-	}
-      case RAWSTRING:
-	{
-	  const char *tmp;
-
-	  o.GetString(&tmp);
-	  SetString(tmp, true);
-	  break ;
-	}
-      }
-    return (*this);
-  }
-
+  SmallConf			&Assign(const SmallConf				&a,
+					SmallConf				*root = NULL,
+					SmallConf				*local = NULL,
+					SmallConf				*artif = NULL,
+					SmallConf				*param = NULL);
+  SmallConf			&operator=(const SmallConf			&o);
   bool				operator==(const SmallConf			&o) const;
   bool				operator!=(const SmallConf			&o) const;
   bool				operator<(const SmallConf			&o) const;
@@ -207,6 +173,8 @@ struct				SmallConf
   void				Bind(char				**v);
   void				Bind(char				*v);
   void				Unbind(void);
+
+  void				Link(SmallConf				*x);
 
   void				Clear(void);
 
