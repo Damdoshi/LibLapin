@@ -91,6 +91,7 @@ int			main(int		argc,
   assert(val == 5);
   bunny_delete_configuration(triple);
 
+  refresh_test("./multiple_format.dab");
   refresh_test("./parameters.dab");
   refresh_test("./multi.dab");
   refresh_test("./with_xml.dab");
