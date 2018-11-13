@@ -1,4 +1,11 @@
 
+Bring specifier in INI?
+
+=> t_bunny_sound_sprite async crachera certainement si on fait un arret manuel a cause
+du conflit avec le thread de gestion...
+
+=> programmer const, eternal et solid.
+
 tests/dabsic/array.dab ne passe plus a cause du changement de politique de regeneration visant a conserver la forme
 array=1,2,3,4 au detriment de {array 1, 2, 3, 4} pour les petits tableaux.
 

@@ -151,6 +151,43 @@ SmallConf		*dabsic_field_name(const char			*code,
 	  return (NULL);
 	}
     }
+  dabsic_read_separator(code, i);
+  ssize_t j = i;
+
+  newnode->is_const = SmallConf::NO_POLITIC;
+  newnode->is_solid = SmallConf::NO_POLITIC;
+  newnode->is_eternal = SmallConf::NO_POLITIC;
+  do
+    {
+      i = j;
+      if (readtextcase(code, j, "const"))
+	{
+	  if (readtextcase(code, j, "!") == false)
+	    newnode->is_const = SmallConf::LOCAL_POLITIC;
+	  else
+	    newnode->is_const = SmallConf::RECURSIVE_POLITIC;
+	}
+
+      if (readtextcase(code, j, "solid"))
+	{
+	  if (readtextcase(code, j, "!") == false)
+	    newnode->is_solid = SmallConf::LOCAL_POLITIC;
+	  else
+	    newnode->is_solid = SmallConf::RECURSIVE_POLITIC;
+	}
+
+      if (readtextcase(code, j, "eternal"))
+	{
+	  if (readtextcase(code, j, "!") == false)
+	    newnode->is_eternal = SmallConf::LOCAL_POLITIC;
+	  else
+	    newnode->is_eternal = SmallConf::RECURSIVE_POLITIC;
+	}
+
+      dabsic_read_separator(code, j);
+    }
+  while (i != j);
+  i = j;
   return (newnode);
 }
 

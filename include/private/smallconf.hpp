@@ -67,6 +67,18 @@ struct				SmallConf
   Type				last_type = NOTYPE;
   bool				symbol;
 
+  enum				e_politic
+    {
+      NO_POLITIC,
+      DYNAMIC_POLITIC,
+      LOCAL_POLITIC,
+      RECURSIVE_POLITIC
+    };
+
+  e_politic			is_const = NO_POLITIC;
+  e_politic			is_solid = NO_POLITIC;
+  e_politic			is_eternal = NO_POLITIC;
+
   Sequence			*sequence;
   Function			*function;
   Expression			*expression;

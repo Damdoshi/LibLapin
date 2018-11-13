@@ -44,6 +44,8 @@ SmallConf	&SmallConf::operator=(const SmallConf		&o)
 	SetString(tmp, true);
 	break ;
       }
+    case NOTYPE:
+      break ;
     }
   return (*this);
 }
@@ -90,6 +92,8 @@ SmallConf	&SmallConf::Assign(const SmallConf		&o,
 	SetString(tmp, true);
 	break ;
       }
+    case NOTYPE:
+      break ;
     }
   return (*this);
 }

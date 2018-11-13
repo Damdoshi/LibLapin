@@ -33,8 +33,12 @@
   "Regular expression matching all Dabsic scopes explicit declaration."
   )
 (defconst dabsic/nodes-regexp
-  "\\(\\[\\|{\\)\\([a-zA-Z_]+[a-zA-Z0-9_]*\\)"
+  "\\(\\[\\|{\\)\\([a-zA-Z_]+[a-zA-Z0-9_]*\\)\\(const\\|eternal\\|solid\\)*"
   "Regular expression matching a Dabsic node opening."
+  )
+(defconst dabsic/node-specifiers-regexp
+  "\\(const\\|eternal\\|solid\\)\\(\\!?\\)"
+  "Regular expression matching a Dabsic node specifier opening."
   )
 (defconst dabsic/fields-regexp
   "\\([a-zA-Z_]+[a-zA-Z0-9_]*\\).*="
@@ -89,6 +93,8 @@
    (cons dabsic/types-regexp font-lock-type-face)
    (cons dabsic/functions-regexp '(1 font-lock-function-name-face))
    (cons dabsic/nodes-regexp '(2 font-lock-type-face))
+   (cons dabsic/node-specifiers-regexp '(1 font-lock-keyword-face))
+   (cons dabsic/node-specifiers-regexp '(2 font-lock-comment-face))
    (cons dabsic/fields-regexp '(1 font-lock-variable-name-face))
    )
   "A map of regular expression to color characters"

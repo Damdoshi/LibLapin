@@ -62,39 +62,55 @@ static void		restore_prototype(std::ostream			&ss,
 {
   ssize_t		i;
 
-  if (conf.Access(".parameters") == false)
-    return ;
-  SmallConf		&params = conf[".parameters"];
+  if (conf.Access(".parameters"))
+    {
+      SmallConf		&params = conf[".parameters"];
 
-  ss << "(";
-  for (i = 0; i < (ssize_t)params.Size(); ++i)
-    {
-      if (params[i].last_type == SmallConf::STRING)
-	ss << "string ";
-      else if (params[i].last_type == SmallConf::INTEGER)
-	ss << "integer ";
-      else if (params[i].last_type == SmallConf::DOUBLE)
-	ss << "real ";
-      ss << params[i].name;
-      if (params[i].expression)
+      ss << "(";
+      for (i = 0; i < (ssize_t)params.Size(); ++i)
 	{
-	  ss << " = ";
-	  restore_expression(ss, *params[i].expression, true);
+	  if (params[i].last_type == SmallConf::STRING)
+	    ss << "string ";
+	  else if (params[i].last_type == SmallConf::INTEGER)
+	    ss << "integer ";
+	  else if (params[i].last_type == SmallConf::DOUBLE)
+	    ss << "real ";
+	  ss << params[i].name;
+	  if (params[i].expression)
+	    {
+	      ss << " = ";
+	      restore_expression(ss, *params[i].expression, true);
+	    }
+	  if (i + 1 < (ssize_t)params.Size())
+	    ss << ", ";
 	}
-      if (i + 1 < (ssize_t)params.Size())
-	ss << ", ";
+      ss << ")";
+      if (conf.last_type != SmallConf::NOTYPE)
+	{
+	  ss << ":";
+	  if (conf.last_type == SmallConf::STRING)
+	    ss << "string";
+	  else if (conf.last_type == SmallConf::INTEGER)
+	    ss << "integer";
+	  else if (conf.last_type == SmallConf::DOUBLE)
+	    ss << "real";
+	}
     }
-  ss << ")";
-  if (conf.last_type != SmallConf::NOTYPE)
-    {
-      ss << ":";
-      if (conf.last_type == SmallConf::STRING)
-	ss << "string";
-      else if (conf.last_type == SmallConf::INTEGER)
-	ss << "integer";
-      else if (conf.last_type == SmallConf::DOUBLE)
-	ss << "real";
-    }
+
+  if (conf.is_const >= SmallConf::LOCAL_POLITIC)
+    ss << " const";
+  if (conf.is_const > SmallConf::LOCAL_POLITIC)
+    ss << "!";
+
+  if (conf.is_solid >= SmallConf::LOCAL_POLITIC)
+    ss << " solid";
+  if (conf.is_solid > SmallConf::LOCAL_POLITIC)
+    ss << "!";
+
+  if (conf.is_eternal >= SmallConf::LOCAL_POLITIC)
+    ss << " eternal";
+  if (conf.is_eternal > SmallConf::LOCAL_POLITIC)
+    ss << "!";
 }
 
 static void		dabsic_array(std::ostream			&ss,
