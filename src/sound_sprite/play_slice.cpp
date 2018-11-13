@@ -38,8 +38,11 @@ static void	bunny_end_sound_trap(double				elapsed,
 				     t_bunny_trap			*trap,
 				     void				*data)
 {
+  struct bunny_music *snd = (struct bunny_music*)data;
+
   (void)elapsed;
   bunny_delete_trap(trap);
+  snd->trap = NULL;
   bunny_end_sound((t_bunny_sound_sprite*)data);
 }
 
@@ -62,6 +65,14 @@ bool		bunny_sound_sprite_play_slice_id(t_bunny_sound_sprite	*sprite,
   sprite_sound = (struct bunny_music*)&sprite->soundset;
 
   bunny_sound_set_cursor(&sprite->soundset.sound, _slice->index);
+
+  sprite_sound->loop = slice_sound->loop;
+  for (i = 0; i < NBRCELL(sprite_sound->position); ++i)
+    sprite_sound->position[i] = slice_sound->position[i];
+  sprite_sound->attenuation = slice_sound->attenuation;
+
+  *((t_bunny_sound_slice**)&sprite->last_played_slice) = _slice;
+
   if (sprite_sound->sound_manager)
     {
       bunny_managed_sound_volume
@@ -70,6 +81,7 @@ bool		bunny_sound_sprite_play_slice_id(t_bunny_sound_sprite	*sprite,
       bunny_managed_sound_pitch
 	((t_bunny_sound_manager*)sprite_sound->sound_manager,
 	 &sprite->soundset.sound, slice_sound->pitch);
+      *(t_bunny_music_track*)&sprite->track = track;
       bunny_sound_manager_play_music
 	((t_bunny_sound_manager*)sprite_sound->sound_manager,
 	 &sprite->soundset, track);
@@ -78,25 +90,17 @@ bool		bunny_sound_sprite_play_slice_id(t_bunny_sound_sprite	*sprite,
     {
       sprite_sound->volume = slice_sound->volume;
       sprite_sound->pitch = slice_sound->pitch;
+      *(t_bunny_music_track*)&sprite->track = BST_LAST_TRACK;
       bunny_sound_play(&sprite->soundset.sound);
-      track = BST_LAST_TRACK;
     }
-
-   sprite_sound->loop = slice_sound->loop;
-  for (i = 0; i < NBRCELL(sprite_sound->position); ++i)
-    sprite_sound->position[i] = slice_sound->position[i];
-  sprite_sound->attenuation = slice_sound->attenuation;
-
-  *((t_bunny_sound_slice**)&sprite->last_played_slice) = _slice;
-  *(t_bunny_music_track*)&sprite->track = track;
 
   if (gl_bunny_loop_threadpool == NULL || gl_bunny_sound_sprite_trap)
     {
-      if (bunny_new_trap
-	  (bunny_end_sound_trap, BCO_BEFORE_LOOP_MAIN_FUNCTION,
-	   bunny_get_current_time() +
-	   _slice->duration / slice_sound->pitch,
-	   0, sprite) == NULL)
+      if ((sprite_sound->trap = bunny_new_trap
+	   (bunny_end_sound_trap, BCO_BEFORE_LOOP_MAIN_FUNCTION,
+	    bunny_get_current_time() +
+	    _slice->duration / slice_sound->pitch,
+	    0, sprite)) == NULL)
 	scream_error_if
 	  (return (false), bunny_errno,
 	   PATTERN ": Cannot create trap.",
@@ -104,6 +108,7 @@ bool		bunny_sound_sprite_play_slice_id(t_bunny_sound_sprite	*sprite,
     }
   else
     {
+      sprite_sound->trap = NULL;
       if (bunny_async_computation_push(bunny_end_sound_async, sprite) == false)
 	scream_error_if
 	  (return (false), bunny_errno,

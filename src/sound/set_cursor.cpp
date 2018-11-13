@@ -10,6 +10,8 @@ void			bunny_sound_set_cursor(t_bunny_sound		*sound,
 {
   enum _music_or_sound	*type = (enum _music_or_sound*)sound;
 
+  bunny_sound_stop(sound);
+  bunny_sound_play(sound);
   if (*type == MUSIC)
     {
       struct bunny_music *mus = (struct bunny_music*)sound;
@@ -22,6 +24,7 @@ void			bunny_sound_set_cursor(t_bunny_sound		*sound,
 
       snd->sound.setPlayingOffset(sf::seconds(s));
     }
+  bunny_sound_pause(sound);
   scream_log_if("%p -> ", "ressource,sound", sound);
 }
 

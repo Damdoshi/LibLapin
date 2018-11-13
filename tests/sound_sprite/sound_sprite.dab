@@ -3,23 +3,23 @@ RessourceFile="./sound_sprite.ogg"
 [Slices
   [f1
     Index=0
-    Duration=1
-    ActiveDuration=0.2
+    Duration=5
+    ActiveDuration=5
     Volume=100
   ]
   [f2
-    Index=1
-    Duration=1
-    ActiveDuration=0.2
+    Index=10
+    Duration=5
+    ActiveDuration=2.5
     Volume=30
   ]
   [f3
-    Index=2
-    Duration=1
-    ActiveDuration=0.5
-    Pitch=2
+    Index=0
+    Duration=5
+    ActiveDuration=2.5
+    'Pitch=2
   ]
-  [f4
+  [*f4
     Index=3
     Duration=1
     ActiveDuration=0.2
@@ -53,6 +53,6 @@ RessourceFile="./sound_sprite.ogg"
     ActiveDuration=0.2
     Pitch=0.5
     Loop=true
-  ]
+  *]
 ]
 

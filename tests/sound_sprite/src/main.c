@@ -46,6 +46,13 @@ t_bunny_response	key(t_bunny_event_state	state,
   return (GO_ON);
 }
 
+t_bunny_response	loop(void		*d)
+{
+  (void)d;
+  printf("%0.3f\n", bunny_get_current_time());
+  return (GO_ON);
+}
+
 t_bunny_response	display(void		*d)
 {
   t_bunny_sound_sprite	*sprite = d;
@@ -72,6 +79,7 @@ int			main(int		argc,
   else
     assert(sprite = bunny_load_sound_sprite("./sound_sprite.dab"));
   bunny_set_key_response(key);
+  bunny_set_loop_main_function(loop);
   bunny_set_display_function(display);
   bunny_loop(win, 50, sprite);
   bunny_stop(win);

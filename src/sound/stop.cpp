@@ -17,6 +17,13 @@ void			bunny_sound_stop(t_bunny_sound		*sound)
 
       snd->music.setPlayingOffset(sf::Time::Zero);
       snd->music.stop();
+      snd->last_played_slice = NULL;
+      snd->track = BST_LAST_TRACK;
+      if (snd->trap)
+	{
+	  bunny_delete_trap(snd->trap);
+	  snd->trap = NULL;
+	}
     }
   else
     ((struct bunny_effect*)sound)->sound.stop();

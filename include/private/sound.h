@@ -50,6 +50,7 @@ struct				bunny_music
   t_bunny_map			*sound_areas; // only in t_bunny_sound_sprite
   void				*last_played_slice; // only in t_bunny_sound_sprite
   t_bunny_music_track		track; // only in t_bunny_sound_sprite
+  t_bunny_trap			*trap;
 
   //
   sf::Music			music;
