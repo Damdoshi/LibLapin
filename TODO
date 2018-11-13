@@ -1,5 +1,14 @@
+
 tests/dabsic/array.dab ne passe plus a cause du changement de politique de regeneration visant a conserver la forme
 array=1,2,3,4 au detriment de {array 1, 2, 3, 4} pour les petits tableaux.
+
+Lors d'une coloration syntaxique de fonction... Donner une couleur unique (ou presque) a CHAQUE variable
+et colorier TOUJOURS ces variables de la meme facon a l'interieur de ces fonctions.
+Les champs exterieurs peuvent etre coloriée de facon arbitraire aussi... Il faut voir.
+Le plus simple sera probablement de hasher le symbole et de faire correspondre le resultat a une table de
+couleur pré établie.
+==> Un pretty printer, ca seriat très chouette pour Dabsic...
+
 
 Les indirections sont deja gerée en Dabsic par [field] => Si field contient une raw string correspondant a un
 champ, ca marche. Le probleme c'est qu'on ne peut pas assigner un champ, seulement son contenu.

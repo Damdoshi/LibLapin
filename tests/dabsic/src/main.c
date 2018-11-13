@@ -60,6 +60,7 @@ int			main(int		argc,
 	alarm(2);
       return (EXIT_SUCCESS);
     }
+  refresh_test("address.dab");
   refresh_test("fields.dab");
   refresh_test("scopes.dab");
   refresh_test("arrays.dab");

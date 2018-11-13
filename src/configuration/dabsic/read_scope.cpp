@@ -16,8 +16,10 @@ Decision		dabsic_read_scope(const char		*code,
 
   dabsic_read_separator(code, i);
   line = whichline(code, i);
-  if (readtext(code, i, "["))
+  if (bunny_check_text(code, &i, "[")
+      && bunny_check_text(code, &i, "[]") == false)
     {
+      readtext(code, i, "[");
       if (getfieldname(code, i, &buffer[0], sizeof(buffer), conf, true, false))
 	{
 	  if (conf.given_name)

@@ -17,6 +17,15 @@
 ** ******************************************************************
 **
 ** This context is a context for dressing games.
+** It uses the BOX context as GUI to display buttons.
+**
+** It display a character on screen and boxes containing clothes associated
+** to closets. It is possible to change the character clothes, to remove them
+** or to change the character.
+**
+** A set of functions are available to do different kind of actions and this
+** set may be extended. The purpose of this set is to be called throught dabsic
+** managed gui boxes.
 */
 
 /*
@@ -50,10 +59,12 @@ typedef struct		s_bunny_dressing_screen
 
 extern const t_bunny_context gl_bunny_dressing_context;
 
-bool		bunny_init_dressing_context_file(const char	*file,
+bool		bunny_init_dressing_context_file(const char		*file,
+						 t_bunny_box_system	*box,
 						 t_bunny_dressing_screen *cnt);
 
 bool		bunny_init_dressing_context_conf(t_bunny_configuration *conf,
+						 t_bunny_box_system	*box,
 						 t_bunny_dressing_screen *cnt);
 
 # define	bunny_init_dressing_context(data, cnt)			\

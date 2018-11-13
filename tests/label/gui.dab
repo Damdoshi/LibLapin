@@ -1,8 +1,13 @@
+
 'Link with a C function! Pay attention to respect prototypes!
 rand():int = [Function
   "Calling a C function!"
   Link
 ]
+
+[*
+** GUI BOX OBJECTS
+*]
 
 [Randomized
   Type="Label"
