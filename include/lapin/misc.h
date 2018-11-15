@@ -223,6 +223,8 @@ void				bunny_memswap(void			*a,
 					      void			*b,
 					      size_t			datalen);
 
+bool				bunny_is_directory(const char		*file);
+
 /*!
 ** Swap two pointers of any type
 ** \param a The pointer to swap with b
