@@ -1,0 +1,3848 @@
+BSICIDE                    % %
+   %                     ---------                     %
+  % %                                                 % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+\documentclass[a5paper, 12pt]{book}
+\usepackage{graphicx}
+
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+
+\title{Technologitator! Dabsicide}
+% \subtitle{''Technologitator: Dabsic''}
+\author{Jason Brillante ``Damdoshi''} % [\and +nom]
+\date{01/01/17}
+
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+\begin{document}
+\maketitle
+
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\frontmatter
+\chapter{Avant-propos}
+
+Ce livre décrit un langage de programmation n'étant pas doté
+à l'heure actuelle d'une implémentation complète. Il existe
+quelques interprètes réalisés par moi-même mais aucun ne prend
+en charge l'intégralité des aspects évoqués dans ce livre
+pour différentes raisons: évolution du langage depuis
+l'implémentation, difficultés lié à certains aspects purement
+techniques, manque de temps ou de moyens.\\
+
+L'objectif de ce livre est alors de poser les specifications
+a priori définitive d'une première réelle version complète
+de DABSIC, et non pas d'enseigner réellement ce langage de
+programmation comme sa forme pourrait le laisser penser.\\
+
+Ainsi, a terme, j'espère qu'un interprète complet verra le
+jour, ouvrant la voie à un large ensemble d'applications à
+la structure nouvelle.
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\chapter{Préface: Génèse}
+
+``Laissez moi vous raconter un peu ma vie.''
+
+\section{Cadre initial}
+
+Les prémisces de Dabsic sont apparu alors que j'étais en
+3ème année à Epitech. Je travaillais sur un projet de C++
+qui consistait à programmer un ``R-Type'' en réseau.
+Ce projet prenait la suite de ``Babel'' o\`u
+nous devions faire un petit client/serveur VOIP.\\
+
+J'étais rodé à différentes choses (à un certain niveau) à
+l'époque: la conception de bibliothèque, le graphisme et le parsing.
+Je développais beaucoup de bibliothèques pour mon propre usage.\\
+
+Au départ, elles étaient en C: j'avais ma propre libre de chaine
+de caractères, un héritage de l'interdiction de la LibC à Epitech
+lors de la première année. Un module pour les arbres, les listes
+chainées, les tables de hash, pile et file, un allocateur de débug
+ainsi que quelques parseurs de formats simples ainsi qu'un
+module d' ``appel dynamique'' me permettant d'appeller n'importe
+quelle fonction prenant n'importe quel paramètre à partir d'une
+liste chainée de paramètres divers (via un hack de la pile).\\
+
+Par la suite, j'ai du passer une partie de celle-ci en C++
+et me débarasser de celles qui n'étaient qu'un héritage des
+interdictions scolaires... ou qui étaient tout simplement
+remplacée par le C++ et sa bibliothèque. Je conservais tout
+de même un bel ordonnanceur réseau mono-socket d'écoute
+conçu pendant ma 2ème année et ré-écrit en C++ pour ``Babel''.\\
+
+Etant ambitieux, souhaitant faire les choses bien et en mettre
+le plus possible plein la vue aux assistants pédagogiques,
+j'ai souhaité doter mon ``R-Type'' de nombreux niveaux et
+rendre possible des éléments divers tels que la configuration
+des touches ou du réseau. Pour cela, j'avais besoin
+d'un format de fichier qui me permettrait de stocker
+ce que je souhaite.\\
+
+Je n'étais guère connaisseur en formats binaires et j'avais
+déjà réalisé un parseur de XML et apprit par ce biais à ne
+plus trop apprécier ce format.\\
+
+Etant donné le temps imparti pour le projet (Un peu plus
+d'un mois) et devant m'occuper également du graphisme, j'ai
+choisi un format simple: le format INI. Mon choix
+s'est porté dessus car je trouvais le format clair et beau.\\
+
+J'esperais ne pas avoir besoin de disposer d'une hiérarchie,
+et lorsque j'en ai eu besoin je m'y suis plié. J'ai détaché
+le symbole permettant de fermer la définition d'un scope en INI
+pour la mettre en contrebas et lui permettre ainsi de contenir
+des éléments.\\
+
+Le format de base était né, je l'ai appellé ``Objective INI''.
+Je ne connaissais pas JSON à l'époque (ni LISP...), et j'ai découvert ce
+dernier lorsqu'on m'a fait remarqué la ressemblance quelque
+chose comme un an après avoir établi ce premier format.\\
+
+C'était quelque chose de très pauvre mais de déjà très utile:
+le format gérait un arbre de chaine de caractère avec des
+branches pouvant contenir un fruit étant lui-même une chaine
+de caractère. La classe elle-même s'utilisait comme des
+tableaux à chaine de caractères de PHP, s'agrandissant toute
+seule et se convertissant en entier si néccessaire.\\
+
+\newpage
+
+\section{Une source de motivation}
+
+Mon ``R-Type'' fut un fiasco. ``Babel'' n'ayant pas
+été mieux, allié au fait que je m'étais inscrit en java et .net
+sans faire les projets, je me suis retrouvé au rattrapage
+de programmation orienté objet, un bien moche palmarès.\\
+
+Le rattrapage consistait à programmer un serveur POP3 et un
+serveur SMTP. Temps imparti: vendredi 19h jusqu'à dimanche 10h.
+C++. J'ai pris mon ordonnanceur réseau du ``Babel'' et
+mon format de fichier du ``R-Type'', le reste était pur
+transaction. Alors que ``Mendoza'' m'aurait terrassé si j'y
+étais allé seul, doté de mes deux outils, il n'avait été
+finalement qu'un petit projet sympa.\\
+
+Autour de moi, mes camarades, le plus souvent armé de Java
+(sans restriction) ou de C\# (Avec les outils SMTP/POP interdit)
+avaient échoué. Nombre d'entre eux avaient passé une ou deux
+nuits blanches. Cela m'a donné envie de continuer à faire
+évoluer ces outils.\\
+
+Il m'a fallu choisir un projet de fin d'étude et cela m'a
+donné à réflechir. Ce que je souhaitais faire, techniquement,
+c'est mettre à profit mes deux bébés qu'étaient ``bpt::OIni'' et
+``bpt::NetCom''. Devoir choisir m'a amené à me rappeller
+les raisons qui m'ont amené dans mon école: je souhaitais
+créer un studio de jeux vidéos. Je voulais distribuer des jeux
+et des moteurs, des éditeurs, ce genre de chose.\\
+
+J'ai reparcouru quelques programmes que j'avais fait auparavent.
+Avant d'être à Epitech, j'avais programmé en PHP, en C et
+en Visual Basic. J'avais fait deux jeux en Visual Basic dont
+un jeu d'aventure. En relisant le code source de celui-ci, je
+me rendit compte que le design du langage et les facilités
+(parfois outrancière, parfois mal considéré par les programmeurs
+de langages ``plus sérieux'') m'avaient amené à mettre en
+place une structure cohérente, solide et extensible.\\
+
+Mon choix était finalement tout vu: je souhaitais transformer
+``Objective INI'' en langage de programmation et le doter
+de manipulations réseaux transparentes en vue de réaliser
+un moteur pour jeux d'aventures basé dessus. Il y aurait un
+IDE graphique dans la veine de RPG Maker, avec un éditeur
+de texte en plus façon Visual Basic 6. Le langage devra
+permettre la mise en place simple par un débutant comme
+je l'étais de structures naturellement solides et simples.\\
+
+\newpage
+
+\section{Mon projet de fin d'étude}
+
+Tout se n'est pas passé comme je l'esperais, devant faire
+des concessions, mon projet de fin d'étude fut un logiciel
+de création de cours et d'exercices pour une professeur
+d'anglais (qui nous a largué très rapidement), cela faisait
+``plus sérieux'' qu'un moteur de jeux vidéos pour un genre
+ayant déjà été entérré une fois. Pas de graphismes, pas
+de réseau, mais je parvenais à sauver le langage de programmation
+en faisant une promesse: il sera très vite finit et fonctionnel.\\
+
+Il le fut. Je m'étais tué à la tache, programmant du matin au soir
+lors de mon voyage à l'étranger imposé en 4ème année d'étude,
+comme l'aurait fait, je pense, n'importe quel passionné.
+Je mettais la touche finale de ``Objective INI 1.0''
+fin octobre, soit officiellement 2 mois après l'ouverture
+de la ``période de développement'' du projet de fin d'étude et
+un an et demi avant la fin du projet. Très rapidement, j'ai
+souhaité changer de nom. A la manière de Jay Miner qui ne voulait
+pas que son ordinateur porte un nom d'ordinateur tel que ``//c'',
+``520ST'', ``TI99'', ``VIC20'' etc. et nomma son ordinateur
+``Amiga'', je ne voulais pas d'un nom qui transpire le langage
+de programmation. ``Objective'' rappelait evidemment Objective C
+et OCaml. INI étant carrément un format crée par Microsoft, cela
+ne me plaisait guère non plus. Les autres ``\#'', ``script'', ``++''
+ou les noms de scientifiques du passé ne me tentaient guère non
+plus.\\
+
+Etant donné que mon langage s'inspirait
+beaucoup de Visual Basic et que BASIC était un acronyme, j'ai
+souhaité disposer d'un nom qui y ressemble. D'autant que
+j'aime beaucoup les ordinateurs et le folklore informatique
+des années 70/80... J'ai renommé ``Objective INI'' en ``Dabsic''.\\
+
+BASIC signifie ``Beginner's All-purpose Symbolic Instruction Code''.
+Dabsic signifie ``Developer's All-purpose Block-structured Instruction Code''.\\
+
+Il s'agit plus d'une blague qu'autre chose, évidemment. J'aimais
+bien la sonorité du nom aussi.\\
+
+Rien ne s'est déroulé correctement pour Dabsic. J'ai programmé
+une trentaine de programmes de tests ainsi qu'un ``Pong'' après
+avoir programmé un bind avec SFML1.6. Malgré cela, je n'ai
+pas réussi à convaincre, dans l'esprit de mes camarades et
+de l'équipe d'évaluation, Dabsic ne fonctionnait pas. Seule
+ma compagne, Lisa, s'est plongé dans Dabsic et l'a compris
+au point de construire un module de GUI pour lui. Dabsic
+a été retiré du projet vers Mars suite à l'insistance et le
+ressentit qui commencait à s'installer.\\
+
+Lisa et moi avons alors commencé une seconde version de Dabsic
+qui règlerait les problèmes les plus évidents: le type unique string,
+la lenteur, principalement, avec le soutien du chef du laboratoire
+des langages avancés, en Flex/Bison. Néanmoins, devant avant
+tout assurer la continuité de notre projet de fin d'étude, cela
+est resté à un état embryonnaire, d'autant que nous avions
+pas mal de difficultés avec notre nouvel outil.\\
+
+Notre projet de fin d'étude s'est achevé sur un logiciel
+inutile: un pseudo IDE dont la plupart des boutons étaient
+mort et dans lequel il était impossible de programmer la moindre
+réaction car... il n'y avait pas de langage en arrière, juste
+des comportements prédéfinis à l'avance pour effectuer notre
+démonstration. Un échec cuisant dont la relecture des échanges
+de mails et tickets me met encore en colère aujourd'hui.\\
+
+Dabsic était mort et enterré. Mes camarades se rejouissaient
+de la réussite de notre ``projet'' qui n'était finalement
+qu'un mock partiel de la moitié de ce qu'il aurait pu être.\\
+
+\newpage
+
+\section{Un projet latent}
+
+Après le projet de fin d'étude est venu le stage de fin d'étude.
+Cette fois, plus question de laisser qui que ce soit au travers
+de mon chemin: j'allais travailler pour moi et développer
+ce que j'entends.\\
+
+J'ai fondé ``Hanged Bunny Studio'' sous la contrainte: j'étais
+déjà auto-entrepreneur mais mon école m'a imposé un autre format,
+sans quoi elle refuserait de considérer mon travail comme
+mon stage de fin d'étude... Mais au moins, j'avais ce que je voulais.\\
+
+J'ai jeté ma vieille bibliothèque ``bpt'' pour une nouvelle ``HBSL''
+et commencé une réimplémentation complète de tous ce que j'avais
+fait ces deux dernières années, mais articulé autour de Dabsic.\\
+
+Mon stage fut évidemment trop court, et étant donné que la pile
+technologique était assez importante, surtout pour un seul programmeur,
+j'ai mis en pause ce travail pour me consacrer à un prototype de jeu
+vidéo et le défendre en convention. Dabsic s'est mit a dormir.\\
+
+Une autre raison est que son développement était trop complexe
+pour moi de la manière dont j'avais attaqué le sujet: je créais
+une sorte de super objet gérant les différents aspects dont
+un champ Dabsic était responsable (hors fonctions et opérations)
+et la moindre fonction était lourde, longue et devait prendre en
+compte trop d'éléments pour que je puisse les avoir tous en tête,
+sans parler de l'absence de support écrit... J'ai donc remis Dabsic
+de coté.\\
+
+\newpage
+
+\section{Aujourd'hui}
+
+Aujoud'hui, je reprends Dabsic différement: pour commencer,
+je me suis imposé d'éclater la classe Dabsic en de très nombreux
+morceaux. J'ai commencé moitement en séparant valeur et
+hiérarchie, avant de finalement éclater au maximum: valeur,
+hiérarchie, spécificateurs, aspects fs, aspects objets, etc.\\
+
+Ensuite, ce livre. Il sert deux propos: définir une base
+sur laquelle me reposer quand j'ai besoin d'implémenter un
+aspect auquel j'ai pensé: plutôt que de me rappeller ou
+de parcourir un TODO au format fumeux, je relis des passages.\\
+
+Le deuxième propos est tout simplement le partage. Ce projet
+a souffert d'une forte apprehension par le passé: la distance
+et le manque de confiance de chacun envers les autres (envers
+moi, j'imagine, surtout) a mené le projet vers un arret
+brutal alors que bien qu'il fut loin d'être parfait, ce train
+tenait bien dans ses rails.\\
+
+La version de Dabsic décrite dans ce livre est bien plus
+vaste que la version originale développée alors que j'étais
+étudiant. Elle est probablement bancale sur differents aspects,
+améliorable sur d'autres et peut tout à fait certainement
+être enrichie de nouveaux aspects.\\
+
+De même, l'implémentation est actuellement à ma seule
+charge et n'aboutira certainement pas...
+Lorsque j'étais étudiant, surtout à l'étranger,
+je disposais d'un temps quasiment infini, aujourd'hui, c'est
+très différent: comme de très nombreux développeur, j'ai un
+travail, des projets divers, outre celui-ci... et il faut
+que je m'en accomode. Ce livre est aussi une façon, au-delà
+du simple partage d'idée, de générer de l'intêret et peut-être,
+j'espère, de former une équipe ou une communauté pouvant
+contribuer à la création de ce langage de programmation.\\
+
+\newpage
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\chapter{Introduction}
+
+Dabsic est un langage de programmation dont la particularité
+est de mêler structure générale, fonctions, politiques d'accès
+et mise en réseau. Mes priorités lors de sa conception et du
+développement des prototypes ayant précedés étaient les suivantes:\\
+
+\begin{itemize}
+  \item Dabsic doit être beau et découpable facilement.
+  \item Dabsic ne doit mettre en place que des fonctionnalités à
+    l'explication triviale et à l'utilité forte.
+  \item Dabsic doit être explicite et de faible densité
+  \item Dabsic doit pouvoir s'inclure à l'interieur d'un
+    programme comme un plugin, et non pas seulement être comme
+    d'autres langages de scripts un point millieu dont les
+    programmes sont les plugins.
+\end{itemize}
+
+\newpage
+
+S'ajoutent à cela les aspects suivants:\\
+
+\begin{itemize}
+  \item Dabsic ne doit laisser aucune erreur sous silence.
+  \item Dabsic doit pouvoir s'adapter aux habitudes de l'utilisateur.
+  \item Dabsic doit pouvoir s'exprimer, au moins partiellement, sous
+    differentes syntaxes. (XML, JSON, LUA, INI, AR)
+\end{itemize}
+
+\vspace{\baselineskip}
+
+De plus: Dabsic est le nom d'un langage dont la définition est
+celle décrite dans ce livre où du moins quelque chose qui
+s'en approche. Si Dabsic finit par massivement évoluer après sa
+première définition et change au point de devenir un C++ (un mot
+synonyme de fourre-tout), il faudra changer de nom - et certainement
+pas juste appeller le nouveau langage Dabsic 2! Un autre nom!\\
+
+Pas de Dabsic0x, Dabsic11, 14, 17, 2.7, 3.3 ...\\
+
+Dabsic est inspiré par l'esthétique du format INI, le langage Visual Basic 6 et
+s'approche de differentes façons du groupement
+HTML/CSS/Javascript ainsi que de Flash. La composante rigide
+du langage se voulant directement influencée par les langages
+fonctionnels, C ou C++.\\
+
+Le nom ``Dabsic'' est presque directement issu de ``BASIC'' et signifie,
+si il faut absolument lui donner un sens ``Developer's all-purpose block structured
+instruction code''.\\
+
+Notez qu'en Dabsic, la casse des mot-clefs n'a aucune importance, mais
+qu'il est possible de forcer certains styles pour l'ensemble des
+symboles et mot-clefs avec des options.
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\chapter{Hello World}
+
+Dabsic étant un langage de programmation dont la nature est avant
+tout de s'ajouter à un programme, il n'est normalement pas supposé
+comporter de fonction ``main'', néanmoins, par respect pour cette
+tradition, voici un ``Hello World'' en Dabsic, écrit de la
+manière la plus concise possible:
+
+\begin{verbatim}
+'Version courte
+Main = [Function
+  "Hello, world!"
+]
+\end{verbatim}
+
+Notez qu'il est tout à fait possible d'être plus exigeant:
+
+\begin{verbatim}
+'Version longue
+strict int Main(string argv[]) = [Function
+  "Hello world!"
+  return 0
+]
+\end{verbatim}
+
+Ou d'omettre ``\verb!strict!'' mais de l'ajouter au lancement de
+l'interprete avec l'option \verb!-Wstrict! comme comportement par
+défaut de toutes les déclarations.
+
+Vous aurez certainement remarqué les phrases précédés du symbole
+"\verb!'!", il s'agit de commentaires.
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\mainmatter
+\part{Arbre Dabsic}
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\chapter{Champs Dabsic}
+\section{Comparaisons}
+
+Les champs Dabsic sont le tissu de l'Arbre Dabsic.
+Ils sont à la fois les variables d'un langage de programmation
+traditionnel mais également les attributs de la structure
+globale de l'environnement.\\
+
+Les champs Dabsic peuvent contenir une valeur, d'autres champs
+Dabsic rangé à la manière d'un tableau, d'autres champs Dabsic
+organisé d'après leurs noms: Notez que ces possibiités ne sont
+pas exclusives! Il est tout à fait possible de disposer d'un
+champ Dabsic étant une valeur et un tableau ou une table.\\
+
+\begin{itemize}
+  \item Si l'on établit une comparaison avec le format INI, voici
+    ce qu'il est possible de faire avec un champ INI:\\
+    \begin{itemize}
+      \item \verb!NomDuChamp=Valeur!
+      \item \verb!NomDuChamp=Valeur,Valeur,Valeur!
+    \end{itemize}
+    \vspace{\baselineskip}
+    Un champ INI peut-être une valeur ou un tableau.\\
+
+  \item Si l'on compare maintenant avec JSON, voici l'étendu de ses
+    possibilités:
+    \begin{itemize}
+      \item \verb!'nom_du_champ':'valeur'!
+      \item \verb!'nom_du_champ':{ { json }, { json }, { json } }!
+      \item \verb!'nom_du_champ':{ 'nom': { json }, 'nom': { json } }!
+    \end{itemize}
+    \vspace{\baselineskip}
+    Un champ JSON peut-être une valeur, un tableau ou une table.
+    Dans le cas d'une table, l'une des entrées peut éventuellement être utilisé
+    pour représenter la valeur du champ lui-même et un autre un tableau.\\
+
+  \item Le même travail avec XML:
+    \begin{itemize}
+      \item \begin{verbatim}
+<nom_du_champ attribut="" attribut="">
+  <XML><XML>
+</nom_du_champ>
+\end{verbatim}
+    \end{itemize}
+    \vspace{\baselineskip}
+    Un champ XML peut contenir une table (les attributs) ainsi qu'un tableau.
+    Comme en JSON, un attribut peut être utilisé pour contenir la valeur du champ.\\
+
+  \item En Dabsic, voici differentes façons de faire:
+    \begin{itemize}
+      \item Déclaration d'un champ valeur:
+        \verb!Dabsic = Valeur!
+      \item Déclaration d'un champ table:
+      \begin{verbatim}
+[Dabsic
+  ...
+]
+        \end{verbatim}
+      \item Déclaration d'un champ tableau:
+        \begin{verbatim}
+Dabsic = [Array
+  ...
+]
+{Dabsic
+  ...
+}
+        \end{verbatim}
+      \item Mélange des trois, version groupée dans la déclaration:
+        \begin{verbatim}
+[Dabsic = [Array = Valeur
+    Dabsic
+    Dabsic
+    Dabsic
+  ]
+  Dabsic = ...
+  [Dabsic = ...
+    ...
+  ]
+]
+\end{verbatim}
+
+	\newpage
+      \item Mélange des trois, Version éclatée:
+        \begin{verbatim}
+[Dabsic = Valeur
+  Dabsic = ...
+  Dabsic = ...
+  This = [Array
+    ...
+  ]
+]
+\end{verbatim}
+		\vspace{\baselineskip}
+        This étant ici un mot-clef indiquant que la modification est a
+        effectuer sur le champ ``parent''.
+    \end{itemize}
+\end{itemize}
+\vspace{\baselineskip}
+
+Plusieurs constats sont à faire: tous les formats ne permettent pas
+la même richesse, ou en tous cas, pas toujours d'une manière directe.
+Il est bien sur possible de simuler en INI une table: il suffit de créer
+un tableau contenant les noms des champs supposée former cette table
+mais cela tient du bricolage à la maintenance complexe et le lien
+de parenté n'apparait pas clairement.\\
+
+JSON règle le problème par une approche hiérarchique, élément commun
+à XML et Dabsic. Néanmoins, il faut choisir entre valeur, table et
+tableau où alors construire par dessus une convention: un champ sera
+toujours une table et il y aura toujours un champ value et un champ
+array.\\
+
+XML embarque dans la balise les propriétés de la balise et enserre entre
+la tête et la queue de la balise des éléments pouvant être considéré comme
+un tableau. Ainsi, en ajoutant un attribut valeur, il est possible d'atteindre
+le niveau d'agglomérat de Dabsic, néanmoins l'approche à une limite
+critique: la verbosité. Voici quelques cas typique:
+
+\begin{itemize}
+  \item
+  \begin{verbatim}
+<MotherMarkup Property="">
+  <Thing value="Value" />
+  <Thing value="Value" />
+  <Thing value="Value" />
+</MotherMarkup>
+\end{verbatim}
+	\vspace{\baselineskip}
+  \item
+  \begin{verbatim}
+<MotherMarkup Property="">
+  <FirstThing>Value</FirstThing>
+  <SecondThing>Value</SecondThing>
+  <ThirdThing>Value</ThirdThing>
+</MotherMarkup>
+\end{verbatim}
+\vspace{\baselineskip}
+\end{itemize}
+
+Ce qui peut être écrit bien plus simplement en JSON ou en Dabsic
+de la façon suivante, dans un cas comme dans l'autre:
+\begin{itemize}
+  \item
+  \begin{verbatim}
+[MotherMarkup = [Array Value Value Value ]
+  Property=""
+]
+\end{verbatim}
+\vspace{\baselineskip}
+\end{itemize}
+
+XML est largement inspiré par HTML, format où le contenu brut
+est modelé par les balises: la donnée n'est pas simplement un
+ensemble de valeur rangé.\\
+
+De plus, en HTML, la fermeture d'une balise est optionnelle: on ferme
+si l'on souhaite que l'effet de la balise cesse.\\
+
+Au départ, les sites webs, documents graphiques mis en page
+par le HTML, était majoritairement constitué de contenu et les
+préprocesseurs étaient moins répandus: il y avait peu de balise,
+et il pouvait faire sens donc d'écrire complètement le nom de
+la balise que l'on fermait dans le symbole de fermeture.\\
+
+Objectivement, le format de LISP est tout à fait suffisant pour
+représenter n'importe quel arbre:\\
+\begin{itemize}
+  \item Lisp: \verb!(clef ...contenu... )!
+  \item JSON: \verb!'clef' : { ...contenu ... }!
+  \item Dabsic: \verb![clef ...contenu... ]!
+  \item XML: \verb!<clef> ...contenu... </clef>!
+\end{itemize}
+\vspace{\baselineskip}
+
+Aujourd'hui, la majorité des sites webs utilisent PHP, ce qui
+rend extremement facile le découpage de nos fichiers sources
+(En réalité, c'était déjà facile et faisable avec du script
+shell ou le préprocesseur de C, mais il fallait un UNIX, ce qui
+était loin d'être évident à l'époque) et les balises représentent
+une très large majorité de nos sources, le contenu étant
+généralement situé en base de donnée. La répétition est donc
+devenue, à mon sens, inutile. La monté en force de format
+comme JSON est une conséquence directe de la désillusion envers
+la qualité de XML comme format efficace.\\
+
+En résumé, la communauté technique réalise que XML
+est un format fait-et c'est pour ça qu'il a été conçu à la base-
+pour s'insérer dans un document, et que ce n'est
+pas efficace pour représenter un ensemble de données.\\
+
+Il est possible d'argumenter sur l'intêret du format du champ
+Dabsic, après tout, le coté tableau et le coté table, en
+particulier, sont fortement séparé et la valeur est également
+un peu à part: c'est vrai. En soi, cette liaison même peut
+être critiquée. Cela dit, les éléments du langage considère un
+champ Dabsic comme étant ces trois éléments, quand bien
+même ils sembleraient être issu d'un montage comme on
+pourrait le faire en JSON ou en XML.\\
+
+Etant donné la nature versatile d'un champ Dabsic, certains
+termes seront parfois utilisé à la place de ``champ'':
+
+\begin{itemize}
+  \item Un noeud (Node, en anglais) est un champ disposant
+    d'enfants sous la forme de table (donc, \verb!clef:valeur!)
+    \vspace{\baselineskip}
+  \item Un tableau (Array, en anglais) est un champ disposant
+    d'enfants sous la forme de tableau (\verb!index:valeur!)
+    \vspace{\baselineskip}
+   \item Un filet (Net, en anglais) est un champ étant à la fois
+    un tableau et un noeud.
+    \vspace{\baselineskip}
+  \item Le terme champ seul sous entendra donc champ sans
+    enfants, ni sous la forme de table, ni sous la forme de
+    tableau, ou alors ou cette spécificité sera sans importance
+    dans le contexte ou le mot est employé.
+    \vspace{\baselineskip}
+\end{itemize}
+
+\newpage
+
+\section{Plus d'informations sur le champ}
+
+Un champ Dabsic peut donc contenir une valeur, un tableau
+de champs Dabsic (ou de simples valeurs) ainsi qu'une table
+de champs Dabsic. Ce ne sont pas les seules caractéristiques
+des champs Dabsic : un champ Dabsic dispose de types et
+de propriétés diverses, sa valeur n'est pas néccessairement
+constante et son établissement peut-être fonction de
+paramètres, etc. ! Voici une liste des propriétés et fonctionnalités
+supplémentaires dont disposent les champs Dabsic.
+
+\subsection{Simple déclaration}
+
+Un champ Dabsic est un élément potentiellement très riche mais
+pas néccessairement, un champ peut tout à fait être vide dans
+tous les sens du terme et être denué de propriétés diverses, par
+exemple :
+
+\begin{verbatim}
+[MotherField
+  Field
+  OtherField
+]
+\end{verbatim}
+
+Les champs ``\verb!Field!'' et ``\verb!OtherField!'' existent mais n'ont
+d'autres propriétés que leur nom et ne contiennent rien.
+
+Un champ Dabsic dispose dans la majorité des cas de son propre nom
+(c'est le cas lorsqu'ils sont déclaré manuellement dans une table),
+ce nom peut être composé de lettres, de chiffres et du caractère ``\verb!_!''
+underscore. Le premier caractère du nom ne peut pas être un chiffre.
+
+Il existe des champs commencant par le symbole ``\verb!.!'' point, il
+s'agit de champs reservés au fonctionnement du langage qui ne
+sont pas visible directement par vos programmes (ils peuvent
+néanmoins en subir les effets)
+
+Pour assigner une valeur à un champ, il est possible d'utiliser
+les symboles ``\verb!=!'' ou ``\verb!:=!''.
+
+\verb|/!\| J'aurai aimé ignorer la casse des champs (comme avec les
+mot-clefs, quoi), mais cela entre peut etre en conflit avec la
+possiblité laissée par HBSL de former un arbre Dabsic a partir
+de XML, Lua, INI/whatever.
+
+\newpage
+
+\subsection{Type de valeur et force du type du valeur}
+
+Un champ Dabsic peut disposer d'un type et d'une force associé.
+Un type est la nature de la valeur contenue. Dabsic gère nativement
+un ensemble restreint de types dont voici la liste:
+
+\begin{itemize}
+  \item Le type ``\verb!bool!'', ``\verb!boolean!'', ``\verb!booléen!'' est un booléen. En terme C, il s'agit
+    d'une énumération pouvant être vraie ou fausse. Un booléen
+    litteral s'écrit ``\verb!True!'' (ou ``\verb!Vrai!''à ou ``\verb!False!'' (``\verb!Faux!''), qui sont tous deux
+    des mot-clefs. Exemples:\\
+
+\begin{verbatim}
+    Field = True
+    OtherField = FALSE
+\end{verbatim}
+\vspace{\baselineskip}
+
+  \item Le type ``\verb!int!'', ``\verb!integer!'', ``\verb!entier!'' est un entier naturel. En terme C, il
+    s'agit d'un \verb!int64_t!. Un entier naturel littéral peut-être
+    écrit en binaire, octal, décimal ou hexadécimal. Un littéral
+    écrit en binaire commence par 0b, en octal par 0, en hexadécimal
+    par 0x et il n'y a pas de préfixe pour le décimal, en faisant
+    le format par défaut.
+    Exemples:\\
+
+\begin{verbatim}
+    Field0 = 0b11001      ' 24
+    Field1 = 0x2a         ' 42
+    Field2 = 424          ' 424
+    Field3 = 010          ' 8
+\end{verbatim}
+	\vspace{\baselineskip}
+
+    Je m'interroge sur l'intêret de conserver le formatage original
+    des littéraux: Dabsic étant également un format de configuration
+    et non pas seulement un langage (potentiellement un environnement
+    comme décrit plus bas), il convient à mon sens de considérer
+    que la méthode d'écriture est porteur de sens, à l'instar des
+    droits Unix et de l'octal. Le fichier est susceptible d'être
+    regénéré ou d'être parcouru à l'execution comme un FS.
+	\vspace{\baselineskip}
+
+  \item Le type ``\verb!real!'', ``\verb!réel!'' est un nombre réel. En terme C, il s'agit
+    d'un double. Un nombre réel litteral s'écrit en décimal et doit
+    comporter le symbole ``\verb!.!''. Il peut commencer par ce symbole comme
+    terminé par celui-ci. Un suffixe ``\verb!e!'' indique également un réel.
+    Exemples:\\
+
+\begin{verbatim}
+    Field0 = 4.2
+    Field1 = 4.
+    Field2 =.2
+    Field3 = 2e4
+\end{verbatim}
+	\vspace{\baselineskip}
+
+    De la même manière, conserver le formatage d'origine du champ
+    me semble interessant.
+    
+    \newpage
+    
+  \item Le type ``\verb!string!'', ``\verb!texte!'' est une chaîne de caractères. En terme C++,
+    il s'agit d'une \verb!std::string!. Une chaine de caractère littérale
+    en Dabsic utilise le même format qu'en C, à savoir être cerclé
+    par l'opérateur guillemet et utiliser anti-slash comme opérateur
+    d'échapement. Exemples:\\
+
+\begin{verbatim}
+    Field0 = "Je vais bien."
+    Field1 = "Je saute une \n ligne."
+    Field2 = "Je comporte des caractères originaux \032."
+\end{verbatim}
+	\vspace{\baselineskip}
+
+    L'objet string est tout à fait à même de contenir des caractères
+    unicode et les manipulations qui lui sont associés considère les
+    caractères unicode comme un seul et unique et non comme un montage
+    multi-caractère: en somme, tout se passe comme si nous étions en
+    ASCII, mais nous sommes en UTF-8.
+    \vspace{\baselineskip}
+
+  \item Un champ Dabsic peut également être d'un type construit, cela
+    en prefixant l'adresse du type construit du mot clef ``\verb!struct!''.
+    En terme pratique, cela importe à l'interieur du champ le contenu
+    du type défini. Plus d'informations sont disponibles plus bas. Il
+    n'est pas néccessaire (En tous cas, dans la version décrite ici)
+    d'écrire un litteral pour un type construit car celui-ci charge
+    dans le noeud sa définition : il faudrait donc redefinir ses
+    valeurs en déclarant des champs équivalent.
+\end{itemize}
+
+\newpage
+
+La force associé au respect du type de ces valeurs peut-être changée
+à l'aide des mot-clefs suivants :
+
+\begin{itemize}
+  \item Le mot-clef ``\verb!weak!'', ``\verb!faible!'' permet d'indiquer que la valeur est
+    faiblement typée. Cette force de type est celle par défaut si
+    l'interprète est lancé sans option.
+
+    La force de type ``\verb!weak!'' établit que la valeur peut-être
+    convertie en n'importe quel autre type. Attention, contrairement
+    à d'autres langage au typage faible tel que PHP ou Javascript,
+    Dabsic effectuera une vérification qu'une convertion à belle et bien
+    eu lieu!
+
+    Ainsi, convertir ``\verb!string!'' en entier renverra une erreur
+    et non 0 comme c'est le cas dans ces autres langages. Convertir
+    ``\verb!string!'' en booléen ne sera valide que si la chaine contient
+    ``\verb!true!'', ``\verb!false!'' ou un entier pouvant évoluer vers un booléen
+    de manière légale.
+
+    Notez que contrairement au C ou au C++, un entier étant convertit
+    en booléen l'est pleinement: n'importe quelle valeur non nulle
+    est vraie et égal à ``\verb!True!'' ! Ainsi \verb!2 == ``True''! est vrai.
+
+    L'idée est que la faiblesse du typage est un outils permettant
+    de flexibiliser le plus possible les manipulations mais que
+    cela ne doit en aucun cas devenir une source d'erreur.
+
+    Bien que cela soit le comportement par défaut, il est possible de
+    l'expliciter avec le flag \verb!-Wweak! indiquant que tous les champs
+    non explicité ont un type de force faible.
+    \vspace{\baselineskip}
+
+  \item Le mot-clef ``\verb!soft!'' permet d'indiquer que la valeur peut-être
+    convertie si la convertion ne détruit pas la précision de la valeur.
+    En ce sens, la hiérarchie est la suivante:
+
+\begin{verbatim}
+    bool < int < real < string
+\end{verbatim}
+
+    Notez qu'un booléen promu en entier ou réel vaudra 0 ou 1, et
+    ``\verb!False!'' et ``\verb!True!'' si il est promu en chaine de caractère.
+
+    Il est possible d'utiliser l'option suivante pour
+    modifier le comportement par défaut de l'interprète : l'option \verb!-Wsoft!
+    assigne la force de type douce à tous les champs dont la force de
+    type n'est pas spécifiée.
+    \vspace{\baselineskip}
+
+  \item Le mot-clef ``\verb!strong!'' permet d'indiquer que la valeur ne
+    peut subir d'opération qu'avec des valeurs du même type. Autrement dit,
+    une opération entre un réel et un nombre entier aboutira à une erreur,
+    tandis qu'avec ``\verb!soft!'', l'entier aurait été convertit en réel.
+
+    Il est possible d'utiliser l'option suivante pour modifier le
+    comportement par défaut de l'interprète : l'option \verb!-Wstrong!
+    assigne la force de type forte à tous les champs dont la force de
+    type n'est pas spécifiée.
+    \vspace{\baselineskip}
+
+  \item Le mot-clef ``\verb!strict!'' ne change pas la force du type lui-même
+    mais interdit le changement du type d'un champ. C'est à dire que dans
+    le cas suivant :\\
+
+\begin{verbatim}
+    soft int Field = 42
+    Main = [Function
+      Field = 4.2
+    ]
+\end{verbatim}
+	\vspace{\baselineskip}
+
+    Le champ Field à la fin de la fonction Main est devenu un nombre
+    réel. Si ce champ avait été à la place ``\verb!strict int!'', alors
+    l'opération aurait renvoyé une erreur. Notez que le mot-clef
+    ``\verb!strict!''. Notez que strict n'aura pas interdit une conversion
+    depuis le type entier vers un autre car la force du type est
+    ``\verb!weak!''. Pour indiquer l'impossibilité d'assigner et de convertir,
+    vous devez préciser ``\verb!strict strong int!''.
+
+    Le mot-clef ``\verb!flexible!'' est l'inverse du mot clef strict et
+    est le comportement par défaut.
+
+    Il est possible d'utiliser l'option \verb!-Wstrict! pour que tous les champs
+    dont la rigueur n'est pas précisé passe en ``\verb!strict!''.
+    \vspace{\baselineskip}
+
+  \item Le mot clef ``\verb!hard!'' est la combinaison de ``\verb!strict!'' et ``\verb!strong!''.
+    L'option -Whard passe tous les champs dont ni la rigueur ni la force
+    du type ne sont précisé en dur. De la même manière, \verb!-Whard! est la
+    combinaison de \verb!-Wstrict! et \verb!-Wstrong!.
+
+\end{itemize}
+\vspace{\baselineskip}
+
+Les options \verb!-Wno-weak!, \verb!-Wno-flexible!, \verb!-Wno-soft!, \verb!-Wno-strong!, \verb!-Wno-strict!
+et \verb!-Wno-hard! forcent l'interprète à lancer une alerte en cas d'utilisation
+des mot-clefs weak, flexible, soft, strong, strict ou hard. Il est possible
+également d'interdire l'explicitation de la force du type avec
+\verb!-Wno-explicit-type-strenght!, ainsi, seul la force définie par configuration sera possible.\\
+
+Ces types sont utilisable sur les champs mais également sur les tableaux:\\
+
+\begin{verbatim}
+Field = [type Array
+  ...
+]
+\end{verbatim}
+
+Préciser un type impose le respect de ce type à tous les éléments de
+celui-ci.
+
+\newpage
+
+\subsection{Addresses et références}
+
+Un champ peut contenir autre chose qu'une valeur et contenir une adresse.
+Ce champ est alors un alias sur le champ dont il contient l'adresse. Voici
+la syntaxe :\\
+\begin{verbatim}
+[Node = [Array 0 1 2 3 ]
+  Integer = 42
+  Reference = .Integer
+  Index = this[3]
+]
+Main = [Function
+  Print([].Node.Reference, "\n")
+  Print(Node.Reference, "\n")
+  Print(Node[3], "\n")
+  Print(Node.Index, "\n")
+]
+\end{verbatim}
+
+``Reference'' est une reference sur ``\verb!Integer!''. Appeller la fonction
+main va donc afficher deux fois ``\verb!42\n!'' puis deux fois ``\verb!3\n!''.
+
+Notez les deux manières de joindre le champ ``\verb!Reference!'': la première
+utilise le symbole ``\verb![]!'' qui en Dabsic correspond à la racine:
+l'adresse est donc absolue. La seconde façon utilise le préfixe ``\verb!.!''
+et est donc une adresse relative. Il est également possible d'utiliser
+le mot-clef ``\verb!this!'' pour représenter le champ courant.
+Deux ``\verb!.!'' d'affilé (ou plus) indique une remontée dans la hiérarchie
+d'autant de ``\verb!.!'' surnuméraire.
+
+Dans l'exemple précédent, l'adresse est récuperée à partir d'une
+adresse litterale, mais ce n'est pas la seule façon : il est également
+possible de récuperer une adresse depuis une autre référence :
+
+\begin{verbatim}
+[Node
+  Integer = 42
+  Reference = .Integer
+  OtherRef = .Reference
+]
+Main = [Function
+  Print(.Node.OtherRef, "\n")
+]
+\end{verbatim}
+
+Attention, ici, nous ne créeons pas une référence sur une référence,
+mais récupérons simplement l'adresse contenu par ``Reference'' pour
+l'assigner à ``OtherReg''. Ainsi, ici, ``Reference'' et ``OtherRef''
+sont équivalent tout deux à ``Integer''.
+
+Le typage d'une référence est celui de l'élément pointé et cela en
+tous point à l'exception d'un seul : si la référence est stricte,
+alors son type ne peut pas être changé lors d'une réassignation
+à une autre adresse. Ainsi, même si la référence est censé prendre
+le type du champ dont elle a l'adresse, il est possible de créer
+des références dédiés à l'aide du mot clef strict, et ainsi obtenir
+le comportement du C ou du C++. L'option \verb!-Wall-ref-are-strict! permet
+de considérer par défaut que toutes les références sont strictes.
+
+\newpage
+
+Est considéré invalide toute référence ne menant pas à un champ
+existant : cela n'empeche pas l'assignation, par exemple :
+
+\begin{verbatim}
+Reference = .Field
+Main = [Function
+  Print(Reference, ``\n'')
+  ' Création du noeud [].Field et assignation à 42
+  Print(Reference, ``\n'')
+]
+\end{verbatim}
+
+Par défaut, ce programme génère une erreur et l'execution s'arrête.
+Néanmoins, avec l'option \verb!--ignore-bad-ref!, au lieu de s'arrêter,
+l'interprète va envoyer une alerte sur la sortie d'erreur et
+continuer normalement l'execution. Une valeur par défaut
+dépendant du type sera retournée si un type était précisé,
+sinon l'état indéfini sera retourné.
+Ici, nous aurons donc une erreur sur stderr suivit de ``\verb!42\n!''
+sur la sortie standard.\\
+
+Il est bien entendu tout à fait possible de vérifier la validité
+d'une référence avant d'y avoir accès : le mot-clef ``\verb!valid!'',
+utilisable telle une fonction :\\
+
+\begin{verbatim}
+Shell> ./dabsic
+Reference = .Unknown
+int Main = [Function
+  Return Valid(Reference)
+]^D
+Shell> echo \$?
+0
+\end{verbatim}
+
+De plus, le mot-clef \verb!NULL! est disponible afin d'assigner une
+adresse invalide à une référence sans avoir à prendre le risque
+d'en créer une : \verb!NULL! sera toujours invalide.
+
+Pour finir, gardez à l'esprit qu'une reference est une reference
+sur un champ et non sur une valeur et qu'il est donc possible
+d'acceder au contenu de celui-ci si il s'agit d'un noeud ou
+d'un tableau.
+
+Dans la même veine, un tableau peut très bien être un tableau
+de référence... Et être l'élément de base d'un graphe complexe.
+
+\subsection{Specificateurs}
+
+Un champ Dabsic ou une déclaration de tableau peut disposer
+de plusieurs propriétés:
+
+\begin{itemize}
+  \item \verb!specificator Field = 42 'The value is specified!
+  \item \verb!Field2 = [specificator Array ... ] 'The array is!
+        \verb!                                   'specified!
+\end{itemize}
+\vspace{\baselineskip}
+
+Voici une liste des spécificateurs:
+
+\begin{itemize}
+  \item ``\verb!const!'' interdit toute modification de la valeur du champ
+    ou des valeurs contenu par le tableau.
+    L'option \verb!-Wconst! indique que par défaut, tous les champs sont
+    constants. Notez qu'un tableau constant est solide.
+    La constance est extremement importante pour les performences:
+    une opération mathématique entre éléments constants fournira
+    toujours le même résultat, donc il sera possible de ne pas
+    recalculer le résultat la prochaine fois!
+    \vspace{\baselineskip}
+  \item ``\verb!mutable!'' indique qu'il est possible de modifier la valeur du champ
+    ou les valeurs stockés dans le tableau.
+    L'option \verb!-Wno-mutable! demande à l'interprète de lancer
+    une alerte si ce mot-clef est utilisé.
+    \vspace{\baselineskip}
+
+  \item ``\verb!solid!'' indique qu'aucun enfant ne peut être ajouté à
+    l'élément solide.
+    L'option \verb!-Wsolid! indique que par défaut, tous les champs
+    sont solides, ainsi leur forme est fixe après le parsing
+    initial.
+    ``\verb!solid!'' peut également être utilisé sur une référence pour
+    indiquer qu'elle ne peut pas être réassignée.
+    \vspace{\baselineskip}
+  \item ``\verb!stretchable!'' indique qu'il est possible de créer
+    de nouveaux enfants au champ.
+    L'option \verb!-Wno-stretchable! demande à l'interprète de lancer
+    une alerte si ce mot-clef est utilisé.
+    \vspace{\baselineskip}
+
+  \item ``\verb!eternal!'' indique que le champ ne peut pas être supprimé.
+    Rendre un champ éternel implique que tous ses parents sont éternels.
+    L'option \verb!-Weternal! indique que tous les champs sont éternels.
+    Un tableau eternel est solide.
+    Pour information, la racine est éternelle.
+    \vspace{\baselineskip}
+\end{itemize}
+
+Le symbole ``\verb|!|'' placé immédiatement après le spécificateur indique
+que celui-ci doit être étendu aux enfants : par défaut, la portée
+est limitée au champ seul. Les références ne sont bien entendus
+pas traversé par ces specificateurs étant donné que ce qu'ils
+poitent n'est pas néccessairement enfant du champ.\\
+
+Pour arrêter la propagation récursive de ces specificateurs, il est
+bien entendu possible d'utiliser le specificateur inverse avec
+l'opérateur de récursion ``\verb|!|'' mais également en utilisant ces
+mot-clefs qui annulent l'effet de specificateur par famille :\\
+
+\begin{itemize}
+  \item ``\verb!default_write_access!'', ou ``\verb!defaultwriteaccess!'' indique
+    qu'il faut restorer les droits d'écriture par défaut de l'interprète.
+    L'option \verb!-Wno-default-write-access! demande à l'interprète de
+    lancer une alerte si ce mot-clef est utilisé.
+    \vspace{\baselineskip}
+  \item ``\verb!default_solidity!'', ou ``\verb!defaultsolidity!'' indique
+    qu'il faut restorer la solidité par défaut de l'interprète.
+    L'option \verb!-Wno-default-solidity! demande à l'interprète de
+    lancer une alerte si ce mot-clef est utilisé.
+    \vspace{\baselineskip}
+\end{itemize}
+
+Ces mot-clefs sont à utiliser ou non avec l'opérateur de récursion ``\verb|!|''.
+
+Je ne recommande pas l'utilisation massive de constructions
+utilisant la récursion de specificateur puis l'annulation etc. car
+cela génère un suivi complexe. Néanmoins si vous en avez besoin,
+c'est possible.
+
+\newpage
+
+\subsection{Opérations}
+
+Dabsic permet de ne pas se contenter d'écrire des valeurs
+littérales ou des adresses : il est tout à fait possible
+d'écrire des opérations à la place de simples valeurs.\\
+
+Vous remarquerez que ces opérations sont finalement des
+fonctions d'une unique ligne. Voici quelques exemples :
+
+\begin{verbatim}
+' Defining things
+Answer = 42
+Offset = 1
+
+' Fields I will use
+TheAnswer = Answer
+ModAnswer = (Answer + Offset) * 3
+\end{verbatim}
+\vspace{\baselineskip}
+\newpage
+
+Un très large ensemble d'opérateurs sont disponibles et utilisables.
+Voici une liste des opérateurs binaires disponibles par ordre croissant de priorité:\\
+
+\begin{tabular}{c|c|c|c}
+  \hline
+  Priorité & Symbole & Sens de lecture & Description\\
+  \hline
+  0 & ``\verb!,!'' & \verb!->! &
+  Effectue les opérations dans l'ordre et retourne l'opérande le plus à droite.
+  Ce sens d'execution est différent de celui du C et de ses héritiers.
+  \\
+  %
+  \hline
+  %
+  1 & ``\verb!=!'', ``\verb!:=!'', ``\verb!equal!'', ``\verb!égal!'' &
+  Assigne l'opérande de droite à l'opérande de gauche.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb!<-!'', ``\verb!become!'', ``\verb!devient!'' &
+  Déplace l'opérande de droite vers l'opérande de gauche. Dans les faits, l'opérande
+  de droite est maintenant indéfini et l'opérande de gauche dispose de sa valeur.
+  \\
+  %
+  1 & ``\verb![=]!'', ``\verb![All=]!'' & \verb!<-! &
+  Assigne récursivement tous les champs contenu par le champ de droite au champ de gauche.
+  Le champ lui-même est assigné.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb![A=]!'', ``\verb![Array=]!'' & \verb!<-! &
+  Assigne récursivement tous les champs contenu par le tableau du champ de droite au
+  tableau du champ de gauche.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb![H=]!'', ``\verb![Hash=]!'' & \verb!<-! &
+  Assigne récursivement tous les champs contenu par le noeud du champ de droite au
+  noeud du champ de gauche.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb!||=!'', ``\verb!or=!'', ``\verb!ou=!'' & \verb!<-! &
+  Assigne à l'opérande de gauche le résultat de l'opération gauche \verb!||! droite.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb!^^=!'', ``\verb!xor=!'', ``\verb!oux=!'' & \verb!<-! &
+  Assigne à l'opérande de gauche le résultat de l'opération gauche \verb!^^! droite.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb!&&=!'', ``\verb!and=!'', ``\verb!et=!'' & \verb!<-! &
+  Assigne à l'opérande de gauche le résultat de l'opération gauche \verb!&&! droite.
+  Retourne l'opérande de gauche.
+  \\
+    %
+  1 & ``\verb!|=!'' & \verb!<-! &
+  Assigne à l'opérande de gauche le résultat de l'opération gauche \verb!|! droite.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb!^=!'' & \verb!<-! &
+  Assigne à l'opérande de gauche le résultat de l'opération gauche \verb!^! droite.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb!&=!'' & \verb!<-! &
+  Assigne à l'opérande de gauche le résultat de l'opération gauche \verb!&! droite.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb!<<=!'' & \verb!<-! &
+  Assigne à l'opérande de gauche le résultat de l'opération gauche \verb!<<! droite.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb!\>\>\=!'' & \verb!<-! &
+  Assigne à l'opérande de gauche le résultat de l'opération gauche \verb!>>! droite.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb!+=!'' & \verb!<-! &
+  Assigne à l'opérande de gauche le résultat de l'opération gauche \verb!+! droite.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb!-=!'' & \verb!<-! &
+  Assigne à l'opérande de gauche le résultat de l'opération gauche \verb!-! droite.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb!*=!'' & \verb!<-! &
+  Assigne à l'opérande de gauche le résultat de l'opération gauche \verb!*! droite.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb!/=!'' & \verb!<-! &
+  Assigne à l'opérande de gauche le résultat de l'opération gauche \verb!/! droite.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb!\%=!'' & \verb!<-! &
+  Assigne à l'opérande de gauche le résultat de l'opération gauche \verb!\%! droite.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb!**=!'' & \verb!<-! &
+  Assigne à l'opérande de gauche le résultat de l'opération gauche \verb!**! droite.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  1 & ``\verb!#=!'' & \verb!<-! &
+  Assigne à l'opérande de gauche le résultat de l'opération gauche \verb!#! droite.
+  Retourne l'opérande de gauche.
+  \\
+  %
+  \hline
+  %
+  2 & ``\verb!?!'' ``\verb!:!'' & -> &
+  Effectue un test sur l'opérande de gauche de ``\verb!?!'', si celui ci est vrai, alors
+  l'opérande situé entre ``\verb!?!'' et ``\verb!:!'' est executé et retourné, sinon c'est
+  celui à droite de ``\verb!:!''.\\
+  %
+  \hline
+  %
+  3 & ``\verb!||!'', ``\verb!.OR.!'', ``\verb!or!'', ``\verb!ou!'' & \verb!->! &
+  Effectue l'opération \verb!OU INCLUSIF! entre l'évaluation comme booléen de
+  l'opérateur de gauche et l'évaluation comme booléen de l'opérateur de droite.
+  L'opérande de droite n'est pas évaluée si l'opérande de gauche est vrai.
+  Retourne un booléen contenant le résultat.\\
+  %
+  3 & ``\verb!^^!'', ``\verb!.XOR.!'', ``\verb!xor!'', ``\verb!oux!'' & -> &
+  Effectue l'opération \verb!OU EXCLUSIF! entre l'évaluation comme booléen de
+  l'opérateur de gauche et l'évaluation comme booléen de l'opérateur de droite.
+  Retourne un booléen contenant le résultat.\\
+  %
+  \hline
+  %
+  4 & ``\verb!&&!'', ``\verb!.AND.!'', ``\verb!and!'', ``\verb!et!'' & \verb!->! &
+  Effectue l'opération \verb!ET! entre l'évaluation comme booléen de
+  l'opérateur de gauche et l'évaluation comme booléen de l'opérateur de droite.
+  L'opérande de droite n'est pas évaluée si l'opérande de gauche est faux.
+  Retourne un booléen contenant le résultat.\\
+  %
+  \hline
+  %
+  5 & ``\verb!==!'', ``\verb!.EQ.!'', ``\verb!equal to!'', ``\verb!égal à!'' & \verb!->! &
+  Teste l'égalité entre l'opérateur de gauche et de droite.
+  Retourne un booléen contenant le résultat.\\
+  %
+  5 & ``\verb|!=|'', ``\verb!<\>!'', ``\verb!.NE.!'', ``\verb!unlike!'', ``\verb!différent de!'' & \verb!->! &
+  Teste la différence entre l'opérateur de gauche et de droite.
+  Retourne un booléen contenant le résultat.\\
+  %
+  5 & ``\verb!<=!'', ``\verb!.LE.!'' & \verb!->! &
+  Teste que l'opérateur de gauche est inférieur ou égal à celui de droite.
+  Retourne un booléen contenant le résultat.\\
+  %
+  5 & ``\verb!>=!'', ``\verb!.GE.!'' & \verb!->! &
+  Teste que l'opérateur de gauche est supérieur ou égal à celui de droite.
+  Retourne un booléen contenant le résultat.\\
+  %
+  5 & ``\verb!<!'', ``\verb!.LT.!'', ``\verb!lesser than!'', ``\verb!inférieur à!'' & \verb!->! &
+  Teste que l'opérateur de gauche est inférieur à celui de droite.
+  Retourne un booléen contenant le résultat.\\
+  %
+  5 & ``\verb!\>!'', ``\verb!.GT.!'', ``\verb!greater than!'', ``\verb!supérieur à!'' & \verb!->! &
+  Teste que l'opérateur de gauche est supérieur à celui de droite.
+  Retourne un booléen contenant le résultat.\\
+  %
+  \hline
+  %
+  6 & ``\verb!|!'' & \verb!->! &
+  Effectue une opération \verb!OU INCLUSIF bit à bit! entre l'opérande de gauche et de droite.
+  Cette opération n'est possible que sur des entiers. Retourne un entier.\\
+  %
+  6 & ``\verb!^!'' & \verb!->! &
+  Effectue une opération \verb!OU EXCLUSIF bit à bit! entre l'opérande de gauche et de droite.
+  Cette opération n'est possible que sur des entiers. Retourne un entier.\\
+  %
+  \hline
+  %
+  7 & ``\verb!&!'' & \verb!->! &
+  Effectue une opération \verb!ET bit à bit! entre l'opérande de gauche et de droite.
+  Cette opération n'est possible que sur des etniers. Retourne un entier.\\
+  %
+  \hline
+  %
+  8 & ``\verb!<<!'' & \verb!->! &
+  Cette opération peut être effectuée sur une chaine de caractère à gauche et
+  un entier à droite ou deux entiers.
+  Si il s'agit de deux entiers, il s'agit d'un décalage binaire vers la gauche.
+  Si il s'agit d'une chaine de caractère et d'un entier, il s'agit d'un décalage
+  à gauche des caractères.
+  Les excedents sont tronqués.
+  Cette opération retourne un résultat du même type que l'opérande de gauche.\\
+  %
+  8 & ``\verb!\>>!'' & \verb!->! &
+  Cette opération peut être effectuée sur une chaine de caractère à gauche et
+  un entier à droite ou deux entiers.
+  Si il s'agit de deux entiers, il s'agit d'un décalage binaire vers la droite.
+  Si il s'agit d'une chaine de caractère et d'un entier, il s'agit d'un décalage
+  à droite des caractères.
+  Les excedents sont tronqués.
+  Cette opération retourne un résultat du même type que l'opérande de gauche.\\
+  %
+  \hline
+  %
+  9 & ``\verb!+!'' & \verb!->! &
+  Cette opération effectue une addition entre l'opérande de gauche et l'opérande
+  de droite. Le résultat est du type de l'opérande de gauche. Cette opération
+  n'est possible que sur des entiers et des réels.\\
+  %
+  9 & ``\verb!-!'' & \verb!->! &
+  Cette opération effectue une soustraction entre l'opérande de gauche et l'opérande
+  de droite. Le résultat est du type de l'opérande de gauche. Cette opération
+  n'est possible que sur des entiers et des réels.\\
+  %
+  \hline
+  %
+  10 & ``\verb!*!'', ``\verb!x!'' & \verb!->! &
+  Cette opération effectue une multiplication entre l'opérande de gauche et l'opérande
+  de droite. Le résultat est du type de l'opérande de gauche. Cette opération
+  n'est possible que sur des entiers et des réels.\\
+  %
+  10 & ``\verb!/!'', ``\verb!:!'' & \verb!->! &
+  Cette opération effectue une division entre l'opérande de gauche et l'opérande
+  de droite. Le résultat est du type de l'opérande de gauche. Cette opération
+  n'est possible que sur des entiers et des réels.\\
+  %
+  10 & ``\verb!\%!'' & \verb!->! &
+  Cette opération effectue un modulo entre l'opérande de gauche et l'opérande
+  de droite. Le résultat est du type de l'opérande de gauche. Cette opération
+  n'est possible que sur des entiers et des réels.\\
+  %
+  \hline
+  %
+  11 & ``\verb!**!'', ``\verb!pow!'' & \verb!->! &
+  Cette opération effectue un modulo entre l'opérande de gauche et l'opérande
+  de droite. Le résultat est du type de l'opérande de gauche. Cette opération
+  n'est possible que sur des entiers et des réels.\\
+  %
+  \hline
+  %
+  12 & ``\verb!#!'' & \verb!->! &
+  Cette opération concatène l'opérande de gauche avec l'opérande de droite.
+  Le résultat est une chaine de caractère. Cette opération est possible
+  avec tous les types.
+  Cette opération est conçu de manière à ne créer qu'une seule chaine
+  finale et aucune chaine intermédiaire (à l'exception des résidu de
+  conversion des opérandes).\\
+  %
+  \hline
+  %
+\end{tabular}
+
+Attention: Tous les opérateurs binaires précisés précédemment doivent être
+précédé et suivi d'un espace.
+
+Un ensemble d'opérateur unaire et spéciaux sont également disponibles.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%% ON NE PEUT PAS FAIRE DE ITEMIZE DANS UN TABLEAU
+%%%%% ON CHECKERA PLUS TARD
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tabular}{c|c}
+  \hline
+  Symbole & Description\\
+  \hline
+  ``\verb!+!'' & L'opérateur unaire \verb!+! à son sens mathématique, il conserve le signe de son opérande.\\
+  %
+  ``\verb!-!'' & L'opérateur unaire \verb!-! à son sens mathématique, il inverse le signe de son opérande.\\
+  %
+  ``\verb![]!'' & L'opérateur crochet dispose de deux sens. Il peut s'utiliser de deux différentes façons :
+%  \begin{itemize}
+%    \item variable = field[42]
+%    \item
+%	Client = ``Gerard''
+%      [Gerard
+%        Age = 42
+%        
+%      ]
+%      [Charles
+%        Age = 23
+%      ]
+%      AgeClient = [Client].Age
+%  \end{itemize}
+  
+  La première ligne est un usage traditionnel de l'opérateur crochet: pour accéder à un index
+  de tableau.
+  La seconde est l'équivalent d'un accès à un attribut/champ d'une structure ou ici en
+  l'occurence de l'arbre Dabsic, mais à la place de le définir littéralement, une
+  indirection est crée à l'aide d'une variable.
+  Ce comportement rappellera certainement celui des références. A défaut d'être totalement
+  efficace, il est néanmoins plus facile à comprendre pour les débutants.
+
+  Le champ (donné directement ou via une opération) peut contenir une série
+  d'indirection type ``Gerard.Champ.AutreChamp''. Si la valeur contenue
+  est invalide, alors le programme s'arrête. Il est possible de forcer
+  le programme à continuer avec l'option --ignore-bad-address, en ce cas,
+  le programme reprend à la ligne suivante et écrit un message d'erreur
+  sur la sortie d'erreur.
+  Si le champ visé n'existe pas, le même comportement intervient et
+  peut-être désactivé de la même manière, néanmoins le message d'erreur
+  sera différent.
+  \\
+  %
+  ``\verb!()!'' & L'opérateur parenthèse, à moins d'être disposé directement à la suite d'une opérande
+  dispose de son sens de mathématique et agit comme modificateur de priorité de l'opération.
+  
+  Dans le cas contraire, il s'agit de l'opérateur d'appel de fonction.
+  
+  Notez qu'en Dabsic, cet opérateur est optionnel si la fonction ne prend pas de paramètre
+  (Il s'agit par exemple d'un simple champ contenant une opération). Il est également
+  optionnel si la fonction n'en prend qu'un seul et que l'appel est effectué avec
+  l'apparence d'une assignation (En utilisant ``= A'' plutôt que ``(A)'').
+
+  Le contenu de ces parenthèses lors d'un appel de fonction peut être disposé de deux
+  façons distinctes:
+%  \begin{itemize}
+%    \item A la manière du C, en séparant les paramètres et en les placant dans l'ordre
+%      défini de la fonction: MaFonction(a, b, c)
+%      
+%      De cette manière, les paramètres optionnels peuvent être demandé en ne placant
+%      tout simplement rien comme paramètre: MaFonction(a, , c)
+%    \item A la manière du Logo, en placant devant chaque paramètre son nom suivi de
+%      l'opérateur ``='' et dans ce cas, l'ordre n'a aucune importance, et pour
+%      spécifier l'utilisation d'un paramètre optionnel, il suffit de ne pas spécifier
+%      le paramètre: MaFonction(premier=a, dernier=c)
+%  \end{itemize}
+  \\
+  %
+  ``\verb!(type)!'', ``\verb!type()!'' & L'opérateur de conversion permet de forcer la modification
+  d'un type. La conversion est toujours effectuée, même si celle-ci est falacieuse.
+  Dans le cas d'une conversion invalide, le pavillon d'erreur est levé et peut-être
+  attrapé par la structure de contrôle adaptée comme décrit plus bas dans la
+  section des structure de contrôle.
+  La première syntaxe est celle du C et de ses dérivés: on place l'opérateur en préfixe.
+  La seconde syntaxe est celle des langages fonctionnels, on utilise le type comme
+  une fonction.
+  Le résultat est le même et une pure préférence.
+  La constance est transmise telle quelle.\\
+  %
+  \hline
+  %
+\end{tabular}
+
+Certains ``operateur'' (dans le sens, opérateur comme sizeof en C) sont également
+disponible:
+
+\begin{tabular}{c|c}
+  \hline
+  Symbole & Description\\
+  \hline
+  %
+  ``\verb!valid()!'' & L'opérateur de validité retourne un booléen indiquant si la référence
+  passée en paramètre est valide ou non. Si la référence est solide et que le champ
+  pointé est éternel, alors le booléen sera constant.\\
+  %
+  ``\verb!array_size()!'', ``\verb!arraysize()!'', ``\verb!size()!'' & Cet opérateur de mesure retourne un entier
+  contenant la taille du tableau du champ. Cet entier est constant si le tableau est solide.\\
+  %
+  ``\verb!hash_size()!, ``\verb!hashsize()!'' & Cet opérateur de mesure retourne un entier contenant
+  le nombre d'élément dans la table du champ. Cet entier est constant si la table est solide.\\
+  %
+  ``\verb!name()!'' & Cet opérateur retourne une chaine de caractère contenant le nom du champ,
+  une alerte est lancé si le champ ne dispose pas de nom.\\
+  %
+  ``\verb!index()!'' & Cet opérateur retourne l'index où est situé le champ,
+  une alerte est lancé si le champ ne dispose pas d'index.\\
+  %
+  ``\verb!is_read()!'', ``\verb!isread()!'' & Cet opérateur retourne un booléen indiquant si le champ courant est
+  en train d'être lu.\\
+  %
+  ``\verb!is_written()!'', ``\verb!iswritten()!'' & Cet opérateur retourne un booléen indiquant si le champ courant
+  est en train d'être écrit.\\
+  %
+  \hline
+  %
+\end{tabular}
+
+%\begin{tabular}{c|c}
+
+Un spécificateur spécifique aux opérations et fonctions est disponible,
+il s'agit du spécificateur ``pure''. Une opération pure indique un
+ensemble de chose:
+
+\begin{itemize}
+  \item Toutes les fonctions, opérations, champs appelées ou lus par
+    l'opération courante sont purs et éternels.
+  \item Aucune assignation n'est effectuée par l'opération en dehors
+    des variables locales (si celle-ci est une fonciton) et de la
+    valeur de retour. Les paramètres ne sont pas modifié si ce sont
+    des références.
+\end{itemize}
+
+Notez qu'une valeur constante est pure par définition.
+
+Il est possible d'utiliser le mot-clef ``record'' sur une fonction pure.
+Celui-ci demande à l'interprète de garder en mémoire les résultats déjà
+calculés de la fonction. Utilisez ce mot-clef avec parcimonie afin de
+ne pas stocker des résultats inutiles si votre fonction peut prendre
+une très large variété de paramètre: ils seront tous enregistré!
+
+Il n'est pas utile d'utiliser ``record'' si la fonction ne prend pas de
+paramètre: le résultat est stocké par nature grace au mécanisme
+d'optimisation lié à la constance.
+
+Un champ contenant une opération/fonction est constante. Ainsi, il n'est pas possible
+d'écraser une opération en la remplacant par une valeur ou une autre
+opération. Il est néanmoins possible d'utiliser l'opérateur d'assignation ``\verb!=!''
+sur une opération si celle-ci comporte un unique paramètre. L'opérande
+de droite est alors passée en paramètre à l'opération.
+
+Dernier détail: si vous souhaitez indiquer qu'une opération ne retourne rien,
+il vous suffit d'écrire void: l'interprète lancera une alerte si vous
+cherchez à récuperer une éventuelle valeur retournée.
+
+\subsection{Paramètres}
+
+La valeur d'un champ peut donc être fonction d'une opération.
+Cette opération peut prendre des paramètres, ceux-là sont définis à la suite
+du nom du champ:\\
+
+\verb!int Field(int x) = x + 1!\\
+
+La déclaration des variables est tout à fait similaire à la déclaration
+du contenu d'une table, à la différence qu'il est possible d'utiliser
+l'opérateur ``\verb!,!'' virgule pour chainer les déclarations.
+
+Les paramètres pouvant également être des tableaux, afin de specifier
+qu'un tableau est attendu, il est possible d'utiliser le mot-clef
+``\verb!array!'' en complément des autres mot-clefs disponibles (type,
+etc.). Ajouter des crochets à la fin du nom de la variable indique
+également qu'il s'agit d'un tableau.
+Il est de plus possible de préciser des informations à propos de
+ce tableau:
+
+\begin{itemize}
+  \item ``\verb![0-42]!'' indique une taille entre 0 et 42.
+  \item ``\verb![-50]!'' indique une taille maximale de 50.
+  \item ``\verb![84]!'' ou ``\verb![84-]!'' indique une taille minimale de 84.
+  \item ``\verb![]!'' ou une absence de crochet indique que n'importe
+    quel taille est valide. Notez que du coup, un champ n'étant
+    pas un tableau peut-être donnée et la précision ``array''
+    est purement sémantique car aucune vérification ne saurait
+    être faite.
+\end{itemize}
+
+Les paramètres pouvant également être des table, il est possible
+de specifier un type construit, cela amènera l'interprète à faire
+un test de compatibilité entre le champ envoyé et le type.
+
+Il est possible de préciser qu'un paramètre est passé par référence
+en ajoutant le symbole ``\verb!.!'' en préfixe de nom de variable.
+
+Ainsi, il est possible d'écrire:
+
+\begin{itemize}
+  \item Quelques fonctions simples:
+    \verb!void PutPixel(int pixels[], int x, int y, int w, int color) := pixels[x + w * y] = color!
+    \verb!void Factoriel(int n) := n <= 1 ? 1 : n * Factoriel(n - 1)!
+  \item Une fonction avec des paramètres par défaut:
+    \verb!pure int Mul(int x = 0, int y = 0) := x * y!
+  \item Une fonction avec des références en paramètre:
+    \verb!void Swap(int .x, int .y) := x = x ^ y, y = x ^ y, x = x ^ y!
+\end{itemize}
+
+\subsection{Tableaux}
+
+Comme vu précédemment, la déclaration d'un tableau est la suivante:\\
+
+\begin{verbatim}
+Field = [Array
+  ...
+]
+\end{verbatim}
+
+Il est possible de préciser un large ensemble de règles de manière
+à renforcer l'environnement, y compris la taille du tableau:\\
+
+\begin{verbatim}
+Field = [hard int Array[20]
+  1 2 3 4 5 6 42
+]
+\end{verbatim}
+
+Ici, un tableau comprenant 20 cellules est créé: celui-ci n'est
+pas redimensionnable, ses éléments sont des entiers constant.
+Les valeurs non précisées se voient assigner la dernière valeur
+renseignée, soit ici 42.\\
+
+Les tableaux ne sont pas exclusivement des planches de valeur!
+Les éléments indéxés sont des champs, comme le reste, ainsi il
+est même possible d'écrire:\\
+
+\begin{verbatim}
+TheArray = [Array
+  [Field
+    Data = 42
+  ]
+  [Field
+    Dance = "Jerk"
+  ]
+  [Field
+    CreditRatio = 2.1
+  ]
+]
+\end{verbatim}
+
+Nous avons créé ici un tableau contenant 3 champs indexés. Ces
+trois champs sont des tables contenant d'autres champs.
+Remarquez ici la ré-utiisation du nom ``Field'': étant
+donné que le nom n'est pas utilisé pour indexer ces noeuds,
+il est possible d'en avoir plusieurs dans le même scope
+avec le même nom et de faire ce genre de chose:\\
+
+\verb!string GetName(x) = name(TheArray[x])!\\
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\chapter{Fonctions}
+
+Ce chapitre traite des fonctions et va donc aborder les
+structures de contrôle du Dabsic au sein d'une fonction
+ainsi que les aspects non déclaratif du langage (Cela a
+déjà été fait par la partie Opération, il s'agit ici de
+le faire a fond.
+
+\section{Déclarer un champ contenant une fonction}
+
+Comme vous avez pu le voir précédemment, la déclaration
+est plutôt simple:\\
+
+\begin{verbatim}
+Type Field(Params) = [Function
+  ...
+]
+\end{verbatim}
+
+Le fonctionnement est exactement le même qu'avec une
+opération: le type de la valeur est le type de la valeur
+de retour de la fonction et il est possible de préciser
+des paramètres.
+
+\section{Remplir sa fonction}
+
+Une ligne d'instruction Dabsic s'achève sur un simple saut de ligne.
+Pas de ``\verb!;!'' à la manière du C. Si vous souhaitez chainer les opérations,
+vous pouvez utiliser l'opérateur virgule ``\verb!,!''.
+
+L'opération la plus simple à réaliser est l'écriture d'une chaine
+de caractère littérale sur la sortie standard: il suffit de l'écrire:\\
+
+\begin{verbatim}
+Main = [Function
+  "Hello, world!"
+]
+\end{verbatim}
+
+En fait, toutes les lignes d'instruction commencant par une chaine
+de caractère en dur sont considérées comme des lignes servant
+exclusivement à afficher. Un saut de ligne est ajouté automatiquement
+à la fin de chacun de ces instructions. Il est possible d'afficher
+d'autres choses que des chaines par la suite: il suffit d'écrire
+ce qu'on veut afficher séparé par des virgules:\\
+
+\begin{verbatim}
+Age = 42
+Main = [Function
+  "Bonjour, j'ai ", Age, " ans!"
+]
+\end{verbatim}
+
+Il est possible de changer de sortie pour les données écrites de
+cette manière, il suffit pour cela d'utiliser l'option --straight-output=value
+ou value est un file descriptor.
+
+Je rappelle que l'écriture de commentaires se fait avec le caractère ``\verb!\!''.
+Le commentaire s'arrête à la fin de la ligne.
+
+\subsection{Déclarer des variables}
+
+Une variable est un champ dont l'existence est lié à l'execution
+d'une fonction. Une fois la fonction terminée, la variable disparait.
+
+La déclaration d'une variable est identique à celle d'un champ, à l'exception
+du fait qu'elle à lieu dans une fonction:
+
+\begin{verbatim}
+Main = [Function
+  i
+
+  i = 42
+  "J'ai ", i, " ns"
+  Return ExitSuccess
+]
+\end{verbatim}
+
+Déclarer ses variables est obligatoire, à moins de
+spécifier \verb!--var-declaration-is-optionnal!.
+
+\subsection{Opérations}
+
+Il est possible bien entendu d'écrire des opérations sur une ligne
+d'instruction:
+
+\begin{verbatim}
+Main = [Function
+  string i
+
+  string = (42 + 37 * 3) # " petits cochons\n"
+  Print(i)
+  Return ExitSuccess
+]
+\end{verbatim}
+
+\subsection{Scopes}
+
+Différents scopes ou ``point de vue'' sont considérable depuis
+l'intérieur d'une fonction. Qu'est ce que cela change?
+
+C'est très simple: lorsque nous cherchons à accéder à une
+variable, à un champ, il arrive que des symboles soient
+identique, et dans ces cas la, il est important de définir
+qui a la priorité.
+
+A la manière du C, en Dabsic, c'est l'élément le plus proche
+qui a la priorité. Voici l'ordre:
+
+\begin{itemize}
+  \item Variables locales d'une fonction.
+  \item Champs issu du point de vue articiel (Mot-clef ``\verb!With!'').
+  \item Champs issu du point de vue du champ contenant la fonction.
+  \item Champs issu du point de vue de la racine.
+\end{itemize}
+
+Si nous sommes dans ce cas-ci:\\
+
+\begin{verbatim}
+Field = 84
+[Node
+  Field = 21
+  Func = [Function
+    Field = 42
+
+    "My value is ", Field
+  ]
+]
+\end{verbatim}
+
+Executer Func affichera 42. Si l'on retire juste la
+déclaration de variable locale, alors cela affichera 21.
+Si on retire également \verb![].Node.Field!, alors cela affichera
+84.
+    
+\section{Les conditions}
+
+\subsection{Conditions métier}
+
+Les structures de contrôle classiques sont bien entendu
+disponible. Voici la syntaxe du bloc conditionnel:\\
+
+\begin{verbatim}
+Field(x) = [Function
+  If x == 0
+    ``x vaut 0''
+    Return
+  EndIf
+  If x == 1
+    ``x vaut 1''
+  ElseIf (x == 2)
+    ``x vaut 2''
+  Else
+    ``x vaut '', x
+  EndIf
+]
+\end{verbatim}
+
+Les mot-clefs ``\verb!if!'' et ``\verb!si!'' sont disponibles pour
+ouvrir la condition. ``\verb!elseif!'', ``\verb!elif!'', ``\verb!sinonsi!'',
+``\verb!ousi!'' pour chainer une condition et ``\verb!else!'', ``\verb!sinon!''
+pour le cas où toutes les conditions précedentes étaient
+fausses.
+
+Les mot-clefs ``\verb!endif!'', ``\verb!finsi!'' ferment le bloc
+conditionnel.
+
+\subsection{Conditions d'erreur}
+
+Il existe en Dabsic un cas particulier de condition:
+les conditions de rattrapage d'erreur. Celle-ci sont
+une réponse à un cas fréquent source d'erreur dans de
+nombreux langages.
+Prenons comme exemple le cas du C en programmation système:
+
+\begin{itemize}
+  \item Une variété de fonctions retourne un état,
+    à la manière des appels système et donc retourne 0 en
+    cas de succès et une autre valeur (souvent négative,
+    typiquement -1) en cas d'erreur.
+  \item Une variété de fonctions retourne un entier
+    dont la valeur d'erreur est 0.
+  \item Une variété de fonctions retourne un entier
+    dont aucune valeur n'est une valeur d'erreur
+    et il faut vérifier errno.
+\end{itemize}
+
+Toutes ces fonctions retournent un int!
+
+Bien entendu, il est possible de vérifier errno directement
+et systématiquement, mais cela entre en conflit avec
+une habitude d'écriture solide et répandue, à savoir:\\
+
+\begin{verbatim}
+int main(void)
+{
+  int fd;
+
+  if ((fd = open("file", O_RDONLY)) == -1)
+    return (EXIT_FAILURE);
+  return (EXIT_SUCCESS);
+}
+\end{verbatim}
+
+Cette manière d'écrire combine la partie active et
+la partie gestion d'erreur de manière concise.
+
+Notez que \verb!EXIT_FAILURE! va valoir 1 sur une large
+variété de système et \verb!EXIT_SUCCESS! 0, ce qui est
+encore une posture différente de celles évoqués
+précédemments...
+\\
+Plusieurs langages tel Go ont pris la décision
+de permettre aux fonctions de renvoyer plusieurs
+valeurs. De même, en C++, il est possible de renvoyer
+des pairs, par exemple.
+Je trouve, personnellement, que bien que ces solutions
+présentent un certain interet, je ne parviens pas à
+me faire au sens qu'elles auraient en C, à savoir,
+faire retourner d'une fonction une structure a deux éléments
+contenant deux informations...
+Le concept, l'idée de errno me plait et si il
+présente certains désavantages peut certainement
+s'améliorer dans le cadre d'un langage de plus
+haut niveau.
+\\
+De ce fait, afin de régler ce problème, Dabsic met en place
+une méthode de bloc conditionnel spécifique à
+la gestion d'erreur, ainis, on peut écrire:\\
+
+\begin{verbatim}
+string ReadFile(string file) = [Function
+  String str
+  Int fd
+
+  OnError fd = Open(file)
+    "Cannot open file", file
+    Return ""
+  EndError
+  ...
+  Return str
+]
+\end{verbatim}
+
+Ici, nous avons une fonction qui prend en paramètre une
+chaine de caractère contenant un nom de fichier et
+qui tente de l'ouvrir.
+
+La fonction open dispose de deux sorties: sa valeur
+retournée et la valeur d'erreur. Le bloc conditionnel
+``\verb!OnError!'' fonctionne comme un ``\verb!If!'', à la différence
+qu'il travaille sur la valeur d'erreur... en terme
+simple, il va donc vérifier errno.
+
+Il y a tout de même une difference avec une simple
+verification de errno dans le sens où il n'y a pas
+besoin d'écraser ce ``\verb!errno!'' en cas du succès pour
+s'assurer d'une compréhension du langage, des mot-clefs
+sont présent pour expliciter un certain ensemble de choses.
+
+\begin{itemize}
+  \item ``\verb!Return!'' a en effet un sens supplémentaire
+    par rapport aux autres langages: il signifie renvoyer
+    une valeur ET tout s'est bien passé.
+    
+  \item ``\verb!Report!'' ne retourne pas de valeur mais indique
+    qu'une erreur s'est produite et qu'aucun traitement
+    (excepté des messages d'erreurs) n'ont été effectué
+    pour récuperer sur cette erreur.
+
+    Tous les messages écrits par ailleurs entre une
+    erreur jusqu'à un ``Return'' sont loggés par Dabsic
+    comme faisant partie de l'explication de l'erreur.
+
+    ``\verb!Report!'' prend une adresse vers un objet de type
+    ``\verb!Error!'' en paramètre. Plus d'informations vous
+    seront donné sur cet objet plus bas dans ce livre.
+    Il est possible d'omettre ce paramètre afin de
+    renvoyer le code erreur de la fonction ayant échoué
+    ainsi que diverses informations.
+
+  \item ``\verb!StartReport!'' demande l'ouverture du logging
+    d'erreur: Dabsic comprend qu'on passe en traitement
+    d'erreur et va se mettre à logger les messages.
+    ``\verb!Report!'' ouvre également le logging d'erreur, si
+    il n'est pas déjà ouvert.
+    L'information du fichier et de la ligne de l'erreur
+    est automatiquement enregistrée lorsque le logging
+    s'ouvre.
+    Il est possible, tout comme avec ``\verb!Report!'' de
+    passer en paramètre un objet. L'unique différence
+    étant qu'on ne quitte pas la fonction.
+  \item ``\verb!StopReport!'' force l'arrêt du logging d'erreurs.
+    Comme vu précédemment, ``\verb!Return!'' provoque le même
+    effet.
+\end{itemize}
+
+Voici un exemple:\\
+
+\begin{verbatim}
+int Open = [Function
+  ... Do things ...
+  If read_rights == false
+    StartReport SystemError.PermissionDenied
+    "Permission denied"
+    Report
+  EndError
+  ... Do things ...
+  Return fd
+]
+
+string LoadFile(string file) = [Function
+  int fd
+
+  OnError fd = Open(file)
+    "Cannot open file", file
+    Report 
+  EndError
+]
+
+int LoadNumberFromFile(string file) = [Function
+  string content
+
+  OnError content = LoadFile(file)
+    "Cannot load file", file
+    Report MyGame.Cannot
+  EndError
+]
+
+int Main(string argv[]) = [Function
+  int nbr
+
+  If size(argv) <> 2
+    "This program needs one parameter."
+    Return ExitFailure
+  EndIf
+  OnError nbr = LoadNumberFromFile(argv[1])
+    "Cannot retrieve number from file ", argv[1]
+    Return ExitFailure
+  EndError
+  Return nbr    
+]
+\end{verbatim}
+
+Si le main reviens dans la fonction l'ayant appellé avec un Report,
+l'interprète lèvera une alerte annoncant qu'une erreur n'a pas
+été traitée.
+
+Plus d'informations vous seront donné par la suite sur
+la gestion d'erreur, principalement les types et autres
+mot-clefs disponibles à employer. (Par exemple, parcourir
+les logs, récuperer le code erreur, le mot clef ``throw'',
+l'enrichissement progressif et automatique du prototype
+en fonction des erreurs envoyés non gérées, etc.)
+
+\subsection{Filtre}
+
+Il arrive que dans un programme, un très large de choix
+soit possible pour une valeur. Dans ces cas là, il n'est
+pas rare de trouver une série de bloc conditionnels se
+chainant ou une fourchette type ``switch'' en C.
+
+Personnellement, ma préférence va en général sur le
+tableau de pointeurs sur fonctions, et ma valeur est
+très souvent de ce fait une énumération. Cela est valable
+pour mon C et mon C++, néanmoins, il existe dans d'autres
+langages des réponses que je trouve également interessante.
+
+Prenons le cas de trois langages extremement éloigné autant
+dans leurs philosophie applicative que dans leur génèse:
+Microsoft Visual Basic 6, OCaml et le C.
+
+Nous allons programmer une suite de fibonacci un peu
+spéciale: elle utilisera switch et renverra -1 si le
+paramètre est supérieur à 10 et inférieur à 20. -2 si
+elle est supérieur a 20
+
+Commencons en C:\\
+
+\begin{verbatim}
+int fibo(int n)
+{
+  if (n > 20)
+    return (-2);
+  if (n > 10)
+    return (-1);
+  switch (n)
+  {
+    case 0:
+    case 1:
+      return (1);
+    default:
+      return (fibo(n - 1) + fibo(n - 2));
+  }
+  return (0); /* Never used */
+}
+\end{verbatim}
+
+En OCaml, il est possible de construire un filtre pour une
+valeur, cela ressemble à ceci:\\
+
+\begin{verbatim}
+let rec fibo n =
+  if (n > 10) (
+    if (n > 20)
+      -2
+    else
+      -1
+  ) else match n with
+    | 0 -> 1
+    | 1 -> 1
+    | _ -> fibo(n - 1) + fibo( - 2)
+    ;;
+\end{verbatim}
+
+En Visual Basic:\\
+
+\begin{verbatim}
+Function Fibo(ByVal n As Integer) As Integer
+  I as Integer
+
+  Select Case
+    Case Is > 20
+      I = -2
+    Case 10 to 20
+      I = -1
+    Case 0, 1
+      I = 1
+    Case Else
+      I = Fibo(n - 1) + Fibo(n - 2)
+  End Select
+  Return I
+End Function
+\end{verbatim}
+
+Faisons les comptes:
+
+\begin{itemize}
+  \item En C, il est possible de traiter
+    avec le même code deux cas - d'un autre coté, pour
+    effectuer des traitements séparés, il faut utiliser
+    ``\verb!break!'' ou alors faire comme ici, utiliser ``\verb!return!''.
+    Les cas liés à 20 et a 10 doivent être traité séparement
+    car il n'est pas possible de traiter des étendues de valeur
+    en C avec ``\verb!switch!''.
+    De plus, cela n'est pas mit en relief ici, mais il
+    n'est pas possible de traiter autre chose que des
+    entiers avec ``\verb!switch!''.
+    Pour finir, on connait quelques applications originales
+    mais détournées du switch, tel que la fameuse Duff's device.
+    
+  \item En OCaml, il est possible de traiter aisément
+    deux cas séparés sans avoir à gérer un retour manuellement,
+    que cela soit avec break ou return. (La nature fonctionnelle
+    de Ocaml jouant bien entendu un fort rôle).
+    De plus, le filtre d'OCaml gère également de nombreux
+    types.
+    Néanmoins, il n'est pas possible de traiter des
+    étendues de valeur.
+
+  \item En Visual Basic 6, chaque cas est parfaitement
+    séparé, comme en OCaml. De nombreux types peuvent
+    être traités et il est possible de traiter des
+    étendues de valeur.
+    Il est même possible à la manière du C de spécifier
+    plusieurs valeurs pour un même traitement, il suffit
+    d'utiliser ``\verb!Case!'' suivit des valeurs séparés par
+    des virgules.
+\end{itemize}
+
+Bien entendu, il reste préférables d'utiliser un tableau de
+pointeurs sur fonctions dans de très nombreux cas car c'est
+plus synthétique et que la complexité de l'implémentation
+ne laisse aucun doute... Néanmoins le reste du temps, lorsque
+nous avons un certain nombre de valeurs à vérifier ainsi
+que des étendues, la syntaxe de Visual Basic 6 est à mon
+sens la meilleure. Evidemment, elle ne permet pas les mêmes
+optimisations, mais pour Dabsic, cela ne devrait pas être
+un problème.
+
+Voici donc la syntaxe en Dabsic:\\
+
+\begin{verbatim}
+Fibo(int n) = [Function
+  int value
+
+  value = Switch (n)
+    Case Is > 20
+      Return -20
+    Case 10 To 20
+      Return -10
+    Case 0, 1
+      Return 1
+    Last
+      Return Fibo(n - 1) + Fibo(n - 2)
+  EndMatch
+  Return 1
+]
+\end{verbatim}
+
+\subsection{Point de vue temporaire}
+
+En C, C++, et dans beaucoup d'autres langages... et a priori,
+plus fortement même dans Dabsic, il n'est pas rare d'avoir à
+accéder à un élément dans une hiérarchie profonde. Or, tel que
+l'a dit Linus (Un homme ayant eu suffisament de volonté pour
+créer son propre système d'exploitation malgré les remarques
+du type ``Pourquoi ne pas travailler plutôt avec X (Au pif,
+GNU ou n'importe quel BSD de l'époque)'', ou ``Pourquoi
+réinventer la roue? (Comme si le pneu avait été inventé direct)''):\\
+
+\begin{verbatim}
+[..] Things like twenty lines of
+
+foobar[(index + 1) % BLAH]->spork.vomit[12]->field_name = <expr>;
+\end{verbatim}
+
+with the only difference in the \verb!field_name!, except for one line where
+we have a typo and see 11 instead of intended 12, are responsible for quite
+a few of such overruns.\\
+
+Ce genre de construction est sujette aux erreurs, sans parler
+du fait que sans manipulations du compilateur (si elles existent),
+un tel code serait sous-optimal du fait de ses répétitions.
+
+Ainsi, la solution la plus habituelle consiste à créer une
+variable locale qui retiendra la destination et à s'en servir
+comme ``raccourci'', ainsi:\\
+
+\begin{verbatim}
+MyCpp().Really()[47].Looks->Like.Java = -42;
+MyCpp().Really()[47].Looks->Like.Shit = -42;
+\end{verbatim}
+
+Devient:\\
+
+\begin{verbatim}
+Type &big = MyCpp().Really()[47].Looks->Like;
+
+big.Java = -42;
+big.Shit = -42;
+\end{verbatim}
+
+Ce qui est plus court, moins sujet à l'erreur et plus rapide.
+Cette pratique est tout à fait correcte, néanmoins, je tiens
+à ajouter un autre design remplissant cette tache. Ce design
+provient lui-aussi de Visual Basic.
+
+Etant donné que Dabsic propose une structure hiérarchique
+plutôt simple où tout est dans quelque chose, jusqu'à remonter
+à la racine, il est possible d'effectuer ceci:\\
+
+\begin{verbatim}
+[I
+  [Have
+    [A
+      [Very
+        [Long
+          [Hiearchy
+            Word
+            AnotherWord
+            [Again
+              DeepDeepness
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+]
+
+Main = [Function
+  With I.Have.A.Very.Long.Hierarchy
+    Word = 42
+    AnotherWord = 84
+  EndWith
+]
+\end{verbatim}
+
+Ce qui vous rappellera certainement ``\verb!using!'' en C++ mais
+est syntaxiquement plus proche du propre mot-clef ``\verb!With!''
+de Visual Basic.
+
+Il est possible d'inclure des blocs ``\verb!With!'' dans d'autres,
+mais dans ce cas, attention: cela déplace le point de vue
+à nouveau! De ce fait, certains appels ne sont plus possible,
+contrairement à ``\verb!using!'' qui permet de mélanger plusieurs
+points de vue:\\
+
+\begin{verbatim}
+Main = [Function
+  With I.Have.A.Very.Long.Hierarchy
+    Word = 42
+    AnotherWord = 84
+    With Again
+      DeepDeepness = 168 'Valide
+      Word = -42 'Invalide!
+    EndWidth
+  EndWith
+]
+\end{verbatim}
+
+L'appel au champ Word devient invalide car le point dans vue
+a été déplacé dans Again par ``\verb!With!''.
+
+Ce point de vue est un point de vue supplémentaire, s'ajoutant
+aux autres: le point de vu local, associé à la position
+de la fonction reste valide, de même que le point de vue
+artificiel lié à l'héritage si vous êtes dans un objet (Voir plus bas)
+
+\section{Les boucles}
+
+\subsection{Boucle simple}
+
+Comme dans tous langage de programmation, il existe en
+Dabsic le moyen d'effectuer un traitement répétitif.
+Voici une boucle simple:\\
+
+\begin{verbatim}
+Field(int n) = [Function
+  int i
+
+  i = 0
+  While i < n do
+    "n='', i
+    i += 1
+  EndWhile
+]
+\end{verbatim}
+
+La foncton prend en paramètre un nombre de tour à faire et
+affiche a chaque tour le numéro du tour.
+
+Le mot-clef ``\verb!do!'' n'est pas optionnel. Il permet
+la distinction entre cette boucle et la boucle détaillée
+dans la partie suivante.
+
+Les mot-clefs ``\verb!while!'', ``\verb!tantque!'' sont disponibles
+pour ouvrir le bloc de la boucle, ``\verb!do!'' et ``\verb!repete!'' pour
+fermer la condition, tandis que ``\verb!endwhile!'',
+``\verb!wend!'' et ``\verb!fintantque!'' ferment la boucle.
+
+\subsection{Boucle à un cas minimum}
+
+Dans une boucle simple, le test pour boucler est effectuée
+dès le départ, avant même l'entrée dans la boucle.
+Il est parfois utile de placer ce test à la fin, de manière
+à assurer l'execution de l'intérieur de la boucle au moins
+une fois:\\
+
+\begin{verbatim}
+Field(int n) = [Function
+  int i
+
+  i = 0
+  Do
+    ``n='', i
+    i += 1
+  While i < n
+]
+\end{verbatim}
+
+Cette fonction affichera toujours au moins ``\verb!n=0!''.
+
+\subsection{Boucle à intervale}
+
+La boucle à intervale combine les trois aspects
+les plus fréquents des boucles: l'initialisation,
+la comparaison et la modification:\\
+
+\begin{verbatim}
+Field(int n) = [Function
+  int i
+
+  For i = 0 To i < n Step n += 1
+    ``n='', i
+  EndFor
+]
+\end{verbatim}
+
+Cette fonction fait exactement la même chose que cette
+de la boucle simple décrite précédemment mais est plus
+concise.
+
+Les mot-clefs ``\verb!for!'' et ``\verb!pour!'' peuvent ouvrir la boucle,
+``\verb!to!'' et ``\verb!à!'' préfixent la condition, ``\verb!step!'' et ``\verb!pas!''
+déterminent la modification à effectuer sur la variable
+de boucle et enfin ``\verb!endfor!'', ``\verb!next!'', ``\verb!finpour!'' ou
+``\verb!suivant!'' terminent la boucle.
+
+\subsection{Boucle sur contenu}
+
+Une boucle sur contenu est une manière de parcourir
+une table ou un tableau de manière très simple, sans
+avoir à définir de variables ou de pas:\\
+
+\begin{verbatim}
+Array = [Array 0 1 2 3 4 5 ]
+
+Count(a) = [Function
+  int i = 0
+
+  Foreach[] a as b
+    i += b
+  Next
+  "La somme des éléments du tableau ", name(a) , " est ", i, "."
+]
+
+Main() = [Function
+  Count(Array)
+  Return ExitSuccess
+]
+\end{verbatim}
+
+Cette fonction affiche ``Le tableau Array comporte 6 elements.''.
+L'itération se fait sur les éléments du tableau si foreach
+est suivi de crochets, sinon il se fait sur la table.
+
+``\verb!foreach!'', ``\verb!pourchaque!'' peuvent être utilisés au choix.
+Le bloc est refermé de la même manière qu'un bloc ``\verb!for!''.
+Le mot clef ``\verb!as!'' ou ``\verb!aka!'' permettent de definir le nom
+de l'élément actuel de l'itération.
+
+Les mot-clef ``\verb!forall!'' et ``\verb!pourtout!'' itèrent sur tout
+le tableau et toute la table.
+
+Notez que l'ordre d'itération n'est garanti que pour
+``\verb!foreach[]!'' où l'ordre de la table est respecté.
+Dans les autres cas, l'ordre est indéfini.
+
+\section{Execution parrallèle}
+
+\subsection{Dispatcher du travail}
+
+Il est possible en Dabsic de demander une execution en
+parrallèle, dans les faits, il s'agit d'enregistrer un ordre
+dans une file d'attente inspecté par une reserve de fils
+d'execution. L'exemple ci-dessous vous montre comment lancer
+une tache sur un ensemble de donnée:\\
+
+\begin{verbatim}
+Array = [Array 0 1 2 3 4 5 6 7 8 9 ]
+
+void Treatment(array A, int n) = [Function
+  int total
+  int i
+
+  For i = n, total = 0 To i < size(A) Step i += 1
+    total += A[i]
+  Next
+  ``Result is ``, total
+]
+
+Main() = [Function
+  Foreach[] Array as i
+    // Treatment(Array, index(i)) 'Cette ligne de code est lancée en parrallèle
+  Next
+  Return ExitSuccess
+]
+\end{verbatim}
+
+L'opérateur ``\verb!//!'' indique le lancement en parrallèle d'une ligne de code.
+Dans l'exemple, cette ligne contient un appel de fonction, de ce fait,
+la boucle du main arrive très vite à sa fin étant donné qu'elle ne fait
+qu'empiler des demandes de traitement. Les différents fils d'execution
+travaillent en arrière pour accomplir les demandes.
+
+``\verb!Return!'' revet ici un sens supplémentaire: il va attendre que les fils d'execution
+aient accompli leur tache avant de quitter la fonction.
+``\verb!Report!'', au contraire, va les arrêter de force avant de quitter la fonction.
+
+Il est possible de simplement les attendre avant de continuer l'execution
+avec le mot clef ``\verb!WaitTasksCompletion!'', ou de forcer l'arret de leur traitement
+avec ``\verb!StopTaskCompletion!''. Les mot-clefs ``\verb!AttendFinTravail!'' et ``\verb!ArrêteTravail!''
+peuvent également être utilisé.
+
+La demande d'attente peut optionnellement prendre en paramètre un temps maximal.
+Cette demande s'utile par ailleurs comme une fonction et renvoit le temps non
+consommé. Par exemple, si on lui passe 5 et que les fils ont terminé après 2.2 secondes,
+alors 2.8 sera retourné. Si aucun pramètre n'est envoyé, 0 sera toujours renvoyé.
+
+Le mécanisme d'execution en parrallèle est localisé: si on lance une execution
+parrallèle dans une execution parrallèle, seule la locale est impactée par
+les éventuelles attentes ou demande d'arret.
+
+Il est possible d'annuler de force le mécanisme liant les fils d'execution
+aux ``\verb!Return!'' et ``\verb!Report!'' locaux, cela en utilisant le symbole ``\verb|/!/|'' à la place de ``\verb!//!''.
+En ce cas, les fils d'execution sont lié au programme seul.
+
+Un fil d'execution s'éteint une fois la ligne de code avec laquelle il était
+associé executé. Il est possible également à l'interieur du fil d'execution
+de demander explicitement l'arrêt du fil avec le mot-clef ``\verb!StopCurrentThread!''
+ou ``\verb!ArrêtFilCourrant!''.
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\chapter{Politiques d'accès}
+
+\section{Scope}
+
+Un scope Dabsic est le contenu entier d'un champ en tant
+qu'enfant de ce champ. Il est possible de limiter l'accès
+à certains champs en fonction du champs d'où la tentative
+d'accès est effectuée. Ces limitations passent par l'emploi
+de mot-clefs associés:
+
+\begin{itemize}
+  \item ``\verb!hidden!'' indique que le champ ne peut-être ni
+    lu ni écrit, ni listé ailleurs que depuis le scope courant.
+    C'est exactement comme si il n'existait pas, à l'exception
+    du fait que toute tentative pour créer un champ du même
+    nom se soldera par un échec: l'interprète lancera une
+    alerte et le champ ne sera pas créé.
+  \item ``\verb!slot!'' indique que le champ ne peut-être écrit
+    que dans le scope courant et est visible.
+  \item ``\verb!peek!'' indique que le champ ne peut-être lu
+    que par le scope courant et est visible.
+\end{itemize}
+
+\section{Utilisateurs}
+
+Il est possible de limiter l'accès à un noeud (et à son
+contenu quel qu'il soit) à partir d'un modèle plus fin
+que les limitations lié au scope: au lieu d'une position,
+c'est l'agent (l'incarnation d'un fil d'execution) ou
+son groupe qui sera le critère discriminant.
+
+\subsection{Etablir des droits}
+
+Pour parvenir à ce résultat, nous allons définir un champ
+spécial: il s'agit bien d'un champ normal, à l'exception
+de son nom qui est imposé, et non pas d'une syntaxe spéciale.
+D'une certaine façon, il est possible de considérer cet
+aspect comme un aspect integré à Dabsic au lieu d'être
+Dabsic lui-même: néanmoins il s'agit bien toujours du langage
+et ce qui va être configuré aura un impact direct sur
+les manipulations habituelles possibles.
+
+``\verb!.access!'' permet de définir des accès fins:
+le noeud va contenir des champs dont les noms
+peuvent être des agents ou des possesseurs
+de tickets. La valeur de ses champs peut-être noté de la
+façon suivante:\\
+
+\begin{verbatim}
+[.access
+  Player = Read, Write
+]
+\end{verbatim}
+
+Ci-dessous, les autorisations pouvant être utilisé,
+elles vous rappelleront certainement les ACL:
+
+\begin{itemize}
+  \item ``\verb!Administrate!'' indique qu'il est possible de changer les droits
+  \item ``\verb!Extend!'' indique qu'il est possible d'ajouter des champs
+  \item ``\verb!Crop!'' indique qu'il est possible d'effacer des champs
+  \item ``\verb!Read!'' indique que la lecture est possible.
+  \item ``\verb!Write!'' indique que l'écriture est possible.
+  \item ``\verb!Visible!'' indique que le champ est visible,
+    il apparait lorsqu'on liste le noeud parent ou
+    lorsqu'on le parcoure.
+  \item ``\verb!Execute!'' indique qu'il est possible d'appeller
+    des fonctions.
+  \item ``\verb!All!'' donne tous les droits
+  \item ``\verb!None!'', ``\verb!Nothing!'' explicite l'absence complète de droit
+\end{itemize}
+
+Il est tout à fait possible d'établir un profil type et
+de construire une référence vers ce profil. Ce profil
+devra être préfixé d'un ``\verb!.!'', comme le champ ``\verb!.access'!'
+et se situer a coté des noms d'agents, de groupes et
+possesseurs de tickets.
+
+De plus, il est possible de définir un noeud supplémentaire
+``\verb!.exception!'' indiquant des droits écrasant les droits
+précédents. Cela peut-être utile pour établir une blacklist:
+
+\begin{verbatim}
+[.access
+  .assistants = Visible, Read, Write, Extend, Crop, Execute
+  .leader = All
+  .old = Visible, Read, Extend, Execute
+  Thor = .leader
+  Iopi = .old
+  Koala = .assistants
+  Authorized = .assistants
+]
+[.exception
+  Banned = Nothing
+  UnpopularKoala = Read, Execute
+]
+\end{verbatim}
+
+En cas de spécification de droits pour un ticket suivi ou
+précédé d'une spécification de droits pour un agent, les
+droits assignés à l'agent sont prioritaires au sein
+d'un même block ``\verb!.access!'' ou ``\verb!.exception!''.
+
+Donc, sachant que, par exemple:
+
+\begin{itemize}
+  \item Thor et Iopi ont tous les deux un ticket Koala
+  \item Tous les possesseurs du ticket UnpopularKoala ont également
+    un ticket Koala.
+\end{itemize}
+
+Voici les droits d'accès finaux:
+
+\begin{itemize}
+  \item Thor peut tout faire.
+  \item Iopi peut voir, lire, ajouter des éléments et executer des fonctions
+  \item Les tickets koalas en général peuvent tout faire sauf administrer
+  \item Les tickets koalas impopulaires peuvent lire et executer des fonctions,
+    mais il faut qu'ils sachent quoi faire parcequ'ils ne peuvent
+    pas voir ce qu'il se passe!
+  \item Les possesseurs du ticket ``\verb!Authorized!'' peuvent faire comme
+    les koalas.
+  \item Les possesseurs du ticket ``\verb!Banned!'' n'ont accès à rien et
+    n'ont aucune visibilité.
+\end{itemize}
+
+Notez que les noms des utilisateurs et tickets doivent tous
+être unique, y compris entre eux. Une alerte sera lancé par l'interprète
+en cas d'erreur. La priorité donnée en cas d'erreur est ticket > agent.
+
+Différents tickets définis par le système sont détaillés plus bas,
+ces tickets donnent des accès inaltérable et agissant partout.
+
+\subsection{Créer des agents et des tickets}
+
+Nous avons défini des droits basé sur des agents/utilisateurs
+ainsi que des groupes. Nous avons dans l'exemple précédent
+deux agents: Thor et Iopi ainsi que deux groupes: Koala et
+UnpopularKoala.
+
+La définition des agents est faite dans le champ ``\verb!.agents!''
+situé à la racine. Les valeurs passés aux agents
+sont les tickets. Voici un exemple:\\
+
+\begin{verbatim}
+[.agents
+  Damdoshi
+  Koneko = Cat
+  Admin = Administrator
+]
+\end{verbatim}
+
+Nous avons donc trois utilisateurs, Admin, Koneko et Damdoshi.
+Koneko dispose du ticket ``Cat'' qui est un ticket défini
+par l'auteur du programme.
+
+Admin dispose du ticket ``Administrator'', qui est un ticket
+établit par Dabsic et qui donne les droits d'accès sur
+l'intégralité de l'arbre en dehors de toute limitation de scope.
+Plusieurs tickets existent par défaut:
+
+\begin{itemize}
+  \item ``Moderator'' permet de distribuer et reprendre des tickets,
+    d'ajouter, retirer et modifier des groupes et agents à
+    l'exception du ticket ``Master''.
+  \item ``Administrator'' donne tous les droits d'accès lié
+    aux utilisateurs, groupes et tickets. Il permet également
+    à un agent de devenir un autre agent.
+  \item ``Developer'' donne tous les droits d'accès lié
+    aux scopes ou à l'héritage.
+  \item ``Monitor'' donne tous les droits d'accès lié au
+    réseau.
+  \item ``Master'' est un ticket cumulant ``Moderator'',
+    ``Administrator'', ``Developer'' et ``Monitor''. Il
+    ne peut y avoir qu'un seul ``Master'' distribué et
+    cela doit être fait en dur. Notez que disposer
+    d'un ``Master'' n'est pas obligatoire.
+\end{itemize}
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\chapter{Réseau}
+
+L'un des points les plus interessant de Dabsic est sa
+mise en réseau automatique. Il s'agit tout simplement
+de déployer l'interprète en mode démon en lui passant
+un programme. L'interprète va alors ouvrir deux prises
+réseau sur le port 55989 (\verb!0xDAB5!) en TCP et UDP en écoute.
+
+Le lancement en serveur s'effectue avec l'option \verb!--network!,
+en tant que démon avec \verb!--daemon!. Les ports peuvent être
+modifiée avec \verb!--tcp-socket=port! et \verb!--udp-socket=port!.
+
+Qui dit serveur Dabsic dit également client Dabsic.
+Le lancement en client se fait avec \verb!--ip=ip --tcp-port=n!
+et \verb!--udp-port=m!, les deux précisions de port étant
+optionnel (par défaut, les deux valent 55989).
+
+Le TCP sert à faire transiter des données en masses,
+tandis que l'UDP fait transiter l'information de
+changement ponctuel ou d'obsolescence.
+
+\section{Agent réseau}
+
+Un agent réseau peut-être défini dans l'environnement
+Dabsic, il s'appelle tout simplement ``\verb!Network!''.
+
+Cet agent est celui qui est utilisé par tous ceux qui
+se connectent. L'état dans lequel il se trouve doit
+leur permettre ensuite de s'autentifier comme étant
+un autre agent: un joueur, un modérateur, etc.
+
+\section{Scope}
+
+Il existe un spécificateur réseau venant s'ajouter
+à tous les autres spécifiateurs: il s'agit de ``\verb!local!''.
+
+``\verb!Local!'' signifie que chaque agent instance d'un agent
+dispose de sa propre copie. (De ce fait, )
+
+``\verb!Shared!'' signifie que chaque type d'agent dispose
+de sa propre copie. Les données sont donc sur le serveur.
+
+Tous les autres champs sont partagés par défaut et ses
+données sont donc sur le serveur.
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\chapter{Orienté objet}
+
+Dabsic dispose de mécanismes généralement associé à la
+programmation objet. Vous avez déjà vu qu'il était possible
+de limiter l'accès à certains champs d'un noeud à l'aide
+de mot-clefs, cela sans pour autant disposer d'une sémantique
+de type objet.
+
+Il est possible d'aller plus loin.
+
+Pour commencer, qui dit objet dit déclaration. Jusqu'ici,
+bien que nous ayons parlé de types construit, déclaration
+était synonyme d'instanciation.
+
+\section{Déclarer un type}
+
+Pour déclarer un type, il suffit de faire comme d'habitude:
+
+\begin{verbatim}
+[Pair
+  First
+  Second = 42
+]
+\end{verbatim}
+
+Nous avons défini un type autant qu'une instance appellé
+``Pair'' comprenant deux attributs ``First'' et ``Second''.
+``Second'' dispose d'une valeur par défaut qui est 42.
+Nous pouvons donc écrire maintenant:\\
+
+\begin{verbatim}
+[struct Pair PseudoAge
+  First = "Pseudo"
+  Second = 27
+]
+\end{verbatim}
+
+Notez que l'absence de définition de type dans la déclaration
+permet à l'assignation d'être correcte. Par ailleurs, il aurait
+été tout à fait possible de ne pas mettre un entier mais autre
+chose en ``Second'' car même si la valeur par défaut est un entier,
+le champ n'est pas ``strict''.
+
+Evidemment, je recommande fortement que les types soient
+éternaux, constant et dur (``\verb!eternal!'', ``\verb!const!'', ``\verb!hard!'')
+et cela récursivement (``\verb|!|'').
+Vous pouvez pour cela utiliser le mot-clef valise ``\verb!declare!''!
+
+Il est également possible d'ajouter ``\verb!named!'' de manière
+à indiquer que le type est fortement lié à son nom et que les compatibilités
+implicites lié au contenu du type avec d'autres types doivent être refusée.
+
+``\verb!declare!'' a une autre propriété: Les champs auquel il est
+spécifié ``\verb!declare!'' sont non executable et ne provoqueront
+pas d'alertes si certaines fonctions ne sont pas implémentés.
+(Voir plus bas, les fonctions virtuelles pures en Dabsic)
+\\
+
+\begin{verbatim}
+[declare Pair
+  First
+  Second
+]
+\end{verbatim}
+
+Est ainsi l'équivalent de :\\
+
+\begin{verbatim}
+[declare Pair
+  First
+  Second
+]
+\end{verbatim}
+
+Pour terminer, il est bien entendu possible d'étendre le champ
+du type en ajoutant des champs à l'intérieur. Ces champs
+n'entrent pas en compte lorsqu'il s'agira de considérer
+ce champ comme étant du type original : autrement dit, qui
+peut le plus peut le moins.
+
+\section{L'encapsulation}
+
+Il est possible d'encapsuler des champs à la manière du C++.
+
+\begin{itemize}
+  \item ``\verb!private!'' : Il est possible de rendre un champ
+    privé, c'est à dire invisible, sans possibilité de lecture
+    ni d'écriture. Il s'agit d'un simple synonyme de ``hidden''
+    en Dabsic.
+  \item ``\verb!protected!'' : Le champ est ``\verb!private!'' sauf pour
+    les champs dont le type est un dérivé du type courant.
+    Plus de détails dans la section ``Héritage''.
+  \item ``\verb!public!'' : Le champ conserve ses droits tel quel,
+    c'est le comportement par défaut, donc ce mot-clef ne
+    devrait pas être très utilisé, a priori.
+\end{itemize}
+
+Ces mot-clefs sont utilisables comme préfixe du nom de champs,
+de la même manière que les types, spécificateurs et autres.
+Contrairement au C++, ils ne sont donc pas ``scopés'', agissant
+sur tous les éléments situé en dessous d'eux. Néanmoins,
+il est possible de les appliquer à des noeuds pour ne pas
+avoir à trop les répéter.
+
+\section{Surcharge d'opérateurs}
+
+La surcharge d'opérateur consiste à apporter la possibilité
+de lier un appel de fonction à une opération normalement
+invalide telle que la suivante:\\
+
+\begin{verbatim}
+[Pair
+  First = 0
+  Second = 0
+  Pair Operator+(const Pair) = [Function
+    Pair p
+    
+    p.First = First + Pair.First
+    p.Second = Second + Pair.Second
+    Return p
+  ]
+]
+
+struct Pair A
+struct Pair B
+
+Main = [Function
+  Return A + B
+]
+\end{verbatim}
+
+Le main retournera donc une pair contenant le resultat
+des deux opérations sur les deux attributs. Sans la
+précision apportée par la fonction ``\verb!Operator+!'', il
+aurait été impossible de résoudre l'opération et l'interprète
+aurait lancé une erreur.
+
+Il est possible de surcharger n'importe quel opérateur
+dont l'utilisation ne serait pas légale autrement.
+L'ordre de priorité des opérateurs reste conservée.
+
+En plus des opérateurs connus, vous avez la possiblité
+de définir de nouveaux opérateurs binaires. Ces opérateurs
+partageront la même priorité et celle-ci sera plus
+basse que le dernier opérateur binaire défini par Dabsic.
+Pour cela, procédez de la même manière :\\
+
+\begin{verbatim}
+[Type
+  '...
+  Type Operator=D(Type) = [Function
+    '...
+  ]
+]
+
+'...
+
+Main = [Function
+  Return A =D B 'Operateur sourire entre A et B
+]
+\end{verbatim}
+
+Ne vous étonnez pas de ce fait si il vous arrive
+de voir précisé ``Cannot find operatorLOL'' dans
+certaines alertes: ne comprenant pas ce qui était
+en vérité supposé être une variable ``LOL'' (mais
+vous avez oublié d'écrire l'opérateur), l'interprète
+tentera de voir si il ne s'agit pas d'un opérateur.
+
+\section{Héritage}
+
+Un champ Dabsic peut hériter d'un autre champ Dabsic.
+Dans les faits, il s'agit presque d'une simple
+composition avec quelques arrangements. Voici la
+syntaxe pour hériter d'un champ :\\
+
+\begin{verbatim}
+[Parent
+  Attribute = 42
+  Yell = [Function
+    "I am the Parent"
+  ]
+]
+
+[Enfant : Parent
+  Hold = [Function
+    "I am holding!"
+  ]
+]
+\end{verbatim}
+
+L'héritage  ressemble d'une certaine façons à ``\verb!struct!'' à la
+différence qu'il n'inclut pas le contenu du type parent
+dans le champ : à la place, il crée un noeud factice dont
+la gestion est laissée à l'interprète et qui permet de ce
+fait de disposer de plusieurs champs du même nom en les
+dissociant par leur classe d'origine. Ainsi, si l'on
+déroule l'héritage décrit précédemment, voici ce qui
+apparait dans la mémoire de l'interprète :\\
+
+\begin{verbatim}
+[Enfant
+  [struct ..Parent
+    Attribute = 42
+    Yell = [Functon
+      "I am the parent"
+    ]
+  ]
+  Hold = [Function
+    "I am holding!"
+  ]
+]
+\end{verbatim}
+
+Constatez donc que ``Parent'' n'est pas tout à fait dans
+``Enfant'': il a son propre noeud préfixé d'un ``\verb!.!'' point.
+Cette nuance permet à l'interprète d'avoir le comportement
+attendu lorsqu'on écrit ensuite :\\
+
+\begin{verbatim}
+Main = [Function
+  Enfant i
+
+  i.Yell()
+  "The attribute is ", i.Attribute, "."
+]
+\end{verbatim}
+
+Qui affichera bien ``I am the parent'' suivi de ``The attribute is 42.''.
+\\
+
+Il est possible d'hériter de plusieurs types. En cas de conflit de nom,
+il convient au type enfant de préciser ou mène son interface :\\
+
+\begin{verbatim}
+[Guitar
+  Name = "The Guitar"
+  Play = [Function
+    "Blues!"
+  ]
+]
+
+[Electricity
+  Name = "Electricity"
+  Play = [Function
+    "Buzz!"
+  ]
+]
+
+[ElectricGuitar : Guitar, Electricity
+  Name = .Electricity.Name
+  Play = [Function
+    Guitar.Play
+    Electricity.Play
+    "Rock'n roll!"
+  ]
+]
+\end{verbatim}
+
+Si aucune précision n'est fournie, l'interprète lancera
+une erreur.
+
+Remarquez que toutes les méthodes sont possible: tant
+que l'enfant marque lui-même un champ portant le nom
+conflictueux, le problème est résolu. Ainsi, ici,
+``\verb!Name!'' est une référence vers le ``\verb!Name!'' de ``\verb!Electricity!''
+et Play un champ tout neuf qui va se servir à sa guise
+des éléments parents.
+
+Notez qu'il est possible, et cela de la même manière qu'en
+C++, de préciser avant le type une règle d'encapsulation:
+``\verb!public!'', ``\verb!private!'' ou ``\verb!protected!''. ``\verb!public!'' est
+la règle par défaut.
+
+Lors d'un héritage en diamant, les classes mères communes
+sont automatiquement aggregée pour n'en former qu'une seule,
+à moins de spécifier ``\verb!exclusive!'' comme règle supplémentaire
+d'encapsulation.
+
+Lors du stockage d'un type dérivé dans un tableau
+ou lorsqu'on le passe en paramètre, il ballade avec lui les
+éléments dont il dérivé et la résolution des symboles se fait
+par le bas, de ce fait, par nature, tous les éléments sont
+``\verb!virtual!'', pour employer un terme C++. Dès lors qu'un élément
+existe en aval, il est prioriétaire.
+
+A propos de ``\verb!virtual!'', il existe en C++ les fameuses fonctions
+virtuelles pures, qui permettent d'établir un ``\verb!contrat!'', c'est
+à dire de modeler une interface sans l'implémenter. J'ignore
+si vous vous êtes posé la question, mais bien avant dans ce
+livre, je vous ai montré qu'il était possible de déclarer
+un champ sans lui assigner de valeur :\\
+
+\begin{verbatim}
+[Node
+  FirstField
+  SecondField
+]
+\end{verbatim}
+
+Il s'agit ici de simples champs: que se passerait il si ces
+champs étaient des fonctions ou des opérations ?\\
+
+\begin{verbatim}
+[Node
+  integer Func(int x)
+]
+\end{verbatim}
+
+Comme nous l'avons vu plus haut, un champ contenant une
+opération ou une fonction est constant, ainsi il n'est
+pas possible de réassigner ce champ... il sembleriat perdu
+sans un autre usage. Cet usage est le suivant, il établit
+l'obligation de l'existence d'une fonction dans un type
+dérivant du type courant. La création d'une instance
+d'un type dont les fonctions virtuelles pures n'ont
+pas été résolues provoque la levée d'une alerte par
+l'interprète.
+
+\section{Constructeur et destructeur}
+
+Par défaut, aucun constructeur ou destructeur n'existe: les champs
+sont tels qu'ils ont été défini, considérant qu'il est possible
+de leur donner des valeurs par défaut non pas seulement dans
+la ``classe mère'' mais également dans les ``classes enfants''.
+
+Il est possible de définir une fonction qui sera appellée
+par la fonction de création (Dont il n'a pas encore été sujet
+ici) et une autre par la fonction de destruction.
+
+La fonction de construction doit s'appeller ``\verb!Build!'' et
+la fonction de destruction ``\verb!Destroy!''. Ces noms de fonction
+sont des mot-clefs ne pouvant être utilisé que par les
+outils de création et suppréssion de Dabsic.
+
+Les opérations de type ``\verb!operator=!'' ou move constructor
+en C++ peuvent être réalisé à partir de surcharge d'opérateurs
+``\verb![=]!'' et ``\verb!<-!''.
+
+Il est également possible de définir des fonctions qui
+seront appellé en cas d'appel à la fonction de création
+en appellant l'une de ses fonctions ``Copy'': celle-ci
+devant prendre en paramètre une référence sur une instance
+constante du même type qu'elle. Il est également
+possible d'en définir pour une construction par déplacement
+avec la fonction ``Become'' prenant comme paramètre
+une référence sur une instance du même type qui sera
+vidé à la fin de l'opération.
+
+Par défaut, aucune de ces fonctions n'existe, ainsi, il
+n'est pas utile de les définir afin de faire disparaitre
+un éventuel comportement par défaut de l'interprète.
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\chapter{Retour sur les erreurs}
+
+- Enrichissement progressif des prototypes de fonctions (pour savoir
+qui lance quoi comme erreur...)
+- Les exceptions
+- Les objets d'erreurs
+- L'accès aux logs
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\chapter{Fil d'execution concurrent et ressources}
+
+L'un des soucis de l'execution en parrallèle est l'accès concurentiel
+aux ressources. Voici un exemple trivial:
+
+\begin{itemize}
+  \item Il faut libérer une ressource et celle-ci est disponible via
+    un pointeur.
+  \item Le fil d'execution teste si le pointeur est NULL.
+  \item Si il ne l'est pas, il copie l'adresse de celui ci
+    et le met a NULL pour éviter qu'un autre fil ne cherche
+    à le libérer.
+  \item Il libère la ressource.
+\end{itemize}
+
+La question est la suivante: Etant donné que les fil d'exectuion
+sont appellé par le système dans un ordre et pour une durée qu'il
+n'est pas possible de connaitre dans notre programme, comment
+s'assurer qu'un fil d'execution ne va pas faire le test du pointeur
+à NULL et entrer dans la condition avant que son prédécesseur
+l'ayant fait ne le mette a NULL?
+
+Le problème vient de la non-atomicité de la condition: plusieurs
+opérations sont néccessaires de manière à bloquer l'accès à une
+ressource. Pour régler le problème, il existe un objet appellé
+sémaphore exploitant une capacité de verrouillage de nos processeur
+et qui permet d'effectuer un test atomique.
+
+Chaque champ Dabsic contient une semaphore, faisant de ceux-là
+des éléments verrouillable.
+
+Petit détail: un champ peut être revérouillé plusieurs
+fois par le fil d'execution l'ayant déjà vérrouillé. Les sémaphores
+sont donc ``re-entrante''.
+
+Les mot-clefs suivant sont disponibles:
+
+\begin{itemize}
+  \item ``\verb!TryLock()!'', ``\verb!TenteVerrou()!'' demande à effectuer une demande de verrou
+    sur un champ. Il prend un champ en paramètre le champ à tenter
+    de verrouiller et retourne le niveau de verrouillage. Si le niveau est de 0,
+    c'est qu'il n'a pas pu le verrouiller. Prend en paramètre le champ à vérrouiller.
+    
+  \item ``\verb!Lock()!'', ``\verb!Verrouille()!'' demande à poser un verrou. Si le champ
+    est déjà verrouillé par un autre thread, il attend qu'il se déverrouille,
+    sinon il le verrouille ou augmente son niveau de verrouillage.
+
+    Ce mot-clef prend le champ comme premier paramètre. Il est possible de
+    préciser un temps d'attente maximal comme deuxième paramètre.
+    La valeur de retour est le niveau de verrouillage. Si il reste inchangé,
+    c'est qu'il n'a pas été verrouillé ou reverrouillé.
+
+  \item ``\verb!Unlock()!'', ``\verb!Déverrouille()!'' demande à déverouiller un champ.
+    Retourne un entier indiquant le niveau de verrouillage. Si celui-ci
+    est de 0, c'est qu'aucun verrou ne demeure. Si le niveau de verrouillage
+    est déjà 0 lorsque le déverrouillage est demandé, une alerte est levée.
+    Plus de détails dans la suite du livre.
+
+  \item ``\verb!LockLevel()!'', ``\verb!NiveauVerrou()!'' demande à récupérer le niveau
+    de verrouillage d'un champ.
+
+  \item ``\verb!LockHolder()!'', ``\verb!Verrouilleur()!'' permet de récuperer l'identifiant
+    du fil d'execution ayant verrouillé le champ passé en paramètre.
+\end{itemize}
+
+Verrouiller a un impact direct sur les possibilités des autres fils d'execution
+sur les éléments protégés: il passe tous ces champs en ``\verb!hard!'' et dans une forme
+dégradé de ``\verb!eternal!'' : le champ et ses fils sont éternaux, néanmoins les parents
+du champ ne le deviennent pas. Ce procédé a pour conséquence que si une suppression
+de la hiérarchie a lieu, alors le champ est susceptible de devenir orphelin.
+Ces changements ne sont valable que pour les autres fil d'execution : le fil courant
+a accès aux champs comme d'habitude.
+
+Lors du déverouillage du champ ramenant le niveau de verrouillage a zéro, tous
+les champs orphelins sont supprimés.
+
+Dernier point. Lorsqu'un fil d'execution retourne dans la reserve de fils, tous
+les champs qu'il a vérrouillé sont déverrouillés et une alerte est levée. Cette
+alerte peut-être désactivée avec l'option \verb!--authorize-implicite-unlock!.
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\part{Bibliothèque standard}
+
+\chapter{Manipulations de chaines de caractères}
+
+La manipulation des chaines de caractères est certainement l'élément le
+plus commun dans les bibliothèques standards. Ainsi, il me semble
+logique de commencer par là.
+
+En Dabsic, une chaine de caractère est un type du langage,
+il ne s'agit pas d'une construction interne comme c'est le
+cas en C. Ainsi il n'est pas possible d'interagir directement
+avec des éléments qui serait écrit en Dabsic.
+
+Afin de fournir tout de même ce qui est néccessaire, des
+bibliothèques sont couplées avec l'interprète. (Vous trouverez
+le détail du couplage plus tard dans le livre)
+
+Ci-dessous la liste des fonctions se trouvant dans le pseudo objet ``\verb!string!'':
+
+\begin{tabular}{|c|l|}
+  \hline
+  Prototype & Description \\
+  \hline
+  %
+  \verb!const int Get(int n)! &
+  Renvoit la valeur du caractère (unicode) à la position n.
+  Retourne une erreur si n est invalide étant donné la longueur de la chaine.
+  ``\verb!Get!'' dispose d'un alter-égo ``\verb!Lit!''.\\
+  %
+  \verb!int Set(int n, int val)! &
+  Assigne la valeur val au caractère situé à la position n dans la chaine.
+  Retourne l'ancienne valeur qui était situé là auparavent.
+  Retourne une erreur si n est invalide ou vaut ``\verb!\0!''.
+  ``\verb!Set!'' dispose d'un alter-égo ``\verb!Ecrit!''.\\
+  %
+  \verb!string SubString(int left = 0, int width = -1)! &
+  Renvoit une chaine de caractère étant une sous-chaine de la chaine originale
+  dont le début est situé à left caractère du début de celle-ci et dont la
+  longueur est width.
+  Si width vaut -1 (Son paramètre par défaut), alors la longueur de la sous
+  chaine sera la longueur de la chaine originale - left :\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% ON VERRA PLUS TARD POUR LE CODE DANS LES TABLEAUX
+%  \begin{verbatim}
+  Main = [Function
+    string str = "ABCDEF"
+
+    "1: ", str.SubString(0, 2)
+    "2: ", str.SubString(2, 2)
+    "3: ", str.SubString(4)
+    Return ExitSuccess
+  ]
+%  \end{verbatim}
+
+  Affichera "AB", "CD" puis "EF" séparé par des sauts de ligne.
+
+  Renvoit une erreur si l'un des paramètres est invalide ou
+  si un problème de mémoire a eu lieu.
+  \\
+  %
+  \verb!const string array Split(string array symbols)! &
+  Renvoit un tableau de chaines de caractères découpé d'après
+  les symboles passé en paramètre:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% ON VERRA PLUS TARD POUR LE CODE DANS LES TABLEAUX
+%  \begin{verbatim}
+  Main = [Function
+    string array symbols = [Array "," "!" "{woulala}"]
+    string str = "Une, liste! de{woulala} mots"
+
+    Foreach[] str.Split(symbols) as word
+      "Mot: ", word
+    Next
+  ]
+%  \end{verbatim}
+
+  Affichera ``Une'', `` liste'', `` de'' puis `` mots'' séparés par
+  des sauts de ligne.
+
+  Renvoit une erreur si l'un des paramètres est invalide ou
+  si un problème de mémoire a eu lieu. \\
+  \hline
+\end{tabular}
+
+\chapter{Manipulations de tableaux}
+
+De la même façon que les chaines de caractères. Une différence
+entre les chaines et les tableaux existe néanmoins: une chaine
+de caractère est un objet, une valeur, tandis que les tableaux
+sont structurels, ainsi, les fonctions ci-dessous ne sont
+pas ``dans'' les tableaux, mais de véritables mot-clefs du
+langage.
+
+\begin{tabular}{|c|l|}
+  \hline
+  Prototype & Description\\
+  \hline
+  \verb!int Resize(array &ar, int size)! &
+  Cette fonction redimensionne le tableau passé en paramètre afin
+  qu'il contienne size éléments. Les éléments surnuméraires sont
+  détruit si le tableau était plus grand que size. Sinon ils
+  sont initialisé avec une valeur par défaut.
+  Les fonctions de construction/destruction sont appellées si
+  il y a matière.
+  Retourne le nombre d'élément ajouté. (Le résultat est négatif
+  si des éléments ont été enlevé)
+  Retourne une erreur en cas de problème de mémoire ou de paramètre
+  invalide.
+  \\
+  %
+  \verb!int PushBack(array &ar, elem)! &
+  Cette fonction ajoute elem à la fin de ar.
+  Retourne une erreur en cas de problème de mémoire ou de paramètre
+  invalide.
+  \\
+  %
+  \verb!int PushFront(array &ar, elem)! &
+  Cette fonction ajoute elem au debut de ar.
+  Retourne une erreur en cas de problème de mémoire ou de paramètre
+  invalide.
+  \\
+  %
+  \verb!int PopBack(array &ar)! &
+  Cette fonction retire un élément à la fin de ar.
+  Retourne une erreur en cas de problème de mémoire ou de paramètre
+  invalide.
+  \\
+  %
+  \verb!int PopFront(array &ar)! &
+  Cette fonction retire un élément au début de ar.
+  Retourne une erreur en cas de problème de mémoire ou de paramètre
+  invalide. \\
+  \hline
+\end{tabular}
+
+\chapter{Manipulations de noeuds}
+
+Les noeuds sont un élément central de Dabsic car
+ils forment l'élément de configuration principal de
+celui-ci.
+
+La création de noeuds peut-être réalisée massivement
+ou non en Dabsic. Trois choix sont possibles:
+
+\begin{itemize}
+  \item Permettre la modification de l'arbre lors d'un accès
+    en écriture ou en lecture. Pour cela, il suffit de commencer
+    l'écriture d'une adresse Dabsic par \verb!|:!\\
+
+    \begin{verbatim}
+    Main = [Function
+      |[].Node.Field = 42
+      |Node = 21
+    ]
+    \end{verbatim}
+
+    Donnera:\\
+    \begin{verbatim}
+    [Node = 21
+      Field = 42
+    ]
+    \end{verbatim}
+    
+  \item Permettre la modification dans une sous-partie d'une
+    fonction:\\
+
+    \begin{verbatim}
+    Main = [Function
+      StartForge
+        [].Node.Field = 42
+        Node = 21
+      EndForge
+    ]
+    \end{verbatim}
+
+    ``\verb!StartForge!'', ``\verb!DebutForge!'' et ``\verb!EndForge!'', ``\verb!FinForge!''
+    permettent de signaler que dans le bloc, il est possible
+    d'écrire et lire des blocs n'existant pas, provoquant ainsi
+    leur création.
+    
+
+  \item Permettre la modification n'importe ou à l'aide
+    de l'option de l'interprète \verb!--no-forge-required!.
+\end{itemize}
+
+Il est possible de retirer un noeud (et tout ses enfants)
+à l'aide du mot clef ``\verb!Tear()!'' ou ``\verb!Arrache()!''. La cible
+doit être marqué comme modifiable, donc, être préfixé de ``\verb!|!'',
+être dans un bloc ``\verb!Forge!'' ou alors être dans un environnement
+entièrement modifiable.
+
+Bien entendu, les champs dont les spécificités font
+qu'il n'est pas possible de les étendre ou de les supprimer
+ne sont malgré tout pas modifiable et une alerte sera
+lanca par l'interprète en cas de tentative.
+
+\chapter{Liens avec HBSL}
+
+HBSL contient actuellement un embryon d'implémentation
+du langage Dabsic. La raison de ce positionnement n'est
+pas qu'historique : l'idée de HBSL est d'intégrer fortement
+Dabsic afin de devenir en quelque sorte sa bibliothèque
+standard.
+
+HBSL est une bibliothèque orienté jeux vidéo, comportant
+divers modules maniant graphisme, temps, réseau ainsi
+que d'autres aspects plus précis.
+
+\section{Modules graphiques}
+
+Les modules graphiques représentent une large
+partie de HBSL.
+
+\subsection{Système de tuile}
+
+Un système de tuile permet de réprésenter sur une
+surface en 2D un univers contenu en mémoire. L'idée
+principale derrière un tel système est d'afficher
+toute sorte d'éléments: simple carré, carré animé,
+groupes de carrés, cela sur plusieurs calques et
+en intégrant des aspects de configuration dépendant
+entièrement du ciblage que l'utilisateur souhaitera
+ajouter: TileSystem fait le minimum, pour pouvoir
+l'adapter au besoin final, il faut en dériver et
+l'enrichir.
+
+Bien sur, de base, celui-ci est équipé pour répondre
+pleinement à Dabsic. Il est possible que les fonctionnalités
+de base suffisent à votre usage.
+
+\subsection{Sprites}
+
+\subsection{Ressources graphiques}
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\part{Outils associé à Dabsic}
+
+\chapter{Coupleur de fonctions}
+
+\section{Couplage par enveloppage}
+
+Un coupleur de fonction est disponible dans l'implémentation
+de Dabsic: il s'agit d'un chargeur de bibliothèque dynamique
+qui va inspecter un dossier établi par configuration pour
+trouver ce qu'il lui faut.
+
+Ce qu'il lui faut, ce sont donc des bibliothèques dynamiques
+contenant une table de définition récupérable via une fonction
+dont le prototype C et l'environnement serait le suivant
+(la fonction \verb!wrap_strchr! est un exemple):\\
+
+\begin{verbatim}
+typedef struct                  s_dynamic_function
+{
+  void                          *c_function;
+  char                          dabsic_prototype[256];
+}                               t_dynamic_function;
+
+typedef struct                  s_function_list
+{
+  int32_t                       func_count;
+  const t_dynamic_function      *list;
+}                               t_function_list;
+
+int64_t                         wrap_strchr(const char          *str,
+                                            size_t              len,
+                                            int64_t             chr)
+{
+  (void)len;
+  return (strchr(str, chr));
+}
+
+t_dynamic_function              gl_dynamic_function[N] =
+{
+  {
+    &wrap_strchr,
+    "integer strchr(const string &str, int char)"
+  },
+  .etc.
+};
+
+const t_function_list           *dabsic_dynamic_functions(void)
+{
+  static const t_function_list  lst =
+  {
+    sizeof(gl_dynamic_function) / sizeof(gl_dynamic_function[0]),
+    &gl_dynamic_function[0]
+  };
+  return (&lst);
+}
+\end{verbatim}
+
+La fonction ``\verb!dabsic_dynamic_functions!'' sera recherché par
+l'interprète qui l'appellera pour en retirer la liste des
+fonctions contenus par la bibliothèque dynamique et dont
+la méthode d'appel sera définie par l'attribut
+``\verb!dabsic_prototype!'' dans ``\verb!t_dynamic_function!''.
+
+Le pointeur \verb!c_function!, quand à lui, doit être une représentation
+C de la fonction Dabsic : par exemple, ici, le premier paramètre
+est une chaine de caractère, alors la fonction recoit un pointeur
+vers la donnée suivi de la taille de la donnée. Ensuite,
+la fonction est supposée recevoir un entier, ce qui est représenté
+par un \verb!int64_t! dans cette fonction.
+Si celle-ci avait prit un réel, elle aurait recu un double.
+
+Un champ dont le type n'est pas clairement traduit dans le
+prototype sera passé en tant que pointeur vers l'interface
+champ de Dabsic. Dans mon implémnetation actuelle, il s'agit
+donc d'un pointeur vers ``\verb!hbs::Node!''.
+
+Dabsic ignore complètement ce qu'il se passe dans une
+bibliothèque externe, ainsi, il convient de faire attention
+lorsqu'elles sont ajoutés. Les erreurs classiques
+types erreur de segmentation, division par zéro, demande
+explicite d'arret du programme ou tube cassé
+peuvent être rattrapé par Dabsic si certains aménagement
+sont fait. Il est possible de spécifier un temps maximal
+passé dans une fonction avec \verb!--maximum-mods-time=n! ou n
+est un nombre entier positif de secondes.
+
+Deux séries de dossiers sont inspecté par
+l'interprète : \verb!DABSIC_LIBRARY_PATH! et \verb!DABSIC_UNSTABLE_LIBRARY_PATH!
+sont des variables d'environnement contenant ces séries.
+La seconde série sera protégée par les garde-fous de Dabsic.
+
+Evidemment, ces garde-fous ne peuvent pas tout rattraper,
+ont un certain cout en terme de performances et certaines
+conséquences d'une erreur dans un module peuvent compromettre
+la stabilité de l'interprète et le faire planter malgré tout
+à terme.
+
+Ces garde-fous sont réalisé à partir de signaux et de sauts longs
+dont la zone d'atterissage est situé après l'appel à une fonction
+externe. En cas d'erreur, l'erreur est ignorée et le programme
+reprend après l'appel de la fonction. La valeur de retour renvoyé
+est alors une valeur par défaut fonction du type du champ de
+reception.
+
+\section{Couplage direct}
+
+La possibilité d'établir un couplage direct entre du script et
+une fonction compilée m'a interessé dès ma première année
+d'étude et avait donné naissance à l'époque à une fonction
+que j'avais appellé ``\verb!dcall!'', pour ``\verb!Damdoshi call!'' mais
+surtout pour ``\verb!dynamic call!''.
+
+Pourquoi ``\verb!dynamique!'' ? \`A priori, les appels de fonctions
+ont toujours lieu à l'execution...
+
+Tout simplement parceque la formation des paramétres n'est
+pas dynamique en fait, elle est définie par le programme.
+L'idée de l'appel dynamique est de passer une liste de
+paramètre, contenu par exemple par une liste chainée, à une
+fonction mais pas en tant que liste... bel et bien en tant
+que paramètres normaux. En gros :\\
+
+\begin{verbatim}
+Retour Fonction(string a, int b, real c, struct *d)
+{
+  ..
+}
+
+Liste = { "Coucou!", 42, 5.7, &data };
+Retour = DCall(Fonction, Liste)
+\end{verbatim}
+
+L'interet ? Pouvoir appeller n'importe quelle fonction
+sans avoir à la typer dans son programme directement,
+mais en pouvant disposer de sa définition dans une chaine
+de caractère... Par exemple issu du chargement du fichier
+en-tête (.h) dans laquelle elle est décrite.
+A l'aide de la bibliothèque dlfcn, il est déjà possible
+de disposer d'une adresse de fonction à pratir de son
+nom... Reste alors à l'appeller.
+
+A l'aide de ce système, il devient possible de construire
+une enveloppe pour n'importe quelle bibliothèque compilée
+sans avoir à le faire...
+
+L'implémentation en 32 bits est triviale, suffisament pour
+avoir pu le faire à l'époque. En 64 bits avec le ``\verb!fast-call!'',
+c'est plus complexe (Mon implem actuelle couvre seulement des cas
+triviaux sous Linux), mais voici déjà la méthode deployée
+pour le 32 bits:\\
+
+\begin{verbatim}
+parameter* dcall(callsign *signature, size_t (*func)(), const callstack *params)
+{
+  register parameter *ucall asm(``rsi'');
+  register const callnode *i asm(``edx'');
+  register size_t eax asm(``eax'');
+  register void (*fax)() asm(``eax'');
+
+  (void)signature;
+  ucall = &ucall_param;
+  for (i = params->last; i != NULL; i = i->prev)
+  {
+    eax = i->parameter.bin;
+    asm("push \%eax");
+  }
+  fax = func;
+  (void)fax;
+  asm("call *\%eax");
+  for (i = params->last; i != NULL; i = i->prev)
+    asm("add $4, \%esp");
+  ucall->bin = eax;
+  return (&ucall_param);
+}
+\end{verbatim}
+
+Le code réel est disponible sur SourceForge, dans la lib BPT2 et
+s'appelle ``\verb!ucall!''.
+
+Au-delà de Dabsic, je pense que cette fonctionnalité (passer
+d'une description en donnée d'une fonction à la possibilité
+d'un appel) serait une belle adjonction à la LibC. Après, ce
+n'est que mon humble avis.
+
+\chapter{Environnement Dabsic}
+
+Comme cela a été vu lorsqu'il a été question d'établir
+un programme Dabsic en réseau, Dabsic est en mesure
+d'agir comme démon. Il peut donc être employé comme
+serveur de configuration: via un module de communication
+que des services peuvent ajouter, il peuvent échanger
+avec l'environnement Dabsic des informations comme
+leur état ou leur configuration.
+
+L'idée est de disposer en tant qu'administrateur d'une
+plateforme unifiée pour traiter les aspects configuration
+et monitoring des services d'une plateforme. Il est
+de plus également possible de définir des programmes
+d'interactions à l'aide de fonctions.
+
+\section{Shell Dabsic}
+
+Le shell Dabsic est un peu similaire à la console de débug
+de Visual Basic ou de Javascript: il s'agit simplement
+d'un endroit ou il est possible d'explorer les données,
+d'executer une commande et de voir ce qui a été envoyé
+sur les différentes sorties du programme.
+
+Le shell Dabsic s'active avec l'option \verb!--shell!. Cela
+provoque la création de deux fichiers: un fichier
+standard ``\verb!dabout!'' et une fifo ``\verb!dabin!'' sur lesquels
+vous pouvez lire et écrire. Vous pouvez ensuite utiliser
+le binaire ``\verb!dash!'' en lui passant en paramètre les
+deux fichiers dans l'ordre ci-dessus afin de vous
+en servir.
+
+En plus de toutes commandes dépendant presque intégralement
+du programme que vous parcourez, il est possible
+d'executer certaines commandes:
+
+\begin{itemize}
+  \item ``\verb!cd!'' permet de déplacer le point de vue.
+  \item ``\verb!pwd!'' permet de connaitre la position du point de vue.
+  \item ``\verb!ls!'' permet d'afficher le contenu du noeud où se
+    trouve le point de vue.
+\end{itemize}
+
+Le shell dispose d'un agent spécialement pour lui dans
+l'arbre Dabsic, il s'agit de l'agent... ``\verb!Shell!''.
+A moins que son attribution de ticket ne soit re-spécifiée,
+il est le détenteur du ticket ``\verb!Master!''.
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\part{Retour sur la philosophie}
+
+Cette partie décrit pêle mêle des éléments de la philosophie
+de Dabsic.
+
+\chapter{Beauté et organisation}
+
+Dabsic doit être beau. Evidemment, la beauté est
+subjective. De ce fait, il convient de définir ici
+ce que cette beauté doit signifier.
+
+La beauté consiste pour moi à disposer d'un set de
+construction cohérent : certains symboles jurent si mit cote
+à cote. La casse 
+
+\chapter{Trivial et utile}
+
+\section{Trivial}
+
+Une fonctionnalité est triviale si celle ci ne néccessite
+pas une mise en place complexe et peut s'expliquer simplement.
+
+Bien entendu, il est possible de s'appuyer dans une moindre
+mesure sur d'autres fonctionnalités pour décrire celle-ci,
+par exemple :\\
+
+\begin{itemize}
+  \item Une constante est une valeur fixe : celle-ci ne peut
+    être défini que lors de sa créaton.
+  \item Une variable est un espace de stockage en mémoire
+    associé à un symbole dans notre programme et contenant
+    une valeur.
+  \item Un pointeur est un cas particulier de variable
+    contenant l'adresse d'une autre variable comme valeur.
+  \item Une référence est un pointeur constant.
+\end{itemize}
+
+Tant qu'il est possible d'expliquer facilement une notion,
+celle-ci est triviale. Bien sur, les retombées peuvent être
+riches et il est possible de discuter longtemps sur celle-ci,
+néanmoins les concepts s'expriment bien à la base.
+
+Evidemment, si il est néccessaire d'expliquer 25 notions
+préalable avant d'en aborder une, cela n'est plus trivial
+du tout. La notion étant finalement subjective, je pense
+qu'en discuter systématiquement pourrait être une bonne
+chose...
+
+Contrairement à ce que beaucoup de gens semblent penser,
+si deux camps se forment ``Oui, c'est trivial'' et ``Non,
+cela ne l'est pas'', c'est que ce n'est pas trivial.
+Une notion est triviale si 75\% des utilisateurs pensent
+qu'elle l'est, et ces utilisateurs ne doivent pas être
+que des experts (Sinon, tout serait trivial) !
+
+\section{Utile}
+
+Une fonctionnalité est utile si elle est utilisée.
+Si elle est présente pour le sport, elle est inutile.
+
+Le problème des fonctionnalité inutile n'est pas tant
+qu'elles ne servent pas: elles brouillent en quelque
+sorte l'accès aux fonctionnalités utiles, car elles
+s'imposent dans les tutoriaux et les manuels, dans
+les messages d'erreur...
+
+Certaines fonctionnalités peuvent être plus ou moins
+utile, en somme ``indispensable'', ``utile'', ``pratique''
+sont des forces différentes d'utilité. Il convient
+à mon sens de placer les éléments les plus indispensable
+en premier, si certaines fonctionnalités s'avèreraient
+plus utiles que d'autres.
+
+Une autre manière d'être inutile n'est pas de ne pas
+potentiellement servir à rien mais d'être redondant:
+si une fonctionnalité couvre déjà un domaine et qu'une
+autre arrive, elle est inutile. Bien sur, peut-être
+que la première a besoin d'être retravaillé ou remplacée,
+mais en aucun cas laisser les deux ne doit devenir une
+habitude.
+
+\chapter{Explicite et peu dense}
+
+\section{Explicite}
+
+Explicite signifie pour moi évident par son design. Une
+fonction doit faire une chose et ses options doivent être
+limités. Si une fonction devient trop riche, elle doit être séparée
+en deux.
+
+Voici un exemple issu de javascript, la fonction date:
+
+\begin{itemize}
+  \item Si elle ne prend aucun paramètre, renvoit la date du jour.
+  \item Si elle recoit un paramètre, elle retourne la date correspondant
+    au timestamp 0 auquel on a ajouté le paramètre.
+  \item Si elle recoit trois paramètres, les paramètres sont a priori,
+    l'année, le mois et le jour. Le nombre d'année est a priori le nombre
+    d'année depuis 1900
+  \item Si le paramètre d'année est grand, par exemple, contient 2000,
+    alors la fonction n'effectue pas 1900+2000 mais la prend comme une
+    année directement.
+\end{itemize}
+
+Le comportement de cette fonction n'est clairement pas explicite, et
+sous couvert que toutes ces ``sous-fonctions'' servent a renvoyer
+une date, ils sont couverts par cette seule fonction.
+
+Les deux premiers cas sont acceptables: le paramètre par défaut est 0,
+donc la fonction retourne la date depuis timestamp 0 + le paramètre.
+
+Les deux autres cas n'ont rien à faire la. Au total, il devrait y avoir
+deux fonctions: L'une qui manipule un timestamp et une qui forge une date
+a partir de paramètre éclatés (le cas 4). Le cas 3 me semble absolument inutile:
+ce n'est ni un timestamp, ni une date... c'est quelque chose.
+
+\section{Peu dense}
+
+Le C est un langage assez peu dense, il se passe peu de chose par
+ligne. Avec un bon découpage, il se passe assez peu de chose par fonction.
+
+De ce fait, un programme écrit en C simple est facile à suivre.
+
+Certains langages fonctionnels, certaines constructions en C++ (ou en C)
+sont faites ainsi:\\
+
+\begin{verbatim}
+...
+{
+  apply(list, condition, action);
+}
+\end{verbatim}
+
+Où list est un conteneur, condition un pointeur sur fonction/fonction membre/
+functor/lambda, et action un autre pointeur sur une fonction sous une forme
+quelconque.
+
+Cette forme est compliquée! Elle va par exemple voir parmis tous les éléments
+de la liste quels sont les éléments qui respectent condition puis ensuite
+leur appliquer action. Eventuellement, on peut imaginer un quatrième paramètre
+pour l'action appliqué à ceux qui ne la respectent pas.
+
+Tout ca pour remplacer cette structure parfaitement triviale:\\
+
+\begin{verbatim}
+{
+  for (init; cond; step) // ou foreach, a la riguer
+  {
+    if (condition(elem))
+    {
+      action(elem)
+    }
+  }
+}
+\end{verbatim}
+
+Oui, le code au-dessus était plus court et cet exemple est tout
+à fait trivial. Néanmoins voyez le ainsi: chaque élément dispose
+d'un type plus ou moins long à définir à l'avance.
+
+Parfois, ces types sont tellement long qu'ils sont masqués derrière
+des mot-clefs (tel auto ou les templates en C++) pouvant couvrir
+autant des données que des fonctions.
+
+On arrive à un code ou le déroulement même est masqué derrière
+un ensemble d'appel de fonctions dont la raison d'être n'est
+pas le traitement qu'elles fournissent mais leur structure générale.
+Bien sur il est toujours possible de comprendre ce code, néanmoins
+c'est plus long: il faut parcourir le contexte plus en profondeur
+pour n'esperer n'avoir ne serait ce qu'une infime comprehension,
+car non, le nom des variables ne sera pas suffisament explicite.
+
+Parfois, c'est la connaissance du langage qui sera insuffisante...
+cela peut sembler ridicule, mais étant donné l'étendu de certains
+langages aujourd'hui, cela peut tout à fait arriver, d'autant
+que la course au code le plus sportif, le plus impressionnant
+existe: certaines fonctionnalités de langages peuvent avoir
+été utilisé tout simplement parcequ'elles existent, et non pas
+parceque c'est elles qui permettaient d'avoir le code le plus
+évident/le plus rapide/le plus économe.
+
+Personnellement, j'appelle cela du code constipé: forcez autant
+que vous voulez, le sens du code ne sortira pas.
+
+\chapter{Plugins et aggregateur}
+
+Dabsic est autant une bibliothèque qu'un langage de programmation
+et il doit être possible et surtout simple de l'inclure dans
+un projet écrit dans le même langage que lui, le C++.
+
+\chapter{Verbosité}
+
+\chapter{Souplesse}
+
+\chapter{Versatilité}
+
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+   % % % % % % % % % % % % % % % % % % % % % % % % % % %
+  % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\part{Champs d'applications}
+
+Dabsic est versatile, comme n'importe quel langage de programmation,
+mais par sa nature déclarative, il est particulierement adapté
+aux programmes néccessitant un large ensemble de définition tel
+que les jeux vidéo ou la programmation web.
+
+\appendix
+
+\chapter{Glossaire}
+
+\chapter{Options}
+
+\begin{tabular}{|l|c|}
+  \hline
+  Option & Explication\\
+  \hline
+  %
+  \verb!-Wsnake_case! &
+  Force le style serpent sur l'ensemble des mot-clefs et symboles. Le style serpent est le suivant:
+  \verb!this_is_the_snake_case!
+  Evidement, l'interprète n'est pas devin : ici, il se contentera d'interdire les majuscules isolées.
+  \\
+  %
+  \verb!-WcamelCase! &
+  Force le style Camel minuscule sur l'ensemble des mot-clefs et symboles. Le style camel minuscule
+  est le suivant:
+  \verb!thisIsTheLowerCamelCase!
+  Evidement, l'interprète n'est pas devin: ici, il se contentera d'interdire la capitalisation
+  de la première lettre (sauf si le reste du mot est également en majuscule) et les underscores (sauf
+  en première et dernière position)
+  \\
+  %
+  \verb!-WPascalCase! &
+  Force le style Pascal sur l'ensemble des mot-clefs et symboles. Le style Pascal:
+  \verb!ThisIsThePascalCase!
+  Evidemment, l'interprète n'est pas devine: ici, il se contentera de vérifier que la première
+  lettre est capitalisée et l'absence d'underscore. (sauf en première et dernière position) \\
+  \hline
+  %
+  \end{tabular}
+  
+\end{document}
+
+
+
+
+
+%%%%%%%%%%%%%% NOTE
+
+% => Gestion de l'orthographe des erreurs (sans importance, mais ca arrive souvent: un '.' ou pas?)
+

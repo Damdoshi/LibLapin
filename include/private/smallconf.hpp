@@ -78,6 +78,7 @@ struct				SmallConf
   e_politic			is_const = NO_POLITIC;
   e_politic			is_solid = NO_POLITIC;
   e_politic			is_eternal = NO_POLITIC;
+  void				SpreadPolitic(void);
 
   Sequence			*sequence;
   Function			*function;
