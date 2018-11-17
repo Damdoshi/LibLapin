@@ -8,7 +8,7 @@
 
 t_bunny_time		bunny_get_time(void)
 {
-#if			defined(__linux__) || defined(__APPLE__)
+#if			defined(__linux__) || defined(__APPLE__) || defined(__GNUC__)
   struct timespec	x;
 
   clock_gettime(CLOCK_MONOTONIC, &x);
