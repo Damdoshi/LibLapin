@@ -122,7 +122,7 @@ extern const void		*last_scope;
 # define			GREY(g)				\
   COLOR(255, g, g, g)
 
-# ifdef				__linux__ || __GNUC__ || __MINGW32__ || __MINGW64__
+# if				defined(__linux__) || defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(BUNNY_ALLOCA)
 #  include			<alloca.h>
 #  define			bunny_alloca(a)			alloca(a)
 #  define			bunny_freea(a)
