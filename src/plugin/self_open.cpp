@@ -12,7 +12,11 @@ void			*bunny_plugin_self_open(void)
 
   if (opened == false)
     {
+#if			_WIN32 || __WIN32__
+      if ((self_handler = LoadLibrary(NULL)) == NULL)
+#else
       if ((self_handler = dlopen(NULL, RTLD_NOW)) == NULL)
+#endif
 	return (NULL);
       opened = true;
     }
@@ -25,6 +29,10 @@ void			*bunny_plugin_get_self_function(const char	*n)
 
   if (!x)
     return (x);
+#if			_WIN32 || __WIN32__
+  return ((void*)GetProcAddress((HMODULE)x, n));
+#else
   return (dlsym(x, n));
+#endif
 }
 
