@@ -1,0 +1,23 @@
+[Dabsic eternal!
+  [Graphics
+    [Color solid! const!
+      [Component
+        Red = 0
+        Green = 1
+        Blue = 2
+
+        Alpha = 3
+      ]
+      Transparent = 0, 0, 0, 0
+      Black = 0, 0, 0, 255
+      Red = 255, 0, 0, 255,
+      Green = 0, 255, 0, 255
+      Blue = 0, 0, 255, 255
+      Purple = 255, 0, 255, 255
+      Teal = 0, 255, 255, 255
+      Yellow = 255, 255, 0, 255
+      White = 255, 255, 255, 255
+      Pink = 255, 0x69, 0xB4, 255
+    ]
+
+]]
