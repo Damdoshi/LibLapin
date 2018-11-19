@@ -52,6 +52,8 @@ int				bunny_strcasecmp(const char	*a,
 int				bunny_strncasecmp(const char	*a,
 						  const char	*b,
 						  size_t	l);
+void				*bunny_memdup(const void	*ptr,
+					      size_t		len);
 
 int				bunny_dprintf(int		fd,
 					      const char	*format,

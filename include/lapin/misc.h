@@ -203,15 +203,6 @@ void				bunny_delete_split(const char * const	*tab);
 */
 typedef const char * const *	t_bunny_split;
 
-/*!
-** Duplicate the chunk of size len pointed by ptr
-** \param ptr The address of the chunk to duplicate
-** \param len The size of the chunk to duplicate
-**
-*/
-void				*bunny_memdup(const void		*ptr,
-					      size_t			len);
-
 void				bunny_randomize(void			*data,
 						size_t			len);
 
@@ -224,6 +215,8 @@ void				bunny_memswap(void			*a,
 					      size_t			datalen);
 
 bool				bunny_is_directory(const char		*file);
+
+bool				bunny_join_binary_directory(const char	*argv0);
 
 /*!
 ** Swap two pointers of any type
