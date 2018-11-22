@@ -17,10 +17,12 @@
   )
 (defconst dabsic/keywords-regexp
   (regexp-opt
-   (list "If" "Then" "EndIf" "Else" "While" "EndWhile" "WEnd" "For" "To"
+   (list "If" "Then" "EndIf" "ElseIf" "Else" "While" "EndWhile" "WEnd" "For" "To"
 	 "Step" "EndFor" "Next" "Do" "AgainIf" "Repeat" "Until" "Select"
 	 "Case" "EndSelect" "With" "EndWith" "Return" "Leave" "Break" "Brake"
-	 "Continue" "Link")
+	 "Continue" "Link" "Goto" "Wait" "Print" "PrintErr" "Exec"
+	 "HaveValue" "NbrChildren" "NbrCase" "IsEmpty" "AddressOf" "Build" "Delete"
+	 )
    'words)
   "Regular expression matching all Dabsic keywords."
   )
@@ -47,6 +49,10 @@
 (defconst dabsic/functions-regexp
   "\\([a-zA-Z_]+[a-zA-Z0-9_]*\\)("
   "Regular expression matching an Dabsic function declaration."
+  )
+(defconst dabsic/labels-regexp
+  "\\([a-zA-Z_]+[a-zA-Z0-9_]*\\):"
+  "Regular expression matching a Dabsic sequence label."
   )
 (defconst dabsic/constants-regexp
   (regexp-opt
@@ -90,6 +96,7 @@
    (cons dabsic/keywords-regexp font-lock-keyword-face)
    (cons dabsic/scopes-regexp '(1 font-lock-preprocessor-face))
    (cons dabsic/constants-regexp font-lock-constant-face)
+   (cons dabsic/labels-regexp font-lock-constant-face)
    (cons dabsic/types-regexp font-lock-type-face)
    (cons dabsic/functions-regexp '(1 font-lock-function-name-face))
    (cons dabsic/nodes-regexp '(2 font-lock-type-face))
