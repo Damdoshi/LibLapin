@@ -1,3 +1,14 @@
+
+Specificateur "pure" permettant de signaler qu'une fonction depend a 100% de ses paramètres
+et que donc son resultat peut etre mis en cache avec comme clef ses paramètres.
+
+Nouveau type "address" basé sur string, permettant de specifier plus precisement les
+paramètres fait pour etre manipulé comme des addresses avec l'operateur [de deref].
+
+Permettre d'executer une sequence de facon aussi transparente qu'une fonction.
+(modifier configuration_execute/dabsic_compute)
+
+
 Un programme de verification syntaxique pour bunny_configuration.
 
 Bring specifier in INI?

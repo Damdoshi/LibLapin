@@ -189,3 +189,5 @@
   - Functions that need a delay/elapsed time can use an inside mechanism that
     is time locked with the main loop to allow avoiding to give the delay
     parameter (ex: t_bunny_sprite)
+
+  - Free functions may be macros to set to NULL sent pointers.
