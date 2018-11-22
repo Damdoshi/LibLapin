@@ -22,11 +22,11 @@ static void		get_float(sf::Shader				*shader,
   for (i = 0; i < n; ++i)
     f[i] = va_arg(*lst, double);
   if (n == 1)
-    shader->setParameter(varname, f[0]);
+    shader->setUniform(varname, f[0]);
   else if (n == 2)
-    shader->setParameter(varname, f[0], f[1]);
+    shader->setUniform(varname, sf::Glsl::Vec2{f[0], f[1]});
   else
-    shader->setParameter(varname, f[0], f[1], f[2]);
+    shader->setUniform(varname, sf::Glsl::Vec3{f[0], f[1], f[2]});
 }
 
 static void		get_component(sf::Shader			*shader,
@@ -41,7 +41,7 @@ static void		get_component(sf::Shader			*shader,
   color.g = (unsigned char)va_arg(*lst, int);
   color.b = (unsigned char)va_arg(*lst, int);
   color.a = (unsigned char)va_arg(*lst, int);
-  shader->setParameter(varname, color);
+  shader->setUniform(varname, sf::Glsl::Vec4{color});
 }
 
 static void		get_color(sf::Shader				*shader,
@@ -52,7 +52,7 @@ static void		get_color(sf::Shader				*shader,
   sf::Color		color(va_arg(*lst, unsigned int));
 
   (void)n;
-  shader->setParameter(varname, color);
+  shader->setUniform(varname, sf::Glsl::Vec4{color});
 }
 
 static void		get_transform(sf::Shader			*shader,
@@ -67,7 +67,7 @@ static void		get_transform(sf::Shader			*shader,
   sft.translate(tra->translation.x, tra->translation.y);
   sft.rotate(tra->rotation, tra->origin.x, tra->origin.y);
   sft.scale(tra->scale.x, tra->scale.y, tra->origin.x, tra->origin.y);
-  shader->setParameter(varname, sft);
+  shader->setUniform(varname, sf::Glsl::Mat4(sft));
 }
 
 static void		get_picture(sf::Shader				*shader,
@@ -78,7 +78,7 @@ static void		get_picture(sf::Shader				*shader,
   struct bunny_picture	*pic = va_arg(*lst, struct bunny_picture*);
 
   (void)n;
-  shader->setParameter(varname, *pic->tex);
+  shader->setUniform(varname, *pic->tex);
 }
 
 static void		get_current(sf::Shader				*shader,
@@ -88,7 +88,7 @@ static void		get_current(sf::Shader				*shader,
 {
   (void)n;
   (void)lst;
-  shader->setParameter(varname, sf::Shader::CurrentTexture);
+  shader->setUniform(varname, sf::Shader::CurrentTexture);
 }
 
 void			bunny_shader_set_variable(t_bunny_shader	*_shader,
