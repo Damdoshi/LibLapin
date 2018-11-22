@@ -73,6 +73,11 @@ int			main(int		argc,
   signal(SIGALRM, sighandler);
   if (argc == 2)
     alarm(2);
+  if (argc == 3)
+    {
+      refresh_test(argv[1]);
+      return (EXIT_SUCCESS);
+    }
 
   refresh_test("address.dab");
   refresh_test("select.dab");

@@ -29,7 +29,7 @@ void			refresh_test(const char	*str)
       bunny_perror(NULL);
       exit(EXIT_FAILURE);
     }
-  
+
   bunny_save_configuration(BC_DABSIC_SEQUENCE, "/dev/stdout", a);
 
   bunny_save_configuration(BC_DABSIC_SEQUENCE, "tmp.dab", a);
@@ -54,7 +54,9 @@ int			main(int		argc,
   refresh_test("simple.dabseq");
   refresh_test("labels.dabseq");
   refresh_test("includer.dabseq");
-  
+
+  execute_test("count.dab");
+
   return (EXIT_SUCCESS);
 }
 

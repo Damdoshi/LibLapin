@@ -325,6 +325,44 @@ void		restore_return(std::ostream			&ss,
     ss << "Leave" << std::endl;
 }
 
+void		restore_build(std::ostream			&ss,
+			      Function				&func,
+			      SmallConf				&conf,
+			      size_t				indent)
+{
+  size_t	i;
+
+  (void)func;
+  (void)conf;
+  for (i = 0; i < indent; ++i)
+    ss << " ";
+  ss << "Build ";
+  restore_expression(ss, *func.value.expression, true);
+  if (func.additionnal_values[0].expression != NULL)
+    {
+      ss << ", ";
+      restore_expression(ss, *func.additionnal_values[0].expression, true);
+    }
+  ss << std::endl;
+}
+
+
+void		restore_delete(std::ostream			&ss,
+			       Function				&func,
+			       SmallConf			&conf,
+			       size_t				indent)
+{
+  size_t	i;
+
+  (void)func;
+  (void)conf;
+  for (i = 0; i < indent; ++i)
+    ss << " ";
+  ss << "Delete ";
+  restore_expression(ss, *func.value.expression, true);
+  ss << std::endl;
+}
+
 t_restore	gl_restore[Function::LAST_COMMAND] =
   {
     &restore_instruction,
@@ -343,7 +381,9 @@ t_restore	gl_restore[Function::LAST_COMMAND] =
     &restore_brake,
     &restore_link,
     &restore_with,
-    &restore_select
+    &restore_select,
+    &restore_build,
+    &restore_delete
   };
 
 void		restore_scope(std::ostream			&ss,

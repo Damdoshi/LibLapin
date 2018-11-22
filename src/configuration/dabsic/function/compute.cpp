@@ -24,8 +24,72 @@ t_dabsic_compute	gl_dabsic_compute[Function::LAST_COMMAND] =
     &dabsic_compute_brake,
     &dabsic_compute_link,
     &dabsic_compute_with,
-    &dabsic_compute_select
+    &dabsic_compute_select,
+    &dabsic_compute_build,
+    &dabsic_compute_delete
   };
+
+t_compute_result	dabsic_compute_build(Function		&func,
+					     Function		&mainnod,
+					     bool		dry,
+					     SmallConf		*root,
+					     SmallConf		*local,
+					     SmallConf		*artif,
+					     SmallConf		*params)
+{
+  const char		*res;
+  bool			cmode;
+
+  (void)mainnod;
+  if (dry)
+    return (CR_OK);
+  if (func.lines.size() < 1)
+    return (CR_ERROR);
+  if (func.additionnal_values[0].GetString(&res, root, local, artif, params))
+    return (CR_ERROR);
+  cmode = SmallConf::create_mode;
+  SmallConf::create_mode = true;
+  t_bunny_configuration	*newnod;
+
+  if (bunny_configuration_getf_node(local, &newnod, "%s", res) == false)
+    {
+      SmallConf::create_mode = cmode;
+      return (CR_ERROR);
+    }
+  SmallConf::create_mode = cmode;
+  if (func.lines.size() == 1)
+    return (CR_OK);
+
+  if (func.lines.size() > 2)
+    return (CR_ERROR);
+  *((SmallConf*)newnod) = func.additionnal_values[1];
+  return (CR_OK);
+}
+
+t_compute_result	dabsic_compute_delete(Function		&func,
+					      Function		&mainnod,
+					      bool		dry,
+					      SmallConf		*root,
+					      SmallConf		*local,
+					      SmallConf		*artif,
+					      SmallConf		*params)
+{
+  const char		*res;
+
+  (void)mainnod;
+  if (dry)
+    return (CR_OK);
+  if (func.lines.size() != 1)
+    return (CR_ERROR);
+  if (func.additionnal_values[0].GetString(&res, root, local, artif, params))
+    return (CR_ERROR);
+  t_bunny_configuration	*newnod;
+
+  if (bunny_configuration_getf_node(local, &newnod, "%s", res) == false)
+    return (CR_OK);
+  bunny_delete_configuration(newnod);
+  return (CR_OK);
+}
 
 t_compute_result	dabsic_compute_select(Function		&func,
 					      Function		&mainnod,
@@ -527,8 +591,6 @@ t_compute_result	dabsic_compute_scope(Function		&func,
     }
   return (CR_OK);
 }
-
-// REMOVE PROTOTYPE!
 
 bool			dabsic_compute(SmallConf		&func,
 				       SmallConf		*prototype,

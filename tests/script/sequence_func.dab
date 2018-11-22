@@ -1,0 +1,20 @@
+
+Number = 0
+Count(int x) = [Sequence
+  Number = x
+  Start:
+  print "Number is", x
+  exec x += 1
+  if x < 10 then 'Can be replaced by if x < 10 then goto Start
+    goto Start
+  endif
+  return
+]
+
+main = [Function
+  "[].Number is ", Number ' "", &Number, " is ", Number - would be better
+  Count(3)
+  "[].Number is ", Number
+  Return 0
+]
+

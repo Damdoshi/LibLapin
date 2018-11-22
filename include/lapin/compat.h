@@ -124,13 +124,14 @@ extern const void		*last_scope;
 # define			GREY(g)				\
   COLOR(255, g, g, g)
 
-# if				defined(__linux__) || defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__) || defined(BUNNY_ALLOCA)
+# if				defined(__linux__)
 #  include			<alloca.h>
 #  define			bunny_alloca(a)			alloca(a)
 #  define			bunny_freea(a)
 
 # elif				_WIN32 || __WIN32__
 
+// /!\ This include MINGW64 from MSYS2
 #  include			<malloc.h>
 #  define			bunny_alloca(a)			_alloca(a)
 #  define			bunny_freea(a)

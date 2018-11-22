@@ -38,11 +38,16 @@ bool			expr_compute_function_call(Expression	&exp,
 						   SmallConf	*param)
 {
   SmallConf		*ope;
+  t_bunny_decision	ret;
   size_t		i;
 
   (void)param;
   if (exp.type_cast != Expression::NO_CAST)
     return (expr_compute_cast(exp, dry, root, local, artif, param));
+  if ((ret = expr_compute_builtins(exp, dry, root, local, artif, param)) == BD_ERROR)
+    return (false);
+  if (ret == BD_OK)
+    return (true);
   exp.is_const = false;
   if ((ope = expr_get_variable(exp.val, dry, root, local, artif, param)) == NULL)
     scream_error_if
@@ -129,6 +134,14 @@ bool			expr_compute_function_call(Expression	&exp,
     {
       if (dabsic_compute
 	  (*ope, proto, dry, root, tmp_artif, parameters) == false)
+	return (false);
+      exp.val = *ope;
+      return (true);
+    }
+  if (ope->sequence)
+    {
+      if (sequence_compute
+	  (*ope, proto, root, tmp_artif, parameters, NULL, NULL) == false)
 	return (false);
       exp.val = *ope;
       return (true);

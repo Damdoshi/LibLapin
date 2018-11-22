@@ -31,6 +31,8 @@ struct				Function
       LINK, // Call the C equivalent of the Dabsic function with the current parameters val
       WITH,
       SELECT,
+      BUILD,
+      DELETE,
       LAST_COMMAND
     };
 
@@ -91,6 +93,8 @@ t_dabsic_compute_f		dabsic_compute_return;
 t_dabsic_compute_f		dabsic_compute_with;
 t_dabsic_compute_f		dabsic_compute_select;
 t_dabsic_compute_f		dabsic_compute_scope;
+t_dabsic_compute_f		dabsic_compute_build;
+t_dabsic_compute_f		dabsic_compute_delete;
 
 extern t_dabsic_compute		gl_dabsic_compute[Function::LAST_COMMAND];
 
@@ -192,5 +196,11 @@ Decision			dabsic_read_print(const char		*code,
 						  Function		&line,
 						  SmallConf		&funcnode,
 						  SmallConf		&root);
+Decision			dabsic_read_build(const char		*code,
+						  ssize_t		&i,
+						  Function		&func,
+						  SmallConf		&funcnode,
+						  SmallConf		&root);
+
 
 #endif	/*			__LAPIN_PRIVATE_FUNCTION_HPP__		*/

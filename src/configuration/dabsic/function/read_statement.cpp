@@ -92,6 +92,29 @@ Decision		dabsic_read_statement(const char	*code,
       return (BD_OK);
     }
 
+  if (readtextcasesep(code, i, "Build", fieldname))
+    {
+      dabsic_read_separator(code, i);
+      func.command = Function::BUILD;
+      if (dabsic_read_build(code, i, func, funcnode, root) == BD_ERROR)
+	return (BD_ERROR);
+      return (BD_OK);
+    }
+
+  if (readtextcasesep(code, i, "Delete", fieldname))
+    {
+      dabsic_read_separator(code, i);
+      func.command = Function::DELETE;
+      if (dabsic_read_instruction(code, i, func, funcnode, root) == BD_ERROR)
+	scream_error_if
+	  (return (BD_ERROR), BE_SYNTAX_ERROR,
+	   "A value or expression was expected after 'delete' on line %s:%d",
+	   "ressource,configuration,syntax",
+	   SmallConf::file_read.top().c_str(), whichline(code, i)
+	   );
+      return (BD_OK);
+    }
+
   if (readtextcasesep(code, i, "Leave", fieldname))
     {
       dabsic_read_separator(code, i);

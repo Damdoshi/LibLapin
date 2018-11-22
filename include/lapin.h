@@ -125,6 +125,7 @@ typedef enum			s_bunny_decision
 # include			"lapin/shader.h"
 # include			"lapin/network.h"
 # include			"lapin/events.h"
+# include			"lapin/sequence.h"
 # include			"lapin/plugin.h"
 # include			"lapin/sound.h"
 # include			"lapin/sound_manager.h"

@@ -198,6 +198,12 @@ bool				expr_compute_cast(Expression		&exp,
 						  SmallConf		*local,
 						  SmallConf		*artif,
 						  SmallConf		*param);
+t_bunny_decision		expr_compute_builtins(Expression	&exp,
+						      bool		dry,
+						      SmallConf		*root,
+						      SmallConf		*local,
+						      SmallConf		*artif,
+						      SmallConf		*param);
 
 t_bunny_configuration		*_bunny_read_expression(const char	*code,
 							t_bunny_configuration *config);
