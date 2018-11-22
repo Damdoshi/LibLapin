@@ -17,7 +17,9 @@
 ** - Blitting to a tilemap place the picture at a specific position
 **   depending of the tilemap itself.
 */
-
+# ifdef				__MINGW32__
+#  pragma			pack(1)
+# endif
 typedef struct			s_bunny_tilemap
 {
   // The t_bunny_tilemap is a clipable
@@ -36,6 +38,7 @@ typedef struct			s_bunny_tilemap
   int				lock_borders;
   bool				loop[2];
 }				t_bunny_tilemap;
+# pragma			pack()
 
 t_bunny_tilemap			*bunny_load_tilemap_wh(const char	*cnf,
 						       unsigned int	width,
