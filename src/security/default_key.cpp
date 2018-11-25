@@ -113,6 +113,11 @@ const t_bunny_cipher_key		*bunny_default_key(void)
   t_bunny_cipher_key			*key;
   int					i;
 
+  // Because key twist seems quite bad shaped. (how I am suppose to cipher?)
+  key = ((t_bunny_cipher_key*)&gl_bunny_default_key[0]);
+  return (key);
+
+  
   for (i = 0; i < gl_bunny_default_key[0].length; ++i)
     if (gl_bunny_default_key[0].key[i] != 0)
       {

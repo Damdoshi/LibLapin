@@ -20,7 +20,7 @@ bool				bunny_cipher_file(const char			*file,
   bunny_cipher_data(cnt, len, cip, key);
   ret = bunny_save_file(file, cnt, len);
   len = bunny_errno;
-  bunny_free(cnt);
+  bunny_delete_file(cnt, file);
   if (ret == false)
     scream_error_if(return (false), len, PATTERN, "security", file, cip, key, "false");
   scream_log_if(PATTERN, "security", file, cip, key, "true");
