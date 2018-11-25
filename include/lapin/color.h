@@ -29,6 +29,9 @@ typedef enum			e_bunny_rgb
     ALPHA_CMP			= 3
   }				t_bunny_rgb;
 
+# ifdef				TRANSPARENT
+#  undef			TRANSPARENT
+# endif
 # define			TRANSPARENT		((uint32_t)0)
 
 # define			BLACK			((uint32_t)(255 << (ALPHA_CMP * 8)))

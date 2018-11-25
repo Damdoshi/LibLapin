@@ -9,6 +9,7 @@
 #ifndef				__LAPIN_PRIVATE_FUNCTION_HPP__
 # define			__LAPIN_PRIVATE_FUNCTION_HPP__
 # include			"smallconf.hpp"
+# undef				DELETE
 
 struct				Function
 {

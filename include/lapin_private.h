@@ -28,5 +28,6 @@
 # include			"private/monitor.h"
 # include			"private/context.h"
 # include			"private/history.h"
+# undef				DELETE
 
 #endif	/*			__LAPIN_PRIVATE_H__	*/
