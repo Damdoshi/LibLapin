@@ -16,7 +16,7 @@ bool			bunny_save_file(const char		*file,
 
   if ((fd = open(file, O_CREAT | O_TRUNC | O_WRONLY, 0644)) == -1)
     scream_error_if(return (false), bunny_errno, PATTERN, "ressource,file", file, data, len, "false");
-  if (write(fd, data, len) != (ssize_t)len)
+  if (write(fd, data, len) == -1)
     {
       close(fd);
       scream_error_if(return (false), bunny_errno, PATTERN, "ressource,file", file, data, len, "false");
