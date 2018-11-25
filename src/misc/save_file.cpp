@@ -14,8 +14,9 @@ bool			bunny_save_file(const char		*file,
 {
   int			fd;
 
-  if ((fd = open(file, O_CREAT | O_TRUNC | O_WRONLY, 0644)) == -1)
+  if ((fd = open(file, O_CREAT | O_TRUNC | O_WRONLY | O_BINARY, 0644)) == -1)
     scream_error_if(return (false), bunny_errno, PATTERN, "ressource,file", file, data, len, "false");
+#warning Does adding O_BINARY allow to compare against sk on mingw again?
   if (write(fd, data, len) == -1)
     {
       close(fd);

@@ -24,7 +24,7 @@ ssize_t			bunny_load_file(const char		*file,
     sk = (size_t)RessourceManager.TryGet(ResManager::SIZE_LOADED_FILE, hash);
   else
     {
-      if ((fd = open(file, O_RDONLY)) == -1)
+      if ((fd = open(file, O_RDONLY | O_BINARY)) == -1)
 	scream_error_if
 	  (return (-1), bunny_errno, PATTERN, "ressource,file", file, data, size, (ssize_t)-1);
       if ((sk = lseek(fd, 0, SEEK_END)) == -1)
@@ -33,6 +33,7 @@ ssize_t			bunny_load_file(const char		*file,
       sz = sk + 1;
       if ((buf = (char*)bunny_malloc(sz * sizeof(*buf))) == NULL)
 	goto close_and_quit;
+#warning Does adding O_BINARY allow to compare against sk on mingw again?
       if ((sz = read(fd, buf, sk)) == -1)
 	{
 	  bunny_free(buf);
