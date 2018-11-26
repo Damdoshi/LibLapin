@@ -28,6 +28,12 @@ void				bunny_uncipher_data(void			*cnt,
     case BS_SWITCH:
       __bunny_switch((char*)cnt, len, key, false);
       return ;
+    case BS_BYTBIT:
+      __bunny_bytbit((char*)cnt, len, key, false);
+      return ;
+    case BS_BITSHAKE:
+      __bunny_bitshake((char*)cnt, len, key, false);
+      return ;
     default:
       gl_bunny_my_uncipher(cip, (char*)cnt, len, key);
     }

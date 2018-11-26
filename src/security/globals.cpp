@@ -17,6 +17,8 @@ const char * const		gl_bunny_ciphering_table[BS_CUSTOM] =
     "xor",
     "caesar",
     "shaker",
-    "switch"
+    "switch",
+    "bytbit",
+    "bitshake"
   };
 

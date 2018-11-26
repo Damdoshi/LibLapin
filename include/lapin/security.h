@@ -38,7 +38,10 @@ typedef enum			e_bunny_ciphering
     BS_CAESAR,			/* + */
     BS_SHAKER,			/* swap data in the buffer */
     BS_SWITCH,			/* state bit to switch bit - no key, not meant to be used alone */
-    /* BS_COKTAIL - it mix all previous algorithm */
+    BS_BYTBIT,			/* Serialize bit on bytess - no key */
+    BS_BITSHAKE,		/* Like shaker, but on bits */
+    /* BS_MIXER,		Reverse N bytes according to key */
+    /* BS_COKTLAIL		The bunny special: bytes of the key indicates which operation will be done */
     BS_CUSTOM			/* any >= BS_CUSTOM */
   }				t_bunny_ciphering;
 

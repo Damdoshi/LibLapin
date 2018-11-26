@@ -27,22 +27,34 @@ t_bunny_response	key(t_bunny_event_state			state,
   if (sym < BKS_F1 || sym > BKS_F8)
     return (GO_ON);
 
-  if (sym < BKS_F5)
-    bunny_cipher_data
-      (pix->pixels,
-       pix->clipable.buffer.width * pix->clipable.buffer.height * 4,
-       sym - BKS_F1,
-       cipher_key
-       );
+  if (sym < BKS_F7)
+    {
+      if (!bunny_get_keyboard()[BKS_LSHIFT] && !bunny_get_keyboard()[BKS_RSHIFT])
+	bunny_cipher_data
+	  (pix->pixels,
+	   pix->clipable.buffer.width * pix->clipable.buffer.height * 4,
+	   sym - BKS_F1,
+	   cipher_key
+	   );
+      else
+	bunny_uncipher_data
+	  (pix->pixels,
+	   pix->clipable.buffer.width * pix->clipable.buffer.height * 4,
+	   sym - BKS_F1,
+	   cipher_key
+	   );
+    }
 
-  if (sym >= BKS_F5)
-    bunny_uncipher_data
-      (pix->pixels,
-       pix->clipable.buffer.width * pix->clipable.buffer.height * 4,
-       sym - BKS_F5,
-       cipher_key
-       );
-
+  printf("%X %X %X %X %X %X %X %X\n",
+	 ((unsigned char*)pix->pixels)[0],
+	 ((unsigned char*)pix->pixels)[1],
+	 ((unsigned char*)pix->pixels)[2],
+	 ((unsigned char*)pix->pixels)[3],
+	 ((unsigned char*)pix->pixels)[4],
+	 ((unsigned char*)pix->pixels)[5],
+	 ((unsigned char*)pix->pixels)[6],
+	 ((unsigned char*)pix->pixels)[7]
+	 );
   return (GO_ON);
 }
 
@@ -73,7 +85,28 @@ int			main(int	argc,
 	 (pix->clipable.clip_width, pix->clipable.clip_height, false, "Entropy test")
 	 );
 
-  printf("F1/F4: XOR\nF2/F5: CAESAR\nF3/F6: SHAKER\nF4/F8: SWITCH\n");
+  ((unsigned char*)pix->pixels)[0] = 0;
+  ((unsigned char*)pix->pixels)[1] = (unsigned char)-1;
+  ((unsigned char*)pix->pixels)[2] = 0;
+  ((unsigned char*)pix->pixels)[3] = (unsigned char)-1;
+  ((unsigned char*)pix->pixels)[4] = 0;
+  ((unsigned char*)pix->pixels)[5] = (unsigned char)-1;
+  ((unsigned char*)pix->pixels)[6] = 0;
+  ((unsigned char*)pix->pixels)[7] = (unsigned char)-1;
+
+  printf("F1: XOR\nF2: CAESAR\nF3: SHAKER\nF4: SWITCH\nF5: BYTBIT\nF6: BITSHAKE\n");
+  printf("Use shift to revert operation.\n");
+
+  printf("%X %X %X %X %X %X %X %X\n",
+	 ((unsigned char*)pix->pixels)[0],
+	 ((unsigned char*)pix->pixels)[1],
+	 ((unsigned char*)pix->pixels)[2],
+	 ((unsigned char*)pix->pixels)[3],
+	 ((unsigned char*)pix->pixels)[4],
+	 ((unsigned char*)pix->pixels)[5],
+	 ((unsigned char*)pix->pixels)[6],
+	 ((unsigned char*)pix->pixels)[7]
+	 );
 
   bunny_set_key_response(key);
   bunny_set_loop_main_function(loop);

@@ -117,7 +117,6 @@ const t_bunny_cipher_key		*bunny_default_key(void)
   key = ((t_bunny_cipher_key*)&gl_bunny_default_key[0]);
   return (key);
 
-  
   for (i = 0; i < gl_bunny_default_key[0].length; ++i)
     if (gl_bunny_default_key[0].key[i] != 0)
       {
