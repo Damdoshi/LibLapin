@@ -19,5 +19,8 @@
 # else
 #  define			__ZERO_LENGTH__			0
 # endif
+# ifndef			O_BINARY
+#  define			O_BINARY			0
+# endif
 #endif	/*			__LAPIN_PORTA_H__		*/
 

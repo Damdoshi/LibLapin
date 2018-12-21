@@ -8,13 +8,14 @@
 
 void			restore_expression(std::ostream		&ss,
 					   Expression		&expr,
-					   bool			complete)
+					   bool			complete,
+					   bool			hexscape)
 {
   size_t		i, j;
 
   if ((expr.is_const && complete == false) || expr.optor_family == -1)
     {
-      writevalue(ss, expr.val);
+      writevalue(ss, expr.val, hexscape);
       return ;
     }
   if (expr.optor_family == Expression::LAST_OPERATOR_FAMILY)
@@ -28,13 +29,13 @@ void			restore_expression(std::ostream		&ss,
 	      {
 		if (expr.operand[j]->val.name != "")
 		  ss << expr.operand[j]->val.name << " = ";
-		restore_expression(ss, *expr.operand[j], true);
+		restore_expression(ss, *expr.operand[j], true, hexscape);
 	      }
 	    if (j + 1 < expr.operand.size())
 	      ss << ", ";
 	  }
       else
-	restore_expression(ss, *expr.operand[0], complete);
+	restore_expression(ss, *expr.operand[0], complete, hexscape);
       ss << ")";
       return ;
     }
@@ -52,11 +53,11 @@ void			restore_expression(std::ostream		&ss,
 	  && expr.operand[i]->optor_family != -1)
 	{
 	  ss << "(";
-	  restore_expression(ss, *expr.operand[i], complete);
+	  restore_expression(ss, *expr.operand[i], complete, hexscape);
 	  ss << ")";
 	}
       else
-	restore_expression(ss, *expr.operand[i], complete);
+	restore_expression(ss, *expr.operand[i], complete, hexscape);
     }
 }
 

@@ -118,7 +118,8 @@ bool				readaddress(const char				*code,
 int				whichline(const char				*code,
 					  int					i);
 void				writestring(std::ostream			&ss,
-					    const std::string			&str);
+					    const std::string			&str,
+					    bool				jsonhex = false);
 bool				read_data(const char				*code,
 					  ssize_t				&i,
 					  SmallConf				&config);
@@ -129,7 +130,8 @@ bool				read_function(const char			*code,
 					      ssize_t				&i,
 					      SmallConf				&config);
 void				writevalue(std::ostream				&ss,
-					   const SmallConf			&cnf);
+					   const SmallConf			&cnf,
+					   bool					jsonhex = false);
 
 
 bool				_bunny_handle_directive(const char		*code,

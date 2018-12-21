@@ -1,6 +1,6 @@
 /*
 ** Jason Brillante "Damdoshi"
-** Hanged Bunny Studio 2014-2016
+** Hanged Bunny Studio 2014-2019
 **
 ** Bibliotheque Lapin
 */
@@ -270,5 +270,54 @@ void				bunny_set_ressource_management(bool	enabled);
 */
 extern char			bunny_big_buffer[16 * 1024 * 1024];
 
+# if				defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+#  define			bunny_typename(x)			\
+  _Generic((x),								\
+	   _Bool: "bool",						\
+	   unsigned char: "unsigned char",				\
+	   char: "char",						\
+	   short int: "short int",					\
+	   unsigned short int: "unsigned short int",			\
+	   int: "int",							\
+	   unsigned int: "unsigned int",				\
+	   long int: "long int",					\
+	   unsigned long int: "unsigned long int",			\
+	   long long int: "long long int",				\
+	   unsigned long long int: "unsigned long long int",		\
+	   float: "float",						\
+	   double: "double",						\
+	   long double: "long double",					\
+	   char *: "char*",						\
+	   void *: "void*",						\
+	   int *: "int*",						\
+	   char **: "char**",						\
+	   void **: "void**",						\
+	   int **: "int**",						\
+  default: "other")
+
+#  define			bunny_typef(x)				\
+  _Generic((x),								\
+	   _Bool: "%d",							\
+	   unsigned char: "%ux",					\
+	   char: "%c",							\
+	   short int: "%d",						\
+	   unsigned short int: "%ud",					\
+	   int: "%d",							\
+	   unsigned int: "%u",						\
+	   long int: "%ld",						\
+	   unsigned long int: "%lud",					\
+	   long long int: "%Ld",					\
+	   unsigned long long int: "%Lu",				\
+	   float: "%f",							\
+	   double: "%f",						\
+	   long double: "%lf",						\
+	   char *: "%s",						\
+	   void *: "(void*)%p",						\
+	   int *: "(int*)%p",						\
+	   char *: "(char**)%p",					\
+	   void *: "(void**)%p",					\
+	   int *: "(int**)%p",						\
+  default: "%%other")
+# endif
 #endif	/*			__LAPIN_MISC_H__			*/
 

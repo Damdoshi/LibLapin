@@ -33,8 +33,7 @@ ssize_t			bunny_load_file(const char		*file,
       sz = sk + 1;
       if ((buf = (char*)bunny_malloc(sz * sizeof(*buf))) == NULL)
 	goto close_and_quit;
-#warning Does adding O_BINARY allow to compare against sk on mingw again?
-      if ((sz = read(fd, buf, sk)) == -1)
+      if ((sz = read(fd, buf, sk)) != sk)
 	{
 	  bunny_free(buf);
 	  goto close_and_quit;
@@ -61,10 +60,6 @@ ssize_t			bunny_load_file(const char		*file,
   scream_log_if(PATTERN, "ressource,file", file, data, size, (ssize_t)sk);
   return (sk);
 
- free_close_and_quit:
-  sk = bunny_errno;
-  bunny_free(data);
-  bunny_errno = sk;
  close_and_quit:
   close(fd);
   scream_error_if(return (-1), bunny_errno, PATTERN, "ressource,file", file, data, size, (ssize_t)-1);

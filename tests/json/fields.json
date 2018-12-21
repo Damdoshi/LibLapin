@@ -1,5 +1,5 @@
 {
-  "string": "value", // commentaries are not standard
+  "astring": "value \xFF \07 \uFEFE", // commentaries are not standard
   "integer": 42 * (1 + 2),
   "double": 5.6,
   /*

@@ -47,9 +47,11 @@ t_bunny_tilemap			*bunny_load_tilemap_wh(const char	*cnf,
 t_bunny_tilemap			*bunny_load_tilemap(const char		*cnf);
 
 int				bunny_tilemap_get_tile_from_px(const t_bunny_tilemap *tmap,
-							       const t_bunny_position *pos);
+							       const t_bunny_position *pos,
+							       int	z);
 
 int				bunny_tilemap_get_tile(const t_bunny_tilemap *tmap,
-						       const t_bunny_position *pos);
+						       const t_bunny_position *pos,
+						       int		z);
 
 #endif	/*			__LAPIN_TILEMAP_H__			*/

@@ -1,4 +1,10 @@
 
+Ajouter la possibilite de mettre des SONS dans bunny sprite.
+
+
+En INI comme dans DABSIC TREE, si des strings litterales sont cote a cote, les concatener.
+
+
 Specificateur "pure" permettant de signaler qu'une fonction depend a 100% de ses paramètres
 et que donc son resultat peut etre mis en cache avec comme clef ses paramètres.
 

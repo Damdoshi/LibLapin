@@ -166,7 +166,8 @@ Decision			expr_read_expression(const char		*code,
 						     int		operation);
 void				restore_expression(std::ostream		&ss,
 						   Expression		&conf,
-						   bool			cmp = false);
+						   bool			cmp = false,
+						   bool			jsonhex = false);
 void				expr_read_separator(const char		*code,
 						    ssize_t		&i);
 

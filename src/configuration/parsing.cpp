@@ -274,7 +274,10 @@ bool			readinteger(const char			*code,
 	}
       return (true);
     }
-  d = strtol(&code[i], &end, 0);
+  if (code[i] == 'u' || code[i] == 'x')
+    d = strtol(&code[++i], &end, 16);
+  else
+    d = strtol(&code[i], &end, 0);
   if (end == &code[i])
     return (false);
   i += end - &code[i];
@@ -370,12 +373,23 @@ bool			readstring(const char			*code,
 	    case 'r': d[p++] = '\r'; break;
 	    case '"': d[p++] = '"'; break;
 	    case '\'': d[p++] = '\''; break;
+	    case 'u':
+	      {
+		int	nbr;
+
+		readinteger(code, j, nbr);
+		d[p++] = nbr & 0xFF;
+		j -= 1;
+		break ;
+	      }
+	    case 'x':
 	    case '0':
 	      {
 		int	nbr;
 
 		readinteger(code, j, nbr);
 		d[p++] = nbr & 0xFF;
+		j -= 1;
 		break ;
 	      }
 	    default:
@@ -399,7 +413,8 @@ bool			readstring(const char			*code,
 }
 
 void			writestring(std::ostream		&ss,
-				    const std::string		&str)
+				    const std::string		&str,
+				    bool			json)
 {
   size_t		i;
 
@@ -420,6 +435,14 @@ void			writestring(std::ostream		&ss,
       default:
 	if (str[i] >= ' ' && str[i] <= '~')
 	  ss << str[i];
+	else if (json)
+	  {
+	    char buffer[5];
+
+	    buffer[0] = 0;
+	    snprintf(&buffer[0], sizeof(buffer), "%04X", (int)(str[i] & 0xFF));
+	    ss << "\\u" << &buffer[0];
+	  }
 	else if (str[i] == '\0')
 	  ss << "\\0";
 	else
@@ -531,14 +554,15 @@ bool			readvalue(const char			*code,
 }
 
 void			writevalue(std::ostream			&ss,
-				   const SmallConf		&cnf)
+				   const SmallConf		&cnf,
+				   bool				jsonehx)
 {
   if (cnf.last_type == SmallConf::DOUBLE)
     ss << cnf.converted;
   else if (cnf.last_type == SmallConf::INTEGER)
     ss << cnf.converted_2;
   else if (cnf.last_type == SmallConf::STRING)
-    writestring(ss, cnf.original_value);
+    writestring(ss, cnf.original_value, jsonehx);
   else
     ss << cnf.original_value;
 }

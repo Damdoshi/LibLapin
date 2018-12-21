@@ -38,9 +38,9 @@ static void		restore_array(std::stringstream		&ss,
 	  ss << "}";
 	}
       else if (conf[j].expression)
-	restore_expression(ss, *conf[j].expression, true);
+	restore_expression(ss, *conf[j].expression, true, true);
       else if (conf[j].have_value)
-	writevalue(ss, conf[j]);
+	writevalue(ss, conf[j], true);
       if (j + 1 < conf.Size())
 	ss << ",";
       ss << std::endl;
@@ -78,12 +78,12 @@ static void		restore_scope(std::stringstream		&ss,
       else if (it->second->expression)
 	{
 	  ss << ": ";
-	  restore_expression(ss, *it->second->expression, true);
+	  restore_expression(ss, *it->second->expression, true, true);
 	}
       else if (it->second->have_value)
 	{
 	  ss << ": ";
-	  writevalue(ss, *it->second);
+	  writevalue(ss, *it->second, true);
 	}
       if (++it != conf.End())
 	ss << ",";
