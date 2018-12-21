@@ -376,6 +376,7 @@ bool			readstring(const char			*code,
 
 		readinteger(code, j, nbr);
 		d[p++] = nbr & 0xFF;
+		break ;
 	      }
 	    default:
 	      fprintf(stderr, "Unknown escaped character. (Line %d)\n", whichline(code, j));

@@ -43,7 +43,7 @@ void		bunny_steam::OnUserAchievementStored(UserAchievementStored_t *d)
 void		bunny_steam::OnUserStatsReceived(UserStatsReceived_t *d)
 {
   if (game_id != d->m_nGameID
-      || configuration->stats_received == false
+      || configuration->stats_received == NULL
       || stats_were_received == false
       )
     return ;
