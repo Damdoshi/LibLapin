@@ -3,6 +3,7 @@
 //
 // Lapin library
 
+#include		<stdio.h>
 #include		"lapin_private.h"
 
 static const char *obj_comment = "#";
@@ -244,6 +245,7 @@ t_bunny_obj_file	*bunny_load_obj_file(const char		*file)
     goto DeleteObjFile;
 
   //
+  fprintf(stderr, "3D object file loading is not implemented in any not custom language\n");
 
   bunny_delete_configuration(cnf);
   return (obj);

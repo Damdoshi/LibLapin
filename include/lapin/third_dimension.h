@@ -56,6 +56,9 @@ typedef struct			s_bunny_obj_file
 }				t_bunny_obj_file;
 
 t_bunny_obj_file		*bunny_load_obj_file(const char		*file);
+size_t				bunny_write_obj_file(t_bunny_obj_file	*obj,
+						     char		*buffer,
+						     size_t		buflen);
 void				bunny_delete_obj_file(t_bunny_obj_file	*obj);
 void				bunny_compute_obj(t_bunny_obj_file	*obj);
 
