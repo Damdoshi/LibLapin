@@ -33,15 +33,15 @@ t_bunny_sound_sprite	*bunny_read_sound_sprite(t_bunny_configuration	*_cnf)
     scream_error_if
       (goto DeleteAll, BE_SYNTAX_ERROR,
        PATTERN ": A 'Slices' scope was expected",
-       "ressource,sound_sprite,syntax", cnf, (void*)NULL);
+       "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
   arr = &cnf["Slices"];
   for (it = arr->Begin(); it != arr->End(); ++it)
     {
       t_bunny_sound_slice *s;
 
       slice = it->second;
-      if (slice->Access("Index") == false
-	  || slice->Access("Duration") == false)
+      if (slice->Access("Index") == false ||
+	  (slice->Access("Duration") == false && slice->Access("EndIndex") == false))
 	scream_error_if
 	  (goto DeleteAll, BE_SYNTAX_ERROR,
 	   PATTERN ": Inside 'Slices', field must be 2 length long for index and duration",
@@ -69,11 +69,25 @@ t_bunny_sound_sprite	*bunny_read_sound_sprite(t_bunny_configuration	*_cnf)
 	}
       if ((*slice)["Duration"].GetDouble(&s->duration) == false)
 	{
-	  bunny_free(s);
-	  scream_error_if
-	    (goto DeleteAll, BE_SYNTAX_ERROR,
-	     PATTERN ": A double was expected inside 'Duration'",
-	     "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
+	  double end;
+
+	  if ((*slice)["EndIndex"].GetDouble(&end) == false)
+	    {
+	      bunny_free(s);
+	      scream_error_if
+		(goto DeleteAll, BE_SYNTAX_ERROR,
+		 PATTERN ": A double was expected inside 'Duration' or 'EndIndex'",
+		 "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
+	    }
+	  if (end < s->index)
+	    {
+	      bunny_free(s);
+	      scream_error_if
+		(goto DeleteAll, BE_SYNTAX_ERROR,
+		 PATTERN ": EndIndex cannot be lesser than Index",
+		 "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
+	    }
+	  s->duration = end - s->index;
 	}
       s->active_duration = s->duration;
       if (slice->Access("ActiveDuration"))

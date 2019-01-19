@@ -28,6 +28,8 @@ void				__bunny_bytbit(char			*cnt,
   size_t			tarbyt;
   size_t			oribyt;
 
+  (void)key;
+  (void)cipher;
   for (dit = 0; dit + 8 < len; dit += 8)
     {
       memset(&buf[0], 0, sizeof(buf));
