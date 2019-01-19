@@ -10,27 +10,93 @@
 # define			__LAPIN_PRIVATE_STEAM_H__
 # include			<stddef.h>
 # include			<steam_api.h>
+# include			<unordered_map>
 
-class				bunny_steam
+# ifdef				__MINGW32__
+#  pragma			pack(1);
+# endif
+class				BunnySteam
 {
- public:
-  uint64_t			game_id;
-  const char			*username;
-  const t_bunny_steam_configuration *configuration;
-  const char			*last_error;
-  //
-  bool				stats_were_received;
+public:
+  uint64_t			game_id = 0;
+  const char			*ext_username = NULL;
+  const char			*ext_language = NULL;
+  const char			*ext_last_error = NULL;
 
-  ISteamUser			*user;
-  ISteamUserStats		*stats;
+protected:
+  std::string			username;
+  std::string			language;
+  std::string			last_error;
+  std::map<std::string, int>	statistics;
+  std::map<std::string, bool>	achievements;
 
-  STEAM_CALLBACK(bunny_steam, OnGameOverlayActivated, GameOverlayActivated_t);
-  STEAM_CALLBACK(bunny_steam, OnUserAchievementStored, UserAchievementStored_t, m_CallbackAchievementStored);
-  STEAM_CALLBACK(bunny_steam, OnUserStatsStored, UserStatsStored_t, m_CallbackUserStatsStored);
-  STEAM_CALLBACK(bunny_steam, OnUserStatsReceived, UserStatsReceived_t, m_CallbackUserStatsReceived);
+  ISteamApps			*apps = NULL;
+  ISteamUser			*user = NULL;
+  IStreamUserStats		*stats = NULL;
+  void				(*callbacks)(void) = NULL;
 
-  bunny_steam(void);
-  ~bunny_steam(void);
+  void				*user_data = NULL;
+  t_bunny_response		overlay_response = GO_ON;
+  t_bunny_response		achievement_received = GO_ON;
+  t_bunny_response		achievement_stored = GO_ON;
+  t_bunny_response		stats_received = GO_ON;
+  t_bunny_response		stats_stored = GO_ON;
+
+public:
+  t_bunny_response		Start(uint64_t				game_id);
+  t_bunny_response		HandleEvents(void			*data);
+  void				Stop(void);
+
+  bool				SetAchievement(const std::string	&name);
+  bool				GetAchievement(const std::string	&name) const;
+  bool				SetStatistic(const std::string		&name,
+					     int			value);
+  int				GetStatistic(const std::string		&name) const;
+
+  const char * const		*AchievementList(void) const;
+  const char * const		*StatisticList(void) const;
+
+  BunnySteam(void);
+  ~BunnySteam(void);
+
+  // Steam stuff.
+private:
+  STEAM_CALLBACK
+  (BunnySteam,
+   OverlayActivated,
+   GameOverlayActivated_t
+   );
+
+  // STORED => Signifie que les scores ont été stockés sur Steam
+  STEAM_CALLBACK
+  (BunnySteam,
+   AchievementStored,
+   UserAchievementStored_t,
+   achievement_callback
+   );
+  STEAM_CALLBACK
+  (BunnySteam,
+   StatsStored,
+   UserStatsStored_t,
+   stats_stored_callback
+   );
+
+  // RECEIVED => Signifie qu'on vient de recevoir les scores
+  STEAM_CALLBACK
+  (BunnySteam,
+   AchievementReceived,
+   UserAchievementReceived_t,
+   achievement_received_callback
+   );
+  STEAM_CALLBACK
+  (BunnySteam,
+   StatsReceived,
+   UserStatsReceived_t,
+   stats_received_callback
+   );
 };
+# pragma			pack()
+
+extern BunnySteam		gl_bunny_steam;
 
 #endif	/*			__LAPIN_PRIVATE_STEAM_H__	*/

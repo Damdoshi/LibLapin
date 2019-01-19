@@ -53,7 +53,9 @@ typedef enum			e_bunny_event_state
     CONNECTED			= GO_DOWN,
     DISCONNECTED		= GO_UP,
     ENTERING			= GO_DOWN,
-    LEAVING			= GO_UP
+    LEAVING			= GO_UP,
+    LOADED			= GO_DOWN,
+    SAVED			= GO_UP,
   }				t_bunny_event_state;
 
 /*!
@@ -756,6 +758,7 @@ typedef struct			s_bunny_context
   t_bunny_leaving_context	leaving_context;
   t_bunny_async_computation_response async_computation_response;
   t_bunny_event_response	event;
+  t_bunny_steam_context		steam;
 }				t_bunny_context;
 
 /*!
