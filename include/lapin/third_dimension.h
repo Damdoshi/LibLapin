@@ -11,6 +11,15 @@
 #  error			You cannot include this file directly.
 # endif
 
+/*!
+** This function reset OpenGL states.
+*/
+void				bunny_GL_reset_states(const t_bunny_window	*pic);
+
+void				bunny_GL_push_states(const t_bunny_window	*pic);
+
+void				bunny_GL_pop_states(const t_bunny_window	*pic);
+
 typedef struct			s_bunny_3d_coordinate
 {
   double			x;

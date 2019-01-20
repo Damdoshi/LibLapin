@@ -36,7 +36,8 @@
 			-Wno-unused-result -Wno-invalid-offsetof		\
 			-DBUNNY_ALLOCATOR_DEACTIVATED				\
 			-DBUNNY_DEBUG						\
-			-DBUNNY_STEAM
+			-DBUNNY_STEAM						\
+			-DBUNNY_THIRD_DIMENSION
 
   DEBUG		=	-O0 -g -g3 -ggdb
 #  OPTIM		=	-O2

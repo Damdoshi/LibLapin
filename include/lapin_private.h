@@ -33,4 +33,8 @@
 #  include			"private/steam.hpp"
 # endif
 
+# ifdef				BUNNY_THIRD_DIMENSION
+#  include			"private/third_dimension.h"
+# endif
+
 #endif	/*			__LAPIN_PRIVATE_H__	*/

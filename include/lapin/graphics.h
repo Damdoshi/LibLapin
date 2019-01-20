@@ -709,14 +709,5 @@ void				bunny_enable_full_blit(bool			enable);
 */
 bool				bunny_make_clipable_unique(t_bunny_clipable	*clipable);
 
-/*!
-** This function reset OpenGL states.
-*/
-void				bunny_GL_reset_states(const t_bunny_window	*pic);
-
-void				bunny_GL_push_states(const t_bunny_window	*pic);
-
-void				bunny_GL_pop_states(const t_bunny_window	*pic);
-
 #endif	/*			__LAPIN_GRAPHICS_H__	*/
 

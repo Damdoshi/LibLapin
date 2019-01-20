@@ -127,7 +127,6 @@
 # include			"lapin/collide.h"
 # include			"lapin/hash.h"
 # include			"lapin/text.h"
-# include			"lapin/third_dimension.h"
 # include			"lapin/unix.h"
 # include			"lapin/fixedpoint.h"
 
@@ -161,6 +160,10 @@
 
 # ifdef				BUNNY_MACRO
 #  include			"lapin/macros.h"
+# endif
+
+# ifdef				BUNNY_THIRD_DIMENSION
+#  include			"lapin/third_dimension.h"
 # endif
 
 # ifdef				__cplusplus

@@ -102,15 +102,21 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 		    ////
 		    /// RESIZE
 		    //
-		    if (event.type == sf::Event::Resized && gl_callback.resize)
+		    if (event.type == sf::Event::Resized)
 		      {
-			t_bunny_position	siz;
+#ifdef BUNNY_THIRD_DIMENSION
+			glViewport(0, 0, event.size.width, event.size.height);
+#endif
+			if (gl_callback.resize)
+			  {
+			    t_bunny_position	siz;
 
-			siz.x = event.size.width;
-			siz.y = event.size.height;
-			scream_log_if(PATTERN "reisze %p)", "event", window, nwin, freq, data, gl_window);
-			if ((rep = gl_callback.resize(gl_window, &siz, data)) != GO_ON)
-			  goto end;
+			    siz.x = event.size.width;
+			    siz.y = event.size.height;
+			    scream_log_if(PATTERN "reisze %p)", "event", window, nwin, freq, data, gl_window);
+			    if ((rep = gl_callback.resize(gl_window, &siz, data)) != GO_ON)
+			      goto end;
+			  }
 		      }
 
 		    ///////
