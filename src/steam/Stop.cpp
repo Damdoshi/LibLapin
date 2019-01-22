@@ -20,7 +20,7 @@ void			BunnySteam::Stop(void)
   ext_last_error = last_error.c_str();
 
   statistics.clear();
-  achievement.clear();
+  achievements.clear();
 
   apps = NULL;
   user = NULL;

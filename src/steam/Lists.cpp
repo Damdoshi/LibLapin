@@ -5,7 +5,7 @@
 
 #include		"lapin_private.h"
 
-const char		**BunnySteam::AchievementList(void) const
+const char * const	*BunnySteam::AchievementList(void) const
 {
   static const char	*buf[1024];
   std::map<std::string, bool>::const_iterator it;
@@ -17,13 +17,13 @@ const char		**BunnySteam::AchievementList(void) const
   return (&buf[0]);
 }
 
-const char		**BunnySteam::StatisticList(void) const
+const char * const	*BunnySteam::StatisticList(void) const
 {
   static const char	*buf[1024];
   std::map<std::string, int>::const_iterator it;
   size_t		i;
 
-  for (it = achievements.begin(), i = 0; it != achievements.end(); ++it, ++i)
+  for (it = statistics.begin(), i = 0; it != statistics.end(); ++it, ++i)
     buf[i] = it->first.c_str();
   buf[i] = NULL;
   return (&buf[0]);

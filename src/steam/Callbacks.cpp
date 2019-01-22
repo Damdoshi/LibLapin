@@ -22,11 +22,12 @@ void			BunnySteam::AchievementStored(UserAchievementStored_t	*d)
   if (game_id != d->m_nGameID)
     return ;
   if (gl_callback.steam.achievement)
-    achievement_stored = gl_callback.steam.achivement(SAVED, user_data);
+    achievement_stored = gl_callback.steam.achievement(SAVED, user_data);
   else
     achievement_stored = GO_ON;
 }
 
+/*
 void			BunnySteam::AchievementReceived(UserAchievementReceived_t *d)
 {
   if (game_id != d->m_nGameID)
@@ -36,6 +37,7 @@ void			BunnySteam::AchievementReceived(UserAchievementReceived_t *d)
   else
     achievement_received = GO_ON;
 }
+*/
 
 //////////////////////////////////////////////////////////////////////////////////////////
 

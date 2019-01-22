@@ -9,7 +9,7 @@
 #ifndef			BUNNY_CAMERA
 # define		BUNNY_CAMERA
 #endif
-#undef			BUNNY_STEAM
+#define                 __LAPIN_PRIVATE_STEAM_H__
 #include		"lapin_private.h"
 
 void			bunny_capture(t_bunny_camera		*camera,

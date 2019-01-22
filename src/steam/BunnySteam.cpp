@@ -10,7 +10,6 @@ BunnySteam			gl_bunny_steam;
 BunnySteam::BunnySteam(void)
   : achievement_callback(this, &BunnySteam::AchievementStored),
     stats_stored_callback(this, &BunnySteam::StatsStored),
-    achievement_received_callback(this, &BunnySteam::AchievementReceived),
     stats_received_callback(this, &BunnySteam::StatsReceived)
 {
   if (this != &gl_bunny_steam)

@@ -3,6 +3,7 @@
 //
 // Bibliothèque Lapin
 
+#include	<limits.h>
 #include	"lapin_private.h"
 
 bool		BunnySteam::SetStatistic(const std::string	&name,
@@ -10,7 +11,7 @@ bool		BunnySteam::SetStatistic(const std::string	&name,
 {
   if (!user)
     return (false);
-  if (user->SetStat(name.c_str(), value) == false)
+  if (stats->SetStat(name.c_str(), value) == false)
     return (false);
   statistics[name] = value;
   return (true);
@@ -20,6 +21,6 @@ int		BunnySteam::GetStatistic(const std::string	&name) const
 {
   std::map<std::string, int>::const_iterator it = statistics.find(name);
 
-  return (it != statistics.end() ? *it : INT_MIN);
+  return (it != statistics.end() ? it->second : INT_MIN);
 }
 

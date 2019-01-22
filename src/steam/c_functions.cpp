@@ -20,7 +20,7 @@ void			bunny_close_steam(t_bunny_steam			*s)
 {
   BunnySteam		*steam = (BunnySteam*)s;
 
-  s->Stop();
+  steam->Stop();
   delete steam;
 }
 
@@ -67,3 +67,17 @@ const char * const	*bunny_get_statistic_list(t_bunny_steam		*steam)
   return (((BunnySteam*)steam)->StatisticList());
 }
 
+const char              *bunny_get_username(t_bunny_steam               *steam)
+{
+  return (((BunnySteam*)steam)->GetUsername());
+}
+
+const char              *bunny_get_language(t_bunny_steam               *steam)
+{
+  return (((BunnySteam*)steam)->GetLanguage());
+}
+
+uint64_t                bunny_get_user_id(t_bunny_steam                 *steam)
+{
+  return (((BunnySteam*)steam)->GetUserId());
+}

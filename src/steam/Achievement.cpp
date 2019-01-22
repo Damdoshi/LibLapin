@@ -7,9 +7,9 @@
 
 bool		BunnySteam::SetAchievement(const std::string	&name)
 {
-  if (!user)
+  if (!stats)
     return (false);
-  if (user->SetAchievement(name.c_str()) == false)
+  if (stats->SetAchievement(name.c_str()) == false)
     return (false);
   achievements[name] = true;
   return (true);
@@ -19,6 +19,6 @@ bool		BunnySteam::GetAchievement(const std::string	&name) const
 {
   std::map<std::string, bool>::const_iterator it = achievements.find(name);
 
-  return (it != achievements.end() ? *it : false);
+  return (it != achievements.end() ? it->second : false);
 }
 

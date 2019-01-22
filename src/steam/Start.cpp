@@ -8,9 +8,9 @@
 t_bunny_response	BunnySteam::Start(uint64_t		id)
 {
   if (id != 0 && SteamAPI_RestartAppIfNecessary(id))
-    return (EXIT_SUCCESS);
+    return (EXIT_ON_SUCCESS);
   if (SteamAPI_Init() == false)
-    return (EXIT_FAILURE);
+    return (EXIT_ON_ERROR);
   game_id = id;
 
   //
@@ -19,7 +19,7 @@ t_bunny_response	BunnySteam::Start(uint64_t		id)
       (stats = SteamUserStats()) == NULL)
     {
       Stop();
-      return (EXIT_FAILURE);
+      return (EXIT_ON_ERROR);
     }
   callbacks = SteamAPI_RunCallbacks;
 

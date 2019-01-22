@@ -70,4 +70,8 @@ int				bunny_get_statistic(t_bunny_steam		*steam,
 						    const char			*name);
 const char * const		*bunny_get_statistic_list(t_bunny_steam		*steam);
 
+const char                      *bunny_get_username(const t_bunny_steam         *steam);
+const char                      *bunny_get_language(const t_bunny_steam         *steam);
+uint64_t                        bunny_get_user_id(const t_bunny_steam           *steam);
+
 #endif	/*			__LAPIN_STEAM_H__			*/

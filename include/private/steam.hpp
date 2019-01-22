@@ -32,7 +32,7 @@ protected:
 
   ISteamApps			*apps = NULL;
   ISteamUser			*user = NULL;
-  IStreamUserStats		*stats = NULL;
+  ISteamUserStats		*stats = NULL;
   void				(*callbacks)(void) = NULL;
 
   void				*user_data = NULL;
@@ -46,6 +46,10 @@ public:
   t_bunny_response		Start(uint64_t				game_id);
   t_bunny_response		HandleEvents(void			*data);
   void				Stop(void);
+
+  const char                    *GetUsername(void) const;
+  const char                    *GetLanguage(void) const;
+  uint64_t                      GetUserId(void) const;
 
   bool				SetAchievement(const std::string	&name);
   bool				GetAchievement(const std::string	&name) const;
@@ -61,19 +65,22 @@ public:
 
   // Steam stuff.
 private:
+  // "Stored" signifie que Steam a recu l'information
+  // "Received" signifie que le programme a recu l'info de Steam
+
   STEAM_CALLBACK
   (BunnySteam,
    OverlayActivated,
    GameOverlayActivated_t
    );
 
-  // STORED => Signifie que les scores ont été stockés sur Steam
   STEAM_CALLBACK
   (BunnySteam,
    AchievementStored,
    UserAchievementStored_t,
    achievement_callback
    );
+
   STEAM_CALLBACK
   (BunnySteam,
    StatsStored,
@@ -81,13 +88,6 @@ private:
    stats_stored_callback
    );
 
-  // RECEIVED => Signifie qu'on vient de recevoir les scores
-  STEAM_CALLBACK
-  (BunnySteam,
-   AchievementReceived,
-   UserAchievementReceived_t,
-   achievement_received_callback
-   );
   STEAM_CALLBACK
   (BunnySteam,
    StatsReceived,

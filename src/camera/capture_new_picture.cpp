@@ -8,7 +8,7 @@
 #ifndef			BUNNY_CAMERA
 # define		BUNNY_CAMERA
 #endif
-#undef			BUNNY_STEAM
+#define                 __LAPIN_PRIVATE_STEAM_H__
 #include		"lapin_private.h"
 
 t_bunny_picture		*bunny_capture_new_picture(t_bunny_capture	*capture)

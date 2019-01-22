@@ -130,6 +130,10 @@
 # include			"lapin/unix.h"
 # include			"lapin/fixedpoint.h"
 
+# ifdef				BUNNY_STEAM
+#  include			"lapin/steam.h"
+# endif
+
 # include			"lapin/container.h"
 # include			"lapin/context.h"
 
@@ -144,10 +148,6 @@
 
 # ifdef				BUNNY_CAMERA
 #  include			"lapin/camera.h"
-# endif
-
-# ifdef				BUNNY_STEAM
-#  include			"lapin/steam.h"
 # endif
 
 # ifdef				BUNNY_DATABASE
