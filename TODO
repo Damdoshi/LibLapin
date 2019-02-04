@@ -6,10 +6,13 @@ En INI comme dans DABSIC TREE, si des strings litterales sont cote a cote, les c
 
 
 Specificateur "pure" permettant de signaler qu'une fonction depend a 100% de ses paramètres
-et que donc son resultat peut etre mis en cache avec comme clef ses paramètres.
+et que donc son resultat peut etre mis en cache avec comme clef ses paramètres. => Le mot clef pure
+va donc interdire d'utiliser le scope artificiel ou le scope global.
 
 Nouveau type "address" basé sur string, permettant de specifier plus precisement les
 paramètres fait pour etre manipulé comme des addresses avec l'operateur [de deref].
+Ou alors, tout simplement, l'opérateur & retourne l'adresse de l'element... et ne peut donc
+evidemment pas être utilisé sur les variables automatiques.
 
 Permettre d'executer une sequence de facon aussi transparente qu'une fonction.
 (modifier configuration_execute/dabsic_compute)

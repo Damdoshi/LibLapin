@@ -197,6 +197,10 @@ const char * const		*bunny_split(const char			*str,
 */
 void				bunny_delete_split(const char * const	*tab);
 
+char				*bunny_stick(const char * const		*tab,
+					     const char			*glue,
+					     bool			no_last);
+
 /*!
 ** Some of you may find const char * const * too long to write and prefer this
 ** typedef which is shorter, but also occulting.

@@ -19,6 +19,10 @@ typedef struct		s_test
   const char		*toks[5];
   bool			agreg;
   const char		*out[20];
+
+  const char		*implode_tok;
+  bool			no_last;
+  const char		*result;
 }			t_test;
 
 t_test			gl_test[] =
@@ -27,35 +31,40 @@ t_test			gl_test[] =
       "Les Lapins Noirs",
       {" ", NULL},
       false,
-      {"Les", "Lapins", "Noirs", NULL}
+      {"Les", "Lapins", "Noirs", NULL},
+      "_", true, "Les_Lapins_Noirs"
     },
 
     {
       "Les  Lapins  Noirs",
       {" ", NULL},
       false,
-      {"Les", "", "Lapins", "", "Noirs", NULL}
+      {"Les", "", "Lapins", "", "Noirs", NULL},
+      "_", false, "Les__Lapins__Noirs_"
     },
 
     {
       "Les  Lapins  Noirs",
       {" ", NULL},
       true,
-      {"Les", "Lapins", "Noirs", NULL}
+      {"Les", "Lapins", "Noirs", NULL},
+      "!", true, "Les!Lapins!Noirs"
     },
 
     {
       "La   LibLapin est plus     qu' une bibliotheque graphique.",
       {" ", "'", ".", NULL},
       true,
-      {"La", "LibLapin", "est", "plus", "qu", "une", "bibliotheque", "graphique", NULL}
+      {"La", "LibLapin", "est", "plus", "qu", "une", "bibliotheque", "graphique", NULL},
+      "", true, "LaLibLapinestplusquunebibliothequegraphique"
     },
 
     {
       "Ceci == Cela",
       {"==", " ", NULL},
       false,
-      {"Ceci", "", "", "Cela", NULL}
+      {"Ceci", "", "", "Cela", NULL},
+      "", false, "CeciCela"
     },
 
 
@@ -63,24 +72,27 @@ t_test			gl_test[] =
       "Ceci == Cela",
       {"==", " ", NULL},
       true,
-      {"Ceci", "Cela", NULL}
+      {"Ceci", "Cela", NULL},
+      "=", true, "Ceci=Cela"
     },
 
     {
       "LeMegaTokenDeLaMortQuiTue UnAutre Token Tres Bizarre",
       {"LeMegaTokenDeLaMortQuiTue", "UnAutre Token Tres Bizarre", NULL},
       false,
-      {"", " ", NULL} // "" because it start with a token
+      {"", " ", NULL}, // "" because it start with a token
+      "", true, ""
     },
 
     {
       "LeMegaTokenDeLaMortQuiTue UnAutre Token Tres Bizarre",
       {"LeMegaTokenDeLaMortQuiTue", "UnAutre Token Tres Bizarre", NULL},
       true,
-      {" ", NULL} // "" because it start with a token
+      {" ", NULL}, // "" because it start with a token
+      "", false, ""
     },
 
-    {NULL, {NULL}, false, {NULL}}
+    {NULL, {NULL}, false, {NULL}, NULL, false, NULL}
   };
 
 static void		sighandler(int			sig)
@@ -112,6 +124,7 @@ static int		wordtabprint(const char * const	*wt)
 static void		test(void)
 {
   const char * const	*tab;
+  char			*merge;
   size_t		i, j;
 
   for (i = 0; gl_test[i].string != NULL; ++i)
@@ -137,6 +150,19 @@ static void		test(void)
 		      i, j, gl_test[i].out[j], tab[j]);
 	      exit(EXIT_FAILURE);
 	    }
+
+	  if ((merge = bunny_stick(tab, gl_test[i].implode_tok, gl_test[i].no_last)) == NULL)
+	    {
+	      fprintf(stderr, "Test %zu: Memory exhausted.\n", i);
+	      exit(EXIT_FAILURE);
+	    }
+	  if (strcmp(merge, gl_test[i].result) != 0)
+	    {
+	      fprintf(stderr, "Test %zu: Merge mismath. Expected %s, got %s.\n",
+		      i, gl_test[i].result, merge);
+	      exit(EXIT_FAILURE);
+	    }
+	  bunny_free(merge);
 	}
       bunny_delete_split(tab);
     }
@@ -149,8 +175,7 @@ int			main(int			argc,
   srand(time(NULL));
   signal(SIGALRM, sighandler);
   if (argc == 2)
-    alarm(2);  
+    alarm(2);
   test();
   return (EXIT_SUCCESS);
 }
-
