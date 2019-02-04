@@ -388,6 +388,10 @@ void			bunny_configuration_push_path(const char			*file);
 */
 void			bunny_configuration_pop_path(void);
 
+bool			bunny_configuration_read_time(const t_bunny_configuration	*cnf,
+						      const char			*fld,
+						      double				*secs);
+
 /*
 ** To avoid having plenty of tmp variable of differentes types when fetching inside
 ** a configuration sequentially

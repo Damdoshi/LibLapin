@@ -191,6 +191,16 @@ struct				SmallConf
 
   void				Clear(void);
 
+  operator			t_bunny_configuration* (void)
+  {
+    return ((t_bunny_configuration*)this);
+  }
+
+  operator			const t_bunny_configuration* (void) const
+  {
+    return ((const t_bunny_configuration*)this);
+  }
+
   SmallConf(void);
   ~SmallConf(void);
 };

@@ -11,6 +11,7 @@
 t_bunny_sound_sprite	*bunny_read_sound_sprite(t_bunny_configuration	*_cnf)
 {
   t_bunny_sound_sprite	*ss;
+  t_bunny_sound		*snd;
   int			tmp;
 
   if ((ss = (t_bunny_sound_sprite*)bunny_read_music(_cnf)) == NULL)
@@ -34,19 +35,13 @@ t_bunny_sound_sprite	*bunny_read_sound_sprite(t_bunny_configuration	*_cnf)
       (goto DeleteAll, BE_SYNTAX_ERROR,
        PATTERN ": A 'Slices' scope was expected",
        "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
+
   arr = &cnf["Slices"];
   for (it = arr->Begin(); it != arr->End(); ++it)
     {
       t_bunny_sound_slice *s;
 
       slice = it->second;
-      if (slice->Access("Index") == false ||
-	  (slice->Access("Duration") == false && slice->Access("EndIndex") == false))
-	scream_error_if
-	  (goto DeleteAll, BE_SYNTAX_ERROR,
-	   PATTERN ": Inside 'Slices', field must be 2 length long for index and duration",
-	   "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
-
       if ((s = (t_bunny_sound_slice*)bunny_malloc(sizeof(*s))) == NULL)
 	goto DeleteAll;
 
@@ -59,84 +54,87 @@ t_bunny_sound_sprite	*bunny_read_sound_sprite(t_bunny_configuration	*_cnf)
       s->sound.position[1] = ss->soundset.sound.position[1];
       s->sound.position[2] = ss->soundset.sound.position[2];
 
-      if ((*slice)["Index"].GetDouble(&s->index) == false)
-	{
-	  bunny_free(s);
-	  scream_error_if
-	    (goto DeleteAll, BE_SYNTAX_ERROR,
-	     PATTERN ": A double was expected inside 'Index'",
-	     "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
-	}
-      if ((*slice)["Duration"].GetDouble(&s->duration) == false)
-	{
-	  double end;
+      ////////////////////////////////////////
 
-	  if ((*slice)["EndIndex"].GetDouble(&end) == false)
-	    {
-	      bunny_free(s);
-	      scream_error_if
-		(goto DeleteAll, BE_SYNTAX_ERROR,
-		 PATTERN ": A double was expected inside 'Duration' or 'EndIndex'",
-		 "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
-	    }
-	  if (end < s->index)
-	    {
-	      bunny_free(s);
-	      scream_error_if
-		(goto DeleteAll, BE_SYNTAX_ERROR,
-		 PATTERN ": EndIndex cannot be lesser than Index",
-		 "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
-	    }
-	  s->duration = end - s->index;
+      if (bunny_configuration_read_time(slice, "Index", &s->index) == false)
+	goto DeleteAllLoop;
+      s->active_start = s->index;
+
+      ////////////////////////////////////////
+
+      if (slice->Access("EndIndex"))
+	{
+	  if (bunny_configuration_read_time(slice, "EndIndex", &s->duration) == false)
+	    goto DeleteAllLoop;
+	  if (s->duration < s->index)
+	    scream_error_if
+	      (goto DeleteAllLoop, BE_SYNTAX_ERROR,
+	       PATTERN ": EndIndex cannot be lesser than Index",
+	       "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
+	  s->duration = s->duration - s->index;
 	}
+      else if (bunny_configuration_read_time(slice, "Duration", &s->duration) == false)
+	goto DeleteAllLoop;
       s->active_duration = s->duration;
-      if (slice->Access("ActiveDuration"))
-	{
-	  if ((*slice)["ActiveDuration"].GetDouble(&s->active_duration) == false)
-	    {
-	      bunny_free(s);
-	      scream_error_if
-		(goto DeleteAll, BE_SYNTAX_ERROR,
-		 PATTERN ": A double was expected inside 'ActiveDuration'",
-		 "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
-	    }
-	}
-      s->active_start = 0;
-      if (slice->Access("ActiveStart"))
-	{
-	  if ((*slice)["ActiveStart"].GetDouble(&s->active_duration) == false)
-	    {
-	      bunny_free(s);
-	      scream_error_if
-		(goto DeleteAll, BE_SYNTAX_ERROR,
-		 PATTERN ": A double was expected inside 'ActiveStart'",
-		 "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
-	    }
-	}
-      t_bunny_sound	*snd = &s->sound;
 
+      ////////////////////////////////////////
+      // OPTIONAL
+      if (slice->Access("ActiveEnd"))
+	{
+	  if (bunny_configuration_read_time(slice, "ActiveEnd", &s->active_duration) == false)
+	    goto DeleteAllLoop;
+	  if (s->active_duration < s->index)
+	    scream_error_if
+	      (goto DeleteAllLoop, BE_SYNTAX_ERROR,
+	       PATTERN ": ActiveEnd cannot be lesser than Index",
+	       "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
+	  s->active_duration = s->active_duration - s->index;
+	}
+      else if (slice->Access("ActiveDuration"))
+	if (bunny_configuration_read_time
+	    (slice, "ActiveDuration", &s->active_duration) == false)
+	  goto DeleteAllLoop;
+
+      ////////////////////////////////////////
+      // OPTIONAL
+      if (slice->Access("ActiveIndex"))
+	{
+	  if (bunny_configuration_read_time(slice, "ActiveIndex", &s->active_start) == false)
+	    goto DeleteAllLoop;
+	}
+      else if (slice->Access("ActiveStart"))
+	{
+	  if (bunny_configuration_read_time(slice, "ActiveStart", &s->active_start) == false)
+	    goto DeleteAllLoop;
+	  s->active_start = s->active_start + s->index;
+	}
+
+      ////////////////////////////////////////
+      // SET SOUND
+
+      snd = &s->sound;
       if (bunny_set_sound_attribute
 	  (NULL, &snd, (t_bunny_configuration**)&slice, true) == false)
-	{
-	  bunny_free(s);
-	  scream_error_if
-	    (goto DeleteAll, bunny_errno,
-	     PATTERN ": An error happen when retrieving sound attributes.",
-	     "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
-	}
+	scream_error_if
+	  (goto DeleteAllLoop, bunny_errno,
+	   PATTERN ": An error happen when retrieving sound attributes.",
+	   "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
+
       s->sound.loop = false;
       if (bunny_map_set_data
 	  (ss->sound_areas,
 	   bunny_sound_sprite_slice_name(it->first.c_str()),
 	   s,
 	   t_bunny_sound_slice*) == NULL)
-	{
-	  bunny_free(s);
-	  scream_error_if
-	    (goto DeleteAll, bunny_errno,
-	     PATTERN ": Cannot add the sound slice into the sound sprite",
-	     "ressource,sound_sprite", _cnf, (void*)NULL);
-	}
+	scream_error_if
+	  (goto DeleteAllLoop, bunny_errno,
+	   PATTERN ": Cannot add the sound slice into the sound sprite",
+	   "ressource,sound_sprite", _cnf, (void*)NULL);
+
+      continue;
+    DeleteAllLoop:
+      bunny_free(s);
+      goto DeleteAll;
     }
 
   *(t_bunny_sound_slice**)&ss->last_played_slice = NULL;
