@@ -32,7 +32,9 @@ int			main(void)
 	  false, "DressedSprite"
 	  ));
 
-  for (i = 0; i < 10; ++i)
+  // Draw the dynamically drawn dressed sprite on screen DOES NOT WORK
+  // Several blits (base, and then clothes) pink clothes
+  for (i = 0; i < 20; ++i)
     {
       bunny_blit(&win->buffer, &dressed_sprite->sprite.clipable, NULL);
       bunny_display(win);
@@ -40,12 +42,17 @@ int			main(void)
       bunny_sprite_animate(&dressed_sprite->sprite, 1);
     }
 
+  bunny_clear(&win->buffer, BLACK);
+  bunny_display(win);
+  bunny_usleep(2e5);
+
   assert(sprite = bunny_render_dressed_sprite(dressed_sprite));
   assert(sprite->clipable.clip_width == 120);
   assert(sprite->clipable.clip_height == 120);
 
   // Draw the generated sprite on screen
-  for (i = 0; i < 10; ++i)
+  // Rendered pink clothes
+  for (i = 0; i < 20; ++i)
     {
       bunny_blit(&win->buffer, &sprite->clipable, NULL);
       bunny_display(win);
@@ -53,11 +60,34 @@ int			main(void)
       bunny_sprite_animate(sprite, 1);
     }
 
+  bunny_clear(&win->buffer, BLACK);
+  bunny_display(win);
+  bunny_usleep(2e5);
+
   bunny_delete_clipable(&sprite->clipable);
   assert(bunny_dressed_sprite_wear(dressed_sprite, "TheArmor", "White"));
   assert(sprite = bunny_render_dressed_sprite(dressed_sprite));
 
   // Draw the generated sprite on screen
+  // Rendered white clothes
+  for (i = 0; i < 20; ++i)
+    {
+      bunny_blit(&win->buffer, &sprite->clipable, NULL);
+      bunny_display(win);
+      bunny_usleep(1e5);
+      bunny_sprite_animate(sprite, 1);
+    }
+
+  bunny_clear(&win->buffer, BLACK);
+  bunny_display(win);
+  bunny_usleep(2e5);
+
+  bunny_delete_clipable(&sprite->clipable);
+  assert(bunny_dressed_sprite_wear(dressed_sprite, "TheArmor", "Red"));
+  assert(sprite = bunny_render_dressed_sprite(dressed_sprite));
+
+  // Draw the generated sprite on screen
+  // The clothes are based on the file of the white clothe but with an additional color mask
   for (i = 0; i < 10; ++i)
     {
       bunny_blit(&win->buffer, &sprite->clipable, NULL);

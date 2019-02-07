@@ -69,8 +69,8 @@ t_bunny_sound_sprite	*bunny_read_sound_sprite(t_bunny_configuration	*_cnf)
 	  if (s->duration < s->index)
 	    scream_error_if
 	      (goto DeleteAllLoop, BE_SYNTAX_ERROR,
-	       PATTERN ": EndIndex cannot be lesser than Index",
-	       "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
+	       PATTERN ": EndIndex (%f) cannot be lesser than Index (%f)",
+	       "ressource,sound_sprite,syntax", _cnf, (void*)NULL, s->duration, s->index);
 	  s->duration = s->duration - s->index;
 	}
       else if (bunny_configuration_read_time(slice, "Duration", &s->duration) == false)
@@ -86,8 +86,8 @@ t_bunny_sound_sprite	*bunny_read_sound_sprite(t_bunny_configuration	*_cnf)
 	  if (s->active_duration < s->index)
 	    scream_error_if
 	      (goto DeleteAllLoop, BE_SYNTAX_ERROR,
-	       PATTERN ": ActiveEnd cannot be lesser than Index",
-	       "ressource,sound_sprite,syntax", _cnf, (void*)NULL);
+	       PATTERN ": ActiveEnd (%f) cannot be lesser than Index (%f)",
+	       "ressource,sound_sprite,syntax", _cnf, (void*)NULL, s->active_duration, s->index);
 	  s->active_duration = s->active_duration - s->index;
 	}
       else if (slice->Access("ActiveDuration"))

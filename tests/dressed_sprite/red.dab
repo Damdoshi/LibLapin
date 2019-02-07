@@ -1,0 +1,13 @@
+RessourceFile="white.png"
+InitialAnimation="Base"
+ColorMask=255,0,0
+Frequency=1
+[Animations
+  [Base
+    Position=0,0
+    Frame=3
+  ]
+]
+[Clip
+  Size=120,120
+]

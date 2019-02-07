@@ -1,9 +1,6 @@
 
-[* THE BODY SPRITE *]
+[* THE BODY SPRITE - t_bunny_sprite *]
 RessourceFile="base.png"
-[Clip
-  Size=120,120
-]
 InitialAnimation="Base"
 Frequency=1
 [Animations
@@ -12,12 +9,17 @@ Frequency=1
     Frame=3
   ]
 ]
+[Clip
+  Size=120,120
+]
 
-[* WHICH CLOTHES THE BODY WEAR *]
+[* WHICH CLOTHES THE BODY WEAR - t_bunny_dressed_sprite *]
 [Clothes
+  [* "Closet", "Clothe" *]
   Hat="TheArmor","Pink"
 ]
 
+[* t_bunny_map of string+t_bunny_wardrobe *]
 [*
 **   WARDROBE WITH CLOTHE THAT
 ** MUST RESPECT THE BODY SPRITE
@@ -30,6 +32,7 @@ Frequency=1
     Depth=3
     {Sprites
       {"White", @insert "white.dab"},
+      {"Red", @insert "red.dab"},
       {"Pink", "pink.dab"}
     }
   ]

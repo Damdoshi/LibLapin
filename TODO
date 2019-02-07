@@ -1,3 +1,16 @@
+Les erreurs dans LibLapin2 doivent etre indenté en fonction de leur profondeur.
+Comme ca, on peut retourner les erreurs et les avoir dans l'ordre, genre
+-Cannot generate ressourceX
+--Cannot parse gnagnagna
+---Syntax error on line 3 because xxxx
+
+
+En Dabsic, le mot clef qui sert a renvoyer une erreur peut servir soit à throw soit à revenir
+dans la fonction parente en fonction de la façon dont il a été appelé. En effet, un specificateur
+d'appel permet de demander a la fonction en dessous de faire l'un ou l'autre. Il existe egalement
+un mot clef servant a transmettre le specificateur de la fonction courante...!
+CA, ca serait cool = )
+
 
 Ajouter la possibilite de mettre des SONS dans bunny sprite.
 

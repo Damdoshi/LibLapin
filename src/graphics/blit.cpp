@@ -5,6 +5,9 @@
 
 #include			"lapin_private.h"
 
+void				merge_clothe(t_bunny_map		*nod,
+					     void			*pnw);
+
 #define				PATTERN				\
   "%p target, %p source, %p position (%d, %d), %p shader"
 
@@ -50,6 +53,29 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	  (PATTERN, "graphics", output, picture, pos, pos->x, pos->y, _shader);
 	return ;
       }
+    case DRESSED_SPRITE:
+      {
+	struct bunny_dressed_sprite *spr = (struct bunny_dressed_sprite*)picture;
+	std::map<int, std::list<t_bunny_clipable*> > clo;
+	t_bunny_map **node;
+
+	spr->type = (size_t)SPRITE;
+	bunny_blit_shader(output, picture, pos, _shader);
+	spr->type = (size_t)DRESSED_SPRITE;
+	for (bunny_map_all(spr->clothes, node))
+	  {
+	    t_bunny_map *nod = *node;
+	    size_t key = (size_t)nod->key;
+	    t_bunny_clothe *clothe = (t_bunny_clothe*)nod->data;
+	    t_bunny_closet *closet = bunny_map_get_data(spr->closets, key, t_bunny_closet*);
+
+	    clo[closet->depth].push_back(&clothe->sprite->clipable);
+	  }
+	for (auto it = clo.begin(); it != clo.end(); ++it)
+	  for (auto jt = it->second.begin(); jt != it->second.end(); ++jt)
+	    bunny_blit_shader(output, *jt, pos, _shader);
+	return ;
+      }
     case TILEMAP:
       {
 	struct bunny_tilemap	*tmap = (struct bunny_tilemap*)picture;
@@ -61,7 +87,6 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	// NO BREAK -> Graphic ram scope is needed too.
 	[[fallthrough]];
       }
-    case DRESSED_SPRITE:
     case SPRITE:
     case GRAPHIC_RAM:
       {

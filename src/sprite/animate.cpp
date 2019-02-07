@@ -11,7 +11,7 @@ static void		broadcast_animate(t_bunny_map			*nod,
   t_bunny_clothe	*clothe = bunny_map_data(nod, t_bunny_clothe*);
 
   if (clothe)
-    bunny_sprite_animate(clothe->sprite, *(float*)p);
+    bunny_sprite_animate(clothe->sprite, *(double*)p);
 }
 
 static void		_set_frame(struct bunny_sprite			&spr,

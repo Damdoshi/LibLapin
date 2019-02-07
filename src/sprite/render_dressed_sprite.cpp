@@ -29,6 +29,7 @@ void			merge_clothe(t_bunny_map		*nod,
   if (1)
     {
       bunny_clipable_copy(clipable, &clothe->sprite->clipable);
+
       clothe->sprite->clipable.clip_x_position = 0;
       clothe->sprite->clipable.clip_y_position = 0;
       clothe->sprite->clipable.clip_width = clothe->sprite->clipable.buffer.width;
