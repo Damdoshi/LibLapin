@@ -6,9 +6,9 @@
 #define			__LAPIN_H__
 #include		"private2/allocator.hpp"
 
-t_bunny_allocator	*gl_bunny_default_allocator = NULL;
+t_bunny_allocator	*gl_default_allocator = NULL;
 
-t_bunny_allocator	*bare_get_default_allocator(void)
+t_bunny_allocator	*bunny::get_default_allocator(void)
 {
   if (gl_bunny_default_allocator)
     if (!(gl_bunny_default_allocator = bare_new_allocator(gl_bunny_default_allocator_size)))
@@ -21,7 +21,8 @@ const t_bunny_allocator	*bunny_get_default_allocator(void)
   t_bunny_allocator	*alloc;
 
   PROLOG({"allocator"}, "Entering", "?");
-  alloc = bare_get_default_allocator();
+  if ((alloc = bunny::get_default_allocator()) == NULL)
+    LOGOUT(NULL);
   POSTLOG({"allocator"}, "Leaving", alloc);
   return (alloc);
 }

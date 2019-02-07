@@ -32,7 +32,7 @@ t_bunny_allocator	*bunny_new_allocator(size_t		nbr_bytes)
 
   PROLOG({"allocator"}, "Entering", "?", nbr_bytes);
   if ((alloc = bare_new_allocator(nbr_bytes)) == NULL)
-    return (NULL);
+    LOGOUT(NULL);
   POSTLOG({"allocator"}, "Leaving", alloc, nbr_bytes);
   return (alloc);
 }

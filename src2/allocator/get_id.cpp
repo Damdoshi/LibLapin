@@ -8,7 +8,7 @@
 
 size_t			gl_allocator_id_stack = 1;
 
-size_t			bare_allocator_get_id(void)
+size_t			bunny::allocator_get_id(void)
 {
   return (gl_allocator_id_stack);
 }
@@ -18,7 +18,7 @@ size_t			bunny_allocator_get_id(void)
   size_t		id;
 
   PROLOG({"allocator"}, "Entering", "?");
-  id = bare_allocator_get_id();
+  id = bunny::allocator_get_id();
   POSTLOG({"allocator"}, "Leaving", id);
   return (id);
 }

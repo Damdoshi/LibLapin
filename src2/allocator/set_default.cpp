@@ -20,7 +20,7 @@ bool			bunny_set_default_allocator_size(size_t		s)
 {
   PROLOG({"allocator"}, "Entering", "?", nbr_bytes);
   if (bare_set_default_allocator_size(size) == false)
-    return (false);
+    LOGOUT(false);
   POSTLOG({"allocator"}, "Leaving", alloc, nbr_bytes);
   return (true);
 }

@@ -21,7 +21,7 @@ size_t			bunny_allocator_pop_id(void)
 
   PROLOG({"allocator"}, "Entering", "?");
   if ((id = bare_allocator_push_id()) == 0)
-    return (0);
+    LOGOUT(0);
   POSTLOG({"allocator"}, "Leaving", id);
   return (id);
 }
