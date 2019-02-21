@@ -3,6 +3,10 @@
 //
 // Lapin library
 
+// Il faut faire de cette gestion d'erreur une gestion utilisable coté utilisateur
+// De manière a ce qu'un utilisateur puisse ajouter ses propres cascades d'erreurs
+// A celle de la LibLapin.
+
 #ifndef			__LAPIN_PRIVATE_LOGS_HPP__
 # define		__LAPIN_PRIVATE_LOGS_HPP__
 # define		leave(er, statement)			\
