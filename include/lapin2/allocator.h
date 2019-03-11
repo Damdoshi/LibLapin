@@ -14,6 +14,7 @@
 typedef struct		s_bunny_allocator
 {
   void			*first_byte;
+  size_t		minimum_allocation_size;
   size_t		length;
   size_t		occupied_space;
   size_t		available_space;
