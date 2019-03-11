@@ -14,16 +14,17 @@ static const std::string gl_screen_tweak_code =
 static void		_clean_shader(void)
 {
   if (gl_screen_tweak_shader)
-    bunny_delete_shader(gl_screen_tweak_shader);
+    {
+      bunny_delete_shader(gl_screen_tweak_shader);
+      gl_screen_tweak_shader = NULL;
+    }
 }
 
 t_bunny_shader		*bunny_screen_tweak_shader(const t_bunny_screen_tweak *bst)
 {
   if (bst == NULL)
     {
-      if (gl_screen_tweak_shader)
-        bunny_delete_shader(gl_screen_tweak_shader);
-      gl_screen_tweak_shader = NULL;
+      _clean_shader();
       return (NULL);
     }
   if (gl_screen_tweak_shader == NULL)
@@ -32,7 +33,10 @@ t_bunny_shader		*bunny_screen_tweak_shader(const t_bunny_screen_tweak *bst)
 	return (NULL);
       if (bunny_read_shader
 	  (gl_screen_tweak_shader, NULL, gl_screen_tweak_code.c_str()) == false)
-	return (NULL);
+	{
+	  _clean_shader();
+	  return (NULL);
+	}
       atexit(_clean_shader);
     }
 

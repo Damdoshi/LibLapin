@@ -685,6 +685,8 @@ extern t_bunny_my_geometry	gl_bunny_my_geometry;
 ** \param enable True to enable full support, false to disable it. False is the default.
 */
 void				bunny_enable_full_blit(bool			enable);
+void				bunny_set_alpha_blit(bool			enable);
+void				bunny_set_additional_blit(bool			enable);
 
 /*!
 ** All picture loading function in the bunny library use a ressource manager to avoid

@@ -16,6 +16,32 @@
 #  error			You cannot include this file directly.
 # endif
 
+/*
+** Algorithme d'affichage:
+**  On commence par tracer les ombres sur un calque dédié. Ce calque
+**  va nous servir de tileset par la suite.
+**
+**  On affiche le sol, puis les ombres immédiatement dessus.
+**
+**  On affiche les murs, et a chaque strate, on affiche l'ombre sur
+**  la nouvelle strate.
+**
+**  De cette facon, on devrait avoir le tracé de l'ombre sur les murs
+**  au lieu d'avoir la colonne entière/visible/invisible comme sur
+**  Allan.
+**
+**  Il faut également générer en sortie un calque normal map qui servira
+**  a dessiner les reliefs fins. (et les ombres au sol)
+**
+**  Le calque d'ombre doit supporter diverses sources de lumieres.
+**  Le calque d'ombre devrait peut etre avoir une influence sur la
+**  normal map (pour effacer les reflets qui sont dans l'obscurité,
+**  par exemple)
+**
+** Depth doit être basé sur t_bunny_tilemap qui doit être capable
+** de s'occuper entre autre du lien entre normal map et map.
+*/
+
 /*!
 ** ******************************************************************
 ** ************** HANGED BUNNY STUDIO DEPTH ENGINE ******************

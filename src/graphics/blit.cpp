@@ -3,6 +3,18 @@
 //
 // Bibliothèque Lapin
 
+/*
+** BlendMode:
+**  color source factor
+**  color destination factor
+**  color blend equation
+**
+**  alpha source factor
+**  alpha destination factor
+**  alpha blend equation
+**
+*/
+
 #include			"lapin_private.h"
 
 void				merge_clothe(t_bunny_map		*nod,
@@ -210,7 +222,51 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	    || *input_type == DRESSED_SPRITE)
 	  {
 	    if (shader)
-	      out->texture->draw(*spr, shader);
+	      {
+		if (gl_set_alpha_blit)
+		  {
+		    sf::RenderStates stt = sf::BlendMultiply;
+
+		    stt.shader = shader;
+		    out->texture->draw(*spr, stt);
+		  }
+		if (gl_set_additional_blit)
+		  {
+		    sf::RenderStates stt = sf::BlendAdd;
+
+		    stt.shader = shader;
+		    out->texture->draw(*spr, stt);
+		  }
+		else if (gl_full_blit == false)
+		  {
+		    sf::RenderStates stt = sf::BlendNone;
+
+		    stt.shader = shader;
+		    out->texture->draw(*spr, stt);
+		  }
+		else
+		  out->texture->draw(*spr, shader);
+	      }
+	    else if (gl_set_alpha_blit)
+	      {
+		sf::RenderStates stt = sf::BlendAlpha;
+
+		stt.blendMode = sf::BlendMode
+		  (sf::BlendMode::Zero, // Tuile
+		   sf::BlendMode::One,  // Ombre
+		   sf::BlendMode::Add,   // On garde la couleur de l'ombre
+		   sf::BlendMode::One,  // Tuile
+		   sf::BlendMode::One,   // Ombre
+		   sf::BlendMode::ReverseSubtract // La tuile retire de la transparence
+		   );
+		out->texture->draw(*spr, stt);
+	      }
+	    else if (gl_set_additional_blit)
+	      {
+		sf::RenderStates stt = sf::BlendAdd;
+
+		out->texture->draw(*spr, stt);
+	      }
 	    else
 	      out->texture->draw(*spr);
 	  }

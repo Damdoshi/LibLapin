@@ -78,7 +78,15 @@ void				bunny_set_geometry(t_bunny_buffer		*buffer,
 	if (pic->res_id != 0)
 	  bunny_make_clipable_unique((t_bunny_clipable*)buffer);
 	if (picture == NULL)
-	  pic->texture->draw(&vert[0], vert.getVertexCount(), (sf::PrimitiveType)geometry);
+	  {
+	    if (gl_full_blit == false)
+	      pic->texture->draw
+		(&vert[0], vert.getVertexCount(),
+		 (sf::PrimitiveType)geometry, sf::RenderStates(sf::BlendNone));
+	    else
+	      pic->texture->draw
+		(&vert[0], vert.getVertexCount(), (sf::PrimitiveType)geometry);
+	  }
 	else
 	  {
 	    struct bunny_picture *tex = (struct bunny_picture*)picture;

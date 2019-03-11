@@ -131,7 +131,10 @@ const std::string	BodyEnd =
 static void		_clean_shader(void)
 {
   if (gl_normal_map_shader)
-    bunny_delete_shader(gl_normal_map_shader);
+    {
+      bunny_delete_shader(gl_normal_map_shader);
+      gl_normal_map_shader = NULL;
+    }
 }
 
 t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
@@ -154,14 +157,14 @@ t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
 	return (NULL);
 
       ss << InitialDeclaration;
-      for (i = 0; i < 1 && sizeof(nm->lights) / sizeof(nm->lights[0]); ++i)
+      for (i = 0; i < sizeof(nm->lights) / sizeof(nm->lights[0]); ++i)
 	{
 	  snprintf(&buffer[0], sizeof(buffer), StretchedDeclaration.c_str(),
 		   i, i, i, i, i, i, i, i, i, i, i); // 1$?
 	  ss << &buffer[0];
 	}
       ss << BodyStart;
-      for (i = 0; i < 1 && sizeof(nm->lights) / sizeof(nm->lights[0]); ++i)
+      for (i = 0; i < sizeof(nm->lights) / sizeof(nm->lights[0]); ++i)
 	{
 	  snprintf(&buffer[0], sizeof(buffer), StretchedBody.c_str(),
 		   i, i, i, i, i, i, i, i, i, i, i, i, i); // 1$?
@@ -202,7 +205,7 @@ t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
      nm->specular_map
      );
 
-  for (i = 0; i < 1 && sizeof(nm->lights) / sizeof(nm->lights[0]); ++i)
+  for (i = 0; i < sizeof(nm->lights) / sizeof(nm->lights[0]); ++i)
     {
       snprintf(&buffer[0], sizeof(buffer), "Active%d", i);
       bunny_shader_set_variable

@@ -1,3 +1,7 @@
+=> Faire un module pour gérer les joysticks connus et attribuer des touches automatiquement.
+(Voir la manette de PS4, XBOX, le Steam Controler, la manette de supernes, le controleur Atari et ma manette pas cher,
+ainsi que le "bunny controler", qui vivra un jour :p)
+
 Les erreurs dans LibLapin2 doivent etre indenté en fonction de leur profondeur.
 Comme ca, on peut retourner les erreurs et les avoir dans l'ordre, genre
 -Cannot generate ressourceX
@@ -166,3 +170,21 @@ Dans le contexte "Adventure"... Les lignes de texte choisies doivent changer de 
 si elles ont deja été dite.
 
 Dans le contexte "Depth"... de la pluie! = )
+
+
+Dans Dabsic, la possibilité d'établir des fonctions de lecture et d'ecriture d'attribut
+afin de remplir les taches de SetX et GetX en C++ mais en utilisant des opérateurs au lieu
+d'appel explicite de fonctions. (Ca n'empeche pas d'ecrire des fonctions specifiques si
+besoin)
+C'est a dire, pour l'écriture, qu'il s'agit d'une sorte de surchage d'opérateur '=' pour
+attribut.
+
+
+Un format "midi like" basé sur bunny configuration et qui permet des choses comme ca:
+rendre une musique... avec des pistes généré a l'arpegiateur, dont l'arpège pourrait
+changer a chaque rendu... (ou pas) de manière a créer de la musique avec une orchestration
+tout le temps similaire mais pouvant changer tout de même.
+
+
+"Fast sinus and cosinus". Des macros permettant d'acceder a des cos et sin precalculé.
+La résolution du precalcul et le precalcul sont commandable au début.

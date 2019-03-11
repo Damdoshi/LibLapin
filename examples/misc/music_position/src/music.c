@@ -8,9 +8,9 @@ t_bunny_response	loop(t_bunny_sound		*music)
 {
   static double		i;
 
-  i += 0.1;
-  bunny_sound_position(music, cos(i) * 2, sin(i) * 2, 0);
-  // bunny_sound_position(music, cos(i) * 5, 0, 0);
+  i += 0.01;
+  //bunny_sound_position(music, cos(i) * 2, sin(i) * 2, 0);
+  bunny_sound_position(music, cos(i) * 2, 0, 0);
   return (GO_ON);
 }
 
