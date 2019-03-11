@@ -49,9 +49,16 @@ static void		get_color(sf::Shader				*shader,
 				  size_t				n,
 				  va_list				*lst)
 {
-  sf::Color		color(va_arg(*lst, unsigned int));
+  sf::Color		color;
+  volatile t_bunny_color col;
 
   (void)n;
+  // Color are reverted...
+  col.full = va_arg(*lst, unsigned int);
+  color.a = col.argb[ALPHA_CMP];
+  color.r = col.argb[RED_CMP];
+  color.g = col.argb[GREEN_CMP];
+  color.b = col.argb[BLUE_CMP];
   shader->setUniform(varname, sf::Glsl::Vec4{color});
 }
 

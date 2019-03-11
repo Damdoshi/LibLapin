@@ -5,7 +5,7 @@
 
 #include		"lapin_private.h"
 
-void			bunny_set_additonal_blit(bool			blend)
+void			bunny_set_additional_blit(bool			blend)
 {
   gl_set_additional_blit = blend;
 }
