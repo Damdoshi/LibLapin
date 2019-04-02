@@ -65,6 +65,8 @@ void				bunny_display(const t_bunny_window		*win);
 */
 const t_bunny_size		*bunny_get_screen_resolution(void);
 
+const t_bunny_size		*bunny_list_monitors(void);
+
 /*!
 ** The t_bunny_window_style enumeration is a collection of values that will
 ** allow you, throught the bunny_start_style function, to open a window with

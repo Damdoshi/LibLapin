@@ -164,4 +164,8 @@ typedef enum			e_bunny_keysym
     BKS_LAST_KEY
   }				t_bunny_keysym;
 
+extern const char		*gl_bunny_keysym[BKS_LAST_KEY];
+
+const char			*bunny_get_keyname(t_bunny_keysym	sym);
+
 #endif	/*			__LAPIN_ENUM_H__	*/

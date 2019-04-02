@@ -267,6 +267,12 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 
 		out->texture->draw(*spr, stt);
 	      }
+	    else if (gl_set_multiply_blit)
+	      {
+		sf::RenderStates stt = sf::BlendMultiply;
+
+		out->texture->draw(*spr, stt);
+	      }
 	    else
 	      out->texture->draw(*spr);
 	  }

@@ -33,6 +33,7 @@ t_bunny_window			*gl_window;
 bool				gl_full_blit = false;
 bool				gl_set_alpha_blit = false;
 bool				gl_set_additional_blit = false;
+bool				gl_set_multiply_blit = false;
 void				*gl_loop_data;
 
 const char			*DEFAULT_SCOPE = "";

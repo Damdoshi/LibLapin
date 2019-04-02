@@ -35,7 +35,7 @@ static t_bunny_response		splash_key(t_bunny_event_state		state,
       bunny_sound_pitch(&bss->falling->sound, pitch);
       bunny_sound_pitch(&bss->outch->sound, pitch);
     }
-  if (sym == BKS_ESCAPE && state == GO_DOWN)
+  if ((sym == BKS_ESCAPE || sym == BKS_RETURN) && state == GO_DOWN)
     bss->animation_step = LAST_AS;
   return (GO_ON);
 }

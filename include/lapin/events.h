@@ -234,6 +234,7 @@ void				bunny_set_joy_connect_response(t_bunny_joy_connect joy);
 ** \return A pointer to the informations of the requested joystick. NULL if id was invalid.
 */
 const t_bunny_joystick		*bunny_get_joy_info(int				id);
+void				bunny_update_joysticks(void);
 
 /*!
 ** The tpye of the function that will handle any changing on a joystick axis.
@@ -690,7 +691,7 @@ typedef struct			s_bunny_joystick_connect_event
 typedef struct			s_bunny_joystick_move_event
 {
   unsigned int			joystick_id;
-  t_bunny_joy_axis		axis;
+  t_bunny_axis			axis;
   float				position;
 }				t_bunny_joystick_move_event;
 
@@ -700,7 +701,7 @@ typedef struct			s_bunny_joystick_button_event
   unsigned int			button;
 }				t_bunny_joystick_button_event;
 
-typedef union			u_bunny_event
+typedef struct			u_bunny_event
 {
   t_bunny_event_type		type;
   union

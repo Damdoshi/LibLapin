@@ -6,6 +6,8 @@
 #include		<stdio.h>
 #include		"lapin_private.h"
 
+#define			LINEMEM_SIZE			512
+
 struct			cstring
 {
   const char		*str;
@@ -126,7 +128,7 @@ static size_t		count_lines(t_bunny_font	*font,
   hcnt = 0;
   line = 0;
   linemem[0].str = font->string;
-  for (i = 0; font->string[i]; ++i)
+  for (i = 0; font->string[i] && line < LINEMEM_SIZE; ++i)
     if (font->string[i] == '\n')
       {
 	hcnt = 0;
@@ -202,7 +204,7 @@ static int		put_letter(t_bunny_font		*font,
 
 void			_bunny_draw_text(t_bunny_font	*font)
 {
-  struct cstring	linemem[512];
+  struct cstring	linemem[LINEMEM_SIZE];
   double		vpitch, hspace;
   t_bunny_position	startpos, iterat;
   int			lines, word, space;

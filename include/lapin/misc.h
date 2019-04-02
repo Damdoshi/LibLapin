@@ -259,6 +259,14 @@ bool				bunny_reach(double			*value,
 					    double			limit,
 					    double			step);
 
+double				bunny_clamp(double			value,
+					    double			min,
+					    double			max);
+
+double				bunny_rclamp(double			value,
+					     double			min,
+					     double			max);
+
 /*
 ** Self evaluation.
 ** Test public/privates structures consistancy.

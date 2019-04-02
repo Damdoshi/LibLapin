@@ -687,6 +687,7 @@ extern t_bunny_my_geometry	gl_bunny_my_geometry;
 void				bunny_enable_full_blit(bool			enable);
 void				bunny_set_alpha_blit(bool			enable);
 void				bunny_set_additional_blit(bool			enable);
+void				bunny_set_multiply_blit(bool			blend);
 
 /*!
 ** All picture loading function in the bunny library use a ressource manager to avoid

@@ -404,6 +404,6 @@ typedef union		u_bunny_temporary_data
   const char		*string;
 }			t_bunny_temporary_data;
 
-# include			"compat/configuration.h"
-#endif	/*			__LAPIN_CONFIGURATION_H__				*/
+# include		"compat/configuration.h"
+#endif	/*		__LAPIN_CONFIGURATION_H__					*/
 
