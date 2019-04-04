@@ -193,3 +193,6 @@
     parameter (ex: t_bunny_sprite)
 
   - Free functions may be macros to set to NULL sent pointers.
+
+  - Bring C++ encapsulating stuff that allows to use scopes ctor/dtor.
+

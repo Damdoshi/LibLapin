@@ -128,7 +128,7 @@ static size_t		count_lines(t_bunny_font	*font,
   hcnt = 0;
   line = 0;
   linemem[0].str = font->string;
-  for (i = 0; font->string[i] && line < LINEMEM_SIZE; ++i)
+  for (i = 0; font->string[i] && line < LINEMEM_SIZE - 1; ++i)
     if (font->string[i] == '\n')
       {
 	hcnt = 0;

@@ -5,7 +5,7 @@
 LibLapin is an easy and direct graphic and game library offering a C API.
 
 It provides features for graphics, events and sound to network and configuration scripts.
-It is written in "C+" and can be used in both C and C++.
+It is written in C++ with a procedural style and can be used in both C and C++.
 
 It was originally designed to be used as rookie library for a private french school with three objectives:
 - Make pupils progress in graphic programming
@@ -59,5 +59,4 @@ If you want to commit something, my only request is: please, keep the project ho
  * Try to keep the coding style as it is, at least inside the headers file. I don't care much about code files.
  * If you create a new module, add a small program in example/misc/ to demonstrate what your module do, and if possible a full test in tests/.
  * If you need to break the API to extend it, don't break it: create a new function with your new prototype and bring an additional macro with the old one that call the new one.
- * Doxygen all
 
