@@ -6,6 +6,7 @@
 #include		<stdlib.h>
 #define			__LAPIN_H__
 #include		"private2/allocator.hpp"
+#include		"private2/logs.hpp"
 
 void			bunny::delete_allocator(t_bunny_allocator	*allocator)
 {
@@ -14,8 +15,8 @@ void			bunny::delete_allocator(t_bunny_allocator	*allocator)
 
 void			bunny_delete_allocator(t_bunny_allocator	*allocator)
 {
-  PROLOG({"allocator"}, "Entering", "[]", allocator);
+  Prelog({"allocator"}, "Entering", "[]", allocator);
   bunny::delete_allocator(allocator);
-  POSTLOG({"allocator"}, "Leaving", [], allocator);
+  Postlog({"allocator"}, "Leaving", "[]", allocator);
 }
 

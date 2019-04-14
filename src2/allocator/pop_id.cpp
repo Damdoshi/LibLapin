@@ -5,13 +5,14 @@
 
 #define			__LAPIN_H__
 #include		"private2/allocator.hpp"
+#include		"private2/logs.hpp"
 
 extern size_t		gl_allocator_id_stack;
 
-size_t			bare_allocator_pop_id(void)
+size_t			bunny::allocator_pop_id(void)
 {
   if (gl_allocator_id_stack == 1)
-    FAILED(return (0), EPERM, {"allocator"}, "Stack is empty.", 0);
+    Failure(return (0), EPERM, {"allocator"}, "Stack is empty.", 0);
   return (--gl_allocator_id_stack);
 }
 
@@ -19,9 +20,12 @@ size_t			bunny_allocator_pop_id(void)
 {
   size_t		id;
 
-  PROLOG({"allocator"}, "Entering", "?");
-  if ((id = bare_allocator_push_id()) == 0)
-    LOGOUT(0);
-  POSTLOG({"allocator"}, "Leaving", id);
+  Prelog({"allocator"}, "Entering", "?");
+  if ((id = bunny::allocator_push_id()) == 0)
+    {
+      ::bunny::TryFlushError();
+      return (0);
+    }
+  Postlog({"allocator"}, "Leaving", id);
   return (id);
 }

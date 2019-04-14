@@ -5,13 +5,14 @@
 
 #define			__LAPIN_H__
 #include		"private2/allocator.hpp"
+#include		"private2/logs.hpp"
 
 t_bunny_allocator	*bunny::migrate_allocator(t_bunny_allocator	*allocator)
 {
-  if (bare_allocator_offset(allocator) == 0)
+  if (bunny::allocator_offset(allocator) == 0)
     return (allocator);
 #warning TODO
-  allocator->first_byte = &allocate->data[0];
+  allocator->first_byte = &allocator->data[0];
   return (allocator);
 }
 
@@ -19,10 +20,13 @@ t_bunny_allocator	*bunny_migrate_allocator(t_bunny_allocator	*allocator)
 {
   t_bunny_allocator	*alloc;
 
-  PROLOG({"allocator"}, "Entering", "?", allocator);
+  Prelog({"allocator"}, "Entering", "?", allocator);
   if ((alloc = bunny::migrate_allocator(allocator)) == NULL)
-    LOGOUT(NULL);
-  POSTLOG({"allocator"}, "Leaving", alloc, allocator);
+    {
+      bunny::TryFlushError();
+      return (NULL);
+    }
+  Postlog({"allocator"}, "Leaving", alloc, allocator);
   return (alloc);
 
 }

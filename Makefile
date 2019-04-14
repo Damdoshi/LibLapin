@@ -32,7 +32,7 @@
   LINKER	?=	ar rcs
   COMPILER	?=	g++
 
-  CONFIG	=	-W -Wall -fPIC -std=c++14 -Wno-write-strings		\
+  CONFIG	=	-W -Wall -fPIC -std=c++1z -Wno-write-strings		\
 			-Wno-unused-result -Wno-format-security			\
 			-Wno-frame-address					\
 			-DBUNNY_ALLOCATOR_DEACTIVATED				\
@@ -60,7 +60,7 @@
 ## Source                                                                      ##
 #################################################################################
 
-  SRC		=	$(shell find src/ -name "*.cpp")
+  SRC		=	$(shell find src2/ -name "*.cpp")
   OBJ		=	$(SRC:.cpp=.o)
 
 #################################################################################

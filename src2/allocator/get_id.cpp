@@ -4,6 +4,7 @@
 // Lapin library
 
 #define			__LAPIN_H__
+#include		"private2/logs.hpp"
 #include		"private2/allocator.hpp"
 
 size_t			gl_allocator_id_stack = 1;
@@ -17,9 +18,9 @@ size_t			bunny_allocator_get_id(void)
 {
   size_t		id;
 
-  PROLOG({"allocator"}, "Entering", "?");
+  Prelog({"allocator"}, "Entering", "?");
   id = bunny::allocator_get_id();
-  POSTLOG({"allocator"}, "Leaving", id);
+  Postlog({"allocator"}, "Leaving", id);
   return (id);
 }
 

@@ -6,16 +6,16 @@
 #include		<stdlib.h>
 #define			__LAPIN_H__
 #include		"private2/allocator.hpp"
+#include		"private2/logs.hpp"
 
-t_bunny_allocator	*bare_new_allocator(size_t		nbr_bytes)
+t_bunny_allocator	*bunny::new_allocator(size_t		nbr_bytes)
 {
   t_bunny_allocator	*alloc;
-  size_t		structlen;
 
   if (nbr_bytes <= sizeof(*alloc))
-    FAILED(return (NULL), EINVAL, {"allocator"}, "Insufficient memory width requested.", NULL, nbr_bytes);
-  if ((alloc = malloc(nbr_bytes)) == NULL)
-    CRITICAL(return (NULL), bunny_errno, {"allocator"}, "", NULL, nbr_bytes);
+    Failure(return (NULL), EINVAL, {"allocator"}, "Insufficient memory width requested.", NULL, nbr_bytes);
+  if ((alloc = (t_bunny_allocator*)malloc(nbr_bytes)) == NULL)
+    Critical(return (NULL), bunny_errno, {"allocator"}, "", NULL, nbr_bytes);
   alloc->first_byte = &alloc->data[0];
   alloc->length = nbr_bytes;
   alloc->occupied_space = 0;
@@ -30,9 +30,13 @@ t_bunny_allocator	*bunny_new_allocator(size_t		nbr_bytes)
 {
   t_bunny_allocator	*alloc;
 
-  PROLOG({"allocator"}, "Entering", "?", nbr_bytes);
-  if ((alloc = bare_new_allocator(nbr_bytes)) == NULL)
-    LOGOUT(NULL);
-  POSTLOG({"allocator"}, "Leaving", alloc, nbr_bytes);
+  Prelog({"allocator"}, "Entering", "?", nbr_bytes);
+  if ((alloc = bunny::new_allocator(nbr_bytes)) == NULL)
+    {
+      bunny::TryFlushError();
+      return (NULL);
+    }
+  Postlog({"allocator"}, "Leaving", alloc, nbr_bytes);
   return (alloc);
 }
+
