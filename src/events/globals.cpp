@@ -7,7 +7,6 @@
 
 const char		*gl_bunny_keysym[BKS_LAST_KEY] =
   {
-    "UnknownKey",
     "A",
     "B",
     "C",
@@ -53,7 +52,7 @@ const char		*gl_bunny_keysym[BKS_LAST_KEY] =
     "RightShift",
     "RightAlt",
     "RightSystem",
-    "Menu"
+    "Menu",
     "[",
     "]",
     ";",
@@ -113,6 +112,10 @@ const char		*gl_bunny_keysym[BKS_LAST_KEY] =
 
 const char			*bunny_get_keyname(t_bunny_keysym	sym)
 {
+  static const char		*unknown = "Unknown";
+
+  if (sym == BKS_UNKNOWN)
+    return (unknown);
   if (sym < BKS_LAST_KEY)
     return (gl_bunny_keysym[sym]);
   return (gl_bunny_keysym[0]);
