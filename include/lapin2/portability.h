@@ -12,9 +12,11 @@
 # endif
 # include	<stdint.h>
 # include	<sys/types.h>
-
 # ifdef		__APPLE__
 #  include	<sys/_types/_ssize_t.h>
+# endif
+# ifdef		__cplusplus
+#  include	"cpp_guard.hpp"
 # endif
 
 # ifdef		__SIZEOF_INT128__
@@ -80,4 +82,7 @@ int		bunny_dprintf(int		fd,
 			      const char	*format,
 			      ...);
 
+# ifdef		__cplusplus
+#  include	"cpp_guard_end.hpp"
+# endif
 #endif	/*	__LAPIN_PORTABILITY_H__		*/

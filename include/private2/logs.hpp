@@ -77,6 +77,9 @@ namespace		bunny
   extern bool		FlushOnReturn;
   extern std::vector<
     std::string>	AcceptedLabels;
+  extern int		LogDescriptor;
+  extern int		FailDescriptor;
+  extern int		CriticalDescriptor;
 
   inline void		DropLog(void)
   {
@@ -151,31 +154,31 @@ namespace		bunny
       {
 	if ((descriptor = bunny_get_log_descriptor()) < 0)
 	  return ;
-	ss << "LOG\t";
+	ss << "LOGG ";
       }
     else if (logtype == BLT_FAILED)
       {
 	if ((descriptor = bunny_get_fail_descriptor()) < 0)
 	  return ;
-	ss << "FAIL\t";
+	ss << "FAIL ";
       }
     else
       {
 	if ((descriptor = bunny_get_critical_descriptor()) < 0)
 	  return ;
-	ss << "CRIT\t";
+	ss << "CRIT ";
       }
 
     if (LogLength == BLL_FULL_LOG)
       {
 	ss << (long unsigned int)time(NULL) << "\t";
 	ss << __FILE__ << ":" << __LINE__ << "\t";
-	ss << prototype << "\t";
+	ss << prototype << " ";
 	((ss << std::forward<Types>(args) << " "), ...);
 	ss << "-> " << std::forward<Arg>(return_value) << "\t";
       }
     else
-      ss << funcname << "\t";
+      ss << funcname << " ";
 
     if (message.size())
       ss << message;

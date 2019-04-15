@@ -5,15 +5,18 @@
 ** Bibliotheque Lapin
 */
 
-#ifndef		__LAPIN_ERROR_H__
-# define	__LAPIN_ERROR_H__
-# if		!defined(__LAPIN_H__)
-#  error	You cannot include this file directly.
+#ifndef			__LAPIN_ERROR_H__
+# define		__LAPIN_ERROR_H__
+# if			!defined(__LAPIN_H__)
+#  error		You cannot include this file directly.
 # endif
-# include	<errno.h>
-# define	bunny_errno				errno
+# ifdef			__cplusplus
+#  include		"cpp_guard.hpp"
+# endif
+# include		<errno.h>
+# define		bunny_errno				errno
 
-typedef enum	e_bunny_error
+typedef enum		e_bunny_error
   {
     BE_CANT_GENERATE_RESSOURCE	= 10000,
     BE_SYNTAX_ERROR,
@@ -28,50 +31,50 @@ typedef enum	e_bunny_error
     BE_TOO_MANY_PARAMETERS,
     BE_MISSING_CONTEXT,
     LAST_ERROR
-  }		t_bunny_error;
+  }			t_bunny_error;
 
-int		bunny_strerror(int			error_code);
-void		bunny_perror(const char			*message);
+const char		*bunny_strerror(int			error_code);
+void			bunny_perror(const char			*message);
 
-typedef enum	e_bunny_log_type
+typedef enum		e_bunny_log_type
   {
-    BLT_LOG,	// Simple information
-    BLT_FAILED,	// The function did not achieved its purpose
-    BLT_CRITICAL// The function encounter a failure that needs a reaction
-  }		t_bunny_log_type;
+    BLT_LOG,		// Simple information
+    BLT_FAILED,		// The function did not achieved its purpose
+    BLT_CRITICAL	// The function encounter a failure that needs a reaction
+  }			t_bunny_log_type;
 
-void		bunny_flush(void);
-void		_bunny_log(const char			*prototype,
-			   const char			*funcname,
-			   t_bunny_log_type		logtype,
-			   const char			*labels,
-			   const char			*messages);
+void			bunny_flush(void);
+void			_bunny_log(const char			*prototype,
+				   const char			*funcname,
+				   t_bunny_log_type		logtype,
+				   const char			*labels,
+				   const char			*messages);
 
-# define	bunny_log(ltype, labels, messages)	\
+# define		bunny_log(ltype, labels, messages)	\
   _bunny_log(__PRETTY_FUNCTION__, __func__, ltype, labels, messages)
 
-void		bunny_filter_label(const char		*labels);
+void			bunny_filter_label(const char		*labels);
 
-int		bunny_get_log_descriptor(void);
-int		bunny_get_fail_descriptor(void);
-int		bunny_get_critical_descriptor(void);
+int			bunny_get_log_descriptor(void);
+int			bunny_get_fail_descriptor(void);
+int			bunny_get_critical_descriptor(void);
 
-int		bunny_set_log_descriptor(int		fd);
-int		bunny_set_fail_descriptor(int		fd);
-int		bunny_set_critical_descriptor(int	fd);
+int			bunny_set_log_descriptor(int		fd);
+int			bunny_set_fail_descriptor(int		fd);
+int			bunny_set_critical_descriptor(int	fd);
 
-# define	bunny_set_message_descriptors(l, f, c)	\
+# define		bunny_set_message_descriptors(l, f, c)	\
   { bunny_set_log_descriptor(l); bunny_set_fail_descriptor(f); bunny_set_critical_descriptor(c); }
 
-typedef enum	e_bunny_log_length
+typedef enum		e_bunny_log_length
   {
     BLL_SHORT_LOG,
     BLL_FULL_LOG
   }		t_bunny_log_length;
 
-t_bunny_log_length bunny_set_log_length(t_bunny_log_length length);
+t_bunny_log_length	bunny_set_log_length(t_bunny_log_length length);
 
-typedef enum	e_bunny_log_verbosity
+typedef enum		e_bunny_log_verbosity
   {
     BLV_DISPLAY_CRITICAL = 1 << 0,
     BLV_DISPLAY_FAILURE = 1 << 1,
@@ -79,7 +82,10 @@ typedef enum	e_bunny_log_verbosity
     BLV_DISPLAY_PRELOG = 1 << 3,
   }		t_bunny_log_verbosity;
 
-t_bunny_log_verbosity bunny_set_log_verbosity(int	verbosity);
+t_bunny_log_verbosity	bunny_set_log_verbosity(int		verbosity);
 
-#endif	/*	__LAPIN_ERROR_H__			*/
+# ifdef			__cplusplus
+#  include		"cpp_guard_end.hpp"
+# endif
+#endif	/*		__LAPIN_ERROR_H__			*/
 

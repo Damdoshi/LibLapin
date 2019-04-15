@@ -10,6 +10,9 @@
 # if			!defined(__LAPIN_H__)
 #  error		You cannot include this file directly.
 # endif
+# ifdef			__cplusplus
+#  include		"cpp_guard.hpp"
+# endif
 # include		"attribute.h"
 # include		"portability.h"
 
@@ -121,4 +124,7 @@ void			_bunny_realloc(void					*ptr,
 # define		bunny_free(old)						\
   _bunny_realloc(old, 0, gl_bunny_no_id, NULL, NULL, __FILE__, __LINE__)
 
+# ifdef			__cplusplus
+#  include		"cpp_guard_end.hpp"
+# endif
 #endif	/*		__LAPIN_ALLOCATOR_H__					*/
