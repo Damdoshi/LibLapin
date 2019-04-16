@@ -23,8 +23,17 @@ void			_bunny_log(const char		*proto,
       for (j = i; labels[j] != ',' && labels[j]; ++j);
       v.push_back(str.substr(i, j - i));
     }
+  int			logv;
+
+  if (logt == BLT_LOG)
+    logv = BLV_DISPLAY_POSTLOG | BLV_DISPLAY_PRELOG;
+  else if (logt == BLT_FAILED)
+    logv = BLV_DISPLAY_FAILURE;
+  else
+    logv = BLV_DISPLAY_CRITICAL;
+
   bunny::Log
-    (bunny::LogVerbosity,
+    (logv,
      std::string(proto),
      std::string(func),
      logt,

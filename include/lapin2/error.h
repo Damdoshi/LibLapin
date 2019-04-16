@@ -69,6 +69,7 @@ int			bunny_set_critical_descriptor(int	fd);
 typedef enum		e_bunny_log_length
   {
     BLL_SHORT_LOG,
+    BLL_LABELED_LOG,
     BLL_FULL_LOG
   }		t_bunny_log_length;
 
@@ -80,9 +81,10 @@ typedef enum		e_bunny_log_verbosity
     BLV_DISPLAY_FAILURE = 1 << 1,
     BLV_DISPLAY_POSTLOG = 1 << 2,
     BLV_DISPLAY_PRELOG = 1 << 3,
-  }		t_bunny_log_verbosity;
+  }			t_bunny_log_verbosity;
 
-t_bunny_log_verbosity	bunny_set_log_verbosity(int		verbosity);
+t_bunny_log_verbosity	bunny_set_log_verbosity(t_bunny_log_verbosity verbosity);
+t_bunny_log_verbosity	bunny_get_log_verbosity(void);
 
 # ifdef			__cplusplus
 #  include		"cpp_guard_end.hpp"

@@ -135,7 +135,7 @@ namespace		bunny
 
     if (!(loglevel & LogVerbosity))
       return ;
-    if (logtype != BLT_CRITICAL)
+    if (logtype != BLT_CRITICAL && AcceptedLabels.size())
       {
 	int		count = 0;
 
@@ -169,7 +169,19 @@ namespace		bunny
 	ss << "CRIT ";
       }
 
-    if (LogLength == BLL_FULL_LOG)
+    if (LogLength == BLL_SHORT_LOG)
+      ss << funcname << " ";
+    else if (LogLength > BLL_LABELED_LOG && labels.size())
+      {
+	ss << " [";
+	for (size_t i = 0; i < labels.size(); ++i)
+	  if (i + 1 < labels.size())
+	    ss << labels[i] << " ";
+	  else
+	    ss << labels[i];
+	ss << "]";
+      }
+    else if (LogLength == BLL_FULL_LOG)
       {
 	ss << (long unsigned int)time(NULL) << "\t";
 	ss << __FILE__ << ":" << __LINE__ << "\t";
@@ -177,8 +189,6 @@ namespace		bunny
 	((ss << std::forward<Types>(args) << " "), ...);
 	ss << "-> " << std::forward<Arg>(return_value) << "\t";
       }
-    else
-      ss << funcname << " ";
 
     if (message.size())
       ss << message;

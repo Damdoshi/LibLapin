@@ -28,7 +28,7 @@ namespace
 
 const char		*bunny_strerror(int		ercode)
 {
-  if (ercode >= BE_CANT_GENERATE_RESSOURCE)
+  if (ercode >= BE_CANT_GENERATE_RESSOURCE && ercode < LAST_ERROR)
     return (gl_bunny_error_msg[ercode - BE_CANT_GENERATE_RESSOURCE]);
   return ((const char*)strerror(ercode));
 }
