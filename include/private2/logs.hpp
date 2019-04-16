@@ -76,7 +76,8 @@ namespace		bunny
   extern bool		FlushOnError;
   extern bool		FlushOnReturn;
   extern std::vector<
-    std::string>	AcceptedLabels;
+    std::string
+    >			AcceptedLabels;
   extern int		LogDescriptor;
   extern int		FailDescriptor;
   extern int		CriticalDescriptor;
@@ -98,7 +99,7 @@ namespace		bunny
 	for (size_t i = 0; i < indent; ++i)
 	  (void)write(top.first, "  ", 2);
 	if (write(top.first, top.second.c_str(), top.second.size()) == -1)
-	  std::cerr << "Failed to log : " << top.second << std::endl;
+	  std::cerr << "Failed to log : " << top.second;
 	LogStack.pop();
 	indent += 1;
       }
@@ -126,6 +127,8 @@ namespace		bunny
 			    t_bunny_log_type			logtype,
 			    const std::vector<std::string>	&labels,
 			    const std::string			&message,
+			    const std::string			&file,
+			    int					line,
 			    Arg&&				return_value,
 			    Types&&...				args)
   {
@@ -171,23 +174,27 @@ namespace		bunny
 
     if (LogLength == BLL_SHORT_LOG)
       ss << funcname << " ";
-    else if (LogLength > BLL_LABELED_LOG && labels.size())
+    if (LogLength >= BLL_LABELED_LOG && labels.size())
       {
-	ss << " [";
+	ss << funcname << " [";
 	for (size_t i = 0; i < labels.size(); ++i)
 	  if (i + 1 < labels.size())
 	    ss << labels[i] << " ";
 	  else
 	    ss << labels[i];
-	ss << "]";
+	ss << "] ";
       }
-    else if (LogLength == BLL_FULL_LOG)
+    if (LogLength == BLL_FULL_LOG)
       {
-	ss << (long unsigned int)time(NULL) << "\t";
-	ss << __FILE__ << ":" << __LINE__ << "\t";
+	std::stringstream oss;
+
+	ss << (long unsigned int)time(NULL) << " ";
+	ss << file << ":" << line << " ";
 	ss << prototype << " ";
 	((ss << std::forward<Types>(args) << " "), ...);
-	ss << "-> " << std::forward<Arg>(return_value) << "\t";
+	oss << std::forward<Arg>(return_value);
+	if (oss.str().size())
+	  ss << "-> " << oss.str() << " ";
       }
 
     if (message.size())
@@ -199,7 +206,7 @@ namespace		bunny
     if (logtype != BLT_LOG)
       LogStack.push({descriptor, ss.str()});
     else if (write(descriptor, ss.str().c_str(), ss.str().size()) == -1)
-      std::cerr << "Failed to log : " << ss.str() << std::endl;
+      std::cerr << "Failed to log : " << ss.str();
   }
 }
 

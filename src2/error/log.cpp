@@ -10,18 +10,23 @@ void			_bunny_log(const char		*proto,
 				   const char		*func,
 				   t_bunny_log_type	logt,
 				   const char		*labels,
-				   const char		*msg)
+				   const char		*msg,
+				   const char		*file,
+				   int			line)
 {
+  char			buffer[256];
   std::vector<
     std::string
     >			v;
   std::string		str(labels);
   size_t		i, j;
 
-  for (i = j = 0; i < str.size(); i = j + 1)
+  for (i = j = 0; labels[i]; i = j)
     {
+      if (labels[i] == ',')
+	i += 1;
       for (j = i; labels[j] != ',' && labels[j]; ++j);
-      v.push_back(str.substr(i, j - i));
+      v.emplace_back(&labels[i], j - i);
     }
   int			logv;
 
@@ -39,6 +44,8 @@ void			_bunny_log(const char		*proto,
      logt,
      v,
      std::string(msg),
+     std::string(file),
+     line,
      ""
      );
 }

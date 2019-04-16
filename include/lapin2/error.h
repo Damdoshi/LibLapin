@@ -48,10 +48,12 @@ void			_bunny_log(const char			*prototype,
 				   const char			*funcname,
 				   t_bunny_log_type		logtype,
 				   const char			*labels,
-				   const char			*messages);
+				   const char			*messages,
+				   const char			*file,
+				   int				line);
 
 # define		bunny_log(ltype, labels, messages)	\
-  _bunny_log(__PRETTY_FUNCTION__, __func__, ltype, labels, messages)
+  _bunny_log(__PRETTY_FUNCTION__, __func__, ltype, labels, messages, __FILE__, __LINE__)
 
 void			bunny_filter_label(const char		*labels);
 
@@ -74,6 +76,7 @@ typedef enum		e_bunny_log_length
   }		t_bunny_log_length;
 
 t_bunny_log_length	bunny_set_log_length(t_bunny_log_length length);
+t_bunny_log_length	bunny_get_log_length(void);
 
 typedef enum		e_bunny_log_verbosity
   {

@@ -32,14 +32,16 @@
   LINKER	?=	ar rcs
   COMPILER	?=	g++
 
+  EXTCONF	?=	-DBUNNY_ALLOCATOR_DEACTIVATED
+
   CONFIG	=	-W -Wall -fPIC -std=c++1z -Wno-write-strings		\
 			-Wno-unused-result -Wno-format-security			\
 			-Wno-frame-address					\
-			-DBUNNY_ALLOCATOR_DEACTIVATED				\
-			-DBUNNY_DEBUG
+			$(EXTCONF)
 
-  DEBUG		=	-O0 -Og -g -g3 -ggdb
-#  OPTIM		=	-O2
+  DEBUG		=	-O0 -Og -g -g3 -ggdb -DBUNNY_DEBUG -fprofile-arcs	\
+			-ftest-coverage --coverage
+# OPTIM		=	-O2
 
   RM		=	rm -f
   ECHO		=	/bin/echo -e
@@ -89,6 +91,7 @@ title:
 			@$(ECHO) $(TEAL) $(TITLE) $(DEFAULT)
 			@mkdir -p $(LOGDIR)
 clean:
+			@find . -name "*.gc*" -delete
 			@$(RM) $(OBJ) &&					\
 			 $(ECHO) $(GREEN) "Object file deleted" $(DEFAULT) ||	\
 			 $(ECHO) $(RED) "Error in clean rule!" $(DEFAULT)

@@ -3,10 +3,13 @@
 success_test=0
 total_test=0
 
+flags="-O0 -Og -g -g3 -ggdb -W -Wall -std=c++1z -fprofile-arcs -ftest-coverage --coverage"
+libs="-L../ -I../include/ --whole-file -llapin -lgcov -lstdc++"
+
 run_test()
 {
     output=`echo "$1" | cut -d '.' -f 2`
-    gcc $1 -O0 -Og -g -g3 -ggdb -W -Wall -std=gnu11 -L../ -I../include/ -llapin -lstdc++ -o .$output && \
+    g++ $1 $libs $flags -o .$output && \
 	./$output && \
 	success_test=$((success_test + 1)) && \
 	echo "\033[0;32mTest $output OK\033[00m" || \
@@ -15,7 +18,7 @@ run_test()
 }
 
 if [ "$#" -eq "0" ]; then
-    for param in `find . -name '*.c'`; do
+    for param in `find . -name '*.cpp'`; do
 	run_test $param
     done
 else
@@ -23,6 +26,11 @@ else
 	run_test $param
     done
 fi
+
+lcov --directory . --directory ../src2/ -c -o coverage_raw.info > /dev/null 2> /dev/null && \
+    lcov --remove coverage.info '/usr/include/*' '7/*' -o coverage.info > /dev/null 2> /dev/null && \
+    genhtml -o ./report/ -t "LibLapin: Coverage" coverage.info | grep "\%"
+rm -f coverage_raw.info
 
 echo "Tests passed:" $success_test "/" $total_test
 if [ "$success_test" -ne "$total_test" ]; then
