@@ -40,11 +40,19 @@ typedef enum		e_bunny_allocator_print_mode
   }			t_bunny_allocator_print_mode;
 
 t_bunny_allocator	*bunny_new_allocator(size_t				nbr_bytes);
+t_bunny_allocator	*_bunny_new_stack_allocator(void			*data,
+						    size_t			nbr_bytes);
+# define		bunny_new_stack_allocator(array_on_stack)		\
+  _bunny_new_stack_allocator							\
+  (&(array_on_stack)[0], NBRCELL(array_on_stack) * sizeof((array_on_stack)[0]))
 void			bunny_delete_allocator(t_bunny_allocator		*allocator);
 t_bunny_ptrdiff		bunny_allocator_offset(t_bunny_allocator		*allocator);
-t_bunny_allocator	*bunny_migrate_allocator(t_bunny_allocator		*allocator);
 void			*bunny_migrate_pointer(t_bunny_ptrdiff			diff,
 					       void				*ptr);
+t_bunny_allocator	*bunny_migrate_allocator(t_bunny_allocator		*allocator,
+						 void				(*func)(void*, t_bunny_ptrdiff));
+void			bunny_foreach_allocation(t_bunny_allocator		*ptr,
+						 void				(*func)(void*, t_bunny_ptrdiff));
 
 ssize_t			bunny_print_allocator(t_bunny_allocator			*allocator,
 					      t_bunny_allocator_print_mode	mode);

@@ -13,11 +13,16 @@ namespace		bunny
   extern t_bunny_allocator *DefaultAllocator;
 
   t_bunny_allocator	*new_allocator(size_t				nbr_bytes);
+  t_bunny_allocator	*new_stack_allocator(void			*data,
+					     size_t			nbr_bytes);
   void			delete_allocator(t_bunny_allocator		*allocator);
   t_bunny_ptrdiff	allocator_offset(t_bunny_allocator		*allocator);
-  t_bunny_allocator	*migrate_allocator(t_bunny_allocator		*allocator);
+  t_bunny_allocator	*migrate_allocator(t_bunny_allocator		*allocator,
+					   void				(*func)(void*, t_bunny_ptrdiff));
   void			*migrate_pointer(t_bunny_ptrdiff		diff,
 					 void				*ptr);
+  void			foreach_allocation(t_bunny_allocator		*ptr,
+					   void				(*func)(void*, t_bunny_ptrdiff));
 
   ssize_t		print_allocator(t_bunny_allocator		*allocator,
 					t_bunny_allocator_print_mode	mode);

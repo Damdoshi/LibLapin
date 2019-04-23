@@ -1,12 +1,13 @@
 <?php
 // Jason Brillante "Damdoshi"
-// Hanged Bunny Studio 2014-2018
+// Hanged Bunny Studio 2014-2019
 //
 // LibLapin
 
+require_once ("./tools.php");
 
-
-
+$latest_version = 2;
+$latest_release = 2;
 
 ?>
 <!DOCTYPE html>
@@ -33,28 +34,34 @@
     <title>LibLapin</title>
     <meta
         name="description"
-        content="<?=htmlentities(file_get_contents("$language/description.htm")); ?>"
+        content="<?=htmlentities(file_get_contents("./tools/$language/description.htm")); ?>"
     />
-    <link rel="stylesheet" href="style/neutralize.css" />
-    <link rel="stylesheet" href="style/structure.css" />
-    <link rel="stylesheet" href="style/<?=$theme; ?>.css" />
-    <?php
-    foreach (scandir("js/") as $file)
-    {
-      if ($file[0] != "." && $file[strlen($file) - 1] != "~")
-      {
-    ?>
-      <script type="text/javascript" src="js/<?=$file; ?>"></script>
-    <?php
-      }
-    }
-    ?>
+    <script type="text/javascript">
+     var Pages = Array("MainPage", "Tutorials", "Manuals", "Downloads", "Gallery");
+
+     <?php
+     foreach (scandir("tools/js/") as $file)
+       if ($file[0] != "." && $file[strlen($file) - 1] != "~")
+         echo file_get_contents($file)."\n";
+     ?>
+    </script>
+
+    <style>
+     <?php require_once ("tools/style/neutralize.css"); ?>
+     <?php require_once ("tools/style/structure.css"); ?>
+     <?php
+     foreach (scandir("./tools/style/") as $css)
+       if (strncmp($css, "theme_", 6) == 0 && strstr($css, ".css") != false && $css[strlen($css) - 1] != -1)
+         echo file_get_contents($css)."\n";
+     ?>
+    </style>
   </head>
-  <?php if (isset($_COOKIE["first_visit"])) { ?>
-  <body onLoad="Reveal('Cover');">
+
+  <?php if (isset($_COOKIE["first_visit"])) { // Loading bunny - auto remove ?>
+  <body onLoad="Reveal('Cover');" class="Theme">
     <div id="Cover">
-  <?php } else { ?>
-  <body>
+  <?php } else { // Loading bunny + message - click to remove ?>
+  <body class="Theme">
     <div id="Cover" onClick="Reveal('Cover');">
   <?php } ?>
       <img src="res/coverlogo.png" alt="..." id="LoadingLogo" />
@@ -62,11 +69,10 @@
        LogoDance('Cover', 'LoadingLogo');
       </script>
       <?php
-      // First visit
-      if (!isset($_COOKIE["first_visit"]))
-      {
-        echo "<p><br />$FirstVisitMessage<br /><br /></p>";
-      }
+        // First visit
+        if (!isset($_COOKIE["first_visit"])) {
+          echo "<p><br />$FirstVisitMessage<br /><br /></p>";
+        }
       ?>
     </div>
 
@@ -83,45 +89,37 @@
 
     <nav>
       <div class="HeaderOverlay">
-        <a href="index.php?pag=0">
+        <a onClick="Show('MainPage')"
           <div><?=$MainPage; ?></div>
         </a>
-        <a href="index.php?pag=1">
+        <a href="Show('Tutorials')">
           <div><?=$Tutorials; ?></div>
         </a>
-        <a href="index.php?pag=2">
+        <a href="Show('Manuals')">
           <div><?=$Manuals; ?></div>
         </a>
-        <a href="index.php?pag=3">
+        <a href="Show('Downloads')">
           <div><?=$Download; ?></div>
         </a>
-        <a href="index.php?pag=5">
+        <a href="Show('Gallery')">
           <div><?=$Gallery; ?></div>
         </a>
       </div>
     </nav>
 
     <div id="Body">
-      <?php
-      $page = [
-        "main.php",
-        "tuto.php",
-        "manual.php",
-        "download.php",
-        "docpage.php",
-        "gallery.php"
-      ];
-      if (!isset($_GET['pag']) || (int)$_GET['pag'] < 0 || (int)$_GET['pag'] >= count($page))
-        $_GET['pag'] = 0;
-      require_once ($page[(int)$_GET['pag']]);
-      ?>
+      <div id="Mainpage"><?php require_once ("main.php"); ?></div>
+      <div id="Tutorials"><?php require_once ("tuto.php"); ?></div>
+      <div id="Manuals"><?php require_once ("manual.php"); ?></div>
+      <div id="Downloads"><?php require_once ("download.php"); ?></div>
+      <div id="Gallery"><?php require_once ("gallery.php"); ?></div>
     </div>
 
     <footer>
       <form method="post" class="style">
         <select name="theme" onChange="this.form.submit();">
           <?php
-          foreach(scandir("./style/") as $css)
+          foreach(scandir("./tools/style/") as $css)
           {
             if (strncmp($css, "theme_", 6) == 0
                 && strstr($css, ".css") != false
@@ -142,6 +140,7 @@
           ?>
         </select>
       </form>
+
       <form method="post" class="style">
         <select name="ads" onChange="this.form.submit();">
           <option value="ads" <?=$ads == "ads" ? "selected" : ""; ?>>Ads</option>

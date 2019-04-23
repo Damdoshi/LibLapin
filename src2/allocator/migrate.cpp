@@ -7,7 +7,8 @@
 #include		"private2/allocator.hpp"
 #include		"private2/logs.hpp"
 
-t_bunny_allocator	*bunny::migrate_allocator(t_bunny_allocator	*allocator)
+t_bunny_allocator	*bunny::migrate_allocator(t_bunny_allocator	*allocator,
+						  void			(*func)(void*, t_bunny_ptrdiff)))
 {
   if (bunny::allocator_offset(allocator) == 0)
     return (allocator);
@@ -16,7 +17,8 @@ t_bunny_allocator	*bunny::migrate_allocator(t_bunny_allocator	*allocator)
   return (allocator);
 }
 
-t_bunny_allocator	*bunny_migrate_allocator(t_bunny_allocator	*allocator)
+t_bunny_allocator	*bunny_migrate_allocator(t_bunny_allocator	*allocator,
+						 void			(*func)(void*, t_bunny_ptrdiff))
 {
   t_bunny_allocator	*alloc;
 

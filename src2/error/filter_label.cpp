@@ -9,7 +9,6 @@
 
 void			bunny_filter_label(const char		*labels)
 {
-  char			buffer[256];
   int			i, j;
 
   bunny::AcceptedLabels.clear();

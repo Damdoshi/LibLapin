@@ -96,11 +96,17 @@ clean:
 			 $(ECHO) $(GREEN) "Object file deleted" $(DEFAULT) ||	\
 			 $(ECHO) $(RED) "Error in clean rule!" $(DEFAULT)
 fclean:			clean erase
+			@(cd tests2 && ./clean.sh)
 			@$(RM) $(NAME) &&					\
 			 $(ECHO) $(GREEN) "Program deleted!" $(DEFAULT) ||	\
 			 $(ECHO) $(RED) "Error in fclean rule!" $(DEFAULT)
 re:			fclean all
 erase:
 			@$(RM) -r $(LOGDIR)/*.*
-
+check:			all
+			(cd tests2/ && ./run.sh)
+doc:
+			./generate_doc.php
+install:
+			./school_install.sh
 .POSIX:

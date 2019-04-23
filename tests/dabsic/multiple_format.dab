@@ -35,6 +35,7 @@ Program = [Sequence
 ]
 
 Fibo(int a) = [Function
+  "Hello, I am Fibo(", a, ")" 'Just to be polite
   If a <= 0 Then
     Return 0
   If a < 2 Then

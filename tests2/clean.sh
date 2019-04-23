@@ -5,5 +5,5 @@ for param in `find . -name '*.cpp'`; do
     rm -f ".$output"
 done
 rm -f ./*.gc*
-rm -f coverage.info
+rm -f ./*.info
 rm -rf ./report/

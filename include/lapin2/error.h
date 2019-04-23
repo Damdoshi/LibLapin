@@ -73,7 +73,7 @@ typedef enum		e_bunny_log_length
     BLL_SHORT_LOG,
     BLL_LABELED_LOG,
     BLL_FULL_LOG
-  }		t_bunny_log_length;
+  }			t_bunny_log_length;
 
 t_bunny_log_length	bunny_set_log_length(t_bunny_log_length length);
 t_bunny_log_length	bunny_get_log_length(void);
@@ -83,7 +83,7 @@ typedef enum		e_bunny_log_verbosity
     BLV_DISPLAY_CRITICAL = 1 << 0,
     BLV_DISPLAY_FAILURE = 1 << 1,
     BLV_DISPLAY_POSTLOG = 1 << 2,
-    BLV_DISPLAY_PRELOG = 1 << 3,
+    BLV_DISPLAY_PRELOG	= 1 << 3,
   }			t_bunny_log_verbosity;
 
 t_bunny_log_verbosity	bunny_set_log_verbosity(t_bunny_log_verbosity verbosity);

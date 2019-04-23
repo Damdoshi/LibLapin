@@ -45,7 +45,7 @@ int			main(void)
   bunny_log(BLT_CRITICAL, "test", "Surface message");
   bunny_flush();
 
-  assert((len = read(pip[0], &buffer[0], sizeof(buffer))) != -1);
+  assert((len = read(pip[0], &buffer[0], sizeof(buffer) - 1)) != -1);
   buffer[len] = '\0';
   assert(strcmp(refall, &buffer[0]) == 0);
 
@@ -64,7 +64,7 @@ int			main(void)
   bunny_log(BLT_LOG, "test", "This will not be stacked");
   bunny_log(BLT_CRITICAL, "test", "Surface message");
   bunny_flush();
-  assert((len = read(pip[0], &buffer[0], sizeof(buffer))) != -1);
+  assert((len = read(pip[0], &buffer[0], sizeof(buffer) - 1)) != -1);
   buffer[len] = '\0';
   assert(strcmp(refcritical, &buffer[0]) == 0);
 
@@ -75,7 +75,7 @@ int			main(void)
   assert(bunny_get_log_length() == BLL_LABELED_LOG);
   bunny_log(BLT_CRITICAL, "test,test2", "Labeled log");
   bunny_flush();
-  assert((len = read(pip[0], &buffer[0], sizeof(buffer))) != -1);
+  assert((len = read(pip[0], &buffer[0], sizeof(buffer) - 1)) != -1);
   buffer[len] = '\0';
   assert(strcmp("CRIT main [test test2] Labeled log\n", &buffer[0]) == 0);
 
@@ -91,7 +91,7 @@ int			main(void)
 	   time(NULL));
   bunny_log(BLT_CRITICAL, "test", "Complete log"); // /!\ Pay attention to the line!
   bunny_flush();
-  assert((len = read(pip[0], &buffer[0], sizeof(buffer))) != -1);
+  assert((len = read(pip[0], &buffer[0], sizeof(buffer) - 1)) != -1);
   buffer[len] = '\0';
   assert(strcmp(buildref, &buffer[0]) == 0);
 
@@ -112,7 +112,7 @@ int			main(void)
      "return", "parameter1", "parameter2"
      );
   bunny_flush();
-  assert((len = read(pip[0], &buffer[0], sizeof(buffer))) != -1);
+  assert((len = read(pip[0], &buffer[0], sizeof(buffer) - 1)) != -1);
   buffer[len] = '\0';
   assert(strcmp(buildref, &buffer[0]) == 0);
 
@@ -137,7 +137,7 @@ int			main(void)
   bunny_log(BLT_FAILED, "ccc", "CCC");
   bunny_log(BLT_FAILED, "ddd,ccc", "EEE");
   bunny_flush();
-  assert((len = read(pip[0], &buffer[0], sizeof(buffer))) != -1);
+  assert((len = read(pip[0], &buffer[0], sizeof(buffer) - 1)) != -1);
   buffer[len] = '\0';
   assert(strcmp(reffilter, &buffer[0]) == 0);
 
@@ -157,7 +157,7 @@ int			main(void)
 
   bunny_set_log_descriptor(42); // Bad fd
   bunny_log(BLT_LOG, "test", "Bad log descriptor."); // Will be flushed immediatly on 2
-  assert((len = read(pip[0], &buffer[0], sizeof(buffer))) != -1);
+  assert((len = read(pip[0], &buffer[0], sizeof(buffer) - 1)) != -1);
   buffer[len] = '\0';
   assert(strcmp("Failed to log : LOGG main Bad log descriptor.\n", &buffer[0]) == 0);
 
@@ -165,7 +165,7 @@ int			main(void)
   bunny_errno = BE_SYNTAX_ERROR;
   bunny_log(BLT_CRITICAL, "test", "");
   bunny_flush(); // Flush previous log on 2
-  assert((len = read(pip[0], &buffer[0], sizeof(buffer))) != -1);
+  assert((len = read(pip[0], &buffer[0], sizeof(buffer) - 1)) != -1);
   buffer[len] = '\0';
   assert(strcmp("Failed to log : CRIT main (Error code 10001: Syntax error)\n", &buffer[0]) == 0);
 

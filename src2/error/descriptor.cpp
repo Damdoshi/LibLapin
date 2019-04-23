@@ -6,6 +6,21 @@
 #define			__LAPIN_H__
 #include		"private2/logs.hpp"
 
+/*?{
+  "type": "function",
+  "name": "bunny_set_log_descriptor",
+  "order": 1000,
+  "desc": "blah",
+
+  "parameters" : [
+    {"name": "fd", "desc": "blah"}
+  ],
+
+  "return": "",
+
+  "log"
+  }
+*/
 int			bunny_set_log_descriptor(int		fd)
 {
   int			prev = bunny::LogDescriptor;
