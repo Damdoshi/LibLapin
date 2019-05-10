@@ -146,6 +146,13 @@ bool			bunny_sprite_is_still(t_bunny_sprite		*sprite);
 	   uint64_t: bunny_sprite_set_animation_id,			\
 	   int: bunny_sprite_set_animation_id				\
 	   )(spr, anim)
+#  define		bunny_sprite_shift_animation(spr, anim)		\
+  _Generic((anim),							\
+	   const char*: bunny_sprite_shift_animation_name,		\
+	   char*: bunny_sprite_shift_animation_name,			\
+	   uint64_t: bunny_sprite_shift_animation_id,			\
+	   int: bunny_sprite_shift_animation_id				\
+	   )(spr, anim)
 # endif
 
 /*!
@@ -159,6 +166,9 @@ bool			bunny_sprite_is_still(t_bunny_sprite		*sprite);
 */
 bool			bunny_sprite_set_animation_name(t_bunny_sprite	*sprite,
 							const char	*anim);
+
+bool			bunny_sprite_shift_animation_name(t_bunny_sprite *sprite,
+							  const char	*anim);
 
 /*!
 ** Indicates that the animation should not loop anymore. The repeatition
@@ -182,6 +192,9 @@ void			bunny_sprite_stop_repeat(t_bunny_sprite		*sprite);
 */
 bool			bunny_sprite_set_animation_id(t_bunny_sprite	*sprite,
 						      uint64_t		anim);
+
+bool			bunny_sprite_shift_animation_id(t_bunny_sprite	*sprite,
+							uint64_t	anim);
 
 /*!
 ** Return the current animation name under its hash format.
