@@ -356,7 +356,8 @@ t_bunny_response	bunny_loop(t_bunny_window	*window,
       gl_callback.leaving_context(rep, data);
     }
 
-  while (win->window->pollEvent(event));
+  if (rep != SWITCH_WINDOW)
+    while (win->window->pollEvent(event));
   while (gl_completed_tasks.empty() == false)
     gl_completed_tasks.pop();
 

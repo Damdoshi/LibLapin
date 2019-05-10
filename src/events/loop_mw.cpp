@@ -370,7 +370,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
       scream_log_if(PATTERN "leave_context)", "event", window, nwin, freq, data);
       gl_callback.leaving_context(rep, data);
     }
-  for (i = 0; i < nwin; ++i)
+  for (i = 0; rep != SWITCH_WINDOW && i < nwin; ++i)
     {
       struct bunny_window	*win = (struct bunny_window*)window[i];
 

@@ -35,6 +35,7 @@ typedef enum			e_bunny_response
     EXIT_ON_CROSS,
     EXIT_ON_SUCCESS,
     SWITCH_CONTEXT,
+    SWITCH_WINDOW,
     GO_ON,
     NOTHING_HAPPENED
   }				t_bunny_response;

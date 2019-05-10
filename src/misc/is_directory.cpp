@@ -10,8 +10,8 @@ bool			bunny_is_directory(const char		*file)
 {
   struct stat		st;
 
-  if (stat(file, &st) == false)
+  if (stat(file, &st))
     return (false);
-  return (S_ISREG(st.st_mode));
+  return (S_ISDIR(st.st_mode));
 }
 
