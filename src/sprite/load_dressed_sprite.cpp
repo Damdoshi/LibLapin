@@ -1,5 +1,5 @@
 // Jason Brillante "Damdoshi"
-// Hanged Bunny Studio 2014-2018
+// Hanged Bunny Studio 2014-2019
 //
 // Lapin library
 
@@ -37,12 +37,15 @@ static bool		_bunny_load_closets(struct bunny_dressed_sprite	*sprite,
       if (bunny_configuration_getf_string(node, &file, "."))
 	closet = bunny_load_closet(file, wardrobe);
       else
-	{
-	  closet = bunny_read_closet(node, wardrobe);
-	  file = closet->name;
-	}
+	closet = bunny_read_closet(node, wardrobe);
       if (closet == NULL)
 	return (false);
+      file = closet->name;
+      if (bunny_fix_single_picture_clothe((t_bunny_dressed_sprite*)sprite, closet) == false)
+	{
+	  bunny_delete_closet(closet);
+	  return (false);
+	}
 
       hs = bunny_hash(BH_DJB2, file, strlen(file));
       if (bunny_map_set_data(sprite->closets, hs, closet, t_bunny_closet*) == NULL)

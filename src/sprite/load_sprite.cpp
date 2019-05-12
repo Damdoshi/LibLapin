@@ -122,15 +122,47 @@ t_bunny_sprite		*_bunny_read_sprite(t_bunny_configuration *conf,
 
 t_bunny_sprite		*bunny_load_sprite(const char		*file)
 {
+  char			buffer[1024];
+  const char * const	empty_sprite =
+    "RessourceFile = \"%s\"\n"
+    "InitialAnimation = \"Idle\"\n"
+    "Frequency = 5\n"
+    "[Clip\n"
+    "  Size = 1, 1\n"
+    "  Selected = 0\n"
+    "]\n"
+    "[Animations\n"
+    "  [Idle\n"
+    "    Position=0,0\n"
+    "    Frame=1\n"
+    "  ]\n"
+    "]\n"
+    ;
   t_bunny_configuration	*conf;
   t_bunny_sprite	*spr;
 
-  if ((conf = bunny_open_configuration(file, NULL)) == NULL)
-    return (NULL);
-  if ((spr = _bunny_read_sprite(conf, file)) == NULL)
+  if (bunny_which_format(file) == BC_CUSTOM)
     {
-      bunny_delete_configuration(conf);
-      return (NULL);
+      snprintf(&buffer[0], sizeof(buffer), empty_sprite, file);
+      if ((conf = bunny_read_configuration(BC_DABSIC, &buffer[0], NULL)) == NULL)
+	return (NULL);
+      if ((spr = _bunny_read_sprite(conf, file)) == NULL)
+	{
+	  bunny_delete_configuration(conf);
+	  return (NULL);
+	}
+      spr->clipable.clip_width = spr->clipable.buffer.width;
+      spr->clipable.clip_height = spr->clipable.buffer.height;
+    }
+  else
+    {
+      if ((conf = bunny_open_configuration(file, NULL)) == NULL)
+	return (NULL);
+      if ((spr = _bunny_read_sprite(conf, file)) == NULL)
+	{
+	  bunny_delete_configuration(conf);
+	  return (NULL);
+	}
     }
   return (spr);
 }

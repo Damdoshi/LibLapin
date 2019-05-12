@@ -5,6 +5,8 @@
 
 #include		"lapin_private.h"
 
+struct bunny_sprite	*_bunny_new_sprite(void);
+
 static void		delete_clothe(t_bunny_clothe	*clothe)
 {
   if (!clothe)
@@ -129,26 +131,39 @@ t_bunny_closet		*bunny_read_closet(t_bunny_configuration *config,
 	  // It is not a string, it is the clothe configuration.
 	  if (bunny_configuration_getf_node(config, &clothe, "Sprites[%d][1]", i) == false)
 	    goto DeleteClothes;
+	  // /////// SHOULD CHECK IF IT IS A CLOTHE, I MAY ALSO ONLY BE A PICTURE
 	  if ((c = bunny_read_clothe(name, clothe)) == NULL)
 	    goto DeleteClothes;
-	  if (bunny_map_set_data(closet->clothes, hs, c, t_bunny_clothe*) == NULL)
-	    {
-	      delete_clothe(c);
-	      goto DeleteClothes;
-	    }
 	}
       // It is a string, it must be a file name
-      else
+      // It is a configuration file
+      else if (bunny_which_format(tmps) != BC_CUSTOM)
 	{
+	  // Configuration file
 	  if ((c = bunny_load_clothe(name, tmps)) == NULL)
 	    goto DeleteClothes;
-	  if (bunny_map_set_data(closet->clothes, hs, c, t_bunny_clothe*) == NULL)
+	}
+      // It is a single picture file
+      else
+	{
+	  if ((c = (t_bunny_clothe*)bunny_calloc(sizeof(*c), 1)) == NULL)
+	    goto DeleteClothes;
+	  if ((c->name = bunny_strdup(name)) == NULL)
+	    {
+	      delete_clothe(c);
+	      goto DeleteClothes;
+	    }
+	  if ((c->sprite = bunny_load_sprite(tmps)) == NULL)
 	    {
 	      delete_clothe(c);
 	      goto DeleteClothes;
 	    }
 	}
-
+      if (bunny_map_set_data(closet->clothes, hs, c, t_bunny_clothe*) == NULL)
+	{
+	  delete_clothe(c);
+	  goto DeleteClothes;
+	}
     }
   if (wardrobe)
     {

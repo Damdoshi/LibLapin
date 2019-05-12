@@ -1,5 +1,5 @@
 // Jason Brillante "Damdoshi"
-// Hanged Bunny Studio 2014-2018
+// Hanged Bunny Studio 2014-2019
 //
 // Lapin library
 
@@ -23,6 +23,8 @@ bool			bunny_sprite_set_animation_id(t_bunny_sprite	*spr,
   struct bunny_sprite	&sprite = *(struct bunny_sprite*)spr;
   t_bunny_map		*map;
 
+  if (sprite.current_animation_hash == hash)
+    return (true);
   if (sprite.type == DRESSED_SPRITE)
     {
       struct bunny_dressed_sprite &dressed = (struct bunny_dressed_sprite&)sprite;
@@ -34,6 +36,7 @@ bool			bunny_sprite_set_animation_id(t_bunny_sprite	*spr,
 
   if ((map = bunny_map_get_subtree(sprite.hashname_id, (void*)hash, false)) == NULL)
     return (false);
+  sprite.current_animation_hash = hash;
   sprite.current_animation = bunny_map_data(map, int32_t);
   sprite.current_repeat = 0;
   sprite.current_frame_repeat = 0;

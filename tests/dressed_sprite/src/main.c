@@ -96,6 +96,24 @@ int			main(void)
       bunny_sprite_animate(sprite, 1);
     }
 
+  bunny_clear(&win->buffer, BLACK);
+  bunny_display(win);
+  bunny_usleep(2e5);
+
+  bunny_delete_clipable(&sprite->clipable);
+  assert(bunny_dressed_sprite_wear(dressed_sprite, "TheArmor", "Blue"));
+  assert(sprite = bunny_render_dressed_sprite(dressed_sprite));
+
+  // Draw the generated sprite on screen
+  // The blue.png picture file converted as sprite is supposed to be used.
+  for (i = 0; i < 10; ++i)
+    {
+      bunny_blit(&win->buffer, &sprite->clipable, NULL);
+      bunny_display(win);
+      bunny_usleep(1e5);
+      bunny_sprite_animate(sprite, 1);
+    }
+
   bunny_delete_clipable(&dressed_sprite->sprite.clipable);
   bunny_delete_clipable(&sprite->clipable);
   bunny_stop(win);

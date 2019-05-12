@@ -90,9 +90,10 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 
 	if (pic->res_id && !RessourceManager.disable_manager)
 	  RessourceManager.TryRemove(ResManager::SF_RENDERTEXTURE, pic->res_id, pic);
-	else
+	else if (pic->texture)
 	  delete pic->texture;
-	delete pic->sprite;
+	if (pic->sprite)
+	  delete pic->sprite;
 	for (i = 0; i < bunny_vector_size(pic->animation); ++i)
 	  {
 	    t_bunny_animation	&a = bunny_vector_data(pic->animation, i, t_bunny_animation);

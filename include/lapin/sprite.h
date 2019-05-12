@@ -79,6 +79,7 @@ typedef struct		s_bunny_sprite
   const size_t		_private[3];
   t_bunny_vector	*animation;	// [int -> anim]
   t_bunny_map		*hashname_id;	// [hash("") -> int]
+  uint64_t		current_animation_hash;
   int32_t		current_animation;
   uint32_t		current_frame_repeat;
   uint32_t		current_repeat;
@@ -276,5 +277,8 @@ t_bunny_sprite		*bunny_render_dressed_sprite(t_bunny_dressed_sprite *sprite);
 bool			bunny_dressed_sprite_wear(t_bunny_dressed_sprite *sprite,
 						  const char		*closet,
 						  const char		*clothe);
+
+bool			bunny_fix_single_picture_clothe(t_bunny_dressed_sprite *sprite,
+							t_bunny_closet	*closet);
 
 #endif	/*		__LAPIN_SPRITE_H__			*/

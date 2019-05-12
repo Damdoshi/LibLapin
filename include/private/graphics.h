@@ -224,6 +224,7 @@ struct				bunny_sprite
 
   t_bunny_vector		*animation;
   t_bunny_map			*hashname_id;
+  uint64_t			current_animation_hash;
   int32_t			current_animation;
   uint32_t			current_frame_repeat;
   int32_t			current_repeat;
@@ -253,6 +254,7 @@ struct				bunny_dressed_sprite
 
   t_bunny_vector		*animation;
   t_bunny_map			*hashname_id;
+  uint64_t			current_animation_hash;
   int32_t			current_animation;
   uint32_t			current_frame_repeat;
   int32_t			current_repeat;

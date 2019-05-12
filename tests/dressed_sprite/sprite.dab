@@ -33,7 +33,9 @@ Frequency=1
     {Sprites
       {"White", @insert "white.dab"},
       {"Red", @insert "red.dab"},
-      {"Pink", "pink.dab"}
+      {"Pink", "pink.dab"},
+      'Using a png indicates that the sprite description is exactly the same as the base.
+      {"Blue", "blue.png"}
     }
   ]
 ]

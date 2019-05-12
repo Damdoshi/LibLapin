@@ -13,6 +13,8 @@ bool			bunny_make_clipable_unique(t_bunny_clipable	*clip)
 
   switch (*type)
     {
+    case DRESSED_SPRITE:
+    case SPRITE:
     case GRAPHIC_RAM:
       {
 	struct bunny_picture *pic = (struct bunny_picture*)clip;
