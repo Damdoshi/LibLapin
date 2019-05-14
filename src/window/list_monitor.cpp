@@ -10,7 +10,7 @@
   ""
 #else
 # define			command				\
-  "xrandr | grep '^Screen'"
+  "xrandr | grep ' connected'"
 #endif
 
 static bool			get_output(char			*buf,
@@ -39,8 +39,8 @@ static bool			get_output(char			*buf,
 
 #if				_WIN32 || __WIN32__
 
-size_t				read_output(const char		*str,
-					    t_bunny_size	*siz,
+static size_t			read_output(const char		*str,
+					    t_bunny_area	*siz,
 					    size_t		len)
 {
   (void)str;
@@ -51,8 +51,8 @@ size_t				read_output(const char		*str,
 
 #else
 
-size_t				read_output(const char		*str,
-					    t_bunny_size	*siz,
+static size_t			read_output(const char		*str,
+					    t_bunny_area	*siz,
 					    size_t		len)
 {
   const char			*p;
@@ -60,9 +60,11 @@ size_t				read_output(const char		*str,
 
   for (i = 0, p = str; i < len; ++i)
     {
-      if ((p = strstr(p, "current")) == NULL)
+      if ((p = strstr(p, " connected")) == NULL)
 	return (i);
-      if (sscanf(p, "current %d x %d,", &siz[i].x, &siz[i].y) != 2)
+      while (*p && *p != '\n' && !isdigit(*p))
+	p += 1;
+      if (sscanf(p, "%dx%d+%d+%d (", &siz[i].w, &siz[i].h, &siz[i].x, &siz[i].y) != 4)
 	return (i);
       if ((p = strchr(p, '\n')) == NULL)
 	return (i);
@@ -73,15 +75,15 @@ size_t				read_output(const char		*str,
 
 #endif
 
-const t_bunny_size		*bunny_list_monitors(void)
+const t_bunny_area		*bunny_list_monitors(void)
 {
-  static t_bunny_size		siz[16]; // Does not support more than 16 monitors
+  static t_bunny_area		siz[16]; // Does not support more than 15 monitors
   char				buf[1024 * 32];
   size_t			last;
 
   if (get_output(&buf[0], sizeof(buf), command) == false)
     return (NULL);
-  last = read_output(&buf[0], &siz[0], sizeof(siz) - 1);
-  siz[last].x = siz[last].y = 0;
+  last = read_output(&buf[0], &siz[0], NBRCELL(siz) - 1);
+  siz[last].x = siz[last].y = siz[last].w = siz[last].h = 0;
   return (&siz[0]);
 }
