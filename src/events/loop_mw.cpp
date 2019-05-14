@@ -184,7 +184,11 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			    else
 			      {
 				gl_joystick[joyid].connected = false;
-				free((char*)gl_joystick[joyid].name);
+				if (gl_joystick[joyid].name)
+				  {
+				    bunny_free((char*)gl_joystick[joyid].name);
+				    gl_joystick[joyid].name = NULL;
+				  }
 				scream_log_if(PATTERN "joydisconnect)", "event", window, nwin, freq, data);
 			      }
 			    if ((rep = gl_callback.connect

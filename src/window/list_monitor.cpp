@@ -39,6 +39,15 @@ static bool			get_output(char			*buf,
 
 #if				_WIN32 || __WIN32__
 
+/*
+HMONITOR monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+MONITORINFO info;
+info.cbSize = sizeof(MONITORINFO);
+GetMonitorInfo(monitor, &info);
+int monitor_width = info.rcMonitor.right - info.rcMonitor.left;
+int monitor_height = info.rcMonitor.bottom - info.rcMonitor.top;
+*/
+
 static size_t			read_output(const char		*str,
 					    t_bunny_area	*siz,
 					    size_t		len)

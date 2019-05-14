@@ -139,103 +139,15 @@ bool			bunny_set_font_attribute(const char		*conf_file,
     }
 
   missing_field = "Invalid color format";
-  if (bunny_configuration_go_get_int(cnf, &tmp, "Color[3]"))
-    {
-      clr.argb[ALPHA_CMP] = tmp;
-      if (bunny_configuration_go_get_int(cnf, &tmp, "Color[2]"))
-	{
-	  clr.argb[BLUE_CMP] = tmp;
-	  if (bunny_configuration_go_get_int(cnf, &tmp, "Color[1]"))
-	    {
-	      clr.argb[GREEN_CMP] = tmp;
-	      if (bunny_configuration_go_get_int(cnf, &tmp, "Color[0]"))
-		{
-		  clr.argb[RED_CMP] = tmp;
-		  fnt->color = clr.full;
-		}
-	      else
-		goto InvalidField;
-	    }
-	  else
-	    goto InvalidField;
-	}
-      else
-	goto InvalidField;
-    }
-  else if (bunny_configuration_go_get_int(cnf, &tmp, "Color[2]"))
-    {
-      clr.argb[BLUE_CMP] = tmp;
-      if (bunny_configuration_go_get_int(cnf, &tmp, "Color[1]"))
-	{
-	  clr.argb[GREEN_CMP] = tmp;
-	  if (bunny_configuration_go_get_int(cnf, &tmp, "Color[0]"))
-	    {
-	      clr.argb[RED_CMP] = tmp;
-	      fnt->color = clr.full;
-	    }
-	  else
-	    goto InvalidField;
-	}
-      else
-	goto InvalidField;
-    }
-  else if (bunny_configuration_go_get_int(cnf, &tmp, "Color[0]"))
-    {
-      clr.argb[ALPHA_CMP] = 255;
-      clr.argb[RED_CMP] = tmp;
-      clr.argb[GREEN_CMP] = tmp;
-      clr.argb[BLUE_CMP] = tmp;
-      fnt->color = clr.full;
-    }
+  if (bunny_color_configuration("Color", &clr, cnf) == BD_ERROR)
+    goto InvalidField;
+  else
+    fnt->color = clr.full;
 
-  if (bunny_configuration_go_get_int(cnf, &tmp, "OutlineColor[3]"))
-    {
-      clr.argb[ALPHA_CMP] = tmp;
-      if (bunny_configuration_go_get_int(cnf, &tmp, "OutlineColor[2]"))
-	{
-	  clr.argb[BLUE_CMP] = tmp;
-	  if (bunny_configuration_go_get_int(cnf, &tmp, "OutlineColor[1]"))
-	    {
-	      clr.argb[GREEN_CMP] = tmp;
-	      if (bunny_configuration_go_get_int(cnf, &tmp, "OutlineColor[0]"))
-		{
-		  clr.argb[RED_CMP] = tmp;
-		  fnt->outline_color = clr.full;
-		}
-	      else
-		goto InvalidField;
-	    }
-	  else
-	    goto InvalidField;
-	}
-      else
-	goto InvalidField;
-    }
-  else if (bunny_configuration_go_get_int(cnf, &tmp, "OutlineColor[2]"))
-    {
-      clr.argb[BLUE_CMP] = tmp;
-      if (bunny_configuration_go_get_int(cnf, &tmp, "OutlineColor[1]"))
-	{
-	  clr.argb[GREEN_CMP] = tmp;
-	  if (bunny_configuration_go_get_int(cnf, &tmp, "OutlineColor[0]"))
-	    {
-	      clr.argb[RED_CMP] = tmp;
-	      fnt->outline_color = clr.full;
-	    }
-	  else
-	    goto InvalidField;
-	}
-      else
-	goto InvalidField;
-    }
-  else if (bunny_configuration_go_get_int(cnf, &tmp, "OutlineColor[0]"))
-    {
-      clr.argb[ALPHA_CMP] = 255;
-      clr.argb[RED_CMP] = tmp;
-      clr.argb[GREEN_CMP] = tmp;
-      clr.argb[BLUE_CMP] = tmp;
-      fnt->outline_color = clr.full;
-    }
+  if (bunny_color_configuration("OutlineColor", &clr, cnf) == BD_ERROR)
+    goto InvalidField;
+  else
+    fnt->outline_color = clr.full;
 
   if (bunny_configuration_go_get_int(cnf, &tmp, "OutlineSize[0]"))
     fnt->outline_size = tmp;

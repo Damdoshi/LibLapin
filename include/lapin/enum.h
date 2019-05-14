@@ -23,7 +23,7 @@
 /*!
 ** The maximum joystick the library can manage
 */
-# define			LAST_BUNNY_JOYSTICK		8
+# define			LAST_BUNNY_JOYSTICK		12
 
 /*!
 ** The axis a library can manage on a single joystick

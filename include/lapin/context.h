@@ -92,6 +92,7 @@ t_bunny_joy_connect_function	bunny_subcontext_joy_connect;
 t_bunny_joy_axis_function	bunny_subcontext_joy_axis;
 t_bunny_joy_button_function	bunny_subcontext_joy_button;
 t_bunny_get_focus_function	bunny_subcontext_get_focus;
+
 t_bunny_lost_focus_function	bunny_subcontext_lost_focus;
 t_bunny_resize_function		bunny_subcontext_resize;
 t_bunny_close_function		bunny_subcontext_close;

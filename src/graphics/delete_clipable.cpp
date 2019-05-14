@@ -9,6 +9,8 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 {
   size_t			*type = (size_t*)clip;
 
+  if (!clip)
+    return ;
   switch (*type)
     {
     case GRAPHIC_RAM:

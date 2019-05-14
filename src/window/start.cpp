@@ -26,7 +26,6 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
   sf::ContextSettings	settings;
   struct bunny_window	*win;
   const char		*str;
-  int			i;
 
 #ifdef			__linux__
   if ((str = getenv("DISPLAY")) == NULL || str[0] != ':')
@@ -56,22 +55,7 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
   win->width = width;
   win->height = height;
 
-  for (i = 0; i < LAST_BUNNY_JOYSTICK; ++i)
-    if (sf::Joystick::isConnected(i))
-      {
-	sf::Joystick::Identification	id;
-	int				j;
-
-	gl_joystick[i].connected = true;
-	gl_joystick[i].name = bunny_strdup(id.name.toAnsiString().c_str());
-	gl_joystick[i].vendor = id.vendorId;
-	gl_joystick[i].product = id.productId;
-	gl_joystick[i].nb_button = sf::Joystick::getButtonCount(i);
-	gl_joystick[i].axis = 0;
-	for (j = 0; j < sf::Joystick::AxisCount; ++j)
-	  gl_joystick[i].axis |= (sf::Joystick::hasAxis(i, (sf::Joystick::Axis)j) ? 1 : 0) << j;
-      }
-
+  bunny_update_joysticks();
   scream_log_if(PATTERN, "window", width, height, winstyle, window_name, win);
   bunny_fill(&((t_bunny_window*)win)->buffer, PINK2);
   return ((t_bunny_window*)win);

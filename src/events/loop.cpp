@@ -164,13 +164,18 @@ t_bunny_response	bunny_loop(t_bunny_window	*window,
 			    gl_joystick[joyid].nb_button = sf::Joystick::getButtonCount(joyid);
 			    gl_joystick[joyid].axis = 0;
 			    for (i = 0; i < sf::Joystick::AxisCount; ++i)
-			      gl_joystick[joyid].axis |= (sf::Joystick::hasAxis(joyid, (sf::Joystick::Axis)i) ? 1 : 0) << i;
+			      gl_joystick[joyid].axis |=
+				(sf::Joystick::hasAxis(joyid, (sf::Joystick::Axis)i) ? 1 : 0) << i;
 			    scream_log_if(PATTERN "joyconnect)", "event", window, freq, data);
 			  }
 			else
 			  {
 			    gl_joystick[joyid].connected = false;
-			    free((char*)gl_joystick[joyid].name);
+			    if (gl_joystick[joyid].name)
+			      {
+				bunny_free((char*)gl_joystick[joyid].name);
+				gl_joystick[joyid].name = NULL;
+			      }
 			    scream_log_if(PATTERN "joydisconnect)", "event", window, freq, data);
 			  }
 			if ((rep = gl_callback.connect
