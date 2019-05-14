@@ -21,6 +21,7 @@ void			merge_clothe(t_bunny_map		*nod,
   t_bunny_clipable	*clipable = (t_bunny_clipable*)&_clipable;
   t_bunny_clothe	*clothe = bunny_map_data(nod, t_bunny_clothe*);
   t_bunny_sprite	*nw = (t_bunny_sprite*)pnw;
+  t_bunny_position	pos = {0, 0};
 
   if (!clothe || !nw)
     return ;
@@ -34,7 +35,7 @@ void			merge_clothe(t_bunny_map		*nod,
       clothe->sprite->clipable.clip_y_position = 0;
       clothe->sprite->clipable.clip_width = clothe->sprite->clipable.buffer.width;
       clothe->sprite->clipable.clip_height = clothe->sprite->clipable.buffer.height;
-      bunny_blit(&nw->clipable.buffer, &clothe->sprite->clipable, NULL);
+      bunny_blit(&nw->clipable.buffer, &clothe->sprite->clipable, &pos);
       bunny_draw(&nw->clipable);
 
       bunny_clipable_copy(&clothe->sprite->clipable, clipable);

@@ -712,6 +712,8 @@ void				bunny_set_multiply_blit(bool			blend);
 */
 bool				bunny_make_clipable_unique(t_bunny_clipable	*clipable);
 
+size_t				bunny_get_maximum_picture_width(void);
+
 /*!
 ** This function reset OpenGL states.
 */
