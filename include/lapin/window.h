@@ -19,6 +19,22 @@
 # endif
 
 /*!
+** The t_bunny_window_style enumeration is a collection of values that will
+** allow you, throught the bunny_start_style function, to open a window with
+** a specific aspect. You can mix these values thanks to a binary or |.
+*/
+typedef enum			e_bunny_window_style
+  {
+    NO_BORDER			= 0,
+    TITLEBAR			= 1,
+    RESIZE_BUTTON		= 2,
+    CLOSE_BUTTON		= 4,
+    FULLSCREEN			= 9,
+    DEFAULT_WIN_STYLE		= TITLEBAR | RESIZE_BUTTON | CLOSE_BUTTON,
+    ANTIALIASING		= 16
+  }				t_bunny_window_style;
+
+/*!
 ** The t_bunny_window represents an opened window. It contains
 ** a t_bunny_buffer with size informations and also a name.
 */
@@ -26,6 +42,7 @@ typedef struct			s_bunny_window
 {
   t_bunny_buffer		buffer;
   const char * const		name;
+  const t_bunny_window_style	style;
 }				t_bunny_window;
 
 /*!
@@ -66,22 +83,6 @@ void				bunny_display(const t_bunny_window		*win);
 const t_bunny_size		*bunny_get_screen_resolution(void);
 
 const t_bunny_area		*bunny_list_monitors(void);
-
-/*!
-** The t_bunny_window_style enumeration is a collection of values that will
-** allow you, throught the bunny_start_style function, to open a window with
-** a specific aspect. You can mix these values thanks to a binary or |.
-*/
-typedef enum			e_bunny_window_style
-  {
-    NO_BORDER			= 0,
-    TITLEBAR			= 1,
-    RESIZE_BUTTON		= 2,
-    CLOSE_BUTTON		= 4,
-    FULLSCREEN			= 9,
-    DEFAULT_WIN_STYLE		= TITLEBAR | RESIZE_BUTTON | CLOSE_BUTTON,
-    ANTIALIASING		= 16
-  }				t_bunny_window_style;
 
 /*!
 ** bunny_start_style works the same way as bunny_start but allow you to specify

@@ -54,6 +54,7 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
   win->type = WINDOW;
   win->width = width;
   win->height = height;
+  win->style = winstyle;
 
   bunny_update_joysticks();
   scream_log_if(PATTERN, "window", width, height, winstyle, window_name, win);

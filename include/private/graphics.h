@@ -78,6 +78,7 @@ struct				bunny_window
   ssize_t			height;
   t_bunny_extended_data		data[BUNNY_EXTENDED_DATA_LENGTH];
   const char			*window_name;
+  t_bunny_window_style		style;
 };
 
 # ifdef				__MINGW32__
