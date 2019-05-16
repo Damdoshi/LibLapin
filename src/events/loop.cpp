@@ -36,7 +36,7 @@ t_bunny_response	bunny_loop(t_bunny_window	*window,
     {
       scream_log_if(PATTERN "enter_context)", "event", window, freq, data);
       if ((rep = gl_callback.entering_context(data)) < GO_ON)
-	return (rep);
+	goto end;
     }
   else
     rep = GO_ON;
