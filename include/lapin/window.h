@@ -29,7 +29,7 @@ typedef enum			e_bunny_window_style
     TITLEBAR			= 1,
     RESIZE_BUTTON		= 2,
     CLOSE_BUTTON		= 4,
-    FULLSCREEN			= 9,
+    FULLSCREEN			= 8,
     DEFAULT_WIN_STYLE		= TITLEBAR | RESIZE_BUTTON | CLOSE_BUTTON,
     ANTIALIASING		= 16
   }				t_bunny_window_style;
