@@ -162,6 +162,8 @@ void				bunny_request_focus(const t_bunny_window	*win);
 void				bunny_move_window(t_bunny_window		*win,
 						  t_bunny_position		pos);
 
+t_bunny_position		bunny_get_window_position(const t_bunny_window	*win);
+
 /*!
 ** Resize the sent window.
 ** \param win The window to resize.
