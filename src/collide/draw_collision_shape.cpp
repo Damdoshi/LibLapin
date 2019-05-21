@@ -392,3 +392,14 @@ void			bunny_draw_collision_shape(t_bunny_buffer		*tar,
     }
 }
 
+void			bunny_set_collision_shape(t_bunny_buffer		*tar,
+						  const t_bunny_collision	*x,
+						  t_bunny_position		pos,
+						  unsigned int			col)
+{
+  t_bunny_collision	c = *x;
+
+  bunny_move_collision(&c, t_bunny_accurate_position{(double)pos.x, (double)pos.y});
+  bunny_draw_collision_shape(tar, &c, col);
+}
+

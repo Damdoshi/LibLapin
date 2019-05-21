@@ -359,9 +359,9 @@ t_bunny_configuration	*bunny_configuration_end(t_bunny_configuration			*config);
 
 # define		bunny_configuration_all(conf, node)				\
   _Generic((node),									\
-	   t_bunny_configuration*: bunny_configuration_all_children,			\
-           default: bunny_configuration_all_case					\
-	   )(conf, node)
+	   t_bunny_configuration*: bunny_configuration_all_children(conf, node),	\
+           default: bunny_configuration_all_cases(conf, node)				\
+	   )
 
 /*!
 ** Return if the sent configuration node is the last children of its local tree.
@@ -392,8 +392,8 @@ bool			bunny_configuration_read_time(const t_bunny_configuration	*cnf,
 						      const char			*fld,
 						      double				*secs);
 
-# define		bunny_configuration_get(cnf, ptr, typ, fmt, ...)		\
-  bunny_configuration_getf(cnf, (typ*)ptr, fmt, ##__VA_ARGS__) ? ptr += sizeof(typ) : 0
+# define		bunny_configuration_get_and_go(cnf, ptr, typ, fmt, ...) \
+  bunny_configuration_getf(cnf, (typ*)ptr, fmt, ##__VA_ARGS__) ? (bool)(ptr += sizeof(typ)) : 0
 
 /*
 ** To avoid having plenty of tmp variable of differentes types when fetching inside

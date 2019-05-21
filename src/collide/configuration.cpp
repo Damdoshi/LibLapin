@@ -6,7 +6,8 @@
 #include		"lapin_private.h"
 
 t_bunny_decision	bunny_collision_configuration(const char		*field,
-						      t_bunny_collision		*col,
+						      t_bunny_collision		**ptr,
+						      int			*len,
 						      t_bunny_configuration	*cnf)
 {
   const char		*types[] = {
@@ -25,6 +26,10 @@ t_bunny_decision	bunny_collision_configuration(const char		*field,
   // Check the node exists
   if (bunny_configuration_getf_node(cnf, &nod, field) == false)
     return (BD_NOT_FOUND);
+  *len = bunny_configuration_casesf(cnf, "%s", field);
+  if ((*ptr = (t_bunny_collision*)bunny_malloc(sizeof(**ptr) * *len)) == NULL)
+    return (BD_ERROR);
+  t_bunny_collision	*col = *ptr;
 
   // For each node
   for (i = 0; bunny_configuration_getf_node(cnf, &nod, "%s[%d]", field, i); ++i)

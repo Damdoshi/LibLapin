@@ -263,6 +263,23 @@ typedef union	u_bunny_collision
 bool		bunny_collide(const t_bunny_collision				*a,
 			      const t_bunny_collision				*b);
 
+bool		bunny_collision(const t_bunny_collision				*a,
+				t_bunny_accurate_position			posa,
+				const t_bunny_collision				*b,
+				t_bunny_accurate_position			posb);
+
+bool		bunny_collision_nbr(const t_bunny_collision			*a,
+				    size_t					lena,
+				    t_bunny_accurate_position			posa,
+				    const t_bunny_collision			*b,
+				    t_bunny_accurate_position			posb,
+				    size_t					lenb);
+
+void		bunny_move_collision(t_bunny_collision				*a,
+				     t_bunny_accurate_position			move);
+
+void		bunny_turn_collision(t_bunny_collision				*a,
+				     double					moment);
 /*!
 ** Draw the collision shape on the sent buffer.
 ** \param tar The surface where to draw the collision
@@ -273,12 +290,18 @@ void		bunny_draw_collision_shape(t_bunny_buffer			*tar,
 					   const t_bunny_collision		*x,
 					   unsigned int				col);
 
+void		bunny_set_collision_shape(t_bunny_buffer			*tar,
+					  const t_bunny_collision		*x,
+					  t_bunny_position			pos,
+					  unsigned int				col);
+
 bool		bunny_pixel_collision(t_bunny_clipable				*pic,
 				      const t_bunny_position			*pos,
 				      double					amgn);
 
 t_bunny_decision bunny_collision_configuration(const char			*field,
-					       t_bunny_collision		*col,
+					       t_bunny_collision		**col,
+					       int				*len,
 					       t_bunny_configuration		*cnf);
 
 #endif	/*	__LAPIN_COLLIDE_H__						*/
