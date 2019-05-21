@@ -101,7 +101,7 @@ const t_bunny_area		*bunny_list_monitors(void)
 
 const t_bunny_area		*bunny_list_autonomous_monitors(void)
 {
-  const t_bunny_area		*screens = bunny_list_monitors();
+  t_bunny_area			*screens = (t_bunny_area*)bunny_list_monitors();
   int				i, j, count;
 
   for (i = 0, count = 0; screens[i].w && screens[i].h; ++i)
