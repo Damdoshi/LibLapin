@@ -42,7 +42,7 @@ typedef struct			s_bunny_window
 {
   t_bunny_buffer		buffer;
   const char * const		name;
-  const t_bunny_window_style	style;
+  const int			style;
 }				t_bunny_window;
 
 /*!
