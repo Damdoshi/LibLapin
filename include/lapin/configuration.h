@@ -392,6 +392,9 @@ bool			bunny_configuration_read_time(const t_bunny_configuration	*cnf,
 						      const char			*fld,
 						      double				*secs);
 
+# define		bunny_configuration_get(cnf, ptr, typ, fmt, ...)		\
+  bunny_configuration_getf(cnf, (typ*)ptr, fmt, ##__VA_ARGS__) ? ptr += sizeof(typ) : 0
+
 /*
 ** To avoid having plenty of tmp variable of differentes types when fetching inside
 ** a configuration sequentially

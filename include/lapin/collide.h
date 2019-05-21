@@ -277,4 +277,8 @@ bool		bunny_pixel_collision(t_bunny_clipable				*pic,
 				      const t_bunny_position			*pos,
 				      double					amgn);
 
+t_bunny_decision bunny_collision_configuration(const char			*field,
+					       t_bunny_collision		*col,
+					       t_bunny_configuration		*cnf);
+
 #endif	/*	__LAPIN_COLLIDE_H__						*/
