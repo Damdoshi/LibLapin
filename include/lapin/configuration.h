@@ -140,7 +140,7 @@ void			bunny_delete_configuration(t_bunny_configuration		*config);
 ** \param config The configuration node to delete.
 */
 void			bunny_delete_node(t_bunny_configuration				*config,
-						   const char				*addr);
+					  const char					*addr);
 
 /*!
 ** Set the create mode to on or off. If the create mode is on, every node required to handle

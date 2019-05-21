@@ -1,3 +1,12 @@
+=> Directive @insert_array, qui, utilisé avec un token de globbing genere un tableau
+   pour chaque fichier et insere.
+
+=> Inventer un format de fichier impliquant normal map et image, le tout ensemble.
+   Avec un logiciel utilisant la LibLapin, il sera possible de l'afficher et d'animer les lumières :p
+
+=> Il faudra ajouter des versions de configuration qui prenne des va_list plutot que directivement
+   les varidiques.
+
 => Faire un module pour gérer les joysticks connus et attribuer des touches automatiquement.
 (Voir la manette de PS4, XBOX, le Steam Controler, la manette de supernes, le controleur Atari et ma manette pas cher,
 ainsi que le "bunny controler", qui vivra un jour :p)

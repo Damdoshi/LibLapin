@@ -1,0 +1,31 @@
+
+{ArrayArray
+  12,
+  13,
+  { = 666
+    "A",
+    "B",
+    "C"
+  },
+  {Name
+    "E",
+    "F",
+    "G"
+  },
+  [
+    Field = 42
+  ]
+}
+
+Empty
+Syntax0 = 2 
+
+Syntax1 =  = 42
+3, 4, 5 
+
+Syntax2 =  = 84
+6, 7, 8 
+
+Syntax3 =  = 168
+9, 10, 11 
+

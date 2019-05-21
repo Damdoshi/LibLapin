@@ -65,6 +65,7 @@ int				main(void)
   assert(*str == 'i');
 
   bunny_save_configuration(BC_CSV, "/dev/stdout", cnf);
+  bunny_save_configuration(BC_DABSIC, "/dev/stdout", cnf);
 
   printf("Done!\n");
 

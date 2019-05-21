@@ -12,7 +12,7 @@ const std::string	Expression::OperatorToken[Expression::LAST_OPERATOR_FAMILY][21
       {"=", "<-", ":="},
       {"[=]", "[<-]", "[:=]"},
       {"[Array=]", "[Array<-]", "[Array:=]"},
-      {"[Hash=]", "[Hash<-]", "[Hash:=]"},
+      {"[Map=]", "[Map<-]", "[Map:=]"},
       {"||="},
       {"^^="},
       {"&&="},

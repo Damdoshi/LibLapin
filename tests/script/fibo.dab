@@ -2,8 +2,9 @@
 Fibo(int a) = [Function
   If a <= 0 Then
     Return 0
-  If a < 2 Then
+  If a < 2
     Return 1
+  EndIf
   Return Fibo(a - 1) + Fibo(a - 2)
 ]
 
