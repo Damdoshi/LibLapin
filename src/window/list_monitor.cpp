@@ -84,6 +84,8 @@ static size_t			read_output(const char		*str,
 
 #endif
 
+///////////////////////// IL FAUT QUE LES ECRANS CLONEES NE SOIENT PAS MONTRES !!!!!
+
 const t_bunny_area		*bunny_list_monitors(void)
 {
   static t_bunny_area		siz[16]; // Does not support more than 15 monitors
@@ -96,3 +98,28 @@ const t_bunny_area		*bunny_list_monitors(void)
   siz[last].x = siz[last].y = siz[last].w = siz[last].h = 0;
   return (&siz[0]);
 }
+
+const t_bunny_area		*bunny_list_autonomous_monitors(void)
+{
+  const t_bunny_area		*screens = bunny_list_monitors();
+  int				i, j, count;
+
+  for (i = 0, count = 0; screens[i].w && screens[i].h; ++i)
+    {
+      // Search for previously encountered screens with the same position
+      for (j = i - 1; j >= 0; --j)
+	if (screens[j].x == screens[i].x && screens[j].y == screens[i].y)
+	  break ;
+      // If one is found, then skip it
+      if (j >= 0)
+	continue ;
+      // If no one is found, store it.
+      screens[count].x = screens[i].x;
+      screens[count].y = screens[i].y;
+      screens[count].w = screens[i].w;
+      screens[count].h = screens[i].h;
+      count += 1;
+    }
+  return (screens);
+}
+

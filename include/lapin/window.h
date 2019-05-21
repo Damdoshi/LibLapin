@@ -84,6 +84,8 @@ const t_bunny_size		*bunny_get_screen_resolution(void);
 
 const t_bunny_area		*bunny_list_monitors(void);
 
+const t_bunny_area		*bunny_list_autonomous_monitors(void);
+
 /*!
 ** bunny_start_style works the same way as bunny_start but allow you to specify
 ** more precisly the aspect of the window you need.
