@@ -37,17 +37,19 @@ Decision		_bunny_handle_directive(const char		*code,
   DIR			*dir;
   struct dirent		*f;
   char			buffer[512];
+  const char		*res;
 
   if (readtext(code, i, "@include") && fileroot)
     {
       read_separator(code, i);
       if (readstring(code, i, &buffer[0], sizeof(buffer)) == false)
 	return (BD_ERROR);
+      res = bunny_configuration_resolve_path(&buffer[0]);
 
-      if (isdir("", &buffer[0]) == false)
+      if (isdir("", res) == false)
 	{
 	  if (bunny_load_configuration
-	      (bunny_which_format(&buffer[0]), &buffer[0], fileroot) == NULL)
+	      (bunny_which_format(res), res, fileroot) == NULL)
 	    scream_error_if(return (BD_ERROR), BE_SYNTAX_ERROR, PATTERN,
 			    "ressource,configuration",
 			    code, i, node, fileroot, "false", "Error while loading ",
@@ -55,12 +57,12 @@ Decision		_bunny_handle_directive(const char		*code,
 	}
       else
 	{
-	  if ((dir = opendir(&buffer[0])) == NULL)
+	  if ((dir = opendir(res)) == NULL)
 	    scream_error_if(return (BD_ERROR), bunny_errno, PATTERN,
 			    "ressource,configuration",
 			    code, i, node, fileroot, "false", "Error while opening directory ",
 			    &buffer[0], whichline(code, i));
-	  bunny_configuration_push_path(&buffer[0]);
+	  bunny_configuration_push_path(res);
 	  bunny_errno = 0;
 	  while ((f = readdir(dir)) != NULL)
 	    {
@@ -72,7 +74,7 @@ Decision		_bunny_handle_directive(const char		*code,
 				  code, i, node, fileroot, "false", "Error while browsing directory ",
 				  &buffer[0], whichline(code, i));
 		}
-	      if (f->d_name[0] != '.' && isdir(&buffer[0], &f->d_name[0]) == false && (fmt = bunny_which_format(&f->d_name[0])) != BC_CUSTOM)
+	      if (f->d_name[0] != '.' && isdir(res, &f->d_name[0]) == false && (fmt = bunny_which_format(&f->d_name[0])) != BC_CUSTOM)
 		if (bunny_load_configuration(fmt, &f->d_name[0], fileroot) == NULL)
 		  {
 		    closedir(dir);
@@ -91,11 +93,12 @@ Decision		_bunny_handle_directive(const char		*code,
       read_separator(code, i);
       if (readstring(code, i, &buffer[0], sizeof(buffer)) == false)
 	return (BD_ERROR);
+      res = bunny_configuration_resolve_path(&buffer[0]);
 
-      if (isdir("", &buffer[0]) == false)
+      if (isdir("", res) == false)
 	{
 	  if (bunny_load_configuration
-	      (bunny_which_format(&buffer[0]), &buffer[0], node) == NULL)
+	      (bunny_which_format(res), res, node) == NULL)
 	    scream_error_if(return (BD_ERROR), BE_SYNTAX_ERROR, PATTERN,
 			    "ressource,configuration",
 			    code, i, node, fileroot, "false", "Error while loading ",
@@ -103,12 +106,12 @@ Decision		_bunny_handle_directive(const char		*code,
 	}
       else
 	{
-	  if ((dir = opendir(&buffer[0])) == NULL)
+	  if ((dir = opendir(res)) == NULL)
 	    scream_error_if(return (BD_ERROR), bunny_errno, PATTERN,
 			    "ressource,configuration",
 			    code, i, node, fileroot, "false", "Error while opening directory ",
 			    &buffer[0], whichline(code, i));
-	  bunny_configuration_push_path(&buffer[0]);
+	  bunny_configuration_push_path(res);
 	  bunny_errno = 0;
 	  while ((f = readdir(dir)) != NULL)
 	    {
@@ -120,7 +123,7 @@ Decision		_bunny_handle_directive(const char		*code,
 				  code, i, node, fileroot, "false", "Error while browsing directory ",
 				  &buffer[0], whichline(code, i));
 		}
-	      if (f->d_name[0] != '.' && isdir(&buffer[0], &f->d_name[0]) == false && (fmt = bunny_which_format(&f->d_name[0])) != BC_CUSTOM)
+	      if (f->d_name[0] != '.' && isdir(res, &f->d_name[0]) == false && (fmt = bunny_which_format(&f->d_name[0])) != BC_CUSTOM)
 		if (bunny_load_configuration(fmt, &f->d_name[0], node) == NULL)
 		  {
 		    closedir(dir);

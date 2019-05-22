@@ -24,6 +24,7 @@ Comme ca, on peut retourner les erreurs et les avoir dans l'ordre, genre
 --Cannot parse gnagnagna
 ---Syntax error on line 3 because xxxx
 
+=> Gerer *, ? et + dans les @directives.
 
 En Dabsic, le mot clef qui sert a renvoyer une erreur peut servir soit à throw soit à revenir
 dans la fonction parente en fonction de la façon dont il a été appelé. En effet, un specificateur
