@@ -1,3 +1,4 @@
+
 => Directive @insert_array, qui, utilisé avec un token de globbing genere un tableau
    pour chaque fichier et insere.
 
@@ -14,9 +15,22 @@
    adapté dans un path plus prioritaire, crack!
    A voir, il faut reflechir à quoi faire...
 
+==> Si une sprite a une animation avec une position n'étant qu'une valeur et non un tableau,
+    alors regarder si elle a un clip défini (comme clipable) si oui, considerer X=0 et Y=
+    le nombre dans la position * la hauteur du clip défini.
+
 => Faire un module pour gérer les joysticks connus et attribuer des touches automatiquement.
 (Voir la manette de PS4, XBOX, le Steam Controler, la manette de supernes, le controleur Atari et ma manette pas cher,
 ainsi que le "bunny controler", qui vivra un jour :p)
+
+Lors d'une coloration syntaxique de fonction... Donner une couleur unique (ou presque) a CHAQUE variable
+et colorier TOUJOURS ces variables de la meme facon a l'interieur de ces fonctions.
+=> Simplement hacher le nom de la variable pour matcher une table ca devrait le faire.
+Les champs exterieurs peuvent etre coloriée de facon arbitraire aussi... Il faut voir.
+Le plus simple sera probablement de hasher le symbole et de faire correspondre le resultat a une table de
+couleur pré établie.
+==> Un pretty printer, ca seriat très chouette pour Dabsic...
+=> Colorier aussi les scopes et boucle par rapport a leur PROFONDEUR.
 
 Les erreurs dans LibLapin2 doivent etre indenté en fonction de leur profondeur.
 Comme ca, on peut retourner les erreurs et les avoir dans l'ordre, genre
@@ -64,12 +78,6 @@ du conflit avec le thread de gestion...
 tests/dabsic/array.dab ne passe plus a cause du changement de politique de regeneration visant a conserver la forme
 array=1,2,3,4 au detriment de {array 1, 2, 3, 4} pour les petits tableaux.
 
-Lors d'une coloration syntaxique de fonction... Donner une couleur unique (ou presque) a CHAQUE variable
-et colorier TOUJOURS ces variables de la meme facon a l'interieur de ces fonctions.
-Les champs exterieurs peuvent etre coloriée de facon arbitraire aussi... Il faut voir.
-Le plus simple sera probablement de hasher le symbole et de faire correspondre le resultat a une table de
-couleur pré établie.
-==> Un pretty printer, ca seriat très chouette pour Dabsic...
 
 
 Les indirections sont deja gerée en Dabsic par [field] => Si field contient une raw string correspondant a un

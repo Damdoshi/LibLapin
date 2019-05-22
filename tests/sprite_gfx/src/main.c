@@ -24,14 +24,13 @@ t_bunny_response	display(void		*d)
   pos.x = 0;
   pos.y = 0;
   bunny_clear(&win->buffer, rand() | BLACK);
-  bunny_clear(&backforth->clipable.buffer, rand() | BLACK);
-  bunny_clear(&double_forward->clipable.buffer, rand() | BLACK);
   bunny_sprite_animate(backforth, 1.0 / bunny_get_frequency());
   bunny_sprite_animate(double_forward, 1.0 / bunny_get_frequency());
   bunny_blit(&win->buffer, &backforth->clipable, &pos);
   pos.x = 0;
   pos.y = backforth->clipable.clip_height;
   bunny_blit(&win->buffer, &double_forward->clipable, &pos);
+
   bunny_display(win);
 
   if (bunny_sprite_is_still(backforth) &&
@@ -42,6 +41,8 @@ t_bunny_response	display(void		*d)
 
 int			main(void)
 {
+  bunny_set_log_mode(true);
+  bunny_set_error_descriptor(2);
   bunny_enable_full_blit(true);
   assert(backforth = bunny_load_sprite("backforth.dab"));
   assert(double_forward = bunny_load_sprite("double_forward.dab"));

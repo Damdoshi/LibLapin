@@ -54,6 +54,13 @@ bool			SmallConf::GetInt(int			*i,
       return (true);
     }
 
+  if (root == NULL)
+    root = (SmallConf*)bunny_configuration_get_root((t_bunny_configuration*)this);
+  if (local == NULL)
+    local = (SmallConf*)bunny_configuration_get_parent((t_bunny_configuration*)this);
+  if (artif == NULL)
+    artif = local;
+
   if (GetDouble(&d, root, local, artif, param) == false)
     {
       if (array.size() == 1)

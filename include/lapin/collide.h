@@ -265,15 +265,19 @@ bool		bunny_collide(const t_bunny_collision				*a,
 
 bool		bunny_collision(const t_bunny_collision				*a,
 				const t_bunny_accurate_position			*posa,
+				double						rota,
 				const t_bunny_collision				*b,
-				const t_bunny_accurate_position			*posb);
+				const t_bunny_accurate_position			*posb,
+				double						rotb);
 
 bool		bunny_collision_nbr(const t_bunny_collision			*a,
 				    size_t					lena,
 				    const t_bunny_accurate_position		*posa,
+				    double					rota,
 				    const t_bunny_collision			*b,
+				    size_t					lenb,
 				    const t_bunny_accurate_position		*posb,
-				    size_t					lenb);
+				    double					rotb);
 
 void		bunny_move_collision(t_bunny_collision				*a,
 				     t_bunny_accurate_position			move);

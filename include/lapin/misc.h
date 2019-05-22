@@ -331,5 +331,9 @@ extern char			bunny_big_buffer[16 * 1024 * 1024];
 	   int *: "(int**)%p",						\
   default: "%%other")
 # endif
+
+#  define			bunny_clear(a)				\
+  memset((void*)a, 0, sizeof(*a))
+
 #endif	/*			__LAPIN_MISC_H__			*/
 

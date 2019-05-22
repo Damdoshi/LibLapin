@@ -13,9 +13,12 @@ RessourceFile = "./sprite.png"
     RepeatAnimation=0
   ]
   [SecondLine
-    Position = 0, 110
+    {Position
+      0,
+      [].Clip.Size[1]
+    }
     Frame = 6
-    'NextAnimation = "FirstLine"
+    NextAnimation = "FirstLine"
     Browsing = "RightToLeft"
     {FramePlay
       1, 1, 1, 3, 3, 3
