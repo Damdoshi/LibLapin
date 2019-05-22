@@ -63,12 +63,12 @@ t_bunny_plugin		*bunny_new_plugin(const char			*libfile)
 #endif
         {
           bunny_errno = BE_CONFIGURED_FUNCTION_NOT_FOUND;
-	goto freename;
+	  goto freename;
         }
-      if ((proto->nbrparam = list[nbrfunc].nbrparam) > 4)
+      if ((proto->nbr_parameters = list[nbrfunc].nbr_parameters) > NBRCELL(proto->parameters))
         {
           bunny_errno = BE_TOO_MANY_PARAMETERS;
-	goto unsupported_format;
+	  goto unsupported_format;
         }
       proto->name = list[nbrfunc].name;
       proto->return_value = list[nbrfunc].return_value;

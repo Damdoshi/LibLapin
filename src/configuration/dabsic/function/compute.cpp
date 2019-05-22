@@ -243,13 +243,13 @@ t_compute_result	dabsic_compute_link(Function		&func,
       proto->name = mainnod.parent_node->name.c_str();
       proto->function_ptr = bunny_plugin_get_self_function(proto->name);
       proto->return_value = lt_to_bvt[mainnod.parent_node->last_type];
-      proto->nbrparam = parameters.Size();
+      proto->nbr_parameters = parameters.Size();
     }
   else
     proto = mainnod.prototype;
 
-  dyparams = (t_bunny_value*)bunny_alloca(proto->nbrparam * sizeof(*dyparams));
-  for (i = 0; i < proto->nbrparam; ++i)
+  dyparams = (t_bunny_value*)bunny_alloca(proto->nbr_parameters * sizeof(*dyparams));
+  for (i = 0; i < proto->nbr_parameters; ++i)
     {
       if (params[i].last_type == SmallConf::STRING)
 	proto->parameters[i] = BVT_STRING;
@@ -276,7 +276,7 @@ t_compute_result	dabsic_compute_link(Function		&func,
 	  break ;
 	}
     }
-  _real_call(proto, &retval, proto->nbrparam, dyparams);
+  _real_call(proto, &retval, proto->nbr_parameters, dyparams);
 
   switch (mainnod.prototype->return_value)
     {

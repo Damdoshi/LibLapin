@@ -51,8 +51,8 @@ void		bunny_turn_collision(t_bunny_collision		*a,
 	a->quad.coord[2].y = a->quad.coord[0].y + siz.y;
 	a->quad.coord[3].x = a->quad.coord[0].x;
 	a->quad.coord[3].y = a->quad.coord[0].y + siz.y;
+	[[fallthrough]];
       }
-      [[fallthrought]];
     case BCT_QUAD:
       turn(&a->quad.coord[0], moment);
       turn(&a->quad.coord[1], moment);

@@ -65,8 +65,8 @@ typedef struct			s_bunny_prototype
   const char *			name;
   const void *			function_ptr;
   t_bunny_value_type		return_value;
-  size_t			nbrparam;
-  t_bunny_value_type		parameters[__ZERO_LENGTH__];
+  size_t			nbr_parameters;
+  t_bunny_value_type		parameters[16];
 }				t_bunny_prototype;
 
 /*!

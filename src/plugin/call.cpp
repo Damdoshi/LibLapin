@@ -18,7 +18,7 @@ bool			bunny_plugin_call(t_bunny_plugin		*plugin,
   for (i = 0; i < plugin->nbr_functions; ++i)
     if (strcmp(plugin->prototypes[i].name, func) == 0)
       {
-	if (plugin->prototypes[i].nbrparam != arrlen)
+	if (plugin->prototypes[i].nbr_parameters != arrlen)
 	  scream_error_if(return (false), EINVAL, PATTERN " (Invalid array length)",
 			  "plugin",
 			  plugin, func, return_value, arrlen, params, "false");
