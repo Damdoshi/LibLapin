@@ -85,7 +85,7 @@ void			bunny_sprite_animate(t_bunny_sprite		*spr,
 	      if (sprite.stop_repeat || anim->animation_repeat == -1 || ++sprite.current_repeat >= anim->animation_repeat)
 		{
 		  sprite.current_repeat = 0;
-		  if (anim->animation_repeat != -1)
+		  if (anim->next_animation != -1)
 		    sprite.current_animation = anim->next_animation;
 		  if (sprite.stop_repeat == false)
 		    {

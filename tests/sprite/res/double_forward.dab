@@ -1,4 +1,4 @@
-RessourceFile = "./sprite.png"
+RessourceFile = @"./sprite.png"
 [Clip
   Size = 100, 100
   Selected = 0

@@ -51,9 +51,10 @@ Decision		dabsic_read_field_value(const char		*code,
   if (code[i] == '@')
     {
       if (_bunny_handle_directive
-	  (code, i, &conf, &root, dabsic_read_separator) == false)
+	  (code, i, &conf, &root, dabsic_read_separator) == BD_ERROR)
 	return (BD_ERROR);
-      dabsic_read_separator(code, i);
+      else
+	dabsic_read_separator(code, i);
     }
 
   if ((ret = dabsic_read_litterals(code, i, conf, root)) == BD_OK)

@@ -7,6 +7,13 @@
 => Il faudra ajouter des versions de configuration qui prenne des va_list plutot que directivement
    les varidiques.
 
+=> Certains noeuds de configuration (ceux ayant été racines locale lors de parsing) devrait stocker
+   l'état de leur "path" afin de permettre la resolution après parsing de fichiers.
+   Actuellement, si un fichier n'existe pas au début du parsing general, le path n'est pas resolu.
+   => Evidemment, cela implique une faille de secu, c'est a dire que si on place un fichier au nom
+   adapté dans un path plus prioritaire, crack!
+   A voir, il faut reflechir à quoi faire...
+
 => Faire un module pour gérer les joysticks connus et attribuer des touches automatiquement.
 (Voir la manette de PS4, XBOX, le Steam Controler, la manette de supernes, le controleur Atari et ma manette pas cher,
 ainsi que le "bunny controler", qui vivra un jour :p)

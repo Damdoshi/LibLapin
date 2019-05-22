@@ -134,7 +134,7 @@ void				writevalue(std::ostream				&ss,
 					   bool					jsonhex = false);
 
 
-bool				_bunny_handle_directive(const char		*code,
+Decision			_bunny_handle_directive(const char		*code,
 							ssize_t			&i,
 							SmallConf		*node,
 							t_bunny_configuration	*fileroot,

@@ -8,7 +8,7 @@
 
 const char		*bunny_configuration_resolve_path(const char	*file)
 {
-  static char		buffer[256];
+  static char		buffer[1024];
   std::list<std::string>::reverse_iterator it;
 
   for (it = SmallConf::file_path.rbegin(); it != SmallConf::file_path.rend(); ++it)
@@ -16,9 +16,11 @@ const char		*bunny_configuration_resolve_path(const char	*file)
       size_t		siz;
 
       if (*it != "")
-	snprintf(&buffer[0], sizeof(buffer), "%s/%s", it->c_str(), file);
+	siz = snprintf(&buffer[0], sizeof(buffer), "%s/%s", it->c_str(), file);
       else
-	snprintf(&buffer[0], sizeof(buffer), "%s", file);
+	siz = snprintf(&buffer[0], sizeof(buffer), "%s", file);
+      if (siz == sizeof(buffer))
+	continue ;
       if (access(&buffer[0], R_OK) == 0)
 	return (&buffer[0]);
     }

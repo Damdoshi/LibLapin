@@ -412,6 +412,21 @@ bool			readstring(const char			*code,
   return (true);
 }
 
+bool			readpath(const char			*code,
+				 ssize_t			&i,
+				 char				*d,
+				 ssize_t			len)
+{
+  ssize_t		j = i;
+
+  if (readtext(code, j, "@") == false)
+    return (false);
+  if (readstring(code, j, d, len) == false)
+    return (false);
+  i = j;
+  return (true);
+}
+
 void			writestring(std::ostream		&ss,
 				    const std::string		&str,
 				    bool			json)
@@ -516,6 +531,15 @@ bool			readvalue(const char			*code,
     {
       nod.SetInt(ival);
       nod.original_value = std::string(&code[bef], i - bef);
+    }
+  else if (readpath(code, i, &buffer[0], sizeof(buffer)))
+    {
+      const char	*tmp = bunny_configuration_resolve_path(&buffer[0]);
+
+      if (tmp == NULL)
+	nod.SetString(std::string(&buffer[0]));
+      else
+	nod.SetString(std::string(tmp));
     }
   else if (readstring(code, i, &buffer[0], sizeof(buffer)))
     nod.SetString(std::string(&buffer[0]));

@@ -26,7 +26,7 @@ bool			isdir(const char				*d,
   return (stbuf.st_mode & S_IFDIR);
 }
 
-bool			_bunny_handle_directive(const char		*code,
+Decision		_bunny_handle_directive(const char		*code,
 						ssize_t			&i,
 						SmallConf		*node,
 						t_bunny_configuration	*fileroot,
@@ -42,13 +42,13 @@ bool			_bunny_handle_directive(const char		*code,
     {
       read_separator(code, i);
       if (readstring(code, i, &buffer[0], sizeof(buffer)) == false)
-	return (false);
+	return (BD_ERROR);
 
       if (isdir("", &buffer[0]) == false)
 	{
 	  if (bunny_load_configuration
 	      (bunny_which_format(&buffer[0]), &buffer[0], fileroot) == NULL)
-	    scream_error_if(return (false), BE_SYNTAX_ERROR, PATTERN,
+	    scream_error_if(return (BD_ERROR), BE_SYNTAX_ERROR, PATTERN,
 			    "ressource,configuration",
 			    code, i, node, fileroot, "false", "Error while loading ",
 			    &buffer[0], whichline(code, i));
@@ -56,7 +56,7 @@ bool			_bunny_handle_directive(const char		*code,
       else
 	{
 	  if ((dir = opendir(&buffer[0])) == NULL)
-	    scream_error_if(return (false), bunny_errno, PATTERN,
+	    scream_error_if(return (BD_ERROR), bunny_errno, PATTERN,
 			    "ressource,configuration",
 			    code, i, node, fileroot, "false", "Error while opening directory ",
 			    &buffer[0], whichline(code, i));
@@ -67,7 +67,7 @@ bool			_bunny_handle_directive(const char		*code,
 	      if (bunny_errno)
 		{
 		  closedir(dir);
-		  scream_error_if(return (false), bunny_errno, PATTERN,
+		  scream_error_if(return (BD_ERROR), bunny_errno, PATTERN,
 				  "ressource,configuration",
 				  code, i, node, fileroot, "false", "Error while browsing directory ",
 				  &buffer[0], whichline(code, i));
@@ -76,7 +76,7 @@ bool			_bunny_handle_directive(const char		*code,
 		if (bunny_load_configuration(fmt, &f->d_name[0], fileroot) == NULL)
 		  {
 		    closedir(dir);
-		    scream_error_if(return (false), BE_SYNTAX_ERROR, PATTERN,
+		    scream_error_if(return (BD_ERROR), BE_SYNTAX_ERROR, PATTERN,
 				    "ressource,configuration",
 				    code, i, node, fileroot, "false", "Error while loading ",
 				    &buffer[0], whichline(code, i));
@@ -90,13 +90,13 @@ bool			_bunny_handle_directive(const char		*code,
     {
       read_separator(code, i);
       if (readstring(code, i, &buffer[0], sizeof(buffer)) == false)
-	return (false);
+	return (BD_ERROR);
 
       if (isdir("", &buffer[0]) == false)
 	{
 	  if (bunny_load_configuration
 	      (bunny_which_format(&buffer[0]), &buffer[0], node) == NULL)
-	    scream_error_if(return (false), BE_SYNTAX_ERROR, PATTERN,
+	    scream_error_if(return (BD_ERROR), BE_SYNTAX_ERROR, PATTERN,
 			    "ressource,configuration",
 			    code, i, node, fileroot, "false", "Error while loading ",
 			    &buffer[0], whichline(code, i));
@@ -104,7 +104,7 @@ bool			_bunny_handle_directive(const char		*code,
       else
 	{
 	  if ((dir = opendir(&buffer[0])) == NULL)
-	    scream_error_if(return (false), bunny_errno, PATTERN,
+	    scream_error_if(return (BD_ERROR), bunny_errno, PATTERN,
 			    "ressource,configuration",
 			    code, i, node, fileroot, "false", "Error while opening directory ",
 			    &buffer[0], whichline(code, i));
@@ -115,7 +115,7 @@ bool			_bunny_handle_directive(const char		*code,
 	      if (bunny_errno)
 		{
 		  closedir(dir);
-		  scream_error_if(return (false), bunny_errno, PATTERN,
+		  scream_error_if(return (BD_ERROR), bunny_errno, PATTERN,
 				  "ressource,configuration",
 				  code, i, node, fileroot, "false", "Error while browsing directory ",
 				  &buffer[0], whichline(code, i));
@@ -124,7 +124,7 @@ bool			_bunny_handle_directive(const char		*code,
 		if (bunny_load_configuration(fmt, &f->d_name[0], node) == NULL)
 		  {
 		    closedir(dir);
-		    scream_error_if(return (false), BE_SYNTAX_ERROR, PATTERN,
+		    scream_error_if(return (BD_ERROR), BE_SYNTAX_ERROR, PATTERN,
 				    "ressource,configuration",
 				    code, i, node, fileroot, "false", "Error while loading ",
 				    &buffer[0], whichline(code, i));
@@ -135,13 +135,9 @@ bool			_bunny_handle_directive(const char		*code,
 	}
     }
   else
-    scream_error_if(return (false), BE_SYNTAX_ERROR,  PATTERN,
-		    "ressource,configuration,syntax",
-		    code, i, node, fileroot, "false",
-		    "Unknow or unsupported directive ",
-		    "", whichline(code, i));
+    return (BD_NOT_FOUND);
   scream_log_if(PATTERN, "ressource,configuration",
 		code, i, node, fileroot, "false", "Success", "", whichline(code, i));
-  return (true);
+  return (BD_OK);
 }
 
