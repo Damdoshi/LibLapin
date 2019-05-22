@@ -6,23 +6,25 @@
 #include	"lapin_private.h"
 
 bool		bunny_collision(const t_bunny_collision		*a,
-				t_bunny_accurate_position	posa,
+				const t_bunny_accurate_position	*posa,
 				const t_bunny_collision		*b,
-				t_bunny_accurate_position	posb)
+				const t_bunny_accurate_position	*posb)
 {
   t_bunny_collision abis = *a;
   t_bunny_collision bbis = *b;
 
-  bunny_move_collision(&abis, posa);
-  bunny_move_collision(&bbis, posb);
+  if (posa)
+    bunny_move_collision(&abis, *posa);
+  if (posb)
+    bunny_move_collision(&bbis, *posb);
   return (bunny_collide(&abis, &bbis));
 }
 
 bool		bunny_collision_nbr(const t_bunny_collision	*a,
-				    t_bunny_accurate_position	posa,
+				    const t_bunny_accurate_position *posa,
 				    size_t			lena,
 				    const t_bunny_collision	*b,
-				    t_bunny_accurate_position	posb,
+				    const t_bunny_accurate_position *posb,
 				    size_t			lenb)
 {
   size_t	i, j;
