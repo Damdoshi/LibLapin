@@ -26,6 +26,8 @@
 # endif
 # include			"compat/ini.h"
 
+# define			LAST_BUNNY_JOYSTICK		gl_maximum_joystick
+
 # define			bunny_get_screen_size()		\
   *bunny_get_screen_resolution()
 
@@ -77,16 +79,6 @@ int				bunny_dprintf(int		fd,
 */
 void				*bunny_pool_getv(t_bunny_pool		*pol,
 						 size_t			*id);
-
-/*!
-** Get a free element inside the pool.
-** \param pol The pool to browse.
-** \param id A pointer to store the id of the element. May be NULL.
-** \param type The type of datas inside the pool
-** \return NULL if there is no free element inside the pool, or a pointer to a free element
-*/
-# define			bunny_pool_get(pol, id, type)		\
-  (type*)bunny_pool_getv(pol, id)
 
 /*!
 ** Signal that the sent element is free again.

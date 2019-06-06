@@ -7,7 +7,7 @@
 
 const t_bunny_joystick	*bunny_get_joy_info(int		id)
 {
-  if (id >= LAST_BUNNY_JOYSTICK || id < 0)
+  if (id >= NBRCELL(gl_joystick) || id < 0)
     return (NULL);
   return (&gl_joystick[id]);
 }

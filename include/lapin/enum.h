@@ -20,10 +20,6 @@
 ** The maximum buttons the library can manage on a single joystick
 */
 # define			LAST_BUNNY_BUTTON		32
-/*!
-** The maximum joystick the library can manage
-*/
-# define			LAST_BUNNY_JOYSTICK		12
 
 /*!
 ** The axis a library can manage on a single joystick
@@ -167,5 +163,7 @@ typedef enum			e_bunny_keysym
 extern const char		*gl_bunny_keysym[BKS_LAST_KEY];
 
 const char			*bunny_get_keyname(t_bunny_keysym	sym);
+
+extern const size_t		gl_maximum_joystick;
 
 #endif	/*			__LAPIN_ENUM_H__	*/

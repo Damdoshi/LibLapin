@@ -280,6 +280,17 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	  out->texture->draw(*spr, sf::RenderStates(sf::BlendNone));
 	else
 	  out->texture->draw(*spr);
+
+	if (*type == SPRITE)
+	  {
+	    t_bunny_sprite *spr = (t_bunny_sprite*)picture;
+	    const t_bunny_collision_shapes *col = bunny_sprite_get_collision(spr);
+
+	    if (col)
+	      for (unsigned int x = 0; x < col->nbr_collision; ++x)
+		bunny_draw_collision_shape(output, &col->collisions[x], RED);
+	  }
+
 	scream_log_if
 	  (PATTERN, "graphics", output, picture, pos, pos->x, pos->y, _shader);
 	return ;

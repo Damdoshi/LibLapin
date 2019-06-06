@@ -18,3 +18,7 @@ Robert="Dreyfus"
   5,
   6
 }
+
+{Pushed
+  @push "dir/"
+}

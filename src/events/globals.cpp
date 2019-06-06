@@ -3,7 +3,11 @@
 //
 // Bibliotheque Lapin
 
+#include		<SFML/Window.hpp>
 #include		"lapin.h"
+
+// 8 with standard SFML. 12 with custom SFML.
+const size_t		gl_maximum_joystick = sf::Joystick::Count;
 
 const char		*gl_bunny_keysym[BKS_LAST_KEY] =
   {

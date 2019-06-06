@@ -37,15 +37,13 @@ bool			bunny_sprite_shift_animation_id(t_bunny_sprite	*spr,
     return (false);
   // Check animations are compatible
   anim = bunny_map_data(map, int32_t);
-  if (bunny_vector_data
-      (sprite.animation, sprite.current_animation, t_bunny_animation).nbr_frame
-      != bunny_vector_data(sprite.animation, anim, t_bunny_animation).nbr_frame)
+  if (sprite.animation[sprite.current_animation].nbr_frame != sprite.animation[anim].nbr_frame)
     return (false);
 
   sprite.current_animation = anim;
   sprite.current_animation_hash = hash;
 
-  t_bunny_animation	&ani = bunny_vector_data(sprite.animation, anim, t_bunny_animation);
+  t_bunny_animation	&ani = sprite.animation[anim];
 
   sprite.position.x = ani.position.x;
   sprite.position.y = ani.position.y;

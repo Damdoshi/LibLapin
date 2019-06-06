@@ -64,15 +64,14 @@ void			bunny_sprite_animate(t_bunny_sprite		*spr,
     }
 
   sprite.current_time += elapsed;
-  anim = &bunny_vector_data
-    (sprite.animation, sprite.current_animation, t_bunny_animation);
+  anim = &sprite.animation[sprite.current_animation];
   while (sprite.current_time > anim->delay)
     {
       sprite.current_time -= anim->delay;
       if (anim->frame_repetition == NULL)
 	frep = 1;
       else
-	frep = bunny_vector_data(anim->frame_repetition, sprite.current_frame, int);
+	frep = anim->frame_repetition[sprite.current_frame];
 
       if (++sprite.current_frame_repeat >= frep)
 	{
@@ -90,10 +89,7 @@ void			bunny_sprite_animate(t_bunny_sprite		*spr,
 		  if (sprite.stop_repeat == false)
 		    {
 		      if (sprite.current_animation != -1)
-			{
-			  anim = &bunny_vector_data
-			    (sprite.animation, sprite.current_animation, t_bunny_animation);
-			}
+			anim = &sprite.animation[sprite.current_animation];
 		      else
 			{
 			  // Stay still on the last frame

@@ -223,8 +223,11 @@ struct				bunny_sprite
   const sf::Texture		*tex;
   sf::Sprite			*sprite;
 
-  t_bunny_vector		*animation;
+  t_bunny_animation		*animation;
+  size_t			nbr_animation;
   t_bunny_map			*hashname_id;
+  t_bunny_collision_shapes	*collision_shapes;
+  int32_t			nbr_collision;
   uint64_t			current_animation_hash;
   int32_t			current_animation;
   uint32_t			current_frame_repeat;
@@ -232,6 +235,8 @@ struct				bunny_sprite
   uint32_t			current_frame;
   double			current_time;
   bool				stop_repeat;
+  bool				draw_collision_shape;
+  t_bunny_collision		working_collision; // private
 };
 
 struct				bunny_dressed_sprite
@@ -253,8 +258,11 @@ struct				bunny_dressed_sprite
   const sf::Texture		*tex;
   sf::Sprite			*sprite;
 
-  t_bunny_vector		*animation;
+  t_bunny_animation		*animation;
+  size_t			nbr_animation;
   t_bunny_map			*hashname_id;
+  t_bunny_collision_shapes	*collision_shapes;
+  int32_t			nbr_collision;
   uint64_t			current_animation_hash;
   int32_t			current_animation;
   uint32_t			current_frame_repeat;
@@ -262,6 +270,8 @@ struct				bunny_dressed_sprite
   uint32_t			current_frame;
   double			current_time;
   bool				stop_repeat;
+  bool				draw_collision_shape;
+  t_bunny_collision		working_collision; // private
 
   t_bunny_map			*closets; // [hash -> t_bunny_closet*]
   t_bunny_map			*clothes; // [hash -> t_bunny_sprite*]

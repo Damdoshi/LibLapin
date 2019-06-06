@@ -60,11 +60,14 @@ Decision		dabsic_read_inside_array(const char		*code,
 
       if (code[i] == '@')
 	{
-	  if (_bunny_handle_directive
-	      (code, i, &newconf, &root, dabsic_read_separator) == false)
-	    return (BD_ERROR);
-	  dabsic_read_separator(code, i);
-	  goto Bottom;
+	  if ((ret = _bunny_handle_directive
+	       (code, i, &newconf, &root, dabsic_read_separator)) == BD_OK)
+	    {
+	      dabsic_read_separator(code, i);
+	      goto Bottom;
+	    }
+	  else if (ret == BD_ERROR)
+	    return (ret);
 	}
 
       if (expr_read_expression

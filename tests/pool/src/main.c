@@ -26,7 +26,7 @@ static void		test(void)
   ssize_t		i, j, k, l;
 
   len = rand() % 4000 + 2000;
-  
+
   void			**id = bunny_alloca(sizeof(*id) * len);
 
   pool = bunny_new_pool(len, size_t);

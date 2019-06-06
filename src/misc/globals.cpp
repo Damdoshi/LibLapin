@@ -45,3 +45,6 @@ const void			*last_scope = NULL;
 
 char				bunny_big_buffer[16 * 1024 * 1024];
 std::map<std::string, struct bunny_monitored_value> gl_monitor;
+
+const t_bunny_string_couple	gl_empty_string_couple = {NULL, NULL};
+

@@ -58,7 +58,8 @@ typedef struct		s_bunny_animation
   uint32_t		nbr_frame;
   t_bunny_position	position;
   t_bunny_size		intertile;
-  t_bunny_vector	*frame_repetition;
+  int			*frame_repetition; // nbr_frame long
+  int			*collision_shapes; // nbr_frame long
   t_bunny_frame_browsing browsing;
   int32_t		animation_repeat;
   int32_t		next_animation;
@@ -77,8 +78,11 @@ typedef struct		s_bunny_sprite
 {
   t_bunny_clipable	clipable;
   const size_t		_private[3];
-  t_bunny_vector	*animation;	// [int -> anim]
+  t_bunny_animation	*animation;	// [int -> anim]
+  size_t		nbr_animation;
   t_bunny_map		*hashname_id;	// [hash("") -> int]
+  t_bunny_collision_shapes *collision_shapes;
+  uint32_t		nbr_collision;
   uint64_t		current_animation_hash;
   int32_t		current_animation;
   uint32_t		current_frame_repeat;
@@ -86,6 +90,7 @@ typedef struct		s_bunny_sprite
   uint32_t		current_frame;
   double		current_time;
   bool			stop_repeat;
+  bool			draw_collision_shapes;
 }			t_bunny_sprite;
 # pragma		pack()
 
@@ -203,6 +208,12 @@ bool			bunny_sprite_shift_animation_id(t_bunny_sprite	*sprite,
 ** \return The name under its hash format.
 */
 uint64_t		bunny_sprite_get_animation(const t_bunny_sprite *sprite);
+const t_bunny_collision_shapes *bunny_sprite_get_collision(const t_bunny_sprite *sprite);
+
+int			bunny_sprite_collide(const t_bunny_sprite	*a,
+					     const t_bunny_sprite	*b,
+					     t_bunny_string_couple	*couple,
+					     size_t			len);
 
 /*!
 ** Return the hash format of the sent name.
@@ -259,6 +270,7 @@ void			bunny_delete_wardrobe(t_bunny_map		*wardrobe);
 typedef struct		s_bunny_dressed_sprite
 {
   t_bunny_sprite	sprite;
+  char			_private[sizeof(t_bunny_collision)];
   t_bunny_map		*closets; // [closet name hash djb2 -> t_bunny_closet*]
   t_bunny_map		*clothes; // [closet name hash djb2 -> t_bunny_clothe*]
 }			t_bunny_dressed_sprite;

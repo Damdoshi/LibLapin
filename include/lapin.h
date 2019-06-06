@@ -149,6 +149,7 @@ typedef enum			s_bunny_decision
 # include			"lapin/history.h"
 # include			"lapin/monitor.h"
 # include			"lapin/misc.h"
+# include			"lapin/named_parameter.h"
 
 # include			"lapin/context.h"
 

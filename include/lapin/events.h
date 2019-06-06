@@ -494,6 +494,7 @@ t_bunny_response		bunny_loop_mw(t_bunny_window			**win,
 ** condition of performences.
 */
 int				bunny_get_frequency(void);
+double				bunny_get_delay(void);
 
 /*
 ** Network event

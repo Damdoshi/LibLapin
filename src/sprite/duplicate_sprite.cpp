@@ -34,23 +34,22 @@ t_bunny_sprite		*bunny_duplicate_sprite(t_bunny_sprite	*s)
   nw->sprite->setTexture(*nw->tex);
 
   // Deep copy of animations
-  if ((nw->animation = bunny_new_vector
-       (bunny_vector_size(s->animation), t_bunny_animation)) == NULL)
+  if ((nw->animation = (t_bunny_animation*)bunny_calloc
+       (s->nbr_animation, sizeof(t_bunny_animation))) == NULL)
     goto DeleteSfSprite;
-  for (i = 0; i < (int)bunny_vector_size(nw->animation); ++i)
+  for (i = 0; i < (int)s->nbr_animation; ++i)
     {
-      t_bunny_animation &anim = bunny_vector_data(nw->animation, i, t_bunny_animation);
-      t_bunny_animation &old = bunny_vector_data(s->animation, i, t_bunny_animation);
+      t_bunny_animation &anim = nw->animation[i];
+      t_bunny_animation &old = s->animation[i];
 
       memcpy(&anim, &old, sizeof(t_bunny_animation));
       if (old.frame_repetition)
 	{
-	  if ((anim.frame_repetition = bunny_new_vector
-	       (bunny_vector_size(old.frame_repetition), int)) == NULL)
+	  if ((anim.frame_repetition = (int*)bunny_calloc
+	       (old.nbr_frame, sizeof(int))) == NULL)
 	    goto DeleteAnimation;
-	  for (j = 0; j < (int)bunny_vector_size(anim.frame_repetition); ++j)
-	    bunny_vector_data(anim.frame_repetition, j, int)
-	      = bunny_vector_data(old.frame_repetition, j, int);
+	  for (j = 0; j < (int)anim.nbr_frame; ++j)
+	    anim.frame_repetition[j] = old.frame_repetition[j];
 	}
     }
 
@@ -70,13 +69,13 @@ t_bunny_sprite		*bunny_duplicate_sprite(t_bunny_sprite	*s)
  DeleteAnimation:
   while (i >= 0)
     {
-      t_bunny_animation &anim = bunny_vector_data(nw->animation, i, t_bunny_animation);
+      t_bunny_animation &anim = nw->animation[i];
 
       if (anim.frame_repetition)
-	bunny_delete_vector(anim.frame_repetition);
+	bunny_free(anim.frame_repetition);
       i -= 1;
     }
-  bunny_delete_vector(nw->animation);
+  bunny_free(nw->animation);
  DeleteSfSprite:
   delete nw->sprite;
  DeleteInnerTexture:

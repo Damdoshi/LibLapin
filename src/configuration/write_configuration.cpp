@@ -7,7 +7,7 @@
 
 t_bunny_my_write_configuration gl_bunny_my_write_configuration = NULL;
 
-#define			PATTERN		"%d type, %p config -> %s"
+#define			PATTERN		"%d type, %p config -> %.30s"
 
 typedef char		*(*write_func)(const t_bunny_configuration	*cnf);
 

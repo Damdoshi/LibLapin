@@ -27,7 +27,7 @@
   "Regular expression matching all Dabsic keywords."
   )
 (defconst dabsic/directives-regexp
-  "\\(?:^\\|\\s-\\)\\(@\\(insert\\|include\\)\\)"
+  "\\(?:^\\|\\s-\\)\\(@\\(insert\\|include\\|push\\)\\)"
   "Regular expression matching all Dabsic directives."
   )
 (defconst dabsic/scopes-regexp

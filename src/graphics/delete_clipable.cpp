@@ -96,14 +96,14 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 	  delete pic->texture;
 	if (pic->sprite)
 	  delete pic->sprite;
-	for (i = 0; i < bunny_vector_size(pic->animation); ++i)
+	for (i = 0; i < pic->nbr_animation; ++i)
 	  {
-	    t_bunny_animation	&a = bunny_vector_data(pic->animation, i, t_bunny_animation);
+	    t_bunny_animation	&a = pic->animation[i];
 
 	    if (a.frame_repetition)
-	      bunny_delete_vector(a.frame_repetition);
+	      bunny_free(a.frame_repetition);
 	  }
-	bunny_delete_vector(pic->animation);
+	bunny_free(pic->animation);
 	bunny_delete_map(pic->hashname_id);
 	delete pic;
 	scream_log_if("%p", "graphics", clip);

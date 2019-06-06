@@ -105,8 +105,11 @@ t_bunny_pool			*_bunny_new_pool(size_t			nmemb,
 ** Free all elements in pool but keep the pool.
 ** \param A pointer on a pool.
 */
-# define			bunny_pool_clear(pool)	\
+# define			bunny_pool_clear(pool)			\
   *(size_t*)&(pool)->nbr_occupied = 0
+
+# define			bunny_pool_get(pool, i, typ)		\
+  ((typ*)((pool)->data[(i)]))
 
 /*!
 ** Get a new element from the pool.

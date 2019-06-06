@@ -95,11 +95,11 @@ t_bunny_sprite		*_bunny_fill_sprite(t_bunny_sprite	*_spr,
     return (NULL);
 
   scream_log_if(PATTERN, "ressource,sprite", file, sprite);
-  bunny_sprite_set_animation_id
-    ((t_bunny_sprite*)sprite,
-     bunny_vector_data
-     (sprite->animation, sprite->current_animation, t_bunny_animation).hash
-     );
+  if (sprite->animation)
+    bunny_sprite_set_animation_id
+      ((t_bunny_sprite*)sprite,
+       sprite->animation[sprite->current_animation].hash
+       );
   return ((t_bunny_sprite*)sprite);
 }
 

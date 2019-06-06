@@ -6,10 +6,11 @@
 #include		"lapin_private.h"
 
 t_bunny_decision	bunny_collision_configuration(const char		*field,
-						      t_bunny_collision		**ptr,
-						      int			*len,
+						      t_bunny_collision_shapes	*shapes,
 						      t_bunny_configuration	*cnf)
 {
+  t_bunny_collision	**ptr = &shapes->collisions;
+  size_t		*len = &shapes->nbr_collision;
   const char		*types[] = {
     "Dot",
     "Circle",
@@ -40,6 +41,10 @@ t_bunny_decision	bunny_collision_configuration(const char		*field,
 	  break ;
       if (j == NBRCELL(types))
 	return (BD_ERROR); //
+
+      if (bunny_configuration_getf_string(nod, &col[i].identity.name, "Name") == false)
+	col[i].identity.name = types[j];
+
       switch ((col[i].type = (t_bunny_collision_type)j))
 	{
 	default:

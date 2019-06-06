@@ -27,6 +27,7 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
   sprite.current_repeat = 0;
   sprite.current_frame_repeat = 0;
   sprite.stop_repeat = false;
+  sprite.draw_collision_shape = false;
 
   // MANDATORY FIELDS //
 
@@ -34,10 +35,7 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
   if (config.Access("Animations") == false)
     {
       sprite.animation = NULL;
-      scream_error_if                    ////////////////////////////////////////////
-	(return (true), BE_SYNTAX_ERROR, // RETURN TRUE => ALLOW NON ANIMATED SPRITE
-	 PATTERN ": An 'Animations' scope was expected",
-	 "sprite,syntax", &sprite, &config, "false");
+      return (true);
     }
 
   // INITIAL ANIMATION
@@ -60,11 +58,40 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
   sprite.current_animation = bunny_hash(BH_DJB2, str, strlen(str));
 
   // ALLOC
-  if ((sprite.animation = bunny_new_vector
-       (config["Animations"].NbrChild(), t_bunny_animation)) == NULL)
+  sprite.nbr_animation = config["Animations"].NbrChild();
+  if ((sprite.animation = (t_bunny_animation*)bunny_calloc
+       (sprite.nbr_animation, sizeof(t_bunny_animation))) == NULL)
     goto ExitDirectly;
   if ((sprite.hashname_id = bunny_new_map(NULL, NULL, NULL, NULL)) == NULL)
     goto DeleteVector;
+
+  // COLLISION
+  sprite.nbr_collision = 0;
+  sprite.collision_shapes = NULL;
+  if ((sprite.nbr_collision = bunny_configuration_casesf(&config, "CollisionShapes")) > 0)
+    {
+      if ((sprite.collision_shapes = (t_bunny_collision_shapes*)bunny_malloc
+	   (sizeof(*sprite.collision_shapes) * sprite.nbr_collision)) == NULL)
+	scream_error_if
+	  (goto DeleteMap, ENOMEM,
+	   PATTERN ": Memory exhausted while loading collision shapes.",
+	   "sprite,syntax", &sprite, &config, "false");
+      for (int x = 0; x < sprite.nbr_collision; ++x)
+	{
+	  char		buf[128];
+
+	  snprintf(&buf[0], sizeof(buf), "CollisionShapes[%d]", x);
+	  if (bunny_collision_configuration
+	      (&buf[0], &sprite.collision_shapes[x], &config)
+	      == BD_ERROR)
+	    scream_error_if
+	      (goto DeleteMap, BE_SYNTAX_ERROR,
+	       PATTERN ": Cannot read the 'Collision' array. Syntax error.",
+	       "sprite,syntax", &sprite, &config, "false");
+	}
+    }
+  else
+    sprite.nbr_collision = 0;
 
   // OPTIONAL FIELDS
   default_delay = -1;
@@ -89,7 +116,7 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
   for (it = animnode->Begin(), i = 0; it != animnode->End(); ++it, ++i)
     {
       aconf = it->second;
-      anim = &bunny_vector_data(sprite.animation, i, t_bunny_animation);
+      anim = &sprite.animation[i];
       anim->hash = bunny_hash(BH_DJB2, it->first.c_str(), it->first.size());
       bunny_map_set_data(sprite.hashname_id, anim->hash, i, int);
 
@@ -120,6 +147,19 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	   PATTERN ": Invalid or absent 'Frame' value for animation '%s'",
 	   "sprite,syntax", &sprite, &config, "false", it->first.c_str());
 
+      if (bunny_configuration_getf_int(aconf, NULL, "Collision[0]"))
+	if ((anim->collision_shapes = (int*)bunny_malloc
+	     (sizeof(*anim->collision_shapes) * anim->nbr_frame)) == NULL)
+	  scream_error_if
+	    (goto DeleteMap, ENOMEM,
+	     PATTERN ": Not enough memory for collision of animation '%s'",
+	     "sprite,syntax", &sprite, &config, "false", it->first.c_str());
+      for (j = 0; anim->collision_shapes && j < anim->nbr_frame; ++j)
+	if (!bunny_configuration_getf_int
+	    (aconf, &anim->collision_shapes[j], "Collision[%d]", j))
+	  anim->collision_shapes[j] = -1;
+
+
       if ((*aconf).Access("Position") == false
 	  || (*aconf)["Position"].Access(0) == false
 	  || (*aconf)["Position"].Access(1) == false
@@ -149,7 +189,8 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	       PATTERN ": The 'FramePlay' array size must match the amount of "
 	       "frame for animation '%s'",
 	       "sprite,syntax", &sprite, &config, "false", it->first.c_str());
-	  if ((anim->frame_repetition = bunny_new_vector(tmp, int)) == NULL)
+	  if ((anim->frame_repetition = (int*)bunny_calloc
+	       (tmp, sizeof(int))) == NULL)
 	    scream_error_if
 	      (goto DeleteMap, ENOMEM,
 	       PATTERN ": Not enough memory to store the 'Repetition' array "
@@ -162,7 +203,7 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 		  (goto DeleteMap, BE_SYNTAX_ERROR,
 		   PATTERN ": Invalid value 'Repetition[%u]' field for animation '%s'",
 		   "sprite,syntax", &sprite, &config, "false", j, it->first.c_str());
-	      bunny_vector_data(anim->frame_repetition, j, int) = tmp;
+	      anim->frame_repetition[j] = tmp;
 	    }
 	}
       else
@@ -230,9 +271,9 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
       else
 	anim->next_animation = -1;
     }
-  for (i = 0; i < bunny_vector_size(sprite.animation); ++i)
+  for (i = 0; i < sprite.nbr_animation; ++i)
     {
-      anim = &bunny_vector_data(sprite.animation, i, t_bunny_animation);
+      anim = &sprite.animation[i];
       if (anim->next_animation != -1)
 	anim->next_animation = bunny_map_get_data
 	  (sprite.hashname_id, anim->next_animation, int);
@@ -246,7 +287,7 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
  DeleteMap:
   bunny_delete_map(sprite.hashname_id);
  DeleteVector:
-  bunny_delete_vector(sprite.animation);
+  bunny_free(sprite.animation);
  ExitDirectly:
   return (false);
 }

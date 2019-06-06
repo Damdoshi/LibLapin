@@ -43,8 +43,7 @@ bool			bunny_sprite_set_animation_id(t_bunny_sprite	*spr,
   sprite.current_frame = 0;
   sprite.current_time = 0;
 
-  t_bunny_animation	&anim = bunny_vector_data
-    (sprite.animation, sprite.current_animation, t_bunny_animation);
+  t_bunny_animation	&anim = sprite.animation[sprite.current_animation];
 
   sprite.position.x = anim.position.x;
   sprite.position.y = anim.position.y;

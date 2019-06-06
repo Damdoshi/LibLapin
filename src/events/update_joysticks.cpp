@@ -10,7 +10,7 @@ void				bunny_update_joysticks(void)
   sf::Joystick::Identification	id;
 
   sf::Joystick::update();
-  for (int i = 0; i < LAST_BUNNY_JOYSTICK; ++i)
+  for (int i = 0; i < NBRCELL(gl_joystick); ++i)
     if ((gl_joystick[i].connected = sf::Joystick::isConnected(i)))
       {
 	id = sf::Joystick::getIdentification(i);

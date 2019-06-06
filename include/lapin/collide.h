@@ -10,11 +10,12 @@
 ** Functions to detect collisions and structure to represent complex collision shape.
 */
 
-#ifndef		__LAPIN_COLLIDE_H__
-# define	__LAPIN_COLLIDE_H__
-# if		!defined(__LAPIN_H__)
-#  error	You cannot include this file directly.
+#ifndef					__LAPIN_COLLIDE_H__
+# define				__LAPIN_COLLIDE_H__
+# if					!defined(__LAPIN_H__)
+#  error				You cannot include this file directly.
 # endif
+# include				"misc.h"
 
 /*!
 ** Return true if the distance elem-dot is inferior to radius
@@ -23,9 +24,9 @@
 ** \param radius The distance between elem and dot that indicates a collision
 ** \return True if elem->dot < radius
 */
-bool		bunny_circle_collision_dot(const t_bunny_accurate_position	*elem,
-					   const t_bunny_accurate_position	*dot,
-					   double				radius);
+bool					bunny_circle_collision_dot(const t_bunny_accurate_position	*elem,
+								   const t_bunny_accurate_position	*dot,
+								   double				radius);
 
 /*!
 ** Return true if the distance center of a-center of b is inferior to both added radius
@@ -35,7 +36,7 @@ bool		bunny_circle_collision_dot(const t_bunny_accurate_position	*elem,
 ** \param r2 The second circle radius
 ** \return True if circle collide
 */
-# define	bunny_circle_collision(a, r1, b, r2)				\
+# define				bunny_circle_collision(a, r1, b, r2)	\
   bunny_circle_collision_dot(a, b, r1 + r2)
 
 /*!
@@ -44,8 +45,8 @@ bool		bunny_circle_collision_dot(const t_bunny_accurate_position	*elem,
 ** \param dot The dot that may collide
 ** \return True if it collides
 */
-bool		bunny_rectangular_collision_dot(const t_bunny_accurate_area	*elem,
-						const t_bunny_accurate_position	*dot);
+bool					bunny_rectangular_collision_dot(const t_bunny_accurate_area	*elem,
+									const t_bunny_accurate_position	*dot);
 
 /*!
 ** Return true if a and b rectangle collides.
@@ -53,8 +54,8 @@ bool		bunny_rectangular_collision_dot(const t_bunny_accurate_area	*elem,
 ** \param b A second rectangle
 ** \return True if rectangles overlaps.
 */
-bool		bunny_rectangular_collision(const t_bunny_accurate_area		*a,
-					    const t_bunny_accurate_area		*b);
+bool					bunny_rectangular_collision(const t_bunny_accurate_area		*a,
+								    const t_bunny_accurate_area		*b);
 
 /*!
 ** Return true if dot is on the clip
@@ -62,8 +63,8 @@ bool		bunny_rectangular_collision(const t_bunny_accurate_area		*a,
 ** \param dot The dot
 ** \return True if dot is on clip
 */
-bool		bunny_clip_collision_dot(const t_bunny_clipable			*clip,
-					 const t_bunny_accurate_position	*dot);
+bool					bunny_clip_collision_dot(const t_bunny_clipable			*clip,
+								 const t_bunny_accurate_position	*dot);
 
 /*!
 ** Return true if a and b clip collides.
@@ -71,8 +72,8 @@ bool		bunny_clip_collision_dot(const t_bunny_clipable			*clip,
 ** \param b A second clip
 ** \return True if clips overlaps.
 */
-bool		bunny_clip_collision(const t_bunny_clipable			*a,
-				     const t_bunny_clipable			*b);
+bool					bunny_clip_collision(const t_bunny_clipable			*a,
+							     const t_bunny_clipable			*b);
 
 
 /*!
@@ -81,8 +82,8 @@ bool		bunny_clip_collision(const t_bunny_clipable			*a,
 ** \param dot The position to test
 ** \return True if it collides.
 */
-bool		bunny_triangle_collision_dot(const t_bunny_vertex_array		*v3,
-					     const t_bunny_accurate_position	*dot);
+bool					bunny_triangle_collision_dot(const t_bunny_vertex_array		*v3,
+								     const t_bunny_accurate_position	*dot);
 
 /*!
 ** Return true if dot is inside the quad.
@@ -90,15 +91,15 @@ bool		bunny_triangle_collision_dot(const t_bunny_vertex_array		*v3,
 ** \param dot The position to test
 ** \return True if it collides.
 */
-bool		bunny_quad_collision_dot(const t_bunny_vertex_array		*v4,
-					 const t_bunny_accurate_position	*dot);
+bool					bunny_quad_collision_dot(const t_bunny_vertex_array		*v4,
+								 const t_bunny_accurate_position	*dot);
 
 /*!
 ** This enumeration is used as recognition token for t_bunny_collision.
 ** Each values, except for LAST_COLLISION_TYPE may be used and the union
 ** filled accordingly.
 */
-typedef enum	e_bunny_collision_type
+typedef enum				e_bunny_collision_type
   {
     BCT_DOT,
     BCT_CIRCLE,
@@ -108,7 +109,7 @@ typedef enum	e_bunny_collision_type
     BCT_QUAD,
     BCT_EQUATION,
     LAST_COLLISION_TYPE
-  }		t_bunny_collision_type;
+  }					t_bunny_collision_type;
 
 /*!
 ** The t_bunny_dot_collision represents a single dot in space.
@@ -118,11 +119,12 @@ typedef enum	e_bunny_collision_type
 ** Its type field must be set to BCT_DOT.
 ** Its coord attribute is its coordinate.
 */
-typedef struct	s_bunny_dot_collision
+typedef struct				s_bunny_dot_collision
 {
-  t_bunny_collision_type type;
-  t_bunny_accurate_position coord;
-}		t_bunny_dot_collision;
+  t_bunny_collision_type		type;
+  const char				*name;
+  t_bunny_accurate_position		coord;
+}					t_bunny_dot_collision;
 
 /*!
 ** The t_bunny_circle_collision represents a circle in space.
@@ -131,12 +133,13 @@ typedef struct	s_bunny_dot_collision
 ** Its coord attribute is the coordinate of the center of the circle.
 ** If its radius field is between -1 and 1, it is considered as a dot.
 */
-typedef struct	s_bunny_circle_collision
+typedef struct				s_bunny_circle_collision
 {
-  t_bunny_collision_type type;
-  t_bunny_accurate_position coord;
-  double	radius;
-}		t_bunny_circle_collision;
+  t_bunny_collision_type		type;
+  const char				*name;
+  t_bunny_accurate_position		coord;
+  double				radius;
+}					t_bunny_circle_collision;
 
 /*!
 ** The t_bunny_line_collision represents two dots with a specific
@@ -145,23 +148,25 @@ typedef struct	s_bunny_circle_collision
 ** Its coord attribute is an array with coordinates of each side of the line.
 ** Its intermediate_points attribute must be greater or equal to 0.
 */
-typedef struct	s_bunny_line_collision
+typedef struct				s_bunny_line_collision
 {
-  t_bunny_collision_type type;
-  t_bunny_accurate_position coord[2];
-  double	intermediate_points;
-}		t_bunny_line_collision;
+  t_bunny_collision_type		type;
+  const char				*name;
+  t_bunny_accurate_position		coord[2];
+  double				intermediate_points;
+}					t_bunny_line_collision;
 
 /*!
 ** The t_bunny_triangle_collision represents a triangle.
 ** Its type field must be set to BCT_TRIANGLE.
 ** Its coord attribute is an array with coordinates of each extremities.
 */
-typedef struct	s_bunny_triangle_collision
+typedef struct				s_bunny_triangle_collision
 {
-  t_bunny_collision_type type;
-  t_bunny_accurate_position coord[3];
-}		t_bunny_triangle_collision;
+  t_bunny_collision_type		type;
+  const char				*name;
+  t_bunny_accurate_position		coord[3];
+}					t_bunny_triangle_collision;
 
 
 /*!
@@ -170,22 +175,24 @@ typedef struct	s_bunny_triangle_collision
 ** Its coord attribute is an array with the position of the top left corner
 ** and then the size of the rectangle.
 */
-typedef struct	s_bunny_rectangular_collision
+typedef struct				s_bunny_rectangular_collision
 {
-  t_bunny_collision_type type;
-  t_bunny_accurate_position coord[2];
-}		t_bunny_rectangular_collision;
+  t_bunny_collision_type		type;
+  const char				*name;
+  t_bunny_accurate_position		coord[2];
+}					t_bunny_rectangular_collision;
 
 /*!
 ** The t_bunny_quad_collision represents a quad.
 ** Its type field must be set to BCT_QUAD.
 ** Its coord attribute is an array of coordinates for the quad.
 */
-typedef struct	s_bunny_quad_collision
+typedef struct				s_bunny_quad_collision
 {
-  t_bunny_collision_type type;
-  t_bunny_accurate_position coord[4];
-}		t_bunny_quad_collision;
+  t_bunny_collision_type		type;
+  const char				*name;
+  t_bunny_accurate_position		coord[4];
+}					t_bunny_quad_collision;
 
 /*!
 ** The t_bunny_equation_collision describe a rectangular area
@@ -202,24 +209,25 @@ typedef struct	s_bunny_quad_collision
 **
 ** Its type field must be set to BCT_EQUATION.
 */
-typedef struct	s_bunny_equation_collision
+typedef struct				s_bunny_equation_collision
 {
-  t_bunny_collision_type type;
-  t_bunny_accurate_position coord[2];
-  t_bunny_accurate_position amplitude;
-  double	a;
-  double	b;
-  double	c;
-  bool		origin_at_center;
-  bool		flipx;
-  bool		flipy;
-}		t_bunny_equation_collision;
+  t_bunny_collision_type		type;
+  const char				*name;
+  t_bunny_accurate_position		coord[2];
+  t_bunny_accurate_position		amplitude;
+  double				a;
+  double				b;
+  double				c;
+  bool					origin_at_center;
+  bool					flipx;
+  bool					flipy;
+}					t_bunny_equation_collision;
 
-typedef struct		s_bunny_collide_point
+typedef struct				s_bunny_collide_point
 {
-  double		radian;
-  t_bunny_accurate_position position;
-}			t_bunny_collide_point;
+  double				radian;
+  t_bunny_accurate_position		position;
+}					t_bunny_collide_point;
 
 /*!
 ** Test if the dot is colliding with the equation: colliding means that for the
@@ -230,8 +238,15 @@ typedef struct		s_bunny_collide_point
 ** occurs (The X/Y value of the equation for the sent X) and the inclinaison
 ** of the position.
 */
-t_bunny_collide_point bunny_collision_equation_dot(const t_bunny_equation_collision *a,
-						   const t_bunny_dot_collision	*b);
+t_bunny_collide_point			bunny_collision_equation_dot(const t_bunny_equation_collision	*a,
+								     const t_bunny_dot_collision	*b);
+
+
+typedef union				u_bunny_collision_identity
+{
+  t_bunny_collision_type		type;
+  const char				*name;
+}					t_bunny_collision_identity;
 
 /*!
 ** The u_bunny_collision union contains every t_bunny_*_collision
@@ -242,17 +257,18 @@ t_bunny_collide_point bunny_collision_equation_dot(const t_bunny_equation_collis
 ** For example, if you set type to BCT_RECTANGLE, you should use the rectangular
 ** field.
 */
-typedef union	u_bunny_collision
+typedef union				u_bunny_collision
 {
-  t_bunny_collision_type type;
-  t_bunny_dot_collision dot;
-  t_bunny_circle_collision circle;
-  t_bunny_line_collision line;
-  t_bunny_triangle_collision triangle;
-  t_bunny_rectangular_collision rectangular;
-  t_bunny_quad_collision quad;
-  t_bunny_equation_collision equation;
-}		t_bunny_collision;
+  t_bunny_collision_type		type;
+  t_bunny_collision_identity		identity;
+  t_bunny_dot_collision			dot;
+  t_bunny_circle_collision		circle;
+  t_bunny_line_collision		line;
+  t_bunny_triangle_collision		triangle;
+  t_bunny_rectangular_collision		rectangular;
+  t_bunny_quad_collision		quad;
+  t_bunny_equation_collision		equation;
+}					t_bunny_collision;
 
 /*!
 ** Return if the two shapes collides, whatever they are.
@@ -260,52 +276,61 @@ typedef union	u_bunny_collision
 ** \param a A shape to test the collision with
 ** \return True if shapes collides
 */
-bool		bunny_collide(const t_bunny_collision				*a,
-			      const t_bunny_collision				*b);
+bool					bunny_collide(const t_bunny_collision				*a,
+						      const t_bunny_collision				*b);
 
-bool		bunny_collision(const t_bunny_collision				*a,
-				const t_bunny_accurate_position			*posa,
-				double						rota,
-				const t_bunny_collision				*b,
-				const t_bunny_accurate_position			*posb,
-				double						rotb);
+bool					bunny_collision(const t_bunny_collision				*a,
+							const t_bunny_accurate_position			*posa,
+							double						rota,
 
-bool		bunny_collision_nbr(const t_bunny_collision			*a,
-				    size_t					lena,
-				    const t_bunny_accurate_position		*posa,
-				    double					rota,
-				    const t_bunny_collision			*b,
-				    size_t					lenb,
-				    const t_bunny_accurate_position		*posb,
-				    double					rotb);
+							const t_bunny_collision				*b,
+							const t_bunny_accurate_position			*posb,
+							double						rotb);
 
-void		bunny_move_collision(t_bunny_collision				*a,
-				     t_bunny_accurate_position			move);
+int					bunny_collision_nbr(const t_bunny_collision			*a,
+							    size_t					lena,
+							    const t_bunny_accurate_position		*posa,
+							    double					rota,
+							    const t_bunny_collision			*b,
+							    size_t					lenb,
+							    const t_bunny_accurate_position		*posb,
+							    double					rotb,
+							    t_bunny_string_couple			*couple,
+							    size_t					couple_len);
 
-void		bunny_turn_collision(t_bunny_collision				*a,
-				     double					moment);
+void					bunny_move_collision(t_bunny_collision				*a,
+							     t_bunny_accurate_position			move);
+
+void					bunny_turn_collision(t_bunny_collision				*a,
+							     double					moment);
+
 /*!
 ** Draw the collision shape on the sent buffer.
 ** \param tar The surface where to draw the collision
 ** \param x The collision to draw
 ** \param col The color that will be used to draw the collision
 */
-void		bunny_draw_collision_shape(t_bunny_buffer			*tar,
-					   const t_bunny_collision		*x,
-					   unsigned int				col);
+void					bunny_draw_collision_shape(t_bunny_buffer			*tar,
+								   const t_bunny_collision		*x,
+								   unsigned int				col);
 
-void		bunny_set_collision_shape(t_bunny_buffer			*tar,
-					  const t_bunny_collision		*x,
-					  t_bunny_position			pos,
-					  unsigned int				col);
+void					bunny_set_collision_shape(t_bunny_buffer			*tar,
+								  const t_bunny_collision		*x,
+								  t_bunny_position			pos,
+								  unsigned int				col);
 
-bool		bunny_pixel_collision(t_bunny_clipable				*pic,
-				      const t_bunny_position			*pos,
-				      double					amgn);
+bool					bunny_pixel_collision(t_bunny_clipable				*pic,
+							      const t_bunny_position			*pos,
+							      double					amgn);
 
-t_bunny_decision bunny_collision_configuration(const char			*field,
-					       t_bunny_collision		**col,
-					       int				*len,
-					       t_bunny_configuration		*cnf);
+typedef struct				s_bunny_collision_shapes
+{
+  t_bunny_collision			*collisions;
+  size_t				nbr_collision;
+}					t_bunny_collision_shapes;
 
-#endif	/*	__LAPIN_COLLIDE_H__						*/
+t_bunny_decision			bunny_collision_configuration(const char			*field,
+								      t_bunny_collision_shapes		*shapes,
+								      t_bunny_configuration		*cnf);
+
+#endif	/*				__LAPIN_COLLIDE_H__						*/

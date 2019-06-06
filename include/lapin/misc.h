@@ -23,6 +23,17 @@
 # define			STRINGIFY(a)				__TOSTRING(a)
 # define			NBRCELL(array)				((int)(sizeof(array) / sizeof(array[0])))
 
+typedef struct			s_bunny_string_couple
+{
+  const char			*first;
+  const char			*second;
+}				t_bunny_string_couple;
+extern const t_bunny_string_couple gl_empty_string_couple;
+t_bunny_string_couple		*bunny_search_string_couple(t_bunny_string_couple *couple,
+							    size_t	len,
+							    const char	*a,
+							    const char	*b);
+
 /*!
 ** Write a litteral string (defined in code, with two double quotes) on stdout.
 ** \param str The string litteral to write
@@ -219,6 +230,7 @@ void				bunny_memswap(void			*a,
 					      size_t			datalen);
 
 bool				bunny_is_directory(const char		*file);
+bool				bunny_file_exists(const char		*file);
 
 bool				bunny_join_binary_directory(const char	*argv0);
 
@@ -332,8 +344,10 @@ extern char			bunny_big_buffer[16 * 1024 * 1024];
   default: "%%other")
 # endif
 
-#  define			bunny_clear(a)				\
+# define			bunny_zero(a)				\
   memset((void*)a, 0, sizeof(*a))
+# define			bunny_erase(a, b)			\
+  memset((void*)((b) > (a) ? (a) : (b)), 0, (b) > (a) ? (b) - (a) : (a) - (b))
 
 #endif	/*			__LAPIN_MISC_H__			*/
 

@@ -40,6 +40,33 @@ void				bunny_consistancy(void)
   do_assert(&usr_pix->clipable.color_mask, &prv_pix->color_mask);
   do_assert(&usr_pix->pixels, &prv_pix->rawpixels);
 
+  t_bunny_sprite		*usr_sprite = NULL;
+  struct bunny_sprite		*prv_sprite = NULL;
+
+  do_assert(&usr_sprite->clipable, &prv_sprite->type);
+  do_assert(&usr_sprite->_private[0], &prv_sprite->res_id);
+  do_assert(&usr_sprite->_private[1], &prv_sprite->tex);
+  do_assert(&usr_sprite->_private[2], &prv_sprite->sprite);
+  do_assert(&usr_sprite->animation, &prv_sprite->animation);
+  do_assert(&usr_sprite->hashname_id, &prv_sprite->hashname_id);
+  do_assert(&usr_sprite->collision_shapes, &prv_sprite->collision_shapes);
+  do_assert(&usr_sprite->nbr_collision, &prv_sprite->nbr_collision);
+  do_assert(&usr_sprite->current_animation_hash, &prv_sprite->current_animation_hash);
+  do_assert(&usr_sprite->current_animation, &prv_sprite->current_animation);
+  do_assert(&usr_sprite->current_frame_repeat, &prv_sprite->current_frame_repeat);
+  do_assert(&usr_sprite->current_repeat, &prv_sprite->current_repeat);
+  do_assert(&usr_sprite->current_frame, &prv_sprite->current_frame);
+  do_assert(&usr_sprite->current_time, &prv_sprite->current_time);
+  do_assert(&usr_sprite->stop_repeat, &prv_sprite->stop_repeat);
+  do_assert(&usr_sprite->draw_collision_shapes, &prv_sprite->draw_collision_shape);
+
+  t_bunny_dressed_sprite	*usr_dsp = NULL;
+  struct bunny_dressed_sprite	*prv_dsp = NULL;
+
+  do_assert(&usr_dsp->sprite, &prv_dsp->type);
+  do_assert(&usr_dsp->closets, &prv_dsp->closets);
+  do_assert(&usr_dsp->clothes, &prv_dsp->clothes);
+
   t_bunny_picture		*usr_pic = NULL;
   struct bunny_picture		*prv_pic = NULL;
 

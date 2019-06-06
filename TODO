@@ -1,4 +1,8 @@
 
+=> Ajouter des collision dans t_bunny_sprite... sprite a sprite. Ou en tous cas, apporter
+   un format permettant d'integrer des collisions quitte  à ce cela soit une table a coté.
+   => Cela permet de re utiliser des valeurs, c'est pas forcement plus mal.
+
 => Directive @insert_array, qui, utilisé avec un token de globbing genere un tableau
    pour chaque fichier et insere.
 
@@ -18,6 +22,8 @@
 ==> Si une sprite a une animation avec une position n'étant qu'une valeur et non un tableau,
     alors regarder si elle a un clip défini (comme clipable) si oui, considerer X=0 et Y=
     le nombre dans la position * la hauteur du clip défini.
+
+=> Les fonctions de configuration de structure devraient elle aussi prendre des paramètres variadiques.
 
 => Faire un module pour gérer les joysticks connus et attribuer des touches automatiquement.
 (Voir la manette de PS4, XBOX, le Steam Controler, la manette de supernes, le controleur Atari et ma manette pas cher,
@@ -213,3 +219,8 @@ tout le temps similaire mais pouvant changer tout de même.
 
 "Fast sinus and cosinus". Des macros permettant d'acceder a des cos et sin precalculé.
 La résolution du precalcul et le precalcul sont commandable au début.
+
+
+Je vois pas pourquoi dans t_bunny_sprite est un vector... si ce n'est parceque je venais
+de coder vector et m'en suis servit par reflexe. Le transformer en tableau. Pareil
+pour t_bunny_animation frame_repetition.
