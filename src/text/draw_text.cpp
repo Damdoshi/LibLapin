@@ -136,7 +136,7 @@ static size_t		count_lines(t_bunny_font	*font,
 	linemem[line].str = &font->string[i];
 	linemem[line - 1].len = linemem[line].str - linemem[line - 1].str; 
       }
-    else if ((hcnt += get_char_width(font, font->string, i)) >= font->clipable.buffer.width)
+    else if ((hcnt += get_char_width(font, font->string, i)) >= font->clipable.clip_width)
       {
 	if (font->string[i] == ' ')
 	  {
@@ -235,10 +235,10 @@ void			_bunny_draw_text(t_bunny_font	*font)
       if (font->valign == BAL_TOP)
 	startpos.y = font->offset.y;
       else if (font->valign == BAL_MIDDLE)
-	startpos.y = (font->clipable.buffer.height - (lines + 1.5) * font->glyph_size.y) / 2
+	startpos.y = (font->clipable.clip_height - (lines + 1.5) * font->glyph_size.y) / 2
 	  + font->offset.y;
       else if (font->valign == BAL_BOTTOM)
-	startpos.y = font->clipable.buffer.height - (lines + 1) * font->glyph_size.y
+	startpos.y = font->clipable.clip_height - (lines + 1) * font->glyph_size.y
 	  + font->offset.y;
       else
 	startpos.y = 0; // Never happen
@@ -247,7 +247,7 @@ void			_bunny_draw_text(t_bunny_font	*font)
     }
   else
     {
-      if ((vpitch = font->clipable.buffer.height / (lines + 2)) < font->glyph_size.y)
+      if ((vpitch = font->clipable.clip_height / (lines + 2)) < font->glyph_size.y)
 	vpitch = font->glyph_size.y + font->interglyph_space.y;
       startpos.y = font->offset.y;
 
@@ -260,7 +260,7 @@ void			_bunny_draw_text(t_bunny_font	*font)
 	{
 	  space = sum_letter_space(font, linemem[j].str, linemem[j].len);
 	  word = count_word(linemem[j].str, linemem[j].len);
-	  hspace = (font->clipable.buffer.width - space) / word;
+	  hspace = (font->clipable.clip_width - space) / word;
 	  startpos.x = font->offset.x;
 	}
       else
@@ -270,9 +270,9 @@ void			_bunny_draw_text(t_bunny_font	*font)
 	  if (font->halign == BAL_LEFT)
 	    startpos.x = font->offset.x;
 	  else if (font->halign == BAL_MIDDLE)
-	    startpos.x = (font->clipable.buffer.width - space) / 2 + font->offset.x;
+	    startpos.x = (font->clipable.clip_width - space) / 2 + font->offset.x;
 	  else if (font->halign == BAL_RIGHT)
-	    startpos.x = font->clipable.buffer.width - space + font->offset.x;
+	    startpos.x = font->clipable.clip_width - space + font->offset.x;
 	  else
 	    startpos.x = 0; // Never happen
 	}
