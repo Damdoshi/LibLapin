@@ -15,8 +15,12 @@ const t_bunny_collision_shapes *bunny_sprite_get_collision(const t_bunny_sprite	
     return (NULL);
   if (sprite.collision_shapes == NULL || sprite.nbr_collision == 0)
     return (NULL);
-  anim = &sprite.animation[sprite.current_animation];
-
+  if (sprite.animation == NULL)
+    return (NULL);
+  if ((anim = &sprite.animation[sprite.current_animation]) == NULL)
+    return (NULL);
+  if (anim->collision_shapes == NULL)
+    return (NULL);
   id = anim->collision_shapes[sprite.current_frame];
   if (id == -1)
     return (NULL);

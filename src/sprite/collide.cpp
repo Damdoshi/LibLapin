@@ -15,6 +15,8 @@ int			bunny_sprite_collide(const t_bunny_sprite	*a,
 
   as = bunny_sprite_get_collision(a);
   bs = bunny_sprite_get_collision(b);
+  if (!as || !bs)
+    return (-1);
   return
     (bunny_collision_nbr
      (as->collisions, as->nbr_collision, NULL, 0,
