@@ -70,6 +70,9 @@ bool			_bunny_add_monitored_value(const char		*name,
 */
 bool			bunny_remove_monitored_value(const char		*name);
 
+void			bunny_store_monitored_value(void);
+void			bunny_reset_stored_monitored_value(void);
+
 /*!
 ** Display inside the sent text area monitored value(s).
 ** Space may be insufficient. Tweaking the textarea to display whatever you

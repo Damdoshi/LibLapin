@@ -12,6 +12,9 @@
 struct bunny_monitored_value
 {
   t_bunny_monitored_type	type;
+  std::list<int>		ihistory;
+  std::list<double>		dhistory;
+  std::list<std::string>	shistory;
   const void			*data;
 };
 
