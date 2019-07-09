@@ -107,6 +107,9 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
       pic->clip_y_position = tmp[3] * pic->clip_height;
     }
 
+  bunny_configuration_getf_bool(cnf, &pic->smooth, "Smooth");
+  bunny_configuration_getf_bool(cnf, &pic->mosaic, "Mosaic");
+
   if (config == NULL)
     bunny_delete_configuration(cnf);
   else

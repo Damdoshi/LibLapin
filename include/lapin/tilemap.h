@@ -20,23 +20,66 @@
 # ifdef				__MINGW32__
 #  pragma			pack(1)
 # endif
+
+typedef struct			s_bunny_tileset
+{
+  const char			*name;
+  t_bunny_picture		*tileset;
+  t_bunny_size			tile_size;
+  t_bunny_size			margin;
+  t_bunny_size			intertile;
+  t_bunny_size			tileset_size;
+  t_bunny_sprite		**animated_tiles_id; // nbr_tiles length
+  int				nbr_tiles;
+  t_bunny_sprite		**animated_tiles; // nbr_animated_tiles length
+  int				nbr_animated_tiles;
+  int				first_tile;
+  int				last_tile;
+
+  t_bunny_map			*properties; // map[string] = string
+}				t_bunny_tileset;
+
+typedef struct			s_bunny_tile_layer
+{
+  bool				visible;
+  const char			*name;
+  t_bunny_size			size;
+  int				*tiles;
+  int				nbr_tiles;
+  t_bunny_color			color_mask;
+
+  t_bunny_map			*properties; // map[string] = string
+}				t_bunny_tile_layer;
+
 typedef struct			s_bunny_tilemap
 {
   // The t_bunny_tilemap is a clipable
   t_bunny_clipable		clipable;
-  size_t			_private[3];
+  const size_t			_private[3];
 
-  // Those properties apply to tiles displayed *inside* the clipable
-  int				layer_clip[2];
-  const int			nbr_layers;
-  const t_bunny_size		map_size;
-  int				*tiles;
+  // Tile size in pixels
   const t_bunny_size		tile_size;
+  // Size of map in tiles
+  const t_bunny_size		map_size;
+
+  // Tilesets
+  t_bunny_tileset * const	tilesets;
+  const int			nbr_tilesets;
+
+  // Tiles
+  t_bunny_tile_layer * const	layers;
+  const int			nbr_layers;
+
+  // Display layers only between layer_clip[0] and layer_clip[1]
+  int				layer_clip[2];
+
   t_bunny_accurate_position	camera;
   t_bunny_accurate_position	zoom;
   double			rotation;
-  int				lock_borders;
+  bool				lock_borders;
   bool				loop[2];
+
+  t_bunny_map			*properties; // map[string] = string
 }				t_bunny_tilemap;
 # pragma			pack()
 
@@ -53,5 +96,8 @@ int				bunny_tilemap_get_tile_from_px(const t_bunny_tilemap *tmap,
 int				bunny_tilemap_get_tile(const t_bunny_tilemap *tmap,
 						       const t_bunny_position *pos,
 						       int		z);
+
+void				bunny_tilemap_set_camera(t_bunny_tilemap *map,
+							 t_bunny_accurate_position pos);
 
 #endif	/*			__LAPIN_TILEMAP_H__			*/

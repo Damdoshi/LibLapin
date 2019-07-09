@@ -1,0 +1,63 @@
+
+ViewSize=3200,2400
+
+' Permettre de placer des objets "a droite", "a gauche", un peu comme centered
+
+{Layers
+  [
+    [Picture
+      RessourceFile = @"./layer.png"
+    ]
+    Mode = "Stretch"
+  ]
+  [*
+    [Picture
+      RessourceFile = @"./background.png"
+      Scale = 2.0, 2.0
+      ColorMask = 255, 255, 255, 128
+    ]
+    Loop = true, true
+    Local = true
+    Mode = "Center"
+  ],
+  [
+    [Picture
+      RessourceFile = @"./background.png"
+      Scale = 1.0, 1.0
+      ColorMask = 255, 255, 255, 128
+    ]
+    Loop = true, true
+    Mode = "Center"
+  ],
+  [
+    [Picture
+      RessourceFile = @"./layer.png"
+    ]
+    Mode = "Stretch"
+  ],
+  [
+    [Picture
+      RessourceFile = @"./layer.png"
+      ColorMask = 255, 0, 0, 128
+      Scale = 1.3, 1.3
+    ]
+    Mode = "Center"
+  ],
+  [
+    [Picture
+      RessourceFile = @"./layer.png"
+      ColorMask = 0, 255, 0
+      'Scale = 3, 3
+    ]
+    Mode = "Stretch"
+  ],
+  [
+    [Picture
+      RessourceFile = @"./layer.png"
+      ColorMask = 0, 0, 255
+      'Scale = 4, 4
+    ]
+    Mode = "Stretch"
+  ]
+  *]
+}

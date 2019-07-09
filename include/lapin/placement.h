@@ -84,7 +84,6 @@ typedef struct			s_bunny_accurate_area
   double			h;
 }				t_bunny_accurate_area;
 
-
 # if				defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 
 typedef struct s_bunny_clipable	t_bunny_clipable;
@@ -160,5 +159,27 @@ t_bunny_decision bunny_accurate_position_bind_configuration(const char		*field,
 							    t_bunny_accurate_position *pos,
 							    t_bunny_configuration *cnf);
 
+# ifdef				__cplusplus
+#  include			"lapin/cpp_guard.hpp"
+# endif
+
+t_bunny_position		bunny_position(int				x,
+					       int				y);
+# define			bunny_size(x, y)				bunny_position(x, y)
+t_bunny_accurate_position	bunny_accurate_position(double			x,
+							double			y);
+# define			bunny_accurate_size(x, y)			bunny_accurate_position(x, y)
+t_bunny_area			bunny_area(int					x,
+					   int					y,
+					   int					w,
+					   int					h);
+t_bunny_accurate_area		bunny_accurate_area(double			x,
+						    double			y,
+						    double			w,
+						    double			h);
+
+# ifdef				__cplusplus
+#  include			"lapin/cpp_guard_end.hpp"
+# endif
 #endif	/*			__LAPIN_PLACEMENT_H__				*/
 

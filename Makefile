@@ -34,11 +34,11 @@
 
   CONFIG	=	-W -Wall -fPIC -std=c++14 -Wno-write-strings		\
 			-Wno-unused-result -Wno-format-security			\
-			-Wno-frame-address					\
+			-Wno-frame-address -Wno-narrowing			\
 			-DBUNNY_ALLOCATOR_DEACTIVATED				\
 			-DBUNNY_DEBUG
 
-  DEBUG		=	-O0 -Og -g -g3 -ggdb
+  DEBUG		=	-O0 -g -g3 -ggdb
 #  OPTIM		=	-O2
 
   RM		=	rm -f

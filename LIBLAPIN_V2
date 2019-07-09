@@ -9,6 +9,8 @@
    to 100%.
  - Avoid void* to avoid invalid parameters bugs unseen because of the absence
    of types. (t_bunny_configuration for example...)
+ - Prefer separate functions that fill structures from one which allocates, so
+   C inheritence is made easier.
 
  General architecture: ---------------------------------------------------------
 

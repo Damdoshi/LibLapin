@@ -51,6 +51,8 @@ t_bunny_pixelarray		*bunny_new_pixelarray(unsigned int		width,
   pa->scale.y = 1;
   pa->rotation = 0;
   pa->color_mask.full = WHITE;
+  pa->smooth = false;
+  pa->mosaic = false;
 
   pa->res_id = 0;
 

@@ -3,205 +3,275 @@
 //
 // Lapin library
 
-#include		"lapin_private.h"
+#include			"lapin_private.h"
 
-void			__bunny_draw_tilemap(struct bunny_tilemap	*tmap)
+static void			set_color(sf::Color				&c,
+					  t_bunny_color				&bc)
 {
-  // Tile cursors
-  double		left, right, top, bot;
-  int			depth, surface;
-  int			h, v, l;
+  c.r = bc.argb[RED_CMP];
+  c.g = bc.argb[GREEN_CMP];
+  c.b = bc.argb[BLUE_CMP];
+  c.a = bc.argb[ALPHA_CMP];
+}
+
+static void			loop_borders(bool				loop,
+					     double				&min,
+					     double				&max,
+					     double				limit)
+{
+  if (loop)
+    {
+      min -= 1;
+      max += 1;
+      return ;
+    }
+  min = bunny_clamp(min - 1, 0, limit);
+  max = bunny_clamp(max + 1, 0, limit);
+}
+
+static void			lock_borders(t_bunny_accurate_position		&tilsiz,
+					     t_bunny_accurate_position		&tlcam,
+					     struct bunny_tilemap		*tmap,
+					     double				left,
+					     double				right,
+					     double				top,
+					     double				bot)
+{
+  t_bunny_accurate_position	fpos = {
+    .x = tmap->map_size.x * tilsiz.x,
+    .y = tmap->map_size.y * tilsiz.y
+  };
+
+  if (fpos.x <= tmap->width)
+    {
+      tlcam.x = fpos.x / 2.0;
+      tmap->camera.x = fpos.x / tmap->zoom.x / 2.0;
+    }
+  else if (left < 0)
+    {
+      tlcam.x -= left * tilsiz.x;
+      tmap->camera.x -= left * tilsiz.x / tmap->zoom.x;
+    }
+  else if (right >= tmap->map_size.x)
+    {
+      tlcam.x -= (right - tmap->map_size.x) * tilsiz.x;
+      tmap->camera.x -= (right - tmap->map_size.x) * tilsiz.x / tmap->zoom.x;
+    }
+
+  if (fpos.y <= tmap->height)
+    {
+      tlcam.y = fpos.y / 2.0;
+      tmap->camera.y = fpos.y / tmap->zoom.y / 2.0;
+    }
+  else if (top < 0)
+    {
+      tlcam.y -= top * tilsiz.y;
+      tmap->camera.y -= top * tilsiz.y / tmap->zoom.y;
+    }
+  else if (bot >= tmap->map_size.y)
+    {
+      tlcam.y -= (bot - tmap->map_size.y) * tilsiz.y - 1;
+      tmap->camera.y -= (bot - tmap->map_size.y) * tilsiz.y / tmap->zoom.y;
+    }
+}
+
+static void			draw_layer(struct bunny_tilemap			*tmap,
+					   int					layer,
+					   int					left,
+					   int					right,
+					   int					top,
+					   int					bot,
+					   t_bunny_tileset			&ts,
+					   const t_bunny_accurate_position	&tilsiz,
+					   const t_bunny_accurate_position	&tlcam)
+{
+  // Vertex array that will contain everything drawn and its size counter
+  int				last_vx = 0;
+  sf::VertexArray		vertex = sf::VertexArray{
+    sf::Triangles, (size_t)((right - left + 1) * (bot - top + 1) * 6)
+  };
+
+  for (int v = top; v <= bot; ++v)
+    for (int h = left; h <= right; ++h)
+      {
+	int			oh = tmap->map_size.x * (h < 0) + h % tmap->map_size.x;
+	int			ov = tmap->map_size.y * (v < 0) + v % tmap->map_size.y;
+	int			index = oh + ov * tmap->map_size.x;
+	int			tile;
+
+	if ((tile = tmap->layers[layer].tiles[index]) == 0)
+	  continue ;
+	if (tile < ts.first_tile || tile >= ts.last_tile)
+	  continue ;
+	tile -= ts.first_tile;
+	t_bunny_picture		*clip;
+	double			rleft;
+	double			rtop;
+	double			tleft;
+	double			ttop;
+
+	rleft = h * tilsiz.x - tlcam.x + tmap->width / 2 + tmap->working_target_diff.x;
+	rtop = v * tilsiz.y - tlcam.y + tmap->height / 2 + tmap->working_target_diff.y;
+
+	// If the tile is not directly inside the tileset, it must be an animated tile
+	if (ts.animated_tiles_id == NULL || ts.animated_tiles_id[tile] == NULL)
+	  {
+	    // Simple tile - clip its graphics
+	    clip = ts.tileset;
+	    tleft =
+	      (tile % ts.tileset_size.x) * (ts.tile_size.x + ts.intertile.x) + ts.margin.x;
+	    ttop =
+	      (tile / ts.tileset_size.x) * (ts.tile_size.y + ts.intertile.y) + ts.margin.y;
+	  }
+	else
+	  {
+	    clip = &ts.animated_tiles_id[tile]->clipable;
+	    tleft = clip->clip_x_position;
+	    ttop = clip->clip_y_position;
+	  }
+
+	////////////////////
+	// FIRST TRIANGLE //
+	////////////////////
+
+	// Top left corner
+	{
+	  sf::Vertex	&vx = vertex[last_vx++];
+
+	  vx.position.x = rleft;
+	  vx.position.y = rtop;
+	  set_color(vx.color, clip->color_mask);
+	  vx.texCoords.x = tleft;
+	  vx.texCoords.y = ttop;
+	}
+
+	// Top right corner
+	{
+	  sf::Vertex	&vx = vertex[last_vx++];
+
+	  vx.position.x = rleft + tilsiz.x;
+	  vx.position.y = rtop;
+	  set_color(vx.color, clip->color_mask);
+	  vx.texCoords.x = tleft + ts.tile_size.x;
+	  vx.texCoords.y = ttop;
+	}
+
+	// Bottom left corner
+	{
+	  sf::Vertex	&vx = vertex[last_vx++];
+
+	  vx.position.x = rleft;
+	  vx.position.y = rtop + tilsiz.y;
+	  set_color(vx.color, clip->color_mask);
+	  vx.texCoords.x = tleft;
+	  vx.texCoords.y = ttop + ts.tile_size.y;
+	}
+
+	/////////////////////
+	// SECOND TRIANGLE //
+	/////////////////////
+
+	// Top right corner
+	{
+	  sf::Vertex	&vx = vertex[last_vx++];
+
+	  vx.position.x = rleft + tilsiz.x;
+	  vx.position.y = rtop;
+	  set_color(vx.color, clip->color_mask);
+	  vx.texCoords.x = tleft + ts.tile_size.x;
+	  vx.texCoords.y = ttop;
+	}
+
+	// Bottom right corner
+	{
+	  sf::Vertex	&vx = vertex[last_vx++];
+
+	  vx.position.x = rleft + tilsiz.x;
+	  vx.position.y = rtop + tilsiz.y;
+	  set_color(vx.color, clip->color_mask);
+	  vx.texCoords.x = tleft + ts.tile_size.x;
+	  vx.texCoords.y = ttop + ts.tile_size.y;
+	}
+
+	// Bottom left corner
+	{
+	  sf::Vertex	&vx = vertex[last_vx++];
+
+	  vx.position.x = rleft;
+	  vx.position.y = rtop + tilsiz.y;
+	  set_color(vx.color, clip->color_mask);
+	  vx.texCoords.x = tleft;
+	  vx.texCoords.y = ttop + ts.tile_size.y;
+	}
+      }
+
+  // Render inside the working buffer
+  sf::RenderStates state = sf::RenderStates::Default;
+  struct bunny_picture *wrk = (struct bunny_picture*)tmap->working;
+
+  vertex.resize(last_vx);
+  state.texture = ((struct bunny_picture*)ts.tileset)->tex;
+  wrk->texture->draw(vertex, state);
+}
+
+bool				__bunny_draw_tilemap(struct bunny_tilemap	*tmap)
+{
   // Final target size
-  t_bunny_buffer	*buffer = (t_bunny_buffer*)tmap;
-  // Utils
-  t_bunny_accurate_position tlcam, tilsiz;
-  int			i, index, tile;
-  t_bunny_position	fpos;
-
+  t_bunny_buffer		*buffer = (t_bunny_buffer*)tmap;
   // On screen tile size
-  tilsiz.x = tmap->tile_size.x * tmap->zoom.x;
-  tilsiz.y = tmap->tile_size.y * tmap->zoom.y;
-
+  t_bunny_accurate_position	tilsiz = {
+    .x = tmap->tile_size.x * tmap->zoom.x,
+    .y = tmap->tile_size.y * tmap->zoom.y
+  };
   // On screen camera position
-  tlcam.x = tmap->camera.x * tmap->zoom.x;
-  tlcam.y = tmap->camera.y * tmap->zoom.y;
-
-  // Horizontal borders
-  left = (tlcam.x - buffer->width / 2.0) / tilsiz.x;
-  right = (tlcam.x + buffer->width / 2.0) / tilsiz.x;
-  top = (tlcam.y - buffer->height / 2.0) / tilsiz.y;
-  bot = (tlcam.y + buffer->height / 2.0) / tilsiz.y;
-
+  t_bunny_accurate_position	tlcam = {
+    .x = tmap->camera.x * tmap->zoom.x,
+    .y = tmap->camera.y * tmap->zoom.y
+  };
+  // Subpart that will be displayed
+  double			left =
+    (tlcam.x - buffer->width / 2.0) / tilsiz.x;
+  double			right =
+    (tlcam.x + buffer->width / 2.0) / tilsiz.x;
+  double			top =
+    (tlcam.y - buffer->height / 2.0) / tilsiz.y;
+  double			bot =
+    (tlcam.y + buffer->height / 2.0) / tilsiz.y;
+  // Layer clipping
+  int				depth =
+    bunny_clamp(tmap->layer_clip[0], 0, tmap->nbr_layers - 1);
+  int				surface =
+    bunny_clamp(tmap->layer_clip[1], 0, tmap->nbr_layers - 1);
   // To avoid showing the outside of the map
   if (tmap->lock_borders)
-    {
-      fpos.x = tmap->map_size.x * tilsiz.x;
-      fpos.y = tmap->map_size.y * tilsiz.y;
+    lock_borders(tilsiz, tlcam, tmap, left, right, top, bot);
+  // Loop borders
+  loop_borders(tmap->loop[0], left, right, tmap->map_size.x - 1);
+  loop_borders(tmap->loop[1], top, bot, tmap->map_size.y - 1);
+  // Compute the animation step to do
+  double			now = bunny_get_current_time();
+  double			elapsed = now - tmap->last_step;
 
-      if (fpos.x <= tmap->width)
-	{
-	  tlcam.x = fpos.x / 2.0;
-	  tmap->camera.x = fpos.x / tmap->zoom.x / 2.0;
-	}
-      else
-	{
-	  if (left < 0)
-	    {
-	      tlcam.x -= left * tilsiz.x;
-	      tmap->camera.x -= left * tilsiz.x / tmap->zoom.x;
-	    }
-	  else if (right >= tmap->map_size.x)
-	    {
-	      tlcam.x -= (right - tmap->map_size.x) * tilsiz.x;
-	      tmap->camera.x -= (right - tmap->map_size.x) * tilsiz.x / tmap->zoom.x;
-	    }
-	}
-
-      if (fpos.y <= tmap->height)
-	{
-	  tlcam.y = fpos.y / 2.0;
-	  tmap->camera.y = fpos.y / tmap->zoom.y / 2.0;
-	}
-      else
-	{
-	  if (top < 0)
-	    {
-	      tlcam.y -= top * tilsiz.y;
-	      tmap->camera.y -= top * tilsiz.y / tmap->zoom.y;
-	    }
-	  else if (bot >= tmap->map_size.y)
-	    {
-	      tlcam.y -= (bot - tmap->map_size.y) * tilsiz.y - 1;
-	      tmap->camera.y -= (bot - tmap->map_size.y) * tilsiz.y / tmap->zoom.y;
-	    }
-	}
-    }
-
-  if (tmap->loop[0] == false)
-    {
-      left = left < 1 ? 0 : left - 1;
-      right = right >= tmap->map_size.x - 1 ? tmap->map_size.x - 1 : right + 1;
-    }
-  else
-    {
-      left -= 1;
-      right += 1;
-    }
-
-  if (tmap->loop[1] == false)
-    {
-      top = top < 1 ? 0 : top - 1;
-      bot = bot >= tmap->map_size.y - 1 ? tmap->map_size.y - 1 : bot + 1;
-    }
-  else
-    {
-      top -= 1;
-      bot += 1;
-    }
-
-  // Loop on tiles
-  if (tmap->layer_clip[0] == -1 && tmap->layer_clip[1] == -1)
-    {
-      depth = 0;
-      surface = tmap->nbr_layers - 1;
-    }
-  else if (tmap->layer_clip[0] != -1 && tmap->layer_clip[1] == -1)
-    {
-      depth = tmap->layer_clip[0];
-      surface = tmap->nbr_layers - 1;
-    }
-  else if (tmap->layer_clip[0] == -1 && tmap->layer_clip[1] != -1)
-    {
-      depth = 0;
-      surface = tmap->layer_clip[1];
-    }
-  else
-    {
-      depth = tmap->layer_clip[0];
-      surface = tmap->layer_clip[1];
-    }
-
-  double elapsed;
-  double now;
-
-  elapsed = (now = bunny_get_current_time()) - tmap->last_step;
-  for (l = 0; l < (int)tmap->nbr_tilesets; ++l)
-    for (v = 0; v < (int)tmap->tilesets[l].nbr_animated_tiles; ++v)
-      bunny_sprite_animate(tmap->tilesets[l].animated_tiles[v], elapsed);
+  for (int ts = 0; ts < (int)tmap->nbr_tilesets; ++ts)
+    for (int an = 0; an < (int)tmap->tilesets[ts].nbr_animated_tiles; ++an)
+      bunny_sprite_animate(tmap->tilesets[ts].animated_tiles[an], elapsed);
   tmap->last_step = now;
 
-  for (l = depth; l <= surface; ++l)
-    for (v = top; v <= (int)bot; ++v)
-      for (h = left; h <= (int)right; ++h)
-	{
-	  int oh, ov;
+  // Loop from deeper clipped layer from surface clipped layer
+  // Jump from tileset to tileset because sf::VertexArray can only clip a single
+  // picture at once.
+  try
+    {
+      for (int layer = depth; layer <= surface; ++layer)
+	for (int ts = 0; ts < tmap->nbr_tilesets; ++ts)
+	  draw_layer(tmap, layer, left, right, top, bot, tmap->tilesets[ts], tilsiz, tlcam);
+    }
+  catch (const std::bad_alloc &e)
+    {
+      return (false);
+    }
 
-	  if (h < 0)
-	    oh = tmap->map_size.x + h % tmap->map_size.x;
-	  else
-	    oh = h % tmap->map_size.x;
-
-	  if (v < 0)
-	    ov = tmap->map_size.y + v % tmap->map_size.y;
-	  else
-	    ov = v % tmap->map_size.y;
-
-	  index
-	    = oh + ov * tmap->map_size.x + l * tmap->map_size.x * tmap->map_size.y;
-	  if ((tile = tmap->tiles[index]) == 0)
-	    continue ;
-	  tile -= 1;
-
-	  for (i = 0;
-	       i < (int)tmap->nbr_tilesets && tmap->tilesets[i].last_tile < tile;
-	       ++i);
-	  if (i >= (int)tmap->nbr_tilesets)
-	    continue ;
-	  if (i > 0)
-	    tile -= tmap->tilesets[i - 1].last_tile;
-
-	  if (tile < (int)tmap->tilesets[i].nbr_tiles)
-	    {
-	      // Simple tile
-	      t_bunny_clipable	*clip = tmap->tilesets[i].tileset;
-
-	      clip->scale.x = (tilsiz.x + 1.0) / clip->clip_width;
-	      clip->scale.y = (tilsiz.y + 1.0) / clip->clip_height;
-
-	      clip->clip_x_position = (tile % tmap->tilesets[i].tileset_size.x) *
-		(tmap->tilesets[i].tile_size.x + tmap->tilesets[i].intertile.x)
-		+ tmap->tilesets[i].intertile.x
-		;
-	      clip->clip_y_position = (tile / tmap->tilesets[i].tileset_size.x) *
-		(tmap->tilesets[i].tile_size.y + tmap->tilesets[i].intertile.y)
-		+ tmap->tilesets[i].intertile.y
-		;
-
-	      fpos.x = (h * tilsiz.x - tlcam.x + tmap->width / 2)
-		+ tmap->working_target_diff.x;
-	      fpos.y = (v * tilsiz.y - tlcam.y + tmap->height / 2)
-		+ tmap->working_target_diff.y;
-	      bunny_blit(&tmap->working->buffer, clip, &fpos);
-	    }
-	  else
-	    {
-	      // Animated tile
-	      t_bunny_sprite	*sprite =
-		tmap->tilesets[i].animated_tiles
-		[tile - tmap->tilesets[i].nbr_tiles]
-		;
-
-	      sprite->clipable.scale.x =
-		(tilsiz.x + 1.0) / sprite->clipable.clip_width;
-	      sprite->clipable.scale.y =
-		(tilsiz.y + 1.0) / sprite->clipable.clip_height;
-
-	      fpos.x = (h * tilsiz.x - tlcam.x + tmap->width / 2)
-		+ tmap->working_target_diff.x;
-	      fpos.y = (v * tilsiz.y - tlcam.y + tmap->height / 2)
-		+ tmap->working_target_diff.y;
-	      bunny_blit(&tmap->working->buffer, &sprite->clipable, &fpos);
-	    }
-	}
+  ((bunny_picture*)tmap->working)->texture->display();
+  return (true);
 }
 

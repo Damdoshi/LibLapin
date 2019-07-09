@@ -45,8 +45,8 @@ bool			bunny_sprite_set_animation_id(t_bunny_sprite	*spr,
 
   t_bunny_animation	&anim = sprite.animation[sprite.current_animation];
 
-  sprite.position.x = anim.position.x;
-  sprite.position.y = anim.position.y;
+  sprite.rect.x = anim.position.x;
+  sprite.rect.y = anim.position.y;
   sprite.stop_repeat = false;
   return (true);
 }

@@ -126,6 +126,9 @@ t_bunny_sprite		*bunny_duplicate_sprite(t_bunny_sprite		*duplicate);
 */
 void			bunny_sprite_animate(t_bunny_sprite		*sprite,
 					     double			elapsed);
+void			bunny_sprite_animate_date(t_bunny_sprite	*sprite,
+						  double		current_date);
+void			bunny_sprite_animate_now(t_bunny_sprite		*sprite);
 
 /*!
 ** This function returns true if the animation is terminated.

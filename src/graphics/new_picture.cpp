@@ -42,6 +42,8 @@ t_bunny_picture		*bunny_new_picture(unsigned int		width,
   pic->scale.y = 1;
   pic->rotation = 0;
   pic->color_mask.full = WHITE;
+  pic->smooth = false;
+  pic->mosaic = false;
 
   pic->res_id = 0;
 

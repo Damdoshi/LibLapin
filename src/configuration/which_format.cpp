@@ -5,33 +5,37 @@
 
 #include		"lapin_private.h"
 
-static const char	*gl_extension[BC_CUSTOM] =
+static const char	*gl_extension[BC_CUSTOM][8] =
   {
-    ".ini",
-    ".dab",
-    ".dabseq",
-    ".dabfun",
-    ".expr",
-    ".xml",
-    ".lua",
-    ".csv",
-    ".json",
-    ".lisp"
+    {".ini", NULL},
+    {".dab", ".sic", ".dabsic", NULL},
+    {".dabseq", NULL},
+    {".dabfun", NULL},
+    {".expr", NULL},
+    {".xml", ".tmx", NULL},
+    {".lua", NULL},
+    {".csv", NULL},
+    {".json", NULL},
+    {".lisp", ".el", NULL}
     //
   };
 
 t_bunny_configuration_type bunny_which_format(const char		*file)
 {
-  int			i, j, k, len;
+  size_t		flen, elen;
+  size_t		i, j;
 
-  for (len = 0; file[len]; ++len);
-  for (j = 0; j < BC_CUSTOM; ++j)
-    {
-      for (k = 0; gl_extension[j][k]; ++k);
-      for (i = len; i >= 0 && k >= 0 && gl_extension[j][k] == file[i]; --k, --i);
-      if (k < 0)
-	break ;
-    }
-  return ((t_bunny_configuration_type)j);
+  flen = strlen(file);
+  for (i = 0; i < NBRCELL(gl_extension); ++i)
+    for (j = 0; j < NBRCELL(gl_extension[i]) && gl_extension[i][j]; ++j)
+      {
+	elen = strlen(gl_extension[i][j]);
+	if (flen < elen)
+	  continue ;
+	if (strcmp(&file[flen - elen], gl_extension[i][j]))
+	  continue ;
+	return ((t_bunny_configuration_type)i);
+      }
+  return (BC_CUSTOM);
 }
 

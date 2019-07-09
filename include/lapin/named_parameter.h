@@ -1,16 +1,29 @@
 /*
+** From https://blog.noctua-software.com/named-parameters-in-c.html
+** Thank you for that. It is pretty great.
+**
+** *************************
+**
 ** Jason Brillante "Damdoshi"
 ** Hanged Bunny Studio 2014-2019
 **
 ** Bibliotheque Lapin
 **
-** From https://blog.noctua-software.com/named-parameters-in-c.html
+** Side effect of parameter naming: default values for unused parameter.
+** They're set to zero, which can be pretty useful. ;)
 **
+** How to use it?
+** Write a macro that looks like that:
+** #define function(...) bunny_named_call(real_function_name, (int x, float y), __VA_ARGS__)
+** Replace (int x, float y) by the real prototype.
+**
+** After that, you can write:
+** function(.x = 42, .y = 4.2)
 */
 
 #ifndef		__LAPIN_NAMED_PARAMETER_H__
 # define	__LAPIN_NAMED_PARAMETER_H__
-# if		defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# ifdef		__GNUC__
 #  define	FE_0(a, a0, X)				a0(0, X)
 #  define	FE_1(a, a0, X, ...)			a(1, X)FE_0(a, a0, __VA_ARGS__)
 #  define	FE_2(a, a0, X, ...)			a(2, X)FE_1(a, a0, __VA_ARGS__)
@@ -45,5 +58,8 @@
       func(PASS_STRUCT args);				\
     })
 
+# else
+#  define	bunny_named_call(func, args, ...)
 # endif
 #endif	/*	__LAPIN_NAMED_PARAMETER_H__		*/
+

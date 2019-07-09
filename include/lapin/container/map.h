@@ -204,5 +204,13 @@ t_bunny_map			**_bunny_map_begin(t_bunny_map		*map,
 # define			bunny_map_all(map, nod)			\
   nod = bunny_map_begin(map); *nod != bunny_map_end(nod); nod = bunny_map_next(nod)
 
+const char			*bunny_string_map_get(t_bunny_map	*map,
+						      const char	*key);
+const char			*bunny_string_map_set(t_bunny_map	*map,
+						      const char	*key,
+						      const char	*val);
+# define			bunny_string_map_clear(map, key)	\
+  bunny_string_map_set(map, key, NULL)
+
 #endif	/*			__LAPIN_MAP_H__				*/
 

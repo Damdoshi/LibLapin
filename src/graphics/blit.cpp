@@ -99,6 +99,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	// NO BREAK -> Graphic ram scope is needed too.
 	[[fallthrough]];
       }
+    case PARALLAX:
     case SPRITE:
     case GRAPHIC_RAM:
       {
@@ -109,6 +110,8 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	rect.top = pic->rect.y;
 	rect.width = pic->rect.w;
 	rect.height = pic->rect.h;
+	pic->texture->setSmooth(pic->smooth);
+	pic->texture->setRepeated(pic->mosaic);
 	pic->tex = &pic->texture->getTexture();
 	pic->sprite->setTexture(*pic->tex);
 	pic->sprite->setTextureRect(rect);
@@ -153,7 +156,6 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 		 );
 	      }
 	pic->tex->loadFromImage(*pic->image, rect);
-	pic->sprite->setTexture(*pic->tex, true);
 	pic->sprite->setPosition(pos->x, pos->y);
 	if (gl_full_blit)
 	  {
@@ -166,7 +168,10 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 			 pic->color_mask.argb[BLUE_CMP],
 			 pic->color_mask.argb[ALPHA_CMP]
 			 ));
+	    pic->tex->setSmooth(pic->smooth);
+	    pic->tex->setRepeated(pic->mosaic);
 	  }
+	pic->sprite->setTexture(*pic->tex, true);
 	spr = pic->sprite;
 	break ;
       }
@@ -274,7 +279,9 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 		out->texture->draw(*spr, stt);
 	      }
 	    else
-	      out->texture->draw(*spr);
+	      {
+		out->texture->draw(*spr);
+	      }
 	  }
 	else if (gl_full_blit == false)
 	  out->texture->draw(*spr, sf::RenderStates(sf::BlendNone));

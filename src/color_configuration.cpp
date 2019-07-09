@@ -10,6 +10,8 @@ t_bunny_decision	bunny_color_configuration(const char			*field,
 						  t_bunny_configuration		*cnf)
 {
   t_bunny_configuration	*nod;
+  const char		*str;
+  char			*end;
   int			tmp;
 
   if (bunny_configuration_getf_node(cnf, &nod, field) == false)
@@ -18,6 +20,18 @@ t_bunny_decision	bunny_color_configuration(const char			*field,
     {
     // case 1:
     case 0:
+      if (bunny_configuration_getf_string(nod, &str, ".") == false)
+	return (BD_ERROR);
+      // HTML style color
+      if (*str == '#')
+	{
+	  tmp = strtol(&str[1], &end, 16) | BLACK;
+	  if (*end)
+	    return (BD_ERROR);
+	  col->full = tmp;
+	  break ;
+	}
+      // Single gray level
       if (bunny_configuration_getf_int(nod, &tmp, ".") == false)
 	return (BD_ERROR);
       tmp &= 255;

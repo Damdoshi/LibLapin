@@ -50,11 +50,13 @@ static t_bunny_tilemap	*bunny_load_tilemap_whc(const char	*file,
   tmap->scale.y = 1;
   tmap->rotation = 0;
   tmap->color_mask.full = WHITE;
+  tmap->smooth = false;
+  tmap->mosaic = false;
 
   tmap->layer_clip[0] = -1;
   tmap->layer_clip[1] = -1;
-  tmap->nbr_layers = 1;
-  tmap->tiles = NULL;
+  tmap->nbr_layers = 0;
+  tmap->layers = NULL;
   tmap->tilesets = NULL;
   tmap->nbr_tilesets = 0;
   tmap->map_size.x = tmap->map_size.y = 0;
@@ -79,15 +81,19 @@ static t_bunny_tilemap	*bunny_load_tilemap_whc(const char	*file,
       (NULL, (t_bunny_clipable**)&tmap, &conf, BCT_PICTURE) == false)
     goto DeleteWorking;
 
-  if (bunny_which_format(file) == BC_DABSIC)
+  switch (bunny_which_format(file))
     {
+    case BC_DABSIC:
       // Dabsic format
       if (__bunny_load_dabsic_tilemap(conf, tmap) == NULL)
 	goto DeleteWorking;
-    }
-  else
-    {
-      // tiled format
+      break ;
+    case BC_XML:
+      if (__bunny_load_tmx_tilemap(conf, tmap) == NULL)
+	goto DeleteWorking;
+      break ;
+    default:
+      break ;
     }
 
   tmap->res_id = 0;

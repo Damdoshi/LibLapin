@@ -49,6 +49,7 @@ void			bunny_set_line(t_bunny_buffer		*buffer,
 	   color, (void*)(size_t)color[0], (void*)(size_t)color[1]);
 	return ;
       }
+    case PARALLAX:
     case DRESSED_SPRITE:
     case SPRITE:
     case TTF_TEXT:

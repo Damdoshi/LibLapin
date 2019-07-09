@@ -28,7 +28,7 @@ typedef enum		e_bunny_configuration_type
     BC_CSV,
     BC_JSON,
     BC_LISP,
-    //BC_YAML,
+    //BC_YAML, Il faudra bien finir par le faire.
     BC_CUSTOM
   }			t_bunny_configuration_type;
 
@@ -273,6 +273,10 @@ ssize_t			bunny_configuration_childrenf(const t_bunny_configuration	*c,
 ssize_t			bunny_configuration_casesf(const t_bunny_configuration		*c,
 						   const char				*pat,
 						   ...) _BFMT(2, 3);
+bool			bunny_configuration_get_case_named(t_bunny_configuration	*cnf,
+							   t_bunny_configuration	**out,
+							   const char			*pat,
+							   ...) _BFMT(3, 4);
 
 bool			bunny_configuration_executef(t_bunny_configuration		*config,
 						     bool				rec,

@@ -36,6 +36,7 @@ void			bunny_clear(t_bunny_buffer		*picture,
 	  bunny_clear(&pic->working->buffer, _color);
 	[[fallthrough]];
       }
+    case PARALLAX:
     case SPRITE:
     case DRESSED_SPRITE:
     case TTF_TEXT:

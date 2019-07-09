@@ -10,7 +10,7 @@ t_bunny_decision bunny_position_configuration(const char			*field,
 					      t_bunny_configuration		*cnf)
 {
   if (bunny_configuration_getf_int(cnf, &pos->x, "%s[0]", field) == false)
-    return (BD_ERROR);
+    return (BD_NOT_FOUND);
   if (bunny_configuration_getf_int(cnf, &pos->y, "%s[1]", field) == false)
     return (BD_ERROR);
   return (BD_OK);
@@ -21,7 +21,7 @@ t_bunny_decision bunny_position_bind_configuration(const char			*field,
 						   t_bunny_configuration	*cnf)
 {
   if (bunny_configuration_bindf_int(cnf, &pos->x, "%s[0]", field) == false)
-    return (BD_ERROR);
+    return (BD_NOT_FOUND);
   if (bunny_configuration_bindf_int(cnf, &pos->y, "%s[1]", field) == false)
     return (BD_ERROR);
   return (BD_OK);
@@ -32,7 +32,7 @@ t_bunny_decision bunny_accurate_position_configuration(const char		*field,
 						       t_bunny_configuration	*cnf)
 {
   if (bunny_configuration_getf_double(cnf, &pos->x, "%s[0]", field) == false)
-    return (BD_ERROR);
+    return (BD_NOT_FOUND);
   if (bunny_configuration_getf_double(cnf, &pos->y, "%s[1]", field) == false)
     return (BD_ERROR);
   return (BD_OK);
@@ -43,7 +43,7 @@ t_bunny_decision bunny_accurate_position_bind_configuration(const char		*field,
 							    t_bunny_configuration *cnf)
 {
   if (bunny_configuration_bindf_double(cnf, &pos->x, "%s[0]", field) == false)
-    return (BD_ERROR);
+    return (BD_NOT_FOUND);
   if (bunny_configuration_bindf_double(cnf, &pos->y, "%s[1]", field) == false)
     return (BD_ERROR);
   return (BD_OK);

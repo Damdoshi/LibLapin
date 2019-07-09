@@ -109,6 +109,38 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 	scream_log_if("%p", "graphics", clip);
 	return ;
       }
+    case PARALLAX:
+      {
+	struct bunny_parallax	*px = (struct bunny_parallax*)clip;
+
+	for (size_t i = 0; i < px->nbr_layers; ++i)
+	  if (px->layers[i].picture)
+	    bunny_delete_clipable(px->layers[i].picture);
+	bunny_free(px->layers);
+	px->type = GRAPHIC_RAM;
+	bunny_delete_clipable(clip);
+	return ;
+      }
+    case TILEMAP:
+      {
+	struct bunny_tilemap	*tm = (struct bunny_tilemap*)clip;
+
+	if (tm->layers)
+	  {
+	    for (int i = 0; i < tm->nbr_layers; ++i)
+	      bunny_delete_layer(&tm->layers[i]);
+	    bunny_free(tm->layers);
+	  }
+	if (tm->tilesets)
+	  {
+	    for (int i = 0; i < tm->nbr_tilesets; ++i)
+	      bunny_delete_tileset(&tm->tilesets[i]);
+	    bunny_free(tm->tilesets);
+	  }
+	tm->type = GRAPHIC_RAM;
+	bunny_delete_clipable(clip);
+	return ;
+      }
     default:
       scream_error_if(return, EINVAL, "%p", "graphics", clip);
     }

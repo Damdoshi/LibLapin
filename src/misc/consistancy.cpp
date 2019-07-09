@@ -120,7 +120,10 @@ void				bunny_consistancy(void)
   do_assert(&usr_tmap->_private[1], &prv_tmap->tex);
   do_assert(&usr_tmap->_private[2], &prv_tmap->sprite);
   do_assert(&usr_tmap->map_size, &prv_tmap->map_size);
-  do_assert(&usr_tmap->tiles, &prv_tmap->tiles);
+  do_assert(&usr_tmap->tilesets, &prv_tmap->tilesets);
+  do_assert(&usr_tmap->nbr_tilesets, &prv_tmap->nbr_tilesets);
+  do_assert(&usr_tmap->layers, &prv_tmap->layers);
+  do_assert(&usr_tmap->nbr_layers, &prv_tmap->nbr_layers);
   do_assert(&usr_tmap->tile_size, &prv_tmap->tile_size);
   do_assert(&usr_tmap->camera, &prv_tmap->camera);
   do_assert(&usr_tmap->zoom, &prv_tmap->zoom);

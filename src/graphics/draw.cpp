@@ -13,6 +13,8 @@ void			bunny_draw(const t_bunny_picture	*picture)
     _bunny_draw_text((t_bunny_font*)picture);
   else if (*typ == TILEMAP)
     __bunny_draw_tilemap((struct bunny_tilemap*)picture);
+  else if (*typ == PARALLAX)
+    __bunny_draw_parallax((struct bunny_parallax*)picture);
   struct bunny_picture	*pic = (struct bunny_picture*)picture;
 
   pic->texture->display();

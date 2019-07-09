@@ -1,10 +1,5 @@
 
-=> Ajouter des collision dans t_bunny_sprite... sprite a sprite. Ou en tous cas, apporter
-   un format permettant d'integrer des collisions quitte  à ce cela soit une table a coté.
-   => Cela permet de re utiliser des valeurs, c'est pas forcement plus mal.
-
-=> Directive @insert_array, qui, utilisé avec un token de globbing genere un tableau
-   pour chaque fichier et insere.
+=> Gestion du globbing dans les @directive
 
 => Inventer un format de fichier impliquant normal map et image, le tout ensemble.
    Avec un logiciel utilisant la LibLapin, il sera possible de l'afficher et d'animer les lumières :p

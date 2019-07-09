@@ -97,6 +97,8 @@ t_bunny_pixelarray	*bunny_load_pixelarray(const char		*file)
   pa->scale.y = 1;
   pa->rotation = 0;
   pa->color_mask.full = WHITE;
+  pa->smooth = false;
+  pa->mosaic = false;
 
   scream_log_if(PATTERN, "ressource,graphics", file, pa);
   return ((t_bunny_pixelarray*)pa);

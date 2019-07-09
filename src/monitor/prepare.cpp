@@ -36,10 +36,10 @@ static void		enqueue_values(std::stringstream		&ss,
     case BMT_STRING:
       for (auto it = v.shistory.begin(); it != v.shistory.end(); ++it)
 	{
-	  snprintf(&buffer[0], sizeof(buffer), "% 8.8s", (const char*)v.data);
+	  snprintf(&buffer[0], sizeof(buffer), "%8.8s", (const char*)v.data);
 	  ss << '"' << &buffer[0] << "\", ";
 	}
-      snprintf(&buffer[0], sizeof(buffer), "% 8.8s", (const char*)v.data);
+      snprintf(&buffer[0], sizeof(buffer), "%8.8s", (const char*)v.data);
       ss << '[' << &buffer[0] << ']' << std::endl;
       break ;
     }

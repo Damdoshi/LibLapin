@@ -37,6 +37,7 @@ void			bunny_set_pixel(t_bunny_buffer		*buffer,
 	scream_log_if(PATTERN, "graphics", buffer, position.x, position.y, (void*)(size_t)color);
 	return ;
       }
+    case PARALLAX:
     case DRESSED_SPRITE:
     case SPRITE:
     case TTF_TEXT:

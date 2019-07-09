@@ -62,6 +62,8 @@ typedef struct			s_bunny_clipable
   t_bunny_accurate_position	scale;
   double			rotation;
   t_bunny_color			color_mask;
+  bool				smooth;
+  bool				mosaic;
 }				t_bunny_clipable;
 
 # define			bunny_clipable_copy(dest, ori) do {	\
@@ -77,6 +79,8 @@ typedef struct			s_bunny_clipable
     (dest)->scale.y = (ori)->scale.y;					\
     (dest)->rotation = (ori)->rotation;					\
     (dest)->color_mask.full = (ori)->color_mask.full;			\
+    (dest)->smooth = (ori)->smooth;					\
+    (dest)->mosaic = (ori)->mosaic;					\
   } while (0)
 
 /*!
@@ -173,7 +177,7 @@ typedef t_bunny_pixelarray	*(*t_bunny_my_load_pixelarray)(const char	*file);
 ** gl_bunny_my_read_pixelarray.
 */
 typedef t_bunny_pixelarray	*(*t_bunny_my_read_pixelarray)(const void	*buf,
-                                                           size_t length);
+							       size_t		length);
 
 /*!
 ** The gl_bunny_my_load_pixelarray is supposed to be the function pointer to set
@@ -270,7 +274,9 @@ typedef enum			t_bunny_clipable_type
     BCT_PIXELARRAY,
     BCT_PICTURE,
     BCT_SPRITE			= BCT_PICTURE,
-    BCT_FONT
+    BCT_FONT,
+    BCT_TILEMAP,
+    BCT_PARALLAX
   }				t_bunny_clipable_type;
 
 /*!

@@ -3,187 +3,292 @@
 //
 // Bibliothèque Lapin
 
-#include	"lapin_private.h"
+#include		"lapin_private.h"
 
-#define		PATTERN		"%p configuration, %p tilemap -> %p"
+#define			PATTERN		"%p configuration, %p tilemap -> %p"
 
-t_bunny_tilemap *__bunny_load_dabsic_tilemap(t_bunny_configuration	*conf,
-					     struct bunny_tilemap	*tmap)
+static bool		load_properties(t_bunny_configuration			*cnf,
+					t_bunny_map				**_map)
 {
-  const char		*tmp;
-  const char		*res;
-  t_bunny_configuration *tmnode;
-  t_bunny_configuration *tiles;
-  size_t		len;
-  size_t		i, j;
-  int			first_tile;
-  int			tmpi;
+  t_bunny_configuration	*props;
+  t_bunny_map		*map;
 
-  if (bunny_configuration_getf_node(conf, &tmnode, "TileMap") == false)
-    goto SingleFailure;
-
-  if (!bunny_configuration_getf_int(tmnode, &tmap->map_size.x, "MapSize[0]") ||
-      !bunny_configuration_getf_int(tmnode, &tmap->map_size.y, "MapSize[1]"))
-    goto SingleFailure;
-
-  if (!bunny_configuration_getf_int(tmnode, &tmap->nbr_layers, "MapSize[2]"))
-    bunny_configuration_getf_int(tmnode, &tmap->nbr_layers, "Layers[0]");
-
-  if (bunny_configuration_casesf(tmnode, "Tiles")
-      != (ssize_t)(len = tmap->map_size.x * tmap->map_size.y * tmap->nbr_layers))
-    goto SingleFailure;
-
-  if ((tmap->tiles = (int*)bunny_malloc(sizeof(*tmap->tiles) * len)) == NULL)
-    goto SingleFailure;
-
-  for (i = 0; i < len; ++i)
-    if (!bunny_configuration_getf_int(tmnode, &tmap->tiles[i], "Tiles[%zu]", i))
-      goto DeleteTiles;
-
-  if (!bunny_configuration_getf_int(tmnode, &tmap->tile_size.x, "TileSize[0]") ||
-      !bunny_configuration_getf_int(tmnode, &tmap->tile_size.y, "TileSize[1]"))
-    goto DeleteTiles;
-
-  if ((tmap->nbr_tilesets = bunny_configuration_casesf(tmnode, "TileSets")) < 1)
-    goto DeleteTiles;
-
-  if (!(tmap->tilesets = (t_bunny_tileset*)bunny_calloc(tmap->nbr_tilesets, sizeof(*tmap->tilesets))))
-    goto DeleteTiles;
-
-  first_tile = 1;
-  for (i = 0; i < tmap->nbr_tilesets; ++i)
+  if ((map = *_map = bunny_new_map(string_map)) == NULL)
+    return (false);
+  for (bunny_configuration_all_children(cnf, props))
     {
-      t_bunny_tileset	*tset = &tmap->tilesets[i];
+      const char	*k, *d;
 
-      if (!bunny_configuration_getf_node(tmnode, &tiles, "TileSets[%zu]", i))
-	goto DeleteTileSets;
-
-      // Full description
-      if (bunny_configuration_getf_string(tiles, &tmp, "RessourceFile"))
+      k = bunny_configuration_get_name(props);
+      if (!bunny_configuration_getf_string(props, &d, "."))
+	goto DeleteMap;
+      if (!(d = bunny_strdup(d)))
+	goto DeleteMap;
+      if (bunny_string_map_set(map, k, d) == NULL)
 	{
-	  res = tmp;
-	  if (bunny_set_clipable_attribute
-	      (NULL, &tset->tileset, &tiles, BCT_PICTURE) == false)
-	    goto DeleteTileSets;
+	  bunny_free((char*)d);
+	  goto DeleteMap;
 	}
-      // External file
-      else if (bunny_configuration_getf_string(tiles, &tmp, "."))
-	{
-	  res = tmp;
-	  if ((tset->tileset = bunny_load_picture(tmp)) == NULL)
-	    goto DeleteTileSets;
-	}
-      else
-	goto DeleteTileSets;
-
-      if (!bunny_configuration_getf_int(tiles, &tset->tile_size.x, "TileSize[0]"))
-	goto DeleteTileSets;
-      if (!bunny_configuration_getf_int(tiles, &tset->tile_size.y, "TileSize[1]"))
-	goto DeleteTileSets;
-
-      bunny_configuration_getf_int(tiles, &tset->intertile.x, "InterTile[0]");
-      bunny_configuration_getf_int(tiles, &tset->intertile.y, "InterTile[1]");
-
-      tmap->tilesets[i].tileset->clip_width = tmap->tilesets[i].tile_size.x;
-      tmap->tilesets[i].tileset->clip_height = tmap->tilesets[i].tile_size.y;
-
-      tmap->tilesets[i].tileset_size.x =
-	tmap->tilesets[i].tileset->buffer.width /
-	tmap->tilesets[i].tileset->clip_width;
-      tmap->tilesets[i].tileset_size.y =
-	tmap->tilesets[i].tileset->buffer.height /
-	tmap->tilesets[i].tileset->clip_height;
-
-      tset->nbr_animated_tiles = bunny_configuration_casesf(tiles, "AnimatedTiles");
-
-      if ((tset->animated_tiles = (t_bunny_sprite**)bunny_calloc
-	   (tset->nbr_animated_tiles, sizeof(*tset->animated_tiles))) == NULL)
-	goto DeleteTileSets;
-
-      for (j = 0; j < tset->nbr_animated_tiles; ++j)
-	{
-	  t_bunny_configuration *nod;
-	  struct bunny_sprite *spr;
-
-	  if (!bunny_configuration_getf_node(tiles, &nod, "AnimatedTiles[%zu]", j))
-	    goto DeleteTileSets;
-	  if ((tset->animated_tiles[j] =
-	       (t_bunny_sprite*)(spr = _bunny_new_sprite())) == NULL)
-	    goto DeleteTileSets;
-	  spr->texture = ((struct bunny_picture*)tset->tileset)->texture;
-	  spr->res_id = ((struct bunny_picture*)tset->tileset)->res_id;
-	  spr->tex = &spr->texture->getTexture();
-	  spr->sprite->setTexture(*spr->tex);
-	  if (RessourceManager.disable_manager == false)
-	    RessourceManager.AddToPool
-	      (ResManager::SF_RENDERTEXTURE, res, spr->res_id, spr, spr->texture);
-
-	  spr->type = SPRITE;
-	  spr->width = spr->tex->getSize().x;
-	  spr->height = spr->tex->getSize().y;
-
-	  spr->rect.x = 0;
-	  spr->rect.y = 0;
-	  spr->rect.w = tset->tileset->clip_width;
-	  spr->rect.h = tset->tileset->clip_height;
-
-	  spr->position.x = 0;
-	  spr->position.y = 0;
-	  spr->origin.x = 0;
-	  spr->origin.y = 0;
-	  spr->scale.x = 1;
-	  spr->scale.y = 1;
-	  spr->rotation = 0;
-	  spr->color_mask.full = WHITE;
-
-	  if (bunny_set_clipable_attribute
-	      (NULL, (t_bunny_clipable**)&spr, &nod, BCT_SPRITE) == false)
-	    goto DeleteTileSets;
-	  if (_bunny_set_sprite_attribute
-	      (*spr, *(SmallConf*)nod) == false)
-	    goto DeleteTileSets;
-	}
-
-      tset->nbr_tiles = tset->tileset_size.x * tset->tileset_size.y;
-      tset->last_tile = first_tile + tset->nbr_animated_tiles + tset->nbr_tiles - 1;
     }
 
-  bunny_configuration_getf_double(tmnode, &tmap->camera.x, "Camera[0]");
-  bunny_configuration_getf_double(tmnode, &tmap->camera.y, "Camera[1]");
+  return (true);
 
-  bunny_configuration_getf_double(tmnode, &tmap->zoom.x, "Zoom[0]");
-  bunny_configuration_getf_double(tmnode, &tmap->zoom.y, "Zoom[1]");
+ DeleteMap:
+  t_bunny_map		**nodmap;
 
-  bunny_configuration_getf_double(tmnode, &tmap->tile_rotation, "Rotation");
+  for (bunny_map_all(map, nodmap))
+    bunny_free(bunny_map_data(*nodmap, char*));
+  bunny_delete_map(map);
+  return (false);
+}
 
-  bunny_configuration_getf_int(tmnode, &tmap->layer_clip[0], "LayerClip[0]");
-  bunny_configuration_getf_int(tmnode, &tmap->layer_clip[1], "LayerClip[1]");
+static bool		load_tileset(t_bunny_configuration			*cnf,
+				     struct bunny_tilemap			*tmap,
+				     t_bunny_tileset				*ts)
+{
+  if (!bunny_configuration_getf_string(cnf, &ts->name, "Name"))
+    ts->name = "";
 
-  tmpi = false;
-  if (bunny_configuration_getf_int(tmnode, &tmpi, "LockBorders") && tmpi)
-    tmap->lock_borders = true;
-  tmpi = false;
-  if (bunny_configuration_getf_int(tmnode, &tmpi, "Loop[0]") && tmpi)
-    tmap->loop[0] = true;
-  tmpi = false;
-  if (bunny_configuration_getf_int(tmnode, &tmpi, "Loop[1]") && tmpi)
-    tmap->loop[1] = true;
+  // Tile info
+  if (!bunny_configuration_getf_int(cnf, &ts->tile_size.x, "TileWidth"))
+    if (!bunny_configuration_getf_int(cnf, &ts->tile_size.x, "Width"))
+      if (!bunny_configuration_getf_int(cnf, &ts->tile_size.x, "TileSize[0]"))
+	ts->tile_size.x = tmap->tile_size.x;
+  if (!bunny_configuration_getf_int(cnf, &ts->tile_size.y, "TileHeight"))
+    if (!bunny_configuration_getf_int(cnf, &ts->tile_size.y, "Height"))
+      if (!bunny_configuration_getf_int(cnf, &ts->tile_size.y, "TileSize[1]"))
+       	ts->tile_size.y = tmap->tile_size.y;
+
+  // Intertile
+  bunny_configuration_getf_int(cnf, &ts->intertile.x, "Intertile[0]");
+  bunny_configuration_getf_int(cnf, &ts->intertile.y, "Intertile[1]");
+  bunny_configuration_getf_int(cnf, &ts->margin.x, "Intertile[0]");
+  bunny_configuration_getf_int(cnf, &ts->margin.y, "Intertile[1]");
+
+  // Misc
+  if (!(ts->name = bunny_strdup(ts->name)))
+    return (false);
+
+  // Picture
+  const char		*tmp = NULL;
+  t_bunny_configuration	*pic;
+
+  if (!bunny_configuration_getf_string(cnf, &tmp, "RessourceFile"))
+    {
+      if (!bunny_configuration_getf_node(cnf, &pic, "Picture"))
+	goto DeleteName;
+      else if (!bunny_set_clipable_attribute("", &ts->tileset, &pic, BCT_PICTURE))
+	goto DeleteName;
+    }
+  else if (!(ts->tileset = bunny_load_picture(tmp)))
+    goto DeleteName;
+
+  // Last values
+  // First and last tiles if not set here will be set un the parent function.
+  if (!bunny_configuration_getf_int(cnf, &ts->first_tile, "FirstTileId"))
+    ts->first_tile = -1;
+  ts->tileset_size.x = ts->tileset->buffer.width / ts->tile_size.x;
+  ts->tileset_size.y = ts->tileset->buffer.height / ts->tile_size.y;
+  if (!bunny_configuration_getf_int(cnf, &ts->nbr_tiles, "TileCount"))
+    ts->nbr_tiles = ts->tileset_size.x * ts->tileset_size.y;
+
+  // Load animated tiles
+  ts->nbr_animated_tiles = bunny_configuration_casesf(cnf, "AnimatedTiles");
+  if (!(ts->animated_tiles_id = (t_bunny_sprite**)bunny_calloc
+	(ts->nbr_tiles, sizeof(*ts->animated_tiles))))
+    goto DeletePicture;
+  if (!(ts->animated_tiles = (t_bunny_sprite**)bunny_calloc
+	(ts->nbr_animated_tiles, sizeof(*ts->animated_tiles))))
+    goto DeletePicture;
+  for (int i = 0; i < ts->nbr_animated_tiles; ++i)
+    {
+      int		id;
+
+      if (!bunny_configuration_getf_int(cnf, &id, "AnimatedTiles[%d].LocalId", i) || id <= 0)
+	goto DeleteAnimatedTiles;
+      // Set the picture file so bunny_load_sprite works correctly
+      if (tmp == NULL)
+	if (!bunny_configuration_getf_string(cnf, &tmp, "Picture.RessourceFile"))
+	  goto DeleteAnimatedTiles;
+      if (!bunny_configuration_getf_string(cnf, NULL, "AnimatedTiles[%d].RessourceFile", i))
+	bunny_configuration_setf_string(cnf, tmp, "AnimatedTiles[%d].RessourceFile", i);
+
+      if (!bunny_configuration_getf_int(cnf, NULL, "AnimatedTiles[%d].Clip.Size[0]", i))
+	bunny_configuration_setf_int(cnf, ts->tile_size.x, "AnimatedTiles[%d].Clip.Size[0]", i);
+      if (!bunny_configuration_getf_int(cnf, NULL, "AnimatedTiles[%d].Clip.Size[1]", i))
+	bunny_configuration_setf_int(cnf, ts->tile_size.y, "AnimatedTiles[%d].Clip.Size[1]", i);
+
+      if (!bunny_configuration_getf_int(cnf, NULL, "AnimatedTiles[%d].Intertile[0]", i))
+	bunny_configuration_setf_int(cnf, ts->intertile.x, "AnimatedTiles[%d].Intertile[0]", i);
+      if (!bunny_configuration_getf_int(cnf, NULL, "AnimatedTiles[%d].Intertile[1]", i))
+	bunny_configuration_setf_int(cnf, ts->intertile.y, "AnimatedTiles[%d].Intertile[1]", i);
+
+      bunny_configuration_getf_node(cnf, &pic, "AnimatedTiles[%d]", i);
+      if (!(ts->animated_tiles[i] = bunny_read_sprite(pic)))
+	goto DeleteAnimatedTiles;
+      if (ts->animated_tiles_id[id])
+	goto DeleteAnimatedTiles;
+      ts->animated_tiles_id[id] = ts->animated_tiles[i];
+    }
+
+  // Custom properties
+  if (bunny_configuration_getf_node(cnf, &pic, "Properties"))
+    if (!load_properties(pic, &ts->properties))
+      goto DeleteAnimatedTiles;
+
+  return (true);
+
+ DeleteAnimatedTiles:
+  for (int i = 0; i < ts->nbr_animated_tiles; ++i)
+    if (ts->animated_tiles[i])
+      bunny_delete_clipable(&ts->animated_tiles[i]->clipable);
+  bunny_free(ts->animated_tiles);
+ DeletePicture:
+  bunny_delete_clipable(ts->tileset);
+ DeleteName:
+  bunny_free((char*)ts->name);
+  return (false);
+}
+
+static bool		load_layer(t_bunny_configuration			*cnf,
+				   struct bunny_tilemap				*tmap,
+				   t_bunny_tile_layer				*layer)
+{
+  if (!bunny_configuration_getf_bool(cnf, &layer->visible, "Visible"))
+    layer->visible = true;
+  if (!bunny_configuration_getf_int(cnf, &layer->size.x, "Size[0]"))
+    if (!bunny_configuration_getf_int(cnf, &layer->size.x, "Width"))
+      layer->size.x = tmap->map_size.x;
+  if (!bunny_configuration_getf_int(cnf, &layer->size.y, "Size[1]"))
+    if (!bunny_configuration_getf_int(cnf, &layer->size.y, "Height"))
+      layer->size.y = tmap->map_size.y;
+
+  if (!bunny_configuration_getf_string(cnf, &layer->name, "Name"))
+    layer->name = "";
+  if (!(layer->name = bunny_strdup(layer->name)))
+    return (false);
+
+  layer->nbr_tiles = layer->size.x * layer->size.y;
+  if (layer->nbr_tiles != bunny_configuration_casesf(cnf, "Tiles"))
+    goto DeleteName;
+
+  if (!(layer->tiles = (int*)bunny_calloc(layer->nbr_tiles, sizeof(int))))
+    goto DeleteName;
+  int			i;
+
+  for (i = 0; bunny_configuration_getf_int(cnf, &layer->tiles[i], "Tiles[%d]", i); ++i);
+  if (i != layer->nbr_tiles)
+    goto DeleteTiles;
+
+  if (bunny_color_configuration("ColorMask", &layer->color_mask, cnf) == BD_ERROR)
+    goto DeleteTiles;
+
+  // Custom properties
+  t_bunny_configuration	*nod;
+
+  if (bunny_configuration_getf_node(cnf, &nod, "Properties"))
+    if (!load_properties(nod, &layer->properties))
+      goto DeleteTiles;
+
+  return (true);
+ DeleteTiles:
+  bunny_free((char*)layer->tiles);
+ DeleteName:
+  bunny_free((char*)layer->name);
+  return (false);
+}
+
+t_bunny_tilemap		*__bunny_load_dabsic_tilemap(t_bunny_configuration	*conf,
+						     struct bunny_tilemap	*tmap)
+{
+  t_bunny_configuration	*map;
+  t_bunny_configuration	*nod;
+  int			i, j;
+
+  // Check the map node
+  if (!bunny_configuration_getf_node(conf, &map, "Tilemap"))
+    return (NULL);
+  if (!bunny_configuration_getf_int(map, &tmap->map_size.x, "Width"))
+    if (!bunny_configuration_getf_int(map, &tmap->map_size.x, "MapWidth"))
+      if (!bunny_configuration_getf_int(map, &tmap->map_size.x, "Size[0]"))
+	if (!bunny_configuration_getf_int(map, &tmap->map_size.x, "MapSize[0]"))
+	  return (NULL);
+  if (!bunny_configuration_getf_int(map, &tmap->map_size.y, "Height"))
+    if (!bunny_configuration_getf_int(map, &tmap->map_size.y, "MapHeight"))
+      if (!bunny_configuration_getf_int(map, &tmap->map_size.y, "Size[1]"))
+	if (!bunny_configuration_getf_int(map, &tmap->map_size.y, "MapSize[1]"))
+	  return (NULL);
+  if (!bunny_configuration_getf_int(map, &tmap->tile_size.x, "TileWidth"))
+    if (!bunny_configuration_getf_int(map, &tmap->tile_size.x, "TileSize[0]"))
+      return (NULL);
+  if (!bunny_configuration_getf_int(map, &tmap->tile_size.y, "TileHeight"))
+    if (!bunny_configuration_getf_int(map, &tmap->tile_size.y, "TileSize[1]"))
+      return (NULL);
+
+  // Count layers and tilesets
+  tmap->nbr_tilesets = bunny_configuration_casesf(map, "Tilesets");
+  tmap->nbr_layers = bunny_configuration_casesf(map, "Layers");
+
+  // Load tileset
+  if (!(tmap->tilesets = (t_bunny_tileset*)bunny_calloc
+	(tmap->nbr_tilesets, sizeof(*tmap->tilesets))))
+    return (NULL);
+  for (i = 0; bunny_configuration_getf_node(map, &nod, "Tilesets[%d]", i); ++i)
+    if (load_tileset(nod, tmap, &tmap->tilesets[i]) == false)
+      goto DeleteTilesets;
+  // Set first and last_tile
+  if ((j = tmap->tilesets[0].first_tile) == -1)
+    j = 1;
+  for (i = 0; i < tmap->nbr_tilesets; ++i)
+    {
+      tmap->tilesets[i].first_tile = j;
+      tmap->tilesets[i].last_tile = tmap->tilesets[i].nbr_tiles + j;
+      j += 1;
+    }
+
+  // Load layer
+  if (!(tmap->layers = (t_bunny_tile_layer*)bunny_calloc
+	(tmap->nbr_layers, sizeof(*tmap->layers))))
+    goto DeleteTilesets;
+  for (i = 0; bunny_configuration_getf_node(map, &nod, "Layers[%d]", i); ++i)
+    if (load_layer(nod, tmap, &tmap->layers[i]) == false)
+      goto DeleteLayers;
+
+  // Load tilemap initial runtime configuration
+  if (!bunny_configuration_getf_double(map, &tmap->camera.x, "Camera[0]"))
+    bunny_configuration_getf_double(map, &tmap->camera.x, "Camera.X");
+  if (!bunny_configuration_getf_double(map, &tmap->camera.y, "Camera[1]"))
+    bunny_configuration_getf_double(map, &tmap->camera.y, "Camera.Y");
+
+  if (!bunny_configuration_getf_double(map, &tmap->zoom.x, "Zoom[0]"))
+    bunny_configuration_getf_double(map, &tmap->zoom.x, "Zoom.X");
+  if (!bunny_configuration_getf_double(map, &tmap->zoom.y, "Zoom[0]"))
+    bunny_configuration_getf_double(map, &tmap->zoom.y, "Zoom.Y");
+
+  if (!bunny_configuration_getf_bool(map, &tmap->loop[0], "Loop[0]"))
+    bunny_configuration_getf_bool(map, &tmap->loop[0], "Loop.X");
+  if (!bunny_configuration_getf_bool(map, &tmap->loop[1], "Loop[1]"))
+    bunny_configuration_getf_bool(map, &tmap->loop[1], "Loop.Y");
+
+  bunny_configuration_getf_bool(map, &tmap->lock_borders, "LockBorders");
+  bunny_configuration_getf_int(map, &tmap->layer_clip[0], "LayerClip[0]");
+  bunny_configuration_getf_int(map, &tmap->layer_clip[1], "LayerClip[1]");
+  bunny_configuration_getf_double(map, &tmap->rotation, "Rotation");
+
+  // Custom properties
+  if (bunny_configuration_getf_node(map, &nod, "Properties"))
+    if (!load_properties(nod, &tmap->properties))
+      goto DeleteLayers;
 
   return ((t_bunny_tilemap*)tmap);
 
- DeleteTileSets:
+ DeleteLayers:
+  for (i = 0; i < tmap->nbr_layers; ++i)
+    bunny_delete_layer(&tmap->layers[i]);
+  bunny_free(tmap->layers);
+ DeleteTilesets:
   for (i = 0; i < tmap->nbr_tilesets; ++i)
-    {
-      if (tmap->tilesets[i].tileset)
-	bunny_delete_clipable(tmap->tilesets[i].tileset);
-      if (tmap->tilesets[i].animated_tiles)
-	for (j = 0; j < tmap->tilesets[i].nbr_animated_tiles; ++j)
-	  if (tmap->tilesets[i].animated_tiles[j])
-	    bunny_delete_clipable(&tmap->tilesets[i].animated_tiles[j]->clipable);
-    }
+    bunny_delete_tileset(&tmap->tilesets[i]);
   bunny_free(tmap->tilesets);
- DeleteTiles:
-  bunny_free(tmap->tiles);
- SingleFailure:
   return (NULL);
 }

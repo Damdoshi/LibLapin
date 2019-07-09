@@ -103,6 +103,10 @@ t_bunny_window			*bunny_start_style(unsigned int			wid,
 						   t_bunny_window_style		sty,
 						   const char			*nam);
 
+t_bunny_window			*bunny_begin(const char				*cnf);
+t_bunny_window			*bunny_begin_configuration(t_bunny_configuration *cnf);
+# define			bunny_end(w)					bunny_stop(w)
+
 /*!
 ** bunny_get_fullscreen_modes return an array of valid full screen modes.
 ** The array is terminated by a pair of 0.

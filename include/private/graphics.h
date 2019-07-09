@@ -62,6 +62,7 @@ enum				_buffer_type
     SPRITE			= 5,
     DRESSED_SPRITE		= 6,
     TILEMAP			= 7,
+    PARALLAX			= 8,
     LAST_BUFFER_TYPE
   };
 
@@ -99,6 +100,8 @@ struct				bunny_picture
   t_bunny_accurate_position	scale;
   double			rotation;
   t_bunny_color			color_mask;
+  bool				smooth;
+  bool				mosaic;
 
   size_t			res_id;
   const sf::Texture		*tex;
@@ -119,6 +122,8 @@ struct				bunny_pixelarray
   t_bunny_accurate_position	scale;
   double			rotation;
   t_bunny_color			color_mask;
+  bool				smooth;
+  bool				mosaic;
   unsigned int			*rawpixels;
 
   size_t			res_id;
@@ -141,6 +146,8 @@ struct				bunny_gfx_font
   t_bunny_accurate_position	scale;
   double			rotation;
   t_bunny_color			color_mask;
+  bool				smooth;
+  bool				mosaic;
 
   size_t			res_id;
   const sf::Texture		*tex;
@@ -179,6 +186,8 @@ struct				bunny_ttf_font
   t_bunny_accurate_position	scale;
   double			rotation;
   t_bunny_color			color_mask;
+  bool				smooth;
+  bool				mosaic;
 
   size_t			res_id;
   const sf::Texture		*tex;
@@ -218,6 +227,8 @@ struct				bunny_sprite
   t_bunny_accurate_position	scale;
   double			rotation;
   t_bunny_color			color_mask;
+  bool				smooth;
+  bool				mosaic;
 
   size_t			res_id;
   const sf::Texture		*tex;
@@ -253,6 +264,8 @@ struct				bunny_dressed_sprite
   t_bunny_accurate_position	scale;
   double			rotation;
   t_bunny_color			color_mask;
+  bool				smooth;
+  bool				mosaic;
 
   size_t			res_id;
   const sf::Texture		*tex;
@@ -278,20 +291,6 @@ struct				bunny_dressed_sprite
   bool				have_wardrobe;
 };
 
-typedef struct			s_bunny_tileset
-{
-  t_bunny_picture		*tileset;
-  t_bunny_size			tile_size;
-  t_bunny_size			intertile;
-  t_bunny_size			tileset_size;
-  size_t			nbr_tiles;
-
-  t_bunny_sprite		**animated_tiles;
-  size_t			nbr_animated_tiles;
-
-  int				last_tile;
-}				t_bunny_tileset;
-
 struct				bunny_tilemap
 {
   size_t			type;
@@ -306,44 +305,87 @@ struct				bunny_tilemap
   t_bunny_accurate_position	scale;
   double			rotation;
   t_bunny_color			color_mask;
+  bool				smooth;
+  bool				mosaic;
 
   // Private fields of t_bunny_clipable
-
   size_t			res_id;
   const sf::Texture		*tex; // Displayed shape
   sf::Sprite			*sprite;
 
+  t_bunny_size			tile_size;
+  t_bunny_size			map_size;
+
+  // Tilesets
+  t_bunny_tileset		*tilesets;
+  int				nbr_tilesets;
+
   // Public fields of t_bunny_tilemap
+  t_bunny_tile_layer		*layers;
+  int				nbr_layers;
 
   int				layer_clip[2];
-  int				nbr_layers;
-  t_bunny_size			map_size;
-  int				*tiles;
-  t_bunny_size			tile_size;
+
   t_bunny_accurate_position	camera;
   t_bunny_accurate_position	zoom;
   double			tile_rotation;
-  int				lock_borders;
+  bool				lock_borders;
   bool				loop[2];
+  t_bunny_map			*properties; // map[string] = string
 
   // Private fields of t_bunny_tilemap
-
   t_bunny_picture		*working;
-  t_bunny_tileset		*tilesets;
-  size_t			nbr_tilesets;
   t_bunny_position		working_target_diff;
   double			last_step;
 };
+
+void				bunny_delete_tileset(t_bunny_tileset		*ts);
+void				bunny_delete_layer(t_bunny_tile_layer		*ts);
+void				bunny_delete_properties(t_bunny_map		*map);
+
+struct				bunny_parallax
+{
+  size_t			type;
+  sf::RenderTexture		*texture;
+  t_copy_on_write_gfx		duplicate;
+  ssize_t			width;
+  ssize_t			height;
+  t_bunny_extended_data		data[BUNNY_EXTENDED_DATA_LENGTH];
+  t_bunny_area			rect;
+  t_bunny_accurate_position	position;
+  t_bunny_accurate_position	origin;
+  t_bunny_accurate_position	scale;
+  double			rotation;
+  t_bunny_color			color_mask;
+  bool				smooth;
+  bool				mosaic;
+
+  // Private fields of t_bunny_clipable
+  size_t			res_id;
+  const sf::Texture		*tex; // Displayed shape
+  sf::Sprite			*sprite;
+
+  t_bunny_parallax_layer	*layers;
+  size_t			nbr_layers;
+  t_bunny_size			inside_size;
+  t_bunny_accurate_position	viewpoint;
+  bool				lock_viewpoint;
+};
+
 
 struct bunny_sprite		*_bunny_new_sprite(void);
 
 t_bunny_tilemap			*__bunny_load_dabsic_tilemap(t_bunny_configuration *,
 							     struct bunny_tilemap *);
-void				__bunny_draw_tilemap(struct bunny_tilemap *);
+t_bunny_tilemap			*__bunny_load_tmx_tilemap(t_bunny_configuration *,
+							  struct bunny_tilemap *);
+bool				__bunny_draw_tilemap(struct bunny_tilemap *);
 void				__bunny_blit_tilemap(struct bunny_tilemap *tmap,
 						     const t_bunny_clipable *pic,
 						     const t_bunny_position *pos,
 						     const t_bunny_shader *shader);
+void				__bunny_draw_parallax(struct bunny_parallax *px);
+
 # pragma			pack()
 
 t_bunny_font			*__bunny_load_ttf(unsigned int		width,

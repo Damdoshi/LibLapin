@@ -94,18 +94,35 @@ t_bunny_response	display(void			*unused)
   return (GO_ON);
 }
 
-int			main(void)
+int			main(int	argc,
+			     char	**argv)
 {
+  const char		*file = "./tilemap.dab";
 
   bunny_consistancy();
   bunny_enable_full_blit(true);
 
-  assert(win = bunny_start(800, 800, false, "TileMap!"));
+  assert(win = bunny_start_style(800, 800, DEFAULT_WIN_STYLE | ANTIALIASING, "TileMap!"));
   //bunny_set_error_descriptor(2);
-  if (!(tmap = bunny_load_tilemap("./tilemap.dab")))
+  if (argc >= 2)
+    file = argv[1];
+
+  if (!(tmap = bunny_load_tilemap_wh(file, 300, 300)))
     {
       bunny_perror("bunny_load_tilemap");
       return (EXIT_FAILURE);
+    }
+
+  if (argc >= 2)
+    {
+      tmap->clipable.scale.x = 2;
+      tmap->clipable.scale.y = 2;
+      tmap->clipable.origin.x = 150;
+      tmap->clipable.origin.y = 150;
+      tmap->clipable.position.x = 400;
+      tmap->clipable.position.y = 400;
+
+      bunny_tilemap_set_camera(tmap, bunny_accurate_position(tmap->map_size.x / 2, tmap->map_size.y / 2));
     }
 
   if (!(spr = bunny_load_sprite("./dinelo.ini")))
@@ -118,7 +135,10 @@ int			main(void)
   bunny_set_key_response(key);
   bunny_set_display_function(display);
 
-  bunny_loop(win, 25, NULL);
+  tmap->clipable.smooth = true;
+  spr->clipable.smooth = true;
+
+  bunny_loop(win, 200, NULL);
 
   bunny_delete_clipable(&tmap->clipable);
   bunny_stop(win);

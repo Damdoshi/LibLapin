@@ -106,3 +106,17 @@ void			bunny_sprite_animate(t_bunny_sprite		*spr,
   _set_frame(sprite, *anim);
   return ;
 }
+
+void			bunny_sprite_animate_date(t_bunny_sprite	*spr,
+						  double		now)
+{
+  struct bunny_sprite	&sprite = *(struct bunny_sprite*)spr;
+
+  bunny_sprite_animate(spr, now - sprite.current_time);
+}
+
+void			bunny_sprite_animate_now(t_bunny_sprite		*spr)
+{
+  bunny_sprite_animate_date(spr, bunny_get_current_time());
+}
+
