@@ -83,21 +83,25 @@ typedef struct			s_bunny_tilemap
 }				t_bunny_tilemap;
 # pragma			pack()
 
-t_bunny_tilemap			*bunny_load_tilemap_wh(const char	*cnf,
-						       unsigned int	width,
-						       unsigned int	height);
+t_bunny_tilemap			*bunny_load_tilemap_wh(const char		*cnf,
+						       unsigned int		width,
+						       unsigned int		height);
 
-t_bunny_tilemap			*bunny_load_tilemap(const char		*cnf);
+t_bunny_tilemap			*bunny_load_tilemap(const char			*cnf);
 
 int				bunny_tilemap_get_tile_from_px(const t_bunny_tilemap *tmap,
 							       const t_bunny_position *pos,
-							       int	z);
+							       int		z);
 
-int				bunny_tilemap_get_tile(const t_bunny_tilemap *tmap,
-						       const t_bunny_position *pos,
-						       int		z);
+int				bunny_tilemap_get_tile(const t_bunny_tilemap	*tmap,
+						       const t_bunny_position	*pos,
+						       int			z);
 
-void				bunny_tilemap_set_camera(t_bunny_tilemap *map,
+t_bunny_tilemap			*bunny_tilemap_new_viewpoint(t_bunny_tilemap	*tm,
+							     unsigned int	width,
+							     unsigned int	height);
+
+void				bunny_tilemap_set_camera(t_bunny_tilemap	*map,
 							 t_bunny_accurate_position pos);
 
-#endif	/*			__LAPIN_TILEMAP_H__			*/
+#endif	/*			__LAPIN_TILEMAP_H__				*/

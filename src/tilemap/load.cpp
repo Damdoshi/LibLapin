@@ -97,6 +97,7 @@ static t_bunny_tilemap	*bunny_load_tilemap_whc(const char	*file,
     }
 
   tmap->res_id = 0;
+  tmap->duplicated_tilemap = false;
 
   bunny_delete_configuration(conf);
   scream_log_if(PATTERN, "ressource,tilemap", file, width, height, tmap);

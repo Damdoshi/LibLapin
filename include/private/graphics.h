@@ -337,6 +337,7 @@ struct				bunny_tilemap
   t_bunny_picture		*working;
   t_bunny_position		working_target_diff;
   double			last_step;
+  bool				duplicated_tilemap;
 };
 
 void				bunny_delete_tileset(t_bunny_tileset		*ts);

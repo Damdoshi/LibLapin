@@ -12,6 +12,7 @@
 
 t_bunny_window		*win;
 t_bunny_tilemap		*tmap;
+t_bunny_tilemap		*tdup;
 t_bunny_sprite		*spr;
 
 t_bunny_response	key(t_bunny_event_state		state,
@@ -59,11 +60,31 @@ t_bunny_response	loop(void			*unused)
   if (bunny_get_keyboard()[BKS_DOWN])
     tmap->zoom.x = (tmap->zoom.y *= 0.95);
 
+  if (bunny_get_keyboard()[BKS_SPACE])
+    {
+      tdup->zoom = tmap->zoom;
+      tdup->rotation = tmap->rotation;
+    }
+
   bunny_sprite_animate(spr, 1.0 / bunny_get_frequency());
 
   return (GO_ON);
 }
 
+static void		render_tilemap(t_bunny_tilemap	*tm)
+{
+  bunny_fill(&tm->clipable.buffer, RED);
+
+  tm->layer_clip[0] = 0;
+  tm->layer_clip[1] = 1;
+  bunny_draw(&tm->clipable);
+
+  bunny_blit(&tm->clipable.buffer, &spr->clipable, NULL);
+
+  tm->layer_clip[0] = 1;
+  tm->layer_clip[1] = 1;
+  bunny_draw(&tm->clipable);
+}
 
 t_bunny_response	display(void			*unused)
 {
@@ -75,21 +96,15 @@ t_bunny_response	display(void			*unused)
   else
     bunny_fill(&win->buffer, PINK);
 
-  bunny_fill(&tmap->clipable.buffer, RED);
+  render_tilemap(tmap);
+  render_tilemap(tdup);
 
-  tmap->layer_clip[0] = 0;
-  tmap->layer_clip[1] = 1;
-  bunny_draw(&tmap->clipable);
-
-  bunny_blit(&tmap->clipable.buffer, &spr->clipable, NULL);
-
-  tmap->layer_clip[0] = 1;
-  tmap->layer_clip[1] = 1;
-  bunny_draw(&tmap->clipable);
-
-  //
+  tdup->clipable.rotation = tmap->clipable.rotation;
+  tdup->clipable.scale = tmap->clipable.scale;
 
   bunny_blit(&win->buffer, &tmap->clipable, NULL);
+  bunny_blit(&win->buffer, &tdup->clipable, NULL);
+
   bunny_display(win);
   return (GO_ON);
 }
@@ -117,13 +132,25 @@ int			main(int	argc,
     {
       tmap->clipable.scale.x = 2;
       tmap->clipable.scale.y = 2;
-      tmap->clipable.origin.x = 150;
-      tmap->clipable.origin.y = 150;
-      tmap->clipable.position.x = 400;
-      tmap->clipable.position.y = 400;
+      tmap->clipable.origin.x = tmap->clipable.buffer.width / 2;
+      tmap->clipable.origin.y = tmap->clipable.buffer.height / 2;
+      tmap->clipable.position.x = win->buffer.width / 2;
+      tmap->clipable.position.y = win->buffer.height / 2;
 
       bunny_tilemap_set_camera(tmap, bunny_accurate_position(tmap->map_size.x / 2, tmap->map_size.y / 2));
     }
+
+  if (!(tdup = bunny_tilemap_new_viewpoint(tmap, 100, 100)))
+    {
+      bunny_perror("bunny_tilemap_new_viewpoint");
+      bunny_delete_clipable(&tmap->clipable);
+      return (EXIT_FAILURE);
+    }
+
+  tdup->clipable.origin.x = tdup->clipable.buffer.width / 2;
+  tdup->clipable.origin.y = tdup->clipable.buffer.height / 2;
+  tdup->clipable.position.x = 2 * win->buffer.width / 3;
+  tdup->clipable.position.y = 2 * win->buffer.height / 3;
 
   if (!(spr = bunny_load_sprite("./dinelo.ini")))
     {

@@ -125,18 +125,22 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
       {
 	struct bunny_tilemap	*tm = (struct bunny_tilemap*)clip;
 
-	if (tm->layers)
+	if (tm->duplicated_tilemap == false)
 	  {
-	    for (int i = 0; i < tm->nbr_layers; ++i)
-	      bunny_delete_layer(&tm->layers[i]);
-	    bunny_free(tm->layers);
+	    if (tm->layers)
+	      {
+		for (int i = 0; i < tm->nbr_layers; ++i)
+		  bunny_delete_layer(&tm->layers[i]);
+		bunny_free(tm->layers);
+	      }
+	    if (tm->tilesets)
+	      {
+		for (int i = 0; i < tm->nbr_tilesets; ++i)
+		  bunny_delete_tileset(&tm->tilesets[i]);
+		bunny_free(tm->tilesets);
+	      }
 	  }
-	if (tm->tilesets)
-	  {
-	    for (int i = 0; i < tm->nbr_tilesets; ++i)
-	      bunny_delete_tileset(&tm->tilesets[i]);
-	    bunny_free(tm->tilesets);
-	  }
+	bunny_delete_clipable(tm->working);
 	tm->type = GRAPHIC_RAM;
 	bunny_delete_clipable(clip);
 	return ;
