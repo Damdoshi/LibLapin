@@ -20,6 +20,8 @@ static bool		load_properties(t_bunny_configuration			*cnf,
       const char	*k, *d;
 
       k = bunny_configuration_get_name(props);
+      if (strcmp(k, "Id") == 0)
+	continue ;
       if (!bunny_configuration_getf_string(props, &d, "."))
 	goto DeleteMap;
       if (!(d = bunny_strdup(d)))
@@ -46,6 +48,8 @@ static bool		load_tileset(t_bunny_configuration			*cnf,
 				     struct bunny_tilemap			*tmap,
 				     t_bunny_tileset				*ts)
 {
+  int			i, j;
+
   if (!bunny_configuration_getf_string(cnf, &ts->name, "Name"))
     ts->name = "";
 
@@ -100,7 +104,7 @@ static bool		load_tileset(t_bunny_configuration			*cnf,
   if (!(ts->animated_tiles = (t_bunny_sprite**)bunny_calloc
 	(ts->nbr_animated_tiles, sizeof(*ts->animated_tiles))))
     goto DeletePicture;
-  for (int i = 0; i < ts->nbr_animated_tiles; ++i)
+  for (i = 0; i < ts->nbr_animated_tiles; ++i)
     {
       int		id;
 
@@ -136,17 +140,60 @@ static bool		load_tileset(t_bunny_configuration			*cnf,
     if (!load_properties(pic, &ts->properties))
       goto DeleteAnimatedTiles;
 
+  // Tile custom properties
+  if (!(ts->tile_properties_id = (t_bunny_tile_property*)bunny_calloc
+	(ts->nbr_tiles, sizeof(*ts->tile_properties_id))))
+    goto DeleteProperties;
+  for (i = 0; bunny_configuration_getf_node(cnf, &pic, "TileProperties[%d]", i); ++i)
+    {
+      int		til;
+
+      if (!bunny_configuration_getf_int(pic, &til, "Id"))
+	goto DeleteTileProperties;
+      if (til < 0 || til >= ts->nbr_tiles)
+	goto DeleteTileProperties;
+      if (ts->tile_properties_id[til].properties)
+	goto DeleteTileProperties; // Already set.
+      if (!load_properties(pic, &ts->tile_properties_id[til].properties))
+	goto DeleteTileProperties;
+      ts->nbr_tile_properties += 1;
+    }
+  if (!(ts->tile_properties = (t_bunny_tile_property**)bunny_calloc
+	(ts->nbr_tile_properties, sizeof(*ts->tile_properties))))
+    goto DeleteTileProperties;
+  for (i = j = 0; i < ts->nbr_tiles; ++i)
+    if (ts->tile_properties_id[i].properties)
+      ts->tile_properties[j++] = &ts->tile_properties_id[i];
   return (true);
 
+ DeleteTileProperties:
+  if (ts->tile_properties_id)
+    {
+      for (i = 0; i < ts->nbr_tiles; ++i)
+	if (ts->tile_properties_id[i].properties)
+	  bunny_delete_string_map(ts->tile_properties_id[i].properties);
+      bunny_release(&ts->tile_properties_id);
+    }
+  if (ts->tile_properties)
+    bunny_release(&ts->tile_properties);
+ DeleteProperties:
+  bunny_delete_string_map(ts->properties);
+  ts->properties = NULL;
  DeleteAnimatedTiles:
-  for (int i = 0; i < ts->nbr_animated_tiles; ++i)
+  for (i = 0; i < ts->nbr_animated_tiles; ++i)
     if (ts->animated_tiles[i])
-      bunny_delete_clipable(&ts->animated_tiles[i]->clipable);
+      {
+	bunny_delete_clipable(&ts->animated_tiles[i]->clipable);
+	ts->animated_tiles[i] = NULL;
+      }
   bunny_free(ts->animated_tiles);
+  ts->animated_tiles = NULL;
  DeletePicture:
   bunny_delete_clipable(ts->tileset);
+  ts->tileset = NULL;
  DeleteName:
   bunny_free((char*)ts->name);
+  ts->name = NULL;
   return (false);
 }
 

@@ -17,9 +17,16 @@ ColorMask=255
   MapSize=10,10
   TileSize=50,50
 
+  [Properties
+    Value = "[].Tilemap.Properties"
+  ]
+
   {Layers
     [
       Name = "TopLayer"
+      [Properties
+        Value = "[].Tilemap.Layers[0]"
+      ]
       {Tiles
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
         2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
@@ -34,6 +41,9 @@ ColorMask=255
       }
     ],
     [
+      [Properties
+        Value = "[].Tilemap.Layers[1]"
+      ]
       {Tiles ' 4 n'existe pas
         3, 3, 3, 3, 3, 4, 0, 0, 0, 4,
         3, 3, 3, 3, 3, 4, 0, 0, 4, 0,
@@ -48,6 +58,9 @@ ColorMask=255
       }
     ],
     [
+      [Properties
+        Value = "[].Tilemap.Layers[2]"
+      ]
       {Tiles
         4, 0, 0, 0, 0, 3, 3, 3, 3, 3,
         0, 4, 0, 0, 0, 3, 3, 3, 3, 3,
@@ -74,28 +87,39 @@ ColorMask=255
       TileCount = 4
       Name = "GraphicTileset"
 
+      [Properties
+        Value = "[].Tilemap.Tilesets[0]"
+      ]
+
+      {TileProperties
+        [
+          Id = 2
+          Value = "[].Tilemap.Tilesets[0].TileProperties[0]"
+        ]
+      }
+
       {AnimatedTiles
         [
           LocalId = 3
-          Rotation=45
-	  ColorMask=64
-	  Transparency=128
-	  InitialAnimation="Fast"
+          Rotation = 45
+	  ColorMask = 64
+	  Transparency = 128
+	  InitialAnimation = "Fast"
 	  [Animations
 	    [Fast
-	      Frequency=9
-	      Position=0,0
-	      Frame=3
-	      RepeatAnimation=3
-	      Browsing="RightToLeft"
-	      NextAnimation="Slow"
+	      Frequency = 9
+	      Position = 0,0
+	      Frame = 3
+	      RepeatAnimation = 3
+	      Browsing = "RightToLeft"
+	      NextAnimation = "Slow"
 	    ]
 	    [Slow
-	      Frequency=2
-	      Position=0,0
-	      Frame=3
-	      RepeatAnimation=3
-	      NextAnimation="Fast"
+	      Frequency = 2
+	      Position = 0,0
+	      Frame = 3
+	      RepeatAnimation = 3
+	      NextAnimation = "Fast"
 	    ]
 	  ]
 	]

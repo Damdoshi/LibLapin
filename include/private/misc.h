@@ -69,19 +69,19 @@ bool				bunny_filter_label(const char		*labels);
       if (bunny_get_error_descriptor() >= 0 &&				\
 	  bunny_filter_label(lab))					\
 	{								\
-	  if (gl_complete_log)					\
+	  if (gl_complete_log)						\
 	    dprintf(bunny_get_error_descriptor(),			\
 		    "FAILURE [%s][%016lu][%16s:%d][%s][" patt "]\n",	\
 		    lab,						\
 		    (long unsigned int)time(NULL),			\
 		    __FILE__, __LINE__,					\
 		    bunny_strerror(err),				\
-		    __VA_ARGS__);					\
+		    ##__VA_ARGS__);					\
 	  else								\
 	    dprintf(bunny_get_error_descriptor(),			\
 		    "%s - " patt ".\n",					\
 		    bunny_strerror(err),				\
-		    __VA_ARGS__);					\
+		    ##__VA_ARGS__);					\
 	}								\
       bunny_errno = err;						\
       out;								\
@@ -105,11 +105,11 @@ bool				bunny_filter_label(const char		*labels);
 		    lab,						\
 		    (long unsigned int)time(NULL),			\
 		    __FILE__, __LINE__,					\
-		    __VA_ARGS__);					\
+		    ##__VA_ARGS__);					\
 	  else								\
 	    dprintf(bunny_get_log_descriptor(),				\
 		    pattern ".\n",					\
-		    __VA_ARGS__);					\
+		    ##__VA_ARGS__);					\
 	}								\
       /* bunny_errno = 0; */						\
     }									\

@@ -211,6 +211,27 @@ const char			*bunny_string_map_set(t_bunny_map	*map,
 						      const char	*val);
 # define			bunny_string_map_clear(map, key)	\
   bunny_string_map_set(map, key, NULL)
+# define			bunny_delete_string_map(map)		\
+  do {									\
+    if (map)								\
+      {									\
+	for (t_bunny_map **nod = bunny_map_begin(map);			\
+	     *nod != bunny_map_end(nod);				\
+	     nod = bunny_map_next(nod)) {				\
+	  bunny_free(bunny_map_data(*nod, char*));			\
+	}								\
+	bunny_delete_map(map);						\
+      }									\
+  } while (0)
+# define			bunny_print_string_map(map, fd, cnt)	\
+  do {									\
+    if (map)								\
+      for (t_bunny_map **nod = bunny_map_begin(map);			\
+	   *nod != bunny_map_end(nod);					\
+	   nod = bunny_map_next(nod)) {					\
+	cnt += bunny_dprintf(fd, "%s: %s\n", (*nod)->key, (*nod)->data); \
+      }									\
+  } while (0)
 
 #endif	/*			__LAPIN_MAP_H__				*/
 

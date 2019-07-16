@@ -14,7 +14,7 @@ static bool		assert_node_value(t_bunny_configuration			*cnf,
   const char		*tmp;
 
   if (!bunny_configuration_getf_string(cnf, &tmp, addr))
-    return (false);
+    scream_error_if(return (NULL), EINVAL, "", "tilemap");
   return (strcmp(tmp, val) == 0);
 }
 
@@ -35,11 +35,11 @@ static bool		load_animation(t_bunny_configuration			*cnf,
   // Create a short array
   if (!(ts->animated_tiles = (t_bunny_sprite**)bunny_calloc
 	(ts->nbr_animated_tiles, sizeof(*ts->animated_tiles))))
-    return (false);
+    scream_error_if(return (false), ENOMEM, "", "tilemap");
   // Create a long array with key matching tile id (minus 1)
   if (!(ts->animated_tiles_id = (t_bunny_sprite**)bunny_calloc
 	(ts->nbr_tiles, sizeof(*ts->animated_tiles))))
-    goto DeleteAnimatedTiles;
+    scream_error_if(goto DeleteAnimatedTiles, ENOMEM, "", "tilemap");
 
   j = 0;
   for (i = 0; bunny_configuration_getf_node(cnf, &nod, "[%d]", i); ++i)
@@ -72,9 +72,9 @@ static bool		load_animation(t_bunny_configuration			*cnf,
 	    int		x, y, delay, tileid;
 
 	    if (!bunny_configuration_getf_int(frame, &tileid, "tileid"))
-	      goto DeleteAnimatedTilesId;
+	      scream_error_if(goto DeleteAnimatedTilesId, EINVAL, "", "tilemap");
 	    if (!bunny_configuration_getf_int(frame, &delay, "duration"))
-	      goto DeleteAnimatedTilesId;
+	      scream_error_if(goto DeleteAnimatedTilesId, EINVAL, "", "tilemap");
 	    if (k + 1 >= bunny_configuration_get_nbr_case(anim))
 	      snprintf(&next[0], sizeof(next), "A0");
 	    else
@@ -91,21 +91,20 @@ static bool		load_animation(t_bunny_configuration			*cnf,
 	       << "  ]\n";
 	  }
 	ss << "]\n";
-	printf("%s\n", ss.str().c_str());
 
 	// Parse the configuration
 	if (!(nod = bunny_read_configuration(BC_DABSIC, ss.str().c_str(), NULL)))
-	  goto DeleteAnimatedTilesId;
+	  scream_error_if(goto DeleteAnimatedTilesId, EINVAL, "", "tilemap");
 	// Generate the bunny sprite
 	atile = bunny_read_sprite(nod);
 	bunny_delete_configuration(nod);
 	if (atile == NULL)
-	  goto DeleteAnimatedTilesId;
+	  scream_error_if(goto DeleteAnimatedTilesId, EINVAL, "", "tilemap");
 	// Check if id is duplicated
 	if (ts->animated_tiles_id[tile])
 	  {
 	    bunny_delete_clipable(&atile->clipable);
-	    goto DeleteAnimatedTilesId;
+	    scream_error_if(goto DeleteAnimatedTilesId, EINVAL, "", "tilemap");
 	  }
 
 	// Save the bunny sprite
@@ -117,12 +116,20 @@ static bool		load_animation(t_bunny_configuration			*cnf,
   return (true);
 
  DeleteAnimatedTilesId:
-  bunny_free(ts->animated_tiles_id);
+  if (ts->animated_tiles_id)
+    {
+      bunny_free(ts->animated_tiles_id);
+      ts->animated_tiles_id = NULL;
+    }
  DeleteAnimatedTiles:
-  for (i = 0; i < ts->nbr_animated_tiles; ++i)
-    if (ts->animated_tiles[i])
-      bunny_delete_clipable(&ts->animated_tiles[i]->clipable);
-  bunny_free(ts->animated_tiles);
+  if (ts->animated_tiles)
+    {
+      for (i = 0; i < ts->nbr_animated_tiles; ++i)
+	if (ts->animated_tiles[i])
+	  bunny_delete_clipable(&ts->animated_tiles[i]->clipable);
+      bunny_free(ts->animated_tiles);
+      ts->animated_tiles = NULL;
+    }
   return (false);
 }
 
@@ -133,32 +140,29 @@ static bool		load_properties(t_bunny_configuration			*cnf,
   t_bunny_map		*map;
 
   if ((map = *_map = bunny_new_map(string_map)) == NULL)
-    return (false);
+    scream_error_if(return (false), ENOMEM, "", "tilemap");
   for (int i = 0; bunny_configuration_getf_node(cnf, &props, "[%d]", i); ++i)
     {
       const char	*k, *d;
 
       if (!bunny_configuration_getf_string(props, &k, "name"))
-	goto DeleteMap;
+	scream_error_if(goto DeleteMap, EINVAL, "", "tilemap");
       if (!bunny_configuration_getf_string(props, &d, "value"))
-	goto DeleteMap;
+	scream_error_if(goto DeleteMap, EINVAL, "", "tilemap");
       if (!(d = bunny_strdup(d)))
-	goto DeleteMap;
+	scream_error_if(goto DeleteMap, EINVAL, "", "tilemap");
       if (bunny_string_map_set(map, k, d) == NULL)
 	{
 	  bunny_free((char*)d);
-	  goto DeleteMap;
+	  scream_error_if(goto DeleteMap, ENOMEM, "", "tilemap");
 	}
     }
 
   return (true);
 
  DeleteMap:
-  t_bunny_map		**nodmap;
-
-  for (bunny_map_all(map, nodmap))
-    bunny_free(bunny_map_data(*nodmap, char*));
-  bunny_delete_map(map);
+  if (map)
+    bunny_delete_string_map(map);
   return (false);
 }
 
@@ -166,8 +170,10 @@ static bool		load_tileset(t_bunny_configuration			*cnf,
 				     struct bunny_tilemap			*tmap,
 				     t_bunny_tileset				*ts)
 {
+  int			i, j;
+
   if (!bunny_configuration_getf_string(cnf, &ts->name, "name"))
-    return (false);
+    scream_error_if(return (false), EINVAL, "", "tilemap");
 
   // Tile info
   if (!bunny_configuration_getf_int(cnf, &ts->tile_size.x, "tilewidth"))
@@ -185,41 +191,39 @@ static bool		load_tileset(t_bunny_configuration			*cnf,
 
   // First and last tile
   if (!bunny_configuration_getf_int(cnf, &ts->nbr_tiles, "tilecount"))
-    return (false);
+    scream_error_if(return (false), EINVAL, "", "tilemap");
   if (!bunny_configuration_getf_int(cnf, &ts->first_tile, "firstgid"))
-    return (false);
+    scream_error_if(return (false), EINVAL, "", "tilemap");
 
   // Misc
   if (!(ts->name = bunny_strdup(ts->name)))
-    return (false);
+    scream_error_if(return (false), ENOMEM, "", "tilemap");
 
   // Picture
   t_bunny_configuration	*nod;
   const char		*tmp;
 
   if (!bunny_configuration_get_case_named(cnf, &nod, "image"))
-    goto DeleteName;
+    scream_error_if(goto DeleteName, EINVAL, "", "tilemap");
 
   if (!bunny_configuration_getf_string(nod, &tmp, "source"))
-    goto DeleteName;
+    scream_error_if(goto DeleteName, EINVAL, "", "tilemap");
   if (!(ts->tileset = bunny_load_picture(tmp)))
-    goto DeleteName;
+    scream_error_if(goto DeleteName, EINVAL, "", "tilemap");
   ts->tileset_size.x = ts->tileset->buffer.width / ts->tile_size.x;
   ts->tileset_size.y = ts->tileset->buffer.height / ts->tile_size.y;
   if (load_animation(cnf, tmap, tmp, ts) == false)
-    goto DeletePicture;
+    scream_error_if(goto DeletePicture, EINVAL, "", "tilemap");
 
   // Check everything is okay.
-  int			i;
-
   if (!bunny_configuration_getf_int(nod, &i, "width"))
-    goto DeleteAnimated;
+    scream_error_if(goto DeleteAnimated, EINVAL, "", "tilemap");
   if (i != ts->tileset->buffer.width)
-    goto DeleteAnimated;
+    scream_error_if(goto DeleteAnimated, EINVAL, "", "tilemap");
   if (!bunny_configuration_getf_int(nod, &i, "height"))
-    goto DeleteAnimated;
+    scream_error_if(goto DeleteAnimated, EINVAL, "", "tilemap");
   if (i != ts->tileset->buffer.height)
-    goto DeleteAnimated;
+    scream_error_if(goto DeleteAnimated, EINVAL, "", "tilemap");
 
   // Deduce last values
   ts->last_tile = ts->first_tile + ts->nbr_tiles;
@@ -227,19 +231,74 @@ static bool		load_tileset(t_bunny_configuration			*cnf,
   // Custom tileset properties
   if (bunny_configuration_get_case_named(cnf, &nod, "properties"))
     if (!load_properties(nod, &ts->properties))
-      goto DeleteAnimated;
+      scream_error_if(goto DeleteAnimated, EINVAL, "", "tilemap");
+
+  // Tile custom properties
+  if (!(ts->tile_properties_id = (t_bunny_tile_property*)bunny_calloc
+	(ts->nbr_tiles, sizeof(*ts->tile_properties_id))))
+    scream_error_if(goto DeleteProperties, ENOMEM, "", "tilemap");
+  for (i = 0; bunny_configuration_getf_node(cnf, &nod, "[%d]", i); ++i)
+    if (!strcmp(bunny_configuration_get_name(nod), "tile"))
+      {
+	int		id;
+
+	if (!bunny_configuration_getf_int(nod, &id, "id"))
+	  scream_error_if(goto DeleteTileProperties, EINVAL, "", "tilemap");
+	if (bunny_configuration_get_case_named(nod, &nod, "properties"))
+	  {
+	    if (ts->tile_properties_id[i].properties)
+	      scream_error_if(goto DeleteTileProperties, EINVAL, "", "tilemap");
+	    if (!load_properties(nod, &ts->tile_properties_id[i].properties))
+	      scream_error_if(goto DeleteTileProperties, EINVAL, "", "tilemap");
+	    ts->nbr_tile_properties += 1;
+	  }
+      }
+  if (!(ts->tile_properties = (t_bunny_tile_property**)bunny_calloc
+	(ts->nbr_tile_properties, sizeof(*ts->tile_properties))))
+    goto DeleteTileProperties;
+  for (i = j = 0; i < ts->nbr_tiles; ++i)
+    if (ts->tile_properties_id[i].properties)
+      ts->tile_properties[j++] = &ts->tile_properties_id[i];
 
   return (true);
 
+ DeleteTileProperties:
+  if (ts->tile_properties_id)
+    {
+      for (i = 0; i < ts->nbr_tiles; ++i)
+	if (ts->tile_properties_id[i].properties)
+	  bunny_delete_string_map(ts->tile_properties_id[i].properties);
+      bunny_release(&ts->tile_properties_id);
+    }
+  if (ts->tile_properties)
+    bunny_release(&ts->tile_properties);
+ DeleteProperties:
+  if (ts->properties)
+    {
+      bunny_delete_string_map(ts->properties);
+      ts->properties = NULL;
+    }
  DeleteAnimated:
-  for (int i = 0; i < ts->nbr_tiles; ++i)
-    if (ts->animated_tiles[i])
-      bunny_delete_clipable(&ts->animated_tiles[i]->clipable);
-  bunny_free(ts->animated_tiles);
+  if (ts->animated_tiles)
+    {
+      for (int i = 0; i < ts->nbr_animated_tiles; ++i)
+	if (ts->animated_tiles[i])
+	  bunny_delete_clipable(&ts->animated_tiles[i]->clipable);
+      bunny_free(ts->animated_tiles);
+      ts->animated_tiles = NULL;
+    }
  DeletePicture:
-  bunny_delete_clipable(ts->tileset);
+  if (ts->tileset)
+    {
+      bunny_delete_clipable(ts->tileset);
+      ts->tileset = NULL;
+    }
  DeleteName:
-  bunny_free((char*)ts->name);
+  if (ts->name)
+    {
+      bunny_free((char*)ts->name);
+      ts->name = NULL;
+    }
   return (false);
 }
 
@@ -255,9 +314,9 @@ static bool		load_layer(t_bunny_configuration			*cnf,
     layer->size.y = tmap->map_size.y;
 
   if (!bunny_configuration_getf_string(cnf, &layer->name, "name"))
-    return (false);
+    scream_error_if(return (false), EINVAL, "", "tilemap");
   if (!(layer->name = bunny_strdup(layer->name)))
-    return (false);
+    scream_error_if(return (false), EINVAL, "", "tilemap");
   t_bunny_configuration	*nod;
 
   if (!bunny_configuration_get_case_named(cnf, &nod, "data"))
@@ -267,17 +326,17 @@ static bool		load_layer(t_bunny_configuration			*cnf,
   size_t		datalen;
 
   if (!bunny_configuration_getf_string(nod, &encoding, "encoding"))
-    goto DeleteName;
+    scream_error_if(goto DeleteName, EINVAL, "", "tilemap");
   if (strcmp(encoding, "base64"))
-    goto DeleteName;
+    scream_error_if(goto DeleteName, EINVAL, "", "tilemap");
 
   if (!bunny_configuration_getf_string(nod, &data, "[0]"))
-    goto DeleteName;
+    scream_error_if(goto DeleteName, EINVAL, "", "tilemap");
   if (!bunny_base64_decode(data, strlen(data), (void**)&layer->tiles, &datalen))
-    goto DeleteName;
+    scream_error_if(goto DeleteName, EINVAL, "", "tilemap");
   datalen /= sizeof(int);
   if (datalen != (size_t)(layer->size.x * layer->size.y))
-    goto DeleteData;
+    scream_error_if(goto DeleteData, EINVAL, "", "tilemap");
   layer->nbr_tiles = datalen;
   double		v;
 
@@ -288,7 +347,7 @@ static bool		load_layer(t_bunny_configuration			*cnf,
   // Custom layer properties
   if (bunny_configuration_get_case_named(cnf, &nod, "properties"))
     if (!load_properties(nod, &layer->properties))
-      goto DeleteData;
+      scream_error_if(goto DeleteData, EINVAL, "", "tilemap");
 
   return (true);
 
@@ -313,27 +372,27 @@ t_bunny_tilemap		*__bunny_load_tmx_tilemap(t_bunny_configuration		*conf,
 
   // Check the map node
   if (!bunny_configuration_getf_node(conf, &map, "[0]"))
-    return (NULL);
+    scream_error_if(return (NULL), EINVAL, "", "tilemap");
   if (strcmp(bunny_configuration_get_name(map), "map"))
-    return (NULL);
+    scream_error_if(return (NULL), EINVAL, "", "tilemap");
   for (i = 0; i < NBRCELL(required_fields); ++i)
     if (!assert_node_value(map, required_fields[i][0], required_fields[i][1]))
-      return (NULL);
+      scream_error_if(return (NULL), EINVAL, "", "tilemap");
   if (!bunny_configuration_getf_int(map, &tmap->map_size.x, "width"))
-    return (NULL);
+    scream_error_if(return (NULL), EINVAL, "", "tilemap");
   if (!bunny_configuration_getf_int(map, &tmap->map_size.y, "height"))
-    return (NULL);
+    scream_error_if(return (NULL), EINVAL, "", "tilemap");
   if (!bunny_configuration_getf_int(map, &tmap->tile_size.x, "tilewidth"))
-    return (NULL);
+    scream_error_if(return (NULL), EINVAL, "", "tilemap");
   if (!bunny_configuration_getf_int(map, &tmap->tile_size.y, "tileheight"))
-    return (NULL);
+    scream_error_if(return (NULL), EINVAL, "", "tilemap");
 
   // Count layers and tilesets
   tmap->nbr_tilesets = 0;
   tmap->nbr_layers = 0;
   for (bunny_configuration_all_cases(map, i))
     if (!bunny_configuration_getf_node(map, &nod, "[%zu]", i))
-      return (NULL);
+      scream_error_if(return (NULL), EINVAL, "", "tilemap");
     else if (!strcmp(bunny_configuration_get_name(nod), "tileset"))
       tmap->nbr_tilesets += 1;
     else if (!strcmp(bunny_configuration_get_name(nod), "layer"))
@@ -342,40 +401,48 @@ t_bunny_tilemap		*__bunny_load_tmx_tilemap(t_bunny_configuration		*conf,
   // Load tileset
   if (!(tmap->tilesets = (t_bunny_tileset*)bunny_calloc
 	(tmap->nbr_tilesets, sizeof(*tmap->tilesets))))
-    return (NULL);
+    scream_error_if(return (NULL), ENOMEM, "", "tilemap");
   for (j = 0, bunny_configuration_all_cases(map, i))
     if (!bunny_configuration_getf_node(map, &nod, "[%zu]", i))
-      goto DeleteTilesets;
+      scream_error_if(goto DeleteTilesets, EINVAL, "", "tilemap");
     else if (!strcmp(bunny_configuration_get_name(nod), "tileset"))
       if (load_tileset(nod, tmap, &tmap->tilesets[j++]) == false)
-	goto DeleteTilesets;
+	scream_error_if(goto DeleteTilesets, EINVAL, "", "tilemap");
 
   // Load layers
   if (!(tmap->layers = (t_bunny_tile_layer*)bunny_calloc
 	(tmap->nbr_layers, sizeof(*tmap->layers))))
-    goto DeleteTilesets;
+    scream_error_if(goto DeleteTilesets, ENOMEM, "", "tilemap");
   for (j = 0, bunny_configuration_all_cases(map, i))
     if (!bunny_configuration_getf_node(map, &nod, "[%zu]", i))
-      goto DeleteLayers;
+      scream_error_if(goto DeleteLayers, EINVAL, "", "tilemap");
     else if (!strcmp(bunny_configuration_get_name(nod), "layer"))
       if (load_layer(nod, tmap, &tmap->layers[j++]) == false)
-	goto DeleteLayers;
+	scream_error_if(goto DeleteLayers, EINVAL, "", "tilemap");
 
   // Custom map properties
   if (bunny_configuration_get_case_named(map, &nod, "properties"))
     if (!load_properties(nod, &tmap->properties))
-      goto DeleteLayers;
+      scream_error_if(goto DeleteLayers, EINVAL, "", "tilemap");
 
   return ((t_bunny_tilemap*)tmap);
 
  DeleteLayers:
-  for (i = 0; i < (size_t)tmap->nbr_layers; ++i)
-    bunny_delete_layer(&tmap->layers[i]);
-  bunny_free(tmap->layers);
+  if (tmap->layers)
+    {
+      for (i = 0; i < (size_t)tmap->nbr_layers; ++i)
+	bunny_delete_layer(&tmap->layers[i]);
+      bunny_free(tmap->layers);
+      tmap->layers = NULL;
+    }
  DeleteTilesets:
-  for (i = 0; i < (size_t)tmap->nbr_tilesets; ++i)
-    bunny_delete_tileset(&tmap->tilesets[i]);
-  bunny_free(tmap->tilesets);
+  if (tmap->tilesets)
+    {
+      for (i = 0; i < (size_t)tmap->nbr_tilesets; ++i)
+	bunny_delete_tileset(&tmap->tilesets[i]);
+      bunny_free(tmap->tilesets);
+      tmap->tilesets = NULL;
+    }
   return (NULL);
 }
 

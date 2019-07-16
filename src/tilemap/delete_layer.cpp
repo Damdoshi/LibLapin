@@ -15,6 +15,6 @@ void			bunny_delete_layer(t_bunny_tile_layer		*ts)
   if (ts->tiles)
     bunny_free(ts->tiles);
   if (ts->properties)
-    bunny_delete_properties(ts->properties);
+    bunny_delete_string_map(ts->properties);
 }
 

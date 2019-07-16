@@ -58,7 +58,8 @@ t_bunny_response	loop(void			*unused)
   if (bunny_get_keyboard()[BKS_UP])
     tmap->zoom.x = (tmap->zoom.y *= 1.05);
   if (bunny_get_keyboard()[BKS_DOWN])
-    tmap->zoom.x = (tmap->zoom.y *= 0.95);
+    if ((tmap->zoom.x = (tmap->zoom.y *= 0.95)) < 0.1)
+      tmap->zoom.x = tmap->zoom.y = 0.1;
 
   if (bunny_get_keyboard()[BKS_SPACE])
     {
@@ -113,9 +114,13 @@ int			main(int	argc,
 			     char	**argv)
 {
   const char		*file = "./tilemap.dab";
+  int			cnt;
 
-  bunny_consistancy();
+  // bunny_consistancy();
+  bunny_set_log_mode(true);
   bunny_enable_full_blit(true);
+  bunny_set_log_filter("tilemap");
+  bunny_set_error_descriptor(2);
 
   assert(win = bunny_start_style(800, 800, DEFAULT_WIN_STYLE | ANTIALIASING, "TileMap!"));
   //bunny_set_error_descriptor(2);
@@ -126,6 +131,42 @@ int			main(int	argc,
     {
       bunny_perror("bunny_load_tilemap");
       return (EXIT_FAILURE);
+    }
+
+  // CHECK CUSTOM PROPERTIES
+
+  //
+  if (tmap->properties)
+    {
+      puts("Tilemap properties:----------");
+      bunny_print_string_map(tmap->properties, 1, cnt);
+      puts("-----------------------------");
+    }
+  //
+  for (int i = 0; i < tmap->nbr_layers; ++i)
+    if (tmap->layers[i].properties)
+      {
+	printf("Tilelayer %s properties:-----------\n", tmap->layers[i].name);
+	bunny_print_string_map(tmap->layers[i].properties, 1, cnt);
+	puts("-----------------------------");
+      }
+  for (int i = 0; i < tmap->nbr_tilesets; ++i)
+    {
+      //
+      if (tmap->tilesets[i].properties)
+	{
+	  printf("Tileset %s properties:----------\n", tmap->tilesets[i].name);
+	  bunny_print_string_map(tmap->tilesets[i].properties, 1, cnt);
+	  puts("-----------------------------");
+	}
+      //
+      for (int j = 0; j < tmap->tilesets[i].nbr_tiles; ++j)
+	if (tmap->tilesets[i].tile_properties_id[j].properties)
+	  {
+	    printf("Tileset %s, tile %d property----------\n", tmap->tilesets[i].name, j);
+	    bunny_print_string_map(tmap->tilesets[i].tile_properties_id[j].properties, 1, cnt);
+	    puts("-----------------------------");
+	  }
     }
 
   if (argc >= 2)

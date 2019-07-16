@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="left-up" width="10" height="10" tilewidth="50" tileheight="50" backgroundcolor="#646464" nextobjectid="1">
  <properties>
-  <property name="custom" value="data"/>
+  <property name="custom" value="tilemap data"/>
  </properties>
  <tileset firstgid="1" name="graphic_tileset" tilewidth="50" tileheight="50" spacing="10" margin="10" tilecount="4">
   <properties>
-   <property name="custom" value="data"/>
+   <property name="custom" value="tileset data"/>
   </properties>
   <image source="tileset.png" width="240" height="60"/>
   <tile id="3">
+   <properties>
+    <property name="custom" value="tile 2 (id 3) data"/>
+   </properties>
    <animation>
     <frame tileid="0" duration="1000"/>
     <frame tileid="1" duration="3000"/>
@@ -18,7 +21,7 @@
  </tileset>
  <layer name="bottom_layer" width="10" height="10" opacity="0.88">
   <properties>
-   <property name="custom" value="data1,data2,data3"/>
+   <property name="custom" value="layer data"/>
   </properties>
   <data encoding="base64">
    AQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAACAAAABAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAAAAAAAAAAAABAAAAAMAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAAAAAAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAA==

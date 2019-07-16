@@ -230,13 +230,13 @@ bool				__bunny_draw_tilemap(struct bunny_tilemap	*tmap)
   };
   // Subpart that will be displayed
   double			left =
-    (tlcam.x - buffer->width / 2.0) / tilsiz.x;
+    (tlcam.x - buffer->width / 1.5) / tilsiz.x;
   double			right =
-    (tlcam.x + buffer->width / 2.0) / tilsiz.x;
+    (tlcam.x + buffer->width / 1.5) / tilsiz.x;
   double			top =
-    (tlcam.y - buffer->height / 2.0) / tilsiz.y;
+    (tlcam.y - buffer->height / 1.5) / tilsiz.y;
   double			bot =
-    (tlcam.y + buffer->height / 2.0) / tilsiz.y;
+    (tlcam.y + buffer->height / 1.5) / tilsiz.y;
   // Layer clipping
   int				depth =
     bunny_clamp(tmap->layer_clip[0], 0, tmap->nbr_layers - 1);

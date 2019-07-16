@@ -63,7 +63,7 @@ void		*bunny_realloc(void		*ptr,
 void		bunny_free(void			*ptr);
 
 # define	bunny_release(a)		\
-  do { bunny_free(a); a = NULL; } while (0)
+  do { bunny_free(*a); *a = NULL; } while (0)
 
 /*!
 ** This function allow you to ask a memory checkup at the end of your program.

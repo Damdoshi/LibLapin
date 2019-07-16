@@ -342,7 +342,6 @@ struct				bunny_tilemap
 
 void				bunny_delete_tileset(t_bunny_tileset		*ts);
 void				bunny_delete_layer(t_bunny_tile_layer		*ts);
-void				bunny_delete_properties(t_bunny_map		*map);
 
 struct				bunny_parallax
 {

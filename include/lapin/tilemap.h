@@ -11,6 +11,14 @@
 #  error			You cannot include this file directly.
 # endif
 
+typedef struct			s_bunny_tile_property
+{
+  // From configuration
+  t_bunny_map			*properties; // map[string] = string
+  // For runtime
+  char				custom[64];
+}				t_bunny_tile_property;
+
 /*
 ** - Filling and clearing a tilemap fill and clear the whole.
 ** - Setting shape onn a tilemap draw on the final clipable
@@ -30,13 +38,16 @@ typedef struct			s_bunny_tileset
   t_bunny_size			intertile;
   t_bunny_size			tileset_size;
   t_bunny_sprite		**animated_tiles_id; // nbr_tiles length
+  t_bunny_tile_property		*tile_properties_id; // nbr_tiles length
   int				nbr_tiles;
+  t_bunny_tile_property		**tile_properties; // nbr_tile_properties length
+  int				nbr_tile_properties;
   t_bunny_sprite		**animated_tiles; // nbr_animated_tiles length
   int				nbr_animated_tiles;
   int				first_tile;
   int				last_tile;
 
-  t_bunny_map			*properties; // map[string] = string
+  t_bunny_map			*properties;
 }				t_bunny_tileset;
 
 typedef struct			s_bunny_tile_layer
@@ -48,7 +59,7 @@ typedef struct			s_bunny_tile_layer
   int				nbr_tiles;
   t_bunny_color			color_mask;
 
-  t_bunny_map			*properties; // map[string] = string
+  t_bunny_map			*properties;
 }				t_bunny_tile_layer;
 
 typedef struct			s_bunny_tilemap
@@ -79,29 +90,46 @@ typedef struct			s_bunny_tilemap
   bool				lock_borders;
   bool				loop[2];
 
-  t_bunny_map			*properties; // map[string] = string
+  t_bunny_map			*properties;
 }				t_bunny_tilemap;
 # pragma			pack()
 
-t_bunny_tilemap			*bunny_load_tilemap_wh(const char		*cnf,
-						       unsigned int		width,
-						       unsigned int		height);
+t_bunny_tilemap			*bunny_load_tilemap_wh(const char			*cnf,
+						       unsigned int			width,
+						       unsigned int			height);
 
-t_bunny_tilemap			*bunny_load_tilemap(const char			*cnf);
+t_bunny_tilemap			*bunny_load_tilemap(const char				*cnf);
 
-int				bunny_tilemap_get_tile_from_px(const t_bunny_tilemap *tmap,
-							       const t_bunny_position *pos,
-							       int		z);
+int				bunny_tilemap_get_tile_from_px(const t_bunny_tilemap	*tmap,
+							       const t_bunny_position	*pos,
+							       int			z);
 
-int				bunny_tilemap_get_tile(const t_bunny_tilemap	*tmap,
-						       const t_bunny_position	*pos,
-						       int			z);
+int				bunny_tilemap_get_tile(const t_bunny_tilemap		*tmap,
+						       const t_bunny_position		*pos,
+						       int				z);
+t_bunny_tile_property		*bunny_tilemap_get_properties(const t_bunny_tilemap	*tmap,
+							      const t_bunny_position	*pos,
+							      int			z);
+t_bunny_tile_property		*bunny_tilemap_get_properties_from_px(const t_bunny_tilemap *tmap,
+								      const t_bunny_position *pos,
+								      int		z);
 
-t_bunny_tilemap			*bunny_tilemap_new_viewpoint(t_bunny_tilemap	*tm,
-							     unsigned int	width,
-							     unsigned int	height);
+t_bunny_tilemap			*bunny_tilemap_new_viewpoint(t_bunny_tilemap		*tm,
+							     unsigned int		width,
+							     unsigned int		height);
 
-void				bunny_tilemap_set_camera(t_bunny_tilemap	*map,
-							 t_bunny_accurate_position pos);
+void				bunny_tilemap_set_camera(t_bunny_tilemap		*map,
+							 t_bunny_accurate_position	pos);
 
-#endif	/*			__LAPIN_TILEMAP_H__				*/
+t_bunny_tileset			*bunny_get_tileset_for_tile(const t_bunny_tilemap	*map,
+							    int				tile);
+
+typedef bool			(*t_bunny_tile_property_func)(t_bunny_tilemap		*tmap,
+							      t_bunny_tileset		*set,
+							      t_bunny_tile_property	*p,
+							      void			*data);
+bool				bunny_browse_tile_properties(t_bunny_tilemap		*tmap,
+							     t_bunny_tile_property_func	f,
+							     void			*dat);
+
+#endif	/*			__LAPIN_TILEMAP_H__					*/
