@@ -12,7 +12,6 @@ const void	*bunny_history_get_frame(t_bunny_history	*h,
 {
   struct bunny_history	*his = (struct bunny_history*)h;
   std::map<size_t, void*>::iterator it;
-  std::pair<size_t, void*> tmp;
 
   if ((it = his->history.find(tim)) == his->history.end())
     {
