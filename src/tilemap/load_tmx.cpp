@@ -14,7 +14,7 @@ static bool		assert_node_value(t_bunny_configuration			*cnf,
   const char		*tmp;
 
   if (!bunny_configuration_getf_string(cnf, &tmp, addr))
-    scream_error_if(return (NULL), EINVAL, "", "tilemap");
+    scream_error_if(return (false), EINVAL, "", "tilemap");
   return (strcmp(tmp, val) == 0);
 }
 

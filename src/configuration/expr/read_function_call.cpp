@@ -64,7 +64,7 @@ bool			expr_read_function_call(const char	*code,
 	    prev = calltype;
 	  else if (prev != calltype)
 	    scream_error_if
-	      (return (NULL), BE_SYNTAX_ERROR,
+	      (return (false), BE_SYNTAX_ERROR,
 	       "Mixing named parameters with order "
 	       "parameters is impossible on line %d",
 	       "ressource,configuration,syntax",
