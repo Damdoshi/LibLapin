@@ -9,6 +9,10 @@
 #include		<unistd.h>
 #include		"lapin_private.h"
 
+#ifndef CV_BGR2GRAY
+# define CV_BGR2GRAY cv::COLOR_BGR2GRAY
+#endif /* !CV_BGR2GRAY */
+
 struct			FileDumper
 {
   static const std::string haar;

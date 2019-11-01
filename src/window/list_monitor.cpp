@@ -21,7 +21,7 @@ static bool			get_output(char			*buf,
   size_t			l;
 
   if ((fil = popen(cmd, "r")) == NULL)
-    return (NULL);
+    return (false);
   l = 0;
   do
     {
