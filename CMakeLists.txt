@@ -11,10 +11,6 @@ if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_compile_options(-O0 -g --coverage)
 endif()
 
-find_package(SFML 2 REQUIRED audio graphics window system)
-find_package(OpenCV REQUIRED)
-find_library(LIBUSB_LIBRARY NAMES usb PATH_SUFFIXES "lib" "lib32" "lib64")
-
 include_directories(
     "${PROJECT_SOURCE_DIR}/include"
     "${PROJECT_SOURCE_DIR}/include/deps/"
