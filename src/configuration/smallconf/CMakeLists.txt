@@ -1,0 +1,18 @@
+list(APPEND LAPIN_SRC
+${CMAKE_CURRENT_LIST_DIR}/Access.cpp
+${CMAKE_CURRENT_LIST_DIR}/Bind.cpp
+${CMAKE_CURRENT_LIST_DIR}/Clear.cpp
+${CMAKE_CURRENT_LIST_DIR}/Double.cpp
+${CMAKE_CURRENT_LIST_DIR}/Integer.cpp
+${CMAKE_CURRENT_LIST_DIR}/Link.cpp
+${CMAKE_CURRENT_LIST_DIR}/Operator.cpp
+${CMAKE_CURRENT_LIST_DIR}/Operator=.cpp
+${CMAKE_CURRENT_LIST_DIR}/OperatorStream.cpp
+${CMAKE_CURRENT_LIST_DIR}/OperatorTest.cpp
+${CMAKE_CURRENT_LIST_DIR}/RecursiveAssign.cpp
+${CMAKE_CURRENT_LIST_DIR}/RecursiveCheck.cpp
+${CMAKE_CURRENT_LIST_DIR}/Remove.cpp
+${CMAKE_CURRENT_LIST_DIR}/SmallConf.cpp
+${CMAKE_CURRENT_LIST_DIR}/SpreadPolitic.cpp
+${CMAKE_CURRENT_LIST_DIR}/String.cpp
+)

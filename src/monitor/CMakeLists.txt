@@ -1,0 +1,9 @@
+list(APPEND LAPIN_SRC
+${CMAKE_CURRENT_LIST_DIR}/add.cpp
+${CMAKE_CURRENT_LIST_DIR}/display.cpp
+${CMAKE_CURRENT_LIST_DIR}/prepare.cpp
+${CMAKE_CURRENT_LIST_DIR}/print.cpp
+${CMAKE_CURRENT_LIST_DIR}/remove.cpp
+${CMAKE_CURRENT_LIST_DIR}/reset.cpp
+${CMAKE_CURRENT_LIST_DIR}/store.cpp
+)

@@ -1,0 +1,4 @@
+list(APPEND LAPIN_SRC
+${CMAKE_CURRENT_LIST_DIR}/ANetAccess.cpp
+${CMAKE_CURRENT_LIST_DIR}/NetUnix.cpp
+)

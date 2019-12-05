@@ -1,0 +1,4 @@
+list(APPEND LAPIN_SRC
+${CMAKE_CURRENT_LIST_DIR}/hash.cpp
+${CMAKE_CURRENT_LIST_DIR}/wide_hash.cpp
+)

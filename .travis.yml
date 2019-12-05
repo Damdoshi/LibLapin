@@ -10,7 +10,7 @@ before_install:
 
 script:
   - mkdir build && cd build
-  - cmake -DBUILD_TESTING=ON -DBUILD_SHARED=OFF -DCODE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug ..
+  - cmake -DWITH_TESTS=ON -DBUILD_SHARED=OFF -DWITH_COVERAGE=ON ..
   - cmake --build . --config Debug -- -j $(nproc)
   - ctest -j $(nproc) --output-on-failure
 
