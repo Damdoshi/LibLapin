@@ -1,5 +1,5 @@
-## Hanged Bunny Studio Library ------    ---  -- --- -    ---  --    - -- -   -
-## Hanged Bunny Studio 2014-2016 ----- -- - -- -  -  -- -- - -- --  -- -- -- --
+## Jason Brillante Damdoshi ---------    ---  -- --- -    ---  --    - -- -   -
+## Hanged Bunny Studio 2014-2018 ----- -- - -- -  -  -- -- - -- --  -- -- -- --
 ## ----------------------------------- -- -    - - - -- -- - -- ---- -    -- --
 ## ----------------------------------    -- -- - --- -    ---  --   -- -- -   -
 ## ----------------------------------------------------------------------------
@@ -7,15 +7,17 @@
 ## ----------------------------------------------------------------------------
 ## Configuration --------------------------------------------------------------
 
+  MOD		=	`pwd | rev | cut -d "/" -f3 | rev`
+
   BIN		=	`pwd | rev | cut -d "/" -f1 | rev`
-  FLAG		=	-W -Wall  -g -g3 -ggdb
+  FLAG		=	-W -Wall -g -g3 -ggdb -Og -std=gnu11
 
   INCLUDE	=	-I./include/
   SRC		=	$(wildcard src/*.c)
   OBJ		=	$(SRC:.c=.o)
   LIBPATH	=	-L${HOME}/.froot/lib/
   LIB		=	-llapin -lsfml-graphics -lsfml-audio -lsfml-window	\
-			-lsfml-system -lstdc++ -lm -ldl -lpthread
+			-lsfml-system -lstdc++ -lm -ldl -lpthread -lavcall
 
   ## Rules ------------------------------------------------------------------
   all:		bin
@@ -37,4 +39,4 @@
 
   .PHONY: all clean fclean re
 
-  .SUFFIXES: .cpp .o
+  .SUFFIXES: .c .o
