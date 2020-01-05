@@ -137,6 +137,10 @@ typedef struct s_bunny_font	t_bunny_font;
 	   )
 # endif
 
+# ifdef				__cplusplus
+#  include			"lapin/cpp_guard.hpp"
+# endif
+  
 # define	bunny_size_configuration(a, b, c)				\
   bunny_position_configuration(a, b, c)
 # define	bunny_size_bind_configuration(a, b, c)				\
@@ -158,10 +162,6 @@ t_bunny_decision bunny_accurate_position_configuration(const char		*field,
 t_bunny_decision bunny_accurate_position_bind_configuration(const char		*field,
 							    t_bunny_accurate_position *pos,
 							    t_bunny_configuration *cnf);
-
-# ifdef				__cplusplus
-#  include			"lapin/cpp_guard.hpp"
-# endif
 
 t_bunny_position		bunny_position(int				x,
 					       int				y);
