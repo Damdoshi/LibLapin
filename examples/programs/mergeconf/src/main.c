@@ -86,6 +86,9 @@ int			main(int					argc,
   t_bunny_configuration_type iformat = BC_CUSTOM;
   t_bunny_configuration_type oformat = BC_CUSTOM;
 
+  bunny_set_log_mode(false);
+  bunny_set_error_descriptor(2);
+  bunny_set_log_filter("system,ressource,syntax");
   for (int i = 1; i < argc; ++i)
     {
       if (!strcmp("-i", argv[i]))
@@ -113,6 +116,11 @@ int			main(int					argc,
 	      return (EXIT_FAILURE);
 	    }
 	  i += 1;
+	  if (i >= argc)
+	    {
+	      fprintf(stderr, "%s: -if option takes a parameter.\n", *argv);
+	      return (EXIT_FAILURE);
+	    }
 	  if ((iformat = bunny_which_format(argv[i])) == BC_CUSTOM)
 	    {
 	      fprintf(stderr, "%s: Unknown format %s.\n", *argv, argv[i]);
@@ -144,6 +152,11 @@ int			main(int					argc,
 	      return (EXIT_FAILURE);
 	    }
 	  i += 1;
+	  if (i >= argc)
+	    {
+	      fprintf(stderr, "%s: -of option takes a parameter.\n", *argv);
+	      return (EXIT_FAILURE);
+	    }
 	  if ((oformat = bunny_which_format(argv[i])) == BC_CUSTOM)
 	    {
 	      fprintf(stderr, "%s: Unknown format %s.\n", *argv, argv[i]);

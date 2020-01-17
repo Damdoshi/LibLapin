@@ -46,7 +46,7 @@ static bool		read_inside_scope(t_bunny_configuration		*fileroot,
        ((t_bunny_configuration*)&conf, code, i)) == NULL)
     scream_error_if
       (return (false), BE_SYNTAX_ERROR,
-       "%p fileroot, %s code, %d i, %p config -> %s "
+       "%p fileroot, '%.5s...' code, %d i, %p config -> %s "
        "(Error while getting field name on line %s:%d)",
        "configuration,syntax",
        fileroot, code, (int)i, &conf, "false",
@@ -92,7 +92,7 @@ SmallConf		*read_new_scope(const char			*code,
        ((t_bunny_configuration*)&root, code, i)) == NULL)
     scream_error_if
       (return (NULL), BE_SYNTAX_ERROR,
-       "%s code, %p config -> %p "
+       "'%.5s...' code, %p config -> %p "
        "(Error while getting scope name or scope address on line %s:%d)",
        "configuration,syntax",
        code, &root, cnf,
@@ -101,7 +101,7 @@ SmallConf		*read_new_scope(const char			*code,
   if (readtext(code, i, "]") == false)
     scream_error_if
       (return (NULL), BE_SYNTAX_ERROR,
-       "%s code, %p config -> %p "
+       "'%.5s...' code, %p config -> %p "
        "(The ']' token was expected after scope name on line %s:%d)",
        "configuration,syntax",
        code, &root, (void*)NULL,
@@ -145,7 +145,7 @@ t_bunny_configuration	*_bunny_read_ini(const char			*code,
     }
   SmallConf::create_mode = cmode;
   scream_log_if
-    ("%s code, %p config -> %p", "ressource,configuration", code, config, config);
+    ("'%.5s...' code, %p config -> %p", "ressource,configuration", code, config, config);
   return (config);
 
  RestoreExit:

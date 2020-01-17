@@ -8,7 +8,7 @@
 #include		"lapin_private.h"
 
 #define			PATTERN						\
-  "%s code, %zd i, %p node, %p fileroot -> %s (%s %s on line %d)"
+  "'%.10s...' code, %zd i, %p node, %p fileroot -> %s (%s %s on line %d)"
 
 bool			isdir(const char				*d,
 			      const char				*f)

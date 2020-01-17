@@ -10,19 +10,19 @@ int			bunny_dprintf(int		fd,
 				      const char	*format,
 				      ...)
 {
+  char			buffer[1024 * 4];
   va_list		lst;
   int			cnt;
+  int			i;
 
   va_start(lst, format);
-#if			_WIN32 || __WIN32__
-  char			buffer[1024 * 4];
-
   cnt = vsnprintf(&buffer[0], sizeof(buffer), format, lst);
+  for (i = 0; i < cnt; ++i)
+    if (buffer[i] == '\n' || buffer[i] == '\r')
+      buffer[i] = ' ';
   if (write(fd, &buffer[0], cnt) == -1)
     return (-1);
-#else
-  cnt = vdprintf(fd, format, lst);
-#endif
+  write(fd, "\n", 1);
   va_end(lst);
   return (cnt);
 }

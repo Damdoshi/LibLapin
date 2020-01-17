@@ -28,7 +28,7 @@ t_bunny_read_file	parser[BC_CUSTOM] =
     _bunny_read_lisp
   };
 
-#define			PATTERN		"%d type, %.30s code, %p config -> %p"
+#define			PATTERN		"%d type, '%.5s...' code, %p config -> %p"
 
 t_bunny_configuration	*bunny_read_configuration(t_bunny_configuration_type type,
 						  const char		*code,

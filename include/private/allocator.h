@@ -46,7 +46,7 @@ struct				memhead
 struct memchunk			*get_node(struct memhead		*head,
 					  size_t			data);
 
-struct memhead			*memory_head(bool			reset = false);
+extern "C" struct memhead	*memory_head(bool			reset = false);
 
 #endif	/*			__LAPIN_PRIVATE_ALLOCATOR_H__	*/
 
