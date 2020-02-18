@@ -23,6 +23,12 @@ bool		bunny_configuration_setf_node(t_bunny_configuration	*cnf,
       bunny_configuration_create_mode(cmode);
       return (false);
     }
+  if (data == NULL)
+    {
+      bunny_configuration_create_mode(cmode);
+      bunny_delete_configuration(got);
+      return (true);
+    }
   SmallConf	*a;
   const SmallConf *b;
 

@@ -11,7 +11,7 @@ t_bunny_configuration	*bunny_configuration_get_root(t_bunny_configuration	*conf)
 {
   t_bunny_configuration	*cnf;
 
-  if ((cnf = bunny_configuration_get_parent(conf)) == NULL)
+  if ((cnf = bunny_configuration_get_parent(conf)) == NULL || conf == cnf)
     {
       scream_log_if(PATTERN, "configuration", conf, conf);
       return (conf);

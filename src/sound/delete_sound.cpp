@@ -11,7 +11,7 @@ void			_bunny_delete_sound(t_bunny_sound		*sound)
 
   if (!sound)
     return ;
-  free((void*)sound->file);
+  bunny_free((void*)sound->file);
   if (*type == MUSIC)
     {
       struct bunny_music *mus = (struct bunny_music*)sound;
