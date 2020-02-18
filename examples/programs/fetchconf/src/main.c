@@ -4,7 +4,7 @@
 **
 ** FetchConf
 **
-** stdin / [-f files]+
+** [#]?Field [-f files]+
 ** stdout
 */
 
@@ -19,6 +19,13 @@ int			main(int		argc,
   const char		*fields[1024];
   int			nfiles = 0;
   int			nfields = 0;
+
+  if (argc == 1)
+    {
+      fprintf(stderr, "%s: Usage is:\n\t%s [[#]?field_address]+ [-f files]+.\n\t'#' stand for \"print array\".\n",
+	      *argv, *argv);
+      return (EXIT_FAILURE);
+    }
 
   for (int i = 1; i < argc; ++i)
     if (strcmp(argv[i], "-f") == 0)
@@ -43,7 +50,10 @@ int			main(int		argc,
 	const char	*str;
 
 	for (int j = 0; j < nfields; ++j)
-	  if (bunny_configuration_getf(cnf, &str, "%s", fields[j]))
+	  if (fields[j][0] == '#')
+	    for (int k = 0; bunny_configuration_getf(cnf, &str, "%s[%d]", &fields[j][1], k); ++k)
+	      puts(str);
+	  else if (bunny_configuration_getf(cnf, &str, "%s", fields[j]))
 	    puts(str);
       }
   return (ret);
