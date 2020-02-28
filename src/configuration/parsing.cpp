@@ -453,10 +453,42 @@ void			writestring(std::ostream		&ss,
 	else if (json)
 	  {
 	    char buffer[5];
+	    int len = 1;
 
-	    buffer[0] = 0;
-	    snprintf(&buffer[0], sizeof(buffer), "%04X", (int)(str[i] & 0xFF));
-	    ss << "\\u" << &buffer[0];
+	    /* CETTE NOTATION C'EST DE LA MERDE. COMMENT ON FAIT SI ON A QU'UN CARACTERE PUTAIN?!
+	      buffer[0] = 0;
+	      snprintf(&buffer[0], sizeof(buffer), "%04X", (int)(str[i] & 0xFF));
+	      ss << "\\u" << &buffer[0];
+	    */
+	    buffer[0] = str[i];
+	    buffer[1] = '\0';
+	    len = 1;
+	    if (str[i] & 0x80)
+	      {
+		if ((str[i] & 0xE0) == 0xC0)
+		  {
+		    buffer[1] = str[i + 1];
+		    buffer[2] = '\0';
+		    len = 2;
+		  }
+		else if ((str[i] & 0xE0) == 0xC0)
+		  {
+		    buffer[1] = str[i + 1];
+		    buffer[2] = str[i + 2];
+		    buffer[3] = '\0';
+		    len = 3;
+		  }
+		else if ((str[i] & 0xF8) == 0xF0)
+		  {
+		    buffer[1] = str[i + 1];
+		    buffer[2] = str[i + 2];
+		    buffer[3] = str[i + 3];
+		    buffer[4] = '\0';
+		    len = 4;
+		  }
+	      }
+	    ss << &buffer[0];
+	    i += len - 1;
 	  }
 	else if (str[i] == '\0')
 	  ss << "\\0";
