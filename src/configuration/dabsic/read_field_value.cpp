@@ -43,6 +43,11 @@ Decision		dabsic_read_field_value(const char		*code,
   if (ret == BD_ERROR)
     return (ret);
 
+  if ((ret = dabsic_read_text(code, i, conf, root)) == BD_OK)
+    return (ret);
+  if (ret == BD_ERROR)
+    return (ret);
+
   if ((ret = dabsic_read_scope(code, i, conf, root)) == BD_OK)
     return (ret);
   if (ret == BD_ERROR)

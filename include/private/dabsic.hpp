@@ -52,6 +52,10 @@ Decision		dabsic_read_sequence(const char			*code,
 					     ssize_t			&i,
 					     SmallConf			&conf,
 					     SmallConf			&root);
+Decision		dabsic_read_text(const char			*code,
+					 ssize_t			&i,
+					 SmallConf			&conf,
+					 SmallConf			&root);
 Decision		dabsic_read_xml(const char			*code,
 					ssize_t				&i,
 					SmallConf			&conf,

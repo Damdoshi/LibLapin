@@ -37,6 +37,11 @@ t_bunny_configuration		*_bunny_read_lua(const char			*code,
 						 t_bunny_configuration		*config);
 t_bunny_configuration		*_bunny_read_csv(const char			*code,
 						 t_bunny_configuration		*config);
+t_bunny_configuration		*_bunny_read_text(const char			*code,
+						  t_bunny_configuration		*config);
+t_bunny_configuration		*_bunny_read_data(const char			*code,
+						  size_t			len,
+						  t_bunny_configuration		*config);
 
 char				*_bunny_write_ini(const t_bunny_configuration	*config);
 char				*_bunny_write_lua(const t_bunny_configuration	*config);

@@ -25,7 +25,9 @@ t_bunny_read_file	parser[BC_CUSTOM] =
     _bunny_read_lua,
     _bunny_read_csv,
     _bunny_read_json,
-    _bunny_read_lisp
+    _bunny_read_lisp,
+    _bunny_read_text,
+    NULL // _data
   };
 
 #define			PATTERN		"%d type, '%.5s...' code, %p config -> %p"
@@ -36,6 +38,9 @@ t_bunny_configuration	*bunny_read_configuration(t_bunny_configuration_type type,
 {
   t_bunny_configuration	*nw = NULL;
   bool			local;
+
+  if (type == BC_DATA)
+    scream_error_if(return (NULL), EINVAL, PATTERN, "ressource,configuration", type, code, config, nw);
 
   if ((local = (config == NULL)))
     if ((config = bunny_new_configuration()) == NULL)

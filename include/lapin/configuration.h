@@ -28,6 +28,8 @@ typedef enum		e_bunny_configuration_type
     BC_CSV,
     BC_JSON,
     BC_LISP,
+    BC_TEXT,
+    BC_DATA,
     //BC_YAML, Il faudra bien finir par le faire.
     BC_CUSTOM
   }			t_bunny_configuration_type;

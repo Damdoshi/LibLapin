@@ -16,7 +16,9 @@ static const char	*gl_extension[BC_CUSTOM][8] =
     {".lua", NULL},
     {".csv", NULL},
     {".json", NULL},
-    {".lisp", ".el", NULL}
+    {".lisp", ".el", NULL},
+    {".txt", ".rtf", NULL},
+    {".dat", ".bin", NULL},
     //
   };
 

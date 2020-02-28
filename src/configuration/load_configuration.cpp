@@ -17,14 +17,13 @@ t_bunny_configuration	*bunny_load_configuration(t_bunny_configuration_type		type
   char			buffer[1024];
   char			because_dirname[1024];
   char			*code;
+  size_t		siz;
 
   if (SmallConf::file_path.size() == 0)
     SmallConf::file_path.push_back("");
 
   for (it = SmallConf::file_path.rbegin(); it != SmallConf::file_path.rend(); ++it)
     {
-      size_t		siz;
-
       if (*it != "")
 	snprintf(&buffer[0], sizeof(buffer), "%s/%s", it->c_str(), file);
       else
@@ -46,7 +45,10 @@ t_bunny_configuration	*bunny_load_configuration(t_bunny_configuration_type		type
   snprintf(&because_dirname[0], sizeof(because_dirname), "%s", file);
   SmallConf::file_path.push_back(dirname(&because_dirname[0]));
 
-  outconf = bunny_read_configuration(type, code, config);
+  if (type == BC_DATA)
+    outconf = _bunny_read_data(code, siz, config);
+  else
+    outconf = bunny_read_configuration(type, code, config);
 
   SmallConf::file_path.pop_back();
   SmallConf::file_read.pop();
