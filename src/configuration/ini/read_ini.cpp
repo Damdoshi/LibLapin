@@ -15,10 +15,10 @@ static void		read_separator(const char			*code,
   while (once == true)
     {
       once = false;
-      while (strncmp(&code[i], "#[", 2) == 0)
+      while (strncmp(&code[i], "#/", 2) == 0)
 	{
 	  once = true;
-	  while (code[i] != '\0' && strncmp(&code[i], "]#", 2) != 0)
+	  while (code[i] != '\0' && strncmp(&code[i], "/#", 2) != 0)
 	    ++i;
 	  if (code[i])
 	    i += 2;
@@ -31,7 +31,7 @@ static void		read_separator(const char			*code,
 	    ++i;
 	  skipspace(code, i);
 	}
-    }
+    }l
 }
 
 static bool		read_inside_scope(t_bunny_configuration		*fileroot,
