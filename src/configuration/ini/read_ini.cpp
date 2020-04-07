@@ -31,7 +31,7 @@ static void		read_separator(const char			*code,
 	    ++i;
 	  skipspace(code, i);
 	}
-    }l
+    }
 }
 
 static bool		read_inside_scope(t_bunny_configuration		*fileroot,
