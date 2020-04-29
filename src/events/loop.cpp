@@ -352,7 +352,7 @@ t_bunny_response	bunny_loop(t_bunny_window	*window,
 	    bunny_usleep(delay - (now - prev));
 	}
       else
-	network_event(delay - (now - prev), data);
+	network_event((delay - (now - prev)) / 1000.0, data);
     }
  end:
   if (gl_callback.leaving_context != NULL)

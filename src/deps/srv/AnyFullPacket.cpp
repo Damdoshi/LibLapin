@@ -11,7 +11,7 @@ bool			bpt::NetCom::Server::AnyFullPacket(void)
   int			t;
 
   for (i = this->client.begin(); i != this->client.end(); ++i)
-    if ((*i)->cursor - (*i)->buffer >= (t = (*i)->packet_size.size) && (*i)->cursor != UNUSED_BUFFER)
+    if ((*i)->buffer && (*i)->cursor - (*i)->buffer >= (t = (*i)->packet_size.size) && (*i)->cursor != UNUSED_BUFFER)
       return (true);
   return (false);
 }

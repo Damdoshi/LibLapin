@@ -22,8 +22,8 @@ const bpt::NetCom::Communication	&bpt::NetCom::Server::operator()(unsigned int	t
   max = FindMaxFd() + 1;
   if (timeout != UMAX)
     {
-      delay.microseconds = timeout * 1000;
       delay.seconds = timeout / 1000;
+      delay.microseconds = (timeout % 1000) * 1000;
       if ((count = Select(max, &this->fds_read, &this->fds_write, &this->fds_error, &delay)) == -1)
 	return (RetError(SELECT_FAIL, delay.seconds * 1000 + delay.microseconds / 1000));
       if ((max =  delay.seconds * 1000 + delay.microseconds / 1000) == 0)
