@@ -9,7 +9,7 @@
 void			bunny_delete_client(t_bunny_client		*clt)
 {
   delete (bpt::NetCom::Client*)clt->_private[1];
-  free((char*)clt->host);
+  bunny_free((char*)clt->host);
   bunny_free(clt);
   scream_log_if("%p", "network", clt);
 }

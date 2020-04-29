@@ -7,6 +7,7 @@
 #include		"deps/NetCom.hpp"
 #include		"lapin_private.h"
 
+#pragma			pack(4)
 struct			bunny_client
 {
   size_t		server;
@@ -15,6 +16,7 @@ struct			bunny_client
   char			*c;
   uint16_t		d;
 };
+#pragma			pack()
 
 #define			PATTERN		"%s host, %d port, %d protocol -> %p"
 

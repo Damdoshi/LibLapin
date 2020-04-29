@@ -224,6 +224,7 @@ bool				bunny_server_doom_client(t_bunny_server		*srv,
 ** The host attribute is the IP of the server.
 ** The port attribute is the port we are talking with on the server.
 */
+#pragma				pack(4)
 typedef struct			s_bunny_client
 {
   const void * const		_private[2];
@@ -231,6 +232,7 @@ typedef struct			s_bunny_client
   const char * const		host;
   uint16_t			port;
 }				t_bunny_client;
+#pragma				pack()
 
 /*!
 ** The bunny_new_client_opt function creates a client that will talk with a server.
