@@ -295,5 +295,6 @@ void				_bunny_delete_sound(t_bunny_sound		*sound);
 */
 bool				bunny_make_effect_unique(t_bunny_effect		*eff);
 
+# pragma			pack()
 #endif	/*			__LAPIN_SOUND_H__	*/
 

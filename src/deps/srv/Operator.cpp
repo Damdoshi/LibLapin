@@ -14,12 +14,10 @@ const bpt::NetCom::Communication	&bpt::NetCom::Server::operator()(unsigned int	t
   int					count;
 
   if (this->communication.comtype == MESSAGE)
-    {
-      this->communication.comtype = EXPIRED;
-      delete[] this->communication.message.buffer.character;
-    }
+    delete[] this->communication.message.buffer.character;
   if (CheckFullPacket() == true)
     return (this->communication);
+  this->communication.comtype = EXPIRED;
   InitFdSet();
   max = FindMaxFd() + 1;
   if (timeout != UMAX)

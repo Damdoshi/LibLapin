@@ -4,7 +4,7 @@
 // BPT NetCom
 
 #include		<string.h>
-#include    "lapin_private.h"
+#include		"lapin_private.h"
 #include		"Server.hpp"
 
 bool			bpt::NetCom::Server::Write(const void		*buffer,

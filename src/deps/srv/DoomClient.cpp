@@ -13,7 +13,10 @@ bool			bpt::NetCom::Server::DoomClient(unsigned int	clt)
   for (it = client.begin(); it != client.end() && (*it)->info->socket != clt; ++it);
   if (it != client.end())
     {
-      (*it)->doomed = true;
+      if ((*it)->write_request.empty())
+	Disconnected((*it)->info->socket, 0);
+      else
+	(*it)->doomed = true;
       return (true);
     }
   bunny_errno = BE_CANNOT_FIND_ELEMENT;

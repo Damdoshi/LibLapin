@@ -99,4 +99,5 @@ struct				bunny_sound_manager
     >				sounds;
 };
 
+# pragma			pack()
 #endif	/*			__LAPIN_PRIVATE_SOUND_H__	*/

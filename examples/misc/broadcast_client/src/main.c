@@ -41,17 +41,17 @@ int			main(int                argc,
       com = bunny_client_poll(clt, 10);
       switch (com->comtype)
 	{
-	case ERROR:
+	case BCT_ERROR:
 	  bunny_delete_client(clt);
 	  fprintf(stderr, "Client dies.\n");
 	  fcntl(0, F_SETFL, flags);
 	  return (EXIT_FAILURE);
-	case NETDISCONNECTED:
+	case BCT_NETDISCONNECTED:
 	  bunny_delete_client(clt);
 	  fprintf(stderr, "Server dies.\n");
 	  fcntl(0, F_SETFL, flags);
 	  return (EXIT_FAILURE);	    
-	case MESSAGE:
+	case BCT_MESSAGE:
 	  write(1, com->message.buffer, com->message.size);
 	default:
 	  break ;

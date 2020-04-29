@@ -138,12 +138,14 @@ typedef union			u_bunny_communication
 ** The fd attribute is the file descriptor of the server: the listening socket.
 ** The port attribute is the port where the server is listening.
 */
+#pragma				pack(4)
 typedef struct			s_bunny_server
 {
   const void * const		_private[2];
   const int			fd;
   const uint16_t		port;
 }				t_bunny_server;
+#pragma				pack()
 
 typedef enum			e_bunny_protocol
   {

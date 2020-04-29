@@ -5,6 +5,7 @@
 
 #ifndef				__INETACCESS_HPP__
 # define			__INETACCESS_HPP__
+# include			<unistd.h>
 # include			<iostream>
 # include			<map>
 # define			UMAX					((unsigned int)-1)
@@ -32,7 +33,9 @@ namespace			bpt
 
 	Info(void) {}
 	Info(const Info		&i) : socket(i.socket), ip(i.ip), port(i.port) {}
-	~Info(void) {}
+	~Info(void) {
+	  close(socket);
+	}
       };
       class			WatchedSocket
       {

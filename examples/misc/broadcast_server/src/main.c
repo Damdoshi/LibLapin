@@ -42,20 +42,20 @@ int			main(int		argc,
       com = bunny_server_poll(srv, 1);
       switch (com->comtype)
 	{
-	case ERROR:
+	case BCT_ERROR:
 	  break ;
-	case NETCONNECTED:
+	case BCT_NETCONNECTED:
 	  fprintf(stdout, "New client %d.\n", com->connected.fd);
 	  if (com->connected.fd >= 1024)
 	    bunny_server_doom_client(srv, com->connected.fd);
 	  else
 	    fd_tab[com->connected.fd] = com->connected.fd;
 	  break ;
-	case NETDISCONNECTED:
+	case BCT_NETDISCONNECTED:
 	  fprintf(stdout, "Dead client %d.\n", com->disconnected.fd);
 	  fd_tab[com->disconnected.fd] = -1;
 	  break ;
-	case MESSAGE:
+	case BCT_MESSAGE:
 	  fprintf(stdout, "Broadcasting for %d. Size is %u\n", com->message.fd, com->message.size);
 	  for (i = 0; i < 1024; ++i)
 	    if (fd_tab[i] != -1 && fd_tab[i] != com->message.fd)
