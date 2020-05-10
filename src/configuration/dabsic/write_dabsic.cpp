@@ -188,13 +188,16 @@ static void		restore_dabsic(std::ostream			&ss,
 	{
 	  if (is_short_and_litterals(conf))
 	    {
-	      dabsic_array(ss, conf, indent + 2, true);
-	      ss << std::endl;
+	      ss << "[Data";
+	      if (!conf.have_value && !conf.expression)
+		ss << std::endl;
+	      dabsic_array(ss, conf, indent + 4, true);
+	      ss << std::endl << "]" << std::endl;
 	    }
 	  else
 	    {
 	      ss << "{";
-	      dabsic_array(ss, conf, indent + 2, false);
+	      dabsic_array(ss, conf, indent + 4, false);
 	      for (i = 0; i < indent; ++i)
 		ss << " ";
 	      ss << "}" << std::endl;

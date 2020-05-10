@@ -48,7 +48,7 @@
   HEADER	=	-I./include						\
 			-I./include/deps/					\
 			-I./external/include/					\
-			-I/opt/local/include/
+			-I/opt/local/include/ -I/usr/include/opencv4/
 
   DEFAULT	=	"\033[00m"
   PINK		=	"\033[1;35m"

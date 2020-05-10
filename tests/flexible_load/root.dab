@@ -1,0 +1,10 @@
+
+
+[Root = [Data = "aaa"
+  "bbb", "ccc", "ddd"
+  ]
+  SubRoot = "eee"
+  SubRoot2 = "fff"
+  @insert "inserted.dab"
+  SubRoot4 = "loaded.dab"
+]

@@ -407,6 +407,35 @@ typedef union		u_bunny_temporary_data
   const char		*string;
 }			t_bunny_temporary_data;
 
+// Ces champs peuvent se combiner.
+typedef enum		e_flexible_load_mode
+  {
+   FLM_LOAD_FIELD	= 1, // 0 or 1.
+   FLM_LOAD_ARRAY	= 2,
+   FLM_LOAD_HASHMAP	= 4,
+   FLM_KEEP_CONFIGURATION = 8 // Register loaded configuration inside the initial conf tree
+  }			t_flexible_load_mode;
+
+/*
+** Recoit la configuration dont il faut extraire les informations directement.
+** Si la configuration est un seul champ, alors le noeud est ce champ.
+*/
+typedef void		*(*t_flexible_load)(t_bunny_configuration			*cnf);
+
+/*
+** Permet de charger un champ pouvant contenir une valeur, un tableau ou une table de hash.
+** La valeur peut etre un noeud avec des valeurs a charger, ou un fichier.
+** void **pointeur;
+** int nbr = bunny_configuration_flexible_load(cnf, FLM_..., function, &pointeur, "...", ...)
+** nbr est la taille du tableau qui a été alloué par flexible_load.
+** free(pointeur);
+*/
+int			bunny_configuration_flexible_load(t_bunny_configuration		*cnf,
+							  t_flexible_load_mode		mode,
+							  t_flexible_load		load,
+							  void				***ptr,
+							  const char			*pattern,
+							  ...);
 # include		"compat/configuration.h"
 #endif	/*		__LAPIN_CONFIGURATION_H__					*/
 
