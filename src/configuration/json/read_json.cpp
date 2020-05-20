@@ -30,8 +30,12 @@ t_bunny_configuration	*_bunny_read_json(const char			*code,
 
   i = 0;
   SmallConf::create_mode = true;
-  conf->construct = SmallConf::MAP;
-  if (json_read_scope(code, i, *conf, *conf) != BD_OK)
+  if (json_read_scope(code, i, *conf, *conf) == BD_ERROR)
+    {
+      SmallConf::create_mode = cmode;
+      return (NULL);
+    }
+  else if (json_read_array(code, i, *conf, *conf) != BD_OK)
     {
       SmallConf::create_mode = cmode;
       return (NULL);

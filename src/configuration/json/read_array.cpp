@@ -17,6 +17,7 @@ Decision		json_read_array(const char		*code,
   if (readtext(code, i, "[") == false)
     return (BD_NOT_FOUND);
 
+  conf.construct = SmallConf::ARRAY;
   json_read_separator(code, i);
 
   if (readtext(code, i, "]"))

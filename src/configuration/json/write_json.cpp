@@ -93,12 +93,22 @@ static void		restore_scope(std::stringstream		&ss,
 
 char			*_bunny_write_json(const t_bunny_configuration	*config)
 {
+  SmallConf		&cnf = *(SmallConf*)config;
   std::stringstream	ss;
   char			*ret;
 
-  ss << "{" << std::endl;
-  restore_scope(ss, *(SmallConf*)config, 2);
-  ss << "}" << std::endl;
+  if (cnf.construct == SmallConf::MAP)
+    {
+      ss << "{" << std::endl;
+      restore_scope(ss, cnf, 2);
+      ss << "}" << std::endl;
+    }
+  else if (cnf.construct == SmallConf::ARRAY)
+    {
+      ss << "[" << std::endl;
+      restore_array(ss, cnf, 2);
+      ss << "]" << std::endl;
+    }
   if ((ret = (char*)bunny_malloc(sizeof(*ret) * (ss.str().size() + 1))) == NULL)
     scream_error_if(return (NULL), bunny_errno, "%p -> %s", "ressource,configuration", config, ret);
   strcpy(ret, ss.str().c_str());
