@@ -1,6 +1,6 @@
 /*
 ** Jason Brillante "Damdoshi"
-** Hanged Bunny Studio 2014-2016
+** Hanged Bunny Studio 2014-2020
 **
 ** Bibliotheque Lapin
 */
@@ -203,6 +203,8 @@ typedef struct			s_bunny_joystick
   unsigned int			product;
   unsigned int			nb_button;
   unsigned char			axis;
+  double			vibration_gain;
+  bool				vibrating;
 }				t_bunny_joystick;
 
 /*!
@@ -315,6 +317,9 @@ void				bunny_set_joy_button_response(t_bunny_joy_button button);
 ** Use it this way: bunny_get_joy_button()[3][4]
 */
 const bool			(*bunny_get_joy_button(void))[LAST_BUNNY_BUTTON];
+
+bool				bunny_set_joystick_vibration(int		joy_id,
+							     double		strength);
 
 /*!
 ** The type of the function that will handle the get focus event.

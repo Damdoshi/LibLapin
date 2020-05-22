@@ -7,6 +7,11 @@
 #include		<string.h>
 #include		"lapin_private.h"
 
+#ifndef			__WIN32
+# include		<linux/input.h>
+extern struct ff_effect	gl_effect[sf::Joystick::Count];
+#endif
+
 #define			PATTERN		"%p window, %zu nbr_window, %u frequency, %p parameter ("
 
 const t_bunny_event	*__bunny_event_convert(const sf::Event	&);
@@ -184,6 +189,9 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 			    else
 			      {
 				gl_joystick[joyid].connected = false;
+#ifndef			__WIN32
+				memset(&gl_effect[joyid], 0, sizeof(gl_effect[joyid]));
+#endif
 				if (gl_joystick[joyid].name)
 				  {
 				    bunny_free((char*)gl_joystick[joyid].name);
