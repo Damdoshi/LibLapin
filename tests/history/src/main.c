@@ -1,6 +1,6 @@
 /*
 ** Jason Brillante "Damdoshi"
-** Hanged Bunny Studio 2014-2017
+** Hanged Bunny Studio 2014-2020
 **
 ** LibLapin Test
 */
@@ -10,61 +10,31 @@
 
 int			main(void)
 {
-  t_bunny_history	*history;
-  int			val;
+  t_bunny_event_history	*his;
+  int			data;
 
-  assert(history = bunny_new_history(sizeof(val)));
-  assert(history->frame_size == sizeof(val));
-  for (val = 0; val < 10; ++val)
-    assert(bunny_history_add_frame(history, val, &val) != 0);
-  for (val = 0; val < 10; ++val)
-    assert(*(int*)bunny_history_get_frame(history, val) == val);
+  assert((his = bunny_new_event_history()));
+  for (data = 0; data <= 5; ++data)
+    assert((bunny_history_add_event(his, data, sizeof(data), &data)));
+  data -= 1;
+  assert((bunny_history_add_event(his, data, sizeof(data), &data)));
+  assert((data = bunny_history_count_events(his, 3)) == 4);
+  t_bunny_historical_event array[data];
 
-  assert(history->last_frame_time == 9);
-  assert(history->oldest_frame_time == 0);
-  assert(history->nbr_frame == 10);
-  assert(*(int*)history->last_frame == 9);
-
-  bunny_history_erase_before(history, 3);
-  bunny_history_erase_after(history, 8);
-  bunny_history_erase_frame(history, 5);
-
-  assert(bunny_history_get_frame(history, 1) == NULL);
-  assert(bunny_history_get_frame(history, 2) == NULL);
-  assert(*(int*)bunny_history_get_frame(history, 5) == 4);
-  assert(*(int*)bunny_history_get_frame(history, 9) == 8);
-  assert(*(int*)bunny_history_get_frame(history, 10) == 8);
-
-  assert(history->nbr_frame == 5);
-  assert(history->oldest_frame_time == 3);
-  assert(*(int*)history->last_frame == 8);
-
-  bunny_history_erase_frame(history, 8);
-  assert(*(int*)history->last_frame == 7);
-  assert(history->nbr_frame == 4);
-
-  bunny_history_erase_frame(history, 7);
-  assert(*(int*)history->last_frame == 6);
-  assert(history->nbr_frame == 3);
-
-  bunny_history_erase_frame(history, 6);
-  assert(*(int*)history->last_frame == 4);
-  assert(history->nbr_frame == 2);
-
-  bunny_history_erase_frame(history, 4);
-  assert(*(int*)history->last_frame == 3);
-  assert(history->nbr_frame == 1);
-
-  bunny_history_erase_frame(history, 3);
-  assert(history->last_frame == NULL);
-  assert(history->nbr_frame == 0);
-
-  for (val = 0; val < 10; ++val)
-    assert(bunny_history_add_frame(history, val, &val) != 0);
-  bunny_history_clear(history);
-  assert(history->nbr_frame == 0);
-  bunny_delete_history(history);
-
+  assert(bunny_history_get_events(his, 3, &array[0]) == 4);
+  assert(array[0].length == sizeof(data));
+  assert(array[1].length == sizeof(data));
+  assert(array[2].length == sizeof(data));
+  assert(array[3].length == sizeof(data));
+  assert(array[0].tick == 3);
+  assert(array[1].tick == 4);
+  assert(array[2].tick == 5);
+  assert(array[3].tick == 5);
+  assert(*(int*)array[0].data == 3);
+  assert(*(int*)array[1].data == 4);
+  assert(*(int*)array[2].data == 5);
+  assert(*(int*)array[3].data == 5);
+  bunny_delete_event_history(his);
   return (0);
 }
 
