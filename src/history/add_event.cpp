@@ -6,7 +6,7 @@
 #include		"lapin_private.h"
 
 bool			bunny_history_add_event(t_bunny_event_history *_his,
-						uint64_t	tick,
+						int64_t		tick,
 						size_t		event_len,
 						void		*event)
 {

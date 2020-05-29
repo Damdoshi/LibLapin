@@ -136,6 +136,9 @@ extern t_bunny_my_write_configuration gl_bunny_my_write_configuration;
 */
 void			bunny_delete_configuration(t_bunny_configuration		*config);
 
+// Destroy all children and remove value.
+void			bunny_clear_configuration(t_bunny_configuration			*config);
+
 /*!
 ** Delete the sent configuration node. All children will be destroyed as well.
 ** If the configuration is a child, it will remove itself cleanly from its parent.
