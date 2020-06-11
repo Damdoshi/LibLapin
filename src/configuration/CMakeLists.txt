@@ -3,11 +3,14 @@ list(APPEND LAPIN_SRC
 	${CMAKE_CURRENT_LIST_DIR}/casesf.cpp
 	${CMAKE_CURRENT_LIST_DIR}/childrenf.cpp
 	${CMAKE_CURRENT_LIST_DIR}/clean_raw_data.cpp
+	${CMAKE_CURRENT_LIST_DIR}/clear.cpp
 	${CMAKE_CURRENT_LIST_DIR}/create_mode.cpp
+	${CMAKE_CURRENT_LIST_DIR}/data.cpp
 	${CMAKE_CURRENT_LIST_DIR}/declarativef.cpp
 	${CMAKE_CURRENT_LIST_DIR}/delete_configuration.cpp
 	${CMAKE_CURRENT_LIST_DIR}/delete_node.cpp
 	${CMAKE_CURRENT_LIST_DIR}/execute.cpp
+	${CMAKE_CURRENT_LIST_DIR}/flexible_load.cpp
 	${CMAKE_CURRENT_LIST_DIR}/get_address.cpp
 	${CMAKE_CURRENT_LIST_DIR}/get_case.cpp
 	${CMAKE_CURRENT_LIST_DIR}/get_case_named.cpp
@@ -34,6 +37,7 @@ list(APPEND LAPIN_SRC
 	${CMAKE_CURRENT_LIST_DIR}/save_configuration.cpp
 	${CMAKE_CURRENT_LIST_DIR}/setf.cpp
 	${CMAKE_CURRENT_LIST_DIR}/shrink_single_element_array.cpp
+	${CMAKE_CURRENT_LIST_DIR}/text.cpp
 	${CMAKE_CURRENT_LIST_DIR}/which_format.cpp
 	${CMAKE_CURRENT_LIST_DIR}/write_configuration.cpp
 )

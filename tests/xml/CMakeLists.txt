@@ -4,7 +4,7 @@ add_executable(xml src/main.c)
 
 set_property(TARGET xml PROPERTY C_STANDARD 11)
 
-target_link_libraries(xml PRIVATE sfml-graphics sfml-audio sfml-window sfml-system stdc++ dl m avcall pthread)
+target_link_libraries(xml PRIVATE sfml-graphics sfml-audio sfml-window sfml-system stdc++ -Wl,--no-as-needed dl m avcall pthread)
 
 if(WITH_COVERAGE)
     target_link_libraries(xml PRIVATE lapin-static --coverage)
