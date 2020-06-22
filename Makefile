@@ -36,8 +36,10 @@
 			-Wno-unused-result -Wno-format-security			\
 			-Wno-frame-address -Wno-narrowing			\
 			-DBUNNY_COMPILATION					\
-			-DBUNNY_DEBUG \
-			-DBUNNY_ALLOCATOR_DEACTIVATED
+			-Wno-cast-function-type					\
+			-DBUNNY_ALLOCATOR_DEACTIVATED				\
+			-DBUNNY_DEBUG
+
   DEBUG		=	-O0 -g -g3 -ggdb
 #  OPTIM		=	-O2
 
