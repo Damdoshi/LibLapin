@@ -175,6 +175,7 @@ typedef enum			s_bunny_decision
 # endif
 # ifdef				__cplusplus
 #  include			"lapin/context/Context.hpp"
+#  include			"lapin/configuration.hpp"
 # endif
 #endif	/*			__LAPIN_H__					*/
 

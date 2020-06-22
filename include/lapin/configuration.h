@@ -1,6 +1,6 @@
 /*
 ** Jason Brillante "Damdoshi"
-** Hanged Bunny Studio 2014-2018
+** Hanged Bunny Studio 2014-2020
 **
 ** Bibliotheque Lapin
 */
@@ -214,6 +214,31 @@ bool			bunny_configuration_getf_bool(t_bunny_configuration		*config,
 						      const char			*format,
 						      ...) _BFMT(3, 4);
 
+bool			bunny_configuration_vgetf_node(t_bunny_configuration		*config,
+						       t_bunny_configuration		**node,
+						       const char			*format,
+						       va_list				lst);
+
+bool			bunny_configuration_vgetf_string(t_bunny_configuration		*config,
+							 const char			**string,
+							 const char			*format,
+							 va_list			lst);
+
+bool			bunny_configuration_vgetf_double(t_bunny_configuration		*config,
+							 double				*dbl,
+							 const char			*format,
+							 va_list			lst);
+
+bool			bunny_configuration_vgetf_int(t_bunny_configuration		*config,
+						      int				*integer,
+						      const char			*format,
+						      va_list				lst);
+
+bool			bunny_configuration_vgetf_bool(t_bunny_configuration		*config,
+						       bool				*boolean,
+						       const char			*format,
+						       va_list				lst);
+
 # if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 /*!
 ** Get a value inside the configuration. Its type will match of the type of val.
@@ -254,6 +279,27 @@ bool			bunny_configuration_setf_int(t_bunny_configuration		*config,
 						     int				integer,
 						     const char				*format,
 						     ...) _BFMT(3, 4);
+
+
+bool			bunny_configuration_vsetf_node(t_bunny_configuration		*config,
+						       const t_bunny_configuration	*node,
+						       const char			*format,
+						       va_list				lst);
+
+bool			bunny_configuration_vsetf_string(t_bunny_configuration		*config,
+							 const char			*string,
+							 const char			*format,
+							 va_list			lst);
+
+bool			bunny_configuration_vsetf_double(t_bunny_configuration		*config,
+							 double				dbl,
+							 const char			*format,
+							 va_list			lst);
+
+bool			bunny_configuration_vsetf_int(t_bunny_configuration		*config,
+						      int				integer,
+						      const char			*format,
+						      va_list				lst);
 
 # if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 /*!

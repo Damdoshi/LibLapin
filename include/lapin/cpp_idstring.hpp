@@ -5,8 +5,9 @@
 
 #ifndef				__LAPIN_CPP_IDSTRING_HPP__
 # define			__LAPIN_CPP_IDSTRING_HPP__
-# include			<string.h>
-# include			<stdint.h>
+# if				__cplusplus > 199711L
+#  include			<string.h>
+#  include			<stdint.h>
 
 namespace			Bunny
 {
@@ -140,4 +141,5 @@ constexpr Bunny::IdString	operator""_IS(const char		*s,
   return (Bunny::IdString(s));
 }
 
+# endif
 #endif	/*			__LAPIN_CPP_IDSTRING_HPP__		*/
