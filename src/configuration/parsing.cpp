@@ -352,10 +352,7 @@ bool			readstring(const char			*code,
 	      p += 4;
 	    }
 	  else
-	    {
-	      fprintf(stderr, "Unknown character. (Line %d)\n", whichline(code, j));
-	      return (false);
-	    }
+	    strncpy(&d[p++], &code[j++], 1);
 	}
       else if (code[j] != '\\')
 	strncpy(&d[p++], &code[j++], 1);
