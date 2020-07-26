@@ -23,20 +23,20 @@
 ** Le bouton haut permet de remonter au dossier parent.
 */
 
-typedef enum		s_bunny_browse_box_display_mode
+typedef enum		s_bunny_gui_browse_display_mode
   {
    BBBDM_LIST_FILE,
    BBBDM_LAST
-  }			t_bunny_browse_box_display_mode;
+  }			t_bunny_gui_browse_display_mode;
 
-typedef struct		s_bunny_browse_box
+typedef struct		s_bunny_gui_browse
 {
   // Basic properties, function pointers and subboxes...
   t_bunny_gui_box	box;
   // Allow to select multiples files - or only select a single one.
   bool			multiple_select;
   // How is the file explorer displayed? Icon? List? etc.
-  t_bunny_browse_box_display_mode display_mode;
+  t_bunny_gui_browse_display_mode file_display_mode;
   // Is there a limit to the up button?
   const char		*max_top_directory;
   // What is the default directory?
@@ -47,6 +47,9 @@ typedef struct		s_bunny_browse_box
   // Only display files that pass filter
   const char		*file_filters[32];
   size_t		nbr_file_filters;
-}
+  // To write file text
+  t_bunny_font		*file_font;
+  t_bunny_gui_box	*buttons[4]; // Ok, Reset, Cancel, Up
+}			t_bunny_gui_browse;
 
 #endif	/*		__LAPIN_BROWSE_BOX_H__	*/
