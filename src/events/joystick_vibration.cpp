@@ -32,7 +32,7 @@ bool			bunny_set_joystick_vibration(int				id,
   vib.wRightMotorSpeed = 65535 * bunny_clamp((0.5 + angle) * strength, 0, 1);
   XInputSetState(id, &vib);
 #else
-  int		fd = sf::Joystick::getDeviceNode(id);
+  int		fd = 0; // sf::Joystick::getDeviceNode(id); FROM CUSTOM SFML
 
   // On enregistre l'effet qu'on veut faire afin de pouvoir l'appeller ensuite, si il n'existe pas
   if (gl_effect[id].type == 0)
@@ -52,7 +52,7 @@ bool			bunny_set_joystick_vibration(int				id,
       gl_effect[id].u.periodic.period = 100;
       gl_effect[id].u.periodic.magnitude = 0x7FFF;
       gl_effect[id].direction = 0;
-      
+
       // L'id de l'effet sera enregistré dans gl_effect[id].id pour être utilisé ensuite
       // Si id ne vaut pas -1, cela rafraichit l'effet, simplement.
       if (ioctl(fd, EVIOCSFF, &gl_effect[id]) == -1)
@@ -68,7 +68,7 @@ bool			bunny_set_joystick_vibration(int				id,
   ie.value = 0xFFFF * strength;
   if (write(fd, &ie, sizeof(ie)) == -1)
     scream_error_if(return (false), errno, "write gain effect failure", "event");
-  
+
   // Ordre de jouer ou non l'effet défini
   ie.type = EV_FF;
   ie.code = gl_effect[id].id;

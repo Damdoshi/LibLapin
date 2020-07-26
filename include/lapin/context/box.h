@@ -22,6 +22,7 @@ typedef enum			e_bunny_box_type
   {
     BBT_SIMPLE_BOX,
     BBT_LABEL_BOX,
+    BBT_BROWSE_BOX,
     BBT_CUSTOM_BOX
   }				t_bunny_box_type;
 
@@ -44,8 +45,8 @@ typedef struct			s_bunny_gui_box
   bool				inactive; // Do not respond to events, neither children
   bool				hidden; // Is not displayed, neither children
 
-  t_bunny_map			*children;
-  t_bunny_accurate_position	position;
+  t_bunny_map			*children; // Map of string->t_bunny_gui_box
+  t_bunny_accurate_position	position; // Relative au parent
   t_bunny_accurate_size		size;
 
   t_bunny_color			color;

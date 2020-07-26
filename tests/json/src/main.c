@@ -52,6 +52,7 @@ int			main(int		argc,
   if (argc == 2)
     alarm(2);
 
+  refresh_test("import_school_year.json");
   refresh_test("fields.json");
   refresh_test("scopes.json");
   refresh_test("arrays.json");
