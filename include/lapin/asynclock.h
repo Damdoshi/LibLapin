@@ -173,4 +173,7 @@ double			bunny_reset_clock(void);
 */
 double			bunny_get_current_time(void);
 
+# define		bunny_time_old(tim)		(tim < bunny_get_current_time())
+# define		bunny_time_alive(tim)		(tim >= bunny_get_current_time())
+
 #endif	/*			__LAPIN_ASYNCLOCK_H__	*/
