@@ -147,6 +147,10 @@ bool			bunny_read_cstring(const char		*str,
 					   char			*out,
 					   size_t		out_len);
 
+bool			bunny_read_cchar(const char		*code,
+					 ssize_t		*index,
+					 char			*out);
+
 /*!
 ** Transform the sent string into a c-string format. Turn LF into '\' and 'n',
 ** for example.
@@ -219,6 +223,11 @@ t_bunny_binary_box	*bunny_read_binary_box(const void	*data,
 t_bunny_binary_box	*bunny_load_binary_box(int		fd);
 
 t_bunny_binary_box	*bunny_create_binary_box(size_t		len);
+
+typedef bool		(*t_bunny_read_whitespace)(const char	*code,
+						   ssize_t	*i);
+extern
+t_bunny_read_whitespace	gl_bunny_read_whitespace;
 
 #endif	/*		__LAPIN_PARSING_H__			*/
 
