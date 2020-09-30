@@ -1,4 +1,3 @@
-
 /*
 ** Jason Brillante "Damdoshi"
 ** Hanged Bunny Studio 2014-2019
@@ -208,6 +207,8 @@ const char * const		*bunny_split(const char			*str,
 ** \param tab The array to free.
 */
 void				bunny_delete_split(const char * const	*tab);
+
+size_t				bunny_split_len(const char * const	*tab);
 
 char				*bunny_stick(const char * const		*tab,
 					     const char			*glue,
