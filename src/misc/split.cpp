@@ -115,3 +115,11 @@ void			bunny_delete_split(const char * const		*tab)
   scream_log_if("%p", "misc", tab);
 }
 
+size_t			bunny_split_len(const char * const		*tab)
+{
+  size_t		i;
+
+  for (i = 0; tab[i]; ++i);
+  return (i);
+}
+

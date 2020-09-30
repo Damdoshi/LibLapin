@@ -31,7 +31,7 @@ bool			bunny_set_joystick_vibration(int				id,
   vib.wLeftMotorSpeed = 65535 * bunny_clamp((0.5 - angle) * strength, 0, 1);
   vib.wRightMotorSpeed = 65535 * bunny_clamp((0.5 + angle) * strength, 0, 1);
   XInputSetState(id, &vib);
-#else
+#elifdef	__CUSTOM_SFML
   int		fd = sf::Joystick::getDeviceNode(id);
 
   // On enregistre l'effet qu'on veut faire afin de pouvoir l'appeller ensuite, si il n'existe pas
@@ -75,6 +75,7 @@ bool			bunny_set_joystick_vibration(int				id,
   ie.value = fabs(strength) > 0.1 ? 3 : -1;
   if (write(fd, &ie, sizeof(ie)) == -1)
     scream_error_if(return (false), errno, "write order effect failure", "event");
+#else
 #endif
 
   gl_joystick[id].vibration_gain = strength;
