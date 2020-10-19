@@ -47,7 +47,7 @@ test_and_add_bash()
 	FROOT=`grep "${INCLUDE_DIR}" $1`
 	if [ -z "${FROOT}" ]; then
 	    echo "" >> $1
-	    echo "export LD_LIBRARY_PATH=\"${LIB_DIR}\"" >> $1
+	    echo "export LIBRARY_PATH=\"${LIB_DIR}\"" >> $1
 	    echo "export C_INCLUDE_PATH=\"${INCLUDE_DIR}\"" >> $1
 	    echo "export CPLUS_INCLUDE_PATH=\"${INCLUDE_DIR}\"" >> $1
 	fi
@@ -60,7 +60,7 @@ test_and_add_csh()
 	FROOT=`grep "${INCLUDE_DIR}" $1`
 	if [ -z "${FROOT}" ]; then
 	    echo "" >> $1
-	    echo "setenv LD_LIBRARY_PATH \"${LIB_DIR}\"" >> $1
+	    echo "setenv LIBRARY_PATH \"${LIB_DIR}\"" >> $1
 	    echo "setenv C_INCLUDE_PATH \"${INCLUDE_DIR}\"" >> $1
 	    echo "setenv CPLUS_INCLUDE_PATH \"${INCLUDE_DIR}\"" >> $1
 	fi
@@ -69,7 +69,7 @@ test_and_add_csh()
 
 mkdir -p ${LIB_DIR} ${INCLUDE_DIR}		|| get_out "Failed to create installation directories."
 
-make -j16					|| get_out "No bunnies were build. Make failed."
+make -j16					|| get_out "No bunnies were built. Make failed."
 
 # Bunnies
 cp -r include/* ${INCLUDE_DIR}			|| get_out "Failed to install Lapin headers."
