@@ -28,7 +28,7 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
   const char		*str;
 
 #ifdef			__linux__
-  if ((str = getenv("DISPLAY")) == NULL || str[0] != ':')
+  if ((str = getenv("DISPLAY")) == NULL || strchr(str, ':') == NULL)
     scream_error_if(return (NULL), BE_UNKNOWN_DISPLAY_DEVICE, PATTERN, "window",
 		    width, height, winstyle, window_name, (void*)NULL);
 #endif
