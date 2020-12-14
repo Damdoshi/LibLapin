@@ -38,7 +38,7 @@ typedef struct			s_bunny_space_node_io
 {
   t_bunny_accurate_position	position;		// Position of the i/o on the current space node
   struct s_bunny_graph_node	*link;			// Link to a target node
-  size_t			number;			// If the target is a space node, precise the io
+  int				number;			// If the target is a space node, precise the io
   t_bunny_configuration		*configuration;		// Configuration of the link - if requested
   void				*data;			// To be allocated, filled and freed by user.
 }				t_bunny_space_node_io;
@@ -69,7 +69,7 @@ typedef struct			s_bunny_dot_node
 
 typedef struct			s_bunny_graph
 {
-  t_bunny_map			*nodes;
+  t_bunny_map			*nodes;		// string -> t_bunny_graph_node and derivates
   const char			*name;
   t_bunny_configuration		*configuration;
   bool				own_configuration;
@@ -77,8 +77,12 @@ typedef struct			s_bunny_graph
 
 t_bunny_graph			*bunny_load_graph(const char				*file);
 t_bunny_graph			*bunny_read_graph(t_bunny_configuration			*cnf);
-void				bunny_delete_graph(t_bunny_graph			*graph);
-void				bunny_graph_dump(t_bunny_graph				*graph);
+void				bunny_delete_graph(t_bunny_graph			*graph,
+						   void					(*dtor)
+						   (const char				*id,
+						    t_bunny_configuration		*cnf,
+						    void				*d));
+int				bunny_graph_dump(t_bunny_graph				*graph);
 
 t_bunny_graph_node		*bunny_graph_get_node(t_bunny_graph			*graph,
 						      const char			*id);

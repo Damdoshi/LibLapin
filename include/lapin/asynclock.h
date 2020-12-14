@@ -175,5 +175,7 @@ double			bunny_get_current_time(void);
 
 # define		bunny_time_old(tim)		(tim < bunny_get_current_time())
 # define		bunny_time_alive(tim)		(tim >= bunny_get_current_time())
+# define		bunny_time_plus(tim)		(bunny_get_current_time() + tim)
+# define		bunny_time_minus(tim)		(bunny_get_current_time() - tim)
 
 #endif	/*			__LAPIN_ASYNCLOCK_H__	*/

@@ -65,6 +65,7 @@ t_bunny_map			*bunny_new_map(t_bunny_map_cmp		cmp,
 					       void			*param);
 # define			string_map				\
   (t_bunny_map_cmp)strcmp, (t_bunny_map_dup)bunny_strdup, (t_bunny_map_del)bunny_free, NULL
+# define			int_map					NULL, NULL, NULL, NULL
 
 /*!
 ** Delete the map.

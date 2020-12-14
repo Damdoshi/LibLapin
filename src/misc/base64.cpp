@@ -155,3 +155,25 @@ bool			bunny_base64_check(const char		*data,
       j += 1;
   return (true);
 }
+
+bool				bunny_read_base64(const char		*data,
+						  ssize_t		*i,
+						  void			**out,
+						  size_t		*outlen)
+{
+  ssize_t			j = *i;
+  ssize_t			k;
+
+  if (bunny_check_text(data, &j, "b64_") == false)
+    return (false);
+  k = j;
+  if (readchar(data, j, gl_dictionnary) == false)
+    return (false);
+  if (readchar(data, j, "\"") == false)
+    return (false);
+  bool				ret;
+
+  if ((ret = bunny_base64_decode(data, j - k, out, outlen)) != false)
+    *i = k;
+  return (ret);
+}

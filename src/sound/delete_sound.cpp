@@ -18,6 +18,7 @@ void			_bunny_delete_sound(t_bunny_sound		*sound)
 
       if (mus->sound_areas)
 	{
+	  // SI C'EST UN SOUND SPRITE
 	  bunny_map_foreach(mus->sound_areas, bunny_foreach_map_bunny_free, NULL);
 	  bunny_delete_map(mus->sound_areas);
 	}

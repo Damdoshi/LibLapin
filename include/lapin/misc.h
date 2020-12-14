@@ -159,6 +159,11 @@ bool				bunny_base64_decode(const char		*data,
 						    void		**out,
 						    size_t		*outlen);
 
+bool				bunny_read_base64(const char		*data,
+						  ssize_t		*i,
+						  void			**out,
+						  size_t		*outlen);
+
 /*!
 ** Check if the sent data is valid as base64 encoded data.
 ** \param data The data to check.

@@ -22,6 +22,7 @@ SmallConf::SmallConf(void)
     father(NULL),
     last_type(INTEGER),
     symbol(false),
+    was_b64(false),
     sequence(NULL),
     function(NULL),
     expression(NULL),

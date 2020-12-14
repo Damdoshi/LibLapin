@@ -551,7 +551,24 @@ bool			readvalue(const char			*code,
   int			bef;
 
   bef = i;
-  if (readdouble(code, i, val))
+  if (readtext(code, i, "b64\""))
+    {
+      void		*out;
+      size_t		outlen;
+
+      if (bunny_read_base64(code, &i, &out, &outlen) == false)
+	return (false);
+      nod.construct = SmallConf::ARRAY;
+      nod.was_b64 = true;
+      for (size_t i = 0; i < outlen / sizeof(int); ++i)
+	{
+	  int		j = *(int*)out;
+
+	  nod[i].SetInt(j);
+	}
+      bunny_free(out);
+    }
+  else if (readdouble(code, i, val))
     {
       nod.SetDouble(val);
       nod.original_value = std::string(&code[bef], i - bef);

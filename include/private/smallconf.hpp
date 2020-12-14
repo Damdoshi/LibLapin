@@ -67,6 +67,8 @@ struct				SmallConf
   Type				last_type = NOTYPE;
   bool				symbol;
 
+  bool				was_b64;
+
   enum				e_politic
     {
       NO_POLITIC,

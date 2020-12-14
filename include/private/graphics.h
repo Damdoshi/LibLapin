@@ -313,6 +313,13 @@ struct				bunny_tilemap
   const sf::Texture		*tex; // Displayed shape
   sf::Sprite			*sprite;
 
+  ////////////////////////////////////
+  // Public fields of t_bunny_tilemap
+
+  bool				normal_map;
+  t_bunny_tilemap_projection	projection;
+  t_bunny_tilemap_method	method;
+
   t_bunny_size			tile_size;
   t_bunny_size			map_size;
 
@@ -320,28 +327,52 @@ struct				bunny_tilemap
   t_bunny_tileset		*tilesets;
   int				nbr_tilesets;
 
-  // Public fields of t_bunny_tilemap
   t_bunny_tile_layer		*layers;
   int				nbr_layers;
 
   int				layer_clip[2];
 
-  t_bunny_accurate_position	camera;
+  t_bunny_accurate_zposition	camera;
   t_bunny_accurate_position	zoom;
   double			tile_rotation;
   bool				lock_borders;
   bool				loop[2];
   t_bunny_map			*properties; // map[string] = string
 
+  /////////////////////////////////////
   // Private fields of t_bunny_tilemap
+  // final stacking:
   t_bunny_picture		*working;
   t_bunny_position		working_target_diff;
   double			last_step;
   bool				duplicated_tilemap;
+
+  // Layer stacking
+  bool				rendered;
+  t_bunny_zposition		animated_tiles[1024 * 16];
+  int				nbr_animated_tiles;
+  t_bunny_zposition		changed_tiles[1024];
+  int				nbr_changed_tiles;
 };
 
-void				bunny_delete_tileset(t_bunny_tileset		*ts);
-void				bunny_delete_layer(t_bunny_tile_layer		*ts);
+void				__bunny_tilemap_lock_borders(t_bunny_accurate_position	&tilsiz,
+							     t_bunny_accurate_position	&tlcam,
+							     struct bunny_tilemap	*tmap,
+							     double			left,
+							     double			right,
+							     double			top,
+							     double			bot);
+void				bunny_delete_tileset(t_bunny_tileset			*ts);
+void				bunny_delete_layer(t_bunny_tile_layer			*ts);
+
+void				__bunny_set_square(sf::VertexArray			&vertex,
+						   t_bunny_picture			*clip,
+						   double				tleft,
+						   double				ttop,
+						   double				rleft,
+						   double				rtop,
+						   int					&last_vx);
+
 
 struct				bunny_parallax
 {

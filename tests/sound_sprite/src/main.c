@@ -71,17 +71,18 @@ int			main(int		argc,
   t_bunny_sound_sprite	*sprite;
 
   bunny_set_error_descriptor(2);
-  assert(win = bunny_start(320, 240, false, "Sound sprite test"));
+  assert((win = bunny_start(320, 240, false, "Sound sprite test")));
   bunny_clear(&win->buffer, PINK2);
   bunny_display(win);
   if (argc == 2)
-    assert(sprite = bunny_load_sound_sprite(argv[1]));
+    assert((sprite = bunny_load_sound_sprite(argv[1])));
   else
-    assert(sprite = bunny_load_sound_sprite("./sound_sprite.dab"));
+    assert((sprite = bunny_load_sound_sprite("./sound_sprite.dab")));
   bunny_set_key_response(key);
   bunny_set_loop_main_function(loop);
   bunny_set_display_function(display);
   bunny_loop(win, 50, sprite);
+  bunny_delete_sound_sprite(sprite);
   bunny_stop(win);
   return (EXIT_SUCCESS);
 }
