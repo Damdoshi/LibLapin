@@ -42,6 +42,26 @@ struct				bunny_splash_screen
   t_bunny_effect		*falling;
 };
 
+struct				bunny_pentacle_screen
+{
+  t_bunny_context_runtime_info	head;
+  unsigned int			background_color;
+  unsigned int			pentacle_color;
+  unsigned int			falling_rotation;
+  double			thickness;
+  char				*jingle_sound_file;
+  char				*font_file;
+
+  //
+  size_t			animation_step;
+  double			time_counter;
+  t_bunny_position		size_of_screen;
+  t_bunny_position		middle_of_screen;
+  bool				jingle_played;
+  t_bunny_font			*text;
+  t_bunny_effect		*jingle;
+};
+
 struct				bunny_loading_screen
 {
   t_bunny_context_runtime_info	head;

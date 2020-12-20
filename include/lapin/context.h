@@ -130,6 +130,7 @@ t_bunny_event_response_function	bunny_subcontext_event_response;
 # include			"context/box.h"
 # include			"context/cinematic.h"
 # include			"context/splash.h"
+# include			"context/pentacle.h"
 # include			"context/loading.h"
 # include			"context/depth.h"
 # include			"context/dressing.h"
