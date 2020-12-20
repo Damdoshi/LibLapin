@@ -104,6 +104,8 @@ static t_bunny_response		pentacle_click(t_bunny_event_state		state,
 {
   (void)state;
   (void)button;
+  if (state == GO_UP)
+    return (GO_ON);
   bss->animation_step = LAST_AS;
   return (GO_ON);
 }
@@ -191,9 +193,7 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
   t_bunny_color			color;
   size_t			i;
 
-  //if (bss->animation_step < TRANSFORMATION)
   bunny_clear(bss->head.screen, ALPHA(16 * 3, BLACK));
-  //else bunny_clear(bss->head.screen, BLACK);
 
   if (bss->animation_step < NEW_PAUSE)
     memcpy(pentacle, &gl_normal_pentacle, sizeof(gl_normal_pentacle));
