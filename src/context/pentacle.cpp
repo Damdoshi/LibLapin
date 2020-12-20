@@ -358,10 +358,11 @@ static t_bunny_response		pentacle_entering(struct bunny_pentacle_screen *bss)
 
   font_size.x = bss->size_of_screen.x * 0.10;
   font_size.y = bss->size_of_screen.y * 0.08;
-  if ((bss->text = bunny_load_font
-       (bss->size_of_screen.x * 0.45, font_size.y * 3,
-	bss->font_file, &font_size)) == NULL)
-    return (EXIT_ON_ERROR);
+  if (bss->text == NULL)
+    if ((bss->text = bunny_load_font
+	 (bss->size_of_screen.x * 0.45, font_size.y * 3,
+	  bss->font_file, &font_size)) == NULL)
+      return (EXIT_ON_ERROR);
   bss->text->string = "Pentacle\nTechnologie";
   bss->text->clipable.color_mask.full = RED;
   bss->text->offset.x = 10;
@@ -371,15 +372,17 @@ static t_bunny_response		pentacle_entering(struct bunny_pentacle_screen *bss)
   bss->text->clipable.position.y = (bss->size_of_screen.y - bss->text->clipable.buffer.height) / 2;
   bss->text->clipable.clip_width = 0;
 
-  bss->jingle = NULL;
   if (bss->jingle_sound_file)
     {
-      if ((bss->jingle = bunny_load_effect(bss->jingle_sound_file)) == NULL)
-	{
-	  bunny_delete_clipable(&bss->text->clipable);
-	  return (EXIT_ON_ERROR);
-	}
+      if (bss->jingle == NULL)
+	if ((bss->jingle = bunny_load_effect(bss->jingle_sound_file)) == NULL)
+	  {
+	    bunny_delete_clipable(&bss->text->clipable);
+	    return (EXIT_ON_ERROR);
+	  }
     }
+  else
+    bss->jingle = NULL;
 
   if (gl_normal_pentacle.length == 0)
     {
@@ -410,8 +413,10 @@ static void			pentacle_leaving(t_bunny_response		resp,
 						 struct bunny_pentacle_screen *bss)
 {
   (void)resp;
-  bunny_delete_sound(&bss->jingle->sound);
-  bunny_delete_clipable(&bss->text->clipable);
+  if (bss->jingle)
+    bunny_delete_sound(&bss->jingle->sound);
+  if (bss->text)
+    bunny_delete_clipable(&bss->text->clipable);
 }
 
 const t_bunny_context		gl_bunny_pentacle_context =
