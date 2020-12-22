@@ -196,7 +196,7 @@ size_t			bunny_read_until_it_is_full(int		fd,
 						    size_t	len);
 
 # ifdef				__MINGW32__
-#  pragma			pack(1)
+#  pragma			pack(4)
 # endif
 typedef struct		s_bunny_binary_box
 {

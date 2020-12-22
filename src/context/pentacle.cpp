@@ -193,7 +193,7 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
   t_bunny_color			color;
   size_t			i;
 
-  bunny_clear(bss->head.screen, ALPHA(16 * 3, BLACK));
+  bunny_fill(bss->head.screen, ALPHA(64, BLACK));
 
   if (bss->animation_step < NEW_PAUSE)
     memcpy(pentacle, &gl_normal_pentacle, sizeof(gl_normal_pentacle));
@@ -202,6 +202,7 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
   switch (bss->animation_step)
     {
     case BEFORE_ANIMATION:
+      bunny_clear(bss->head.screen, BLACK);
       break ;
     case FALLING:
       color.full = BLACK;
@@ -302,10 +303,10 @@ void				spread_coords(struct vertex_array		*vec,
 					      double				thick,
 					      size_t				len)
 {
+  t_bunny_accurate_position	farr;
+  t_bunny_accurate_position	farr_close;
   t_bunny_accurate_position	here;
   t_bunny_accurate_position	here_close;
-  t_bunny_accurate_position	far;
-  t_bunny_accurate_position	far_close;
 
   int				i;
   int				j;
@@ -320,17 +321,17 @@ void				spread_coords(struct vertex_array		*vec,
       here_close.x = here.x * thick;
       here_close.y = here.y * thick;
 
-      far.x = -cos(RAD(coords[(i + 2) % len].x)) * coords[(i + 2) % len].y;
-      far.y = sin(RAD(coords[(i + 2) % len].x)) * coords[(i + 2) % len].y;
-      far_close.x = far.x * thick;
-      far_close.y = far.y * thick;
+      farr.x = -cos(RAD(coords[(i + 2) % len].x)) * coords[(i + 2) % len].y;
+      farr.y = sin(RAD(coords[(i + 2) % len].x)) * coords[(i + 2) % len].y;
+      farr_close.x = farr.x * thick;
+      farr_close.y = farr.y * thick;
 
       vec->vertex[j++].pos = here;
-      vec->vertex[j++].pos = far;
-      vec->vertex[j++].pos = far_close;
+      vec->vertex[j++].pos = farr;
+      vec->vertex[j++].pos = farr_close;
       vec->vertex[j++].pos = here;
       vec->vertex[j++].pos = here_close;
-      vec->vertex[j++].pos = far_close;
+      vec->vertex[j++].pos = farr_close;
     }
   for (i = 0; i < (int)vec->length; ++i)
     {
