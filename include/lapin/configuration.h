@@ -371,6 +371,11 @@ bool			bunny_configuration_declarativef(t_bunny_configuration		*c,
 							 const char			*fmt,
 							 ...) _BFMT(2, 3);
 
+/*
+** Turn expression into field that contains their result
+*/
+bool			bunny_configuration_resolve(t_bunny_configuration		*cnf);
+
 /*!
 ** c[fmt] become a link on c.
 */
