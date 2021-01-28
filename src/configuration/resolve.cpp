@@ -12,30 +12,35 @@ bool		bunny_configuration_resolve(t_bunny_configuration	*par)
 
   if (par == NULL)
     return (false);
+  SmallConf	*root = (SmallConf*)bunny_configuration_get_root(par);
+  SmallConf	*parent = (SmallConf*)bunny_configuration_get_parent(par);
   const char	*str;
   int		integer;
   double	dbl;
 
   if (cnf.expression != NULL)
     {
-      if (cnf.GetString(&str) == false)
-	bad = true;
-      else if (cnf.expression->val.last_type == SmallConf::INTEGER)
+      if (expr_compute(cnf, NULL, false, root, NULL, parent, NULL) == false)
+	return (false);
+      if (cnf.expression->val.last_type == SmallConf::INTEGER)
 	{
-	  if (cnf.GetInt(&integer))
+	  if (cnf.GetInt(&integer, root, parent))
 	    cnf.SetInt(integer);
 	}
       else if (cnf.expression->val.last_type == SmallConf::DOUBLE)
 	{
-	  if (cnf.GetDouble(&dbl))
+	  if (cnf.GetDouble(&dbl, root, parent))
 	    cnf.SetDouble(dbl);
 	}
       else
-	cnf.SetString(std::string(str));
+	{
+	  if (cnf.GetString(&str, root, parent))
+	    cnf.SetString(std::string(str));
+	}
       delete cnf.expression;
       cnf.expression = NULL;
     }
-  
+
   std::map<std::string, SmallConf*>::iterator itn;
   std::vector<SmallConf*>::iterator itv;
 

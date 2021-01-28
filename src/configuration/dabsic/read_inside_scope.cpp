@@ -18,7 +18,18 @@ Decision		dabsic_read_inside_scope(const char		*code,
     return (BD_ERROR);
   while (code[i] != '\0' && code[i] != ']')
     if ((ret = dabsic_read_field(code, i, conf, root)) != BD_OK)
-      return (ret);
+      {
+	if (code[i] != '\0' && code[i] != ']')
+	  {
+	    scream_error_if
+	    (return (BD_ERROR), BE_SYNTAX_ERROR,
+	     "An end of scope was expected on line %s:%d",
+	     "ressource,configuration,syntax",
+	     SmallConf::file_read.top().c_str(), whichline(code, i)
+	     );
+	  }
+	return (ret);
+      }
   return (BD_OK);
 }
 

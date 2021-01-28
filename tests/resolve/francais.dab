@@ -1,0 +1,54 @@
+ModuleName = "COM-FRA-01B"
+
+[Modules
+  [Francais
+    name = [].ModuleName
+    emergence_date = 1, "Monday", 10, 00
+    done_date = 13, "Monday", 23, 30
+    fr_name = "Grammaire & Orthographe française"
+    fr_description = "L'écriture, l'écoute, la parole en anglais"
+    mandatory = true
+  ]
+]
+
+{Calendar
+  [
+    number = 0
+    name = [].ModuleName # "-" # string(number)
+    fr_name = "Cours"
+    type = "class"
+    allow_unregistration = true
+    mandatory = true
+
+    {Sessions
+      [
+        begin_date = 3 + _._._.number, "Thursday", 14, 00
+        end_date = 3 + _._._.number, "Thursday", 16, 00
+      ],
+      [
+        begin_date = 3 + _._._.number, "Thursday", 16, 00
+        end_date = 3 + _._._.number, "Thursday", 18, 00
+      ]
+    }
+  ],
+  [
+    number = 1
+    name = [].ModuleName # "-" # string(number)
+    fr_name = "Cours"
+    type = "class"
+    allow_unregistration = true
+    mandatory = true
+
+    {Sessions
+      [
+        begin_date = 3 + _._._.number, "Thursday", 14, 00
+        end_date = 3 + _._._.number, "Thursday", 16, 00
+      ],
+      [
+        begin_date = 3 + _._._.number, "Thursday", 16, 00
+        end_date = 3 + _._._.number, "Thursday", 18, 00
+      ]
+    }
+  ]
+}
+

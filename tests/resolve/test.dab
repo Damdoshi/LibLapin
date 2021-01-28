@@ -3,4 +3,10 @@
 Field = 1 + 2
 Final = "Lol"
 Other = "Lel" # Final
+[Sub
+  Here = "lel"
+  Lol = [].Other
+  Other = Here # _.Other
+]
+
 
