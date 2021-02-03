@@ -31,7 +31,7 @@ void			__bunny_blit_tilemap(struct bunny_tilemap	*tmap,
 					     const t_bunny_position	*_pos,
 					     const t_bunny_shader	*shader)
 {
-  __bunny_blit_flat_tilemap(tmap, _pic, _pos, shader);
+  //__bunny_blit_flat_tilemap(tmap, _pic, _pos, shader);
   /*
     if (tmap->method == BTM_FLAT)
     __bunny_blit_flat_tilemap(tmap, _pic, _pos, shader);
