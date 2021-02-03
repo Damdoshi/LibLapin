@@ -146,7 +146,6 @@ typedef enum			s_bunny_decision
 
 # include			"lapin/sprite.h"
 # include			"lapin/sound_sprite.h"
-# include			"lapin/tileset.h"
 # include			"lapin/tilemap.h"
 
 # include			"lapin/history.h"
