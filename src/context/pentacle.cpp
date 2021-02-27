@@ -91,11 +91,36 @@ static t_bunny_response		pentacle_key(t_bunny_event_state		state,
 	pitch = 3;
       else
 	pitch = 1;
-      bunny_sound_pitch(&bss->jingle->sound, pitch);
+      if (bss->jingle)
+	bunny_sound_pitch(&bss->jingle->sound, pitch);
     }
   if ((sym == BKS_ESCAPE || sym == BKS_RETURN) && state == GO_DOWN)
     bss->animation_step = LAST_AS;
   return (GO_ON);
+}
+
+static t_bunny_response		pentacle_joy_button(t_bunny_event_state		state,
+						    int				id,
+						    int				button,
+						    struct bunny_pentacle_screen *bss)
+{
+  (void)state;
+  (void)id;
+  (void)button;
+  (void)bss;
+  return (pentacle_key(state, BKS_ESCAPE, bss));
+}
+
+static t_bunny_response		pentacle_joy_axis(int				id,
+						  t_bunny_axis			axis,
+						  float				val,
+						  struct bunny_pentacle_screen *bss)
+{
+  (void)id;
+  (void)axis;
+  (void)val;
+  (void)bss;
+  return (pentacle_key(GO_DOWN, BKS_SPACE, bss));
 }
 
 static t_bunny_response		pentacle_click(t_bunny_event_state		state,
@@ -428,8 +453,8 @@ const t_bunny_context		gl_bunny_pentacle_context =
    bunny_context_move,
    bunny_context_wheel,
    bunny_context_joy_connect,
-   bunny_context_joy_button,
-   bunny_context_joy_axis,
+   (t_bunny_joy_button)pentacle_joy_button,
+   (t_bunny_joy_axis)pentacle_joy_axis,
    bunny_context_get_focus,
    bunny_context_lost_focus,
    bunny_context_resize,
