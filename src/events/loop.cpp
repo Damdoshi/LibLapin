@@ -17,7 +17,7 @@ extern struct ff_effect	gl_effect[sf::Joystick::Count];
 const t_bunny_event	*__bunny_event_convert(const sf::Event	&);
 
 t_bunny_response	bunny_loop(t_bunny_window	*window,
-				   unsigned char	freq,
+				   unsigned int		freq,
 				   void			*data)
 {
   struct bunny_window	*win = (struct bunny_window*)window;

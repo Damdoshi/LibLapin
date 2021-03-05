@@ -18,7 +18,7 @@ const t_bunny_event	*__bunny_event_convert(const sf::Event	&);
 
 t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 				      size_t		nwin,
-				      unsigned char	freq,
+				      unsigned int	freq,
 				      void		*data)
 {
   sf::Event		event;
