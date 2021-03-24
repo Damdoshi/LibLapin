@@ -81,7 +81,7 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
 
   eff->sample_per_second = eff->effect->getSampleRate();
   eff->duration = (double)eff->effect->getSampleCount() / eff->sample_per_second;
-  eff->sound.setBuffer(*eff->effect);
+  eff->sound->setBuffer(*eff->effect);
   eff->type = EFFECT;
 
   scream_log_if(PATTERN, "ressource,sound", file, eff);

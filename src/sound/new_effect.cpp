@@ -8,16 +8,22 @@
 
 #define			PATTERN		"%f -> %p"
 
-t_bunny_effect		*bunny_new_effect(double		duration)
+t_bunny_effect		*_bunny_new_effect(double		duration,
+					   int			sample_per_second)
 {
   struct bunny_effect	*eff;
+  int			len = duration * sample_per_second;
 
   if ((eff = new (std::nothrow) struct bunny_effect) == NULL)
     goto Fail;
   if ((eff->effect = new (std::nothrow) sf::SoundBuffer) == NULL)
     goto FailStruct;
-  if ((eff->sample = (int16_t*)bunny_malloc(sizeof(*eff->sample) * duration * 44100)) == NULL)
+  if ((eff->sample = (int16_t*)bunny_malloc(sizeof(*eff->sample) * len)) == NULL)
     goto FailEffect;
+  if (eff->effect->loadFromSamples(eff->sample, len, 1, sample_per_second) == false)
+    goto FailSample;
+  if ((eff->sound = new (std::nothrow) sf::Sound) == NULL)
+    goto FailSample;
 
   eff->file = bunny_strdup("");
   eff->volume = 50;
@@ -31,9 +37,9 @@ t_bunny_effect		*bunny_new_effect(double		duration)
   eff->pause = false;
 
   eff->sound_manager = NULL;
-  eff->sample_per_second = SAMPLE_PER_SECONDS;
+  eff->sample_per_second = sample_per_second;
   eff->duration = duration;
-  eff->sound.setBuffer(*eff->effect);
+  eff->sound->setBuffer(*eff->effect);
   eff->type = EFFECT;
 
   eff->res_id = 0;
@@ -41,6 +47,8 @@ t_bunny_effect		*bunny_new_effect(double		duration)
   scream_log_if(PATTERN, "ressource,sound", duration, (void*)NULL);
   return ((t_bunny_effect*)eff);
 
+ FailSample:
+  bunny_free(eff->sample);
  FailEffect:
   delete eff->effect;
  FailStruct:
