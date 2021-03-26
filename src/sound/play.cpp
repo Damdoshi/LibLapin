@@ -24,7 +24,7 @@ void			bunny_sound_play(t_bunny_sound		*sound)
   if (*type == MUSIC)
     ((struct bunny_music*)sound)->music.play();
   else
-    ((struct bunny_effect*)sound)->sound.play();
+    ((struct bunny_effect*)sound)->sound->play();
   scream_log_if("%p", "ressource,sound", sound);
 }
 

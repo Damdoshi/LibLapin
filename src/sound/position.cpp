@@ -19,7 +19,7 @@ void			bunny_sound_position(t_bunny_sound		*sound,
   if (*type == MUSIC)
     ((struct bunny_music*)sound)->music.setPosition(x, y, z);
   else
-    ((struct bunny_effect*)sound)->sound.setPosition(x, y, z);
+    ((struct bunny_effect*)sound)->sound->setPosition(x, y, z);
   scream_log_if("%p sound, %f x, %f y, %f z", "sound", sound, x, y, z);
 }
 

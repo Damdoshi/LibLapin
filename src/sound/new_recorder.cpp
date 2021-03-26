@@ -5,18 +5,23 @@
 
 #include		"lapin_private.h"
 
+#define			PATTERN		"%s, %u -> %p"
+
 t_bunny_recorder	*bunny_new_recorder(const char			*dev,
 					    unsigned int		sample_rate)
 {
   struct bunny_recorder	*rec;
 
-  if ((rec = bunny_malloc(sizeof(*rec))) == NULL)
+  if ((rec = new (std::nothrow) struct bunny_recorder) == NULL)
     return (NULL);
+  memset(rec, 0, sizeof(*rec));
   if ((rec->device = bunny_strdup(dev)) == NULL)
     goto Delete;
   if ((rec->recorder = new (std::nothrow) sf::SoundBufferRecorder) == NULL)
     goto FailString;
-  if ((eff->sound = new (std::nothrow) sf::Sound) == NULL)
+  if (rec->recorder->setDevice(std::string(dev)) == false)
+    goto FailRecorder;
+  if ((rec->sound = new (std::nothrow) sf::Sound) == NULL)
     goto FailRecorder;
 
   rec->file = bunny_strdup("");
@@ -38,7 +43,7 @@ t_bunny_recorder	*bunny_new_recorder(const char			*dev,
 
   rec->res_id = 0;
 
-  scream_log_if(PATTERN, "ressource,sound", duration, (void*)NULL);
+  scream_log_if(PATTERN, "ressource,sound", dev, sample_rate, (void*)NULL);
   return ((t_bunny_recorder*)rec);
 
  FailRecorder:

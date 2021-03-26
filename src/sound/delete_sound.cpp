@@ -24,7 +24,19 @@ void			_bunny_delete_sound(t_bunny_sound		*sound)
 	}
       if (mus->sound_manager)
 	_bunny_sound_manager_remove((t_bunny_sound_manager*)mus->sound_manager, sound);
-      delete ((struct bunny_music*)sound);
+      delete mus;
+    }
+  else if (*type == RECORDER)
+    {
+      struct bunny_recorder *rec = (struct bunny_recorder*)sound;
+
+      if (rec->device)
+	bunny_free(rec->device);
+      if (rec->sample)
+	bunny_free(rec->sample);
+      delete rec->recorder;
+      delete rec->sound;
+      delete rec;
     }
   else
     {
@@ -42,7 +54,7 @@ void			_bunny_delete_sound(t_bunny_sound		*sound)
 	  RessourceManager.TryRemove(ResManager::BUNNY_SAMPLE, snd->res_id, snd);
 	  RessourceManager.TryRemove(ResManager::SF_SOUNDBUFFER, snd->res_id, snd);
 	}
-      delete ((struct bunny_effect*)sound);
+      delete snd;
     }
   scream_log_if("%p", "ressource,sound", sound);
 }

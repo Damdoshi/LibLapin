@@ -16,7 +16,8 @@
 enum				_music_or_sound
   {
     MUSIC,
-    EFFECT
+    EFFECT,
+    RECORDER
   };
 
 struct				bunny_sound
@@ -72,7 +73,7 @@ struct				bunny_effect
   int16_t *			sample;
   size_t			res_id;
   sf::SoundBuffer		*effect;
-  sf::Sound			sound;
+  sf::Sound			*sound;
   void				*sound_manager;
 };
 
@@ -97,6 +98,32 @@ struct				bunny_sound_manager
     std::map<t_bunny_sound*, t_bunny_managed_sound>,
     BST_LAST_SOUND_TYPE
     >				sounds;
+};
+
+
+struct				bunny_recorder
+{
+  size_t			type;
+  char				*file;
+  double			volume;
+  double			pitch;
+  bool				loop;
+  double			position[3];
+  double			attenuation;
+  bool				playing;
+  bool				pause;
+
+  size_t			sample_per_second;
+  double			duration;
+  int16_t *			sample;
+  size_t			res_id;
+  sf::SoundBuffer		*effect;
+  sf::Sound			*sound;
+  void				*sound_manager;
+
+  bool				recording;
+  char				*device;
+  sf::SoundBufferRecorder	*recorder;
 };
 
 # pragma			pack()

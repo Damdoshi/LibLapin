@@ -15,5 +15,5 @@ void			bunny_sound_attenuation(t_bunny_sound		*sound,
   if (*type == MUSIC)
     ((struct bunny_music*)sound)->music.setAttenuation(att);
   else
-    ((struct bunny_effect*)sound)->sound.setAttenuation(att);
+    ((struct bunny_effect*)sound)->sound->setAttenuation(att);
 }

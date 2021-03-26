@@ -5,7 +5,7 @@
 
 #include			"lapin_private.h"
 
-const char			*bunny_default_device(void)
+const char			*bunny_default_record_device(void)
 {
   static char			buf[512];
 

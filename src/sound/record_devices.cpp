@@ -12,7 +12,7 @@ const char			**bunny_record_devices(void)
 
   for (int i = 0; i < NBRCELL(tab); ++i)
     tab[i] = &s[i][0];
-  auto				&dev = sf::SoundBufferRecorder::getAvailableDevices();
+  auto const			&dev = sf::SoundBufferRecorder::getAvailableDevices();
   int				i;
 
   i = 0;
@@ -21,5 +21,6 @@ const char			**bunny_record_devices(void)
       strncpy(&s[i][0], it->c_str(), NBRCELL(s[i]));
       i = i + 1;
     }
-  return (&tab[0]);
+  tab[i] = NULL;
+  return ((const char**)&tab[0]);
 }

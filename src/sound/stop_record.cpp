@@ -8,6 +8,7 @@
 void			bunny_stop_record(t_bunny_recorder	*recorder)
 {
   struct bunny_recorder	*rec = (struct bunny_recorder*)recorder;
+  int			len;
 
   if (rec->recording == false)
     return ;
@@ -19,8 +20,9 @@ void			bunny_stop_record(t_bunny_recorder	*recorder)
   if (rec->sample != NULL)
     {
       bunny_free(rec->sample);
-      res->sample = NULL;
+      rec->sample = NULL;
     }
+  rec->duration = (double)len / rec->sample_per_second;
   if ((rec->sample = (int16_t*)bunny_malloc(sizeof(*rec->sample) * len)) == NULL)
     return ;
   memcpy(rec->sample, rec->effect->getSamples(), len * sizeof(*rec->sample));
