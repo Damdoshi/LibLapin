@@ -54,6 +54,8 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
       len = eff->effect->getSampleCount();
       if ((eff->sample = (int16_t*)bunny_malloc(sizeof(*eff->sample) * len)) == NULL)
 	goto FailEffect;
+      if ((eff->sound = new (std::nothrow) sf::Sound) == NULL)
+	goto FailSample;
       memcpy(eff->sample, eff->effect->getSamples(), len * sizeof(*eff->sample));
     }
   else
@@ -87,6 +89,8 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
   scream_log_if(PATTERN, "ressource,sound", file, eff);
   return ((t_bunny_effect*)eff);
 
+ FailSample:
+  delete eff->sound;
  FailEffect:
   delete eff->effect;
  FailStruct:
