@@ -464,7 +464,7 @@ void				bunny_set_loop_main_function(t_bunny_loop	lop);
 ** \return A value returned by any callback, which cannot be GO_ON.
 */
 t_bunny_response		bunny_loop(t_bunny_window			*win,
-					   uint8_t				freq,
+					   unsigned int				freq,
 					   void					*dat);
 
 /*!
@@ -490,7 +490,7 @@ t_bunny_response		bunny_loop(t_bunny_window			*win,
 */
 t_bunny_response		bunny_loop_mw(t_bunny_window			**win,
 					      size_t				nwin,
-					      uint8_t				freq,
+					      unsigned int			freq,
 					      void				*data);
 
 /*!

@@ -17,6 +17,6 @@ bool			bunny_sound_is_playing(const t_bunny_sound	*sound)
     }
   struct bunny_effect *snd = (struct bunny_effect*)sound;
 
-  return (snd->playing = snd->sound.getStatus() == sf::SoundSource::Playing);
+  return (snd->playing = snd->sound->getStatus() == sf::SoundSource::Playing);
 }
 

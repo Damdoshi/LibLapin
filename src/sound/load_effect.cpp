@@ -54,10 +54,16 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
       len = eff->effect->getSampleCount();
       if ((eff->sample = (int16_t*)bunny_malloc(sizeof(*eff->sample) * len)) == NULL)
 	goto FailEffect;
+      if ((eff->sound = new (std::nothrow) sf::Sound) == NULL)
+	goto FailSample;
       memcpy(eff->sample, eff->effect->getSamples(), len * sizeof(*eff->sample));
     }
   else
-    eff->sample = (int16_t*)RessourceManager.TryGet(ResManager::BUNNY_SAMPLE, hash);
+    {
+      if ((eff->sound = new (std::nothrow) sf::Sound) == NULL)
+	goto FailStruct;
+      eff->sample = (int16_t*)RessourceManager.TryGet(ResManager::BUNNY_SAMPLE, hash);
+    }
 
   if (RessourceManager.disable_manager == false)
     {
@@ -81,12 +87,14 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
 
   eff->sample_per_second = eff->effect->getSampleRate();
   eff->duration = (double)eff->effect->getSampleCount() / eff->sample_per_second;
-  eff->sound.setBuffer(*eff->effect);
+  eff->sound->setBuffer(*eff->effect);
   eff->type = EFFECT;
 
   scream_log_if(PATTERN, "ressource,sound", file, eff);
   return ((t_bunny_effect*)eff);
 
+ FailSample:
+  bunny_free(eff->sample);
  FailEffect:
   delete eff->effect;
  FailStruct:

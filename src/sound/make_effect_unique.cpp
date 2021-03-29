@@ -38,7 +38,7 @@ bool			bunny_make_effect_unique(t_bunny_effect	*_eff)
 
   eff->sample = sample;
   eff->effect = snd;
-  eff->sound.setBuffer(*eff->effect);
+  eff->sound->setBuffer(*eff->effect);
   scream_log_if(PATTERN, "sound", _eff, "true");
   return (true);
 }
