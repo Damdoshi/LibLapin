@@ -59,7 +59,11 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
       memcpy(eff->sample, eff->effect->getSamples(), len * sizeof(*eff->sample));
     }
   else
-    eff->sample = (int16_t*)RessourceManager.TryGet(ResManager::BUNNY_SAMPLE, hash);
+    {
+      if ((eff->sound = new (std::nothrow) sf::Sound) == NULL)
+	goto FailStruct;
+      eff->sample = (int16_t*)RessourceManager.TryGet(ResManager::BUNNY_SAMPLE, hash);
+    }
 
   if (RessourceManager.disable_manager == false)
     {
@@ -90,7 +94,7 @@ t_bunny_effect		*bunny_load_effect(const char		*file)
   return ((t_bunny_effect*)eff);
 
  FailSample:
-  delete eff->sound;
+  bunny_free(eff->sample);
  FailEffect:
   delete eff->effect;
  FailStruct:
