@@ -202,3 +202,11 @@ int			bunny_which_line(const char		*str,
   return (whichline(str, index));
 }
 
+bool			bunny_read_value(const char		*code,
+					 ssize_t		*index,
+					 t_bunny_configuration	*node,
+					 const char		*end_token)
+{
+  return (readvalue(code, *i, *(SmallConf*)node, end_token))
+}
+

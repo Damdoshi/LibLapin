@@ -274,7 +274,9 @@ bool			readinteger(const char			*code,
 	}
       return (true);
     }
-  if (code[i] == 'u' || code[i] == 'x')
+  if (strncmp(&code[i], "0c", 2) == 0)
+    d = strtol(&code[++i], &end, 3);
+  else if (code[i] == 'u' || code[i] == 'x')
     d = strtol(&code[++i], &end, 16);
   else
     d = strtol(&code[i], &end, 0);

@@ -182,6 +182,11 @@ bool			bunny_read_rawstring(const char		*str,
 					     size_t		out_len,
 					     char		*end_token);
 
+bool			bunny_read_value(const char		*code,
+					 ssize_t		*index,
+					 t_bunny_configuration	*node,
+					 const char		*end_token);
+
 /*!
 ** Return on which line str[index] is.
 ** \param str The string to test.
