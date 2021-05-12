@@ -207,6 +207,6 @@ bool			bunny_read_value(const char		*code,
 					 t_bunny_configuration	*node,
 					 const char		*end_token)
 {
-  return (readvalue(code, *i, *(SmallConf*)node, end_token))
+  return (readvalue(code, *index, *(SmallConf*)node, end_token))
 }
 
