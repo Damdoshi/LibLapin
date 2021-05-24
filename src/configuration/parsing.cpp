@@ -261,7 +261,9 @@ bool			readinteger(const char			*code,
 				    int				&d)
 {
   char			*end;
+  int			moved;
 
+  moved = 0;
   if (strncmp(&code[i], "0b", 2) == 0)
     {
       d = 0;
@@ -275,13 +277,22 @@ bool			readinteger(const char			*code,
       return (true);
     }
   if (strncmp(&code[i], "0c", 2) == 0)
-    d = strtol(&code[++i], &end, 3);
+    {
+      i += (moved = 2);
+      d = strtol(&code[i], &end, 3);
+    }
   else if (code[i] == 'u' || code[i] == 'x')
-    d = strtol(&code[++i], &end, 16);
+    {
+      i += (moved = 1);
+      d = strtol(&code[i], &end, 16);
+    }
   else
     d = strtol(&code[i], &end, 0);
   if (end == &code[i])
-    return (false);
+    {
+      i -= moved;
+      return (false);
+    }
   i += end - &code[i];
   return (true);
 }
