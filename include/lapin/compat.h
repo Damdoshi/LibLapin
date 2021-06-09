@@ -26,6 +26,7 @@
 # endif
 # include			"compat/ini.h"
 
+# define			SAMPLE_PER_SECONDS		44100
 # define			LAST_BUNNY_JOYSTICK		gl_maximum_joystick
 
 # define			bunny_get_screen_size()		\
