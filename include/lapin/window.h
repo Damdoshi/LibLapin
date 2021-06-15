@@ -181,4 +181,8 @@ void				bunny_resize_window(t_bunny_window		*win,
 void				bunny_vertical_sync(t_bunny_window		*win,
 						    bool			enabled);
 
+struct s_bunny_pixelarray;
+void				bunny_set_window_icon(t_bunny_window		*win,
+						      struct s_bunny_pixelarray	*px);
+
 #endif	/*			__LAPIN_WINDOW_H__		*/
