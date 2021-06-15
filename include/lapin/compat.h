@@ -81,6 +81,16 @@ int				bunny_dprintf(int		fd,
 void				*bunny_pool_getv(t_bunny_pool		*pol,
 						 size_t			*id);
 
+
+/*!
+** Set a minimum offset between the previous value and the new one to trigger
+** the joystick axis response.
+** \param axis The axis concerne by the offset
+** \param offset The offset [0; +100]
+*/
+void				bunny_set_joy_axis_minimum_offset(t_bunny_axis	axis,
+								  float		offset);
+
 /*!
 ** Signal that the sent element is free again.
 ** Pay attention: its fast free mechanism have a cost: it changes the id

@@ -267,11 +267,10 @@ void				bunny_set_joy_axis_response(t_bunny_joy_axis	axis);
 /*!
 ** Set a minimum offset between the previous value and the new one to trigger
 ** the joystick axis response.
-** \param axis The axis concerne by the offset
 ** \param offset The offset [0; +100]
 */
-void				bunny_set_joy_axis_minimum_offset(t_bunny_axis	axis,
-								  float		offset);
+void				bunny_set_joystick_threshold(t_bunny_window	*win,
+							     float		offset);
 
 /*!
 ** Get an array of array of axis. The first dimension is the joystick, the second
