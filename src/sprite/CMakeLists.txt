@@ -1,0 +1,20 @@
+list(APPEND LAPIN_SRC
+${CMAKE_CURRENT_LIST_DIR}/animate.cpp
+${CMAKE_CURRENT_LIST_DIR}/collide.cpp
+${CMAKE_CURRENT_LIST_DIR}/delete_closet.cpp
+${CMAKE_CURRENT_LIST_DIR}/delete_wardrobe.cpp
+${CMAKE_CURRENT_LIST_DIR}/duplicate_sprite.cpp
+${CMAKE_CURRENT_LIST_DIR}/fix_single_picture_clothe.cpp
+${CMAKE_CURRENT_LIST_DIR}/get_animation.cpp
+${CMAKE_CURRENT_LIST_DIR}/get_collision.cpp
+${CMAKE_CURRENT_LIST_DIR}/is_still.cpp
+${CMAKE_CURRENT_LIST_DIR}/load_closet.cpp
+${CMAKE_CURRENT_LIST_DIR}/load_dressed_sprite.cpp
+${CMAKE_CURRENT_LIST_DIR}/load_sprite.cpp
+${CMAKE_CURRENT_LIST_DIR}/render_dressed_sprite.cpp
+${CMAKE_CURRENT_LIST_DIR}/set_animation.cpp
+${CMAKE_CURRENT_LIST_DIR}/set_sprite_attribute.cpp
+${CMAKE_CURRENT_LIST_DIR}/shift_animation.cpp
+${CMAKE_CURRENT_LIST_DIR}/stop_repeat.cpp
+${CMAKE_CURRENT_LIST_DIR}/wear.cpp
+)

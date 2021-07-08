@@ -42,5 +42,5 @@ int			main(void)
     (cnf, FLM_LOAD_FIELD | FLM_LOAD_ARRAY | FLM_LOAD_HASHMAP | FLM_KEEP_CONFIGURATION, load, (void***)&data, "Root");
   bunny_save_configuration(BC_DABSIC, "/dev/stdout", cnf);
   bunny_delete_configuration(cnf);
-  return (EXIT_FAILURE);
+  return (EXIT_SUCCESS);
 }

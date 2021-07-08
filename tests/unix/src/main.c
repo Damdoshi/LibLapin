@@ -25,9 +25,9 @@ static void		test(char		**env)
   char			buffer[4096];
   size_t		len;
 
-  subproc.stdout = 1;
+  subproc._stdout = 1;
   bunny_popen(&subproc, env, 3, "/bin/ls", "-l", "-a");
-  len = read(subproc.stdout, &buffer[0], sizeof(buffer) - 1);
+  len = read(subproc._stdout, &buffer[0], sizeof(buffer) - 1);
   buffer[len] = '\0';
   printf("Receive:\n%sEnd.\n", &buffer[0]);
   bunny_pclose(&subproc, 2);

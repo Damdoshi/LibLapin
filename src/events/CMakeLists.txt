@@ -1,0 +1,26 @@
+list(APPEND LAPIN_SRC
+${CMAKE_CURRENT_LIST_DIR}/event_convert.cpp
+${CMAKE_CURRENT_LIST_DIR}/get_context.cpp
+${CMAKE_CURRENT_LIST_DIR}/get_delay.cpp
+${CMAKE_CURRENT_LIST_DIR}/get_frequency.cpp
+${CMAKE_CURRENT_LIST_DIR}/get_joy_axis.cpp
+${CMAKE_CURRENT_LIST_DIR}/get_joy_button.cpp
+${CMAKE_CURRENT_LIST_DIR}/get_joy_info.cpp
+${CMAKE_CURRENT_LIST_DIR}/get_keyboard.cpp
+${CMAKE_CURRENT_LIST_DIR}/get_mouse_button.cpp
+${CMAKE_CURRENT_LIST_DIR}/get_mouse_position.cpp
+${CMAKE_CURRENT_LIST_DIR}/get_window.cpp
+${CMAKE_CURRENT_LIST_DIR}/globals.cpp
+${CMAKE_CURRENT_LIST_DIR}/loop.cpp
+${CMAKE_CURRENT_LIST_DIR}/loop_mw.cpp
+${CMAKE_CURRENT_LIST_DIR}/network_event.cpp
+${CMAKE_CURRENT_LIST_DIR}/set_async_computation.cpp
+${CMAKE_CURRENT_LIST_DIR}/set_context.cpp
+${CMAKE_CURRENT_LIST_DIR}/set_display_function.cpp
+${CMAKE_CURRENT_LIST_DIR}/set_event_response.cpp
+${CMAKE_CURRENT_LIST_DIR}/set_joy_axis_minimum_offset.cpp
+${CMAKE_CURRENT_LIST_DIR}/set_loop_main_function.cpp
+${CMAKE_CURRENT_LIST_DIR}/set_response.cpp
+${CMAKE_CURRENT_LIST_DIR}/set_to_scheduler.cpp
+${CMAKE_CURRENT_LIST_DIR}/update_joysticks.cpp
+)
