@@ -261,6 +261,7 @@ bool			readinteger(const char			*code,
 				    int				&d)
 {
   char			*end;
+  int			j = i;
   int			moved;
 
   moved = 0;
