@@ -20,7 +20,7 @@ bool		bunny_configuration_resolve(t_bunny_configuration	*par)
 
   if (cnf.expression != NULL)
     {
-      if (expr_compute(cnf, NULL, false, root, NULL, parent, NULL) == false)
+      if (expr_compute(cnf, NULL, false, root, &cnf, parent, NULL) == false)
 	return (false);
       if (cnf.expression->val.last_type == SmallConf::INTEGER)
 	{

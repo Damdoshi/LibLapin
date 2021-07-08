@@ -267,13 +267,16 @@ bool			readinteger(const char			*code,
   if (strncmp(&code[i], "0b", 2) == 0)
     {
       d = 0;
-      i += 2;
-      while (code[i] == '1' || code[i] == '0')
+      j += 2;
+      while (code[j] == '1' || code[j] == '0')
 	{
 	  d <<= 1;
-	  d |= (code[i] == '1') ? 1 : 0;
-	  i += 1;
+	  d |= (code[j] == '1') ? 1 : 0;
+	  j += 1;
 	}
+      if (j == i + 2)
+	return (false);
+      i = j;
       return (true);
     }
   if (strncmp(&code[i], "0c", 2) == 0)
