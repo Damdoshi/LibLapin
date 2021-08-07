@@ -85,6 +85,9 @@ bool				checktext(const char				*str,
 					  ssize_t				&index,
 					  const std::string			*token,
 					  size_t				len = (size_t)-1);
+bool				checktext(const char				*str,
+					  ssize_t				&index,
+					  const char				*token);
 void				skipspace(const char				*str,
 					  ssize_t				&i);
 void				skipspace_inline(const char			*str,
