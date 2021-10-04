@@ -124,7 +124,7 @@ bool			bunny_read_cchar(const char		*code,
 
 	  readinteger(code, j, nbr);
 	  *out = nbr & 0xFF;
-	  break ;
+	  goto End;
 	}
       case 'x':
       case '0':
@@ -133,16 +133,15 @@ bool			bunny_read_cchar(const char		*code,
 
 	  readinteger(code, j, nbr);
 	  *out = nbr & 0xFF;
-	  break ;
+	  goto End;
 	}
       default:
 	*out = code[j];
       }
   else
-    {
-      *out = code[j];
-      j += 1;
-    }
+    *out = code[j];
+  j += 1;
+ End:
   if (readtext(code, j, "'") == false)
     return (false);
   *index = j;
