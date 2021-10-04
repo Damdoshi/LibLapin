@@ -139,8 +139,10 @@ bool			bunny_read_cchar(const char		*code,
 	*out = code[j];
       }
   else
-    *out = code[j];
-  j += 1;
+    {
+      *out = code[j];
+      j += 1;
+    }
   if (readtext(code, j, "'") == false)
     return (false);
   *index = j;
