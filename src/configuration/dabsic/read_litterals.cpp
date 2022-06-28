@@ -9,7 +9,8 @@
 Decision		dabsic_read_litterals(const char		*code,
 					      ssize_t			&i,
 					      SmallConf			&conf,
-					      SmallConf			&root)
+					      SmallConf			&root,
+					      bool			shrink)
 {
 
   (void)root;
@@ -28,7 +29,8 @@ Decision		dabsic_read_litterals(const char		*code,
       dabsic_read_separator(code, i);
     }
   while (readtext(code, i, ","));
-  shrink_single_element_array(conf);
+  if (shrink)
+    shrink_single_element_array(conf);
   dabsic_read_separator(code, i);
   return (BD_OK);
 }

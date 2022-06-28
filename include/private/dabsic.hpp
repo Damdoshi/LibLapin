@@ -68,7 +68,8 @@ Decision		dabsic_read_field_value(const char		*code,
 Decision		dabsic_read_litterals(const char		*code,
 					      ssize_t			&i,
 					      SmallConf			&conf,
-					      SmallConf			&root);
+					      SmallConf			&root,
+					      bool			shrink = true);
 SmallConf		*dabsic_field_name(const char			*code,
 					   ssize_t			&i,
 					   SmallConf			&conf,

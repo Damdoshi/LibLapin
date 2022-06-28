@@ -6,6 +6,12 @@
 #include		<string.h>
 #include		"lapin_private.h"
 
+/*
+** = [Text    texte    ]
+** = [Text($)    texte   $(expression)  texte       ]
+** = [Text($,EOF)    texte   $(expression)  texte       EOF]
+*/
+
 Decision		dabsic_read_text(const char		*code,
 					 ssize_t		&i,
 					 SmallConf		&conf,
@@ -86,7 +92,7 @@ Decision		dabsic_read_text(const char		*code,
 	       );
 	  // On enregistre ce qu'on a deja parcouru
 	  conf[index++].SetString(std::string(&code[l], i - l - 1 - strlen(tok)));
-	  if (dabsic_read_litterals(code, i, conf[index++], root) == BD_ERROR)
+	  if (dabsic_read_litterals(code, i, conf[index++], root, true) == BD_ERROR) // true: shrink
 	    return (BD_ERROR);
 	  if (readtext(code, i, ")") == false)
 	    scream_error_if
