@@ -12,7 +12,7 @@
 
 #define			PATTERN		"%p -> %s"
 
-bool			bunny_hardware_write(const t_bunny_hardware	*hdr)
+bool			bunny_hardware_write(const t_bunny_vm110n	*hdr)
 {
   hbs::PVM110N		*hard = (hbs::PVM110N*)hdr->_private;
 

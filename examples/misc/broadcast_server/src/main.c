@@ -56,6 +56,7 @@ int			main(int		argc,
 	  fd_tab[com->disconnected.fd] = -1;
 	  break ;
 	case BCT_MESSAGE:
+	  fprintf(stdout, "%s\n", com->message.buffer);
 	  fprintf(stdout, "Broadcasting for %d. Size is %u\n", com->message.fd, com->message.size);
 	  for (i = 0; i < 1024; ++i)
 	    if (fd_tab[i] != -1 && fd_tab[i] != com->message.fd)

@@ -6,7 +6,7 @@
 #include		"PVM110N.hpp"
 #include		"lapin_private.h"
 
-void			bunny_delete_hardware(t_bunny_hardware		*hdr)
+void			bunny_delete_hardware(t_bunny_vm110n		*hdr)
 {
   delete (hbs::PVM110N*)hdr->_private;
   bunny_free(hdr);

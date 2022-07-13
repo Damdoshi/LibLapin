@@ -20,7 +20,7 @@ struct				bunny_hardware
 
 #define				PATTERN		"%zu id -> %p"
 
-t_bunny_hardware		*bunny_new_hardware(size_t		id)
+t_bunny_vm110n		*bunny_new_hardware(size_t		id)
 {
   struct bunny_hardware		*ptr;
 
@@ -42,6 +42,6 @@ t_bunny_hardware		*bunny_new_hardware(size_t		id)
     }
   ptr->id = id;
   scream_log_if(PATTERN, "hardware", id, ptr);
-  return ((t_bunny_hardware*)ptr);
+  return ((t_bunny_vm110n*)ptr);
 }
 

@@ -18,7 +18,7 @@ struct			bunny_hardware
 
 #define			PATTERN		"%p -> %s"
 
-bool			bunny_hardware_read(t_bunny_hardware		*hdr)
+bool			bunny_hardware_read(t_bunny_vm110n		*hdr)
 {
   struct bunny_hardware	*hard = (struct bunny_hardware*)hdr;
   hbs::PVM110N		*ptr = (hbs::PVM110N*)hdr->_private;
