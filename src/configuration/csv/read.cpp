@@ -30,7 +30,7 @@ Decision		csv_read(const char				*code,
 		   "ressource,configuration,syntax",
 		   code, &conf, (void*)NULL, y, x);
 	    }
-	  else if (readvalue(code, i, conf[y][x], ";\n") == false)
+	  else if (readvalue(code, i, conf[y][x], ";\n]") == false)
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
 	       "%s code, %p config -> %p "
