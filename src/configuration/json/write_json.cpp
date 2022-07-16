@@ -40,7 +40,7 @@ static void		restore_array(std::stringstream		&ss,
       else if (conf[j].expression)
 	restore_expression(ss, *conf[j].expression, true, true);
       else if (conf[j].have_value)
-	writevalue(ss, conf[j], true);
+	writevalue(ss, conf[j], true, true);
       if (j + 1 < conf.Size())
 	ss << ",";
       ss << std::endl;

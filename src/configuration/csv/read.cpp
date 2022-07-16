@@ -37,6 +37,8 @@ Decision		csv_read(const char				*code,
 	       "(A correct value was expected on line %d, column %d)",
 	       "ressource,configuration,syntax",
 	       code, &conf, (void*)NULL, y, x);
+	  if (conf[y][x].last_type == SmallConf::RAWSTRING)
+	    conf[y][x].last_type = SmallConf::STRING;
 	  conf[y].construct = SmallConf::ARRAY;
 	  skipspace_inline(code, i);
 	  if (readtext(code, i, "\n"))

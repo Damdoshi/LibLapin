@@ -139,7 +139,8 @@ bool				read_function(const char			*code,
 					      SmallConf				&config);
 void				writevalue(std::ostream				&ss,
 					   const SmallConf			&cnf,
-					   bool					jsonhex = false);
+					   bool					jsonhex = false,
+					   bool					never_raw = false);
 
 
 Decision			_bunny_handle_directive(const char		*code,

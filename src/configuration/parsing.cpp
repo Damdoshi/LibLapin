@@ -470,7 +470,7 @@ void			writestring(std::ostream		&ss,
       case '\t': ss << "\\t"; break;
       case '\\': ss << "\\\\"; break;
       case '\r': ss << "\\r"; break;
-      case '"':  ss << "\""; break;
+      case '"':  ss << "\\\""; break;
       case '\'': ss << "'"; break;
       default:
 	if (str[i] >= ' ' && str[i] <= '~')
@@ -653,13 +653,14 @@ bool			readvalue(const char			*code,
 
 void			writevalue(std::ostream			&ss,
 				   const SmallConf		&cnf,
-				   bool				jsonehx)
+				   bool				jsonehx,
+				   bool				never_raw)
 {
   if (cnf.last_type == SmallConf::DOUBLE)
     ss << cnf.converted;
   else if (cnf.last_type == SmallConf::INTEGER)
     ss << cnf.converted_2;
-  else if (cnf.last_type == SmallConf::STRING)
+  else if (cnf.last_type == SmallConf::STRING || never_raw)
     writestring(ss, cnf.original_value, jsonehx);
   else
     ss << cnf.original_value;
