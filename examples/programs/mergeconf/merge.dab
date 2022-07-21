@@ -1,0 +1,386 @@
+Language="FR"
+
+'''''''''''''''''''''''''''''
+'Configuration de DocBuilder'
+'''''''''''''''''''''''''''''
+
+Translate(string a):string = [Function
+  If [a][[].Language] != "" Then
+    Return [a][[].Language]
+  Return a.FR
+]
+
+'Fichier CSS utilisé pour la mise en page. Si non spécifié, c'est /etc/technocore/default.css
+Style="./res/efrits.css"
+Font="./res/futura.woff2"
+EOL="<br />"
+SOL="@ALINEA@"
+
+'Le nom de l'école. OBLIGATOIRE.
+' Peut-être un noeud dont les enfants seraient nommés d'après les langages
+[Company
+  [Name
+    EN = "EFRITS"
+    FR = "EFRITS"
+  ]
+  [LegalName
+    EN = "EFRITS SAS"
+    FR = "EFRITS SAS"
+  ]
+
+  'Le logo de l'école. Un fichier PNG. OBLIGATOIRE.
+  Logo="./res/efrits.png"
+  'Le logo de l'école pour les pieds de page, en largeur.
+  SmallLogo="./res/efrits.png"
+  Mail = "contact@efrits.fr"
+
+  City = "Styx"
+  LegalCity = "Maisons-Alfort"
+
+  Address = [Text($,EOF)
+    42 Avenue du Boulevard des Rues
+    68666 $(_.City)
+    France
+  EOF]
+  LegalAddress = [Text($,EOF)
+    33 Rue Delaporte
+    94700 $(_.LegalCity)
+    France
+  EOF]
+  Code = "909 292 773"
+  Registrar = "R.C.S Créteil"
+  [Training
+    Code = "AAA BBB CCC"
+    Registrar = "DRIEETS Ile-de-France"
+  ]
+  Credentials = [Text($,EOF)
+    Entreprise immatriculée au $([].Company.Registrar) sous le numéro $([].Company.Code)
+    Centre de formation professionnel immatriculé sous le numéro $([].Company.Training.Code) auprès de la $([].Company.Training.Registrar)
+  EOF]
+]
+Language="EN"
+
+Type = "subject"
+
+[Document
+  Revision = "1.0"
+  LastRevision = "24/03/1989"
+  {Author
+    [
+      Name = "Jason Brillante"
+      Mail = "jason.brillante@efrits.fr"
+    ]
+  }
+]
+
+[Matter
+  FR = "Programmation graphique"
+  EN = "Graphic programming"
+  Code = "gfx"
+  Logo = "./res/matter_logo.png"
+  SmallLogo = "./res/small_matter_logo.png"
+  {Teacher
+    [
+      Name = "Le Laboratoire aux Lapins Noirs"
+      Mail = "lapinsnoirs@efrits.fr"
+    ]
+  }
+]
+
+[Activity
+  FR = "Raiden"
+  EN = "Raiden"
+  Code = "raiden"
+  Logo = "./res/activity_logo.png"
+  SmallLogo = "./res/small_activity_logo.png"
+  {Teacher
+    [
+      Name = "Jason Brillante"
+      Mail = "jason.brillante@efrits.fr"
+    ]
+  }
+]
+
+[FrontPage
+  [Message
+    FR = "Dieu du tonnerre et des éclairs"
+    EN = "God Of Thunder (And rock'n roll!)"
+  ]
+  [Description
+    FR = "La description"
+    EN = "The description"
+  ]
+]
+
+'Elements de configuration de Crawler représentant la valeur par défaut
+'pour tous les exercices
+[Norm
+  'Si ce bloc n'est pas défini, tout est autorisé sauf ce qui est interdit
+  [Authorized
+    Keyword = "if", "while", "for"
+    Function = "open", "close", "read", "write"
+  ]
+  'L'interdiction l'emporte sur l'autorisation
+  [Forbidden
+    Keyword = "goto", "auto"
+    Function = "printf"
+  ]
+]
+
+{Exercises
+  [
+    Type = "Delivery"
+    Critical = true
+    [Name
+      FR = "Livraison"
+      EN = "Delivery"
+    ]
+
+    [DeliveryTargetType
+      FR = "le dossier"
+      EN = "the repository"
+    ]
+    DeliveryTarget = "~/wrk/" # [].Matter.Code # "/" # [].Activity.Code # "/"
+    [DeliveryTargetSpace
+      FR = "dans votre espace personnel"
+      EN = "in your personnal space"
+    ]
+
+    'Ne changez pas cette ligne.
+    [TeamSize
+      _FR = [].TeamSize[0] == [].TeamSize[1] ? string([].TeamSize[0]) : string([].TeamSize[0]) # " à " # string([].TeamSize[1])
+      _EN = [].TeamSize[0] == [].TeamSize[1] ? string([].TeamSize[0]) # " people" : string([].TeamSize[0]) # " to " # string([].TeamSize[1]) # " people"
+      FR = [].TeamSize[0] == 1 && [].TeamSize[1] == 1 ? "seul" : "en équipe de " # FR
+      EN = [].TeamSize[0] == 1 && [].TeamSize[1] == 1 ? "alone" : "with a team of " # EN
+    ]
+
+    'Sera utilisé pour verifier la norme
+    Files = "!*.c" '! signifiera recursivement
+    Directory = "." 'Donc on a tous les fichiers .c à partir de la racine du dépot
+    [Norm
+      [Name 'On indique le nom de la norme, car celle-ci ne sera pas décrite dans le sujet faute de place
+        FR = "Norme EFRITS"
+        EN = "EFRITS standard style"
+      ]
+      'La description de la norme qui sera appliquée sur $Directory/$Files
+      @insert "norm.dab"
+    ]
+
+    [Document
+      ActivityType = "Exam"
+      [ActivityTypes
+        [Exam
+          FR = "De plus, il s'agit d'un examen. Vous n'avez donc **pas** le droit de communiquer avec vos camarades."
+          EN = "Also, this is an exam. You therefore have no right to communicate with your comrades."
+        ]
+        [Activity
+          FR = "Vous pouvez bien sur échanger avec vos camarades, néanmoins vous devez être l'auteur·e de votre travail. Utiliser le code d'un autre, c'est **tricher**. Et tricher annule **toutes** les médailles que vous auriez pu recevoir de cette activité. La véficiation de la triche est réalisée de la même manière quel la correction : de manière **automatique**. Prenez garde si vous pensez pouvoir passer au travers"
+          EN = "You can of course talk with your classmates, however you must be the author of your work. Using someone else's code is **cheating**. And cheating cancels **all** the medals you may have received from this activity. The verification of the cheat is carried out in the same way as the correction: **automatically**. Be careful if you think you can get through"
+        ]
+      ]
+      FR = [Text($,EOF)
+        $(SOL)Votre travail doit être rendu via $(_._.DeliveryTargetType[[].Language]) $(_._.DeliveryTarget) $(_._.DeliveryTargetSpace[[].Language]).
+
+        @ALERT[
+          L'évaluateur n'est pas capable de deviner où vous avez rendu. Si vous faites erreur et que le dossier que vous utiliser pour votre livraison est différent, vous ne serez **pas** évalué.
+        @ALERT]
+
+        $(SOL)Ce travail est à effectuer $(_._.TeamSize[[].Language]). $(_.ActivityTypes[_.ActivityType][[].Language]).
+
+        @@HLINE
+
+        $(SOL)Votre rendu doit respecter **strictement** l'ensemble des règles suivantes:
+
+        * Il ne doit contenir **aucun** fichier objet. (*.o)
+        * Il ne doit contenir **aucun** fichier tampon. (*~, #*#)
+        * Il ne doit pas contenir votre production finale.
+
+        @ALERT[
+          La présence d'un fichier interdit mettra immédiatement fin à votre évaluation.
+        @ALERT]
+
+        $(SOL)Votre programme doit respecter les Tables de la Norme dans leur **integralité**. Vous êtes invités à les observer depuis l'Infosphère.
+      EOF]
+      EN = [Text($,EOF)
+        Your work must be delivered through $(_._.DeliveryTargetType[[].Language]) $(_._.DeliveryTarget) $(_._.DeliveryTargetSpace[[].Language]).
+
+        @ALERT[
+          The evaluator cannot guess where you have delivered your work. If you do not deliver it precisly where it is requested, you will **not** be evaluated.
+        @ALERT]
+
+        This work must be done $(_._.TeamSize[[].Language]). $(_.ActivityTypes[_.ActivityType][[].Language]).
+
+        @@HLINE
+
+        $(SOL)Your delivery must **stricly** respect the following rules:
+
+        * It must not contains **any** object file. (*.o)
+        * It must not contains **any** buffer file. (*~, #*#)
+        * It must not contains your final production.
+
+        @ALERT[
+          The presence of a forbidden file will immediatly stop your evaluation.
+        @ALERT]
+
+        $(SOL)Your program must respect the Table Of Norm in their integrity. You are invited to observe them through the Infosphere.
+      EOF]
+    ]
+  ],
+
+  [
+    Type = "AuthorizedFunctions" 'C'est un bloc Norm limité à la vérification des fonctions, globalement
+    Critical = true 'On s'arrete...
+
+    'Sera utilisé pour verifier les fonctions
+    Files = "!*.c" '! signifiera recursivement
+    Directory = "." 'Donc on a tous les fichiers .c à partir de la racine du dépot
+    Compile = "gcc -Wextra -Wall -c @FILES@ -o @OFILES "
+    [Norm
+      [Authorized
+        Function = "open", "close", "read", "write"
+      ]
+      [Forbidden
+        Function = "printf"
+      ]
+    ]
+
+    [Document
+      FR = [Text($,EOF)
+        $(SOL)Nous avons fait le choix de vous interdire l'utilisation des fonctions integrés à votre langage de programmation ou à votre système d'exploitation, à l'exception de celle que nous vous spécifions explicitement. Ce choix est motivé pédagogique: nous allons vous amener à découvrir ces fonctionnalités en vous les faisant reproduire, de sorte à ce qu'en plus de leur maîtrise, vous en compreniez le fonctionnement.
+
+        @ALERT[
+          L'utilisation d'une fonction interdite est assimilée à de la triche. La triche provoque l'arrêt de l'évaluation et la perte des médailles que vous auriez pu acquérir lors de cette activité.
+        @ALERT]
+
+        $(SOL)Vous avez le droit d'utiliser les fonctions dont nous vous reconnaissons la maîtrise. Lors
+        des travaux de groupe, cette autorisation n'est donnée que si l'intégralité des équipiers
+        disposent de cette autorisation.
+
+        $(SOL)Pour cette activité, les fonctions auquel vous avez le droit sont les suivantes:
+
+        @@DEFINED_FUNCTIONS
+
+        $(SOL)Ci-dessous, la liste des fonctions dont nous vous reconnaissons le droit d'utilisation:
+
+        @@WON_FUNCTIONS
+      EOF]
+      EN = [Text($,EOF)
+      EOF]
+    ]
+  ],
+
+  [
+    Type = "Function"
+    Critical = false 'Indique si il faut arrêter la correction en cas de non réussite
+    [Name
+      FR = "Début"
+      EN = "Beginning"
+    ]
+
+    [Document
+      FR = [Text($,EOF)
+        ## Titre
+
+        Programme la fonction ci-dessous.
+
+        @ALERT[Fais bien attention au nom de celle-ci!@ALERT]
+
+        @CODE[
+          int bonjour(int c);
+        @CODE]
+      EOF]
+      EN = [Text($,EOF)
+      EOF]
+    ]
+
+    Directory = "." 'Si absent, par défaut, c'est .
+
+    'Peut utiliser le globbing.
+    Files = "bonjour.c" 'Les éléments à compiler
+    Product = "bonjour.o" 'L'élément produit par la compilation
+    Artefacts = "bonjour.bmp" 'Les éléments à ramasser, produit par l'execution du programme
+
+    UserLibrary = true 'Faut il charger la bibliothèque utilisateur?
+    Compile = "gcc -Wextra -Wall @FILES@ -o @PRODUCTS@ "
+    Condition = "first_program" 'Correction et documents ne sont disponible que si ces médailles sont ok
+
+    'Tout CCCrawler peut-être configuré ici. CCCrawler s'executes sur le tableau Files.
+    [Norm
+      'Si ce bloc n'est pas défini, tout est autorisé sauf ce qui est interdit
+      [Authorized
+        Keyword = "if", "while", "for"
+        Function = "open", "close", "read", "write"
+      ]
+      'L'autorisation l'emporte sur l'interdiction: elle est plus restrictive
+      [Forbidden
+        Keyword = "goto", "auto"
+        Function = "printf"
+      ]
+    ]
+
+    'Tout Evaluator peut-être configuré ici. Evaluator s'execute sur le tableau Files.
+    {Evaluation
+      [
+        Robot = "/opt/technocore/c/bonjour.so"
+        Timeout = 2
+
+        Evaluator = "evaluate_bonjour"
+        Function = "bonjour"
+        Test = "test_bonjour"
+
+        [Evaluation
+          Mandatory = true
+          Medals = "function", "condition"
+        ]
+        [FullEvaluation
+          Mandatory = true
+          Medals = "corner_case"
+        ]
+        [DefensiveProgramming
+          Mandatory = false
+          Medals = "defensive"
+        ]
+        [ReportError
+          Mandatory = true
+          Medals = "return_value"
+        ]
+        [UseErrno
+          Mandatory = false
+          Medals = "einval"
+        ]
+        [Test
+          Mandatory = true
+          Medals = "simple_check"
+        ]
+        [FullTest
+          Mandatory = true
+          Medals = "full_check"
+        ]
+        [DefensiveTesting
+          Mandatory = false
+          Medals = "stupid_check"
+        ]
+        [ErrorTesting
+          Mandatory = true
+          Medals = "good_check"
+        ]
+        [ErrnoTesting
+          Mandatory = true
+          Medals = "complete_check"
+        ]
+        MaximumPerfRatio = 2
+        MaximumRamRatio = 2
+        Complexity(int n) = n
+      ]
+    }
+  ]
+}
+
+CodeName = "PRG-GFX-RAIDEN"
+Login = "AdminEquipe", "Equipier", "Equipier"
+DeliveryDate = "30/03/2022 14:59:00"
+Token = "Bouzouk"
+
+TeamSize = 1, 1
+Medals = "procedure", "set_pixel"
+Functions = "strlen", "strcpy"

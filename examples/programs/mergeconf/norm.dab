@@ -1,0 +1,472 @@
+[*********************************************
+ ** Fichier de configuration de             **
+ **                CCCCRAWLER               **
+ ** Configurable                            **
+ ** C                                       **
+ ** Code                                    **
+ ** Crawler                                 **
+ **                                         **
+ *********************************************]
+
+[*********************************************
+ ** Note sur DABSIC:                        **
+ ** - Placer un ! juste après le crochet    **
+ **   ouvrant place le bloc entier en       **
+ **   commentaire.                          **
+ ** - Le guillemet sert a ouvrir un         **
+ **   commentaire sur une seule ligne.      **
+ ** - [] signifie "la racine".              **
+ ** - Il n'est pas néccessaire de faire des **
+ **   blocs de commentaire comme celui-là,  **
+ **   mais c'est plus stylé.                **
+ **                                         **
+ *********************************************]
+
+[Header
+  'Un ensemble de texte qui DOIT marquer le début de chaque fichier
+  'Si aucun en-tête n'est défini, Crawler ne pourra pas verifier le style.
+  Value = [Text($,EOF)
+/*
+** %FirstName %FamilyName %Nickname %Login <%Mail>
+** %ProjectName %Year
+*/
+EOF]
+  Points = 1
+]
+
+[FunctionPerFile
+  Value = 5 'Maximum amount of functions inside a single file
+  Points = 5 'How many error points are gonna be added if not respected
+]
+
+[FunctionMatchingPath 'Only if NonStaticFunctionPerFile.Value is 1
+  'If function is called name1_name2 (infix saved), then its file should be
+  'name1/name2.c or name1_name2.c
+  Value = true
+  Points = 5
+]
+
+[NonStaticFunctionPerFile
+  Value = 1 'Maximum amount of non static function inside a single file
+  Points = 5 'How many error points are gonna be added if not respected
+]
+
+[MaximumLineWidth
+  Value = 80
+  Points = 5
+]
+
+[MaximumFunctionLength
+  Value = 25
+  Points = 5
+]
+
+[MaximumFunctionParameter
+  Value = 4
+  Points = 2
+]
+
+[MaximumVariable
+  Value = 2 'Peut tout a fait etre zéro.
+  Points = 2
+]
+
+[NoGlobal
+  Value = true 'Il est interdit de declarer des variables globales
+  Points = 1
+]
+
+[AlwaysBraces
+  'N'est pas compatible avec AvoidBracesForSingleLine
+  Value = true 'Il faut toujours qu'il y ai des accolades
+  Points = 1
+]
+
+[AvoidBracesForSingleLine
+  Value = true 'Si le contenu d'un bloc de controle est d'une ligne, pas d'accolades
+  Points = 1
+]
+
+[MaximumScopeLength ' PAS FAIT ===========================
+  Value = 2 'Pas plus de deux lignes dans un scope, fonction comprise
+  Points = 1
+]
+
+[OnlyByReference
+  Value = 4 'Les paramètres faisant plus de Value octet DOIVENT etre des pointeurs
+  Points = 1
+]
+
+[LocalVariableInlineInitForbidden
+  Value = 1 'It is forbidden to write something like "int i = 42;"
+  Points = 1 'How many error points are gonna be added if not respected
+]
+
+[AllGlobalsAreConst
+  Value = true
+  Points = 1
+]
+
+[********************************
+ ** GNU:                       **
+ ** if ()                      **
+ **   {                        **
+ **     ...                    **
+ **   }                        **
+ ** ALLMAN:                    **
+ ** if ()                      **
+ ** {                          **
+ **   ...                      **
+ ** }                          **
+ ** KNR:                       **
+ ** if () {                    **
+ **   ...                      **
+ ** }                          **
+ ********************************]
+GNU_INDENT_STYLE = 0
+ALLMAN_INDENT_STYLE = 1
+KNR_INDENT_STYLE = 2
+
+IndentationStyle = GNU_INDENT_STYLE
+
+[IndentationSize
+  Value = 2 'Deux espaces (ou equivalent) pour un unique niveau d'indentation
+  Points = 1
+]
+
+'0: Tabulation est interdite
+'1: Les tabulations font 1 de taille
+'2: Les tabulations font 2 de taille
+'3: etc.
+IndentationToken = 1
+
+[FunctionVariableDefinitionAlignment
+  'Les noms d'attributs de struct, union, de variables et fonctions
+  'doivent être allignés sur la meme colonne localement
+  Value = true
+  Points = 1
+]
+
+[GlobalFunctionVariableDefinitionAlignment
+  'L'allignement défini par FunctionVariableDefinitionAlignment
+  'doit etre réalisé localement ET globalement
+  Value = true
+  Points = 1
+]
+
+[ParameterTypeAlignment
+  'Les types de paramètres de fonctions doivent etre aligné, et donc chacun sur une ligne
+  Value = true
+  Points = 1
+]
+
+[ParameterNameAlignment
+  'Les noms des paramètres de fonction doivent être aligné et donc chacun sur une ligne
+  Value = true
+  Points = 1
+]
+
+[GlobalParameterNameAlignment
+  'Les noms des paramètres doivent être alignés globalement
+  Value = true
+  Points = 1
+]
+
+[DeclarationStatementSeparator
+  Value = 1 'Il faut une ligne vide entre les variables et les instructions
+  Points = 1
+]
+
+[NoEmptyLineInFunction
+  'Il est interdit d'avoir une ligne vide dans le corps d'une fonction
+  '(Sauf celle explicitement autorisée de DeclarationStatementSeparator si défini)
+  Value = 1
+  Points = 1
+]
+
+[TrailingWhitespace
+  Value = 1 'Les espaces en fin de ligne sont interdits
+  Points = 1
+]
+
+[SingleInstructionPerLine
+  Value = 1 'Une seule instruction par ligne maximum
+  Points = 1
+]
+
+[********************************
+ ** STYLE DES SYMBOLES ET NOMS **
+ ********************************]
+
+MIXED_CASE = 0  'THIS_IS_IT
+SNAKE_CASE = 1  'this_is_it
+CAMEL_CASE = 2  'thisIsIt
+PASCAL_CASE = 3 'ThisIsIt
+
+[GlobalStyle
+  'Un style appliqué a TOUS les symboles, sauf ceux dont on défini apres un style propre
+  Value = _.SNAKE_CASE
+  Points = 1
+]
+
+[GlobalInfix
+  'Un infix appliqué a TOUS les symboles, sauf ceux dont on défini un infixe propre
+  Value = "tc_"
+  Position = "Prefix"
+  Points = 1
+]
+  
+[FunctionNameStyle
+  Value = _.SNAKE_CASE
+  Points = 1
+]
+  
+[FunctionNameInfix
+  Value = "cln_" 'The infix that is mandatory
+  Position = "Prefix" 'Or Suffix
+  Points = 1 'How many error points are gonna be added if not respected
+]
+
+[LocalVariableStyle
+  Value = _.SNAKE_CASE
+  Points = 1
+]
+
+[LocalVariableInfix
+  Value = "cln_" 'The infix that is mandatory
+  Position = "Prefix" 'Or Suffix
+  Points = 1 'How many error points are gonna be added if not respected
+]
+
+[GlobalVariableStyle
+  Value = _.SNAKE_CASE
+  Points = 1
+]
+
+[GlocalVariableInfix
+  Value = "cln_" 'The infix that is mandatory
+  Position = "Prefix" 'Or Suffix
+  Points = 1 'How many error points are gonna be added if not respected
+]
+
+[StructStyle
+  Value = _.SNAKE_CASE
+  Points = 1
+]
+
+[StructInfix
+  Value = "cln_" 'The infix that is mandatory
+  Position = "Prefix" 'Or Suffix
+  Points = 1 'How many error points are gonna be added if not respected
+]
+
+[EnumStyle
+  Value = _.SNAKE_CASE
+  Points = 1
+]
+
+[EnumInfix
+  Value = "cln_" 'The infix that is mandatory
+  Position = "Prefix" 'Or Suffix
+  Points = 1 'How many error points are gonna be added if not respected
+]
+
+[EnumConstantStyle
+  Value = _.MIXED_CASE
+  Points = 1
+]
+
+[EnumConstantInfix
+  Value = "cln_" 'The infix that is mandatory
+  Position = "Prefix" 'Or Suffix
+  Points = 1 'How many error points are gonna be added if not respected
+]
+
+[UnionStyle
+  Value = _.SNAKE_CASE
+  Points = 1
+]
+
+[UnionInfix
+  Value = "cln_" 'The infix that is mandatory
+  Position = "Prefix" 'Or Suffix
+  Points = 1 'How many error points are gonna be added if not respected
+]
+
+[AttributetStyle
+  Value = _.SNAKE_CASE
+  Points = 1
+]
+
+[AttributeInfix
+  Value = "cln_" 'The infix that is mandatory
+  Position = "Prefix" 'Or Suffix
+  Points = 1 'How many error points are gonna be added if not respected
+]
+
+[FunctionPointerAttributeStyle
+  Value = _.SNAKE_CASE
+  Points = 1
+]
+
+[FunctionPointerAttributeInfix
+  Value = "cln_" 'The infix that is mandatory
+  Position = "Prefix" 'Or Suffix
+  Points = 1 'How many error points are gonna be added if not respected
+]
+
+[FunctionPointerTypeStyle
+  Value = _.SNAKE_CASE
+  Points = 1
+]
+
+[FunctionPointerTypeInfix
+  Value = "cln_" 'The infix that is mandatory
+  Position = "Prefix" 'Or Suffix
+  Points = 1 'How many error points are gonna be added if not respected
+]
+
+[TypedefStyle
+  Value = _.SNAKE_CASE
+  Points = 1
+]
+
+[TypedefInfix
+  Value = "cln_" 'The infix that is mandatory
+  Position = "Prefix" 'Or Suffix
+  Points = 1 'How many error points are gonna be added if not respected
+]
+
+[TypedefMatching
+  Value = true 'Force le nommage de typedef d'apres le type sous  jacent associé
+  Points = 1
+]
+
+[NoMagicValue
+  'Pas de valeur arbitraire en dur.
+  'Sont tout de meme autorisés les valeurs comprises entre -1 et 1 en double ou float
+  'Ainsi que les valeurs entières 0, 1, -1, les puissances de 2 jusqu'a 4096
+  'et les multiples de 10
+  Value = true
+  Points = 1
+]
+
+[NoShortName
+  Value = 4 'La taille minimale d'un symbole
+  Points = 1
+]
+
+[PointerStarOnType
+  'int* i;
+  'La combinaison avec PointerStarOnName produira des effets indésirables
+  Value = true 'L'étoile d'un pointeur situé entre les spécificateurs et le nom est a gauche
+  Points = 1
+]
+
+[PointerStarOnName
+  'int *i;
+  'La combinaison avec PointerStarOnType produira des effets indésirables
+  Value = true 'L'étoile d'un pointeur situé entre les spécificateurs et le nom est a droite
+  Points = 1
+]
+
+[SpaceAroundInbetweenPointerStars
+  'const * int i;
+  Value = true 'Il faut un espace de chaque coté des pointeurs inter-spécificateurs
+  Points = 1
+]
+
+[NoSpaceInsideParenthesis
+  Value = true 'Il devient interdit de faire ca: "( 2 + 2 )". Il faut faire "(2 + 2)"
+  Points = 1
+]
+
+[SpaceAroundBinaryOperator
+  Value = true 'Il devient interdit de faire 2+2, on doit faire 2 + 2
+  Points = 1
+]
+
+[SpaceAfterStatement
+  Value = true 'Un espace est requis apres if, while, for, switch, return, break, continue
+  Points = 1
+]
+
+[SpaceAfterComma
+  Value = true '1,2,3 devient illégal, il faut écrire 1, 2, 3
+  Points = 1
+]
+
+[ReturnParenthesis
+  Value = true 'It is forbidden to write return 42; It is mandatory to write return (42);
+  Points = 1
+]
+
+[SizeOfParenthesis
+  Value = true 'It is forbidden to write sizeof int, mandatory to write sizeof(int)
+  Points = 1
+]
+
+[***********************************
+ ** REGLEMENTATION DES MOTS CLEFS **
+ ***********************************]
+
+[ForForbidden
+  Value = true
+  Points = 5
+]
+
+[WhileForbidden
+  Value = true
+  Points = 5
+]
+
+[DoWhileForbidden
+  Value = true
+  Points = 5
+]
+
+[GoToForbidden
+  Value = true
+  Points = 5
+]
+
+[ReturnForbidden
+  Value = true
+  Points = 5
+]
+
+[BreakForbidden
+  Value = true
+  Points = 5
+]
+
+[ContinueForbidden
+  Value = true
+  Points = 5
+]
+
+[IfForbidden
+  Value = true
+  Points = 5
+]
+
+[ElseForbidden
+  Value = true
+  Points = 5
+]
+
+[SwitchForbidden
+  Value = true
+  Points = 5
+]
+
+[TernaryForbidden
+  Value = true
+  Points = 5
+]
+
+[InlineModificationForbidden
+  Value = true '++ / --
+  Points = 5
+]
+

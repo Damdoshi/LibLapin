@@ -18,7 +18,8 @@ bool		bunny_configuration_resolve(t_bunny_configuration	*par)
   int		integer;
   double	dbl;
 
-  if (cnf.expression != NULL)
+  // Si il y a une expression à résoudre et qui ne prend aucun paramètres...
+  if (cnf.expression != NULL && cnf.nodes.find(".parameters") == cnf.nodes.end())
     {
       if (expr_compute(cnf, NULL, false, root, &cnf, parent, NULL) == false)
 	return (false);

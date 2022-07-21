@@ -122,7 +122,7 @@ static void		restore_prototype(std::ostream			&ss,
       if (conf.last_type != SmallConf::NOTYPE)
 	{
 	  ss << ":";
-	  if (conf.last_type == SmallConf::STRING)
+	  if (conf.last_type == SmallConf::STRING || conf.last_type == SmallConf::RAWSTRING)
 	    ss << "string";
 	  else if (conf.last_type == SmallConf::INTEGER)
 	    ss << "integer";
