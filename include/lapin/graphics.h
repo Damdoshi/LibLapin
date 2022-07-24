@@ -237,6 +237,12 @@ t_bunny_picture			*bunny_new_picture(unsigned int			wid,
 t_bunny_picture			*bunny_load_picture(const char			*file);
 
 /*!
+** Save a picture into a file.
+*/
+bool				bunny_save_picture(const t_bunny_picture	*buf,
+						   const char			*file);
+
+/*!
 ** The bunny_read_picture load a picture from memory. Supported formats are
 ** .png, .jpg, .gif and 24 bits bitmap. Output is a fast picture.
 ** The reserved memory to handle it is outside the bunny_malloc space.

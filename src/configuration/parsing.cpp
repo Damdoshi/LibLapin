@@ -119,8 +119,6 @@ bool			checktext(const char			*str,
 				  ssize_t			&index,
 				  const char			*token)
 {
-  size_t		i;
-
   if (strncmp(&str[index], token, strlen(token)) == 0)
     return (true);
   return (false);
