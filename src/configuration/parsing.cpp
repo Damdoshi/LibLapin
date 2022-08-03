@@ -604,6 +604,7 @@ bool			readvalue(const char			*code,
       nod.SetInt(ival);
       nod.original_value = std::string(&code[bef], i - bef);
     }
+  // @suivi d'un chemin.
   else if (readpath(code, i, &buffer[0], sizeof(buffer)))
     {
       const char	*tmp = bunny_configuration_resolve_path(&buffer[0]);

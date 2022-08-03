@@ -10,6 +10,10 @@
 ** = [Text    texte    ]
 ** = [Text($)    texte   $(expression)  texte       ]
 ** = [Text($,EOF)    texte   $(expression)  texte       EOF]
+** = [Text($,EOF,COM)   texte COM c'est du commentaire\n $(expression) texte EOF] <=== A FAIRE
+**
+** Cette fonction est à refaire: l'adjonction des paramètres entre parenthèses
+** sont une bonne idée, mais c'est fait à l'arrache et du coup difficile à modifier
 */
 
 Decision		dabsic_read_text(const char		*code,
@@ -19,6 +23,7 @@ Decision		dabsic_read_text(const char		*code,
 {
   char			buf[9];
   char			tok[9];
+  // Ca serait bien de pouvoir etablir un token pour des commentaires inlines
   ssize_t		j, k, l;
 
   tok[0] = '\0';
@@ -123,6 +128,7 @@ Decision		dabsic_read_text(const char		*code,
        "ressource,configuration,syntax",
        SmallConf::file_read.top().c_str(), whichline(code, i)
        );
+  conf.was_text_block = true;
   dabsic_read_separator(code, i);
   return (BD_OK);
 }

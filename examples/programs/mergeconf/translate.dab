@@ -1,0 +1,31 @@
+
+Language = "Lower"
+
+Translate(string a):string = [Function
+  If [][a][[].Language] != "" Then
+    Return [][a][[].Language]
+  Return [][a].Upper
+]
+
+[AAA
+  Upper = "AAA"
+  Lower = "aaa"
+]
+
+[BBB
+  Upper = "BBB"
+  Lower = "bbb"
+]
+
+[CCC
+  Upper = "CCC"
+  Lower = "ccc"
+]
+
+'Here = "CCC"
+'Lower = "Lower"
+'Test1 = [].CCC.Lower
+'Test2 = [][Here].Lower
+'Test3 = [][Here][Lower]
+
+Final = "Je traduis en petit caractères " # Translate("AAA")

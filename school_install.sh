@@ -69,7 +69,7 @@ test_and_add_csh()
 
 mkdir -p ${LIB_DIR} ${INCLUDE_DIR}		|| get_out "Failed to create installation directories."
 
-make -j32					|| get_out "No bunnies were built. Make failed."
+make -j16					|| get_out "No bunnies were built. Make failed."
 
 # Bunnies
 cp -r include/* ${INCLUDE_DIR}			|| get_out "Failed to install Lapin headers."

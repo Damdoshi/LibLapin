@@ -1,0 +1,263 @@
+
+@insert "crawler.dab"
+
+Language = "FR"
+Tolerance = 1
+AnsiC = true
+
+[Header
+  Points = 5
+  Value = [Text($,E)
+/*
+** %FirstName %FamilyName "%NickName"
+** %Login - <%Mail>
+**
+** %ProjectName - %Year
+*/
+E]
+]
+
+[FunctionPerFile
+  Value = 5
+  Points = 3
+]
+
+[FunctionMatchingPath
+  Value = true
+  Points = 1
+]
+
+[NonStaticFunctionPerFile
+  Value = 1
+  Points = 3
+]
+
+[MaximumLineWidth
+  Value = 80
+  Points = 3
+]
+
+[MaximumFunctionLength
+  Value = 25
+  Points = 5
+]
+
+[MaximumFunctionParameter
+  Value = 4
+  Points = 3
+]
+
+[OnlyByReference
+  Value = 16
+  Points = 2
+]
+
+[LocalVariableInlineInitForbidden
+  Value = true
+  Points = 3
+]
+
+[AllGlobalsAreConst
+  Value = true
+  Points = 2
+]
+
+[Indentation
+  Style = GNU_INDENT_STYLE
+  Token = 8
+  Size = 2
+  Points = 1
+]
+
+[FunctionVariableDefinitionAlignment
+  Value = true
+  Points = 1
+]
+
+[GlobalFunctionVariableDefinitionAlignment
+  Value = true
+  Points = 1
+]
+
+[ParameterTypeAlignment
+  Value = true
+  Points = 1
+]
+
+[ParameterNameAlignment
+  Value = true
+  Points = 1
+]
+
+[GlobalParameterNameAlignment
+  Value = true
+  Points = 1
+]
+
+[DeclarationStatementSeparator
+  Value = true
+  Points = 1
+]
+
+[NoEmptyLineInFunction
+  Value = true
+  Points = 1
+]
+
+[TrailingWhitespace
+  Value = true
+  Points = 1
+]
+
+[SingleInstructionPerLine
+  Value = true
+  Points = 5
+]
+
+[Global
+  [Style
+    Value = SNAKE_CASE
+    Points = 1
+  ]
+]
+
+[GlobalVariable
+  [Infix
+    Position = "Prefix"
+    Value = "g_"
+    Points = 1
+  ]
+]
+
+[StructName
+  [Infix
+    Position = "Prefix"
+    Value = "s_"
+    Points = 1
+  ]
+]
+
+[EnumName
+  [Infix
+    Position = "Prefix"
+    Value = "e_"
+    Points = 1
+  ]
+]
+
+[EnumConstant
+  [Style
+    Value = MIXED_CASE
+    Points = 1
+  ]
+]
+
+[UnionName
+  [Infix
+    Value = "u_"
+    Position = "Prefix"
+    Points = 1
+  ]
+]
+
+[TypedefName
+  [Infix
+    Value = "t_"
+    Position = "Prefix"
+    Points = 1
+  ]
+]
+
+[TypedefMatching
+  Value = true
+  Points = 1
+]
+
+[FunctionPointerTypeName
+  [Infix
+    Value = "f_"
+    Position = "Prefix"
+    Points = 1
+  ]
+]
+
+[NoShortName
+  Value = 3
+  Points = 1
+]
+
+[PointerStarOnName
+  Value = true
+  Points = 1
+]
+
+[SpaceAroundInbetweenPointerStars
+  Value = true
+  Points = 1
+]
+
+[NoSpaceInsideParenthesis
+  Value = true
+  Points = 1
+]
+
+[SpaceAroundBinaryOperator
+  Value = true
+  Points = 1
+]
+
+[SpaceAfterStatement
+  Value = true
+  Points = 1
+]
+
+[SpaceAfterComma
+  Value = true
+  Points = 1
+]
+
+[ReturnParenthesis
+  Value = true
+  Points = 1
+]
+
+[SizeOfParenthesis
+  Value = true
+  Points = 1
+]
+
+[GoToForbidden
+  Value = true
+  Points = 3
+]
+
+[ForForbidden
+  Value = true
+  Points = 5
+]
+
+[SwitchForbidden
+  Value = true
+  Points = 2
+]
+
+[DoWhileForbidden
+  Value = true
+  Points = 2
+]
+
+[AvoidBracesForSingleLine
+  Value = true
+  Points = 1
+]
+
+[InlineModificationForbidden
+  Value = true
+  Points = 5
+]
+
+[NoMagicValue
+  Value = true
+  Points = 1
+]
+

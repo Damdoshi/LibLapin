@@ -1,0 +1,14 @@
+
+
+{Exercices
+  [
+    [TeamSize
+      _FR = [].TeamSize[0] == [].TeamSize[1] ? string([].TeamSize[0]) : string([].TeamSize[0]) # " à " # string([].TeamSize[1])
+      _EN = [].TeamSize[0] == [].TeamSize[1] ? string([].TeamSize[0]) # " people" : string([].TeamSize[0]) # " to " # string([].TeamSize[1]) # " people"
+      FR = [].TeamSize[0] == 1 && [].TeamSize[1] == 1 ? "seul" : "en équipe de " # string(_FR)
+      EN = [].TeamSize[0] == 1 && [].TeamSize[1] == 1 ? "alone" : "with a team of " # string(_EN)
+    ]
+  ]
+}
+
+TeamSize = 2, 4
