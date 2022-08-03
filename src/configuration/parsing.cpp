@@ -521,6 +521,8 @@ void			writestring(std::ostream		&ss,
   ss << "\"";
 }
 
+// Cette fonction mériterait d'être refaite, à partir d'un dry run d'une fonction
+// type bunny_configuration_go_get_node corrigée (pour prendre en considération tous les scopes)
 bool			readaddress(const char			*addr,
 				    ssize_t			&i,
 				    SmallConf			&out)
@@ -530,7 +532,7 @@ bool			readaddress(const char			*addr,
   ssize_t		j;
 
   start = j = i;
-  while (addr[i] && addr[i] != ']')
+  while (addr[i] && addr[i] != ']' && checktext(addr, i, ".]") == false)
     {
       if (addr[i] == '[')
 	j = i;
@@ -543,7 +545,9 @@ bool			readaddress(const char			*addr,
 	  j = strtol(&addr[i], (char**)&str, 0);
 	  if (str == &addr[i])
 	    {
-	      if (readaddress(addr, i, out) == false)
+	      if (i - start == 1 && readtext(addr, i, "."))
+		{} // Racine locale trouvée
+	      else if (readaddress(addr, i, out) == false)
 		return (false);
 	    }
 	  else
@@ -562,7 +566,10 @@ bool			readaddress(const char			*addr,
 	}
       i = j;
     }
-  out.SetString(std::string(&addr[start], i - start), true);
+  if (addr[i] == '.')
+    out.SetString(std::string(&addr[start], (i + 1) - start), true);
+  else
+    out.SetString(std::string(&addr[start], i - start), true);
   return (true);
 }
 

@@ -131,6 +131,14 @@ t_bunny_configuration	*_bunny_configuration_go_get_node(const t_bunny_configurat
       if (addr[i] == '.')
 	j = i += 1;
     }
+  else if (strncmp(&addr[i], "[.]", 3) == 0)
+    {
+      while (((SmallConf*)cnf)->local_root == false)
+	cnf = bunny_configuration_get_parent(cnf);
+      j = i += 3;
+      if (addr[i] == '.')
+	j = i += 1;
+    }
   while (addr[i] && addr[i] != ']')
     {
       if (addr[i] != '[')

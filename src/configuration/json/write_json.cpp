@@ -85,6 +85,8 @@ static void		restore_scope(std::stringstream		&ss,
 	  ss << ": ";
 	  writevalue(ss, *it->second, true);
 	}
+      else
+	ss << ": null";
       if (++it != conf.End())
 	ss << ",";
       ss << std::endl;

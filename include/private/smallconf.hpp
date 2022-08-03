@@ -69,6 +69,7 @@ struct				SmallConf
 
   bool				was_b64;
   bool				was_text_block = false;
+  bool				local_root = false;
 
   enum				e_politic
     {
