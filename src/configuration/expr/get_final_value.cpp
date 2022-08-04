@@ -40,16 +40,6 @@ SmallConf		*expr_get_variable(SmallConf		&variable,
     {
       if (bunny_configuration_resolve(variable) == false)
 	return (NULL);
-      /*
-      // On l'a trouvé, il faut le calculer de fait.
-      // On établi le contexte correctement.
-      root = (SmallConf*)bunny_configuration_get_root(&variable);
-      artif = (SmallConf*)bunny_configuration_get_parent(&variable);
-      local = &variable;
-      if (gl_expr_computation[variable.expression->optor_family]
-	  (*variable.expression, dry, root, local, artif, NULL) == false)
-	return (NULL);
-      */
     }
 
   if (variable.symbol == false)
