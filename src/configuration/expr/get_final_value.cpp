@@ -17,6 +17,41 @@ SmallConf		*expr_get_variable(SmallConf		&variable,
   t_bunny_configuration	*cnf;
   ssize_t		i;
 
+  // Si c'était un bloc [Text, alors on rassemble tout dans une même chaine de caractères
+  if (variable.was_text_block) // Il pourrait être interessant de permettre une option pour l'éviter
+    {
+      std::vector<SmallConf*>::iterator itv;
+      std::stringstream ss;
+      const char *out;
+
+      for (itv = variable.array.begin(); itv != variable.array.end(); ++itv)
+	{
+	  if ((*itv)->GetString(&out, root, local, artif, params) == false)
+	    return (NULL);
+	  ss << out;
+	}
+      variable.SetString(ss.str());
+      variable.array.clear();
+      variable.construct = SmallConf::PLAIN;
+      variable.was_text_block = false;
+    }
+
+  if (variable.expression && variable.expression->optor_family != -1)
+    {
+      if (bunny_configuration_resolve(variable) == false)
+	return (NULL);
+      /*
+      // On l'a trouvé, il faut le calculer de fait.
+      // On établi le contexte correctement.
+      root = (SmallConf*)bunny_configuration_get_root(&variable);
+      artif = (SmallConf*)bunny_configuration_get_parent(&variable);
+      local = &variable;
+      if (gl_expr_computation[variable.expression->optor_family]
+	  (*variable.expression, dry, root, local, artif, NULL) == false)
+	return (NULL);
+      */
+    }
+
   if (variable.symbol == false)
     return (&variable);
 

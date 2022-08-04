@@ -1,7 +1,7 @@
 
 
 Second=42
-First=Second
+First=&Second
 
 Print = [Function
   "This is ", [First], "!"

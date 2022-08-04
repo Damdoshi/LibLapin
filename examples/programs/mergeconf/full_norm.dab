@@ -116,7 +116,7 @@ E]
 
 [Global
   [Style
-    Value = SNAKE_CASE
+    Value = [.].SNAKE_CASE
     Points = 1
   ]
 ]
@@ -147,7 +147,7 @@ E]
 
 [EnumConstant
   [Style
-    Value = MIXED_CASE
+    Value = [.].MIXED_CASE
     Points = 1
   ]
 ]

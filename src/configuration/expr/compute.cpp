@@ -101,6 +101,13 @@ bool			expr_compute(SmallConf			&exp,
 
 
     }
+
+  // Une expression doit toujours s'evaluer à partir de l'endroit ou l'on est - sauf
+  // quand il y a un With, mais on verra plus tard ca du coup.
+  root = (SmallConf*)bunny_configuration_get_root((SmallConf*)&exp);
+  artif = (SmallConf*)bunny_configuration_get_parent((SmallConf*)&exp);
+  local = &exp;
+
   if (exp.expression->optor_family == Expression::LAST_OPERATOR_FAMILY
       || exp.expression->optor_family == -1)
     {

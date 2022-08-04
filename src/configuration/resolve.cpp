@@ -33,10 +33,16 @@ bool		bunny_configuration_resolve(t_bunny_configuration	*par)
 	  if (cnf.GetDouble(&dbl, root, parent))
 	    cnf.SetDouble(dbl);
 	}
-      else
+      else if (cnf.expression->val.last_type == SmallConf::STRING)
 	{
 	  if (cnf.GetString(&str, root, parent))
 	    cnf.SetString(std::string(str));
+	}
+      else
+	{
+	  // Ceci indique qu'on a un pointeur, en fait, car une RAWSTRING
+	  // est une sorte de pointeur.
+	  // Il faudrait formaliser plus fortement cet aspect, car il est crucial.
 	}
       delete cnf.expression;
       cnf.expression = NULL;
@@ -60,12 +66,14 @@ bool		bunny_configuration_resolve(t_bunny_configuration	*par)
 
       for (itv = cnf.array.begin(); itv != cnf.array.end(); ++itv)
 	{
-	  (*itv)->GetString(&out);
+	  if ((*itv)->GetString(&out) == false)
+	    return (NULL);
 	  ss << out;
 	}
       cnf.SetString(ss.str());
       cnf.array.clear();
       cnf.construct = SmallConf::PLAIN;
+      cnf.was_text_block = false;
     }
 
   return (!bad);
