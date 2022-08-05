@@ -59,23 +59,10 @@ bool		bunny_configuration_resolve(t_bunny_configuration	*par)
       bad = true;
 
   // Si c'était un bloc [Text, alors on rassemble tout dans une même chaine de caractères
-  if (cnf.was_text_block) // Il pourrait être interessant de permettre une option pour l'éviter
-    {
-      std::stringstream ss;
-      const char *out;
-
-      for (itv = cnf.array.begin(); itv != cnf.array.end(); ++itv)
-	{
-	  if ((*itv)->GetString(&out) == false)
-	    return (NULL);
-	  ss << out;
-	}
-      cnf.SetString(ss.str());
-      cnf.array.clear();
-      cnf.construct = SmallConf::PLAIN;
-      cnf.was_text_block = false;
-    }
-
+  // Il pourrait être interessant de permettre une option pour l'éviter
+  if (cnf.was_text_block)
+    if (_bunny_resolve_text_block(cnf, root, parent, &cnf, NULL) == false)
+      return (NULL);
   return (!bad);
 }
 

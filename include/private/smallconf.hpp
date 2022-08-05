@@ -212,4 +212,10 @@ struct				SmallConf
 std::ostream			&operator<<(std::ostream		&os,
 					    const SmallConf		&cnf);
 
+bool				_bunny_resolve_text_block(SmallConf	&sc,
+							  SmallConf	*root,
+							  SmallConf	*local,
+							  SmallConf	*artif,
+							  SmallConf	*params);
+
 #endif	//			__LAPIN_PRIVATE_SMALLCONF_HPP__

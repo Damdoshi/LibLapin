@@ -5,6 +5,7 @@
 
 #include		"lapin_private.h"
 
+
 SmallConf		*expr_get_variable(SmallConf		&variable,
 					   bool			dry,
 					   SmallConf		*root,
@@ -18,23 +19,10 @@ SmallConf		*expr_get_variable(SmallConf		&variable,
   ssize_t		i;
 
   // Si c'était un bloc [Text, alors on rassemble tout dans une même chaine de caractères
-  if (variable.was_text_block) // Il pourrait être interessant de permettre une option pour l'éviter
-    {
-      std::vector<SmallConf*>::iterator itv;
-      std::stringstream ss;
-      const char *out;
-
-      for (itv = variable.array.begin(); itv != variable.array.end(); ++itv)
-	{
-	  if ((*itv)->GetString(&out, root, local, artif, params) == false)
-	    return (NULL);
-	  ss << out;
-	}
-      variable.SetString(ss.str());
-      variable.array.clear();
-      variable.construct = SmallConf::PLAIN;
-      variable.was_text_block = false;
-    }
+  // Il pourrait être interessant de permettre une option pour l'éviter
+  if (variable.was_text_block)
+    if (_bunny_resolve_text_block(variable, root, local, artif, params) == false)
+      return (NULL);
 
   if (variable.expression && variable.expression->optor_family != -1)
     {

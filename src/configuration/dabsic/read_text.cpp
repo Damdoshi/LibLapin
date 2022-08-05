@@ -83,7 +83,8 @@ Decision		dabsic_read_text(const char		*code,
   int			index;
 
   index = 0;
-  dabsic_read_separator(code, i);
+  // On arrive au début de la première ligne non vide du bloc
+  readchar(code, i, "\n\v");
   l = i;
   while (code[i] && readtext(code, i, &buf[0]) == false)
     {
