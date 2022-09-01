@@ -431,6 +431,13 @@ t_bunny_configuration	*bunny_configuration_end(t_bunny_configuration			*config);
 bool			bunny_configuration_is_last(t_bunny_configuration		*config);
 
 /*!
+** Merge all sents configurations into the first one
+*/
+bool			bunny_configuration_merge(int					cnt,
+						  t_bunny_configuration			*target,
+						  ...);
+
+/*!
 ** Return the format which is supposed to be used in file thanks to its extension.
 ** \param file The filename/path
 ** \return The file format, accordingly to its extension. BC_CUSTOM if there is no
