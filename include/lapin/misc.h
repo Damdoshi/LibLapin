@@ -52,6 +52,16 @@ t_bunny_string_couple		*bunny_search_string_couple(t_bunny_string_couple *couple
 # define			bunny_trace()				printf("%s-%d:%d\n", __PRETTY_FUNCTION__, __FILE__, __LINE__)
 
 /*!
+**
+*/
+int				bunny_vsnprintf(char			*buffer,
+						size_t			buflen,
+						va_list			lst);
+int				bunny_snprintf(char			*buffer,
+					       size_t			buflen,
+					       ...);
+
+/*!
 ** Load an entire file.
 ** The file is stored in the bunny ressource manager, so loading the same
 ** file multiple times won't load it several times. To prevent this behaviour,
