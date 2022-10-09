@@ -61,6 +61,7 @@ static std::string	remove_space_offset(const std::string	&code)
 	    }
 	  else
 	    {
+	      ss << code[i];
 	      spaces = 0;
 	      startline = false;
 	    }
