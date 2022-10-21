@@ -8,7 +8,7 @@
 #include			"PVM110N.hpp"
 #include			"lapin_private.h"
 
-struct				bunny_hardware
+struct				bunny_vm110n
 {
   hbs::PVM110N			*board;
   int				id;
@@ -20,28 +20,28 @@ struct				bunny_hardware
 
 #define				PATTERN		"%zu id -> %p"
 
-t_bunny_vm110n		*bunny_new_hardware(size_t		id)
+t_bunny_vm110n		*bunny_new_vm110n(size_t		id)
 {
-  struct bunny_hardware		*ptr;
+  struct bunny_vm110n		*ptr;
 
   if (id > 3)
-    scream_error_if(return (NULL), EINVAL, PATTERN, "hardware", id, (void*)NULL);
-  if ((ptr = (struct bunny_hardware*)bunny_malloc(sizeof(*ptr))) == NULL)
-    scream_error_if(return (NULL), bunny_errno, PATTERN, "hardware", id, (void*)NULL);
+    scream_error_if(return (NULL), EINVAL, PATTERN, "vm110n", id, (void*)NULL);
+  if ((ptr = (struct bunny_vm110n*)bunny_malloc(sizeof(*ptr))) == NULL)
+    scream_error_if(return (NULL), bunny_errno, PATTERN, "vm110n", id, (void*)NULL);
   memset(ptr, 0, sizeof(*ptr));
   if ((ptr->board = new (std::nothrow) hbs::PVM110N) == NULL)
     {
       bunny_free(ptr);
-      scream_error_if(return (NULL), ENOMEM, PATTERN, "hardware", id, (void*)NULL);
+      scream_error_if(return (NULL), ENOMEM, PATTERN, "vm110n", id, (void*)NULL);
     }
   if ((ptr->board->Open((hbs::PVM110N::CardId)id)) == false)
     {
       delete ptr->board;
       bunny_free(ptr);
-      scream_error_if(return (NULL), BE_CANT_GENERATE_RESSOURCE, PATTERN, "hardware", id, (void*)NULL);
+      scream_error_if(return (NULL), BE_CANT_GENERATE_RESSOURCE, PATTERN, "vm110n", id, (void*)NULL);
     }
   ptr->id = id;
-  scream_log_if(PATTERN, "hardware", id, ptr);
+  scream_log_if(PATTERN, "vm110n", id, ptr);
   return ((t_bunny_vm110n*)ptr);
 }
 

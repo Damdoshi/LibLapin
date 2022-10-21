@@ -147,14 +147,14 @@ extern const void		*last_scope;
 #  define			bunny_alloca(a)			bunny_malloc(a)
 #  define			bunny_freea(a)			bunny_free(a)
 
+# endif
+
 # define			s_bunny_hardware		s_bunny_vm110n
 # define			t_bunny_hardwave		t_bunny_vm110n
 # define			bunny_new_hardware(a)		bunny_new_vm110n(a)
 # define			bunny_delete_harware(a)		bunny_delete_vm110n(a)
 # define			bunny_hardware_read(a)		bunny_vm110n_read(a)
 # define			bunny_hardware_write(a)		bunny_vm110n_write(a)
-
-# endif
 
 /*
 ** For MinGW

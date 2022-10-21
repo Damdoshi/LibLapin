@@ -161,9 +161,7 @@ typedef enum			s_bunny_decision
 #  include			"working/database.h"
 # endif
 
-# ifdef				BUNNY_HARDWARE
-#  include			"lapin/hardware.h"
-# endif
+# include			"lapin/hardware.h"
 
 # ifdef				BUNNY_MACRO
 #  include			"lapin/macros.h"
