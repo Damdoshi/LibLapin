@@ -26,7 +26,7 @@ t_bunny_vm110n		*bunny_new_vm110n(size_t		id)
 
   if (id > 3)
     scream_error_if(return (NULL), EINVAL, PATTERN, "vm110n", id, (void*)NULL);
-  if ((ptr = (struct bunny_vm110n*)bunny_calloc(sizeof(*ptr))) == NULL)
+  if ((ptr = (struct bunny_vm110n*)bunny_calloc(1, sizeof(*ptr))) == NULL)
     scream_error_if(return (NULL), bunny_errno, PATTERN, "vm110n", id, (void*)NULL);
   memset(ptr, 0, sizeof(*ptr));
   if ((ptr->board = new (std::nothrow) hbs::PVM110N) == NULL)
