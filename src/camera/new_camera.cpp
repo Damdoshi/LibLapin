@@ -15,7 +15,7 @@ t_bunny_camera		*bunny_new_camera(int	id)
 
   try
     {
-      cam = new cv::VideoCapture(id);
+      cam = new cv::VideoCapture(id, cv::CAP_V4L2);
     }
   catch (...)
     {
