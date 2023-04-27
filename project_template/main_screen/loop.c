@@ -7,7 +7,7 @@
 
 #include		"bunny_project.h"
 
-t_bunny_response	bunny_project_loop(t_bunny_project	*prj)
+t_bunny_response	main_screen_loop(t_bunny_project	*prj)
 {
   if (bunny_get_keyboard()[BKS_LEFT])
     {

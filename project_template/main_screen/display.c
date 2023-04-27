@@ -7,7 +7,7 @@
 
 #include		"bunny_project.h"
 
-t_bunny_response	bunny_project_display(const t_bunny_project	*prj)
+t_bunny_response	main_screen_display(const t_bunny_project	*prj)
 {
   t_bunny_position	pos = {prj->bunny_position.x, prj->bunny_position.y};
 
