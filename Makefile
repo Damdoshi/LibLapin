@@ -37,7 +37,6 @@
 			-Wno-frame-address -Wno-narrowing			\
 			-DBUNNY_COMPILATION					\
 			-Wno-cast-function-type					\
-			-DBUNNY_ALLOCATOR_DEACTIVATED				\
 			-DBUNNY_DEBUG
 
 #  DEBUG		=	-O0 -g -g3 -ggdb
