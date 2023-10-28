@@ -48,6 +48,11 @@ Decision		dabsic_read_inside_array(const char		*code,
       if (ret == BD_OK)
 	goto Bottom;
 
+      if ((ret = dabsic_read_csv(code, i, newconf, root)) == BD_ERROR)
+	return (BD_ERROR);
+      if (ret == BD_OK)
+	goto Bottom;
+
       if ((ret = dabsic_read_array(code, i, newconf, root)) == BD_ERROR)
 	return (BD_ERROR);
       if (ret == BD_OK)
