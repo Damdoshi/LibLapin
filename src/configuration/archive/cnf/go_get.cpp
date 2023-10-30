@@ -128,16 +128,31 @@ t_bunny_configuration	*_bunny_configuration_go_get_node(const t_bunny_configurat
     {
       cnf = bunny_configuration_get_root(cnf);
       j = i += 2;
-      if (addr[i] == '.')
-	j = i += 1;
+      readtext(addr, i, ".");
+      j = i;
     }
   else if (strncmp(&addr[i], "[.]", 3) == 0)
     {
       while (((SmallConf*)cnf)->local_root == false)
 	cnf = bunny_configuration_get_parent(cnf);
       j = i += 3;
-      if (addr[i] == '.')
-	j = i += 1;
+      readtext(addr, i, ".");
+      j = i;
+    }
+  else if (strncmp(&addr[i], "[#", 2) == 0)
+    {
+      j = i += 2;
+      // Remonter jusqu'a trouver un noeud du nom donné - ou la racine
+      readchar(addr, j, fieldname);
+      strncpy(&buffer[0], &addr[i], j - i);
+      buffer[j - i] = '\0';
+      while (cnf != bunny_configuration_get_root(cnf) &&
+	     strcmp(bunny_configuration_get_name(cnf), buffer))
+	cnf = bunny_configuration_get_parent(cnf);
+      if (readtext(addr, j, "]") == false)
+	return (NULL);
+      readtext(addr, j, ".");
+      i = j;
     }
   while (addr[i] && addr[i] != ']')
     {

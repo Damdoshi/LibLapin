@@ -536,8 +536,12 @@ bool			readaddress(const char			*addr,
     {
       if (addr[i] == '[')
 	j = i;
-      else if (readchar(addr, j, fieldname) == false)
-	return (false);
+      else
+	{
+	  readtext(addr, j, "#");
+	  if (readchar(addr, j, fieldname) == false)
+	    return (false);
+	}
 
       while (readtext(addr, j, "["))
 	{

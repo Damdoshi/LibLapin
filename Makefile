@@ -38,8 +38,8 @@
 			-DBUNNY_COMPILATION					\
 			-Wno-cast-function-type
 
-#  DEBUG		=	-O0 -g -g3 -ggdb
-  OPTIM		=	-O2
+  DEBUG		=	-O0 -g -g3 -ggdb
+#  OPTIM		=	-O2
 
   RM		=	rm -f
   ECHO		=	/bin/echo -e
