@@ -1,0 +1,11 @@
+
+[Here
+  Presente = "presente"
+  [There
+    Vive = "vive"
+    Data = [Text($, END)
+      Je suis une donnée $([#Here].Presente) et $([#There].Vive). Je t'assure, $(_.Vive) et $(_._.Presente)
+    END]
+  ]
+]
+

@@ -1,4 +1,10 @@
-[DabsicNode
-   DabsicArray=0,1,2
-   DabsicField="42"
-]
+
+{Crotte
+  [Func
+    [Name = "prout"
+      FR = "frout"
+      EN = "erout"
+    ]
+  ]
+}
+

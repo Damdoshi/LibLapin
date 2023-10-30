@@ -10,6 +10,12 @@
 #define			PATTERN						\
   "'%.10s...' code, %zd i, %p node, %p fileroot -> %s (%s %s on line %d)"
 
+Decision		dabsic_read_text_conf(const char		*code,
+					      ssize_t			&i,
+					      std::string		&vartok,
+					      std::string		&eoftok,
+					      std::string		&comtok);
+
 bool			isdir(const char				*d,
 			      const char				*f)
 {
