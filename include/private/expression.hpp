@@ -55,6 +55,7 @@ struct				Expression
       BEO_MOD_ASSIGN,
       BEO_POW_ASSIGN,
       BEO_CAT_ASSIGN,
+      BEO_PUSH,
       // BEO_MOVE,
       // BEO_ASSIGN_ XOR, OR, ETC
       BEO_TERNARY		= 0,

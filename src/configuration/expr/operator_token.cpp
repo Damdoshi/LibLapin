@@ -27,7 +27,8 @@ const std::string	Expression::OperatorToken[Expression::LAST_OPERATOR_FAMILY][21
       {"/="},
       {"%="},
       {"**="},
-      {"#="}
+      {"#="},
+      {"[]="}
     },
     { // TERNARY
       {"?"},

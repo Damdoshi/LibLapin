@@ -61,7 +61,7 @@ int		main(int	argc,
   //////////////////
   //// EXECUTION //
   ////////////////
-  bunny_set_error_descriptor(-1);
+  bunny_set_error_descriptor(2);
   if (bunny_configuration_executef(cnf, false, params, "[].Main"))
     bunny_configuration_getf(cnf, &cnt, "[].Main");
   else if (bunny_configuration_executef(cnf, false, params, "[].main"))
