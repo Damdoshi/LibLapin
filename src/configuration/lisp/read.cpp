@@ -52,7 +52,9 @@ Decision		lisp_read_list(const char		*code,
       else if (code[i] == '@')
 	{
 	  if (_bunny_handle_directive
-	      (code, i, &conf, &root, lisp_read_separator) == false)
+	      (code, i, &conf, &root, lisp_read_separator,
+	       Expression::BEOF_TERNARY
+	       ) != BD_OK)
 	    return (BD_ERROR);
 	}
       else if (readvalue(code, i, conf[conf.Size()], " )") == false)

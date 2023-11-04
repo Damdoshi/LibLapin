@@ -147,7 +147,8 @@ Decision			_bunny_handle_directive(const char		*code,
 							ssize_t			&i,
 							SmallConf		*node,
 							t_bunny_configuration	*fileroot,
-							void (*readseparator)(const char*, ssize_t&));
+							void (*readseparator)(const char*, ssize_t&),
+							Expression::OperatorFamily family);
 t_bunny_configuration		*_bunny_configuration_go_get_node(const t_bunny_configuration *config,
 								  const char		*addr,
 								  ssize_t		&i);

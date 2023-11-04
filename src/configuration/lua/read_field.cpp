@@ -18,7 +18,9 @@ Decision		lua_read_field(const char		*code,
   if (code[i] == '@')
     {
       if (_bunny_handle_directive
-	  (code, i, &conf, &root, lua_read_separator) == false)
+	  (code, i, &conf, &root, lua_read_separator,
+	   Expression::BEOF_TERNARY
+	   ) != BD_OK)
 	return (BD_ERROR);
       lua_read_separator(code, i);
       return (BD_OK);
@@ -74,7 +76,9 @@ Decision		lua_read_field(const char		*code,
   if (code[i] == '@')
     {
       if (_bunny_handle_directive
-	  (code, i, newconf, &root, lua_read_separator) == false)
+	  (code, i, newconf, &root, lua_read_separator,
+	   Expression::BEOF_TERNARY
+	   ) != BD_OK)
 	return (BD_ERROR);
       lua_read_separator(code, i);
       return (BD_OK);

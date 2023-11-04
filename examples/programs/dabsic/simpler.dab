@@ -1,0 +1,10 @@
+
+
+
+Main = [Function
+  int variable
+
+  variable = 3
+  "La variable vaut ", variable
+  return 0
+]

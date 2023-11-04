@@ -55,7 +55,7 @@ bool			expr_compute_function_call(Expression	&exp,
        "Undefined function %s from context %s on line %s:%d",
        "configuration,syntax",
        exp.val.original_value.c_str(),
-       artif->address.c_str(),
+       artif ? artif->address.c_str() : local->address.c_str(),
        exp.file.c_str(), exp.line);
   if (ope == &exp.val)
     return (true);

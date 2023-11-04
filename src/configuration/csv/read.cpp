@@ -22,7 +22,10 @@ Decision		csv_read(const char				*code,
 	{
 	  if (code[i] == '@')
 	    {
-	      if (_bunny_handle_directive(code, i, &conf[y][x], &root, skipspace_inline) == false)
+	      if (_bunny_handle_directive
+		  (code, i, &conf[y][x], &root, skipspace_inline,
+		   Expression::BEOF_TERNARY
+		   ) != BD_OK)
 		scream_error_if
 		  (return (BD_ERROR), BE_SYNTAX_ERROR,
 		   "%s code, %p config -> %p "

@@ -48,8 +48,8 @@ t_bunny_configuration	*bunny_new_configuration(void);
 ** \param file The file to load
 ** \param config An existing config to fill, or NULL to create a new one
 */
-# define		bunny_open_configuration(file, config) \
-  bunny_load_configuration(bunny_which_format(file), file, config)
+# define		bunny_open_configuration(file, config, ...)	\
+  bunny_load_configuration(bunny_which_format(file), file, config, #__VA_ARGS__)
 
 /*!
 ** Load a file into a configuration node and its children.
@@ -63,7 +63,8 @@ t_bunny_configuration	*bunny_new_configuration(void);
 */
 t_bunny_configuration	*bunny_load_configuration(t_bunny_configuration_type		type,
 						  const char				*file,
-						  t_bunny_configuration			*config);
+						  t_bunny_configuration			*config,
+						  ...);
 
 /*!
 ** Save a configuration into a file.

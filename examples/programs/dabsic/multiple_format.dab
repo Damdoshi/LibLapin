@@ -1,0 +1,73 @@
+
+Name = "include"
+
+[InsertedCSV
+  @insert "to_" # [].Name # ".csv"
+]
+
+WrittenCSV = [CSV
+  1;2;3
+  4;5;6
+  7;8;9
+]
+
+[Scope = 50
+  <ThisIsXML lol="42">
+    <this_is_not_included>
+      Raw
+    </this_is_not_included>
+    <@insert "to_include.xml" />
+  </ThisIsXML>
+
+  Field=100
+  [Scope = 10
+     Field = 200
+   ]
+   @include "to_include.dab"
+   @insert "to_insert.dab"
+]
+
+{Array
+  1, 2, {"Je vais bien", "Tout va bien"}
+}
+
+Program = [Sequence
+  add 1, 2
+  mov 3, 4
+
+ label1:
+  after_label "toto"
+]
+
+Fibo(int a):integer = [Function
+  If a <= 0 Then
+    Return 0
+  If a < 2 Then
+    Return 1
+  Return Fibo(a - 1) + Fibo(a - 2)
+]
+
+inline_fact(int a) = a <= 1 ? 1 : a * inline_fact(a - 1)
+
+'main = Fibo(12)
+
+DynVal = 3
+DynComputation = 3 + DynVal
+
+DynComputationF() = 3 + DynVal
+
+Main = [Function
+  int variable
+  
+  "Le resultat de Fibo(12) est ", Fibo(12)
+  "Le resultat de Fact(5) est ", inline_fact(5)
+  "DynVal vaut 3, donc DynComputation vaut ", DynComputation
+  "DynVal vaut 3, donc DynComputationF vaut ", DynComputationF
+  DynVal = 5
+  "DynVal vaut 5, donc DynComputation vaut ", DynComputation
+  "DynVal vaut 5, donc DynComputationF vaut ", DynComputationF
+
+  variable = 3
+  "La variable vaut ", variable
+  return 0
+]

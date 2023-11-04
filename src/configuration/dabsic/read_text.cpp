@@ -29,7 +29,7 @@ Decision		dabsic_read_text_cont(const char	*code,
 
   readchar(code, i, "\n\v");
   l = i;
-  while (code[i] && !readtext(code, i, eoftok.c_str()))
+  while (code[i] && (eoftok == "" || !readtext(code, i, eoftok.c_str())))
     {
       // On a trouvé une variable
       if (vartok != "" && readtext(code, i, vartok.c_str()))
@@ -68,7 +68,7 @@ Decision		dabsic_read_text_cont(const char	*code,
 	i = i + 1;
     }
 
-  if (!code[i])
+  if (!code[i] && eoftok != "")
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR,
        "The token '%s' was expected to close the text start on line %s:%d",

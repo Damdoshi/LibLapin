@@ -1,0 +1,4 @@
+<this_is_included prop="prop">
+  <field>42</field>
+  <field />
+</this_is_included>

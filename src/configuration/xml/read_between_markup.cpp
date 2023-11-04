@@ -46,9 +46,24 @@ Decision		xml_read_between_markup(const char		*code,
       i = j + 1;
       if (code[i] == '@') // <@insert ... />
 	{
+	  const char	*cod = strstr(&code[i], "/>");
+
+	  if (!cod)
+	    scream_error_if
+	      (return (BD_ERROR), BE_SYNTAX_ERROR,
+	       "Special markup end was expected on line %s:%d",
+	       "configuration,syntax",
+	       SmallConf::file_read.top().c_str(), whichline(code, i)
+	       );
+	  std::string	sub(code, i, cod - &code[i]);
+	  ssize_t	ii = 0;
+	  
 	  if (_bunny_handle_directive
-	      (code, i, &conf, &root, xml_read_separator) == false)
+	      (sub.c_str(), ii, &conf, &root, xml_read_separator,
+	       Expression::BEOF_CAT
+	       ) != BD_OK)
 	    return (BD_ERROR);
+	  i += ii;
 	  xml_read_separator(code, i);
 	  if (readtext(code, i, "/>") == false)
 	    scream_error_if

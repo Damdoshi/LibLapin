@@ -63,7 +63,10 @@ static bool		read_inside_scope(t_bunny_configuration		*fileroot,
       read_separator(code, i);
       if (code[i] == '@')
 	{
-	  if (_bunny_handle_directive(code, i, &newnode[iteration++], fileroot, read_separator) == false)
+	  if (_bunny_handle_directive
+	      (code, i, &newnode[iteration++], fileroot, read_separator,
+	       Expression::BEOF_TERNARY
+	       ) != BD_OK)
 	    return (false);
 	}
       else if (code[i] == '$')
@@ -133,7 +136,10 @@ t_bunny_configuration	*_bunny_read_ini(const char			*code,
 	}
       else if (code[i] == '@')
 	{
-	  if (_bunny_handle_directive(code, i, child, config, read_separator) == false)
+	  if (_bunny_handle_directive
+	      (code, i, child, config, read_separator,
+	       Expression::BEOF_TERNARY
+	       ) != BD_OK)
 	    goto RestoreExit;
 	}
       else if (code[i] != '\0')

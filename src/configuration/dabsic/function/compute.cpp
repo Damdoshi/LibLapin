@@ -309,15 +309,11 @@ t_compute_result	dabsic_compute_return(Function		&func,
   (void)func;
   (void)mainnod;
   (void)dry;
-  (void)root;
-  (void)local;
-  (void)artif;
-  (void)params;
   if (func.value.expression)
     {
       if (expr_compute(func.value, NULL, dry, root, local, artif, params) == false)
 	return (CR_ERROR);
-      mainnod.result = func.value;
+      mainnod.result.Assign(func.value, root, local, artif, params);
     }
   return (CR_RETURN);
 }
