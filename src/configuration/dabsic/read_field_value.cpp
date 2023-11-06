@@ -48,10 +48,14 @@ Decision		dabsic_read_field_value(const char		*code,
   if (ret == BD_ERROR)
     return (ret);
 
+  /*
+  ** Provoque une mauvaise interpretation des expressions
+  ** commencant par une adresse de noeud [Stuff] [#Stuff].Lol
   if ((ret = dabsic_read_scope(code, i, conf, root)) == BD_OK)
     return (ret);
   if (ret == BD_ERROR)
     return (ret);
+  */
 
   if (code[i] == '@')
     {

@@ -39,12 +39,14 @@ Program = [Sequence
   after_label "toto"
 ]
 
-Fibo(int a):integer = [Function
-  If a <= 0 Then
-    Return 0
-  If a < 2 Then
-    Return 1
-  Return Fibo(a - 1) + Fibo(a - 2)
+[class Blob
+  Fibo(int a):integer = [Function
+    If a <= 0 Then
+      Return 0
+    If a < 2 Then
+      Return 1
+    Return Fibo(a - 1) + Fibo(a - 2)
+  ]
 ]
 
 inline_fact(int a) = a <= 1 ? 1 : a * inline_fact(a - 1)
@@ -59,7 +61,7 @@ DynComputationF() = 3 + DynVal
 Main = [Function
   int variable
   
-  "Le resultat de Fibo(12) est ", Fibo(12)
+  "Le resultat de Fibo(12) est ", Blob.Fibo(12)
   "Le resultat de Fact(5) est ", inline_fact(5)
   "DynVal vaut 3, donc DynComputation vaut ", DynComputation
   "DynVal vaut 3, donc DynComputationF vaut ", DynComputationF

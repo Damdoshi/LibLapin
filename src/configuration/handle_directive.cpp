@@ -6,6 +6,7 @@
 #include		<sys/stat.h>
 #include		<dirent.h>
 #include		<string.h>
+#include		<sstream>
 #include		"lapin_private.h"
 
 struct			Directive
@@ -48,9 +49,9 @@ Decision		_bunny_handle_directive(const char		*code,
 						Expression::OperatorFamily family)
 {
   Directive		directives[] = {
-    {"@include", (SmallConf*)fileroot},
+    {"@include", (SmallConf*)bunny_configuration_get_root(fileroot)},
     {"@insert", (SmallConf*)node},
-    {"@push", NULL}
+    {"@push", (SmallConf*)node},
   };
   int			directive;
 
@@ -178,30 +179,23 @@ Decision		_bunny_handle_directive(const char		*code,
     }
   else
     flist.push_back(res);
-
+  const char *temp = "_Temporary";
+  
   ////////////////////////////////////////////////////////////////////////
   // On parcoure l'ensemble des fichiers qui doivent etre chargé
   for (auto it = flist.begin(); it != flist.end(); ++it)
     {
-      // Si on @push, alors il faut ajouter au tableau chaque fichier
-      if (directive == 2)
-	{
-	  int		len = bunny_configuration_childrenf(node, ".");
-	  bool		cmode = SmallConf::create_mode;
-      
-	  SmallConf::create_mode = true;
-	  bunny_configuration_getf_node
-	    (node, (t_bunny_configuration**)&directives[directive].node, "[%d]", len);
-	  SmallConf::create_mode = cmode;
-	}
-
       if (type == BC_CUSTOM)
 	chk = bunny_open_configuration(it->c_str(), directives[directive].node);
       else if (type == BC_TEXT)
-	chk = bunny_load_configuration
-	  (type, it->c_str(), directives[directive].node,
-	   conf[0].c_str(), conf[1].c_str(), conf[2].c_str()
-	   );
+	{
+	  chk = bunny_load_configuration
+	    (type, it->c_str(), directives[directive].node,
+	     conf[0].c_str(), conf[1].c_str(), conf[2].c_str()
+	     );
+	  ((SmallConf*)chk)->was_text_block = true;
+	  bunny_configuration_resolve(chk);
+	}
       else
 	chk = bunny_load_configuration(type, it->c_str(), directives[directive].node);
       if (!chk)
@@ -211,7 +205,7 @@ Decision		_bunny_handle_directive(const char		*code,
 	   code, i, node, fileroot, "false", "Error while loading ",
 	   it->c_str(), whichline(code, i));
     }
-  
+
   scream_log_if
     (PATTERN, "ressource,configuration",
      code, i, node, fileroot, "false", "Success", "", whichline(code, i));

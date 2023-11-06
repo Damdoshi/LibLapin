@@ -1,0 +1,66 @@
+
+FunctionPrefix = "ef"
+FunctionSuffix = ""
+
+'Ca serait mieux si on pouvait passer un noeud en paramètre
+DisplayOnce(string s) = [Function
+  'Pour l'instant, bah, on fait rien car c'est pas possible de le faire...
+  Return s
+]
+
+{Exercises
+  [Eval
+    [Name = "abs"
+      FR = "Valabs"
+      EN = "Absval"
+    ]
+    Module = "/opt/technocore/function/" # Name # "/libtc.so"
+    Evaluator = "evaluate_" # Name
+    FunctionName = [].FunctionPrefix # Name # [].FunctionSuffix
+    TestFunctionName = "test_" # Name
+
+    [Document
+      FileToDeliver = [#Eval].Name # ".c"
+
+      TestFunctionCode = @insert c ($, EOF) "test.c"
+      {Prototype
+        "int " # [#Eval].FunctionName # "(int nbr);",
+        "int " # [#Eval].TestFunctionName # "(void);"
+      }
+      
+      [TestMechanismDescription
+        FR = [Text($, END)
+          En plus d'écrire la fonction **$([#Eval].FunctionName)**, voila.
+        END]
+      ]
+
+      [Description
+        FR = [Text($, FR)
+          Ecrivez la fonction **$([#Eval].FunctionName)** qui renvoit la valeur.
+          
+          $(DisplayOnce([#Document].TestMechanismDescription.FR))
+          
+          Les prototypes des fonctions **$([#Eval].FunctionName)** et
+          **$([#Eval].TestFunctionName)** sont les suivants:
+          
+          @@CODE[
+            $([#Document].Prototype[0])
+            $([#Document].Prototype[1])
+          @@CODE]
+          
+          $(DisplayOnce([#Document].TestMechanismMain.FR))
+          
+          @@CODE[$([#Document].TestFunctionCode)@@CODE]
+        
+        FR]
+      ]
+      
+      [TestMechanismMain
+        FR = [Text($, END)
+          Evidemment, vous devriez utiliser cette fonction **$([#Eval].TestFunctionName)**
+          pour tester votre propre fonction **$([#Eval].FunctionName)** avant.    
+        END]
+      ]
+    ]
+  ]
+}
