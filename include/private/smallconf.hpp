@@ -63,6 +63,7 @@ struct				SmallConf
   static bool			create_mode;
   static std::stack<std::string> file_read;
   static std::list<std::string> file_path;
+  static int			additionnal_path_to_pop;
   SmallConf			*father;
   Type				last_type = NOTYPE;
   bool				symbol;

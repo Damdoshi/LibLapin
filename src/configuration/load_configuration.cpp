@@ -89,6 +89,11 @@ t_bunny_configuration	*bunny_load_configuration(t_bunny_configuration_type		type
     outconf = bunny_read_configuration(type, code, config);
 
   SmallConf::file_path.pop_back();
+  while (SmallConf::additionnal_path_to_pop > 0)
+    {
+      SmallConf::file_path.pop_back();
+      SmallConf::additionnal_path_to_pop -= 1;
+    }
   SmallConf::file_read.pop();
   bunny_delete_file(code, &buffer[0]);
   if (!outconf)

@@ -32,16 +32,8 @@ Decision		dabsic_read_text_cont(const char	*code,
   while (code[i] && (eoftok == "" || !readtext(code, i, eoftok.c_str())))
     {
       // On a trouvé une variable
-      if (vartok != "" && readtext(code, i, vartok.c_str()))
+      if (vartok != "" && readtext(code, i, vartok.c_str()) && readtext(code, i, "("))
 	{
-	  if (readtext(code, i, "(") == false)
-	    scream_error_if
-	      (return (BD_ERROR), BE_SYNTAX_ERROR,
-	       "The token '(' was expected after the variable insertion token "
-	       "on line %s:%d",
-	       "ressource,configuration,syntax",
-	       SmallConf::file_read.top().c_str(), whichline(code, i)
-	       );
 	  conf[index++].SetString(std::string(&code[l], i - l - 1 - vartok.size()));
 	  if (dabsic_read_litterals(code, i, conf[index++], root, true) == BD_ERROR)
 	    return (BD_ERROR);

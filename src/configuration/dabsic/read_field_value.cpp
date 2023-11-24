@@ -59,14 +59,16 @@ Decision		dabsic_read_field_value(const char		*code,
 
   if (code[i] == '@')
     {
-      if (_bunny_handle_directive
-	  (code, i, &conf, &root, dabsic_read_separator,
-	   Expression::BEOF_TERNARY) != BD_OK)
-	return (BD_ERROR);
+      if ((ret = _bunny_handle_directive
+	   (code, i, &conf, &root, dabsic_read_separator,
+	    Expression::BEOF_TERNARY)) == BD_ERROR)
+	return (ret);
       dabsic_read_separator(code, i);
-      return (BD_OK);
+      if (ret == BD_OK)
+	return (ret);
     }
-
+  // On continue si on a @ mais pas une directive car @ indique qu'on veut completer
+  // une string avec le chemin du script actuel.
   if ((ret = dabsic_read_litterals(code, i, conf, root)) == BD_OK)
     return (ret);
   if (ret == BD_ERROR)

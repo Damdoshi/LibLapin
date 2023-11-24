@@ -89,7 +89,7 @@ int			main(int					argc,
 
   bunny_set_log_mode(false);
   bunny_set_error_descriptor(2);
-  bunny_set_log_filter("system,ressource,syntax");
+  bunny_set_log_filter("syntax,configuration");
   for (int i = 1; i < argc; ++i)
     {
       if (strcmp("--resolve", argv[i]) == 0)

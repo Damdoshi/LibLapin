@@ -52,6 +52,7 @@ Decision		_bunny_handle_directive(const char		*code,
     {"@include", (SmallConf*)bunny_configuration_get_root(fileroot)},
     {"@insert", (SmallConf*)node},
     {"@push", (SmallConf*)node},
+    {"@addpath", NULL}
   };
   int			directive;
 
@@ -87,7 +88,7 @@ Decision		_bunny_handle_directive(const char		*code,
   std::string		path;
   t_bunny_configuration	*chk;
 
-  if (readtext(code, i, "("))
+  if (readtext(code, i, "(") && directive != 3) // Ne fonctionne pas avec addpath
     {
       read_separator(code, i);
       
@@ -160,6 +161,7 @@ Decision		_bunny_handle_directive(const char		*code,
 	   code, i, node, fileroot, "false", "Error while opening directory ",
 	   res, whichline(code, i));
       bunny_configuration_push_path(res);
+      SmallConf::additionnal_path_to_pop += 1;
       bunny_errno = 0;
       while ((f = readdir(dir)) != NULL)
 	{
@@ -174,17 +176,25 @@ Decision		_bunny_handle_directive(const char		*code,
 		 res, whichline(code, i));
 	    }
 	  if (f->d_name[0] != '.' && isdir(res, &f->d_name[0]) == false)
-	    flist.push_back(f->d_name);
+	    flist.push_back(std::string(res) + std::string(f->d_name));
 	}
     }
   else
     flist.push_back(res);
-  const char *temp = "_Temporary";
   
   ////////////////////////////////////////////////////////////////////////
   // On parcoure l'ensemble des fichiers qui doivent etre chargé
   for (auto it = flist.begin(); it != flist.end(); ++it)
     {
+      if (directive == 3)
+	{
+	  if (isdir("", it->c_str()))
+	    {
+	      bunny_configuration_push_path(it->c_str());
+	      SmallConf::additionnal_path_to_pop += 1;
+	    }
+	  continue ;
+	}
       if (type == BC_CUSTOM)
 	chk = bunny_open_configuration(it->c_str(), directives[directive].node);
       else if (type == BC_TEXT)
