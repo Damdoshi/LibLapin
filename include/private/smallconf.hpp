@@ -206,6 +206,28 @@ struct				SmallConf
     return ((const t_bunny_configuration*)this);
   }
 
+  std::string			RebuildAddress(void) const
+  {
+    const SmallConf		*cnf = this;
+    std::vector<const SmallConf*> tmp;
+    std::string			str;
+    
+    tmp.reserve(20);
+    while (cnf->father != NULL)
+      {
+	tmp.push_back(cnf);
+	cnf = cnf->father;
+      }
+    str = "";
+    for (auto rit = tmp.rbegin(); rit != tmp.rend(); ++rit)
+      {
+	if (rit == tmp.rbegin() && !(*rit)->array.size())
+	  str += ".";
+	str += (*rit)->name;
+      }
+    return (str);
+  }
+
   SmallConf(void);
   ~SmallConf(void);
 };

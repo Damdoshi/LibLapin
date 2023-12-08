@@ -19,7 +19,7 @@ Decision		dabsic_read_inside_scope(const char		*code,
   while (code[i] != '\0' && code[i] != ']')
     if ((ret = dabsic_read_field(code, i, conf, root)) != BD_OK)
       {
-	if (code[i] != '\0' && code[i] != ']')
+	if (ret != BD_ERROR && code[i] != '\0' && code[i] != ']')
 	  {
 	    scream_error_if
 	    (return (BD_ERROR), BE_SYNTAX_ERROR,

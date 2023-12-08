@@ -23,14 +23,15 @@ Decision		dabsic_read_inside_array(const char		*code,
       dabsic_read_separator(code, i);
     }
   dabsic_read_separator(code, i);
-  if (code[i] == '}')
+  if (code[i] == '}' || code[i] == ']')
     return (BD_OK);
 
   conf.construct = SmallConf::ARRAY;
-  iteration = 0;
   do
     {
-      SmallConf		&newconf = conf[iteration++];
+      // Exploitation de la taille afin de s'adapter aux éventuels @push
+      iteration = conf.array.size();
+      SmallConf		&newconf = conf[iteration];
 
       dabsic_read_separator(code, i);
       if ((ret = dabsic_read_sequence(code, i, newconf, root)) == BD_ERROR)
