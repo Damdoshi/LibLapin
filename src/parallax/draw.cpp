@@ -163,7 +163,7 @@ typedef void		(*__draw)(struct bunny_parallax			&px,
   for (size_t i = 0; i < px->nbr_layers; ++i)
     {
       if (px->layers[i].local)
-	func[px->layers[i].mode](*px, px->layers[i], {0.0, 0.0}, {0, 0}, screen_size);
+	func[px->layers[i].mode](*px, px->layers[i], {0, 0}, {0.0, 0.0}, screen_size);
       else
 	{
 	  t_bunny_accurate_position ratio = {
