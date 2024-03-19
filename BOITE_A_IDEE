@@ -22,3 +22,6 @@ Main = [Function
 
   DoOperation(5, 6, ADD) 'Le scope du paramètre est implicite.
 ]
+
+=> Operateur d'assignation alternatif autorisant le changement de type de l'opérande de gauche.
+=> L'opérateur = classique serait fortement typé tandis que l'autre non. Un mot clef indiquant la solidité du type des champs était prévu dans le livre de référence, a voir comment cela peut s'articuler.
