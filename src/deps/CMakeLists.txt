@@ -1,0 +1,6 @@
+include(${CMAKE_CURRENT_LIST_DIR}/abs/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/brd/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/clt/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/cmt/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/srv/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/thr/CMakeLists.txt)

@@ -1,0 +1,54 @@
+list(APPEND LAPIN_SRC
+	${CMAKE_CURRENT_LIST_DIR}/bindf.cpp
+	${CMAKE_CURRENT_LIST_DIR}/casesf.cpp
+	${CMAKE_CURRENT_LIST_DIR}/childrenf.cpp
+	${CMAKE_CURRENT_LIST_DIR}/clean_raw_data.cpp
+	${CMAKE_CURRENT_LIST_DIR}/clear.cpp
+	${CMAKE_CURRENT_LIST_DIR}/create_mode.cpp
+	${CMAKE_CURRENT_LIST_DIR}/data.cpp
+	${CMAKE_CURRENT_LIST_DIR}/declarativef.cpp
+	${CMAKE_CURRENT_LIST_DIR}/delete_configuration.cpp
+	${CMAKE_CURRENT_LIST_DIR}/delete_node.cpp
+	${CMAKE_CURRENT_LIST_DIR}/execute.cpp
+	${CMAKE_CURRENT_LIST_DIR}/flexible_load.cpp
+	${CMAKE_CURRENT_LIST_DIR}/get_address.cpp
+	${CMAKE_CURRENT_LIST_DIR}/get_case.cpp
+	${CMAKE_CURRENT_LIST_DIR}/get_case_named.cpp
+	${CMAKE_CURRENT_LIST_DIR}/get_child.cpp
+	${CMAKE_CURRENT_LIST_DIR}/get_good_conf.cpp
+	${CMAKE_CURRENT_LIST_DIR}/get_name.cpp
+	${CMAKE_CURRENT_LIST_DIR}/get_nbr_case.cpp
+	${CMAKE_CURRENT_LIST_DIR}/get_nbr_child.cpp
+	${CMAKE_CURRENT_LIST_DIR}/get_parent.cpp
+	${CMAKE_CURRENT_LIST_DIR}/get_root.cpp
+	${CMAKE_CURRENT_LIST_DIR}/getf.cpp
+	${CMAKE_CURRENT_LIST_DIR}/handle_directive.cpp
+	${CMAKE_CURRENT_LIST_DIR}/is_last.cpp
+	${CMAKE_CURRENT_LIST_DIR}/iterator.cpp
+	${CMAKE_CURRENT_LIST_DIR}/linkf.cpp
+	${CMAKE_CURRENT_LIST_DIR}/load_configuration.cpp
+	${CMAKE_CURRENT_LIST_DIR}/new_configuration.cpp
+	${CMAKE_CURRENT_LIST_DIR}/parsing.cpp
+	${CMAKE_CURRENT_LIST_DIR}/pop_path.cpp
+	${CMAKE_CURRENT_LIST_DIR}/push_path.cpp
+	${CMAKE_CURRENT_LIST_DIR}/read_configuration.cpp
+	${CMAKE_CURRENT_LIST_DIR}/read_time.cpp
+	${CMAKE_CURRENT_LIST_DIR}/resolve_path.cpp
+	${CMAKE_CURRENT_LIST_DIR}/save_configuration.cpp
+	${CMAKE_CURRENT_LIST_DIR}/setf.cpp
+	${CMAKE_CURRENT_LIST_DIR}/shrink_single_element_array.cpp
+	${CMAKE_CURRENT_LIST_DIR}/text.cpp
+	${CMAKE_CURRENT_LIST_DIR}/which_format.cpp
+	${CMAKE_CURRENT_LIST_DIR}/write_configuration.cpp
+)
+
+include(${CMAKE_CURRENT_LIST_DIR}/archive/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/csv/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/dabsic/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/expr/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/ini/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/json/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/lisp/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/lua/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/smallconf/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/xml/CMakeLists.txt)

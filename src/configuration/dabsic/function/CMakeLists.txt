@@ -1,0 +1,20 @@
+list(APPEND LAPIN_SRC
+${CMAKE_CURRENT_LIST_DIR}/Function.cpp
+${CMAKE_CURRENT_LIST_DIR}/compute.cpp
+${CMAKE_CURRENT_LIST_DIR}/read_build.cpp
+${CMAKE_CURRENT_LIST_DIR}/read_do.cpp
+${CMAKE_CURRENT_LIST_DIR}/read_for.cpp
+${CMAKE_CURRENT_LIST_DIR}/read_function.cpp
+${CMAKE_CURRENT_LIST_DIR}/read_function_line.cpp
+${CMAKE_CURRENT_LIST_DIR}/read_if.cpp
+${CMAKE_CURRENT_LIST_DIR}/read_inside_function.cpp
+${CMAKE_CURRENT_LIST_DIR}/read_instruction.cpp
+${CMAKE_CURRENT_LIST_DIR}/read_print.cpp
+${CMAKE_CURRENT_LIST_DIR}/read_repeat.cpp
+${CMAKE_CURRENT_LIST_DIR}/read_select.cpp
+${CMAKE_CURRENT_LIST_DIR}/read_statement.cpp
+${CMAKE_CURRENT_LIST_DIR}/read_variable_declaration.cpp
+${CMAKE_CURRENT_LIST_DIR}/read_while.cpp
+${CMAKE_CURRENT_LIST_DIR}/read_with.cpp
+${CMAKE_CURRENT_LIST_DIR}/write_function.cpp
+)

@@ -1,0 +1,23 @@
+list(APPEND LAPIN_SRC
+${CMAKE_CURRENT_LIST_DIR}/count_field.cpp
+${CMAKE_CURRENT_LIST_DIR}/delete_ini.cpp
+${CMAKE_CURRENT_LIST_DIR}/field_get_value.cpp
+${CMAKE_CURRENT_LIST_DIR}/field_name.cpp
+${CMAKE_CURRENT_LIST_DIR}/field_set_value.cpp
+${CMAKE_CURRENT_LIST_DIR}/first_field.cpp
+${CMAKE_CURRENT_LIST_DIR}/first_scope.cpp
+${CMAKE_CURRENT_LIST_DIR}/get_error.cpp
+${CMAKE_CURRENT_LIST_DIR}/get_field.cpp
+${CMAKE_CURRENT_LIST_DIR}/get_scope.cpp
+${CMAKE_CURRENT_LIST_DIR}/load_ini.cpp
+${CMAKE_CURRENT_LIST_DIR}/new_ini.cpp
+${CMAKE_CURRENT_LIST_DIR}/next_field.cpp
+${CMAKE_CURRENT_LIST_DIR}/next_scope.cpp
+${CMAKE_CURRENT_LIST_DIR}/read_ini.cpp
+${CMAKE_CURRENT_LIST_DIR}/save_ini.cpp
+${CMAKE_CURRENT_LIST_DIR}/scope_get_field.cpp
+${CMAKE_CURRENT_LIST_DIR}/scope_name.cpp
+${CMAKE_CURRENT_LIST_DIR}/scope_set_field.cpp
+${CMAKE_CURRENT_LIST_DIR}/set_field.cpp
+${CMAKE_CURRENT_LIST_DIR}/write_ini.cpp
+)

@@ -1,0 +1,20 @@
+language: cpp
+dist: bionic
+sudo: required
+compiler:
+  - gcc
+
+before_install:
+  - sudo apt update
+  - sudo apt install -y libsfml-dev libopencv-dev libusb-dev libffcall-dev lcov
+
+script:
+  - mkdir build && cd build
+  - cmake -DWITH_TESTS=ON -DBUILD_SHARED=OFF -DWITH_COVERAGE=ON ..
+  - cmake --build . --config Debug -- -j $(nproc)
+  - ctest -j $(nproc) --output-on-failure
+
+after_success:
+  - lcov --directory . --capture --output-file coverage.info
+  - lcov --remove coverage.info '/usr/*' '*/tests/*' --output-file coverage.info
+  - bash <(curl -s https://codecov.io/bash) -f coverage.info 

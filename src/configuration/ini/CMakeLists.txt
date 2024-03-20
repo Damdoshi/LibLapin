@@ -1,0 +1,4 @@
+list(APPEND LAPIN_SRC
+${CMAKE_CURRENT_LIST_DIR}/read_ini.cpp
+${CMAKE_CURRENT_LIST_DIR}/write_ini.cpp
+)
