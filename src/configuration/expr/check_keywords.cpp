@@ -13,6 +13,10 @@ bool			check_keywords(const std::string		&str)
     return (false);
   if (bunny_strcasecmp(cstr, "else") == 0)
     return (false);
+  if (bunny_strcasecmp(cstr, "in") == 0)
+    return (false);
+  if (bunny_strcasecmp(cstr, "out") == 0)
+    return (false);
   return (true);
 }
 

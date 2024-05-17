@@ -32,6 +32,7 @@ struct				Expression
       BEOF_HIGHMATH,
       BEOF_POW,
       BEOF_CAT,
+      BEOF_GROUPS,
       LAST_OPERATOR_FAMILY
     };
   enum				Operator
@@ -82,8 +83,10 @@ struct				Expression
       BEO_MUL			= 0,
       BEO_DIV,
       BEO_MOD,
-      BEO_POW,
-      BEO_CAT			= 0
+      BEO_POW			= 0,
+      BEO_CAT			= 0,
+      BEO_IN			= 0,
+      BEO_OUT
     };
 
   static const std::string
@@ -143,6 +146,7 @@ t_expr_computation_func		expr_compute_low_math;
 t_expr_computation_func		expr_compute_high_math;
 t_expr_computation_func		expr_compute_pow;
 t_expr_computation_func		expr_compute_cat;
+t_expr_computation_func		expr_compute_group;
 t_expr_computation_func		expr_compute_function_call;
 
 SmallConf			*expr_get_variable(SmallConf		&variable,

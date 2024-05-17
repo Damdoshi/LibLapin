@@ -19,7 +19,8 @@ const t_expr_computation gl_expr_computation[Expression::LAST_OPERATOR_FAMILY] =
     &expr_compute_low_math,
     &expr_compute_high_math,
     &expr_compute_pow,
-    &expr_compute_cat
+    &expr_compute_cat,
+    &expr_compute_group,
   };
 
 bool			expr_compute(SmallConf			&exp,
