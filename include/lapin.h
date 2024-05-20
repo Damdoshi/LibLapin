@@ -142,6 +142,7 @@ typedef enum			s_bunny_decision
 # include			"lapin/fixedpoint.h"
 
 # include			"lapin/container.h"
+# include			"lapin/graph.h"
 
 # include			"lapin/sprite.h"
 # include			"lapin/sound_sprite.h"
@@ -160,9 +161,7 @@ typedef enum			s_bunny_decision
 #  include			"working/database.h"
 # endif
 
-# ifdef				BUNNY_HARDWARE
-#  include			"lapin/hardware.h"
-# endif
+# include			"lapin/hardware.h"
 
 # ifdef				BUNNY_MACRO
 #  include			"lapin/macros.h"
@@ -175,6 +174,7 @@ typedef enum			s_bunny_decision
 # endif
 # ifdef				__cplusplus
 #  include			"lapin/context/Context.hpp"
+#  include			"lapin/configuration.hpp"
 # endif
 #endif	/*			__LAPIN_H__					*/
 

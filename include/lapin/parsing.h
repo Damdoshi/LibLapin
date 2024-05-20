@@ -147,6 +147,10 @@ bool			bunny_read_cstring(const char		*str,
 					   char			*out,
 					   size_t		out_len);
 
+bool			bunny_read_cchar(const char		*code,
+					 ssize_t		*index,
+					 char			*out);
+
 /*!
 ** Transform the sent string into a c-string format. Turn LF into '\' and 'n',
 ** for example.
@@ -178,6 +182,11 @@ bool			bunny_read_rawstring(const char		*str,
 					     size_t		out_len,
 					     char		*end_token);
 
+bool			bunny_read_value(const char		*code,
+					 ssize_t		*index,
+					 t_bunny_configuration	*node,
+					 const char		*end_token);
+
 /*!
 ** Return on which line str[index] is.
 ** \param str The string to test.
@@ -192,7 +201,7 @@ size_t			bunny_read_until_it_is_full(int		fd,
 						    size_t	len);
 
 # ifdef				__MINGW32__
-#  pragma			pack(1)
+#  pragma			pack(4)
 # endif
 typedef struct		s_bunny_binary_box
 {
@@ -219,6 +228,11 @@ t_bunny_binary_box	*bunny_read_binary_box(const void	*data,
 t_bunny_binary_box	*bunny_load_binary_box(int		fd);
 
 t_bunny_binary_box	*bunny_create_binary_box(size_t		len);
+
+typedef bool		(*t_bunny_read_whitespace)(const char	*code,
+						   ssize_t	*i);
+extern
+t_bunny_read_whitespace	gl_bunny_read_whitespace;
 
 #endif	/*		__LAPIN_PARSING_H__			*/
 

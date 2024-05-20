@@ -1,0 +1,14 @@
+
+
+main = [Function
+  integer i
+
+  'For i = 0 To i < 100000 Step i += 1
+  'Next
+  i = 0
+  While i < 100000
+    i = i + 1
+  WEnd
+  Return 2
+]
+

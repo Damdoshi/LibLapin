@@ -16,7 +16,7 @@ void				bunny_set_geometry(t_bunny_buffer		*buffer,
   size_t			*typ = (size_t*)buffer;
   sf::VertexArray		vert;
   size_t			i;
-
+ 
   if (*typ != SYSTEM_RAM && *typ != GRAPHIC_TEXT)
     {
       vert.resize(array->length);

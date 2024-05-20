@@ -12,12 +12,13 @@ Decision		dabsic_read_scope(const char		*code,
 					  SmallConf		&root)
 {
   char			buffer[128];
-  int			line;
+  int			init_index;
 
   dabsic_read_separator(code, i);
-  line = whichline(code, i);
+  init_index = i;
   if (bunny_check_text(code, &i, "[")
-      && bunny_check_text(code, &i, "[]") == false)
+      && bunny_check_text(code, &i, "[]") == false
+      && bunny_check_text(code, &i, "[.]") == false)
     {
       readtext(code, i, "[");
       if (getfieldname(code, i, &buffer[0], sizeof(buffer), conf, true, false))
@@ -52,7 +53,7 @@ Decision		dabsic_read_scope(const char		*code,
        "The token ']' was expected to close the dictionnary "
        "scope opened on line %d, on line %s:%d",
        "ressource,configuration,syntax",
-       line, SmallConf::file_read.top().c_str(), whichline(code, i)
+       whichline(code, init_index), SmallConf::file_read.top().c_str(), whichline(code, i)
        );
   dabsic_read_separator(code, i);
   return (BD_OK);

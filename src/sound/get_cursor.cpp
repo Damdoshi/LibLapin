@@ -20,7 +20,7 @@ double			bunny_sound_get_cursor(const t_bunny_sound	*sound)
     {
       struct bunny_effect *snd = (struct bunny_effect*)sound;
 
-      f = snd->sound.getPlayingOffset().asSeconds();
+      f = snd->sound->getPlayingOffset().asSeconds();
     }
   scream_log_if("%p -> %f", "sound", sound, f);
   return (f);

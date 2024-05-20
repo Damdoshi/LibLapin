@@ -19,7 +19,8 @@ const t_expr_computation gl_expr_computation[Expression::LAST_OPERATOR_FAMILY] =
     &expr_compute_low_math,
     &expr_compute_high_math,
     &expr_compute_pow,
-    &expr_compute_cat
+    &expr_compute_cat,
+    &expr_compute_group,
   };
 
 bool			expr_compute(SmallConf			&exp,
@@ -101,6 +102,31 @@ bool			expr_compute(SmallConf			&exp,
 
 
     }
+
+  // Une expression doit toujours s'evaluer à partir de l'endroit ou l'on est - sauf
+  // quand il y a un With, mais on verra plus tard ca du coup.
+  
+  ///////////////////////////////////////////////////////////////////////////////
+  ////// CECI EST UNE MAUVAISE IDEE                                          ////
+  /// Le "Precalculateur" effectue une passe avec                            ////
+  /// des pointeurs nuls passés...                                           ////
+  /// Cela veut dire que dans certains cas, des references a des variables   ////
+  /// pourrait etre ecrasés par d'autres portant le meme nom                 ////
+  /// mais situé dans d'autres scopes.                                       ////
+  ///////////////////////////////////////////////////////////////////////////////
+  // Le précalcul en fait, ne devrait pas aovir lieu du tout, car la configuration
+  // peut tout a fait prendre plein de passes.
+  // il faudrait probablement laisser au programme la possibilité de demander
+  // le calcul final lui meme plutot que faire une passe, ou alors
+  // s'en tenir aux resolutions de constantes
+  
+  if (!root)
+    root = (SmallConf*)bunny_configuration_get_root((SmallConf*)&exp);
+  if (!artif)
+    artif = (SmallConf*)bunny_configuration_get_parent((SmallConf*)&exp);
+  if (!local)
+    local = &exp;
+
   if (exp.expression->optor_family == Expression::LAST_OPERATOR_FAMILY
       || exp.expression->optor_family == -1)
     {

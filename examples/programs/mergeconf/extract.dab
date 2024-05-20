@@ -1,0 +1,25 @@
+Complexity(int n) = n
+SOL = "-ALINEA-"
+Language = "FR"
+[Matter
+  Code = "AAA"
+]
+[Activity
+  Code = "BBB"
+]
+
+[DeliveryTargetType
+  FR = "le dossier"
+  EN = "the repository"
+]
+DeliveryTarget = "~/wrk/" # [].Matter.Code # "/" # [].Activity.Code # "/"
+[DeliveryTargetSpace
+  FR = "dans votre espace personnel"
+  EN = "in your personnal space"
+]
+
+[Document
+  FR = [Text($,EOF)
+    $(SOL)Votre travail doit être rendu via $(_._.DeliveryTargetType[[].Language]) $(_._.DeliveryTarget) $(_._.DeliveryTargetSpace[[].Language]).
+  EOF]
+]

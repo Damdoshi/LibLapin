@@ -1,0 +1,8 @@
+
+
+LocalStuff = "This is local"
+
+[SecondScope
+  Complicated = [.].LocalStuff # " YEAH"
+]
+

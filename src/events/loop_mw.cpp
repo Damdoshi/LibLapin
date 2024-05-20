@@ -18,7 +18,7 @@ const t_bunny_event	*__bunny_event_convert(const sf::Event	&);
 
 t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 				      size_t		nwin,
-				      unsigned char	freq,
+				      unsigned int	freq,
 				      void		*data)
 {
   sf::Event		event;
@@ -374,7 +374,8 @@ t_bunny_response	bunny_loop_mw(t_bunny_window	**window,
 	    bunny_usleep(delay - (now - prev));
 	}
       else
-	network_event((delay - (now - prev)) / 1000.0, data);
+	if ((rep = network_event((delay - (now - prev)) / 1000.0, data)) != GO_ON)
+	  return (rep);
     }
  end:
   if (gl_callback.leaving_context != NULL)

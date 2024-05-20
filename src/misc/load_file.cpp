@@ -38,6 +38,7 @@ ssize_t			bunny_load_file(const char		*file,
 	  bunny_free(buf);
 	  goto close_and_quit;
 	}
+      close(fd);
       buf[sz] = '\0';
     }
 

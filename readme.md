@@ -26,7 +26,7 @@ There is currently no tarball to get, but you can clone our master branch to get
 ## Install
 
 For Linux:
-* Install SFML on your system.
+* Install SFML, libffcall, libopencv4 and libusb on your system.
 * Download the LibLapin version of your choice.
 * Execute install.sh or school_install.sh
 * Reset your shell

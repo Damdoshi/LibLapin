@@ -22,7 +22,7 @@ void			bunny_sound_set_cursor(t_bunny_sound		*sound,
     {
       struct bunny_effect *snd = (struct bunny_effect*)sound;
 
-      snd->sound.setPlayingOffset(sf::seconds(s));
+      snd->sound->setPlayingOffset(sf::seconds(s));
     }
   bunny_sound_pause(sound);
   scream_log_if("%p -> ", "ressource,sound", sound);

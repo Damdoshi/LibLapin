@@ -5,7 +5,7 @@
 
 #include		"lapin_private.h"
 
-static const char	*gl_extension[BC_CUSTOM][8] =
+static const char	*gl_extension[BC_CUSTOM][64] =
   {
     {".ini", NULL},
     {".dab", ".sic", ".dabsic", NULL},
@@ -17,7 +17,7 @@ static const char	*gl_extension[BC_CUSTOM][8] =
     {".csv", NULL},
     {".json", NULL},
     {".lisp", ".el", NULL},
-    {".txt", ".rtf", NULL},
+    {".txt", ".rtf", ".c", ".cpp", ".h", ".hh", ".hpp", NULL},
     {".dat", ".bin", NULL},
     //
   };

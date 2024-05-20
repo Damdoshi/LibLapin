@@ -115,6 +115,15 @@ bool			checktext(const char			*str,
   return (false);
 }
 
+bool			checktext(const char			*str,
+				  ssize_t			&index,
+				  const char			*token)
+{
+  if (strncmp(&str[index], token, strlen(token)) == 0)
+    return (true);
+  return (false);
+}
+
 bool			readtextcase(const char			*str,
 				     ssize_t			&index,
 				     const char			*token)
@@ -261,25 +270,42 @@ bool			readinteger(const char			*code,
 				    int				&d)
 {
   char			*end;
+  int			j = i;
+  int			moved;
 
+  moved = 0;
   if (strncmp(&code[i], "0b", 2) == 0)
     {
       d = 0;
-      i += 2;
-      while (code[i] == '1' || code[i] == '0')
+      j += 2;
+      while (code[j] == '1' || code[j] == '0')
 	{
 	  d <<= 1;
-	  d |= (code[i] == '1') ? 1 : 0;
-	  i += 1;
+	  d |= (code[j] == '1') ? 1 : 0;
+	  j += 1;
 	}
+      if (j == i + 2)
+	return (false);
+      i = j;
       return (true);
     }
-  if (code[i] == 'u' || code[i] == 'x')
-    d = strtol(&code[++i], &end, 16);
+  if (strncmp(&code[i], "0c", 2) == 0)
+    {
+      i += (moved = 2);
+      d = strtol(&code[i], &end, 3);
+    }
+  else if (code[i] == 'u' || code[i] == 'x')
+    {
+      i += (moved = 1);
+      d = strtol(&code[i], &end, 16);
+    }
   else
     d = strtol(&code[i], &end, 0);
   if (end == &code[i])
-    return (false);
+    {
+      i -= moved;
+      return (false);
+    }
   i += end - &code[i];
   return (true);
 }
@@ -352,10 +378,7 @@ bool			readstring(const char			*code,
 	      p += 4;
 	    }
 	  else
-	    {
-	      fprintf(stderr, "Unknown character. (Line %d)\n", whichline(code, j));
-	      return (false);
-	    }
+	    strncpy(&d[p++], &code[j++], 1);
 	}
       else if (code[j] != '\\')
 	strncpy(&d[p++], &code[j++], 1);
@@ -445,7 +468,7 @@ void			writestring(std::ostream		&ss,
       case '\t': ss << "\\t"; break;
       case '\\': ss << "\\\\"; break;
       case '\r': ss << "\\r"; break;
-      case '"':  ss << "\""; break;
+      case '"':  ss << "\\\""; break;
       case '\'': ss << "'"; break;
       default:
 	if (str[i] >= ' ' && str[i] <= '~')
@@ -498,6 +521,8 @@ void			writestring(std::ostream		&ss,
   ss << "\"";
 }
 
+// Cette fonction mériterait d'être refaite, à partir d'un dry run d'une fonction
+// type bunny_configuration_go_get_node corrigée (pour prendre en considération tous les scopes)
 bool			readaddress(const char			*addr,
 				    ssize_t			&i,
 				    SmallConf			&out)
@@ -507,12 +532,16 @@ bool			readaddress(const char			*addr,
   ssize_t		j;
 
   start = j = i;
-  while (addr[i] && addr[i] != ']')
+  while (addr[i] && addr[i] != ']' && checktext(addr, i, ".]") == false)
     {
       if (addr[i] == '[')
 	j = i;
-      else if (readchar(addr, j, fieldname) == false)
-	return (false);
+      else
+	{
+	  readtext(addr, j, "#");
+	  if (readchar(addr, j, fieldname) == false)
+	    return (false);
+	}
 
       while (readtext(addr, j, "["))
 	{
@@ -520,7 +549,9 @@ bool			readaddress(const char			*addr,
 	  j = strtol(&addr[i], (char**)&str, 0);
 	  if (str == &addr[i])
 	    {
-	      if (readaddress(addr, i, out) == false)
+	      if (i - start == 1 && readtext(addr, i, "."))
+		{} // Racine locale trouvée
+	      else if (readaddress(addr, i, out) == false)
 		return (false);
 	    }
 	  else
@@ -539,7 +570,10 @@ bool			readaddress(const char			*addr,
 	}
       i = j;
     }
-  out.SetString(std::string(&addr[start], i - start), true);
+  if (addr[i] == '.')
+    out.SetString(std::string(&addr[start], (i + 1) - start), true);
+  else
+    out.SetString(std::string(&addr[start], i - start), true);
   return (true);
 }
 
@@ -554,7 +588,24 @@ bool			readvalue(const char			*code,
   int			bef;
 
   bef = i;
-  if (readdouble(code, i, val))
+  if (readtext(code, i, "b64\""))
+    {
+      void		*out;
+      size_t		outlen;
+
+      if (bunny_read_base64(code, &i, &out, &outlen) == false)
+	return (false);
+      nod.construct = SmallConf::ARRAY;
+      nod.was_b64 = true;
+      for (size_t i = 0; i < outlen / sizeof(int); ++i)
+	{
+	  int		j = *(int*)out;
+
+	  nod[i].SetInt(j);
+	}
+      bunny_free(out);
+    }
+  else if (readdouble(code, i, val))
     {
       nod.SetDouble(val);
       nod.original_value = std::string(&code[bef], i - bef);
@@ -564,6 +615,7 @@ bool			readvalue(const char			*code,
       nod.SetInt(ival);
       nod.original_value = std::string(&code[bef], i - bef);
     }
+  // @suivi d'un chemin.
   else if (readpath(code, i, &buffer[0], sizeof(buffer)))
     {
       const char	*tmp = bunny_configuration_resolve_path(&buffer[0]);
@@ -611,13 +663,14 @@ bool			readvalue(const char			*code,
 
 void			writevalue(std::ostream			&ss,
 				   const SmallConf		&cnf,
-				   bool				jsonehx)
+				   bool				jsonehx,
+				   bool				never_raw)
 {
   if (cnf.last_type == SmallConf::DOUBLE)
     ss << cnf.converted;
   else if (cnf.last_type == SmallConf::INTEGER)
     ss << cnf.converted_2;
-  else if (cnf.last_type == SmallConf::STRING)
+  else if (cnf.last_type == SmallConf::STRING || never_raw)
     writestring(ss, cnf.original_value, jsonehx);
   else
     ss << cnf.original_value;

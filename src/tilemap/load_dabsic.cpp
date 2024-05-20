@@ -201,21 +201,23 @@ static bool		load_layer(t_bunny_configuration			*cnf,
 				   struct bunny_tilemap				*tmap,
 				   t_bunny_tile_layer				*layer)
 {
+  if (tmap->method != BTM_VECTOR)
+    {
+      if ((layer->picture = bunny_new_picture(tmap->width, tmap->height)) == NULL)
+	return (false);
+    }
+  else
+    layer->picture = NULL;
+
   if (!bunny_configuration_getf_bool(cnf, &layer->visible, "Visible"))
     layer->visible = true;
-  if (!bunny_configuration_getf_int(cnf, &layer->size.x, "Size[0]"))
-    if (!bunny_configuration_getf_int(cnf, &layer->size.x, "Width"))
-      layer->size.x = tmap->map_size.x;
-  if (!bunny_configuration_getf_int(cnf, &layer->size.y, "Size[1]"))
-    if (!bunny_configuration_getf_int(cnf, &layer->size.y, "Height"))
-      layer->size.y = tmap->map_size.y;
 
   if (!bunny_configuration_getf_string(cnf, &layer->name, "Name"))
     layer->name = "";
   if (!(layer->name = bunny_strdup(layer->name)))
     return (false);
 
-  layer->nbr_tiles = layer->size.x * layer->size.y;
+  layer->nbr_tiles = tmap->map_size.x * tmap->map_size.y;
   if (layer->nbr_tiles != bunny_configuration_casesf(cnf, "Tiles"))
     goto DeleteName;
 
@@ -271,6 +273,29 @@ t_bunny_tilemap		*__bunny_load_dabsic_tilemap(t_bunny_configuration	*conf,
   if (!bunny_configuration_getf_int(map, &tmap->tile_size.y, "TileHeight"))
     if (!bunny_configuration_getf_int(map, &tmap->tile_size.y, "TileSize[1]"))
       return (NULL);
+
+  // Retrieve how tiles'gonna be displayed
+  const char		*str;
+
+  if (!bunny_configuration_getf_string(map, &str, "Projection"))
+    str = "";
+  if (!bunny_strcasecmp(str, "Perspective"))
+    tmap->projection = BTP_PERSPECTIVE;
+  else if (!bunny_strcasecmp(str, "Isometric"))
+    tmap->projection = BTP_ISOMETRIC;
+  else if (!bunny_strcasecmp(str, "Parrallel"))
+    tmap->projection = BTP_PERSPECTIVE;
+  else
+    tmap->projection = BTP_FLAT;
+
+  if (!bunny_configuration_getf_string(map, &str, "Method"))
+    str = "";
+  if (!bunny_strcasecmp(str, "Layer"))
+    tmap->method = BTM_LAYER;
+  else if (!bunny_strcasecmp(str, "Vector"))
+    tmap->method = BTM_VECTOR;
+  else
+    tmap->method = BTM_FLAT;
 
   // Count layers and tilesets
   tmap->nbr_tilesets = bunny_configuration_casesf(map, "Tilesets");

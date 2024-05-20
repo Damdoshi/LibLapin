@@ -1,0 +1,7 @@
+
+{Array
+  @push "pushee0.dab",
+  @push "pushee1.dab",
+  @push "pushee2.dab"
+}
+

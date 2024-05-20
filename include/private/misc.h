@@ -38,6 +38,7 @@ extern bool			gl_set_additional_blit;
 extern bool			gl_set_multiply_blit;
 extern size_t			gl_bunny_frequency;
 extern bool			gl_complete_log;
+extern t_bunny_list		*gl_backtasks_queue;
 extern void			*gl_loop_data;
 
 extern t_bunny_threadpool	*gl_bunny_loop_threadpool;

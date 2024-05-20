@@ -35,8 +35,8 @@
   CONFIG	=	-W -Wall -fPIC -std=c++14 -Wno-write-strings		\
 			-Wno-unused-result -Wno-format-security			\
 			-Wno-frame-address -Wno-narrowing			\
-			-DBUNNY_ALLOCATOR_DEACTIVATED				\
-			-DBUNNY_DEBUG
+			-DBUNNY_COMPILATION					\
+			-Wno-cast-function-type
 
   DEBUG		=	-O0 -g -g3 -ggdb
 #  OPTIM		=	-O2

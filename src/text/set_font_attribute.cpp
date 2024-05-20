@@ -110,7 +110,7 @@ bool			bunny_set_font_attribute(const char		*conf_file,
 	fnt->halign = BAL_LEFT;
       else if (strcmp(resfile, "Right") == 0)
 	fnt->halign = BAL_RIGHT;
-      else if (strcmp(resfile, "Middle") == 0)
+      else if (strcmp(resfile, "Middle") == 0 || strcmp(resfile, "Center") == 0)
 	fnt->halign = BAL_MIDDLE;
       else if (strcmp(resfile, "Justify") == 0)
 	fnt->halign = BAL_JUSTIFY;
@@ -127,7 +127,7 @@ bool			bunny_set_font_attribute(const char		*conf_file,
 	fnt->valign = BAL_TOP;
       else if (strcmp(resfile, "Bottom") == 0)
 	fnt->valign = BAL_BOTTOM;
-      else if (strcmp(resfile, "Middle") == 0)
+      else if (strcmp(resfile, "Middle") == 0 || strcmp(resfile, "Center") == 0)
 	fnt->valign = BAL_MIDDLE;
       else if (strcmp(resfile, "Justify") == 0)
 	fnt->valign = BAL_JUSTIFY;

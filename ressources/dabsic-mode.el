@@ -155,9 +155,9 @@
     (modify-syntax-entry ?' "<" dabsic-mode-syntax-table)
     (modify-syntax-entry ?\n ">" dabsic-mode-syntax-table)
     ; Multi-line commentaries
-    (modify-syntax-entry ?[ ". 1" dabsic-mode-syntax-table)
-    (modify-syntax-entry ?* ". 23b" dabsic-mode-syntax-table)
-    (modify-syntax-entry ?] "> 4" dabsic-mode-syntax-table)
+    (modify-syntax-entry ?\[ ". 1" dabsic-mode-syntax-table)
+    (modify-syntax-entry ?\* ". 23b" dabsic-mode-syntax-table)
+    (modify-syntax-entry ?\] "> 4" dabsic-mode-syntax-table)
     dabsic-mode-syntax-table)
     "Syntax table for dabsic-mode")
 

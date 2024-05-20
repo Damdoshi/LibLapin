@@ -45,6 +45,8 @@ t_bunny_font			*bunny_load_font(unsigned int		width,
   final->clipable.scale.y = 1;
   final->clipable.rotation = 0;
   final->clipable.color_mask.full = WHITE;
+  final->clipable.smooth = false;
+  final->clipable.mosaic = false;
 
   // Text properties
   final->string = NULL;

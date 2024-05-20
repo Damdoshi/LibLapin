@@ -10,6 +10,8 @@
 
 void			bunny_delete_layer(t_bunny_tile_layer		*ts)
 {
+  if (ts->picture)
+    bunny_delete_clipable(ts->picture);
   if (ts->name)
     bunny_free((char*)ts->name);
   if (ts->tiles)

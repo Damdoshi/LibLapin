@@ -45,7 +45,7 @@ typedef enum			e_bunny_align
 ** and verticaly.
 */
 # ifdef				__MINGW32__
-#  pragma			pack(1)
+#  pragma			pack(4)
 # endif
 typedef struct			s_bunny_font
 {
@@ -109,7 +109,7 @@ typedef struct			s_bunny_vector_font_line_coord
 typedef struct			s_bunny_letter
 {
   int				nb_edge;
-  t_bunny_vector_font_line_coord edge[5];
+  t_bunny_vector_font_line_coord edge[6];
 }				t_bunny_letter;
 
 /*!
@@ -154,6 +154,8 @@ typedef enum			e_bunny_letter_tab
     BFT_8,
     BFT_9,
     BFT_EXCLAMATION,
+    BFT_SLASH,
+    BFT_DOT,
     LAST_BUNNY_FONT
   }				t_bunny_letter_tab;
 

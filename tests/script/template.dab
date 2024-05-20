@@ -1,0 +1,88 @@
+'''''''''''''''''''''''''''''
+'Configuration de DocBuilder'
+'''''''''''''''''''''''''''''
+
+'Fichier CSS utilisé pour la mise en page. Si non spécifié, c'est /etc/technocore/default.css
+Style="res/simple.css"
+'Format par défaut quand l'option -f n'est pas spécifiée. Par défaut c'est PDF.
+'Les valeurs valides sont PDF, Web, Schoolbook et Pocketbook
+Format="PDF"
+'Langue par défaut des documents générés. Par défaut c'est FRANCAIS mösieur.
+'Les valeurs valides sont FR et EN actuellement.
+Language="FR"
+
+'Le nom de l'école. OBLIGATOIRE.
+' Peut-être un noeud dont les enfants seraient nommés d'après les langages
+[Company
+  [Name
+    EN = "EFRITS"
+    FR = "EFRITS"
+  ]
+  [LegalName
+    EN = "EFRITS SAS"
+    FR = "EFRITS SAS"
+  ]
+
+  'Le logo de l'école. Un fichier PNG. OBLIGATOIRE.
+  Logo="./res/school_logo.png"
+  'Le logo de l'école pour les pieds de page, en largeur.
+  SmallLogo="./res/small_school_logo.png"
+  Mail = "contact@efrits.fr"
+
+  Address = [Text($,EOF)
+    42 Avenue du Boulevard des Rues
+    68666 Styx
+    France
+  EOF]
+  Credentials = [Text($,EOF)
+    Entreprise immatriculée au RCS de Créteil sous le numéro 909 292 773
+    Centre de formation enregistrée sous le numéro AAA BBB CCC
+  EOF]
+]
+
+[Representative
+  Name = "Lisa Monpierre"
+  [Role
+    FR = "Présidente"
+    EN = "President"
+  ]
+  Gender = "e"
+]
+
+[Customer
+  Name = "Fabrice Boissier"
+  Gender = ""
+]
+
+Name = "Formation JavaScript"
+Address = ""
+Date = ""
+Duration = ""
+RealDuration = ""
+ELearning = false
+TrainingType = ""
+
+[Title
+  FR = "Attestation d'assiduité"
+  EN = "Attendance certification"
+]
+
+[Content
+  FR = [Text($,EOF)
+    Je, soussigné $([].Representative.Name), $([].Representative.Role) de $([].Company.LegalName)
+    atteste que $([].Customer.Name) a suivi la formation :
+
+    * Nom de la session : $([].Name)
+    * Lieu de la formation : $([].Address)
+    * Date(s) de la formation : $([].Date)
+    * Durée de la formation : $([].Duration)
+    * Type d'action de formation (au sens de l'article 6313-1 du code du travail) : $([].TrainingType)
+    * Durée effectivement suivie par $([].Customer.Gender == "e" ? "la" : "le") stagiaire de $([].RealDuration)
+    soit un taux de présence et de réalisation de $(100 * real([].RealDuration) / real([].Duration))%
+    * Suivi détaillée de l'assiduité en e-learning : $([].ELearning ? "Oui" : "Non")
+  EOF]
+  EN = [Text($,EOF)
+    
+  EOF]
+]
+

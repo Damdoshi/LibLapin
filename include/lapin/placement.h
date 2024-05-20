@@ -84,6 +84,40 @@ typedef struct			s_bunny_accurate_area
   double			h;
 }				t_bunny_accurate_area;
 
+typedef struct			s_bunny_zposition
+{
+  int				x;
+  int				y;
+  int				z;
+}				t_bunny_zposition;
+
+typedef struct			s_bunny_accurate_zposition
+{
+  double			x;
+  double			y;
+  double			z;
+}				t_bunny_accurate_zposition;
+
+typedef struct			s_bunny_zarea
+{
+  int				x;
+  int				y;
+  int				z;
+  int				w;
+  int				h;
+  int				d;
+}				t_bunny_zarea;
+
+typedef struct			s_bunny_accurate_zarea
+{
+  double			x;
+  double			y;
+  double			z;
+  double			w;
+  double			h;
+  double			d;
+}				t_bunny_accurate_zarea;
+
 # if				defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 
 typedef struct s_bunny_clipable	t_bunny_clipable;
@@ -140,7 +174,7 @@ typedef struct s_bunny_font	t_bunny_font;
 # ifdef				__cplusplus
 #  include			"lapin/cpp_guard.hpp"
 # endif
-  
+
 # define	bunny_size_configuration(a, b, c)				\
   bunny_position_configuration(a, b, c)
 # define	bunny_size_bind_configuration(a, b, c)				\

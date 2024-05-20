@@ -1,0 +1,10 @@
+
+
+Valeur = "Valeur"
+
+File = @insert c ($, EOF) "small.c"
+
+Text = [Text($, EOF)
+  Test $([].File) Test
+EOF]
+

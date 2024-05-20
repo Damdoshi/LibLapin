@@ -1,0 +1,20 @@
+
+
+{Scope
+}
+
+Main():int = [Function
+  integer i
+  
+  Scope []= "Bonjour"
+  Scope []= "Ca va?"
+  Scope []= "Bien!"
+  ' Ca ne fonctionne pas car bunny conf go get node ne prend qu'un seul point
+  ' de reference, hors en prenant root comme reference pour avoir Scope, i n'est plus accessible
+  ' car i est accessible seulement a l'interieur de la fonction...
+  ' gros probleme donc car la fonction go get node est utilisee absolument partout
+  For i = 0 To i < 3 Step i += 1
+    "Print: ", i, " = ", Scope[i], "\n"
+  Next
+  return 0
+]

@@ -1,0 +1,1266 @@
+[*
+** Jason Brillante "Damdoshi"
+** Hanged Bunny Studio 2014-2021
+** Pentacle Technologie 2008-2022
+** EFRITS SAS 2022-2022
+**
+** Crawler configuration file
+**
+** This file contains informations for docbuilder to generate documentation about the way
+** crawler will check source files and default values that neutralize its effect.
+** Those default values should be overwritten by another configuration file, or keep as it
+** to obtain the desired effect.
+*]
+
+'Default language
+Language = "FR"
+
+[PrintEP
+  FR(int x) = "Une erreur de ce type apporte " # string(x) # " point(s) d'erreur(s)."
+  EN(int x) = "That kind of mistake bring you " # string(x) # " error point(s)."
+]
+
+
+[Tolerance = -1
+  _FR = [Text($,E)
+    Chaque règle à respecter est accompagnée d'un nombre de "points d'erreurs" que provoque
+    son non-respect. Le nombre de points d'erreurs s'accumule pour un type d'erreur jusqu'à trois fois.
+    L'acquisition de $([.].Tolerance) points d'erreurs ou plus entraine la considération de votre travail comme
+    non fonctionnel.
+  E]
+  _EN = [Text($,E)
+    All rules are written aside a number of "error points" that would be added to your work for
+    each infrigement. The number of error points grows for each type of error until three times.
+    The acquisition of $([.].Tolerance) error points or more will make your work considered broken.
+  E]
+  FR = [.].Tolerance <> -1 ? _FR : ""
+  EN = [.].Tolerance <> -1 ? _EN : ""
+]
+
+[AnsiC
+  _FR = [Text($,E)
+    Votre programme devra compiler en C ANSI, exploitant pour cela les drapeaux -ansi et -pedantic
+    lors de la procédure de compilation. Cela implique, entre autres, la possibilité de ne déclarer
+    de variables locales qu'en début de fonction.
+  E]
+  _EN = [Text($,E)
+    Your program must compile using ANSI C, by adding -ansi and -pedantic to your compilation flags.
+    This imply, among other things, that you can only declare local variables at the beginning of
+    function.
+  E]
+  FR = [.].AnsiC ? _FR : ""
+  EN = [.].AnsiC ? _EN : ""
+]
+
+[Header
+  _FR = [Text($,E)
+    Tous les fichiers sources doivent commencer par l'en-tête règlementaire.
+    Cet en-tête est accessible via un raccourci pré-configuré dans votre **emacs** : CTRL-C-H.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+    All source files must start with the regular header.
+    This header is available through a key shortcut configured in your **emacs**: CTRL-C-H.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  FR = Points && Value <> "" ? _FR : ""
+  EN = Points && Value <> "" ? _EN : ""
+  Value = ""
+  Points = 0
+]
+
+[FunctionPerFile
+  _FR = [Text($,E)
+    Un fichier source d'implémentation de fonctions ne doit pas contenir plus de $(_.Value) fonctions.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+    A source file implementing functions must not contain more than $(_.Value) functions.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = 0
+  Points = 0
+]
+
+[FunctionMatchingPath
+  _FR = [Text($,E)
+    Les fichiers d'implémentation de fonctions doivent porter le nom
+    de leur fonction communicante (non static), hors préfixes et hors suffixes eventuels. Ils doivent
+    se situer sans dans un dossier src, soit dans un dossier nommé d'après leur préfixe ou suffixe
+    éventuels. Ci-dessous, des exemples de fonction appartenant à un module "list" et à un module
+    "vector" et comportant un préfixe arbitraire "hbs_", ainsi qu'une fonction hors module.
+
+    * hbs_list_add, située dans list/add.c
+    * hbs_list_remove, située dans list/remove.c
+    * hbs_vector_new, situé dans vector/new.c
+    * hbs_swap, situé dans src/swap.c
+
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[NonStaticFunctionPerFile
+  _FR = [Text($,E)
+    Le nombre de fonctions communicantes (non static) pouvant être écrite dans un unique fichier
+    d'implémentation de fonction est de $(_.Value).
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = 0
+  Points = 0
+]
+
+[MaximumLineWidth
+  _FR = [Text($,E)
+    Le nombre maximal de colonnes qu'une ligne peut comporter est $(_.Value).
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = 0
+  Points = 0
+]
+
+[MaximumFunctionLength
+  _FR = [Text($,E)
+    Le nombre maximal de ligne dans une fonction est de $(_.Value). Ce nombre de ligne est celui
+    situé entre les accolades définissant le contenu de la fonction.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = 0
+  Points = 0
+]
+
+[MaximumFunctionParameter
+  _FR = [Text($,E)
+    Une fonction ne peut pas prendre plus de $(_.Value) paramètres.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = 0
+  Points = 0
+]
+
+[OnlyByReference
+  _FR = [Text($,E)
+    Les instances de structure d'une taille supérieure à $(_.Value) multiplets - rembourrage compris -
+    **doivent** être passé comme argument de fonction exclusivement via leur adresse.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+    Instances of structures with a size greater than $(_.Value) bytes - padding included -
+    **must** be sent as parameter by address only.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[LocalVariableInlineInitForbidden
+  _FR = [Text($,E)
+    Il est interdit d'initialiser une variable locale sur la ligne de sa déclaration, à moins que celle
+    ci ne soit static.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+    It is forbidden to initialize a local variable on the same line of its declaration, unless it is
+    static.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[AllGlobalsAreConst
+  _FR = [Text($,E)
+    Les variables globales **doivent** être constantes.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+    Global variables **must** be const.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[Indentation
+  GNU_INDENT_STYLE = 0
+  ALLMAN_INDENT_STYLE = 1
+  KNR_INDENT_STYLE = 2
+  {StyleName
+    "GNU",
+    "Allman",
+    "K&R"
+  }
+  _FR = [Text($,E)
+    L'indentation doit être réalisée par les smart-tab pré-configuré d'**emacs**. Cette indentation est appelée via la touche tabulation. L'indentation attendue pour un niveau est de $(_.Size) colonne(s) de large.$(_.Token != 0 ? " Les tabulations seront considéré comme mesurant " # string(_.Token) # " colonnes." : "Seul les espaces doivent être utilisés pour indenter.") Le style d'indentation attendu est le style $(_.StyleName[_.Style]). Les tabulations forcées doivent être réalisées via le raccourci d'**emacs** : ALT-i.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+    The indentation must be achieved with smart-tab available in **emacs**. This indentation is invoked with the tabulation key. The expected indentation for a single level is $(_.Size) column(s) wide. $(_.Token != 0 ? " Tabulations will be considered " # string(_.Token) # " columns wide and must be used when required." : "Only space can be used for indentation.") The expected indentation style is $(_.StyleName[_.Style]). Forced tabulation must be invoked with the **emacs** key shortcut ALT-I.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  FR = Points ? _FR : ""
+  EN = Points ? _EN : ""
+  Style = 0
+  Size = 2
+  Token = 8
+  Points = 0
+]
+
+
+[FunctionVariableDefinitionAlignment
+  _FR = [Text($,E)
+    Les noms des variables ou attributs déclarés doivent être alignés avec le nom du bloc qui les
+    contient, fonction, structure ou union.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+    Names of variables or attributes must be alligned with the name of the block that contains them,
+    function, structure or union.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[GlobalFunctionVariableDefinitionAlignment
+  _FR = [Text($,E)
+    Le nom des variables locales, des variables globales et des noms de fonction doivent être alignés
+    sur l'ensemble du fichier.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+    Local and global variable names, as much as function names, must be alligned in their file.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[ParameterTypeAlignment
+  _FR = [Text($,E)
+    Les types des paramètres de fonction doivent être alignés.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+    Parameter types must be aligned.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[ParameterNameAlignment
+  _FR = [Text($,E)
+    Les noms des paramètres de fonction doivent être alignés.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+    Parameter names must be aligned.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[GlobalParameterNameAlignment
+  _FR = [Text($,E)
+    Les types des paramètres de fonction doivent être alignés sur l'ensemble du fichier.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+    Parameter types must be aligned in the whole file.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[DeclarationStatementSeparator
+  _FR = [Text($,E)
+    Une ligne vide doit suivre un bloc de déclaration de variables.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+    An empty line must follow any variable declaration block.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[NoEmptyLineInFunction
+  _FR = [Text($,EOF)
+    En dehors des lignes vides éventuellements imposées, aucune ligne ne doit être vide à l'intérieur d'une fonction.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  _EN = [Text($,E)
+    There must be no empty line else than the one that are required in a function body.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[TrailingWhitespace
+  _FR = [Text($,E)
+    Ni espace ni tabulation ne devront être trouvé en fin de ligne.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+    No space or tabulation must be found at the end of any line.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[SingleInstructionPerLine
+  _FR = [Text($,E)
+    Une ligne ne peut comporter qu'une seule instruction ou déclaration. L'utilisation de l'opérateur virgule pour
+    chainer les opérations (à ne pas confondre avec le séparateur d'arguments de fonctions) est interdit.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,E)
+    A line must only have a single instruction or declaration. The use of the comma operator to chain operations
+    (not to be confused with the parameter separator) is forbidden.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+MIXED_CASE = 0  'THIS_IS_IT
+SNAKE_CASE = 1  'this_is_it
+CAMEL_CASE = 2  'thisIsIt
+PASCAL_CASE = 3 'ThisIsIt
+
+{Cases
+  "MIXED_CASE",
+  "snake_case",
+  "camelCase",
+  "PascalCase"
+}
+
+[Global
+  [Style
+    _FR = [Text($,E)
+      Les symboles n'ayant pas de style déterminé spécifique doivent être écrit en $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,E)
+      Symbols with no specific determined style must be written using $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    FR = Points ? _FR : ""
+    EN = Points ? _EN : ""
+    Value = 0
+    Points = 0
+  ]
+  [Infix
+    _FR = [Text($,E)
+      Les symboles n'ayant pas de style déterminé spécifique doivent comporter un $(_.Position == "Prefix" ? "préfixe" : "suffixe") '$(_.Value)'.
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,E)
+      Symbols with no specific determined style must include a $(_.Position == "Prefix" ? "prefix" : "suffix") '$(_.Value)'
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    FR = Points ? _FR : ""
+    EN = Points ? _EN : ""
+    Value = ""
+    Position = ""
+    Points = 0
+  ]
+]
+
+[FunctionName
+  [Style
+    _FR = [Text($,E)
+      Les noms de fonction doivent être écrit en $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,E)
+      Function names must be written using $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    FR = Points ? _FR : ""
+    EN = Points ? _EN : ""
+    Value = 0
+    Points = 0
+  ]
+  [Infix
+    _FR = [Text($,E)
+      Les noms de fonctions doivent comporter un $(_.Position == "Prefix" ? "préfixe" : "suffixe") '$(_.Value)'.
+        $([.].PrintEP[[].Language](_.Points))
+      E]
+      _EN = [Text($,E)
+        Function names must include a $(_.Position == "Prefix" ? "prefix" : "suffix") '$(_.Value)'
+        $([.].PrintEP[[].Language](_.Points))
+      E]
+      FR = Points && Value <> "" ? _FR : ""
+      EN = Points && Value <> "" ? _EN : ""
+      Position = ""
+      Value = ""
+      Points = 0
+    ]
+]
+
+[GlobalVariable
+  [Style
+    _FR = [Text($,E)
+      Les noms des variables globales doivent être écrit en $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,E)
+      Global variable names must be written using $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    FR = Points ? _FR : ""
+    EN = Points ? _EN : ""
+    Value = 0
+    Points = 0
+  ]
+  [Infix
+    _FR = [Text($,E)
+      Les noms variables globales comporteront un $(_.Position == "Prefix" ? "préfixe" : "suffixe") '$(_.Value)'.
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,E)
+      Global variable names must include a $(_.Position == "Prefix" ? "prefix" : "suffix") '$(_.Value)'
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    FR = Points && Value <> "" ? _FR : ""
+    EN = Points && Value <> "" ? _EN : ""
+    Position = ""
+    Value = ""
+    Points = 0
+  ]
+]
+
+[LocalVariable
+  [Style
+    _FR = [Text($,E)
+      Les noms des variables locales doivent être écrit en $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,E)
+      Local variable names must be written using $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    FR = Points ? _FR : ""
+    EN = Points ? _EN : ""
+    Value = 0
+    Points = 0
+  ]
+  [Infix
+    _FR = [Text($,E)
+      Les noms variables locales comporteront un $(_.Position == "Prefix" ? "préfixe" : "suffixe") '$(_.Value)'.
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,E)
+      Local variable names must include a $(_.Position == "Prefix" ? "prefix" : "suffix") '$(_.Value)'
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    FR = Points && Value <> "" ? _FR : ""
+    EN = Points && Value <> "" ? _EN : ""
+    Position = ""
+    Value = ""
+    Points = 0
+  ]
+]
+
+[StructName
+  [Style
+    _FR = [Text($,E)
+      Les noms des structure doivent être écrit en $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,E)
+      Structure names must be written using $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    FR = Points ? _FR : ""
+    EN = Points ? _EN : ""
+    Value = 0
+    Points = 0
+  ]
+  [Infix
+    _FR = [Text($,E)
+      Les noms des structures comporteront un $(_.Position == "Prefix" ? "préfixe" : "suffixe") '$(_.Value)'.
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,E)
+      Struct names must include a $(_.Position == "Prefix" ? "prefix" : "suffix") '$(_.Value)'
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    FR = Points && Value <> "" ? _FR : ""
+    EN = Points && Value <> "" ? _EN : ""
+    Position = ""
+    Value = ""
+    Points = 0
+  ]
+]
+
+[StructAttributeName
+  [Style
+    _FR = [Text($,E)
+      Les noms des attributs de structure doivent être écrit en $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,E)
+      Structure attribute names must be written using $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    FR = Points ? _FR : ""
+    EN = Points ? _EN : ""
+    Value = 0
+    Points = 0
+  ]
+  [Infix
+    _FR = [Text($,E)
+      Les noms des attributes de structure comporteront un $(_.Position == "Prefix" ? "préfixe" : "suffixe") '$(_.Value)'.
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,E)
+      Struct attribute names must include a $(_.Position == "Prefix" ? "prefix" : "suffix") '$(_.Value)'
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    FR = Points && Value <> "" ? _FR : ""
+    EN = Points && Value <> "" ? _EN : ""
+    Position = ""
+    Value = ""
+    Points = 0
+  ]
+]
+
+[EnumName
+  [Style
+    _FR = [Text($,EOF)
+      Les noms des types énumérés doivent être écrit en $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    EOF]
+    _EN = [Text($,EOF)
+      Enumaration type names must be written using $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    EOF]
+    FR = Points ? _FR : ""
+    EN = Points ? _EN : ""
+    Value = 0
+    Points = 0
+  ]
+  [Infix
+    _FR = [Text($,EOF)
+      Les noms des types énumérés comporteront un $(_.Position == "Prefix" ? "préfixe" : "suffixe") '$(_.Value)'.
+      $([.].PrintEP[[].Language](_.Points))
+    EOF]
+    _EN = [Text($,EOF)
+      Enumeration type names must include a $(_.Position == "Prefix" ? "prefix" : "suffix") '$(_.Value)'
+      $([.].PrintEP[[].Language](_.Points))
+    EOF]
+    FR = Points && Value <> "" ? _FR : ""
+    EN = Points && Value <> "" ? _EN : ""
+    Position = ""
+    Value = ""
+    Points = 0
+  ]
+]
+
+[EnumConstant
+  [Style
+    _FR = [Text($,E)
+      Les constantes d'une énumération doivent être écrit en $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,EOF)
+      Enumeration symbolic constant names must be written using $([.].Cases[_.Value])
+      $([.].PrintEP[[].Language](_.Points))
+    EOF]
+    FR = Points ? _FR : ""
+    EN = Points ? _EN : ""
+    Value = 0
+    Points = 0
+  ]
+  [Infix
+    _FR = [Text($,E)
+      Les constantes d'une énumération doivent comporter un $(_.Position == "Prefix" ? "préfixe" : "suffixe") '$(_.Value)'.
+        $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,EOF)
+      Enumeration symbolic constant names must include a $(_.Position == "Prefix" ? "prefix" : "suffix") '$(_.Value)'
+        $([.].PrintEP[[].Language](_.Points))
+    EOF]
+    FR = Points && Value <> "" ? _FR : ""
+    EN = Points && Value <> "" ? _EN : ""
+    Position = ""
+    Value = ""
+    Points = 0
+  ]
+]
+
+[UnionName
+  [Style
+    _FR = [Text($,E)
+      Les noms des types unions doivent être écrit en $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,EOF)
+      Union type names must be written using $([.].Cases[_.Value])
+      $([.].PrintEP[[].Language](_.Points))
+    EOF]
+    FR = Points ? _FR : ""
+    EN = Points ? _EN : ""
+    Value = 0
+    Points = 0
+  ]
+  [Infix
+    _FR = [Text($,E)
+      Les noms des types union comporteront un $(_.Position == "Prefix" ? "préfixe" : "suffixe") '$(_.Value)'.
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,EOF)
+      Union type names must include a $(_.Position == "Prefix" ? "prefix" : "suffix") '$(_.Value)'
+      $([.].PrintEP[[].Language](_.Points))
+    EOF]
+    FR = Points && Value <> "" ? _FR : ""
+    EN = Points && Value <> "" ? _EN : ""
+    Position = ""
+    Value = ""
+    Points = 0
+  ]
+]
+
+[UnionAttributeName
+  [Style
+    _FR = [Text($,E)
+      Les noms des attributs d'unions doivent être écrit en $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,E)
+      Union attribute names must be written using $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    FR = Points ? _FR : ""
+    EN = Points ? _EN : ""
+    Value = 0
+    Points = 0
+  ]
+  [Infix
+    _FR = [Text($,E)
+      Les noms des attributes d'unions comporteront un $(_.Position == "Prefix" ? "préfixe" : "suffixe") '$(_.Value)'.
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,E)
+      Union attribute names must include a $(_.Position == "Prefix" ? "prefix" : "suffix") '$(_.Value)'
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    FR = Points && Value <> "" ? _FR : ""
+    EN = Points && Value <> "" ? _EN : ""
+    Position = ""
+    Value = ""
+    Points = 0
+  ]
+]
+
+[TypedefName
+  [Style
+    FR = [Text($,E)
+      Les noms des types définis avec typedef doivent être écrit en $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    EN = [Text($,EOF)
+      Typedef names must be written using $([.].Cases[_.Value])
+      $([.].PrintEP[[].Language](_.Points))
+    EOF]
+    FR = _.Points ? _FR : ""
+    EN = _.Points ? _EN : ""
+    Value = 0
+    Points = 0
+  ]
+  [Infix
+    _FR = [Text($,E)
+      Les noms des types définis avec typedef doivent comporter un $(_.Position == "Prefix" ? "préfixe" : "suffixe") '$(_.Value)'.
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,EOF)
+      Typedef names must include a $(_.Position == "Prefix" ? "prefix" : "suffix") '$(_.Value)'
+      $([.].PrintEP[[].Language](_.Points))
+    EOF]
+    FR = Points && Value <> "" ? _FR : ""
+    EN = Points && Value <> "" ? _EN : ""
+    Position = ""
+    Value = ""
+    Points = 0
+  ]
+]
+
+[TypedefMatching
+  _FR = [Text($,E)
+    Les noms des types déclarés avec typedef doivent correspondre au nom du type sous jacent, s'il s'agit d'une structure, d'une union ou d'une énumération, en dehors de ses infixes éventuels.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    Typedef names must match the typedefed name - with the exception of its infixes - when the type is a struct, union or enum one.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[FunctionPointerTypeName
+  [Style
+    FR = [Text($,E)
+      Les noms des types pointeurs sur fonction doivent être écrit en $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    EN = [Text($,EOF)
+      Function pointer type names must be written using $([.].Cases[_.Value])
+      $([.].PrintEP[[].Language](_.Points))
+    EOF]
+    FR = _.Points ? _FR : ""
+    EN = _.Points ? _EN : ""
+    Value = 0
+    Points = 0
+  ]
+  [Infix
+    _FR = [Text($,E)
+      Les noms des types pointeurs sur fonction doivent comporter un $(_.Position == "Prefix" ? "préfixe" : "suffixe") '$(_.Value)'.
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,EOF)
+      Function pointer type names must include a $(_.Position == "Prefix" ? "prefix" : "suffix") '$(_.Value)'
+      $([.].PrintEP[[].Language](_.Points))
+    EOF]
+    FR = Points && Value <> "" ? _FR : ""
+    EN = Points && Value <> "" ? _EN : ""
+    Position = ""
+    Value = ""
+    Points = 0
+  ]
+]
+
+'N'EST ACTUELLEMENT PAS IMPLEMENTE
+[FunctionPointerAttribute
+  [Style
+    FR = [Text($,E)
+      Les pointeurs sur fonction utilisés comme attribut doivent être écrit en $([.].Cases[_.Value]).
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    EN = [Text($,EOF)
+      Function pointer used as attribute names must be written using $([.].Cases[_.Value])
+      $([.].PrintEP[[].Language](_.Points))
+    EOF]
+    FR = _.Points ? _FR : ""
+    EN = _.Points ? _EN : ""
+    Value = 0
+    Points = 0
+  ]
+  [Infix
+    _FR = [Text($,E)
+      Les pointeurs sur fonction utilisés comme attribut doivent comporter un $(_.Position == "Prefix" ? "préfixe" : "suffixe") '$(_.Value)'.
+      $([.].PrintEP[[].Language](_.Points))
+    E]
+    _EN = [Text($,EOF)
+      Function pointer tused as attribute names must include a $(_.Position == "Prefix" ? "prefix" : "suffix") '$(_.Value)'
+      $([.].PrintEP[[].Language](_.Points))
+    EOF]
+    FR = Points && Value <> "" ? _FR : ""
+    EN = Points && Value <> "" ? _EN : ""
+    Position = ""
+    Value = ""
+    Points = 0
+  ]
+]
+
+[NoShortName
+  _FR = [Text($,E)
+    Les noms de symbole trop courts sont proscrits. Les exceptions sont les suivantes : i, j, k, cnt, ret, end, go, win, nbr, len, add, sub, mul, div and mod.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    Short names are forbidden. Exceptions are the following: i, j, k, cnt, ret, end, go, win, nbr, len,
+    add, sub, mul, div and mod.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = 0
+  Points = 0
+]
+
+[PointerStarOnName
+  _FR = [Text($,E)
+    L'étoile indiquant qu'un type est un pointeur doit être situé du coté du nom dans les déclarations.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    Stars that indicates that a type is a pointer must stick with the variable name.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[PointerStarOnType
+  _FR = [Text($,E)
+    L'étoile indiquant qu'un type est un pointeur doit être situé du coté du type dans les déclarations.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    Stars that indicates that a type is a pointer must stick with the variable type.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[SpaceAroundInbetweenPointerStars
+  _FR = [Text($,E)
+    Les séries d'étoiles de pointeur dans les déclarations entrecoupés de mot-clefs (comme const) doivent
+    leur être séparé par un unique espace.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    Series of stars indicating pointers separated by keywords (like const) must be separated from
+    them by a single space.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[NoSpaceInsideParenthesis
+  _FR = [Text($,E)
+    Aucun espace ne doit être situé entre l'intérieur d'une parenthèse et l'opérande qui s'y trouve.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    There must be no space between the interior of a parenthesis and the operand inside.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[SpaceAroundBinaryOperator
+  _FR = [Text($,E)
+    Il doit y avoir un espace, un saut de ligne ou une tabulation de chaque coté des opérateurs binaires.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    There must be a space, tabulation or newline on each side of every binary operator.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[SpaceAfterStatement
+  _FR = [Text($,E)
+    Un espace doit suivre immédiatement les mot-clefs permettant le contrôle de l'execution :
+    if, while, switch, goto, break, return et continue.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    A space must follow immediatly after an execution control keyword:
+    if, while, switch, goto, break, return or continue;
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[SpaceAfterComma
+  _FR = [Text($,E)
+    Un espace doit suivre immédiatement un opérateur virgule ou un séparateur virgule d'arguments.
+    Aucun espace ne doit se trouver devant la virgule.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    A space must follow a comma for chaining instructions or separating arguments.
+    There must be no space before the comma.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[ReturnParenthesis
+  _FR = [Text($,E)
+    L'expression calculée pour la structure de contrôle return doit être entourée de parenthèses.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    The return expression must be surrounded by parenthesis.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[SizeOfParenthesis
+  _FR = [Text($,E)
+    L'expression envoyée en paramètre à sizeof doit être entourée de parenthèses.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    The sizeof expression must be surrounded by parenthesis.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[StructForbidden
+  _FR = [Text($,E)
+    Le mot clef 'struct' est interdit.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    The 'struct' keyword is forbidden.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[UnionForbidden
+  _FR = [Text($,E)
+    Le mot clef 'union' est interdit.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    The 'union' keyword is forbidden.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[EnumForbidden
+  _FR = [Text($,E)
+    Le mot clef 'enum' est interdit.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    The 'enum' keyword is forbidden.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[GotoForbidden
+  _FR = [Text($,E)
+    Le mot clef 'goto' est interdit.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    The 'goto' keyword is forbidden.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[BreakForbidden
+  _FR = [Text($,E)
+    Le mot clef 'break' est interdit.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    The 'break' keyword is forbidden.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[ForForbidden
+  _FR = [Text($,E)
+    Le mot clef 'for' est interdit.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    The 'for' keyword is forbidden.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[SwitchForbidden
+  _FR = [Text($,E)
+    Le mot clef 'switch' est interdit.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    The 'switch' keyword is forbidden.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[DoWhileForbidden
+  _FR = [Text($,E)
+    Le mot clef 'do' est interdit.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    The 'do' keyword is forbidden.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[WhileForbidden
+  _FR = [Text($,E)
+    Le mot clef 'while' est interdit.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    The 'while' keyword is forbidden.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[IfForbidden
+  _FR = [Text($,E)
+    Le mot clef 'if' est interdit.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    The 'if' keyword is forbidden.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[ElseForbidden
+  _FR = [Text($,E)
+    Le mot clef 'else' est interdit.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    The 'else' keyword is forbidden.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[AvoidBracesForSingleLine
+  _FR = [Text($,E)
+    Une portée de boucle ou de condition ne comportant qu'une unique ligne ne doit pas comporter d'accolades.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    A scope with a single line inside must not have braces around it.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[AlwaysBraces
+  _FR = [Text($,E)
+    Une portée de boucle ou de condition doit toujours comporter des accolades, même lorsque celle-ci ne contient qu'une seule ligne.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    Braces are mandatory around a scope, even if the scope is a single line long.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[InlineModificationForbidden
+  _FR = [Text($,E)
+    Les opérateurs '++' et '--' sont interdits.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    Operators '++' and '--' are forbidden.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[TernaryForbidden
+  _FR = [Text($,E)
+    L'opérateur ternaire '?' ':' est interdit.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    The ternary operator '?' ':' is forbidden.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[MaximumIfInFunction
+  _FR = [Text($,E)
+    Une fonction ne peut pas comporter plus de $(_.Value) if, else if compris.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    A function cannot have more than $(_.Value) if, else if included.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = 0
+  Points = 0
+]
+
+[NoGlobal
+  _FR = [Text($,E)
+    Les variables globales sont interdites.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    Global variables are forbidden.
+    $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[NoMagicValue
+  _FR = [Text($,E)
+    Les constantes magiques sont interdites, à l'exception de coefficients entre 1.0 et -1.0 pour les
+    flottants, des valeurs inférieure à 10, des valeurs 16, 32, 24, 48, 64, 128, 256, 512, 1024, 2048 et 4096 pour les entiers.
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    Magic constants are forbidden, with the excpetion of coefficients between 1.0 and -1.0 for
+    floating numbers, and values inferior to 10, values equal to 16, 32, 24, 48, 64, 128, 256, 512, 2048 and 4096 for integers.
+      $([.].PrintEP[[].Language](_.Points))
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = false
+  Points = 0
+]
+
+[MaximumVariable
+  _FR = [Text($,E)
+    Le nombre maximal de variables dans une fonction est de $(_.Value).
+    $([.].PrintEP[[].Language](_.Points))
+  E]
+  _EN = [Text($,EOF)
+    The maximum amount of variable inside a function is $(_.Value).
+  EOF]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = 0
+  Points = 0
+]
+

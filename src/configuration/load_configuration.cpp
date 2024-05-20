@@ -8,9 +8,18 @@
 
 #define			PATTERN		"%d type, %s file, %p config -> %p"
 
+Decision		dabsic_read_text_cont(const char				*code,
+					      ssize_t					&i,
+					      SmallConf					&conf,
+					      SmallConf					&root,
+					      std::string				vartok,
+					      std::string				eoftok,
+					      std::string				comtok);
+
 t_bunny_configuration	*bunny_load_configuration(t_bunny_configuration_type		type,
 						  const char				*file,
-						  t_bunny_configuration			*config)
+						  t_bunny_configuration			*config,
+						  ...)
 {
   std::list<std::string>::reverse_iterator it;
   t_bunny_configuration	*outconf = NULL;
@@ -47,10 +56,44 @@ t_bunny_configuration	*bunny_load_configuration(t_bunny_configuration_type		type
 
   if (type == BC_DATA)
     outconf = _bunny_read_data(code, siz, config);
+  else if (type == BC_TEXT)
+    {
+      t_bunny_configuration	*nw = NULL;
+      std::string		toks[3];
+      va_list			lst;
+      char			*ptr;
+      ssize_t			parsing;
+
+      parsing = 0;
+      va_start(lst, config);
+      if (config == NULL)
+	outconf = nw = bunny_new_configuration();
+      else
+	outconf = config;
+      if (outconf != NULL)
+	{
+	  for (size_t z = 0; z < 3 && (ptr = va_arg(lst, char*)); ++z)
+	    toks[z] = std::string(ptr);
+	  if (dabsic_read_text_cont
+	      (code, parsing, *(SmallConf*)outconf,
+	       *(SmallConf*)bunny_configuration_get_root(outconf),
+	       toks[0], "", toks[2]
+	       ) == BD_ERROR)
+	    {
+	      bunny_delete_configuration(nw);
+	      return (NULL);
+	    }
+	}
+    }
   else
     outconf = bunny_read_configuration(type, code, config);
 
   SmallConf::file_path.pop_back();
+  while (SmallConf::additionnal_path_to_pop > 0)
+    {
+      SmallConf::file_path.pop_back();
+      SmallConf::additionnal_path_to_pop -= 1;
+    }
   SmallConf::file_read.pop();
   bunny_delete_file(code, &buffer[0]);
   if (!outconf)
@@ -59,4 +102,3 @@ t_bunny_configuration	*bunny_load_configuration(t_bunny_configuration_type		type
   scream_log_if(PATTERN, "ressource,configuration", type, file, config, outconf);
   return (outconf);
 }
-

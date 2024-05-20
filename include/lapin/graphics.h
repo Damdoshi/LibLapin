@@ -47,7 +47,7 @@
 **
 */
 # ifdef				__MINGW32__
-#  pragma			pack(1)
+#  pragma			pack(4)
 # endif
 
 typedef struct			s_bunny_clipable
@@ -235,6 +235,12 @@ t_bunny_picture			*bunny_new_picture(unsigned int			wid,
 ** \return Return a t_bunny_picture filled with the picture or NULL on error.
 */
 t_bunny_picture			*bunny_load_picture(const char			*file);
+
+/*!
+** Save a picture into a file.
+*/
+bool				bunny_save_picture(const t_bunny_picture	*buf,
+						   const char			*file);
 
 /*!
 ** The bunny_read_picture load a picture from memory. Supported formats are

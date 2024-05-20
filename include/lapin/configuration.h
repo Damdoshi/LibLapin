@@ -1,6 +1,6 @@
 /*
 ** Jason Brillante "Damdoshi"
-** Hanged Bunny Studio 2014-2018
+** Hanged Bunny Studio 2014-2020
 **
 ** Bibliotheque Lapin
 */
@@ -48,8 +48,8 @@ t_bunny_configuration	*bunny_new_configuration(void);
 ** \param file The file to load
 ** \param config An existing config to fill, or NULL to create a new one
 */
-# define		bunny_open_configuration(file, config) \
-  bunny_load_configuration(bunny_which_format(file), file, config)
+# define		bunny_open_configuration(file, config, ...)	\
+  bunny_load_configuration(bunny_which_format(file), file, config, #__VA_ARGS__)
 
 /*!
 ** Load a file into a configuration node and its children.
@@ -63,7 +63,8 @@ t_bunny_configuration	*bunny_new_configuration(void);
 */
 t_bunny_configuration	*bunny_load_configuration(t_bunny_configuration_type		type,
 						  const char				*file,
-						  t_bunny_configuration			*config);
+						  t_bunny_configuration			*config,
+						  ...);
 
 /*!
 ** Save a configuration into a file.
@@ -214,6 +215,31 @@ bool			bunny_configuration_getf_bool(t_bunny_configuration		*config,
 						      const char			*format,
 						      ...) _BFMT(3, 4);
 
+bool			bunny_configuration_vgetf_node(t_bunny_configuration		*config,
+						       t_bunny_configuration		**node,
+						       const char			*format,
+						       va_list				lst);
+
+bool			bunny_configuration_vgetf_string(t_bunny_configuration		*config,
+							 const char			**string,
+							 const char			*format,
+							 va_list			lst);
+
+bool			bunny_configuration_vgetf_double(t_bunny_configuration		*config,
+							 double				*dbl,
+							 const char			*format,
+							 va_list			lst);
+
+bool			bunny_configuration_vgetf_int(t_bunny_configuration		*config,
+						      int				*integer,
+						      const char			*format,
+						      va_list				lst);
+
+bool			bunny_configuration_vgetf_bool(t_bunny_configuration		*config,
+						       bool				*boolean,
+						       const char			*format,
+						       va_list				lst);
+
 # if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 /*!
 ** Get a value inside the configuration. Its type will match of the type of val.
@@ -254,6 +280,27 @@ bool			bunny_configuration_setf_int(t_bunny_configuration		*config,
 						     int				integer,
 						     const char				*format,
 						     ...) _BFMT(3, 4);
+
+
+bool			bunny_configuration_vsetf_node(t_bunny_configuration		*config,
+						       const t_bunny_configuration	*node,
+						       const char			*format,
+						       va_list				lst);
+
+bool			bunny_configuration_vsetf_string(t_bunny_configuration		*config,
+							 const char			*string,
+							 const char			*format,
+							 va_list			lst);
+
+bool			bunny_configuration_vsetf_double(t_bunny_configuration		*config,
+							 double				dbl,
+							 const char			*format,
+							 va_list			lst);
+
+bool			bunny_configuration_vsetf_int(t_bunny_configuration		*config,
+						      int				integer,
+						      const char			*format,
+						      va_list				lst);
 
 # if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 /*!
@@ -325,6 +372,11 @@ bool			bunny_configuration_declarativef(t_bunny_configuration		*c,
 							 const char			*fmt,
 							 ...) _BFMT(2, 3);
 
+/*
+** Turn expression into field that contains their result
+*/
+bool			bunny_configuration_resolve(t_bunny_configuration		*cnf);
+
 /*!
 ** c[fmt] become a link on c.
 */
@@ -378,6 +430,13 @@ t_bunny_configuration	*bunny_configuration_end(t_bunny_configuration			*config);
 ** \return True if it is the last.
 */
 bool			bunny_configuration_is_last(t_bunny_configuration		*config);
+
+/*!
+** Merge all sents configurations into the first one
+*/
+bool			bunny_configuration_merge(int					cnt,
+						  t_bunny_configuration			*target,
+						  ...);
 
 /*!
 ** Return the format which is supposed to be used in file thanks to its extension.

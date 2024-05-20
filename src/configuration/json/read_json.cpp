@@ -24,21 +24,25 @@
 t_bunny_configuration	*_bunny_read_json(const char			*code,
 					  t_bunny_configuration		*config)
 {
+  Decision		dec;
   SmallConf		*conf = (SmallConf*)config;
   ssize_t		i;
   bool			cmode = SmallConf::create_mode;
 
   i = 0;
   SmallConf::create_mode = true;
-  if (json_read_scope(code, i, *conf, *conf) == BD_ERROR)
+  if ((dec = json_read_scope(code, i, *conf, *conf)) == BD_ERROR)
     {
       SmallConf::create_mode = cmode;
       return (NULL);
     }
-  else if (json_read_array(code, i, *conf, *conf) != BD_OK)
+  else if (dec != BD_OK)
     {
-      SmallConf::create_mode = cmode;
-      return (NULL);
+      if (json_read_array(code, i, *conf, *conf) != BD_OK)
+	{
+	  SmallConf::create_mode = cmode;
+	  return (NULL);
+	}
     }
   SmallConf::create_mode = cmode;
   scream_log_if("%s code, %p config -> %p", "ressource,configuration", code, config, config);

@@ -26,6 +26,7 @@
 # endif
 # include			"compat/ini.h"
 
+# define			SAMPLE_PER_SECONDS		44100
 # define			LAST_BUNNY_JOYSTICK		gl_maximum_joystick
 
 # define			bunny_get_screen_size()		\
@@ -80,6 +81,16 @@ int				bunny_dprintf(int		fd,
 void				*bunny_pool_getv(t_bunny_pool		*pol,
 						 size_t			*id);
 
+
+/*!
+** Set a minimum offset between the previous value and the new one to trigger
+** the joystick axis response.
+** \param axis The axis concerne by the offset
+** \param offset The offset [0; +100]
+*/
+void				bunny_set_joy_axis_minimum_offset(t_bunny_axis	axis,
+								  float		offset);
+
 /*!
 ** Signal that the sent element is free again.
 ** Pay attention: its fast free mechanism have a cost: it changes the id
@@ -132,11 +143,18 @@ extern const void		*last_scope;
 
 # else
 
-#  warning "bunny_alloca will use bunny_malloc"
+#  warning			"bunny_alloca will use bunny_malloc"
 #  define			bunny_alloca(a)			bunny_malloc(a)
 #  define			bunny_freea(a)			bunny_free(a)
 
 # endif
+
+# define			s_bunny_hardware		s_bunny_vm110n
+# define			t_bunny_hardwave		t_bunny_vm110n
+# define			bunny_new_hardware(a)		bunny_new_vm110n(a)
+# define			bunny_delete_harware(a)		bunny_delete_vm110n(a)
+# define			bunny_hardware_read(a)		bunny_vm110n_read(a)
+# define			bunny_hardware_write(a)		bunny_vm110n_write(a)
 
 /*
 ** For MinGW

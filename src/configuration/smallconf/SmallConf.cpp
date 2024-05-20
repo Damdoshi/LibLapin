@@ -6,6 +6,8 @@
 #include		<string.h>
 #include		"lapin_private.h"
 
+int			SmallConf::additionnal_path_to_pop = 0;
+
 SmallConf::SmallConf(void)
   : construct(PLAIN),
     given_name(false),
@@ -22,6 +24,7 @@ SmallConf::SmallConf(void)
     father(NULL),
     last_type(INTEGER),
     symbol(false),
+    was_b64(false),
     sequence(NULL),
     function(NULL),
     expression(NULL),

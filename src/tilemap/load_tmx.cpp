@@ -308,10 +308,6 @@ static bool		load_layer(t_bunny_configuration			*cnf,
 {
   if (!bunny_configuration_getf_bool(cnf, &layer->visible, "visible"))
     layer->visible = true;
-  if (!bunny_configuration_getf_int(cnf, &layer->size.x, "width"))
-    layer->size.x = tmap->map_size.x;
-  if (!bunny_configuration_getf_int(cnf, &layer->size.y, "height"))
-    layer->size.y = tmap->map_size.y;
 
   if (!bunny_configuration_getf_string(cnf, &layer->name, "name"))
     scream_error_if(return (false), EINVAL, "", "tilemap");
@@ -335,7 +331,7 @@ static bool		load_layer(t_bunny_configuration			*cnf,
   if (!bunny_base64_decode(data, strlen(data), (void**)&layer->tiles, &datalen))
     scream_error_if(goto DeleteName, EINVAL, "", "tilemap");
   datalen /= sizeof(int);
-  if (datalen != (size_t)(layer->size.x * layer->size.y))
+  if (datalen != (size_t)(tmap->map_size.x * tmap->map_size.y))
     scream_error_if(goto DeleteData, EINVAL, "", "tilemap");
   layer->nbr_tiles = datalen;
   double		v;

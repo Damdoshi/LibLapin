@@ -22,7 +22,7 @@ typedef struct		s_bunny_sound_slice
 }			t_bunny_sound_slice;
 
 # ifdef			__MINGW32__
-#  pragma		pack(1)
+#  pragma		pack(4)
 # endif
 typedef struct		s_bunny_sound_sprite
 {
@@ -60,5 +60,7 @@ bool			bunny_sound_sprite_stop_slice(t_bunny_sound_sprite *sprite);
 
 # define		bunny_sound_sprite_slice_name(name)		\
   bunny_hash(BH_DJB2, name, strlen(name))
+
+// No delete. Use bunny_delete_sound
 
 #endif	/*		__LAPIN_SOUND_SPRITE_H__			*/

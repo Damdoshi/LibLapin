@@ -1,0 +1,6 @@
+
+[InsertedScope
+  Field = 42
+  @insert "far_leaf.dab"
+]
+InsertedField = 100

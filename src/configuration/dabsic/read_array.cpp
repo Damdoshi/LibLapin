@@ -12,10 +12,10 @@ Decision		dabsic_read_array(const char		*code,
 					  SmallConf		&root)
 {
   char			buffer[128];
-  int			line;
+  int			init_index;
 
   dabsic_read_separator(code, i);
-  line = whichline(code, i);
+  init_index = i;
   if (readtext(code, i, "{"))
     {
       if (getfieldname(code, i, &buffer[0], sizeof(buffer), conf, true, false))
@@ -50,7 +50,7 @@ Decision		dabsic_read_array(const char		*code,
        "The token ']' or '}' was expected to close the "
        "array scope opened on line %d, on line %s:%d",
        "configuration,syntax",
-       line, SmallConf::file_read.top().c_str(), whichline(code, i)
+       whichline(code, init_index), SmallConf::file_read.top().c_str(), whichline(code, i)
        );
   dabsic_read_separator(code, i);
   return (BD_OK);

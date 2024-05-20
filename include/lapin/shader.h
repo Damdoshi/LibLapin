@@ -232,5 +232,12 @@ void			bunny_draw_spreading_source(t_bunny_spreading	*spread);
 void			bunny_clear_spreading(t_bunny_spreading		*spread);
 void			bunny_delete_spreading(t_bunny_spreading	*spread);
 
+typedef struct		s_bunny_blur
+{
+  t_bunny_accurate_position offset_factor;
+}			t_bunny_blur;
+
+t_bunny_shader		*bunny_blur_shader(const t_bunny_blur		*blur);
+
 #endif	/*		__LAPIN_SHADER_H__				*/
 

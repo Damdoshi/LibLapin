@@ -38,6 +38,7 @@ bool			expr_compute_test(Expression		&exp,
       SmallConf		*left = &exp.operand[i]->val;
       SmallConf		*right = &x.val;
       int		optor = exp.operand[i + 1]->optor;
+      SmallConf		*tmp;
 
       if (x.optor_family == -1)
 	{}
@@ -53,7 +54,7 @@ bool			expr_compute_test(Expression		&exp,
       if (left->last_type == SmallConf::RAWSTRING)
 	{
 	  cnst = false;
-	  if ((left = expr_get_variable
+	  if ((tmp = expr_get_variable
 	       (*left, dry, root, local, artif, param)) == NULL)
 	    scream_error_if
 	      (return (false), BE_BAD_ADDRESS,
@@ -63,6 +64,7 @@ bool			expr_compute_test(Expression		&exp,
 	       left->original_value.c_str(),
 	       artif->address.c_str(),
 	       exp.file.c_str(), exp.line);
+	  left = tmp;
 	}
       else if (exp.operand[i]->is_const == false)
 	cnst = false;
@@ -70,7 +72,7 @@ bool			expr_compute_test(Expression		&exp,
       if (right->last_type == SmallConf::RAWSTRING)
 	{
 	  cnst = false;
-	  if ((right = expr_get_variable
+	  if ((tmp = expr_get_variable
 	       (*right, dry, root, local, artif, param)) == NULL)
 	    scream_error_if
 	      (return (false), BE_BAD_ADDRESS,
@@ -80,6 +82,7 @@ bool			expr_compute_test(Expression		&exp,
 	       right->original_value.c_str(),
 	       artif->address.c_str(),
 	       exp.file.c_str(), exp.line);
+	  right = tmp;
 	}
       else if (exp.operand[i + 1]->is_const == false)
 	cnst = false;

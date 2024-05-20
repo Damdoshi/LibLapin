@@ -1,0 +1,35 @@
+
+[A
+  B = 1, 2, 3
+  C = 5
+]
+
+Z
+
+{Tab
+  "lol",
+  "lulz",
+  "lel"
+}
+
+ThisIsTest1 = "Is this ok ? " , "mdr" in [].Tab
+ThisIsTest2 = "Is this ok ? " , "mdr" out [].Tab
+ThisIsTest3 = "Is this ok ? " , "lulz" in [].Tab
+ThisIsTest4 = "Is this ok ? " , "lulz" out [].Tab
+
+AddressDe = "Je teste l'adresse de " , AddressOf([].A.B[1])
+JaiPasValeur = "Je verifie la valeur de " , HaveValue([].A)
+JaiValeur = "Je verifie la valeur de " , HaveValue([].A.C)
+JaiDeux = "Je regarde les deux enfants " , NbrChildren([].A)
+JaiTrois = "Je regarde les trois cases de A.B " , NbrCase([].A.B)
+JaiTroisBis = "Je regarde les trois cases de Tab " , NbrCase([].Tab)
+PasVideA = "Pas vide " , IsEmpty([].A)
+PasVideTab = "Pas vide " , IsEmpty([].Tab)
+PasVideAC = "Pas vide " , IsEmpty([].A.C)
+Vide = "Vide " , IsEmpty([].Z)
+
+Exists1 = "Existe ", Exists([].Tab)
+Exists2 = "Existe ", Exists([].A.B[2])
+DontExists1 = "Existe pas ", Exists([].A.B[3])
+DontExists2 = "Existe pas ", Exists([].A.Prout)
+

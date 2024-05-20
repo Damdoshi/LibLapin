@@ -22,7 +22,7 @@ int			main(int		argc,
 
   if (argc == 1)
     {
-      fprintf(stderr, "%s: Usage is:\n\t%s [[#]?field_address]+ [-f files]+.\n\t'#' stand for \"print array\".\n",
+      fprintf(stderr, "%s: Usage is:\n\t%s [[#@]?field_address]+ [-f files]+.\n\t'#' stand for \"print array\", one data per line. @ for merging datas.\n",
 	      *argv, *argv);
       return (EXIT_FAILURE);
     }
@@ -53,6 +53,9 @@ int			main(int		argc,
 	  if (fields[j][0] == '#')
 	    for (int k = 0; bunny_configuration_getf(cnf, &str, "%s[%d]", &fields[j][1], k); ++k)
 	      puts(str);
+	  else if (fields[j][0] == '@')
+	    for (int k = 0; bunny_configuration_getf(cnf, &str, "%s[%d]", &fields[j][1], k); ++k)
+	      write(1, str, strlen(str));
 	  else if (bunny_configuration_getf(cnf, &str, "%s", fields[j]))
 	    puts(str);
       }

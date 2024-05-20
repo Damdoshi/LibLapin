@@ -48,20 +48,27 @@ Decision		dabsic_read_field_value(const char		*code,
   if (ret == BD_ERROR)
     return (ret);
 
+  /*
+  ** Provoque une mauvaise interpretation des expressions
+  ** commencant par une adresse de noeud [Stuff] [#Stuff].Lol
   if ((ret = dabsic_read_scope(code, i, conf, root)) == BD_OK)
     return (ret);
   if (ret == BD_ERROR)
     return (ret);
+  */
 
   if (code[i] == '@')
     {
-      if (_bunny_handle_directive
-	  (code, i, &conf, &root, dabsic_read_separator) == BD_ERROR)
-	return (BD_ERROR);
-      else
-	dabsic_read_separator(code, i);
+      if ((ret = _bunny_handle_directive
+	   (code, i, &conf, &root, dabsic_read_separator,
+	    Expression::BEOF_TERNARY)) == BD_ERROR)
+	return (ret);
+      dabsic_read_separator(code, i);
+      if (ret == BD_OK)
+	return (ret);
     }
-
+  // On continue si on a @ mais pas une directive car @ indique qu'on veut completer
+  // une string avec le chemin du script actuel.
   if ((ret = dabsic_read_litterals(code, i, conf, root)) == BD_OK)
     return (ret);
   if (ret == BD_ERROR)

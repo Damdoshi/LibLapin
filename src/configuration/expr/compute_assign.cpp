@@ -342,6 +342,8 @@ bool			expr_compute_assign(Expression		&exp,
 	      ss << a << b;
 	      ope->SetString(ss.str());
 	    }
+	  else if (typ.optor == Expression::BEO_PUSH)
+	    (*ope)[ope->array.size()].Assign(*var, root, local, artif, param);
 	}
     }
   exp.val = *ope;

@@ -5,6 +5,7 @@
 
 #include		"lapin_private.h"
 
+
 SmallConf		*expr_get_variable(SmallConf		&variable,
 					   bool			dry,
 					   SmallConf		*root,
@@ -16,6 +17,18 @@ SmallConf		*expr_get_variable(SmallConf		&variable,
   int			cmode;
   t_bunny_configuration	*cnf;
   ssize_t		i;
+
+  // Si c'était un bloc [Text, alors on rassemble tout dans une même chaine de caractères
+  // Il pourrait être interessant de permettre une option pour l'éviter
+  if (variable.was_text_block)
+    if (_bunny_resolve_text_block(variable, root, local, artif, params) == false)
+      return (NULL);
+
+  if (variable.expression && variable.expression->optor_family != -1)
+    {
+      if (bunny_configuration_resolve(variable) == false)
+	return (NULL);
+    }
 
   if (variable.symbol == false)
     return (&variable);

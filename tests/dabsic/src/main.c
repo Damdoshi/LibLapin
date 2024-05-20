@@ -33,7 +33,7 @@ void			refresh_test(const char	*str)
   bunny_save_configuration(BC_DABSIC, "/dev/stdout", a);
 
   bunny_save_configuration(BC_DABSIC, "tmp.dab", a);
-  assert(b = bunny_load_configuration(BC_DABSIC, "./tmp.dab", NULL));
+  assert((b = bunny_load_configuration(BC_DABSIC, "./tmp.dab", NULL)));
   bunny_save_configuration(BC_DABSIC, "tmp2.dab", b);
   assert(system("diff tmp.dab tmp2.dab") == 0);
   system("rm tmp*.dab");
@@ -71,7 +71,7 @@ int			main(int		argc,
 
   t_bunny_configuration *sub;
 
-  assert(triple = bunny_load_configuration(BC_DABSIC, "triple.dab", NULL));
+  assert((triple = bunny_load_configuration(BC_DABSIC, "triple.dab", NULL)));
   assert(bunny_configuration_go_get(triple, &val, "SAV"));
   assert(val == 42);
   assert(bunny_configuration_go_get(triple, &val, "SAV[0]"));

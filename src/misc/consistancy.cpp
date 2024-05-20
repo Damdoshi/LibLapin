@@ -38,6 +38,8 @@ void				bunny_consistancy(void)
   do_assert(&usr_pix->clipable.scale.y, &prv_pix->scale.y);
   do_assert(&usr_pix->clipable.rotation, &prv_pix->rotation);
   do_assert(&usr_pix->clipable.color_mask, &prv_pix->color_mask);
+  do_assert(&usr_pix->clipable.smooth, &prv_pix->smooth);
+  do_assert(&usr_pix->clipable.mosaic, &prv_pix->mosaic);
   do_assert(&usr_pix->pixels, &prv_pix->rawpixels);
 
   t_bunny_sprite		*usr_sprite = NULL;
@@ -86,6 +88,8 @@ void				bunny_consistancy(void)
   do_assert(&usr_pic->scale.y, &prv_pic->scale.y);
   do_assert(&usr_pic->rotation, &prv_pic->rotation);
   do_assert(&usr_pic->color_mask, &prv_pic->color_mask);
+  do_assert(&usr_pic->smooth, &prv_pix->smooth);
+  do_assert(&usr_pic->mosaic, &prv_pix->mosaic);
 
   t_bunny_effect		*usr_eff = NULL;
   struct bunny_effect		*prv_eff = NULL;
@@ -113,6 +117,15 @@ void				bunny_consistancy(void)
   do_assert(&usr_spr->last_played_slice, &prv_spr->last_played_slice);
   do_assert(&usr_spr->track, &prv_spr->track);
 
+  t_bunny_font			*usr_fnt = NULL;
+  struct bunny_ttf_font		*prv_ttf = NULL;
+  struct bunny_gfx_font		*prv_gfx = NULL;
+
+  do_assert(&usr_fnt->clipable.smooth, &prv_ttf->smooth);
+  do_assert(&usr_fnt->clipable.mosaic, &prv_ttf->mosaic);
+  do_assert(&usr_fnt->clipable.smooth, &prv_gfx->smooth);
+  do_assert(&usr_fnt->clipable.mosaic, &prv_gfx->mosaic);
+
   t_bunny_tilemap		*usr_tmap = NULL;
   struct bunny_tilemap		*prv_tmap = NULL;
 
@@ -130,5 +143,5 @@ void				bunny_consistancy(void)
   do_assert(&usr_tmap->rotation, &prv_tmap->tile_rotation);
   do_assert(&usr_tmap->lock_borders, &prv_tmap->lock_borders);
 
-  bunny_printl("If this text appears, it menas that all tests were successful.");
+  bunny_printl("If this text appears, it means that all tests were successful.");
 }

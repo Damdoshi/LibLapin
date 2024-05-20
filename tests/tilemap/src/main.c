@@ -36,6 +36,10 @@ t_bunny_response	loop(void			*unused)
     spr->clipable.position.x -= 3;
   if (bunny_get_keyboard()[BKS_F4])
     spr->clipable.position.x += 3;
+  if (bunny_get_keyboard()[BKS_F5])
+    spr->clipable.position.y -= 3;
+  if (bunny_get_keyboard()[BKS_F6])
+    spr->clipable.position.y += 3;
 
   if (bunny_get_keyboard()[BKS_Z] || bunny_get_keyboard()[BKS_W])
     tmap->camera.y -= 3.0;
@@ -122,7 +126,7 @@ int			main(int	argc,
   bunny_set_log_filter("tilemap");
   bunny_set_error_descriptor(2);
 
-  assert(win = bunny_start_style(800, 800, DEFAULT_WIN_STYLE | ANTIALIASING, "TileMap!"));
+  assert((win = bunny_start_style(800, 800, DEFAULT_WIN_STYLE | ANTIALIASING, "TileMap!")));
   //bunny_set_error_descriptor(2);
   if (argc >= 2)
     file = argv[1];

@@ -78,7 +78,7 @@ int			main(int		argc,
       refresh_test(argv[1]);
       return (EXIT_SUCCESS);
     }
-
+  /*
   refresh_test("address.dab");
   refresh_test("select.dab");
   refresh_test("simple_loop_call.dab");
@@ -97,6 +97,19 @@ int			main(int		argc,
   refresh_test("complex_cast.dab");
   refresh_test("assign_cascade.dab");
   refresh_test("env.dab");
-
+*/
+  t_bunny_configuration *a;
+  
+  printf("---------------------- big loop perf test ---------------\n");
+  if ((a = bunny_load_configuration(BC_DABSIC, "big_loop.dab", NULL)) == NULL)
+    {
+      bunny_perror(NULL);
+      exit(EXIT_FAILURE);
+    }
+  t_bunny_configuration	*mainf = bunny_configuration_go_get_node(a, "main");
+  t_bunny_time prev = bunny_get_time();
+  assert(bunny_configuration_execute(mainf, false, NULL));
+  t_bunny_time after = bunny_get_time();
+  printf("2 billion iteration took %zu ns, %f sec.\n", after - prev, (after - prev) / 1e9);
   return (EXIT_SUCCESS);
 }

@@ -11,7 +11,7 @@ t_bunny_tileset	*bunny_get_tileset_for_tile(const t_bunny_tilemap	*map,
   int		i;
 
   for (i = 0; i < map->nbr_tilesets; ++i)
-    if (map->tilesets[i].first_tile >= tile && tile < map->tilesets[i].last_tile)
+    if (map->tilesets[i].first_tile <= tile && tile < map->tilesets[i].last_tile)
       break ;
   if (i == map->nbr_tilesets)
     return (NULL);

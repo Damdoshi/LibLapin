@@ -85,13 +85,16 @@ int			main(int					argc,
   size_t		nbr_outputs = 0;
   t_bunny_configuration_type iformat = BC_CUSTOM;
   t_bunny_configuration_type oformat = BC_CUSTOM;
+  bool			resolve = false;
 
   bunny_set_log_mode(false);
   bunny_set_error_descriptor(2);
-  bunny_set_log_filter("system,ressource,syntax");
+  bunny_set_log_filter("syntax,configuration");
   for (int i = 1; i < argc; ++i)
     {
-      if (!strcmp("-i", argv[i]))
+      if (strcmp("--resolve", argv[i]) == 0)
+	resolve = true;
+      else if (!strcmp("-i", argv[i]))
 	{
 	  if (iformat != BC_CUSTOM)
 	    {
@@ -207,6 +210,9 @@ int			main(int					argc,
 
   if (load_all_files(*argv, iformat, cnf, inputs, nbr_inputs) == false)
     return (EXIT_FAILURE);
+  if (resolve)
+    if (bunny_configuration_resolve(cnf) == false)
+      fprintf(stderr, "%s: Cannot resolve all operations! Operation will be rendered as it.", argv[0]);
   if (write_all_files(*argv, oformat, cnf, outputs, nbr_outputs) == false)
     return (EXIT_FAILURE);
 

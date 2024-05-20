@@ -1,0 +1,757 @@
+
+[Activity
+  Code = "raiden"
+  EN = "Raiden"
+  FR = "Raiden"
+  Logo = "./res/activity_logo.png"
+  SmallLogo = "./res/small_activity_logo.png"
+  {Teacher
+    [
+      Mail = "jason.brillante@efrits.fr"
+      Name = "Jason Brillante"
+    ]
+  }
+
+]
+
+CodeName = "PRG-GFX-RAIDEN"
+[Company
+  Address = "42 Avenue du Boulevard des Rues\n    68666 ", "Styx", "\n    France\n  " 
+
+  City = "Styx"
+  Code = "909 292 773"
+  {Credentials
+    "Entreprise immatricul\0303\0251e au ",
+    "R.C.S Cr\0303\0251teil",
+    " sous le num\0303\0251ro ",
+    "909 292 773",
+    "\n    Centre de formation professionnel immatricul\0303\0251 sous le num\0303\0251ro ",
+    "AAA BBB CCC",
+    " aupr\0303\0250s de la ",
+    "DRIEETS Ile-de-France",
+    "\n  "
+  }
+
+  LegalAddress = "33 Rue Delaporte\n    94700 ", "Maisons-Alfort", "\n    France\n  " 
+
+  LegalCity = "Maisons-Alfort"
+  [LegalName
+    EN = "EFRITS SAS"
+    FR = "EFRITS SAS"
+  ]
+
+  Logo = "./res/efrits.png"
+  Mail = "contact@efrits.fr"
+  [Name
+    EN = "EFRITS"
+    FR = "EFRITS"
+  ]
+
+  Registrar = "R.C.S Cr\0303\0251teil"
+  SmallLogo = "./res/efrits.png"
+  [Training
+    Code = "AAA BBB CCC"
+    Registrar = "DRIEETS Ile-de-France"
+  ]
+
+]
+
+DeliveryDate = "30/03/2022 14:59:00"
+[Document
+  {Author
+    [
+      Mail = "jason.brillante@efrits.fr"
+      Name = "Jason Brillante"
+    ]
+  }
+
+  LastRevision = "24/03/1989"
+  Revision = "1.0"
+]
+
+EOL = "<br />"
+{Exercises
+  [
+    Critical = 1
+    DeliveryTarget = "~/wrk/gfx/raiden/"
+    [DeliveryTargetSpace
+      EN = "in your personnal space"
+      FR = "dans votre espace personnel"
+    ]
+
+    [DeliveryTargetType
+      EN = "the repository"
+      FR = "le dossier"
+    ]
+
+    Directory = "."
+    [Document
+      ActivityType = "Exam"
+      [ActivityTypes
+        [Activity
+          EN = "You can of course talk with your classmates, however you must be the author of your work. Using someone else's code is **cheating**. And cheating cancels **all** the medals you may have received from this activity. The verification of the cheat is carried out in the same way as the correction: **automatically**. Be careful if you think you can get through"
+          FR = "Vous pouvez bien sur \0303\0251changer avec vos camarades, n\0303\0251anmoins vous devez \0303\0252tre l'auteur\0302\0267e de votre travail. Utiliser le code d'un autre, c'est **tricher**. Et tricher annule **toutes** les m\0303\0251dailles que vous auriez pu recevoir de cette activit\0303\0251. La v\0303\0251ficiation de la triche est r\0303\0251alis\0303\0251e de la m\0303\0252me mani\0303\0250re quel la correction : de mani\0303\0250re **automatique**. Prenez garde si vous pensez pouvoir passer au travers"
+        ]
+
+        [Exam
+          EN = "Also, this is an exam. You therefore have no right to communicate with your comrades."
+          FR = "De plus, il s'agit d'un examen. Vous n'avez donc **pas** le droit de communiquer avec vos camarades."
+        ]
+
+      ]
+
+      {EN
+        "Your work must be delivered through ",
+        _._.DeliveryTargetType[[].Language],
+        " ",
+        "~/wrk/gfx/raiden/",
+        " ",
+        _._.DeliveryTargetSpace[[].Language],
+        ".\n\n        @ALERT[\n          The evaluator cannot guess where you have delivered your work. If you do not deliver it precisly where it is requested, you will **not** be evaluated.\n        @ALERT]\n\n        This work must be done ",
+        _._.TeamSize[[].Language],
+        ". ",
+        _.ActivityTypes[_.ActivityType][[].Language],
+        ".\n\n        @@HLINE\n\n        ",
+        "@ALINEA@",
+        "Your delivery must **stricly** respect the following rules:\n\n        * It must not contains **any** object file. (*.o)\n        * It must not contains **any** buffer file. (*~, #*#)\n        * It must not contains your final production.\n\n        @ALERT[\n          The presence of a forbidden file will immediatly stop your evaluation.\n        @ALERT]\n\n        ",
+        "@ALINEA@",
+        "Your program must respect the Table Of Norm in their integrity. You are invited to observe them through the Infosphere.\n      "
+      }
+
+      {FR
+        "",
+        "@ALINEA@",
+        "Votre travail doit \0303\0252tre rendu via ",
+        _._.DeliveryTargetType[[].Language],
+        " ",
+        "~/wrk/gfx/raiden/",
+        " ",
+        _._.DeliveryTargetSpace[[].Language],
+        ".\n\n        @ALERT[\n          L'\0303\0251valuateur n'est pas capable de deviner o\0303\0271 vous avez rendu. Si vous faites erreur et que le dossier que vous utiliser pour votre livraison est diff\0303\0251rent, vous ne serez **pas** \0303\0251valu\0303\0251.\n        @ALERT]\n\n        ",
+        "@ALINEA@",
+        "Ce travail est \0303\0240 effectuer ",
+        _._.TeamSize[[].Language],
+        ". ",
+        _.ActivityTypes[_.ActivityType][[].Language],
+        ".\n\n        @@HLINE\n\n        ",
+        "@ALINEA@",
+        "Votre rendu doit respecter **strictement** l'ensemble des r\0303\0250gles suivantes:\n\n        * Il ne doit contenir **aucun** fichier objet. (*.o)\n        * Il ne doit contenir **aucun** fichier tampon. (*~, #*#)\n        * Il ne doit pas contenir votre production finale.\n\n        @ALERT[\n          La pr\0303\0251sence d'un fichier interdit mettra imm\0303\0251diatement fin \0303\0240 votre \0303\0251valuation.\n        @ALERT]\n\n        ",
+        "@ALINEA@",
+        "Votre programme doit respecter les Tables de la Norme dans leur **integralit\0303\0251**. Vous \0303\0252tes invit\0303\0251s \0303\0240 les observer depuis l'Infosph\0303\0250re.\n      "
+      }
+
+    ]
+
+    Files = "!*.c"
+    [Name
+      EN = "Delivery"
+      FR = "Livraison"
+    ]
+
+    [Norm
+      ALLMAN_INDENT_STYLE = 1
+      [AllGlobalsAreConst
+        Points = 1
+        Value = 1
+      ]
+
+      [AlwaysBraces
+        Points = 1
+        Value = 1
+      ]
+
+      [AttributeInfix
+        Points = 1
+        Position = "Prefix"
+        Value = "cln_"
+      ]
+
+      [AttributetStyle
+        Points = 1
+        Value = "1"
+      ]
+
+      [AvoidBracesForSingleLine
+        Points = 1
+        Value = 1
+      ]
+
+      [BreakForbidden
+        Points = 5
+        Value = 1
+      ]
+
+      CAMEL_CASE = 2
+      [ContinueForbidden
+        Points = 5
+        Value = 1
+      ]
+
+      [DeclarationStatementSeparator
+        Points = 1
+        Value = 1
+      ]
+
+      [DoWhileForbidden
+        Points = 5
+        Value = 1
+      ]
+
+      [ElseForbidden
+        Points = 5
+        Value = 1
+      ]
+
+      [EnumConstantInfix
+        Points = 1
+        Position = "Prefix"
+        Value = "cln_"
+      ]
+
+      [EnumConstantStyle
+        Points = 1
+        Value = "0"
+      ]
+
+      [EnumInfix
+        Points = 1
+        Position = "Prefix"
+        Value = "cln_"
+      ]
+
+      [EnumStyle
+        Points = 1
+        Value = "1"
+      ]
+
+      [ForForbidden
+        Points = 5
+        Value = 1
+      ]
+
+      [FunctionMatchingPath
+        Points = 5
+        Value = 1
+      ]
+
+      [FunctionNameInfix
+        Points = 1
+        Position = "Prefix"
+        Value = "cln_"
+      ]
+
+      [FunctionNameStyle
+        Points = 1
+        Value = "1"
+      ]
+
+      [FunctionPerFile
+        Points = 5
+        Value = 5
+      ]
+
+      [FunctionPointerAttributeInfix
+        Points = 1
+        Position = "Prefix"
+        Value = "cln_"
+      ]
+
+      [FunctionPointerAttributeStyle
+        Points = 1
+        Value = "1"
+      ]
+
+      [FunctionPointerTypeInfix
+        Points = 1
+        Position = "Prefix"
+        Value = "cln_"
+      ]
+
+      [FunctionPointerTypeStyle
+        Points = 1
+        Value = "1"
+      ]
+
+      [FunctionVariableDefinitionAlignment
+        Points = 1
+        Value = 1
+      ]
+
+      GNU_INDENT_STYLE = 0
+      [GlobalFunctionVariableDefinitionAlignment
+        Points = 1
+        Value = 1
+      ]
+
+      [GlobalInfix
+        Points = 1
+        Position = "Prefix"
+        Value = "tc_"
+      ]
+
+      [GlobalParameterNameAlignment
+        Points = 1
+        Value = 1
+      ]
+
+      [GlobalStyle
+        Points = 1
+        Value = "1"
+      ]
+
+      [GlobalVariableStyle
+        Points = 1
+        Value = "1"
+      ]
+
+      [GlocalVariableInfix
+        Points = 1
+        Position = "Prefix"
+        Value = "cln_"
+      ]
+
+      [GoToForbidden
+        Points = 5
+        Value = 1
+      ]
+
+      [Header
+        Points = 1
+        Value = "/*\n** %FirstName %FamilyName %Nickname %Login <%Mail>\n** %ProjectName %Year\n*/\n" 
+
+      ]
+
+      [IfForbidden
+        Points = 5
+        Value = 1
+      ]
+
+      [IndentationSize
+        Points = 1
+        Value = 2
+      ]
+
+      IndentationStyle = "0"
+      IndentationToken = 1
+      [InlineModificationForbidden
+        Points = 5
+        Value = 1
+      ]
+
+      KNR_INDENT_STYLE = 2
+      [LocalVariableInfix
+        Points = 1
+        Position = "Prefix"
+        Value = "cln_"
+      ]
+
+      [LocalVariableInlineInitForbidden
+        Points = 1
+        Value = 1
+      ]
+
+      [LocalVariableStyle
+        Points = 1
+        Value = "1"
+      ]
+
+      MIXED_CASE = 0
+      [MaximumFunctionLength
+        Points = 5
+        Value = 25
+      ]
+
+      [MaximumFunctionParameter
+        Points = 2
+        Value = 4
+      ]
+
+      [MaximumLineWidth
+        Points = 5
+        Value = 80
+      ]
+
+      [MaximumScopeLength
+        Points = 1
+        Value = 2
+      ]
+
+      [MaximumVariable
+        Points = 2
+        Value = 2
+      ]
+
+      [Name
+        EN = "EFRITS standard style"
+        FR = "Norme EFRITS"
+      ]
+
+      [NoEmptyLineInFunction
+        Points = 1
+        Value = 1
+      ]
+
+      [NoGlobal
+        Points = 1
+        Value = 1
+      ]
+
+      [NoMagicValue
+        Points = 1
+        Value = 1
+      ]
+
+      [NoShortName
+        Points = 1
+        Value = 4
+      ]
+
+      [NoSpaceInsideParenthesis
+        Points = 1
+        Value = 1
+      ]
+
+      [NonStaticFunctionPerFile
+        Points = 5
+        Value = 1
+      ]
+
+      [OnlyByReference
+        Points = 1
+        Value = 4
+      ]
+
+      PASCAL_CASE = 3
+      [ParameterNameAlignment
+        Points = 1
+        Value = 1
+      ]
+
+      [ParameterTypeAlignment
+        Points = 1
+        Value = 1
+      ]
+
+      [PointerStarOnName
+        Points = 1
+        Value = 1
+      ]
+
+      [PointerStarOnType
+        Points = 1
+        Value = 1
+      ]
+
+      [ReturnForbidden
+        Points = 5
+        Value = 1
+      ]
+
+      [ReturnParenthesis
+        Points = 1
+        Value = 1
+      ]
+
+      SNAKE_CASE = 1
+      [SingleInstructionPerLine
+        Points = 1
+        Value = 1
+      ]
+
+      [SizeOfParenthesis
+        Points = 1
+        Value = 1
+      ]
+
+      [SpaceAfterComma
+        Points = 1
+        Value = 1
+      ]
+
+      [SpaceAfterStatement
+        Points = 1
+        Value = 1
+      ]
+
+      [SpaceAroundBinaryOperator
+        Points = 1
+        Value = 1
+      ]
+
+      [SpaceAroundInbetweenPointerStars
+        Points = 1
+        Value = 1
+      ]
+
+      [StructInfix
+        Points = 1
+        Position = "Prefix"
+        Value = "cln_"
+      ]
+
+      [StructStyle
+        Points = 1
+        Value = "1"
+      ]
+
+      [SwitchForbidden
+        Points = 5
+        Value = 1
+      ]
+
+      [TernaryForbidden
+        Points = 5
+        Value = 1
+      ]
+
+      [TrailingWhitespace
+        Points = 1
+        Value = 1
+      ]
+
+      [TypedefInfix
+        Points = 1
+        Position = "Prefix"
+        Value = "cln_"
+      ]
+
+      [TypedefMatching
+        Points = 1
+        Value = 1
+      ]
+
+      [TypedefStyle
+        Points = 1
+        Value = "1"
+      ]
+
+      [UnionInfix
+        Points = 1
+        Position = "Prefix"
+        Value = "cln_"
+      ]
+
+      [UnionStyle
+        Points = 1
+        Value = "1"
+      ]
+
+      [WhileForbidden
+        Points = 5
+        Value = 1
+      ]
+
+    ]
+
+    [TeamSize
+      EN = "alone"
+      FR = "seul"
+      _EN = [].TeamSize[0] == [].TeamSize[1] ? [].TeamSize[0] # " people" : string([].TeamSize[0]) # " to " # string([].TeamSize[1]) # " people"
+      _FR = "[].TeamSize[0]"
+    ]
+
+    Type = "Delivery"
+  ],
+  [
+    Compile = "gcc -Wextra -Wall -c @FILES@ -o @OFILES "
+    Critical = 1
+    Directory = "."
+    [Document
+      EN = "" 
+
+      {FR
+        "",
+        "@ALINEA@",
+        "Nous avons fait le choix de vous interdire l'utilisation des fonctions integr\0303\0251s \0303\0240 votre langage de programmation ou \0303\0240 votre syst\0303\0250me d'exploitation, \0303\0240 l'exception de celle que nous vous sp\0303\0251cifions explicitement. Ce choix est motiv\0303\0251 p\0303\0251dagogique: nous allons vous amener \0303\0240 d\0303\0251couvrir ces fonctionnalit\0303\0251s en vous les faisant reproduire, de sorte \0303\0240 ce qu'en plus de leur ma\0303\0256trise, vous en compreniez le fonctionnement.\n\n        @ALERT[\n          L'utilisation d'une fonction interdite est assimil\0303\0251e \0303\0240 de la triche. La triche provoque l'arr\0303\0252t de l'\0303\0251valuation et la perte des m\0303\0251dailles que vous auriez pu acqu\0303\0251rir lors de cette activit\0303\0251.\n        @ALERT]\n\n        ",
+        "@ALINEA@",
+        "Vous avez le droit d'utiliser les fonctions dont nous vous reconnaissons la ma\0303\0256trise. Lors\n        des travaux de groupe, cette autorisation n'est donn\0303\0251e que si l'int\0303\0251gralit\0303\0251 des \0303\0251quipiers\n        disposent de cette autorisation.\n\n        ",
+        "@ALINEA@",
+        "Pour cette activit\0303\0251, les fonctions auquel vous avez le droit sont les suivantes:\n\n        @@DEFINED_FUNCTIONS\n\n        ",
+        "@ALINEA@",
+        "Ci-dessous, la liste des fonctions dont nous vous reconnaissons le droit d'utilisation:\n\n        @@WON_FUNCTIONS\n      "
+      }
+
+    ]
+
+    Files = "!*.c"
+    [Norm
+      [Authorized
+        Function = "open", "close", "read", "write" 
+
+      ]
+
+      [Forbidden
+        Function = "printf"
+      ]
+
+    ]
+
+    Type = "AuthorizedFunctions"
+  ],
+  [
+    Artefacts = "bonjour.bmp"
+    Compile = "gcc -Wextra -Wall @FILES@ -o @PRODUCTS@ "
+    Condition = "first_program"
+    Critical = 0
+    Directory = "."
+    [Document
+      EN = "" 
+
+      FR = "## Titre\n\n        Programme la fonction ci-dessous.\n\n        @ALERT[Fais bien attention au nom de celle-ci!@ALERT]\n\n        @CODE[\n          int bonjour(int c);\n        @CODE]\n      " 
+
+    ]
+
+    {Evaluation
+      [
+        Complexity(integer n): = n
+        [DefensiveProgramming
+          Mandatory = 0
+          Medals = "defensive"
+        ]
+
+        [DefensiveTesting
+          Mandatory = 0
+          Medals = "stupid_check"
+        ]
+
+        [ErrnoTesting
+          Mandatory = 1
+          Medals = "complete_check"
+        ]
+
+        [ErrorTesting
+          Mandatory = 1
+          Medals = "good_check"
+        ]
+
+        [Evaluation
+          Mandatory = 1
+          Medals = "function", "condition" 
+
+        ]
+
+        Evaluator = "evaluate_bonjour"
+        [FullEvaluation
+          Mandatory = 1
+          Medals = "corner_case"
+        ]
+
+        [FullTest
+          Mandatory = 1
+          Medals = "full_check"
+        ]
+
+        Function = "bonjour"
+        MaximumPerfRatio = 2
+        MaximumRamRatio = 2
+        [ReportError
+          Mandatory = 1
+          Medals = "return_value"
+        ]
+
+        Robot = "/opt/technocore/c/bonjour.so"
+        [Test = "test_bonjour"
+          Mandatory = 1
+          Medals = "simple_check"
+        ]
+
+        Timeout = 2
+        [UseErrno
+          Mandatory = 0
+          Medals = "einval"
+        ]
+
+      ]
+    }
+
+    Files = "bonjour.c"
+    [Name
+      EN = "Beginning"
+      FR = "D\0303\0251but"
+    ]
+
+    [Norm
+      [Authorized
+        Function = "open", "close", "read", "write" 
+
+        Keyword = "if", "while", "for" 
+
+      ]
+
+      [Forbidden
+        Function = "printf"
+        Keyword = "goto", "auto" 
+
+      ]
+
+    ]
+
+    Product = "bonjour.o"
+    Type = "Function"
+    UserLibrary = 1
+  ]
+}
+
+Font = "./res/futura.woff2"
+[FrontPage
+  [Description
+    EN = "The description"
+    FR = "La description"
+  ]
+
+  [Message
+    EN = "God Of Thunder (And rock'n roll!)"
+    FR = "Dieu du tonnerre et des \0303\0251clairs"
+  ]
+
+]
+
+Functions = "strlen", "strcpy" 
+
+Language = "EN"
+Login = "AdminEquipe", "Equipier", "Equipier" 
+
+[Matter
+  Code = "gfx"
+  EN = "Graphic programming"
+  FR = "Programmation graphique"
+  Logo = "./res/matter_logo.png"
+  SmallLogo = "./res/small_matter_logo.png"
+  {Teacher
+    [
+      Mail = "lapinsnoirs@efrits.fr"
+      Name = "Le Laboratoire aux Lapins Noirs"
+    ]
+  }
+
+]
+
+Medals = "procedure", "set_pixel" 
+
+[Norm
+  [Authorized
+    Function = "open", "close", "read", "write" 
+
+    Keyword = "if", "while", "for" 
+
+  ]
+
+  [Forbidden
+    Function = "printf"
+    Keyword = "goto", "auto" 
+
+  ]
+
+]
+
+SOL = "@ALINEA@"
+Style = "./res/efrits.css"
+TeamSize = 1, 1 
+
+Token = "Bouzouk"
+Translate(string a):string = [Function
+  If [a][[].Language] != "" Then
+    Return [a][[].Language]
+  Return a.FR
+]
+Type = "subject"

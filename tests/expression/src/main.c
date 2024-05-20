@@ -83,6 +83,7 @@ int			main(int		argc,
   refresh_test("single_variable.expr");
   refresh_test("factorise.expr");
   refresh_test("assign.expr");
+  refresh_test("cast.expr");
 
   return (EXIT_SUCCESS);
 }

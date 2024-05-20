@@ -1,0 +1,8 @@
+
+Prefix = "ef"
+Suffix = "fe"
+
+Code = @insert c ($, EOF, //) "function.c"
+
+Data = 47
+

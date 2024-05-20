@@ -23,14 +23,15 @@ Decision		dabsic_read_inside_array(const char		*code,
       dabsic_read_separator(code, i);
     }
   dabsic_read_separator(code, i);
-  if (code[i] == '}')
+  if (code[i] == '}' || code[i] == ']')
     return (BD_OK);
 
   conf.construct = SmallConf::ARRAY;
-  iteration = 0;
   do
     {
-      SmallConf		&newconf = conf[iteration++];
+      // Exploitation de la taille afin de s'adapter aux éventuels @push
+      iteration = conf.array.size();
+      SmallConf		&newconf = conf[iteration];
 
       dabsic_read_separator(code, i);
       if ((ret = dabsic_read_sequence(code, i, newconf, root)) == BD_ERROR)
@@ -48,6 +49,11 @@ Decision		dabsic_read_inside_array(const char		*code,
       if (ret == BD_OK)
 	goto Bottom;
 
+      if ((ret = dabsic_read_csv(code, i, newconf, root)) == BD_ERROR)
+	return (BD_ERROR);
+      if (ret == BD_OK)
+	goto Bottom;
+
       if ((ret = dabsic_read_array(code, i, newconf, root)) == BD_ERROR)
 	return (BD_ERROR);
       if (ret == BD_OK)
@@ -61,7 +67,8 @@ Decision		dabsic_read_inside_array(const char		*code,
       if (code[i] == '@')
 	{
 	  if ((ret = _bunny_handle_directive
-	       (code, i, &newconf, &root, dabsic_read_separator)) == BD_OK)
+	       (code, i, &newconf, &root, dabsic_read_separator,
+		Expression::BEOF_TERNARY)) == BD_OK)
 	    {
 	      dabsic_read_separator(code, i);
 	      goto Bottom;

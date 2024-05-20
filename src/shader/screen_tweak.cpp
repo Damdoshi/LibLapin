@@ -21,6 +21,7 @@ static void		_clean_shader(void)
 }
 
 t_bunny_shader		*bunny_screen_tweak_shader(const t_bunny_screen_tweak *bst)
+
 {
   if (bst == NULL)
     {

@@ -72,7 +72,7 @@ typedef struct		s_bunny_animation
 ** frame is currently being used to display.
 */
 # ifdef			__MINGW32__
-#  pragma		pack(1)
+#  pragma		pack(4)
 # endif
 typedef struct		s_bunny_sprite
 {
@@ -270,6 +270,9 @@ void			bunny_delete_wardrobe(t_bunny_map		*wardrobe);
 **
 **
 */
+# ifdef			__MINGW32__
+#  pragma		pack(4)
+# endif
 typedef struct		s_bunny_dressed_sprite
 {
   t_bunny_sprite	sprite;
@@ -277,6 +280,7 @@ typedef struct		s_bunny_dressed_sprite
   t_bunny_map		*closets; // [closet name hash djb2 -> t_bunny_closet*]
   t_bunny_map		*clothes; // [closet name hash djb2 -> t_bunny_clothe*]
 }			t_bunny_dressed_sprite;
+# pragma		pack()
 
 t_bunny_dressed_sprite	*bunny_load_dressed_sprite(const char		*file,
 						   t_bunny_map		*wardrobe);

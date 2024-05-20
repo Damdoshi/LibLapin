@@ -40,7 +40,7 @@ static void		restore_array(std::stringstream		&ss,
       else if (conf[j].expression)
 	restore_expression(ss, *conf[j].expression, true, true);
       else if (conf[j].have_value)
-	writevalue(ss, conf[j], true);
+	writevalue(ss, conf[j], true, true);
       if (j + 1 < conf.Size())
 	ss << ",";
       ss << std::endl;
@@ -85,6 +85,8 @@ static void		restore_scope(std::stringstream		&ss,
 	  ss << ": ";
 	  writevalue(ss, *it->second, true);
 	}
+      else
+	ss << ": null";
       if (++it != conf.End())
 	ss << ",";
       ss << std::endl;
@@ -97,17 +99,17 @@ char			*_bunny_write_json(const t_bunny_configuration	*config)
   std::stringstream	ss;
   char			*ret;
 
-  if (cnf.construct == SmallConf::MAP)
-    {
-      ss << "{" << std::endl;
-      restore_scope(ss, cnf, 2);
-      ss << "}" << std::endl;
-    }
-  else if (cnf.construct == SmallConf::ARRAY)
+  if (cnf.Size())
     {
       ss << "[" << std::endl;
       restore_array(ss, cnf, 2);
       ss << "]" << std::endl;
+    }
+  else
+    {
+      ss << "{" << std::endl;
+      restore_scope(ss, cnf, 2);
+      ss << "}" << std::endl;
     }
   if ((ret = (char*)bunny_malloc(sizeof(*ret) * (ss.str().size() + 1))) == NULL)
     scream_error_if(return (NULL), bunny_errno, "%p -> %s", "ressource,configuration", config, ret);

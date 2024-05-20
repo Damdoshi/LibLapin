@@ -22,7 +22,10 @@ Decision		csv_read(const char				*code,
 	{
 	  if (code[i] == '@')
 	    {
-	      if (_bunny_handle_directive(code, i, &conf[y][x], &root, skipspace_inline) == false)
+	      if (_bunny_handle_directive
+		  (code, i, &conf[y][x], &root, skipspace_inline,
+		   Expression::BEOF_TERNARY
+		   ) != BD_OK)
 		scream_error_if
 		  (return (BD_ERROR), BE_SYNTAX_ERROR,
 		   "%s code, %p config -> %p "
@@ -30,13 +33,15 @@ Decision		csv_read(const char				*code,
 		   "ressource,configuration,syntax",
 		   code, &conf, (void*)NULL, y, x);
 	    }
-	  else if (readvalue(code, i, conf[y][x], ";\n") == false)
+	  else if (readvalue(code, i, conf[y][x], ";\n]") == false)
 	    scream_error_if
 	      (return (BD_ERROR), BE_SYNTAX_ERROR,
 	       "%s code, %p config -> %p "
 	       "(A correct value was expected on line %d, column %d)",
 	       "ressource,configuration,syntax",
 	       code, &conf, (void*)NULL, y, x);
+	  if (conf[y][x].last_type == SmallConf::RAWSTRING)
+	    conf[y][x].last_type = SmallConf::STRING;
 	  conf[y].construct = SmallConf::ARRAY;
 	  skipspace_inline(code, i);
 	  if (readtext(code, i, "\n"))

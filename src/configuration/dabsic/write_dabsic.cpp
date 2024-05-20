@@ -5,6 +5,40 @@
 
 #include		"lapin_private.h"
 
+static bool		is_long_and_integer(SmallConf			&conf)
+{
+  ssize_t		j;
+
+  if (conf.Size() < 30 * 30)
+    return (false);
+  for (j = 0; j < (ssize_t)conf.Size(); ++j)
+    if (conf[j].construct != SmallConf::PLAIN || conf[j].last_type != SmallConf::INTEGER)
+      break ;
+  return (j == (ssize_t)conf.Size());
+}
+
+static bool		restore_b64(std::ostream			&ss,
+				    SmallConf				&conf)
+{
+  if (conf.was_b64 == false)
+    return (false);
+  int			*i = (int*)bunny_malloc(conf.Size() * sizeof(int));
+  bool			ret;
+
+  if (i == NULL)
+    return (false);
+  for (ssize_t j = 0; j < (ssize_t)conf.Size(); ++j)
+    i[j] = conf[j].converted_2;
+  char			*out;
+  size_t		outlen;
+
+  ret = bunny_base64_encode(i, conf.Size() * sizeof(int), &out, &outlen);
+  bunny_free(i);
+  if (ret)
+    ss << "b64_\"" << out << "\"";
+  return (ret);
+}
+
 static bool		is_short_and_litterals(SmallConf		&conf)
 {
   if (conf.Size() > 4)
@@ -88,7 +122,7 @@ static void		restore_prototype(std::ostream			&ss,
       if (conf.last_type != SmallConf::NOTYPE)
 	{
 	  ss << ":";
-	  if (conf.last_type == SmallConf::STRING)
+	  if (conf.last_type == SmallConf::STRING || conf.last_type == SmallConf::RAWSTRING)
 	    ss << "string";
 	  else if (conf.last_type == SmallConf::INTEGER)
 	    ss << "integer";
@@ -148,13 +182,16 @@ static void		dabsic_array(std::ostream			&ss,
 	}
       else if (conf[i].Size() > 0)
 	{
-	  ss << "{";
-	  if (conf[i].given_name)
-	    ss << conf[i].name;
-	  dabsic_array(ss, conf[i], indent + 2, false);
-	  for (j = 0; j < indent; ++j)
-	    ss << " ";
-	  ss << "}";
+	  if (!is_long_and_integer(conf[i]) || !restore_b64(ss, conf[i]))
+	    {
+	      ss << "{";
+	      if (conf[i].given_name)
+		ss << conf[i].name;
+	      dabsic_array(ss, conf[i], indent + 2, false);
+	      for (j = 0; j < indent; ++j)
+		ss << " ";
+	      ss << "}";
+	    }
 	}
       else if (conf[i].given_name)
 	{
@@ -186,21 +223,24 @@ static void		restore_dabsic(std::ostream			&ss,
       ss <<  " = ";
       if (conf.Size() > 0)
 	{
-	  if (is_short_and_litterals(conf))
+	  if (!is_long_and_integer(conf) || !restore_b64(ss, conf))
 	    {
-	      ss << "[Data";
-	      if (!conf.have_value && !conf.expression)
-		ss << std::endl;
-	      dabsic_array(ss, conf, indent + 4, true);
-	      ss << std::endl << "]" << std::endl;
-	    }
-	  else
-	    {
-	      ss << "{";
-	      dabsic_array(ss, conf, indent + 4, false);
-	      for (i = 0; i < indent; ++i)
-		ss << " ";
-	      ss << "}" << std::endl;
+	      if (is_short_and_litterals(conf))
+		{
+		  ss << "[Data";
+		  if (!conf.have_value && !conf.expression)
+		    ss << std::endl;
+		  dabsic_array(ss, conf, indent + 4, true);
+		  ss << std::endl << "]" << std::endl;
+		}
+	      else
+		{
+		  ss << "{";
+		  dabsic_array(ss, conf, indent + 4, false);
+		  for (i = 0; i < indent; ++i)
+		    ss << " ";
+		  ss << "}" << std::endl;
+		}
 	    }
 	}
       else
@@ -225,19 +265,22 @@ static void		restore_dabsic(std::ostream			&ss,
 	}
       else if (it->second->Size() > 0)
 	{
-	  if (is_short_and_litterals(*it->second))
+	  if (!is_long_and_integer(*it->second) || !restore_b64(ss, *it->second))
 	    {
-	      ss << it->second->name << " = ";
-	      dabsic_array(ss, *it->second, indent + 2, true);
-	      ss << std::endl;
-	    }
-	  else
-	    {
-	      ss << "{" << it->second->name;
-	      dabsic_array(ss, *it->second, indent + 2, false);
-	      for (i = 0; i < indent; ++i)
-		ss << " ";
-	      ss << "}" << std::endl;
+	      if (is_short_and_litterals(*it->second))
+		{
+		  ss << it->second->name << " = ";
+		  dabsic_array(ss, *it->second, indent + 2, true);
+		  ss << std::endl;
+		}
+	      else
+		{
+		  ss << "{" << it->second->name;
+		  dabsic_array(ss, *it->second, indent + 2, false);
+		  for (i = 0; i < indent; ++i)
+		    ss << " ";
+		  ss << "}" << std::endl;
+		}
 	    }
 	}
       else

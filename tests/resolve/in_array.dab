@@ -1,0 +1,13 @@
+
+[A
+  [B
+    Field = 42
+    {Sub
+      [
+        Inside = _._.Field + 2
+      ]
+    }
+  ]
+]
+
+

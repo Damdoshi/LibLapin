@@ -62,7 +62,9 @@ Decision		dabsic_read_inside_sequence(const char		*code,
       if (code[i] == '@')
 	{
 	  if (_bunny_handle_directive
-	      (code, i, &conf, &root, dabsic_read_separator) == false)
+	      (code, i, &conf, &root, dabsic_read_separator,
+	       Expression::BEOF_TERNARY
+	       ) != BD_OK)
 	    return (BD_ERROR);
 	  dabsic_read_separator(code, i);
 	}

@@ -9,10 +9,14 @@
 const std::string	Expression::OperatorToken[Expression::LAST_OPERATOR_FAMILY][21][8] =
   {
     { // ASSIGNATION
-      {"=", "<-", ":="},
-      {"[=]", "[<-]", "[:=]"},
-      {"[Array=]", "[Array<-]", "[Array:=]"},
-      {"[Map=]", "[Map<-]", "[Map:=]"},
+
+      // Révisions futures: l'assignation devrait probablement tout copier
+      // plutot que seulement des morceaux...
+      // Et il faudrait peut etre des fonctions pour extraires les parties des champs
+      {"=", "<-", ":="}, // Devrait tout copier
+      {"[=]", "[<-]", "[:=]"}, // (=) pourrait etre un symbole pour prendre que la valeur (voir si gramamticalement, c'est jouable)
+      {"[Array=]", "[Array<-]", "[Array:=]"}, // {=} serait judicieux, ne copie que les tableaux
+      {"[Map=]", "[Map<-]", "[Map:=]"}, // [=] serait judicieux, ne copie que les tables
       {"||="},
       {"^^="},
       {"&&="},
@@ -27,7 +31,8 @@ const std::string	Expression::OperatorToken[Expression::LAST_OPERATOR_FAMILY][21
       {"/="},
       {"%="},
       {"**="},
-      {"#="}
+      {"#="},
+      {"[]="}
     },
     { // TERNARY
       {"?"},
@@ -75,7 +80,11 @@ const std::string	Expression::OperatorToken[Expression::LAST_OPERATOR_FAMILY][21
       {"**"},
     },
     { // CAT
-      {"#"}
+      {"#"},
+    },
+    { // Test d'ensembles
+      {"in", "∈"},
+      {"out", "∉", "!∈"}
     }
   };
 

@@ -84,8 +84,10 @@ t_bunny_music			*bunny_read_music(t_bunny_configuration		*cnf);
 ** \param duration The duration of the sound effect in seconds
 ** \return A valid t_bunny_effect or NULL on error.
 */
-# define			SAMPLE_PER_SECONDS				44100
-t_bunny_effect			*bunny_new_effect(double			duration);
+# define			bunny_new_effect(d)				_bunny_new_effect(d, SAMPLE_PER_SECONDS)
+# define			bunny_create_effect(d, s)			_bunny_new_effect(d, s)
+t_bunny_effect			*_bunny_new_effect(double			duration,
+						   int				sample_per_second);
 
 /*!
 ** The bunny_load_effect function load a sound file and return a matching t_bunny_effect.
@@ -294,6 +296,24 @@ void				_bunny_delete_sound(t_bunny_sound		*sound);
 ** everything went well.
 */
 bool				bunny_make_effect_unique(t_bunny_effect		*eff);
+
+
+typedef struct			s_bunny_recorder
+{
+  t_bunny_effect		effect;
+  const char			_private[sizeof(size_t) * 4];
+  const char * const		device;
+  const bool			recording;
+}				t_bunny_recorder;
+
+t_bunny_recorder		*bunny_new_recorder(const char			*device,
+						    unsigned int		sample_rate);
+
+bool				bunny_start_record(t_bunny_recorder		*recorder);
+void				bunny_stop_record(t_bunny_recorder		*recorder);
+const char			**bunny_record_devices(void);
+const char			*bunny_default_record_device(void);
+bool				bunny_record_available(void);
 
 # pragma			pack()
 #endif	/*			__LAPIN_SOUND_H__	*/

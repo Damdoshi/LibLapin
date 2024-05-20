@@ -63,9 +63,14 @@ struct				SmallConf
   static bool			create_mode;
   static std::stack<std::string> file_read;
   static std::list<std::string> file_path;
+  static int			additionnal_path_to_pop;
   SmallConf			*father;
   Type				last_type = NOTYPE;
   bool				symbol;
+
+  bool				was_b64;
+  bool				was_text_block = false;
+  bool				local_root = false;
 
   enum				e_politic
     {
@@ -201,11 +206,39 @@ struct				SmallConf
     return ((const t_bunny_configuration*)this);
   }
 
+  std::string			RebuildAddress(void) const
+  {
+    const SmallConf		*cnf = this;
+    std::vector<const SmallConf*> tmp;
+    std::string			str;
+    
+    tmp.reserve(20);
+    while (cnf->father != NULL)
+      {
+	tmp.push_back(cnf);
+	cnf = cnf->father;
+      }
+    str = "";
+    for (auto rit = tmp.rbegin(); rit != tmp.rend(); ++rit)
+      {
+	if (rit == tmp.rbegin() && !(*rit)->array.size())
+	  str += ".";
+	str += (*rit)->name;
+      }
+    return (str);
+  }
+
   SmallConf(void);
   ~SmallConf(void);
 };
 
 std::ostream			&operator<<(std::ostream		&os,
 					    const SmallConf		&cnf);
+
+bool				_bunny_resolve_text_block(SmallConf	&sc,
+							  SmallConf	*root,
+							  SmallConf	*local,
+							  SmallConf	*artif,
+							  SmallConf	*params);
 
 #endif	//			__LAPIN_PRIVATE_SMALLCONF_HPP__

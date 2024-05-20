@@ -1,0 +1,27 @@
+
+Dabsic:
+Mot clef pour récupérer le nom d'un noeud.
+Mot clef pour récupérer l'adresse d'un noeud, sous forme de string ou sous forme de pointeur (?). Reference sur noeud. Normalement c'est geré mais... je ne sais plus ^^'
+
+Specificateur "safe" ou "sanitized", et "unsafe" ou "unsanitized" - permettant d'indiquer qu'une variable a été vérifiée et est maintenant valide sous un contexte qui n'est pas précisé.
+L'assignation d'un unsafe a un safe est interdite. Il existe un mot clef pour faire la conversion.
+Les deux n'ont pas à exister: l'un ou l'autre suffit et l'autre étant le comportement défaut. unsafe semble être préférable explicite, afin d'éviter d'avoir à se farcir safe partout.
+
+Champs énumérés crée a la volée dans les prototypes des fonctions. Il accessible a l'adresse de la fonction.nom_fonction.nom_paramètre par exemple et sont un tableau.
+Il n'est possible d'utiliser ces champs énumérés implicitement que lorsqu'on est dans la liste d'appel des paramètres. Exemple:
+
+DoOperation(int a, int b, [ADD,SUB] ope) = [Function
+  if ope == ADD then
+    return a + b
+  return a - b
+]
+
+Main = [Function
+  [].DoOperation.ope var = [].DoOperation.ope.SUB 'Ca, c'est moche, mais peut on l'éviter ? Peut etre avec un With implicite basée sur le type de la variable
+  DoOperation(3, 2, var)
+
+  DoOperation(5, 6, ADD) 'Le scope du paramètre est implicite.
+]
+
+=> Operateur d'assignation alternatif autorisant le changement de type de l'opérande de gauche.
+=> L'opérateur = classique serait fortement typé tandis que l'autre non. Un mot clef indiquant la solidité du type des champs était prévu dans le livre de référence, a voir comment cela peut s'articuler.

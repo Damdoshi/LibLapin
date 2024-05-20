@@ -52,6 +52,16 @@ t_bunny_string_couple		*bunny_search_string_couple(t_bunny_string_couple *couple
 # define			bunny_trace()				printf("%s-%d:%d\n", __PRETTY_FUNCTION__, __FILE__, __LINE__)
 
 /*!
+**
+*/
+int				bunny_vsnprintf(char			*buffer,
+						size_t			buflen,
+						va_list			lst);
+int				bunny_snprintf(char			*buffer,
+					       size_t			buflen,
+					       ...);
+
+/*!
 ** Load an entire file.
 ** The file is stored in the bunny ressource manager, so loading the same
 ** file multiple times won't load it several times. To prevent this behaviour,
@@ -159,6 +169,11 @@ bool				bunny_base64_decode(const char		*data,
 						    void		**out,
 						    size_t		*outlen);
 
+bool				bunny_read_base64(const char		*data,
+						  ssize_t		*i,
+						  void			**out,
+						  size_t		*outlen);
+
 /*!
 ** Check if the sent data is valid as base64 encoded data.
 ** \param data The data to check.
@@ -207,6 +222,8 @@ const char * const		*bunny_split(const char			*str,
 ** \param tab The array to free.
 */
 void				bunny_delete_split(const char * const	*tab);
+
+size_t				bunny_split_len(const char * const	*tab);
 
 char				*bunny_stick(const char * const		*tab,
 					     const char			*glue,

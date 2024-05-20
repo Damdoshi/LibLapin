@@ -55,7 +55,7 @@ bool			expr_compute_function_call(Expression	&exp,
        "Undefined function %s from context %s on line %s:%d",
        "configuration,syntax",
        exp.val.original_value.c_str(),
-       artif->address.c_str(),
+       artif ? artif->address.c_str() : local->address.c_str(),
        exp.file.c_str(), exp.line);
   if (ope == &exp.val)
     return (true);
@@ -127,7 +127,14 @@ bool			expr_compute_function_call(Expression	&exp,
       if (expr_compute
 	  (*ope, proto, dry, root, NULL, tmp_artif, parameters) == false)
 	return (false);
+      auto save = ope->expression;
+
+      // Hack nul parceque exp.val = *ope va appeller expr_compute mais sans les paramètres
+      // si ope->expression existe. Il faudrait probablement que expr_compute
+      // puisse stocker quelque part le resultat directement pour eviter ca.
+      ope->expression = NULL;
       exp.val = *ope;
+      ope->expression = save;
       return (true);
     }
   if (ope->function)
@@ -135,7 +142,12 @@ bool			expr_compute_function_call(Expression	&exp,
       if (dabsic_compute
 	  (*ope, proto, dry, root, tmp_artif, parameters) == false)
 	return (false);
+      auto save = ope->expression;
+
+      // Exactement le meme caca qu'au dessus
+      ope->expression = NULL;
       exp.val = *ope;
+      ope->expression = save;
       return (true);
     }
   if (ope->sequence)
@@ -143,7 +155,12 @@ bool			expr_compute_function_call(Expression	&exp,
       if (sequence_compute
 	  (*ope, proto, root, tmp_artif, parameters, NULL, NULL) == false)
 	return (false);
+      auto save = ope->expression;
+
+      // Exactement le meme caca qu'au dessus
+      ope->expression = NULL;
       exp.val = *ope;
+      ope->expression = save;
       return (true);
     }
   if (dry)

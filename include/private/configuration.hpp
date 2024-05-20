@@ -85,6 +85,9 @@ bool				checktext(const char				*str,
 					  ssize_t				&index,
 					  const std::string			*token,
 					  size_t				len = (size_t)-1);
+bool				checktext(const char				*str,
+					  ssize_t				&index,
+					  const char				*token);
 void				skipspace(const char				*str,
 					  ssize_t				&i);
 void				skipspace_inline(const char			*str,
@@ -136,14 +139,16 @@ bool				read_function(const char			*code,
 					      SmallConf				&config);
 void				writevalue(std::ostream				&ss,
 					   const SmallConf			&cnf,
-					   bool					jsonhex = false);
+					   bool					jsonhex = false,
+					   bool					never_raw = false);
 
 
 Decision			_bunny_handle_directive(const char		*code,
 							ssize_t			&i,
 							SmallConf		*node,
 							t_bunny_configuration	*fileroot,
-							void (*readseparator)(const char*, ssize_t&));
+							void (*readseparator)(const char*, ssize_t&),
+							Expression::OperatorFamily family);
 t_bunny_configuration		*_bunny_configuration_go_get_node(const t_bunny_configuration *config,
 								  const char		*addr,
 								  ssize_t		&i);

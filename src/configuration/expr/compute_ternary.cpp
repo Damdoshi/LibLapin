@@ -85,7 +85,7 @@ bool			expr_compute_ternary(Expression		&exp,
 
   if (y->optor_family == -1)
     {}
-  else if (y->optor_family == Expression::LAST_OPERATOR_FAMILY)
+  else if (y->optor_family == -1 || y->optor_family == Expression::LAST_OPERATOR_FAMILY)
     {
       if (expr_compute_function_call(*y, dry, root, local, artif, param) == false)
 	return (false);
@@ -94,7 +94,27 @@ bool			expr_compute_ternary(Expression		&exp,
 	   (*y, dry, root, local, artif, param) == false)
     return (false);
 
-  exp.val = y->val;
+  // Car le ternaire peut tres bien aboutir sur une operation contenant seulement
+  // un nom de variable...
+  ope = &y->val;
+  if (ope->last_type == SmallConf::RAWSTRING)
+    {
+      cnst = false;
+      if ((ope = expr_get_variable
+	   (*ope, dry, root, local, artif, param)) == NULL)
+	scream_error_if
+	  (return (false), BE_BAD_ADDRESS,
+	   "Undefined variable or unresolvable address %s "
+	   "from context %s on line %s:%d",
+	   "configuration,syntax",
+	   y->val.original_value.c_str(),
+	   artif->address.c_str(),
+	   exp.file.c_str(), exp.line);
+    }
+  else if (ope->is_const == false)
+    cnst = false;
+
+  exp.val = *ope;
   if (cnst)
     exp.is_const = true;
   return (true);
