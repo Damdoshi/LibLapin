@@ -101,6 +101,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
       }
     case PARALLAX:
     case SPRITE:
+    case CINEMATIC:
     case GRAPHIC_RAM:
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)picture;
@@ -216,6 +217,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
     case SPRITE:
     case GRAPHIC_TEXT:
     case GRAPHIC_RAM:
+    case CINEMATIC:
       {
 	struct bunny_picture	*out = (struct bunny_picture*)output;
 
@@ -224,7 +226,9 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	if (*input_type == GRAPHIC_RAM
 	    || *input_type == SPRITE
 	    || *input_type == TTF_TEXT
-	    || *input_type == DRESSED_SPRITE)
+	    || *input_type == DRESSED_SPRITE
+	    || *input_type == CINEMATIC
+	    )
 	  {
 	    if (shader)
 	      {

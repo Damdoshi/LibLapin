@@ -1,4 +1,5 @@
 
+<<<<<<< Updated upstream
 Dabsic:
 Mot clef pour récupérer le nom d'un noeud.
 Mot clef pour récupérer l'adresse d'un noeud, sous forme de string ou sous forme de pointeur (?). Reference sur noeud. Normalement c'est geré mais... je ne sais plus ^^'
@@ -25,3 +26,32 @@ Main = [Function
 
 => Operateur d'assignation alternatif autorisant le changement de type de l'opérande de gauche.
 => L'opérateur = classique serait fortement typé tandis que l'autre non. Un mot clef indiquant la solidité du type des champs était prévu dans le livre de référence, a voir comment cela peut s'articuler.
+=======
+Mot clef pour récupérer le nom d'un noeud en dabsic
+Mot clef pour récupérer l'adresse d'un noeud en Dabsic, sous forme de string.
+Reference sur noeud. Normalement c'est geré mais... je ne sais plus ^^'
+
+Possibilité d'écrire un truc comme [0..10] et qui représente un ensemble.
+Du coup on pourrait faire
+If (Stuff in [0..10])
+Foreach ([0..10] as Var)
+
+Bien sur, on pourrait avoir des variables [var..0] [var1..var2] etc.
+
+Pourquoi pas carrement un ensemble non linéaire: [0..10, 20..30] par exemple.
+Ce type pourrait être bati sur une classe (quand Dabsic supportera ca correctement)
+écrite en Dabsic.
+
+
+La surcharge d'opérateur est une fonctionnalié attendue, mais et si il était
+possible d'établir une nouvelle syntaxe de construction? Par exemple, l'ensemble ci-dessus
+pourrait etre:
+[class Range
+  BuildSyntax = "\[#Value..#Value[, \[#Value..#Value\]]*\]
+  Constructor(Array values) = [Function
+
+  ]
+]
+Cette expression régulière dans le langage permettrait de définir de nouveaux aspects linguistiques a chaud.
+Evidemment, ca semble aussi particulièrement risqué d'un point de vue sécu.
+>>>>>>> Stashed changes

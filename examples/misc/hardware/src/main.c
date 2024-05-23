@@ -9,46 +9,68 @@
 #include		<math.h>
 #include		<lapin.h>
 
-t_bunny_hardware	*hard;
+t_bunny_vm110n		*hard[4];
+int			hardnbr;
 
 void			bye(int			i)
 {
-  (void)i;
-  bunny_delete_hardware(hard);
+  for (i = 0; i < hardnbr; ++i)
+    bunny_delete_vm110n(hard[i]);
   puts("\nGood bye");
   exit(EXIT_SUCCESS);
 }
 
-int			main(void)
+int			main(int		argc,
+			     char		**argv)
 {
-  size_t		k;
-  double		j;
-  size_t		i;
+  int			k;
+  int			j;
+  int			i;
+  double		val;
 
-  j = 0;
-  if ((hard = bunny_new_hardware(0)) == NULL)
+  for (i = 1; i < argc; ++i)
     {
-      puts("Cannot find the board, or maybe you ain't sudo?");
-      return (EXIT_FAILURE);
+      if ((hard[i - 1] = bunny_new_vm110n(atoi(argv[i]))) == NULL)
+	{
+	  puts("Cannot find the board, or maybe you ain't sudo?");
+	  return (EXIT_FAILURE);
+	}
+      hardnbr = i;
     }
- start:
-  bunny_hardware_read(hard);
-  write(1, "\r", 1);
-  for (i = 0; i < sizeof(hard->digital_inputs) / sizeof(hard->digital_inputs[0]); ++i)
-    fprintf(stdout, "%d ", hard->digital_inputs[i]);
-  fprintf(stdout, "%.3lf ", hard->analog_inputs[0]);
-  fprintf(stdout, "%.3lf ", hard->analog_inputs[1]);
-  fflush(stdout);
+  if (hardnbr == 0)
+    return (0);
   
-  hard->analog_outputs[0] = fabs(cos(j += 0.01));
-  hard->analog_outputs[1] = fabs(sin(j));
-  for (i = 0; i < sizeof(hard->digital_outputs) / sizeof(hard->digital_outputs[0]); ++i)
-    hard->digital_outputs[i] = (k / 10) >= i;
-  if ((k += 1) >= 80)
-    k = 0;
-  bunny_hardware_write(hard);
+  val = 0;
+  while (1)
+    {
+      if (argc != 2)
+	write(1, "\e[2H\e[J", 7);
+      else
+	write(1, "\r", 1);
+      for (i = 0; i < argc - 1; ++i)
+	{
+	  bunny_vm110n_read(hard[i]);
+	  fprintf(stdout, "Board %d - ", i);
+	  for (j = 0; j < NBRCELL(hard[i]->digital_inputs); ++j)
+	    fprintf(stdout, "%d ", hard[i]->digital_inputs[j]);
+	  fprintf(stdout, "%.3lf ", hard[i]->analog_inputs[0]);
+	  fprintf(stdout, "%.3lf ", hard[i]->analog_inputs[1]);
+	  if (argc == 2)
+	    fflush(stdout);
+	  else
+	    fprintf(stdout, "\n");
+      
+	  hard[i]->analog_outputs[0] = fabs(cos(val));
+	  hard[i]->analog_outputs[1] = fabs(sin(val));
+	  for (j = 0; j < NBRCELL(hard[i]->digital_outputs); ++j)
+	    hard[i]->digital_outputs[j] = (k / 10) >= j;
+	  if ((k += 1) >= 80)
+	    k = 0;
+	  bunny_vm110n_write(hard[i]);
+	}
+      val += 0.01;
+    }
 
-  goto start;
-  return (-42);
+  return (0);
 }
 

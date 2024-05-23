@@ -23,6 +23,7 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
       (return (false), EINVAL, PATTERN, "ressource,graphics",
        conf_file, clipable, config, typ, "false", "");
 
+  bunny_configuration_resolve(cnf);
   if (*clipable == NULL)
     {
       if (!bunny_configuration_go_get_string(cnf, &str, "RessourceFile[0]"))

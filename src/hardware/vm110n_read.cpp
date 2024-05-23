@@ -25,8 +25,8 @@ bool			bunny_vm110n_read(t_bunny_vm110n		*hdr)
 
   if (ptr->ReadInputs() == false)
     scream_error_if(return (false), EAGAIN, PATTERN, "vm110n", hdr, "false");
-  hard->analog_inputs[0] = ptr->GetAnalog(hbs::PVM110N::ANAL_INPUT_0);
-  hard->analog_inputs[1] = ptr->GetAnalog(hbs::PVM110N::ANAL_INPUT_1);
+  hard->analog_inputs[0] = ptr->GetAnalog(hbs::PVM110N::ANAL_INPUT_0) / 255.0;
+  hard->analog_inputs[1] = ptr->GetAnalog(hbs::PVM110N::ANAL_INPUT_1) / 255.0;
   hard->digital_inputs[0] = ptr->GetDigital(hbs::PVM110N::DIGI_INPUT_0);
   hard->digital_inputs[1] = ptr->GetDigital(hbs::PVM110N::DIGI_INPUT_1);
   hard->digital_inputs[2] = ptr->GetDigital(hbs::PVM110N::DIGI_INPUT_2);

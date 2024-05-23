@@ -641,7 +641,11 @@ bool			readvalue(const char			*code,
 	  nod.original_value = "0";
 	}
       else
-	nod.SetString(std::string(&buffer[0]), true);
+	{
+	  if (buffer[0] == '\0')
+	    return (false);
+	  nod.SetString(std::string(&buffer[0]), true);
+	}
     }
   else
     {

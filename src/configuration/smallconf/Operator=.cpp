@@ -14,7 +14,7 @@ SmallConf	&SmallConf::operator=(const SmallConf		&o)
     {
     case INTEGER:
       {
-	int tmp;
+	int tmp = 0;
 
 	o.GetInt(&tmp);
 	SetInt(tmp);
@@ -22,7 +22,7 @@ SmallConf	&SmallConf::operator=(const SmallConf		&o)
       }
     case DOUBLE:
       {
-	double tmp;
+	double tmp = 0;
 
 	o.GetDouble(&tmp);
 	SetDouble(tmp);
@@ -30,7 +30,7 @@ SmallConf	&SmallConf::operator=(const SmallConf		&o)
       }
     case STRING:
       {
-	const char *tmp;
+	const char *tmp = NULL;
 
 	o.GetString(&tmp);
 	SetString(tmp, false);
@@ -38,7 +38,7 @@ SmallConf	&SmallConf::operator=(const SmallConf		&o)
       }
     case RAWSTRING:
       {
-	const char *tmp;
+	const char *tmp = NULL;
 
 	o.GetString(&tmp);
 	SetString(tmp, true);

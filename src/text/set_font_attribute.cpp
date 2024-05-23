@@ -31,6 +31,7 @@ bool			bunny_set_font_attribute(const char		*conf_file,
       (return (false), EINVAL, PATTERN, "ressource,graphics",
        conf_file, font, config, "false", "");
 
+  bunny_configuration_resolve(cnf);
   if (bunny_configuration_go_get_string(cnf, &resfile, "RessourceFile") == false)
     {
       missing_field = "Missing field RessourceFile";

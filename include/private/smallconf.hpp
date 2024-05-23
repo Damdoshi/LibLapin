@@ -155,9 +155,9 @@ struct				SmallConf
   }
 
   SmallConf			&operator[](const std::string		&str);
-  SmallConf			&operator[](size_t			i);
+  SmallConf			&operator[](ssize_t			i);
   const SmallConf		&operator[](const std::string		&str) const;
-  const SmallConf		&operator[](size_t			i) const;
+  const SmallConf		&operator[](ssize_t			i) const;
 
   void				Remove(const std::string		&str);
   void				Remove(size_t				i);

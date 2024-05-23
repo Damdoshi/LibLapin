@@ -44,6 +44,10 @@ t_bunny_configuration	*_bunny_read_dabsic(const char			*code,
   SmallConf::create_mode = true;
   conf->construct = SmallConf::MAP;
   conf->local_root = true;
+  // Skip sharp bang
+  if (readtext(code, i, "#!"))
+    while (code[i] && code[i] != '\n')
+      i = i + 1;
   if (dabsic_read_inside_scope(code, i, *conf, *conf) != BD_OK)
     {
       SmallConf::create_mode = cmode;

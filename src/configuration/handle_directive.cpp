@@ -215,6 +215,8 @@ Decision		_bunny_handle_directive(const char		*code,
 	chk = bunny_open_configuration(it->c_str(), directives[directive].node);
       else if (type == BC_TEXT)
 	{
+	  if (conf.size() != 3)
+	    conf.resize(3);
 	  chk = bunny_load_configuration
 	    (type, it->c_str(), directives[directive].node,
 	     conf[0].c_str(), conf[1].c_str(), conf[2].c_str()

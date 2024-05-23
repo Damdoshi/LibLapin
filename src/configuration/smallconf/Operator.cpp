@@ -41,13 +41,16 @@ const SmallConf		&SmallConf::operator[](const std::string	&str) const
   return ((*const_cast<SmallConf*>(this))[str]);
 }
 
-SmallConf		&SmallConf::operator[](size_t			i)
+SmallConf		&SmallConf::operator[](ssize_t			i)
 {
-  size_t		olsize;
+  ssize_t		olsize;
 
   if (i == 0 && array.size() == 0 && create_mode == false && have_value)
     return (*this);
 
+  while (i < 0)
+    i += array.size();
+  
   if ((olsize = array.size()) <= i)
     {
       if (!create_mode)
@@ -73,7 +76,7 @@ SmallConf		&SmallConf::operator[](size_t			i)
   return (*array[i]);
 }
 
-const SmallConf		&SmallConf::operator[](size_t			i) const
+const SmallConf		&SmallConf::operator[](ssize_t			i) const
 {
   return ((*const_cast<SmallConf*>(this))[i]);
 }

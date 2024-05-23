@@ -51,7 +51,7 @@ t_bunny_recorder	*bunny_new_recorder(const char			*dev,
  FailString:
   bunny_free(rec->device);
  Delete:
-  bunny_free(rec);
+  delete rec;
   return (NULL);
 }
 

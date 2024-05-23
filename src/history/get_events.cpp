@@ -27,7 +27,7 @@ int64_t	bunny_history_get_events_of(t_bunny_event_history	*_his,
   auto it = his->events.lower_bound(tick);
   int64_t	z = 0;
 
-  if (it->first != tick)
+  if ((int64_t)it->first != tick)
     return (0);
   for (auto itx = it->second.begin(); itx != it->second.end(); ++itx)
     memcpy(&evt[z++], *itx, sizeof(*evt));

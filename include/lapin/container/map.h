@@ -158,7 +158,7 @@ void				*_bunny_map_set_data(t_bunny_map	*map,
 **         Or NULL on error.
 */
 # define			bunny_map_set_data(map, k, d, typ)	\
-  _bunny_map_set_data(map, (void*)(size_t)k, (void*)(size_t)d)
+  ((typ)_bunny_map_set_data(map, (void*)(size_t)k, (void*)(size_t)d))
 
 /*!
 ** Call the func function on every data of the sent map.

@@ -8,7 +8,7 @@
 static void		copy_all(t_bunny_map		*node,
 				 void			*param)
 {
-  bunny_map_set_data((t_bunny_map*)param, node->key, node->data, int);
+  bunny_map_set_data((t_bunny_map*)param, node->key, node->data, void*);
 }
 
 t_bunny_sprite		*bunny_duplicate_sprite(t_bunny_sprite	*s)

@@ -51,7 +51,7 @@ t_bunny_configuration	*bunny_configuration_get_child(t_bunny_configuration		*con
 ** false, NULL if create_mode is true but here is no more memory.
 */
 t_bunny_configuration	*bunny_configuration_get_case(t_bunny_configuration		*config,
-						      size_t				i);
+						      ssize_t				i);
 
 # if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 /*!

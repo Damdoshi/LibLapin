@@ -46,6 +46,7 @@ void			bunny_fill(t_bunny_buffer		*picture,
     case TTF_TEXT:
     case GRAPHIC_TEXT:
     case GRAPHIC_RAM:
+    case CINEMATIC:
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)picture;
 	sf::IntRect		rect(pic->rect.x, pic->rect.y, pic->rect.w, pic->rect.h);

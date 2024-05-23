@@ -282,7 +282,8 @@ typedef enum			t_bunny_clipable_type
     BCT_SPRITE			= BCT_PICTURE,
     BCT_FONT,
     BCT_TILEMAP,
-    BCT_PARALLAX
+    BCT_PARALLAX,
+    BCT_CINEMATIC
   }				t_bunny_clipable_type;
 
 /*!

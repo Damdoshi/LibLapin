@@ -40,8 +40,9 @@ Decision		dabsic_read_sequence_line(const char		*code,
 	       );
 	  return (BD_OK);
 	}
+      else
+	line.nbr_parameters = ++it;
       dabsic_read_separator(code, i);
-      line.nbr_parameters = ++it;
     }
   while (readtext(code, i, ","));
   dabsic_read_separator(code, i);

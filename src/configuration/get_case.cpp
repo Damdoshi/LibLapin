@@ -9,7 +9,7 @@
 #define			PATTERN		"%p(%s) conf, %zu index -> %p"
 
 t_bunny_configuration	*bunny_configuration_get_case(t_bunny_configuration	*conf,
-						      size_t			n)
+						      ssize_t			n)
 {
   SmallConf		*c = (SmallConf*)conf;
   t_bunny_configuration	*cnf = NULL;

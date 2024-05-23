@@ -15,6 +15,8 @@ void			bunny_draw(const t_bunny_picture	*picture)
     {} // __bunny_draw_tilemap((struct bunny_tilemap*)picture);
   else if (*typ == PARALLAX)
     __bunny_draw_parallax((struct bunny_parallax*)picture);
+  else if (*typ == CINEMATIC)
+    __bunny_draw_cinematic((struct bunny_cinematic*)picture);
   struct bunny_picture	*pic = (struct bunny_picture*)picture;
 
   pic->texture->display();

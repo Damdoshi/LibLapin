@@ -118,7 +118,7 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
       aconf = it->second;
       anim = &sprite.animation[i];
       anim->hash = bunny_hash(BH_DJB2, it->first.c_str(), it->first.size());
-      bunny_map_set_data(sprite.hashname_id, anim->hash, i, int);
+      bunny_map_set_data(sprite.hashname_id, anim->hash, i, void*);
 
       // FREQUENCY
       if ((*aconf).Access("Frequency") == false)

@@ -51,7 +51,7 @@ ssize_t			_bunny_monitor_prepare_buffer(char		*buf,
 {
   std::stringstream	ss;
   std::map<std::string, struct bunny_monitored_value>::iterator		it;
-  ssize_t		acc;
+  ssize_t		acc = 0;
   ssize_t		i;
 
   if (n == NULL || strcmp(n, "*") == 0)

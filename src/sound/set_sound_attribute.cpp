@@ -21,6 +21,7 @@ bool				bunny_set_sound_attribute(const char		*conf_file,
   if (sound == NULL || (cnf = _get_good_conf(conf_file, config)) == NULL)
     scream_error_if(return (false), bunny_errno, PATTERN, "ressource,sound", conf_file, sound, config, is_mus ? "true" : "false", "false", "");
 
+  bunny_configuration_resolve(cnf);
   if (*sound == NULL)
     {
       if (!bunny_configuration_go_get_string(cnf, &str, "RessourceFile[0]"))

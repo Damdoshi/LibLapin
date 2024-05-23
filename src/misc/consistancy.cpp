@@ -143,5 +143,24 @@ void				bunny_consistancy(void)
   do_assert(&usr_tmap->rotation, &prv_tmap->tile_rotation);
   do_assert(&usr_tmap->lock_borders, &prv_tmap->lock_borders);
 
+  t_bunny_cinematic		*usr_cin = NULL;
+  struct bunny_cinematic	*prv_cin = NULL;
+
+#define				TF(a)		\
+  do_assert(&usr_cin->a, &prv_cin->a)
+  TF(volumes.music);
+  TF(volumes.voice);
+  TF(volumes.effect);
+  TF(pictures);
+  TF(effects);
+  TF(musics);
+  TF(voices);
+  TF(fonts);
+  TF(texts);
+  TF(commands);
+  TF(program);
+  TF(current_command);
+  TF(stack_frame);
+  
   bunny_printl("If this text appears, it means that all tests were successful.");
 }

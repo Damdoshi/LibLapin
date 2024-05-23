@@ -38,7 +38,7 @@ static bool		_bunny_read_box(t_bunny_box_system	*bs,
 
       if (nw == NULL)
 	return (false);
-      if (bunny_map_set_data(parent->children, nw->id, nw, NULL) == NULL)
+      if (bunny_map_set_data(parent->children, nw->id, nw, void*) == NULL)
 	return (false);
       if (bunny_configuration_getf_node(n, &children, "Children"))
 	if (_bunny_read_box(bs, children, nw) == false)

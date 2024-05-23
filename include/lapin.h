@@ -153,6 +153,8 @@ typedef enum			s_bunny_decision
 # include			"lapin/misc.h"
 # include			"lapin/named_parameter.h"
 
+# include			"lapin/cinematic.h"
+
 # include			"lapin/context.h"
 
 # include			"lapin/compat.h"

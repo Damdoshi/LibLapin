@@ -63,6 +63,7 @@ enum				_buffer_type
     DRESSED_SPRITE		= 6,
     TILEMAP			= 7,
     PARALLAX			= 8,
+    CINEMATIC			= 9,
     LAST_BUFFER_TYPE
   };
 
