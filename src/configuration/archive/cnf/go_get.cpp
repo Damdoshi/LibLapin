@@ -124,6 +124,18 @@ t_bunny_configuration	*_bunny_configuration_go_get_node(const t_bunny_configurat
   j = i;
   if (addr == NULL || *addr == 0 || strcmp(addr, ".") == 0)
     return (cnf);
+  if (strncmp(&addr[i], "*", 1) == 0)
+    {
+      SmallConf		*sc;
+      ssize_t		k = 0;
+
+      if ((sc = (SmallConf*)_bunny_configuration_go_get_node(cnf, addr, ++i)) == NULL)
+	return (NULL);
+      bunny_configuration_executef(sc, true, NULL, ".");
+      if (sc->last_type != SmallConf::RAWSTRING)
+	return (NULL);
+      return (_bunny_configuration_go_get_node(cnf, sc->original_value.c_str(), k));
+    }
   if (strncmp(&addr[i], "[]", 2) == 0)
     {
       cnf = bunny_configuration_get_root(cnf);
@@ -222,7 +234,8 @@ t_bunny_configuration	*_bunny_configuration_go_get_node(const t_bunny_configurat
 	  if (bunny_configuration_get_string(cnf, &str) == false)
 	    return (NULL);
 	  cnf = bunny_configuration_get_root(cnf);
-	  if ((cnf = _bunny_configuration_go_get_node(cnf, str, j)) == NULL)
+	  ssize_t k = 0;
+	  if ((cnf = _bunny_configuration_go_get_node(cnf, str, k)) == NULL)
 	    return (NULL);
 	}
       else if (readtext(addr, j, ".") == false)
@@ -301,4 +314,3 @@ bool			bunny_configuration_go_get_int(t_bunny_configuration		*config,
   scream_log_if(PATTERN, "configuration", config, val, addr, "true", *val);
   return (true);
 }
-

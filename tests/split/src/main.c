@@ -52,6 +52,14 @@ t_test			gl_test[] =
     },
 
     {
+      "   Les  Lapins  Noirs   ",
+      {" ", NULL},
+      true,
+      {"Les", "Lapins", "Noirs", NULL},
+      "!", true, "Les!Lapins!Noirs"
+    },
+
+    {
       "La   LibLapin est plus     qu' une bibliotheque graphique.",
       {" ", "'", ".", NULL},
       true,

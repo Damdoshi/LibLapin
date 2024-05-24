@@ -24,6 +24,7 @@ Decision		dabsic_read_text_cont(const char	*code,
 					      std::string	eoftok,
 					      std::string	comtok)
 {
+  vartok += "(";
   int			index = 0;
   int			l;
 
@@ -32,9 +33,9 @@ Decision		dabsic_read_text_cont(const char	*code,
   while (code[i] && (eoftok == "" || !readtext(code, i, eoftok.c_str())))
     {
       // On a trouvé une variable
-      if (vartok != "" && readtext(code, i, vartok.c_str()) && readtext(code, i, "("))
+      if (vartok != "" && readtext(code, i, vartok.c_str()))
 	{
-	  conf[index++].SetString(std::string(&code[l], i - l - 1 - vartok.size()));
+	  conf[index++].SetString(std::string(&code[l], i - l - vartok.size()));
 	  if (dabsic_read_litterals(code, i, conf[index++], root, true) == BD_ERROR)
 	    return (BD_ERROR);
 	  if (readtext(code, i, ")") == false)

@@ -50,7 +50,10 @@ t_bunny_decision	expr_compute_builtins(Expression	&exp,
 
   if (bunny_strcasecmp(bin.c_str(), "AddressOf") == 0)
     {
-      exp.val.SetString(ope->address, true);
+      std::string root = "[].";
+
+      root += ope->address;
+      exp.val.SetString(root, true);
       // exp.val.SetString(ope->address, false);
       return (BD_OK);
     }
