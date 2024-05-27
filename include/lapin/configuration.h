@@ -188,6 +188,10 @@ const char		*bunny_configuration_get_name(const t_bunny_configuration	*config);
 ** "" is returned if the node is the root.
 */
 const char		*bunny_configuration_get_address(const t_bunny_configuration	*config);
+bool			bunny_configuration_addressf(t_bunny_configuration		*config,
+						     const char				**addr,
+						     const char				*format,
+						     ...) _BFMT(3, 4);
 
 // The retrieving parameter can be NULL, so the function can be used only to check if the type is correct.
 bool			bunny_configuration_getf_node(t_bunny_configuration		*config,
