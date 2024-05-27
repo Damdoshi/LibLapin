@@ -86,7 +86,11 @@ struct				Expression
       BEO_POW			= 0,
       BEO_CAT			= 0,
       BEO_IN			= 0,
-      BEO_OUT
+      BEO_INARRAY,
+      BEO_INSCOPE,
+      BEO_OUT,
+      BEO_OUTARRAY,
+      BEO_OUTSCOPE
     };
 
   static const std::string

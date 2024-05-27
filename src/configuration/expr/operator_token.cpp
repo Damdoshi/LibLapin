@@ -84,7 +84,11 @@ const std::string	Expression::OperatorToken[Expression::LAST_OPERATOR_FAMILY][21
     },
     { // Test d'ensembles
       {"in", "∈"},
-      {"out", "∉", "!∈"}
+      {"{in}"},
+      {"[in]"},
+      {"out", "∉", "!∈"},
+      {"{out}"},
+      {"[out]"}
     }
   };
 

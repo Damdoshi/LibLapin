@@ -72,22 +72,45 @@ bool			expr_compute_group(Expression		&exp,
 	   exp.file.c_str(), exp.line);
       else
 	{
+	  bool		in =
+	    x.optor >= Expression::BEO_IN && x.optor <= Expression::BEO_INSCOPE;
+	  int		type;
+
+	  if (in)
+	    type = x.optor - Expression::BEO_IN;
+	  else
+	    type = x.optor - Expression::BEO_OUT;
 	  SmallConf	&tab = *ope;
 	  std::vector<SmallConf*>::iterator it;
+	  std::map<std::string, SmallConf*>::iterator itn;
 
-	  res = false; // Récupérer la position plutot qu'une simple
+	  // Récupérer la position plutot qu'une simple
 	  // presence serait interessant, mais il faudrait que "in" renvoi
 	  // -1 en cas d'absence afin d'éviter une ambiguié (j'ai pas envie
 	  // d'un === comme en PHP
 	  // mais "in" n'a pas ce sens, et si "in" avait ce sens, alors
 	  // "out" ne serait pas que la simple inversion de "in"...
-	  for (it = tab.array.begin(); it != tab.array.end(); ++it)
-	    if (*first == **it)
-	      {
-		res = true;
-		break ;
-	      }
-	  if (x.optor == Expression::BEO_IN)
+	  
+	  res = false;
+	  if (type == 0 || type == 1)
+	    {
+	      for (it = tab.array.begin(); it != tab.array.end(); ++it)
+		if (*first == **it)
+		  {
+		    res = true;
+		    break ;
+		  }
+	    }
+	  if (type == 0 || type == 2)
+	    {
+	      for (itn = tab.nodes.begin(); itn != tab.nodes.end(); ++itn)
+		if (first->original_value == itn->first)
+		  {
+		    res = true;
+		    break ;
+		  }
+	    }
+	  if (in)
 	    res = res;
 	  else
 	    res = !res;

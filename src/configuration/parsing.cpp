@@ -539,6 +539,7 @@ bool			readaddress(const char			*addr,
       else
 	{
 	  readtext(addr, j, "#");
+	  readtext(addr, j, "*");
 	  if (readchar(addr, j, fieldname) == false)
 	    return (false);
 	}
