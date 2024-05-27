@@ -26,7 +26,9 @@ bool			bunny_configuration_execute(t_bunny_configuration	*cnf,
 
   if (artif->expression)
     {
-      ret = expr_compute(*artif, NULL, false, root, NULL, artif->father, param);
+      // C'était NULL à la place de proto ici.
+      // Changé pour tadventure
+      ret = expr_compute(*artif, proto, false, root, NULL, artif->father, param);
       SmallConf::create_mode = cmode;
       return (ret);
     }

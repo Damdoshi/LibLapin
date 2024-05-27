@@ -606,6 +606,7 @@ bool			dabsic_compute(SmallConf		&func,
        );
   if (prototype)
     {
+      /*
       if (params == NULL)
 	scream_error_if
 	  (return (false), BE_SYNTAX_ERROR,
@@ -613,8 +614,9 @@ bool			dabsic_compute(SmallConf		&func,
 	   "ressource,configuration,syntax",
 	   func.name.c_str(), func.line
 	   );
+      */
       // test classic call by nbr
-      if (params->Size())
+      if (params && params->Size())
 	{
 	  if (params->Size() > prototype->Size())
 	    scream_error_if
