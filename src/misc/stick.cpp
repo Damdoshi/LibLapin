@@ -16,7 +16,7 @@ char			*bunny_stick(const char * const		*tab,
 
   for (i = 0, len = 0; tab[i]; ++i)
     len += strlen(tab[i]);
-  len += strlen(glue) * (i - no_last ? 1 : 0);
+  len += strlen(glue) * (i - no_last ? 1 : 0) + 1;
   if ((data = (char*)bunny_malloc(sizeof(*data) * len)) == NULL)
     return (NULL);
   for (i = 0, wt = 0; tab[i]; ++i)

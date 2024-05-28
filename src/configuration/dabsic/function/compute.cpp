@@ -227,17 +227,23 @@ t_compute_result	dabsic_compute_link(Function		&func,
   t_bunny_value		retval;
   t_bunny_value		*dyparams;
   size_t		i;
+  size_t		nbparams;
 
   (void)func;
   (void)root;
   (void)local;
   (void)artif;
 
+  if (params)
+    nbparams = params->NbrChild();
+  else
+    nbparams = 0;
+
   if (mainnod.prototype == NULL)
     {
       if ((mainnod.prototype = (t_bunny_prototype*)bunny_malloc
 	   (sizeof(*mainnod.prototype)
-	    + sizeof(mainnod.prototype->parameters) * params->NbrChild())) == NULL)
+	    + sizeof(mainnod.prototype->parameters) * nbparams)) == NULL)
 	return (CR_ERROR);
       proto = mainnod.prototype;
       proto->name = mainnod.parent_node->name.c_str();

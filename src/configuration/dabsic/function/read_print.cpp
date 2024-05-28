@@ -28,6 +28,8 @@ Decision		dabsic_read_print(const char		*code,
 	   "ressource,configuration,syntax",
 	   SmallConf::file_read.top().c_str(), whichline(code, i)
 	   );
+      func.value.father = &funcnode;
+      func.value[func.value.Size() - 1].father = &funcnode;
       func.value[func.value.Size() - 1].line = line;
       dabsic_read_separator(code, i);
     }

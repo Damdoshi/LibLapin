@@ -1,6 +1,7 @@
 
 Second = 42
-First = &Second
+'First = &Second
+First = AddressOf(&Second)
 
 Print = [Function
   "This is ", [First], "!"
