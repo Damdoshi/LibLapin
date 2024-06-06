@@ -74,7 +74,7 @@ bool			expr_compute_function_call(Expression	&exp,
   proto = &(*ope)[".prototype"];
   SmallConf::create_mode = true;
 
-  // Les paramètres sont ils passé par nom?
+  // Les paramètres sont ils passé par ordre?
   if (exp.operand[0]->val.name == "")
     {
       for (i = 0; i < exp.operand.size() && i < (*proto).Size(); ++i)
@@ -107,7 +107,7 @@ bool			expr_compute_function_call(Expression	&exp,
 	    temp_param[(*proto)[i].name] = *oparg;
 	  }
     }
-  // Ils sont envoyé par ordre
+  // Ils sont envoyé par nom
   else
     for (i = 0; i < exp.operand.size(); ++i)
       if (exp.operand[i] != NULL)
@@ -132,50 +132,36 @@ bool			expr_compute_function_call(Expression	&exp,
       if (expr_compute
 	  (*ope, dry, root, NULL, tmp_artif, parameters) == false)
 	return (false);
-      auto save = ope->expression;
-
-      // Hack nul parceque exp.val = *ope va appeller expr_compute mais sans les paramètres
-      // si ope->expression existe. Il faudrait probablement que expr_compute
-      // puisse stocker quelque part le resultat directement pour eviter ca.
-      ope->expression = NULL;
-      exp.val = *ope;
-      ope->expression = save;
-      return (true);
     }
-  if (ope->function)
+  else if (ope->function)
     {
       if (dabsic_compute
 	  (*ope, dry, root, tmp_artif, parameters) == false)
 	return (false);
-      auto save = ope->expression;
-
-      // Exactement le meme caca qu'au dessus
-      ope->expression = NULL;
-      exp.val = *ope;
-      ope->expression = save;
-      return (true);
     }
-  if (ope->sequence)
+  else if (ope->sequence)
     {
       if (sequence_compute
 	  // Le NULL sera a retiré quand sequence_compute pourra être modifié
 	  (*ope, NULL, root, tmp_artif, parameters, NULL, NULL) == false)
 	return (false);
-      auto save = ope->expression;
-
-      // Exactement le meme caca qu'au dessus
-      ope->expression = NULL;
-      exp.val = *ope;
-      ope->expression = save;
-      return (true);
     }
-  if (dry)
+  else if (dry)
     return (true);
-  scream_error_if
-    (return (false), BE_SYNTAX_ERROR,
-     "Node %s is not a function on line %s:%d",
-     "configuration,syntax",
-     exp.val.original_value.c_str(), exp.file.c_str(), exp.line);
-  return (false);
+  else
+    scream_error_if
+      (return (false), BE_SYNTAX_ERROR,
+       "Node %s is not a function on line %s:%d",
+       "configuration,syntax",
+       exp.val.original_value.c_str(), exp.file.c_str(), exp.line);
+  auto save = ope->expression;
+
+  // Hack nul parceque exp.val = *ope va appeller expr_compute mais sans les paramètres
+  // si ope->expression existe. Il faudrait probablement que expr_compute
+  // puisse stocker quelque part le resultat directement pour eviter ca.
+  ope->expression = NULL;
+  exp.val = *ope;
+  ope->expression = save;
+  return (true);
 }
 
