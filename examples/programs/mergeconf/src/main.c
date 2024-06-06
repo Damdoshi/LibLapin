@@ -86,6 +86,7 @@ int			main(int					argc,
   t_bunny_configuration_type iformat = BC_CUSTOM;
   t_bunny_configuration_type oformat = BC_CUSTOM;
   bool			resolve = false;
+  int			call_main = -1;
 
   bunny_set_log_mode(false);
   bunny_set_error_descriptor(2);
@@ -94,6 +95,11 @@ int			main(int					argc,
     {
       if (strcmp("--resolve", argv[i]) == 0)
 	resolve = true;
+      if (strcmp("!", argv[i]) == 0)
+	{
+	  call_main = i;
+	  break ;
+	}
       else if (!strcmp("-i", argv[i]))
 	{
 	  if (iformat != BC_CUSTOM)
@@ -101,9 +107,9 @@ int			main(int					argc,
 	      fprintf(stderr, "%s: Cannot mix option '-if' with option '-i'.\n", *argv);
 	      return (EXIT_FAILURE);
 	    }
-	  for (i += 1; i < argc && argv[i][0] != '-'; ++i)
+	  for (i += 1; i < argc && argv[i][0] != '-' && argv[i][0] != '!'; ++i)
 	    inputs[nbr_inputs++] = argv[i];
-	  if (i < argc && argv[i][0] == '-')
+	  if (i < argc && (argv[i][0] == '-' || argv[i][0] == '!'))
 	    i -= 1;
 	}
       else if (!strcmp("-if", argv[i]))
@@ -137,9 +143,9 @@ int			main(int					argc,
 	      fprintf(stderr, "%s: Cannot mix option '-of' with option '-o'.\n", *argv);
 	      return (EXIT_FAILURE);
 	    }
-	  for (i += 1; i < argc && argv[i][0] != '-'; ++i)
+	  for (i += 1; i < argc && argv[i][0] != '-' && argv[i][0] != '!'; ++i)
 	    outputs[nbr_outputs++] = argv[i];
-	  if (i < argc && argv[i][0] == '-')
+	  if (i < argc && (argv[i][0] == '-' || argv[i][0] == '!'))
 	    i -= 1;
 	}
       else if (!strcmp("-of", argv[i]))
@@ -213,7 +219,21 @@ int			main(int					argc,
   if (resolve)
     if (bunny_configuration_resolve(cnf) == false)
       fprintf(stderr, "%s: Cannot resolve all operations! Operation will be rendered as it.", argv[0]);
-  if (write_all_files(*argv, oformat, cnf, outputs, nbr_outputs) == false)
+
+  if (call_main != -1)
+    {
+      t_bunny_configuration *params = bunny_new_configuration();
+      int ret;
+      int i;
+      
+      bunny_configuration_setf(params, argc - call_main, "[0]");
+      for (i = call_main; i < argc; ++i)
+	bunny_configuration_setf(params, argv[i], "[1][%d]", i - call_main);
+      if (!bunny_configuration_executef(cnf, &ret, false, params, "Main"))
+	return (EXIT_FAILURE);
+      return (ret);
+    }
+  else if (write_all_files(*argv, oformat, cnf, outputs, nbr_outputs) == false)
     return (EXIT_FAILURE);
 
   return (EXIT_SUCCESS);

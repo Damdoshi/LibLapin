@@ -1,8 +1,0 @@
-#!/bin/sh
-
-echo -llapin -lsfml-graphics -lsfml-audio -lsfml-window		\
-     -lsfml-system -lstdc++ -lm -ldl -lpthread			\
-     -lopencv_imgproc -lopencv_highgui -lopencv_objdetect	\
-     -lopencv_video -lopencv_videoio -lopencv_core -lavcall	\
-     -lusb
-

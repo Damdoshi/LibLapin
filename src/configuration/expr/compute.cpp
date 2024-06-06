@@ -41,9 +41,6 @@ bool			expr_compute(SmallConf			&exp,
     }
   if (exp.expression->is_const)
     return (true);
-
-  if ((variables = test_and_set_prototype(exp, variables)) == NULL)
-    return (false);
   // C'est vraiment au cas ou
   if (!root)
     root = (SmallConf*)bunny_configuration_get_root((SmallConf*)&exp);
@@ -54,8 +51,9 @@ bool			expr_compute(SmallConf			&exp,
   int			cmode = SmallConf::create_mode;
 
   cmode = true;
-  if (exp.expression->optor_family == Expression::LAST_OPERATOR_FAMILY
-      || exp.expression->optor_family == -1)
+  if ((variables = test_and_set_prototype(exp, variables)) == NULL)
+    return (false);
+  if (exp.expression->optor_family == Expression::LAST_OPERATOR_FAMILY || exp.expression->optor_family == -1)
     {
       SmallConf		*ope;
 

@@ -7,10 +7,11 @@
 
 #include		"lapin_private.h"
 
-static SmallConf	*restore(int				cmode)
+static SmallConf	*restore(int				cmode,
+				 SmallConf			*ptr = NULL)
 {
   SmallConf::create_mode = cmode;
-  return (NULL);
+  return (ptr);
 }
 
 SmallConf		*test_and_set_prototype(SmallConf	&function,
@@ -18,20 +19,21 @@ SmallConf		*test_and_set_prototype(SmallConf	&function,
 {
   std::stringstream	varnodess;
   std::string		varnode;
-  SmallConf		&vars = function[varnode];
+  int			cmode = SmallConf::create_mode;
 
+  SmallConf::create_mode = true;
   varnodess << ".c" << function.NbrChild();
   varnode = varnodess.str();
+  SmallConf		&vars = function[varnode];
+
   if (!function.Access(".prototype"))
-    return (&vars);
+    return (restore(cmode, &vars));
   if (parameters == NULL)
-    return (&vars);
+    return (restore(cmode, &vars));
   SmallConf		&gparameters = *parameters;
   SmallConf		&proto = function[".prototype"];
-  int			cmode = SmallConf::create_mode;
   size_t		i;
   
-  SmallConf::create_mode = true;
   // Méthode classique d'appel
   if (parameters->Size())
     {

@@ -71,8 +71,8 @@ bool			expr_compute_function_call(Expression	&exp,
   bool			cmode = SmallConf::create_mode;
 
   // On récupère le prototype de la fonction ciblée
-  proto = &(*ope)[".prototype"];
   SmallConf::create_mode = true;
+  proto = &(*ope)[".prototype"];
 
   // Les paramètres sont ils passé par ordre?
   if (exp.operand[0]->val.name == "")
@@ -91,8 +91,10 @@ bool			expr_compute_function_call(Expression	&exp,
 		  return (false);
 		}
 	    oparg = &arg.val;
+	    /*
 	    if (oparg->last_type == SmallConf::RAWSTRING)
-	      {
+	      { // Il arrive pas a récupérer la variable qui est dans le prototype car elle a pas été crée, logique. La vérification a lieu dans test_and_stuff
+		// test_and_stuff est appelée par les computes
 		if ((oparg = expr_get_variable
 		     (*oparg, dry, root, local, artif, param)) == NULL)
 		  scream_error_if
@@ -104,6 +106,7 @@ bool			expr_compute_function_call(Expression	&exp,
 		     artif->address.c_str(),
 		     exp.file.c_str(), exp.line);
 	      }
+	    */
 	    temp_param[(*proto)[i].name] = *oparg;
 	  }
     }
@@ -129,8 +132,8 @@ bool			expr_compute_function_call(Expression	&exp,
 
   if (ope->expression)
     {
-      if (expr_compute
-	  (*ope, dry, root, NULL, tmp_artif, parameters) == false)
+      if (expr_compute // Local a tmp_artif car on repart sur une autre fonction
+	  (*ope, dry, root, tmp_artif, tmp_artif, parameters) == false)
 	return (false);
     }
   else if (ope->function)
