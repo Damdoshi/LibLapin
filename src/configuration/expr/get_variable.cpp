@@ -6,7 +6,7 @@
 #include		"lapin_private.h"
 
 
-SmallConf		*expr_get_var(SmallConf		&var,
+SmallConf		*expr_get_variable(SmallConf		&var,
 					   bool			dry,
 					   SmallConf		*root,
 					   SmallConf		*local,
@@ -50,54 +50,11 @@ SmallConf		*expr_get_var(SmallConf		&var,
   if (root) contexts[nbrctx++] = root; // La racine
 
   i = 0;
-  /*
-  if (strstr("Rooms.SalleAttente.TimePass", ((SmallConf*)contexts[0])->address.c_str()) == 0)
-    {
-      puts("LOCAL");
-      bunny_save_configuration(BC_DABSIC, "/dev/stderr", contexts[0]);
-      puts("VARIABLES");
-      bunny_save_configuration(BC_DABSIC, "/dev/stderr", contexts[1]);
-      puts("ARTIF");
-      bunny_save_configuration(BC_DABSIC, "/dev/stderr", contexts[2]);
-      // puts("ROOT");
-      // bunny_save_configuration(BC_DABSIC, "/dev/stderr", contexts[0]);
-    }
-  */
   if (nbrctx && (cnf = bunny_configuration_resolve_address(contexts, nbrctx, name, i)))
     {
       SmallConf::create_mode = cmode;
-      return (expr_get_var(*(SmallConf*)cnf, dry, root, local, artif, variables));
+      return (expr_get_variable(*(SmallConf*)cnf, dry, root, local, artif, variables));
     }
-
-  /*
-  i = 0;
-  if (artif && (cnf = _bunny_configuration_go_get_node(artif, name, i)))
-    {
-      SmallConf::create_mode = cmode;
-      return (expr_get_var(*(SmallConf*)cnf, dry, root, local, artif, variables));
-    }
-
-  i = 0;
-  if (local && (cnf = _bunny_configuration_go_get_node(local, name, i)))
-    {
-      SmallConf::create_mode = cmode;
-      return (expr_get_var(*(SmallConf*)cnf, dry, root, local, artif, variables));
-    }
-
-  i = 0;
-  if (variables && (cnf = _bunny_configuration_go_get_node(variables, name, i)))
-    {
-      SmallConf::create_mode = cmode;
-      return (expr_get_var(*(SmallConf*)cnf, dry, root, local, artif, variables));
-    }
-
-  i = 0;
-  if (root && (cnf = _bunny_configuration_go_get_node(root, name, i)))
-    {
-      SmallConf::create_mode = cmode;
-      return (expr_get_var(*(SmallConf*)cnf, dry, root, local, artif, variables));
-    }
-    */
 
   SmallConf::create_mode = cmode;
   if (dry)
