@@ -1,0 +1,18 @@
+RessourceFile="voices.ogg"
+
+[Slices
+  [S00
+    Index=0
+    ActiveEnd=1
+    EndIndex=2
+    Volume=100
+    Position=0,0,0
+  ]
+  [S01
+    Index=2
+    ActiveEnd=3
+    EndIndex=4
+    Volume=100
+    Position=0,0,0
+  ]
+]

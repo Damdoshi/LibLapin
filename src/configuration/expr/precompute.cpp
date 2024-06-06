@@ -7,6 +7,7 @@
 
 bool			expr_precompute(SmallConf		&exp)
 {
-  return (expr_compute(exp, NULL, true, NULL, NULL, NULL, NULL));
+  return (true); // Sabotage du précalcul car ca génère trop de merde.
+  return (expr_compute(exp, true, NULL, NULL, NULL, NULL));
 }
 

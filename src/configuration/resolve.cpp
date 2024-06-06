@@ -21,7 +21,7 @@ bool		bunny_configuration_resolve(t_bunny_configuration	*par)
   // Si il y a une expression à résoudre et qui ne prend aucun paramètres...
   if (cnf.expression != NULL && cnf.nodes.find(".parameters") == cnf.nodes.end())
     {
-      if (expr_compute(cnf, NULL, false, root, &cnf, parent, NULL) == false)
+      if (expr_compute(cnf, false, root, &cnf, parent, NULL) == false)
 	return (false);
       if (cnf.expression->val.last_type == SmallConf::INTEGER)
 	{
@@ -40,6 +40,8 @@ bool		bunny_configuration_resolve(t_bunny_configuration	*par)
 	}
       else
 	{
+	  if (cnf.GetString(&str, root, parent))
+	    cnf.SetString(std::string(str, true));
 	  // Ceci indique qu'on a un pointeur, en fait, car une RAWSTRING
 	  // est une sorte de pointeur.
 	  // Il faudrait formaliser plus fortement cet aspect, car il est crucial.

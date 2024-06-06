@@ -10,12 +10,12 @@ static SmallConf	* _ecb(Expression			&exp,
 			       SmallConf			*root,
 			       SmallConf			*local,
 			       SmallConf			*artif,
-			       SmallConf			*param,
+			       SmallConf			*variables,
 			       const std::string		&bin)
 {
   SmallConf		*ope;
 
-  if ((ope = expr_get_variable(exp.operand[0]->val, dry, root, local, artif, param)) == NULL)
+  if ((ope = expr_get_variable(exp.operand[0]->val, dry, root, local, artif, variables)) == NULL)
     {
       if (bunny_strcasecmp(bin.c_str(), "Exists") != 0)
 	scream_error_if
@@ -36,7 +36,7 @@ t_bunny_decision	expr_compute_builtins(Expression	&exp,
 					      SmallConf		*root,
 					      SmallConf		*local,
 					      SmallConf		*artif,
-					      SmallConf		*param)
+					      SmallConf		*variables)
 {
   std::string		bin;
   SmallConf		*ope;
@@ -49,8 +49,8 @@ t_bunny_decision	expr_compute_builtins(Expression	&exp,
   if (bunny_strcasecmp(bin.c_str(), "Exists") == 0)
     {
       if (exp.operand.size() != 1)
-	goto BadAmountOfParameters;
-      if ((ope = _ecb(exp, dry, root, local, artif, param, bin)) == NULL)
+	goto BadAmountOfVariableseters;
+      if ((ope = _ecb(exp, dry, root, local, artif, variables, bin)) == NULL)
 	exp.val.SetInt(0);
       else
 	exp.val.SetInt(1);
@@ -59,21 +59,30 @@ t_bunny_decision	expr_compute_builtins(Expression	&exp,
   if (bunny_strcasecmp(bin.c_str(), "AddressOf") == 0)
     {
       if (exp.operand.size() != 1)
-	goto BadAmountOfParameters;
-      if ((ope = _ecb(exp, dry, root, local, artif, param, bin)) == NULL)
+	goto BadAmountOfVariableseters;
+      if ((ope = _ecb(exp, dry, root, local, artif, variables, bin)) == NULL)
 	return (BD_ERROR);
-      std::string root = "[].";
+      std::string croot = "[].";
 
-      root += ope->address;
-      exp.val.SetString(root, true);
+      croot += ope->address;
+      exp.val.SetString(croot, true);
       // exp.val.SetString(ope->address, false);
+      return (BD_OK);
+    }
+  if (bunny_strcasecmp(bin.c_str(), "NameOf") == 0)
+    {
+      if (exp.operand.size() != 1)
+	goto BadAmountOfVariableseters;
+      if ((ope = _ecb(exp, dry, root, local, artif, variables, bin)) == NULL)
+	return (BD_ERROR);
+      exp.val.SetString(ope->name, false);
       return (BD_OK);
     }
   if (bunny_strcasecmp(bin.c_str(), "HaveValue") == 0)
     {
       if (exp.operand.size() != 1)
-	goto BadAmountOfParameters;
-      if ((ope = _ecb(exp, dry, root, local, artif, param, bin)) == NULL)
+	goto BadAmountOfVariableseters;
+      if ((ope = _ecb(exp, dry, root, local, artif, variables, bin)) == NULL)
 	return (BD_ERROR);
       exp.val.SetInt((int)ope->have_value);
       return (BD_OK);
@@ -81,17 +90,17 @@ t_bunny_decision	expr_compute_builtins(Expression	&exp,
   if (bunny_strcasecmp(bin.c_str(), "NbrChildren") == 0)
     {
       if (exp.operand.size() != 1)
-	goto BadAmountOfParameters;
-      if ((ope = _ecb(exp, dry, root, local, artif, param, bin)) == NULL)
+	goto BadAmountOfVariableseters;
+      if ((ope = _ecb(exp, dry, root, local, artif, variables, bin)) == NULL)
 	return (BD_ERROR);
       exp.val.SetInt(ope->NbrChild());
       return (BD_OK);
     }
-  if (bunny_strcasecmp(bin.c_str(), "NbrCase") == 0)
+  if (bunny_strcasecmp(bin.c_str(), "NbrCases") == 0)
     {
       if (exp.operand.size() != 1)
-	goto BadAmountOfParameters;
-      if ((ope = _ecb(exp, dry, root, local, artif, param, bin)) == NULL)
+	goto BadAmountOfVariableseters;
+      if ((ope = _ecb(exp, dry, root, local, artif, variables, bin)) == NULL)
 	return (BD_ERROR);
       exp.val.SetInt(ope->Size());
       return (BD_OK);
@@ -99,15 +108,15 @@ t_bunny_decision	expr_compute_builtins(Expression	&exp,
   if (bunny_strcasecmp(bin.c_str(), "IsEmpty") == 0)
     {
       if (exp.operand.size() != 1)
-	goto BadAmountOfParameters;
-      if ((ope = _ecb(exp, dry, root, local, artif, param, bin)) == NULL)
+	goto BadAmountOfVariableseters;
+      if ((ope = _ecb(exp, dry, root, local, artif, variables, bin)) == NULL)
 	return (BD_ERROR);
       exp.val.SetInt(ope->Size() == 0 && ope->NbrChild() == 0 && ope->have_value == false);
       return (BD_OK);
     }
 
   return (BD_NOT_FOUND);
- BadAmountOfParameters:
+ BadAmountOfVariableseters:
   scream_error_if
     (return (BD_ERROR), BE_SYNTAX_ERROR,
      "Builtin function %s only takes one parameter on line %s:%d",

@@ -73,11 +73,11 @@ int			bunny_configuration_flexible_load(t_bunny_configuration		*cnf,
   if (mode & FLM_LOAD_ARRAY)
     {
       t_bunny_configuration	*c;
-      size_t			i;
-	
+      ssize_t			i;
+
       for (bunny_configuration_all_cases(cnf, i))
 	{
-	  bunny_configuration_getf_node(cnf, &c, "[%zu]", i);
+	  bunny_configuration_getf_node(cnf, &c, "[%zd]", i);
 	  if (load_node_or_file(c, mode & FLM_KEEP_CONFIGURATION, load, &(*ptr)[cnt]) == false)
 	    return (-cnt);
 	  cnt += 1;

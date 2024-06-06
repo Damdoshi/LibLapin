@@ -29,5 +29,5 @@ void		bunny_clear_configuration(t_bunny_configuration	*cnf)
 
   for (itx = dupx.begin(); itx != dupx.end(); ++itx)
     delete *itx;
-  dupx.clear();
+  c->array.clear();
 }

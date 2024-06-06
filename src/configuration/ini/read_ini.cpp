@@ -39,11 +39,11 @@ static bool		read_inside_scope(t_bunny_configuration		*fileroot,
 					  ssize_t			&i,
 					  SmallConf			&conf)
 {
-  t_bunny_configuration	*cnf;
+  t_bunny_configuration	*cnf = (t_bunny_configuration*)&conf;
 
   read_separator(code, i);
-  if ((cnf = _bunny_configuration_go_get_node
-       ((t_bunny_configuration*)&conf, code, i)) == NULL)
+  if ((cnf = bunny_configuration_resolve_address
+       (&cnf, 1, code, i)) == NULL)
     scream_error_if
       (return (false), BE_SYNTAX_ERROR,
        "%p fileroot, '%.5s...' code, %d i, %p config -> %s "
@@ -90,11 +90,11 @@ SmallConf		*read_new_scope(const char			*code,
 					ssize_t				&i,
 					SmallConf			&root)
 {
-  t_bunny_configuration	*cnf;
+  t_bunny_configuration	*cnf = (t_bunny_configuration*)&root;
 
   read_separator(code, i);
-  if ((cnf = _bunny_configuration_go_get_node
-       ((t_bunny_configuration*)&root, code, i)) == NULL)
+  if ((cnf = bunny_configuration_resolve_address
+       (&cnf, 1, code, i)) == NULL)
     scream_error_if
       (return (NULL), BE_SYNTAX_ERROR,
        "'%.5s...' code, %p config -> %p "

@@ -364,7 +364,7 @@ t_bunny_tilemap		*__bunny_load_tmx_tilemap(t_bunny_configuration		*conf,
   };
   t_bunny_configuration	*map;
   t_bunny_configuration	*nod;
-  size_t		i, j;
+  ssize_t		i, j;
 
   // Check the map node
   if (!bunny_configuration_getf_node(conf, &map, "[0]"))
@@ -387,7 +387,7 @@ t_bunny_tilemap		*__bunny_load_tmx_tilemap(t_bunny_configuration		*conf,
   tmap->nbr_tilesets = 0;
   tmap->nbr_layers = 0;
   for (bunny_configuration_all_cases(map, i))
-    if (!bunny_configuration_getf_node(map, &nod, "[%zu]", i))
+    if (!bunny_configuration_getf_node(map, &nod, "[%zd]", i))
       scream_error_if(return (NULL), EINVAL, "", "tilemap");
     else if (!strcmp(bunny_configuration_get_name(nod), "tileset"))
       tmap->nbr_tilesets += 1;
@@ -399,7 +399,7 @@ t_bunny_tilemap		*__bunny_load_tmx_tilemap(t_bunny_configuration		*conf,
 	(tmap->nbr_tilesets, sizeof(*tmap->tilesets))))
     scream_error_if(return (NULL), ENOMEM, "", "tilemap");
   for (j = 0, bunny_configuration_all_cases(map, i))
-    if (!bunny_configuration_getf_node(map, &nod, "[%zu]", i))
+    if (!bunny_configuration_getf_node(map, &nod, "[%zd]", i))
       scream_error_if(goto DeleteTilesets, EINVAL, "", "tilemap");
     else if (!strcmp(bunny_configuration_get_name(nod), "tileset"))
       if (load_tileset(nod, tmap, &tmap->tilesets[j++]) == false)
@@ -410,7 +410,7 @@ t_bunny_tilemap		*__bunny_load_tmx_tilemap(t_bunny_configuration		*conf,
 	(tmap->nbr_layers, sizeof(*tmap->layers))))
     scream_error_if(goto DeleteTilesets, ENOMEM, "", "tilemap");
   for (j = 0, bunny_configuration_all_cases(map, i))
-    if (!bunny_configuration_getf_node(map, &nod, "[%zu]", i))
+    if (!bunny_configuration_getf_node(map, &nod, "[%zd]", i))
       scream_error_if(goto DeleteLayers, EINVAL, "", "tilemap");
     else if (!strcmp(bunny_configuration_get_name(nod), "layer"))
       if (load_layer(nod, tmap, &tmap->layers[j++]) == false)
@@ -426,7 +426,7 @@ t_bunny_tilemap		*__bunny_load_tmx_tilemap(t_bunny_configuration		*conf,
  DeleteLayers:
   if (tmap->layers)
     {
-      for (i = 0; i < (size_t)tmap->nbr_layers; ++i)
+      for (i = 0; i < tmap->nbr_layers; ++i)
 	bunny_delete_layer(&tmap->layers[i]);
       bunny_free(tmap->layers);
       tmap->layers = NULL;
@@ -434,7 +434,7 @@ t_bunny_tilemap		*__bunny_load_tmx_tilemap(t_bunny_configuration		*conf,
  DeleteTilesets:
   if (tmap->tilesets)
     {
-      for (i = 0; i < (size_t)tmap->nbr_tilesets; ++i)
+      for (i = 0; i < tmap->nbr_tilesets; ++i)
 	bunny_delete_tileset(&tmap->tilesets[i]);
       bunny_free(tmap->tilesets);
       tmap->tilesets = NULL;

@@ -17,12 +17,14 @@ bool			SmallConf::RecursiveAssign(SmallConf		&a,
   a = b;
   if (hash)
     for (it = b.Begin(); it != b.End(); ++it)
-      if (RecursiveAssign(a[it->first], b[it->first], hash, array) == false)
-	return (false);
+      if (it->first[0] != '.')
+	if (RecursiveAssign(a[it->first], b[it->first], hash, array) == false)
+	  return (false);
   if (array)
     for (i = 0; i < b.Size(); ++i)
-      if (RecursiveAssign(a[i], b[i], hash, array) == false)
-	return (false);
+      if (b[i].name[0] != '.')
+	if (RecursiveAssign(a[i], b[i], hash, array) == false)
+	  return (false);
   return (true);
 }
 

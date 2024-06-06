@@ -35,7 +35,7 @@ t_compute_result	dabsic_compute_build(Function		&func,
 					     SmallConf		*root,
 					     SmallConf		*local,
 					     SmallConf		*artif,
-					     SmallConf		*params)
+					     SmallConf		*variables)
 {
   const char		*res;
   bool			cmode;
@@ -45,7 +45,7 @@ t_compute_result	dabsic_compute_build(Function		&func,
     return (CR_OK);
   if (func.lines.size() < 1)
     return (CR_ERROR);
-  if (func.additionnal_values[0].GetString(&res, root, local, artif, params))
+  if (func.additionnal_values[0].GetString(&res, root, local, artif, variables))
     return (CR_ERROR);
   cmode = SmallConf::create_mode;
   SmallConf::create_mode = true;
@@ -72,7 +72,7 @@ t_compute_result	dabsic_compute_delete(Function		&func,
 					      SmallConf		*root,
 					      SmallConf		*local,
 					      SmallConf		*artif,
-					      SmallConf		*params)
+					      SmallConf		*variables)
 {
   const char		*res;
 
@@ -81,10 +81,12 @@ t_compute_result	dabsic_compute_delete(Function		&func,
     return (CR_OK);
   if (func.lines.size() != 1)
     return (CR_ERROR);
-  if (func.additionnal_values[0].GetString(&res, root, local, artif, params))
+  if (func.additionnal_values[0].GetString(&res, root, local, artif, variables))
     return (CR_ERROR);
   t_bunny_configuration	*newnod;
 
+  //// Il faudrait peut etre plutot déplacer dans []..Trash le noeud
+  // afin de pas segfault si quelqu'un travaille sur un truc avec
   if (bunny_configuration_getf_node(local, &newnod, "%s", res) == false)
     return (CR_OK);
   bunny_delete_configuration(newnod);
@@ -97,27 +99,27 @@ t_compute_result	dabsic_compute_select(Function		&func,
 					      SmallConf		*root,
 					      SmallConf		*local,
 					      SmallConf		*artif,
-					      SmallConf		*params)
+					      SmallConf		*variables)
 {
   t_compute_result	ret;
-  SmallConf		&loc = *local;
+  SmallConf		&loc = *local; // Quelle idée de merde.
   size_t		i;
   int			cmode;
   int			selected;
 
-  if (expr_compute(func.value, NULL, dry, root, local, artif, params) == false)
+  if (expr_compute(func.value, dry, root, local, artif, variables) == false)
     return (CR_ERROR);
   cmode = SmallConf::create_mode;
   if (local)
     {
       SmallConf::create_mode = true;
-      loc["Is"] = func.value;
+      loc["Is"] = func.value; // Mais quelle idée de merde.
     }
 
   for (i = 0; i < func.nbr_lines; ++i)
     {
       if (expr_compute
-	  (func.lines[i].value, NULL, dry, root, local, artif, params)
+	  (func.lines[i].value, dry, root, local, artif, variables)
 	  == false)
 	{
 	  if (local)
@@ -142,7 +144,7 @@ t_compute_result	dabsic_compute_select(Function		&func,
       if (selected)
 	{
 	  ret = dabsic_compute_scope
-	    (func.lines[i], mainnod, dry, root, local, artif, params);
+	    (func.lines[i], mainnod, dry, root, local, artif, variables);
 	  if (local)
 	    delete &loc["Is"];
 	  SmallConf::create_mode = cmode;
@@ -161,7 +163,7 @@ t_compute_result	dabsic_compute_break(Function		&func,
 					     SmallConf		*root,
 					     SmallConf		*local,
 					     SmallConf		*artif,
-					     SmallConf		*params)
+					     SmallConf		*variables)
 {
   (void)func;
   (void)mainnod;
@@ -169,7 +171,7 @@ t_compute_result	dabsic_compute_break(Function		&func,
   (void)root;
   (void)local;
   (void)artif;
-  (void)params;
+  (void)variables;
   return (CR_BREAK);
 }
 
@@ -179,7 +181,7 @@ t_compute_result	dabsic_compute_continue(Function	&func,
 						SmallConf	*root,
 						SmallConf	*local,
 						SmallConf	*artif,
-						SmallConf	*params)
+						SmallConf	*variables)
 {
   (void)func;
   (void)mainnod;
@@ -187,7 +189,7 @@ t_compute_result	dabsic_compute_continue(Function	&func,
   (void)root;
   (void)local;
   (void)artif;
-  (void)params;
+  (void)variables;
   return (CR_CONTINUE);
 }
 
@@ -197,7 +199,7 @@ t_compute_result	dabsic_compute_brake(Function		&func,
 					     SmallConf		*root,
 					     SmallConf		*local,
 					     SmallConf		*artif,
-					     SmallConf		*params)
+					     SmallConf		*variables)
 {
   (void)func;
   (void)mainnod;
@@ -205,7 +207,7 @@ t_compute_result	dabsic_compute_brake(Function		&func,
   (void)root;
   (void)local;
   (void)artif;
-  (void)params;
+  (void)variables;
   return (CR_OK);
 }
 
@@ -215,35 +217,35 @@ t_compute_result	dabsic_compute_link(Function		&func,
 					    SmallConf		*root,
 					    SmallConf		*local,
 					    SmallConf		*artif,
-					    SmallConf		*params)
+					    SmallConf		*variables)
 {
   if (dry)
     return (CR_OK);
   static t_bunny_value_type lt_to_bvt[4] = { // Last type to Bunny value type
     BVT_INTEGER, BVT_DOUBLE, BVT_STRING, BVT_STRING
   };
-  SmallConf		&parameters = (*mainnod.parent_node)[".parameters"];
+  SmallConf		&parameters = (*mainnod.parent_node)[".prototype"];
   t_bunny_prototype	*proto;
   t_bunny_value		retval;
-  t_bunny_value		*dyparams;
+  t_bunny_value		*dyvariables;
   size_t		i;
-  size_t		nbparams;
+  size_t		nbvariables;
 
   (void)func;
   (void)root;
   (void)local;
   (void)artif;
 
-  if (params)
-    nbparams = params->NbrChild();
+  if (variables)
+    nbvariables = variables->NbrChild();
   else
-    nbparams = 0;
+    nbvariables = 0;
 
   if (mainnod.prototype == NULL)
     {
       if ((mainnod.prototype = (t_bunny_prototype*)bunny_malloc
 	   (sizeof(*mainnod.prototype)
-	    + sizeof(mainnod.prototype->parameters) * nbparams)) == NULL)
+	    + sizeof(mainnod.prototype->parameters) * nbvariables)) == NULL)
 	return (CR_ERROR);
       proto = mainnod.prototype;
       proto->name = mainnod.parent_node->name.c_str();
@@ -254,10 +256,10 @@ t_compute_result	dabsic_compute_link(Function		&func,
   else
     proto = mainnod.prototype;
 
-  dyparams = (t_bunny_value*)bunny_alloca(proto->nbr_parameters * sizeof(*dyparams));
+  dyvariables = (t_bunny_value*)bunny_alloca(proto->nbr_parameters * sizeof(*dyvariables));
   for (i = 0; i < proto->nbr_parameters; ++i)
     {
-      if (params[i].last_type == SmallConf::STRING)
+      if (variables[i].last_type == SmallConf::STRING)
 	proto->parameters[i] = BVT_STRING;
       else if (parameters[i].last_type == SmallConf::INTEGER)
 	proto->parameters[i] = BVT_INTEGER;
@@ -268,21 +270,21 @@ t_compute_result	dabsic_compute_link(Function		&func,
 	{
 	case BVT_INTEGER:
 	  int tmp;
-	  (*params)[parameters.name].GetInt(&tmp);
-	  dyparams[i].integer = tmp;
+	  (*variables)[parameters.name].GetInt(&tmp);
+	  dyvariables[i].integer = tmp;
 	  break ;
 	case BVT_DOUBLE:
-	  (*params)[parameters.name].GetDouble(&dyparams[i].real);
+	  (*variables)[parameters.name].GetDouble(&dyvariables[i].real);
 	  break ;
 	case BVT_STRING:
-	  (*params)[parameters.name].GetString(&dyparams[i].string);
+	  (*variables)[parameters.name].GetString(&dyvariables[i].string);
 	  break ;
 	default:
 	  // No pointer type.
 	  break ;
 	}
     }
-  _real_call(proto, &retval, proto->nbr_parameters, dyparams);
+  _real_call(proto, &retval, proto->nbr_parameters, dyvariables);
 
   switch (mainnod.prototype->return_value)
     {
@@ -300,7 +302,7 @@ t_compute_result	dabsic_compute_link(Function		&func,
 	fprintf(stderr, "Return used in a void function\n");
       mainnod.result.SetString("");
     }
-  bunny_freea((void*)dyparams);
+  bunny_freea((void*)dyvariables);
   return (CR_RETURN);
 }
 
@@ -310,16 +312,16 @@ t_compute_result	dabsic_compute_return(Function		&func,
 					      SmallConf		*root,
 					      SmallConf		*local,
 					      SmallConf		*artif,
-					      SmallConf		*params)
+					      SmallConf		*variables)
 {
   (void)func;
   (void)mainnod;
   (void)dry;
   if (func.value.expression)
     {
-      if (expr_compute(func.value, NULL, dry, root, local, artif, params) == false)
+      if (expr_compute(func.value, dry, root, local, artif, variables) == false)
 	return (CR_ERROR);
-      mainnod.result.Assign(func.value, root, local, artif, params);
+      mainnod.result.Assign(func.value, root, local, artif, variables);
     }
   return (CR_RETURN);
 }
@@ -330,10 +332,10 @@ t_compute_result	dabsic_compute_instruction(Function	&func,
 						   SmallConf	*root,
 						   SmallConf	*local,
 						   SmallConf	*artif,
-						   SmallConf	*params)
+						   SmallConf	*variables)
 {
   (void)mainnod;
-  if (expr_compute(func.value, NULL, dry, root, local, artif, params) == false)
+  if (expr_compute(func.value, dry, root, local, artif, variables) == false)
     return (CR_ERROR);
   return (CR_OK);
 }
@@ -344,23 +346,23 @@ t_compute_result	dabsic_compute_if(Function		&func,
 					  SmallConf		*root,
 					  SmallConf		*local,
 					  SmallConf		*artif,
-					  SmallConf		*params)
+					  SmallConf		*variables)
 {
   int			res;
 
-  if (func.value.GetInt(&res, root, local, artif, params) == false)
+  if (func.value.GetInt(&res, root, local, artif, variables) == false)
     return (CR_ERROR);
 
   if (res)
-    return (dabsic_compute_scope(func, mainnod, dry, root, local, artif, params));
+    return (dabsic_compute_scope(func, mainnod, dry, root, local, artif, variables));
   if (func.nbr_lines == 0)
     return (CR_OK);
   Function		*x = &func.lines[func.nbr_lines - 1];
 
   if (x->command == Function::ELSE_IF)
-    return (dabsic_compute_if(*x, mainnod, dry, root, local, artif, params));
+    return (dabsic_compute_if(*x, mainnod, dry, root, local, artif, variables));
   if (x->command == Function::ELSE)
-    return (dabsic_compute_scope(*x, mainnod, dry, root, local, artif, params));
+    return (dabsic_compute_scope(*x, mainnod, dry, root, local, artif, variables));
   return (CR_OK);
 }
 
@@ -370,18 +372,18 @@ t_compute_result	dabsic_compute_while(Function		&func,
 					     SmallConf		*root,
 					     SmallConf		*local,
 					     SmallConf		*artif,
-					     SmallConf		*params)
+					     SmallConf		*variables)
 {
   int			res = 1;
   t_compute_result	ret;
 
   while (res)
     {
-      if (func.value.GetInt(&res, root, local, artif, params) == false)
+      if (func.value.GetInt(&res, root, local, artif, variables) == false)
 	return (CR_ERROR);
       if (res)
 	if ((ret = dabsic_compute_scope
-	     (func, mainnod, dry, root, local, artif, params)) != CR_OK)
+	     (func, mainnod, dry, root, local, artif, variables)) != CR_OK)
 	  {
 	    if (ret == CR_BREAK)
 	      return (CR_OK);
@@ -398,7 +400,7 @@ t_compute_result	dabsic_compute_repeat(Function		&func,
 					      SmallConf		*root,
 					      SmallConf		*local,
 					      SmallConf		*artif,
-					      SmallConf		*params)
+					      SmallConf		*variables)
 {
   t_compute_result	ret;
   int			res;
@@ -406,14 +408,14 @@ t_compute_result	dabsic_compute_repeat(Function		&func,
   do
     {
       if ((ret = dabsic_compute_scope
-	   (func, mainnod, dry, root, local, artif, params)) != CR_OK)
+	   (func, mainnod, dry, root, local, artif, variables)) != CR_OK)
 	{
 	  if (ret == CR_BREAK)
 	    return (CR_OK);
 	  if (ret == CR_RETURN)
 	    return (ret);
 	}
-      if (func.value.GetInt(&res, root, local, artif, params) == false)
+      if (func.value.GetInt(&res, root, local, artif, variables) == false)
 	return (CR_ERROR);
     }
   while (!res);
@@ -426,7 +428,7 @@ t_compute_result	dabsic_compute_do(Function		&func,
 					  SmallConf		*root,
 					  SmallConf		*local,
 					  SmallConf		*artif,
-					  SmallConf		*params)
+					  SmallConf		*variables)
 {
   t_compute_result	ret;
   int			res;
@@ -434,14 +436,14 @@ t_compute_result	dabsic_compute_do(Function		&func,
   do
     {
       if ((ret = dabsic_compute_scope
-	   (func, mainnod, dry, root, local, artif, params)) != CR_OK)
+	   (func, mainnod, dry, root, local, artif, variables)) != CR_OK)
 	{
 	  if (ret == CR_BREAK)
 	    return (CR_OK);
 	  if (ret == CR_RETURN)
 	    return (ret);
 	}
-      if (func.value.GetInt(&res, root, local, artif, params) == false)
+      if (func.value.GetInt(&res, root, local, artif, variables) == false)
 	return (CR_ERROR);
     }
   while (res);
@@ -454,23 +456,23 @@ t_compute_result	dabsic_compute_for(Function		&func,
 					   SmallConf		*root,
 					   SmallConf		*local,
 					   SmallConf		*artif,
-					   SmallConf		*params)
+					   SmallConf		*variables)
 {
   t_compute_result	ret;
   int			res = 1;
 
-  if (expr_compute(func.value, NULL, dry, root, local, artif, params) == false)
+  if (expr_compute(func.value, dry, root, local, artif, variables) == false)
     return (CR_ERROR);
 
   while (res)
     {
       if (func.additionnal_values[0].GetInt
-	  (&res, root, local, artif, params) == false)
+	  (&res, root, local, artif, variables) == false)
 	return (CR_ERROR);
       if (res)
 	{
 	  if ((ret = dabsic_compute_scope
-	       (func, mainnod, dry, root, local, artif, params)) != CR_OK)
+	       (func, mainnod, dry, root, local, artif, variables)) != CR_OK)
 	    {
 	      if (ret == CR_BREAK)
 		return (CR_OK);
@@ -478,7 +480,7 @@ t_compute_result	dabsic_compute_for(Function		&func,
 		return (ret);
 	    }
 	  if (expr_compute
-	      (func.additionnal_values[1], NULL, dry, root, local, artif, params) == false)
+	      (func.additionnal_values[1], dry, root, local, artif, variables) == false)
 	    return (CR_ERROR);
 	}
     }
@@ -491,7 +493,7 @@ t_compute_result	dabsic_compute_no_execution(Function	&func,
 						    SmallConf	*root,
 						    SmallConf	*local,
 						    SmallConf	*artif,
-						    SmallConf	*params)
+						    SmallConf	*variables)
 {
   (void)func;
   (void)mainnod;
@@ -499,7 +501,7 @@ t_compute_result	dabsic_compute_no_execution(Function	&func,
   (void)root;
   (void)local;
   (void)artif;
-  (void)params;
+  (void)variables;
   return (CR_OK);
 }
 
@@ -509,14 +511,14 @@ t_compute_result	dabsic_compute_with(Function		&func,
 					    SmallConf		*root,
 					    SmallConf		*local,
 					    SmallConf		*artif,
-					    SmallConf		*params)
+					    SmallConf		*variables)
 {
   SmallConf		*newartif;
 
   // Should be a complete expression returning an address,
   // but currently, there is no real address type...
   if ((newartif = expr_get_variable
-       (func.value, dry, root, local, artif, params)) == NULL)
+       (func.value, dry, root, local, artif, variables)) == NULL)
     scream_error_if
       (return (CR_ERROR), BE_BAD_ADDRESS,
        "Undefined variable or unresolvable address %s "
@@ -525,7 +527,7 @@ t_compute_result	dabsic_compute_with(Function		&func,
        func.value.original_value.c_str(),
        artif->address.c_str(),
        func.file.c_str(), func.line);
-  return (dabsic_compute_scope(func, mainnod, dry, root, local, newartif, params));
+  return (dabsic_compute_scope(func, mainnod, dry, root, local, newartif, variables));
 }
 
 t_compute_result	dabsic_compute_print(Function		&func,
@@ -534,7 +536,7 @@ t_compute_result	dabsic_compute_print(Function		&func,
 					     SmallConf		*root,
 					     SmallConf		*local,
 					     SmallConf		*artif,
-					     SmallConf		*params)
+					     SmallConf		*variables)
 {
   std::ostream		*out;
   size_t		i;
@@ -551,21 +553,21 @@ t_compute_result	dabsic_compute_print(Function		&func,
       double		b;
       const char	*c;
 
-      if (expr_compute(cnf, NULL, dry, root, local, artif, params) == false)
+      if (expr_compute(cnf, dry, root, local, artif, variables) == false)
 	return (CR_ERROR);
       if (cnf.last_type == SmallConf::INTEGER)
 	{
-	  if (cnf.GetInt(&a, root, local, artif, params))
+	  if (cnf.GetInt(&a, root, local, artif, variables))
 	    *out << a;
 	}
       else if (cnf.last_type == SmallConf::DOUBLE)
 	{
-	  if (cnf.GetDouble(&b, root, local, artif, params))
+	  if (cnf.GetDouble(&b, root, local, artif, variables))
 	    *out << b;
 	}
       else if (cnf.last_type == SmallConf::STRING)
 	{
-	  if (cnf.GetString(&c, root, local, artif, params))
+	  if (cnf.GetString(&c, root, local, artif, variables))
 	    *out << c;
 	}
     }
@@ -579,7 +581,7 @@ t_compute_result	dabsic_compute_scope(Function		&func,
 					     SmallConf		*root,
 					     SmallConf		*local,
 					     SmallConf		*artif,
-					     SmallConf		*params)
+					     SmallConf		*variables)
 {
   //std::stack<SmallConf*> artificial_context;
   t_compute_result	ret;
@@ -588,86 +590,39 @@ t_compute_result	dabsic_compute_scope(Function		&func,
   for (i = 0; i < func.nbr_lines; ++i)
     {
       if ((ret = gl_dabsic_compute[func.lines[i].command]
-	   (func.lines[i], mainnod, dry, root, local, artif, params)) != CR_OK)
+	   (func.lines[i], mainnod, dry, root, local, artif, variables)) != CR_OK)
 	return (ret);
     }
   return (CR_OK);
 }
 
-bool			dabsic_compute(SmallConf		&func,
-				       SmallConf		*prototype,
+bool	 		dabsic_compute(SmallConf		&func,
 				       bool			dry,
 				       SmallConf		*root,
 				       SmallConf		*artif,
-				       SmallConf		*params)
+				       SmallConf		*variables)
 {
-  size_t		i;
-
   if (func.function == NULL)
     scream_error_if
       (return (false), BE_SYNTAX_ERROR,
        "Node %s is not a function on line %d",
        "ressource,configuration,syntax",
-       func.name.c_str(), func.line
+       func.address.c_str(), func.line
        );
-  if (prototype)
-    {
-      /*
-      if (params == NULL)
-	scream_error_if
-	  (return (false), BE_SYNTAX_ERROR,
-	   "Missing parameters for function or expression %s on line %d",
-	   "ressource,configuration,syntax",
-	   func.name.c_str(), func.line
-	   );
-      */
-      // test classic call by nbr
-      if (params && params->Size())
-	{
-	  if (params->Size() > prototype->Size())
-	    scream_error_if
-	      (return (false), BE_SYNTAX_ERROR,
-	       "Too many parameters for function or expression %s on line %d",
-	       "ressource,configuration,syntax",
-	       func.name.c_str(), func.line
-	       );
-	  for (i = 0; i < params->Size() && i < prototype->Size(); ++i)
-	    (*params)[(*prototype)[i].name] = (*params)[i];
-	  while (i < prototype->Size())
-	    {
-	      if ((*prototype)[i].have_value)
-		(*params)[(*prototype)[i].name] = (*prototype)[i];
-	      else
-		scream_error_if
-		  (return (false), BE_SYNTAX_ERROR,
-		   "Missing parameters for function or expression %s on line %d",
-		   "ressource,configuration,syntax",
-		   func.name.c_str(), func.line
-		   );
-	      ++i;
-	    }
-	}
-      else
-	for (i = 0; i < prototype->Size(); ++i)
-	  {
-	    if (params->Access((*prototype)[i].name) == false)
-	      {
-		if ((*prototype)[i].have_value)
-		  (*params)[(*prototype)[i].name] = (*prototype)[i];
-		else
-		  scream_error_if
-		    (return (false), BE_SYNTAX_ERROR,
-		     "Missing parameters for function or expression %s on line %d",
-		     "ressource,configuration,syntax",
-		     func.name.c_str(), func.line
-		     );
-	      }
-	  }
-    }
-  if (dabsic_compute_scope
-      (*func.function, *func.function, dry, root,
-       &func.function->local_variables, artif, params) == CR_ERROR)
+
+  if ((variables = test_and_set_prototype(func, variables)) == NULL)
     return (false);
+  if (dabsic_compute_scope
+      (*func.function, *func.function, dry,
+       root,
+       func.father, // Le contexte de déclaration dla fonction (class, struct, node)
+       artif, // Le contexte imposé
+       variables) == CR_ERROR) // Les variables locales et paramètres
+    {
+      func.Remove(variables->name);
+      return (false);
+    }
+  func.Remove(variables->name);
   func = func.function->result;
   return (true);
 }

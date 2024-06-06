@@ -539,7 +539,7 @@ bool			readaddress(const char			*addr,
       else
 	{
 	  readtext(addr, j, "#");
-	  readtext(addr, j, "*");
+	  readtext(addr, j, "@");
 	  if (readchar(addr, j, fieldname) == false)
 	    return (false);
 	}
@@ -631,12 +631,12 @@ bool			readvalue(const char			*code,
   else if (endtok != NULL)
     {
       readrawchar(code, i, &buffer[0], sizeof(buffer), endtok);
-      if (strcmp(&buffer[0], "true") == 0)
+      if (strcasecmp(&buffer[0], "true") == 0)
 	{
 	  nod.SetInt(1);
 	  nod.original_value = "1";
 	}
-      else if (strcmp(&buffer[0], "false") == 0)
+      else if (strcasecmp(&buffer[0], "false") == 0)
 	{
 	  nod.SetInt(0);
 	  nod.original_value = "0";
@@ -669,7 +669,8 @@ bool			readvalue(const char			*code,
 void			writevalue(std::ostream			&ss,
 				   const SmallConf		&cnf,
 				   bool				jsonehx,
-				   bool				never_raw)
+				   bool				never_raw,
+				   bool				builtin)
 {
   if (cnf.last_type == SmallConf::DOUBLE)
     ss << cnf.converted;
@@ -677,6 +678,9 @@ void			writevalue(std::ostream			&ss,
     ss << cnf.converted_2;
   else if (cnf.last_type == SmallConf::STRING || never_raw)
     writestring(ss, cnf.original_value, jsonehx);
-  else
+  else if (!builtin)
     ss << cnf.original_value;
+  else
+    ss << "AddressOf(" << cnf.original_value << ")";
 }
+

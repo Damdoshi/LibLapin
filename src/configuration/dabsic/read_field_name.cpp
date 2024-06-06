@@ -19,6 +19,8 @@ SmallConf		*dabsic_function_type(const char		*code,
 	type = SmallConf::STRING;
       else if (readtext(code, i, "real"))
 	type = SmallConf::DOUBLE;
+      else if (readtext(code, i, "node"))
+	type = SmallConf::RAWSTRING;
       else if (readtext(code, i, "integer") || readtext(code, i, "int"))
 	type = SmallConf::INTEGER;
       else if (readtext(code, i, "void") == false)
@@ -71,7 +73,7 @@ SmallConf		*dabsic_field_name(const char			*code,
   // READ PARAMETERS
   if (readtext(code, i, "("))
     {
-      (*newnode)[".parameters"].construct = SmallConf::ARRAY;
+      (*newnode)[".prototype"].construct = SmallConf::ARRAY;
       dabsic_read_separator(code, i);
       if (readtext(code, i, ")"))
 	{
@@ -94,6 +96,8 @@ SmallConf		*dabsic_field_name(const char			*code,
 	    type = SmallConf::STRING;
 	  else if (readtext(code, i, "real"))
 	    type = SmallConf::DOUBLE;
+	  else if (readtext(code, i, "node"))
+	    type = SmallConf::RAWSTRING;
 	  else if (readtext(code, i, "integer") || readtext(code, i, "int"))
 	    type = SmallConf::INTEGER;
 	  else
@@ -114,7 +118,7 @@ SmallConf		*dabsic_field_name(const char			*code,
 		 SmallConf::file_read.top().c_str(), whichline(code, i)
 		 );
 	    }
-	  SmallConf		&pr = (*newnode)[".parameters"][iteration++];
+	  SmallConf		&pr = (*newnode)[".prototype"][iteration++];
 
 	  pr.name = &buffer[0];
 	  pr.last_type = type;

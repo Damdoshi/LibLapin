@@ -37,10 +37,10 @@ t_bunny_response	bunny_sequence_execute(t_bunny_configuration	*cnf,
   SmallConf		*params = (SmallConf*)_params;
   SmallConf		*proto;
 
-  if (artif->Access(".parameters") == false)
+  if (artif->Access(".prototype") == false)
     proto = NULL;
   else
-    proto = &(*artif)[".parameters"];
+    proto = &(*artif)[".prototype"];
   if (sequence_compute(*artif, proto, root, artif, params, &fb, dat) == false)
     return (EXIT_ON_ERROR);
   return (GO_ON);

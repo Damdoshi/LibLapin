@@ -39,7 +39,8 @@ Decision		dabsic_read_scope(const char		*code,
 	  conf.given_name = true;
 	}
     }
-  else if (readtext(code, i, "[Scope") == false)
+  else if (readtext(code, i, "[Scope") == false
+	   && readtext(code, i, "[Node") == false)
     return (BD_NOT_FOUND);
   dabsic_read_separator(code, i);
 

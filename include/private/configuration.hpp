@@ -140,7 +140,8 @@ bool				read_function(const char			*code,
 void				writevalue(std::ostream				&ss,
 					   const SmallConf			&cnf,
 					   bool					jsonhex = false,
-					   bool					never_raw = false);
+					   bool					never_raw = false,
+					   bool					builtin = false);
 
 
 Decision			_bunny_handle_directive(const char		*code,
@@ -148,14 +149,19 @@ Decision			_bunny_handle_directive(const char		*code,
 							SmallConf		*node,
 							t_bunny_configuration	*fileroot,
 							void (*readseparator)(const char*, ssize_t&),
-							Expression::OperatorFamily family);
-t_bunny_configuration		*_bunny_configuration_go_get_node(const t_bunny_configuration *config,
-								  const char		*addr,
-								  ssize_t		&i);
+							Expression::OperatorFamily family,
+							bool			check = false);
+
+t_bunny_configuration		*bunny_configuration_resolve_address(t_bunny_configuration	**config,
+								     size_t			nbrconfig,
+								     const char			*addr,
+								     ssize_t			&i);
 
 extern const char		*fieldname_first_char;
 extern const char		*fieldname;
 extern const char		*numbers;
 
+SmallConf			*test_and_set_prototype(SmallConf	&function,
+							SmallConf	*parameters);
 
 #endif	/*			__LAPIN_PRIVATE_CONFIGURATION_HPP__		*/

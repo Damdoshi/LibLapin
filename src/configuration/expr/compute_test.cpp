@@ -10,7 +10,7 @@ bool			expr_compute_test(Expression		&exp,
 					  SmallConf		*root,
 					  SmallConf		*local,
 					  SmallConf		*artif,
-					  SmallConf		*param)
+					  SmallConf		*variables)
 {
   bool			cnst;
   size_t		i;
@@ -21,10 +21,18 @@ bool			expr_compute_test(Expression		&exp,
 
   if (exp.operand.size() > 0 && exp.operand[0]->optor_family != -1)
     {
-      cnst = exp.operand[0]->is_const;
-      if (gl_expr_computation[exp.operand[0]->optor_family]
-	  (*exp.operand[0], dry, root, local, artif, param) == false)
-	return (false);
+      if (exp.operand[0]->optor_family == Expression::LAST_OPERATOR_FAMILY)
+	{
+	  if (!expr_compute_function_call(*exp.operand[0], dry, root, local, artif, variables))
+	    return (false);
+	}
+      else
+	{
+	  cnst = exp.operand[0]->is_const;
+	  if (gl_expr_computation[exp.operand[0]->optor_family]
+	      (*exp.operand[0], dry, root, local, artif, variables) == false)
+	    return (false);
+	}
     }
   else if (exp.operand[0]->val.symbol)
     cnst = exp.operand[0]->is_const;
@@ -44,18 +52,18 @@ bool			expr_compute_test(Expression		&exp,
 	{}
       else if (x.optor_family == Expression::LAST_OPERATOR_FAMILY)
 	{
-	  if (expr_compute_function_call(x, dry, root, local, artif, param) == false)
+	  if (expr_compute_function_call(x, dry, root, local, artif, variables) == false)
 	    return (false);
 	}
       else if (gl_expr_computation[x.optor_family]
-	       (x, dry, root, local, artif, param) == false)
+	       (x, dry, root, local, artif, variables) == false)
 	return (false);
 
       if (left->last_type == SmallConf::RAWSTRING)
 	{
 	  cnst = false;
 	  if ((tmp = expr_get_variable
-	       (*left, dry, root, local, artif, param)) == NULL)
+	       (*left, dry, root, local, artif, variables)) == NULL)
 	    scream_error_if
 	      (return (false), BE_BAD_ADDRESS,
 	       "Undefined variable or unresolvable address %s "
@@ -73,7 +81,7 @@ bool			expr_compute_test(Expression		&exp,
 	{
 	  cnst = false;
 	  if ((tmp = expr_get_variable
-	       (*right, dry, root, local, artif, param)) == NULL)
+	       (*right, dry, root, local, artif, variables)) == NULL)
 	    scream_error_if
 	      (return (false), BE_BAD_ADDRESS,
 	       "Undefined variable or unresolvable address %s "

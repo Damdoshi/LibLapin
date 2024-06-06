@@ -6,37 +6,56 @@
 #include		<string.h>
 #include		"lapin_private.h"
 
-const std::string	Expression::OperatorToken[Expression::LAST_OPERATOR_FAMILY][21][8] =
+const std::string	Expression::OperatorToken[Expression::LAST_OPERATOR_FAMILY][64][8] =
   {
     { // ASSIGNATION
 
       // Révisions futures: l'assignation devrait probablement tout copier
       // plutot que seulement des morceaux...
       // Et il faudrait peut etre des fonctions pour extraires les parties des champs
-      {"=", "<-", ":="}, // Devrait tout copier
-      {"[=]", "[<-]", "[:=]"}, // (=) pourrait etre un symbole pour prendre que la valeur (voir si gramamticalement, c'est jouable)
-      {"[Array=]", "[Array<-]", "[Array:=]"}, // {=} serait judicieux, ne copie que les tableaux
-      {"[Map=]", "[Map<-]", "[Map:=]"}, // [=] serait judicieux, ne copie que les tables
+      {"(=)", "(:=)"}, // N'assigne que la valeur
+      {"=", ":="}, // Assigne tout
+      {"{=}"},
+      {"[=]"},
       {"||="},
       {"^^="},
       {"&&="},
       {"|="},
       {"^="},
       {"&="},
+      {"!|="},
+      {"!^="},
+      {"!&="},
       {"<<="},
       {">>="},
+      {"!<<="},
+      {"!>>="},
       {"+="},
+      {"{+=}"},
+      {"[+=]"},
       {"-="},
+      {"{-=}"},
+      {"[-=]"},
       {"*="},
       {"/="},
       {"%="},
+      {"!%="},
       {"**="},
       {"#="},
-      {"[]="}
+      {"u=", "union=", "∪="},
+      {"{u=}", "{union=}", "{∪=}"},
+      {"[u=]", "[union=]", "[∪=]"},
+      {"n=", "inter=", "∩="},
+      {"{n=}", "{inter=}", "{∩=}"},
+      {"[n=]", "[inter=]", "[∩=]"},
+      {"|<|="},
+      {"|>|="},
+      {"!|<|=", "!<|="},
+      {"!|>|=", "!>|="},
     },
     { // TERNARY
-      {"?"},
-      {":"}
+      {"?", "alors"},
+      {":", "sinon"}
     },
     { // LOW LOGIC
       {"||", "or", "ou"},
@@ -46,49 +65,73 @@ const std::string	Expression::OperatorToken[Expression::LAST_OPERATOR_FAMILY][21
       {"&&", "and", "et"}
     },
     { // TEST
-      {"==",   "is",    ".eq.", "-eq"},
-      {"[==]", "[is]"},
-      {"!=",   "<>",    ".ne.", "-ne"},
-      {"[!=]", "[<>]"},
-      {"<=",   ".le.",  "-le"},
-      {">=",   ".ge.",  "-ge"},
-      {"<",    ".lt.",  "-lt"},
-      {">",    ".gt.",  "-gt"}
+      {"(==)",	"(vaut)"},
+      {"==",	"vaut"},
+      {"(!=)",	"(<>)"},
+      {"!=",	"<>"},
+      {"<="},
+      {">="},
+      {"<"},
+      {">"},
+      {"~="}, // Opérateur seulement surchargeable
+    },
+    { // Test d'ensembles
+      {"in", "∈", "dans"},
+      {"{in}", "{∈}", "{dans}"},
+      {"[in]", "[∈]", "[dans]"},
+      {"out", "dehors", "∉", "!∈"},
+      {"{out}", "{dehors}", "{∉}", "{!∈}"},
+      {"[out]", "[dehors]", "[∉]", "[!∈]"},
     },
     { // LOW BINARY
       {"|"},
-      {"^"}
+      {"^"},
+      {"!|"}, // NOR
+      {"!^"}, // NXOR
     },
     { // HIGH BINARY
-      {"&"}
+      {"&"},
+      {"!&"}, // NAND
     },
     { // SHIFT
       {"<<"},
       {">>"},
-      //
+      {"!<<"}, // ROTATION
+      {"!>>"}, // ROTATION
     },
     { // LOW MATH
       {"+"},
-      {"-"}
+      {"{+}", "+#"},
+      {"[+]"},
+      {"-"},
+      {"{-}", "-#"},
+      {"[-]"},
     },
     { // HIGH MATH
       {"*"},
       {"/"},
+      {"*#"}, // Produit matriciel
+      {"/#"}, // Division matricielle
       {"%"},
+      {"!%"}, // Ce qu'il manque pour avoir modulo 0
+      {"%#"}, // Modulo matriciel
     },
-    { // POW
+    { // POW - (call pow(x, y)
       {"**"},
     },
     { // CAT
-      {"#"},
-    },
-    { // Test d'ensembles
-      {"in", "∈"},
-      {"{in}"},
-      {"[in]"},
-      {"out", "∉", "!∈"},
-      {"{out}"},
-      {"[out]"}
+      {"#"}, // Concaténation de string
+      {"|<|"}, // Ajout de l'élément de droite au début du tableau de gauche
+      {"|>|"}, // Ajout de l'élément de droite à la fin du tableau de gauche
+      {"!|<|", "!<|"}, // Retrait de n elements au début du tableau de gauche
+      {"!|>|", "!<|"}, // Retrait de n elements à la fin du tableau de gauche
+      {"u", "union", "∪"}, // Mélange de tableau et noeuds
+      {"{u}", "{union}", "{∪}"}, // Mélange de tableau
+      {"[u]", "[union]", "[∪]"}, // Mélange de noeuds
+      {"n", "inter", "∩"}, // Intersection de tableau et noeuds
+      {"{n}", "{inter}", "{∩}"}, // Intersection de tableau
+      {"[n]", "[inter]", "[∩]"}, // Intersection de noeuds
+      {"o", "∘"}, // Composition de fonction
     }
   };
 

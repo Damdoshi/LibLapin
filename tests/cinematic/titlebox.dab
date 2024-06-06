@@ -1,0 +1,8 @@
+RessourceFile=@"font.png"
+Scale=3,3
+Size=1024/[].Scale[0],100/[].Scale[1]
+GlyphSize=10,14
+HorizontalAlign="Middle"
+Interglyph=1,1
+Text="- TitleBox -"
+Position=0,0

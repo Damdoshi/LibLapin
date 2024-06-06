@@ -50,7 +50,7 @@ static double		operand(const char			*operation,
     }
 
   // Get variable
-  if ((cnf = _bunny_configuration_go_get_node(env, operation, i)) == NULL)
+  if ((cnf = bunny_configuration_resolve_address(&env, 1, operation, i)) == NULL)
     {
       bad = true;
       scream_error_if

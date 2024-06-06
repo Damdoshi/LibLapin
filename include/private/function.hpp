@@ -38,7 +38,7 @@ struct				Function
     };
 
   Command			command;
-  SmallConf			local_variables;
+  SmallConf			local_variables; // **Définition** des variables, et non valeurs de celle-ci.
   SmallConf			value; // operation ;
   SmallConf			result;
   SmallConf			additionnal_values[2];
@@ -100,7 +100,6 @@ t_dabsic_compute_f		dabsic_compute_delete;
 extern t_dabsic_compute		gl_dabsic_compute[Function::LAST_COMMAND];
 
 bool				dabsic_compute(SmallConf		&func,
-					       SmallConf		*proto,
 					       bool			dry,
 					       SmallConf		*root,
 					       SmallConf		*artif,

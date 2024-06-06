@@ -46,7 +46,8 @@ Decision		_bunny_handle_directive(const char		*code,
 						t_bunny_configuration	*fileroot,
 						void			(*read_separator)
 						(const char*,ssize_t&),
-						Expression::OperatorFamily family)
+						Expression::OperatorFamily family,
+						bool			check)
 {
   Directive		directives[] = {
     {"@include", (SmallConf*)bunny_configuration_get_root(fileroot)},
@@ -60,10 +61,13 @@ Decision		_bunny_handle_directive(const char		*code,
   /// On cherche la directive qui nous concerne
   for (directive = 0;
        directive < NBRCELL(directives) &&
-	 !readtext(code, i, directives[directive].token.c_str());
+	 !checktext(code, i, directives[directive].token.c_str());
        ++directive);
   if (directive == NBRCELL(directives))
     return (BD_NOT_FOUND);
+  if (check)
+    return (BD_OK);
+  readtext(code, i, directives[directive].token.c_str());
   read_separator(code, i);
   
   /////////////////////////////////////////////////////////
@@ -124,7 +128,7 @@ Decision		_bunny_handle_directive(const char		*code,
       == BD_ERROR)
     return (BD_ERROR);
   read_separator(code, i);
-  if (expr_compute(dirconf, NULL, false, (SmallConf*)bunny_configuration_get_root(node), (SmallConf*)node, NULL, NULL) == false)
+  if (expr_compute(dirconf, false, (SmallConf*)bunny_configuration_get_root(node), (SmallConf*)node, NULL, NULL) == false)
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR, PATTERN,
        "ressource,configuration",

@@ -1,0 +1,63 @@
+
+Size = 1024, 768
+
+[Volumes
+  Music = 0.2
+  Voice = 0.2
+  Effect = 0.2
+]
+
+[Pictures
+  Background = @"./background.png"
+  Sprite = @"./sprite.dab"
+]
+
+[Musics
+  Mood = @"./mood.ogg"
+]
+
+[Voices
+  SoundSprite = @"./sound_sprite.dab"
+]
+
+
+[Fonts
+  Title = @"./titlebox.dab"
+  Talk = @"./talkbox.dab"
+]
+
+[Texts
+  [FR
+    Text0 = "Salut! Ca va? Je teste le texte."
+    Text1 = "Genial. Tout simplement génial."
+  ]
+  [EN
+    Text0 = "Hello! How are you? I'm testing text display."
+    Text1 = "Great. Simply great."
+  ]
+]
+
+Animation = [Sequence
+  backcolor 255, 255, 255
+  backcolor
+  sleep 1
+  backcolor 128
+  sleep 1
+  display Background
+  sleep 1
+  backcolor 128, 0
+  display Sprite
+  sleep 0.5
+  forecolor 255, 255, 255, 255
+  sleep 0.05
+  forecolor
+  sleep 1
+  backcolor 255, 0, 255
+  hide Background
+  sleep 1
+  forecolor 128, 255, 255, 255
+  sleep 1
+  hide Sprite
+  sleep 1
+]
+

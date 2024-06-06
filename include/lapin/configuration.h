@@ -260,6 +260,15 @@ bool			bunny_configuration_vgetf_bool(t_bunny_configuration		*config,
 	   double*: bunny_configuration_getf_double,					\
 	   bool*: bunny_configuration_getf_bool,					\
 	   int*: bunny_configuration_getf_int)(cnf, data, fmt, ##__VA_ARGS__)
+#  define		bunny_configuration_vgetf(cnf, data, fmt, va)			\
+  _Generic((data),									\
+	   void*: bunny_configuration_getf_node,					\
+	   const t_bunny_configuration**: bunny_configuration_getf_node,		\
+	   t_bunny_configuration**: bunny_configuration_getf_node,			\
+	   const char**: bunny_configuration_getf_string,				\
+	   double*: bunny_configuration_getf_double,					\
+	   bool*: bunny_configuration_getf_bool,					\
+	   int*: bunny_configuration_getf_int)(cnf, data, fmt, va)
 # endif
 
 #  define		bunny_configuration_existsf(cnf, fmt, ...)			\
@@ -334,11 +343,54 @@ bool			bunny_configuration_get_case_named(t_bunny_configuration	*cnf,
 							   const char			*pat,
 							   ...) _BFMT(3, 4);
 
-bool			bunny_configuration_executef(t_bunny_configuration		*config,
-						     bool				rec,
-						     t_bunny_configuration		*parameters,
-						     const char				*pattern,
-						     ...) _BFMT(4, 5);
+bool			bunny_configuration_executef_node(t_bunny_configuration		*config,
+							  t_bunny_configuration		**data,
+							  bool				rec,
+							  t_bunny_configuration		*parameters,
+							  const char			*pattern,
+							  ...) _BFMT(5, 6);
+bool			bunny_configuration_executef_string(t_bunny_configuration	*config,
+							    const char			**data,
+							    bool			rec,
+							    t_bunny_configuration	*parameters,
+							    const char			*pattern,
+							    ...) _BFMT(5, 6);
+bool			bunny_configuration_executef_double(t_bunny_configuration	*config,
+							    double			*data,
+							    bool			rec,
+							    t_bunny_configuration	*parameters,
+							    const char			*pattern,
+							    ...) _BFMT(5, 6);
+bool			bunny_configuration_executef_int(t_bunny_configuration		*config,
+							 int				*data,
+							 bool				rec,
+							 t_bunny_configuration		*parameters,
+							 const char			*pattern,
+							 ...) _BFMT(5, 6);
+bool			bunny_configuration_executef_bool(t_bunny_configuration		*config,
+							  bool				*data,
+							  bool				rec,
+							  t_bunny_configuration		*parameters,
+							  const char			*pattern,
+							  ...) _BFMT(5, 6);
+
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+#  define		bunny_configuration_executef(cnf, data, rec, params, fmt, ...)	\
+  _Generic((data),									\
+	   void*: bunny_configuration_executef_node,					\
+	   const t_bunny_configuration**: bunny_configuration_executef_node,		\
+	   t_bunny_configuration**: bunny_configuration_executef_node,			\
+	   const char**: bunny_configuration_executef_string,				\
+	   double*: bunny_configuration_executef_double,				\
+    	   bool*: bunny_configuration_executef_bool,					\
+	   int*: bunny_configuration_executef_int)(cnf, data, rec, params, fmt, ##__VA_ARGS__)
+# endif
+
+bool			bunny_configuration_target(t_bunny_configuration		*from,
+						   t_bunny_configuration		*to);
+bool			bunny_configuration_targetf(t_bunny_configuration	*_f,
+						    const char			*pattern,
+						    ...);
 
 bool			bunny_configuration_bindf_int(t_bunny_configuration		*c,
 						      int				*i,
@@ -399,6 +451,9 @@ void			bunny_configuration_link(t_bunny_configuration			*dst,
 ** \return The first chil. Return NULL ("bunny_configuration_end") if there is no child.
 */
 t_bunny_configuration	*bunny_configuration_first(t_bunny_configuration		*config);
+t_bunny_configuration	*bunny_configuration_firstf(t_bunny_configuration		*config,
+						    const char				*pattern,
+						    ...) _BFMT(2, 3);
 
 /*!
 ** Return the next children of config->father, directly after config.
@@ -415,12 +470,18 @@ t_bunny_configuration	*bunny_configuration_next(t_bunny_configuration			*config)
 t_bunny_configuration	*bunny_configuration_end(t_bunny_configuration			*config);
 
 # define		bunny_configuration_all_children(conf, node)			\
-  node = bunny_configuration_first(conf);						\
+  node = bunny_configuration_firstf(conf, ".");						\
+  node != bunny_configuration_end(conf);						\
+  node = bunny_configuration_next(node)
+# define		bunny_configuration_all_childrenf(conf, node, addr, ...)	\
+  node = bunny_configuration_firstf(conf, addr, ##__VA_ARGS__)		;		\
   node != bunny_configuration_end(conf);						\
   node = bunny_configuration_next(node)
 
+# define		bunny_configuration_all_casesf(conf, i, addr, ...)		\
+  i = 0; i < bunny_configuration_casesf(conf, addr, ##__VA_ARGS__); ++i
 # define		bunny_configuration_all_cases(conf, i)				\
-  i = 0; i < bunny_configuration_get_nbr_case(conf); ++i
+  i = 0; i < bunny_configuration_casesf(conf, "."); ++i
 
 # define		bunny_configuration_all(conf, node)				\
   _Generic((node),									\
@@ -458,6 +519,9 @@ bool			bunny_configuration_read_time(const t_bunny_configuration	*cnf,
 						      const char			*fld,
 						      double				*secs);
 
+// I think this is broken. Having to specifiy a type + increase a pointer... ?
+// So it is full void* or char* and specified explicitly
+// Let's think again.
 # define		bunny_configuration_get_and_go(cnf, ptr, typ, fmt, ...) \
   bunny_configuration_getf(cnf, (typ*)ptr, fmt, ##__VA_ARGS__) ? (bool)(ptr += sizeof(typ)) : 0
 

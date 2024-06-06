@@ -18,12 +18,15 @@
 // Prototype:
 //
 // [function_node
-//   .parameter = [Array
+//   .prototype = [Array
 //      "parameter name"
+//   ]
+//   .cNUMBER = [Node ???????????????????????
+//      variables
 //   ]
 // ]
 
-// Param smallconf:
+// Variables smallconf:
 // [
 //   name = val
 //   name = val
@@ -49,6 +52,8 @@ bool			expr_compute_function_call(Expression	&exp,
   if (ret == BD_OK)
     return (true);
   exp.is_const = false;
+
+  // On récupère la fonction ciblée
   if ((ope = expr_get_variable(exp.val, dry, root, local, artif, param)) == NULL)
     scream_error_if
       (return (false), BE_BAD_ADDRESS,
@@ -63,69 +68,69 @@ bool			expr_compute_function_call(Expression	&exp,
   SmallConf		temp_param;
   SmallConf		*parameters = NULL;
   SmallConf		*proto = NULL;
+  bool			cmode = SmallConf::create_mode;
 
-  if (exp.operand.size())
+  // On récupère le prototype de la fonction ciblée
+  proto = &(*ope)[".prototype"];
+  SmallConf::create_mode = true;
+
+  // Les paramètres sont ils passé par nom?
+  if (exp.operand[0]->val.name == "")
     {
-      bool		cmode = SmallConf::create_mode;
+      for (i = 0; i < exp.operand.size() && i < (*proto).Size(); ++i)
+	if (exp.operand[i] != NULL)
+	  {
+	    Expression	&arg = *exp.operand[i];
+	    SmallConf	*oparg;
 
-      proto = &(*ope)[".parameters"];
-      SmallConf::create_mode = true;
-
-      if (exp.operand[0]->val.name == "")
-	{
-	  for (i = 0; i < exp.operand.size() && i < (*proto).Size(); ++i)
-	    if (exp.operand[i] != NULL)
-	      {
-		Expression	&arg = *exp.operand[i];
-		SmallConf	*oparg;
-
-		if (arg.operand.size() > 1)
-		  if (gl_expr_computation[arg.optor_family]
-		      (arg, dry, root, local, artif, param) == false)
-		    {
-		      SmallConf::create_mode = cmode;
-		      return (false);
-		    }
-		oparg = &arg.val;
-		if (oparg->last_type == SmallConf::RAWSTRING)
-		  {
-		    if ((oparg = expr_get_variable
-			 (*oparg, dry, root, local, artif, param)) == NULL)
-		      scream_error_if
-			(return (false), BE_BAD_ADDRESS,
-			 "Undefined variable or unresolvable address %s "
-			 "from context %s on line %s:%d",
-			 "ressource,configuration,syntax",
-			 arg.val.original_value.c_str(),
-			 artif->address.c_str(),
-			 exp.file.c_str(), exp.line);
-		  }
-		temp_param[(*proto)[i].name] = *oparg;
-	      }
-	}
-      else
-	for (i = 0; i < exp.operand.size(); ++i)
-	  if (exp.operand[i] != NULL)
-	    {
-	      Expression	&arg = *exp.operand[i];
-
-	      if (arg.optor_family != -1 && gl_expr_computation[arg.optor_family]
+	    if (arg.operand.size() > 1)
+	      if (gl_expr_computation[arg.optor_family]
 		  (arg, dry, root, local, artif, param) == false)
 		{
 		  SmallConf::create_mode = cmode;
 		  return (false);
 		}
-	      temp_param[arg.val.name] = arg.val;
-	    }
-      parameters = &temp_param;
-      SmallConf::create_mode = cmode;
+	    oparg = &arg.val;
+	    if (oparg->last_type == SmallConf::RAWSTRING)
+	      {
+		if ((oparg = expr_get_variable
+		     (*oparg, dry, root, local, artif, param)) == NULL)
+		  scream_error_if
+		    (return (false), BE_BAD_ADDRESS,
+		     "Undefined variable or unresolvable address %s "
+		     "from context %s on line %s:%d",
+		     "ressource,configuration,syntax",
+		     arg.val.original_value.c_str(),
+		     artif->address.c_str(),
+		     exp.file.c_str(), exp.line);
+	      }
+	    temp_param[(*proto)[i].name] = *oparg;
+	  }
     }
+  // Ils sont envoyé par ordre
+  else
+    for (i = 0; i < exp.operand.size(); ++i)
+      if (exp.operand[i] != NULL)
+	{
+	  Expression	&arg = *exp.operand[i];
+	  
+	  if (arg.optor_family != -1 && gl_expr_computation[arg.optor_family]
+	      (arg, dry, root, local, artif, param) == false)
+	    {
+	      SmallConf::create_mode = cmode;
+	      return (false);
+	    }
+	  temp_param[arg.val.name] = arg.val;
+	}
+  parameters = &temp_param;
+  SmallConf::create_mode = cmode;
+
   SmallConf		*tmp_artif = ope->father ? ope->father : ope;
 
   if (ope->expression)
     {
       if (expr_compute
-	  (*ope, proto, dry, root, NULL, tmp_artif, parameters) == false)
+	  (*ope, dry, root, NULL, tmp_artif, parameters) == false)
 	return (false);
       auto save = ope->expression;
 
@@ -140,7 +145,7 @@ bool			expr_compute_function_call(Expression	&exp,
   if (ope->function)
     {
       if (dabsic_compute
-	  (*ope, proto, dry, root, tmp_artif, parameters) == false)
+	  (*ope, dry, root, tmp_artif, parameters) == false)
 	return (false);
       auto save = ope->expression;
 
@@ -153,7 +158,8 @@ bool			expr_compute_function_call(Expression	&exp,
   if (ope->sequence)
     {
       if (sequence_compute
-	  (*ope, proto, root, tmp_artif, parameters, NULL, NULL) == false)
+	  // Le NULL sera a retiré quand sequence_compute pourra être modifié
+	  (*ope, NULL, root, tmp_artif, parameters, NULL, NULL) == false)
 	return (false);
       auto save = ope->expression;
 

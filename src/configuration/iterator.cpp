@@ -22,6 +22,18 @@ t_bunny_configuration	*bunny_configuration_first(t_bunny_configuration	*config)
   return (cnf);
 }
 
+t_bunny_configuration	*bunny_configuration_firstf(t_bunny_configuration	*cnf,
+						    const char			*pattern,
+						    ...)
+{
+  va_list		lst;
+
+  va_start(lst, pattern);
+  if (!bunny_configuration_vgetf_node(cnf, &cnf, pattern, lst))
+    return (NULL);
+  return (bunny_configuration_first(cnf));
+}
+
 t_bunny_configuration	*bunny_configuration_next(t_bunny_configuration		*config)
 {
   SmallConf		*conf = (SmallConf*)config;

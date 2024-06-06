@@ -11,7 +11,7 @@ bool			expr_compute_cast(Expression		&exp,
 					  SmallConf		*root,
 					  SmallConf		*local,
 					  SmallConf		*artif,
-					  SmallConf		*param)
+					  SmallConf		*variables)
 {
   SmallConf		&x = exp.operand[0]->val;
   const char		*str;
@@ -21,7 +21,7 @@ bool			expr_compute_cast(Expression		&exp,
   if (exp.operand[0]->operand.size() > 1)
     {
       if (gl_expr_computation[exp.operand[0]->optor_family]
-	  (*exp.operand[0], dry, root, local, artif, param) == false)
+	  (*exp.operand[0], dry, root, local, artif, variables) == false)
 	return (false);
     }
   SmallConf		*ope;
@@ -30,7 +30,7 @@ bool			expr_compute_cast(Expression		&exp,
   if (ope->last_type == SmallConf::RAWSTRING)
     {
       if ((ope = expr_get_variable
-	   (*ope, dry, root, local, artif, param)) == NULL)
+	   (*ope, dry, root, local, artif, variables)) == NULL)
 	scream_error_if
 	  (return (false), BE_BAD_ADDRESS,
 	   "Undefined variable or unresolvable address %s "

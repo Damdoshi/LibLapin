@@ -49,7 +49,7 @@ bool			SmallConf::GetDouble(double		*v,
 
   if (expression && (root || local || artif || param))
     {
-      if (expr_compute((SmallConf&)*this, NULL, false, root, local, artif, param) == false)
+      if (expr_compute((SmallConf&)*this, false, root, local, artif, param) == false)
 	return (false);
     }
   if (have_value == false)

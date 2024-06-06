@@ -10,7 +10,7 @@ bool			expr_compute_ternary(Expression		&exp,
 					     SmallConf		*root,
 					     SmallConf		*local,
 					     SmallConf		*artif,
-					     SmallConf		*param)
+					     SmallConf		*variables)
 {
   if (exp.is_const)
     return (true);
@@ -46,11 +46,11 @@ bool			expr_compute_ternary(Expression		&exp,
     {}
   else if (x.optor_family == Expression::LAST_OPERATOR_FAMILY)
     {
-      if (expr_compute_function_call(x, dry, root, local, artif, param) == false)
+      if (expr_compute_function_call(x, dry, root, local, artif, variables) == false)
 	return (false);
     }
   else if (gl_expr_computation[x.optor_family]
-	   (x, dry, root, local, artif, param) == false)
+	   (x, dry, root, local, artif, variables) == false)
     return (false);
 
   ope = &x.val;
@@ -58,7 +58,7 @@ bool			expr_compute_ternary(Expression		&exp,
     {
       cnst = false;
       if ((ope = expr_get_variable
-	   (*ope, dry, root, local, artif, param)) == NULL)
+	   (*ope, dry, root, local, artif, variables)) == NULL)
 	scream_error_if
 	  (return (false), BE_BAD_ADDRESS,
 	   "Undefined variable or unresolvable address %s "
@@ -87,11 +87,11 @@ bool			expr_compute_ternary(Expression		&exp,
     {}
   else if (y->optor_family == -1 || y->optor_family == Expression::LAST_OPERATOR_FAMILY)
     {
-      if (expr_compute_function_call(*y, dry, root, local, artif, param) == false)
+      if (expr_compute_function_call(*y, dry, root, local, artif, variables) == false)
 	return (false);
     }
   else if (gl_expr_computation[y->optor_family]
-	   (*y, dry, root, local, artif, param) == false)
+	   (*y, dry, root, local, artif, variables) == false)
     return (false);
 
   // Car le ternaire peut tres bien aboutir sur une operation contenant seulement
@@ -101,7 +101,7 @@ bool			expr_compute_ternary(Expression		&exp,
     {
       cnst = false;
       if ((ope = expr_get_variable
-	   (*ope, dry, root, local, artif, param)) == NULL)
+	   (*ope, dry, root, local, artif, variables)) == NULL)
 	scream_error_if
 	  (return (false), BE_BAD_ADDRESS,
 	   "Undefined variable or unresolvable address %s "

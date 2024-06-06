@@ -1,0 +1,7 @@
+RessourceFile=@"font.png"
+Size=1024,68
+GlyphSize=10,14
+HorizontalAlign="Middle"
+Interglyph=1,1
+Text="- TalkBox -"
+Position=0,700

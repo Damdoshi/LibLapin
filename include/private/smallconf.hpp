@@ -107,8 +107,8 @@ struct				SmallConf
 					       const SmallConf			&b);
   static bool			RecursiveAssign(SmallConf			&a,
 						const SmallConf			&b,
-						bool				hsh,
-						bool				arr);
+						bool				hsh = true,
+						bool				arr = true);
 
   void				SetCreateMode(bool				cm)
   {
@@ -228,6 +228,10 @@ struct				SmallConf
     return (str);
   }
 
+  SmallConf(const SmallConf &ptr)
+  {
+    RecursiveAssign(*this, ptr);
+  }
   SmallConf(void);
   ~SmallConf(void);
 };

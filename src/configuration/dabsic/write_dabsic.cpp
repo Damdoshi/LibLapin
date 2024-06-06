@@ -74,7 +74,7 @@ static void		restore_value(std::ostream			&ss,
   else if (conf.expression && conf.expression->optor_family != -1)
     restore_expression(ss, *conf.expression, true);
   else if (conf.have_value)
-    writevalue(ss, conf);
+    writevalue(ss, conf, false, false, true);
 }
 
 static void		restore_dabsic(std::ostream			&ss,
@@ -96,9 +96,9 @@ static void		restore_prototype(std::ostream			&ss,
 {
   ssize_t		i;
 
-  if (conf.Access(".parameters"))
+  if (conf.Access(".prototype"))
     {
-      SmallConf		&params = conf[".parameters"];
+      SmallConf		&params = conf[".prototype"];
 
       ss << "(";
       for (i = 0; i < (ssize_t)params.Size(); ++i)
@@ -109,6 +109,8 @@ static void		restore_prototype(std::ostream			&ss,
 	    ss << "integer ";
 	  else if (params[i].last_type == SmallConf::DOUBLE)
 	    ss << "real ";
+	  else if (params[i].last_type == SmallConf::RAWSTRING)
+	    ss << "node ";
 	  ss << params[i].name;
 	  if (params[i].expression)
 	    {
@@ -122,8 +124,10 @@ static void		restore_prototype(std::ostream			&ss,
       if (conf.last_type != SmallConf::NOTYPE)
 	{
 	  ss << ":";
-	  if (conf.last_type == SmallConf::STRING || conf.last_type == SmallConf::RAWSTRING)
+	  if (conf.last_type == SmallConf::STRING)
 	    ss << "string";
+	  else if (conf.last_type == SmallConf::RAWSTRING)
+	    ss << "node";
 	  else if (conf.last_type == SmallConf::INTEGER)
 	    ss << "integer";
 	  else if (conf.last_type == SmallConf::DOUBLE)
@@ -157,9 +161,13 @@ static void		dabsic_array(std::ostream			&ss,
   restore_prototype(ss, conf);
   if (conf.have_value || conf.expression)
     {
-      ss <<  " = ";
-      restore_value(ss, conf, indent + 2);
-      ss << std::endl;
+      std::stringstream tmp;
+
+      restore_value(tmp, conf, indent + 2);
+      std::string	tmp2 = tmp.str();
+
+      if (tmp2.size())
+	ss <<  " = " << tmp2 << std::endl;
     }
   else if (!shortform)
     ss << std::endl;

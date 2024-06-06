@@ -11,7 +11,7 @@ bool			expr_compute_assign(Expression		&exp,
 					    SmallConf		*root,
 					    SmallConf		*local,
 					    SmallConf		*artif,
-					    SmallConf		*param)
+					    SmallConf		*variables)
 {
   SmallConf		*ope = NULL;
   int			i;
@@ -22,13 +22,13 @@ bool			expr_compute_assign(Expression		&exp,
   if (exp.operand[exp.operand.size() - 1]->optor_family == Expression::LAST_OPERATOR_FAMILY)
     {
       if (expr_compute_function_call
-	  (*exp.operand[exp.operand.size() - 1], dry, root, local, artif, param) == false)
+	  (*exp.operand[exp.operand.size() - 1], dry, root, local, artif, variables) == false)
 	return (false);
     }
   else if (exp.operand[exp.operand.size() - 1]->optor_family != -1)
     {
       if (gl_expr_computation[exp.operand[exp.operand.size() - 1]->optor_family]
-	  (*exp.operand[exp.operand.size() - 1], dry, root, local, artif, param)
+	  (*exp.operand[exp.operand.size() - 1], dry, root, local, artif, variables)
 	  == false)
 	return (false);
     }
@@ -42,18 +42,18 @@ bool			expr_compute_assign(Expression		&exp,
 	{}
       else if (x.optor_family == Expression::LAST_OPERATOR_FAMILY)
        	{
-	  if (expr_compute_function_call(x, dry, root, local, artif, param) == false)
+	  if (expr_compute_function_call(x, dry, root, local, artif, variables) == false)
 	    return (false);
 	}
       else if (gl_expr_computation[x.optor_family]
-	       (x, dry, root, local, artif, param) == false)
+	       (x, dry, root, local, artif, variables) == false)
 	return (false);
 
       ope = &x.val;
       if (ope->last_type == SmallConf::RAWSTRING)
 	{
 	  if ((ope = expr_get_variable
-	       (*ope, dry, root, local, artif, param)) == NULL)
+	       (*ope, dry, root, local, artif, variables)) == NULL)
 	    scream_error_if
 	      (return (false), BE_BAD_ADDRESS,
 	       "Undefined variable or unresolvable address %s "
@@ -75,7 +75,7 @@ bool			expr_compute_assign(Expression		&exp,
 	  SmallConf *var;
 
 	  if ((var = expr_get_variable
-	       (exp.operand[i + 1]->val, dry, root, local, artif, param)) == NULL)
+	       (exp.operand[i + 1]->val, dry, root, local, artif, variables)) == NULL)
 	    var = &exp.operand[i + 1]->val;
 
 	  if (typ.optor == Expression::BEO_ASSIGN)
@@ -342,8 +342,12 @@ bool			expr_compute_assign(Expression		&exp,
 	      ss << a << b;
 	      ope->SetString(ss.str());
 	    }
-	  else if (typ.optor == Expression::BEO_PUSH)
-	    (*ope)[ope->array.size()].Assign(*var, root, local, artif, param);
+	  else if (typ.optor == Expression::BEO_PUSH_BACK_ASSIGN)
+	    (*ope)[ope->array.size()].Assign(*var, root, local, artif, variables);
+	  // Quand POP sera fait, au lieu de delete et de segfault
+	  // si le dabsic fait une betise,
+	  // il faudra créer un []..Trash et déplacer le truc dedans
+	  // et emettre une erreur en cas d'utilisation
 	}
     }
   exp.val = *ope;

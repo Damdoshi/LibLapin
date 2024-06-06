@@ -13,6 +13,7 @@ const t_expr_computation gl_expr_computation[Expression::LAST_OPERATOR_FAMILY] =
     &expr_compute_low_logic,
     &expr_compute_high_logic,
     &expr_compute_test,
+    &expr_compute_group,
     &expr_compute_low_bin,
     &expr_compute_high_bin,
     &expr_compute_shift,
@@ -20,20 +21,18 @@ const t_expr_computation gl_expr_computation[Expression::LAST_OPERATOR_FAMILY] =
     &expr_compute_high_math,
     &expr_compute_pow,
     &expr_compute_cat,
-    &expr_compute_group,
   };
 
 bool			expr_compute(SmallConf			&exp,
-				     SmallConf			*prototype,
 				     bool			dry,
 				     SmallConf			*root,
+				     // Local est défini ici car exp n'est pas
+				     // forcement dans un champ.
+				     // Il peut etre dans une fonction.
 				     SmallConf			*local,
 				     SmallConf			*artif,
-				     SmallConf			*param)
+				     SmallConf			*variables)
 {
-  int			cmode;
-  size_t		i;
-
   if(exp.expression == NULL)
     {
       if (exp.have_value)
@@ -42,91 +41,19 @@ bool			expr_compute(SmallConf			&exp,
     }
   if (exp.expression->is_const)
     return (true);
-  if (prototype)
-    {
-      if (param == NULL)
-	scream_error_if
-	  (return (false), BE_SYNTAX_ERROR,
-	   "Missing parameters for function or expression %s on line %s:%d",
-	   "ressource,configuration,syntax",
-	   exp.name.c_str(), exp.expression->file.c_str(), exp.line
-	   );
-      // test classic call by nbr
-      if (param->Size())
-	{
-	  if (param->Size() > prototype->Size())
-	    scream_error_if
-	      (return (false), BE_SYNTAX_ERROR,
-	       "Too many parameters for function or expression %s on line %d",
-	       "ressource,configuration,syntax",
-	       exp.name.c_str(), exp.line
-	       );
-	  for (i = 0; i < param->Size() && i < prototype->Size(); ++i)
-	    (*param)[(*prototype)[i].name] = (*param)[i];
-	  while (i < prototype->Size())
-	    {
-	      if ((*prototype)[i].have_value)
-		(*param)[(*prototype)[i].name] = (*prototype)[i];
-	      else
-		scream_error_if
-		  (return (false), BE_SYNTAX_ERROR,
-		   "Missing parameters for function or expression %s on line %d",
-		   "ressource,configuration,syntax",
-		   exp.name.c_str(), exp.line
-		   );
-	      ++i;
-	    }
-	}
-      else
-	for (i = 0; i < prototype->Size(); ++i)
-	  {
-	    if (param->Access((*prototype)[i].name) == false)
-	      {
-		if ((*prototype)[i].have_value)
-		  {
-		    cmode = SmallConf::create_mode;
-		    SmallConf::create_mode = true;
-		    (*param)[(*prototype)[i].name] = (*prototype)[i];
-		    SmallConf::create_mode = cmode;
-		  }
-		else
-		  scream_error_if
-		    (return (false), BE_SYNTAX_ERROR,
-		     "Missing parameters n=%zu (%s) for function or expression %s on line %s:%d",
-		     "ressource,configuration,syntax",
-		     i, (*prototype)[i].name.c_str(), exp.name.c_str(),
-		     exp.expression->file.c_str(), exp.line
-		     );
-	      }
-	  }
 
-
-    }
-
-  // Une expression doit toujours s'evaluer à partir de l'endroit ou l'on est - sauf
-  // quand il y a un With, mais on verra plus tard ca du coup.
-  
-  ///////////////////////////////////////////////////////////////////////////////
-  ////// CECI EST UNE MAUVAISE IDEE                                          ////
-  /// Le "Precalculateur" effectue une passe avec                            ////
-  /// des pointeurs nuls passés...                                           ////
-  /// Cela veut dire que dans certains cas, des references a des variables   ////
-  /// pourrait etre ecrasés par d'autres portant le meme nom                 ////
-  /// mais situé dans d'autres scopes.                                       ////
-  ///////////////////////////////////////////////////////////////////////////////
-  // Le précalcul en fait, ne devrait pas aovir lieu du tout, car la configuration
-  // peut tout a fait prendre plein de passes.
-  // il faudrait probablement laisser au programme la possibilité de demander
-  // le calcul final lui meme plutot que faire une passe, ou alors
-  // s'en tenir aux resolutions de constantes
-  
+  if ((variables = test_and_set_prototype(exp, variables)) == NULL)
+    return (false);
+  // C'est vraiment au cas ou
   if (!root)
     root = (SmallConf*)bunny_configuration_get_root((SmallConf*)&exp);
   if (!artif)
     artif = (SmallConf*)bunny_configuration_get_parent((SmallConf*)&exp);
   if (!local)
     local = &exp;
+  int			cmode = SmallConf::create_mode;
 
+  cmode = true;
   if (exp.expression->optor_family == Expression::LAST_OPERATOR_FAMILY
       || exp.expression->optor_family == -1)
     {
@@ -135,28 +62,34 @@ bool			expr_compute(SmallConf			&exp,
       if (exp.expression->optor_family == -1)
 	{
 	  if ((ope = expr_get_variable
-	       (exp.expression->val, dry, root, local, artif, param)) ==
+	       (exp.expression->val, dry, root, local, artif, variables)) ==
 	      NULL)
 	    scream_error_if
-	      (return (false), BE_BAD_ADDRESS,
+	      (goto ResetAndFalse, BE_BAD_ADDRESS,
 	       "Undefined variable or unresolvable address %s from context %s on line %s:%d",
 	       "ressource,configuration,syntax",
 	       exp.expression->val.original_value.c_str(),
 	       artif->address.c_str(),
 	       exp.expression->file.c_str(), exp.line);
-	  exp.Assign(*ope, root, local, artif, param);
-	  return (true);
+	  exp.Assign(*ope, root, local, artif, variables);
+	  goto ResetAndTrue;
 	}
       if (expr_compute_function_call
-	  (*exp.expression, dry, root, local, artif, param) == false)
-	return (false);
+	  (*exp.expression, dry, root, local, artif, variables) == false)
+	goto ResetAndFalse;
       exp = exp.expression->val;
-      return (true); // Y a des trucs a faire ici, encore, peut etre?
+      goto ResetAndTrue; // Y a des trucs a faire ici, encore, peut etre?
     }
   if (gl_expr_computation[exp.expression->optor_family]
-      (*exp.expression, dry, root, local, artif, param) == false)
-    return (false);
+      (*exp.expression, dry, root, local, artif, variables) == false)
+    goto ResetAndFalse;
   exp = exp.expression->val;
+
+ ResetAndTrue:
+  SmallConf::create_mode = cmode;
   return (true);
+ ResetAndFalse:
+  SmallConf::create_mode = cmode;
+  return (false);
 }
 
