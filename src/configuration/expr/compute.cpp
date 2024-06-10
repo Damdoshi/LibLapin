@@ -69,19 +69,21 @@ bool			expr_compute(SmallConf			&exp,
 	       exp.expression->val.original_value.c_str(),
 	       artif->address.c_str(),
 	       exp.expression->file.c_str(), exp.line);
-	  exp.Assign(*ope, root, local, artif, variables);
+	  SmallConf::RecursiveAssign(exp, *ope);
 	  goto ResetAndTrue;
 	}
       if (expr_compute_function_call
 	  (*exp.expression, dry, root, local, artif, variables) == false)
 	goto ResetAndFalse;
-      exp = exp.expression->val;
+      SmallConf::RecursiveAssign(exp, exp.expression->val);
       goto ResetAndTrue; // Y a des trucs a faire ici, encore, peut etre?
     }
   if (gl_expr_computation[exp.expression->optor_family]
       (*exp.expression, dry, root, local, artif, variables) == false)
     goto ResetAndFalse;
-  exp = exp.expression->val;
+
+  // exp = exp.expression->val;
+  SmallConf::RecursiveAssign(exp, exp.expression->val);
 
  ResetAndTrue:
   SmallConf::create_mode = cmode;

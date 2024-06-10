@@ -29,7 +29,7 @@ bool			bunny_box_set_click_callback(t_bunny_gui_box		*nw)
   if (bunny_configuration_getf_node(nw->configuration, &nw->click_node, "OnClick") == false)
     return (true);
   SmallConf		&cnf = *(SmallConf*)nw->click_node;
-  SmallConf		&prot = cnf[".parameters"];
+  SmallConf		&prot = cnf[".prototype"];
 
   if (prot.Size() != 0)
     return (false);

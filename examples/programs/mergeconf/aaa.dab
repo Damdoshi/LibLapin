@@ -2,18 +2,17 @@
 
 AAA(int v) = [Function
   "J'affiche ", v
+  Return 0
 ]
-
-BBB(int v) = AAA(v)
 
 Main(int c, node v) = [Function
   integer i
-  
+
   "J'ai ", c, " paramètres."
   For i = 0 To i < c Step i = i + 1
     "Le paramètre ", i, " est ", v[i], "."
+    AAA(integer(v[i]))
   Next
-  'BBB(5)
   Return 0
 ]
 

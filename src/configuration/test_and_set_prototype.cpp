@@ -21,13 +21,16 @@ SmallConf		*test_and_set_prototype(SmallConf	&function,
   std::string		varnode;
   int			cmode = SmallConf::create_mode;
 
+  if (!function.Access(".prototype"))
+    return (restore(cmode, parameters));
   SmallConf::create_mode = true;
   varnodess << ".c" << function.NbrChild();
   varnode = varnodess.str();
   SmallConf		&vars = function[varnode];
 
-  if (!function.Access(".prototype"))
-    return (restore(cmode, &vars));
+  // On établi le noeud de toutes les variables définie dans le cadre de la fonction
+  if (function.function)
+    SmallConf::RecursiveAssign(vars, function.function->local_variables);
   if (parameters == NULL)
     return (restore(cmode, &vars));
   SmallConf		&gparameters = *parameters;

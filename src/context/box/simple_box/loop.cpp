@@ -31,7 +31,7 @@ bool			bunny_box_set_loop_callback(t_bunny_gui_box		*nw)
   if (bunny_configuration_getf_node(nw->configuration, &nw->loop_node, "Loop") == false)
     return (true);
   SmallConf		&cnf = *(SmallConf*)nw->loop_node;
-  SmallConf		&prot = cnf[".parameters"];
+  SmallConf		&prot = cnf[".prototype"];
 
   if (prot.Size() != 1)
     return (false);

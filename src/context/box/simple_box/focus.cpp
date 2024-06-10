@@ -31,7 +31,7 @@ bool			bunny_box_set_focus_callback(t_bunny_gui_box		*nw)
   if (bunny_configuration_getf_node(nw->configuration, &nw->focus_node, "OnFocusChange") == false)
     return (true);
   SmallConf		&cnf = *(SmallConf*)nw->focus_node;
-  SmallConf		&prot = cnf[".parameters"];
+  SmallConf		&prot = cnf[".prototype"];
 
   if (prot.Size() != 1)
     return (false);

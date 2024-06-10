@@ -19,7 +19,7 @@ bool		bunny_configuration_resolve(t_bunny_configuration	*par)
   double	dbl;
 
   // Si il y a une expression à résoudre et qui ne prend aucun paramètres...
-  if (cnf.expression != NULL && cnf.nodes.find(".parameters") == cnf.nodes.end())
+  if (cnf.expression != NULL && cnf.nodes.find(".prototype") == cnf.nodes.end())
     {
       if (expr_compute(cnf, false, root, &cnf, parent, NULL) == false)
 	return (false);

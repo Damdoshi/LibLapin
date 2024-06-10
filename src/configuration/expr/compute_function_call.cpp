@@ -38,23 +38,22 @@ bool			expr_compute_function_call(Expression	&exp,
 						   SmallConf	*root,
 						   SmallConf	*local,
 						   SmallConf	*artif,
-						   SmallConf	*param)
+						   SmallConf	*variables)
 {
   SmallConf		*ope;
   t_bunny_decision	ret;
   size_t		i;
 
-  (void)param;
   if (exp.type_cast != Expression::NO_CAST)
-    return (expr_compute_cast(exp, dry, root, local, artif, param));
-  if ((ret = expr_compute_builtins(exp, dry, root, local, artif, param)) == BD_ERROR)
+    return (expr_compute_cast(exp, dry, root, local, artif, variables));
+  if ((ret = expr_compute_builtins(exp, dry, root, local, artif, variables)) == BD_ERROR)
     return (false);
   if (ret == BD_OK)
     return (true);
   exp.is_const = false;
 
   // On récupère la fonction ciblée
-  if ((ope = expr_get_variable(exp.val, dry, root, local, artif, param)) == NULL)
+  if ((ope = expr_get_variable(exp.val, dry, root, local, artif, variables)) == NULL)
     scream_error_if
       (return (false), BE_BAD_ADDRESS,
        "Undefined function %s from context %s on line %s:%d",
@@ -81,33 +80,36 @@ bool			expr_compute_function_call(Expression	&exp,
 	if (exp.operand[i] != NULL)
 	  {
 	    Expression	&arg = *exp.operand[i];
-	    SmallConf	*oparg;
+	    SmallConf	*oparg, *tmp;
 
 	    if (arg.operand.size() > 1)
 	      if (gl_expr_computation[arg.optor_family]
-		  (arg, dry, root, local, artif, param) == false)
+		  (arg, dry, root, local, artif, variables) == false)
 		{
 		  SmallConf::create_mode = cmode;
 		  return (false);
 		}
 	    oparg = &arg.val;
-	    /*
+	    // Le résultat peut etre une adresse ou un nom de variable.
+	    // Par exemple func(v)... v est le resultat.
+	    // Donc il faut pouvoir résoudre le nom de variable final.
 	    if (oparg->last_type == SmallConf::RAWSTRING)
-	      { // Il arrive pas a récupérer la variable qui est dans le prototype car elle a pas été crée, logique. La vérification a lieu dans test_and_stuff
-		// test_and_stuff est appelée par les computes
-		if ((oparg = expr_get_variable
-		     (*oparg, dry, root, local, artif, param)) == NULL)
-		  scream_error_if
-		    (return (false), BE_BAD_ADDRESS,
-		     "Undefined variable or unresolvable address %s "
-		     "from context %s on line %s:%d",
-		     "ressource,configuration,syntax",
-		     arg.val.original_value.c_str(),
-		     artif->address.c_str(),
-		     exp.file.c_str(), exp.line);
+	      {
+		if ((tmp = expr_get_variable
+		     (*oparg, dry, root, local, artif, variables)) == NULL)
+		  if (!bunny_configuration_is_type(root, arg.val.original_value.c_str()))
+		    scream_error_if
+		      (return (false), BE_BAD_ADDRESS,
+		       "Undefined variable or unresolvable address %s "
+		       "from context %s on line %s:%d",
+		       "ressource,configuration,syntax",
+		       arg.val.original_value.c_str(),
+		       artif->address.c_str(),
+		       exp.file.c_str(), exp.line);
+		if (tmp)
+		  oparg = tmp;
 	      }
-	    */
-	    temp_param[(*proto)[i].name] = *oparg;
+	    SmallConf::RecursiveAssign(temp_param[(*proto)[i].name], *oparg);
 	  }
     }
   // Ils sont envoyé par nom
@@ -118,12 +120,12 @@ bool			expr_compute_function_call(Expression	&exp,
 	  Expression	&arg = *exp.operand[i];
 	  
 	  if (arg.optor_family != -1 && gl_expr_computation[arg.optor_family]
-	      (arg, dry, root, local, artif, param) == false)
+	      (arg, dry, root, local, artif, variables) == false)
 	    {
 	      SmallConf::create_mode = cmode;
 	      return (false);
 	    }
-	  temp_param[arg.val.name] = arg.val;
+	  SmallConf::RecursiveAssign(temp_param[arg.val.name], arg.val);
 	}
   parameters = &temp_param;
   SmallConf::create_mode = cmode;
@@ -163,7 +165,7 @@ bool			expr_compute_function_call(Expression	&exp,
   // si ope->expression existe. Il faudrait probablement que expr_compute
   // puisse stocker quelque part le resultat directement pour eviter ca.
   ope->expression = NULL;
-  exp.val = *ope;
+  SmallConf::RecursiveAssign(exp.val, *ope);
   ope->expression = save;
   return (true);
 }

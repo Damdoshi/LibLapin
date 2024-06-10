@@ -164,4 +164,7 @@ extern const char		*numbers;
 SmallConf			*test_and_set_prototype(SmallConf	&function,
 							SmallConf	*parameters);
 
+bool				bunny_configuration_is_type(t_bunny_configuration *cnf,
+							    const char	*str);
+
 #endif	/*			__LAPIN_PRIVATE_CONFIGURATION_HPP__		*/

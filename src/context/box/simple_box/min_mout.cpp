@@ -29,7 +29,7 @@ bool			bunny_box_set_min_callback(t_bunny_gui_box		*nw)
   if (bunny_configuration_getf_node(nw->configuration, &nw->mouse_in_node, "OnMouseIn") == false)
     return (true);
   SmallConf		&cnf = *(SmallConf*)nw->mouse_in_node;
-  SmallConf		&prot = cnf[".parameters"];
+  SmallConf		&prot = cnf[".prototype"];
 
   if (prot.Size() != 0)
     return (false);
@@ -61,7 +61,7 @@ bool			bunny_box_set_mout_callback(t_bunny_gui_box		*nw)
   if (bunny_configuration_getf_node(nw->configuration, &nw->mouse_out_node, "OnMouseOut") == false)
     return (true);
   SmallConf		&cnf = *(SmallConf*)nw->mouse_out_node;
-  SmallConf		&prot = cnf[".parameters"];
+  SmallConf		&prot = cnf[".prototype"];
 
   if (prot.Size() != 0)
     return (false);

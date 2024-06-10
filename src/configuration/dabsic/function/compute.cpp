@@ -40,7 +40,6 @@ t_compute_result	dabsic_compute_build(Function		&func,
   const char		*res;
   bool			cmode;
 
-  (void)mainnod;
   if (dry)
     return (CR_OK);
   if (func.lines.size() < 1)
@@ -62,7 +61,8 @@ t_compute_result	dabsic_compute_build(Function		&func,
 
   if (func.lines.size() > 2)
     return (CR_ERROR);
-  *((SmallConf*)newnod) = func.additionnal_values[1];
+  SmallConf::RecursiveAssign(*((SmallConf*)newnod), func.additionnal_values[1]);
+  // *((SmallConf*)newnod) = func.additionnal_values[1];
   return (CR_OK);
 }
 
@@ -321,8 +321,8 @@ t_compute_result	dabsic_compute_return(Function		&func,
     {
       if (expr_compute(func.value, dry, root, local, artif, variables) == false)
 	return (CR_ERROR);
-      mainnod.result.Assign(func.value, root, local, artif, variables);
     }
+  SmallConf::RecursiveAssign(mainnod.result, func.value);
   return (CR_RETURN);
 }
 
@@ -337,6 +337,7 @@ t_compute_result	dabsic_compute_instruction(Function	&func,
   (void)mainnod;
   if (expr_compute(func.value, dry, root, local, artif, variables) == false)
     return (CR_ERROR);
+  SmallConf::RecursiveAssign(mainnod.result, func.value);
   return (CR_OK);
 }
 
@@ -549,27 +550,15 @@ t_compute_result	dabsic_compute_print(Function		&func,
   for (i = 0; i < func.value.Size(); ++i)
     {
       SmallConf		&cnf = func.value[i];
-      int		a;
-      double		b;
-      const char	*c;
 
       if (expr_compute(cnf, dry, root, local, artif, variables) == false)
 	return (CR_ERROR);
       if (cnf.last_type == SmallConf::INTEGER)
-	{
-	  if (cnf.GetInt(&a, root, local, artif, variables))
-	    *out << a;
-	}
+	*out << cnf.converted_2;
       else if (cnf.last_type == SmallConf::DOUBLE)
-	{
-	  if (cnf.GetDouble(&b, root, local, artif, variables))
-	    *out << b;
-	}
+	*out << cnf.converted;
       else if (cnf.last_type == SmallConf::STRING)
-	{
-	  if (cnf.GetString(&c, root, local, artif, variables))
-	    *out << c;
-	}
+	*out << cnf.original_value;
     }
   *out << std::endl;
   return (CR_OK);
@@ -623,7 +612,7 @@ bool	 		dabsic_compute(SmallConf		&func,
       return (false);
     }
   func.Remove(variables->name);
-  func = func.function->result;
+  SmallConf::RecursiveAssign(func, func.function->result);
   return (true);
 }
 

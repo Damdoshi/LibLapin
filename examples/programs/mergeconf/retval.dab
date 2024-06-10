@@ -1,0 +1,19 @@
+
+
+
+Swap(node a) = [Function
+  integer tmp
+
+  tmp = a[0]
+  a[0] = a[1]
+  a[1] = tmp
+  Return a
+]
+
+Inter(node b) = Swap(b)
+
+Main(int argc, node v) = [Function
+  v = Inter(v)
+  $v[0], v[1]
+]
+

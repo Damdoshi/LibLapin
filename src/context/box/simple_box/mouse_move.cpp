@@ -70,7 +70,7 @@ bool			bunny_box_set_mmove_callback(t_bunny_gui_box		*nw)
       return (true);
     }
   SmallConf		&cnf = *(SmallConf*)nw->mouse_move_node;
-  SmallConf		&prot = cnf[".parameters"];
+  SmallConf		&prot = cnf[".prototype"];
 
   if (prot.Size() != 2)
     return (false);

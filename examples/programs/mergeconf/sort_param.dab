@@ -1,0 +1,55 @@
+
+
+BubbleSort(node v) = [Function
+  integer sorted
+  integer i
+
+  "Je fais un essai pour voir ", NbrCases(v)
+  For i = 0 to i < NbrCases(v) step i = i + 1
+    v[i] = integer(v[i])
+  Next
+  Do
+    integer tmp
+    integer j
+    
+    sorted = true
+    For i = 0 To i + 1 < NbrCases(v) Step i = i + 1
+      j = i + 1 'A cause des limitations actuelle de la résolution d'adresse
+      If v[i] > v[j]
+        tmp = v[i]
+        v[i] = v[j]
+        v[j] = tmp
+        sorted = false
+      EndIf
+    Next
+  AgainIf sorted == false
+  "Ecriture dans la fonction BubbleSort"
+  For i = 0 to i < NbrCases(v) Step i = i + 1
+    $v[i]
+  Next
+  Return v
+]
+
+Passthrought3(node z) = [Function
+  Return BubbleSort(z)
+]
+
+Passthrought2(node k) = Passthrought3(k)
+
+Passthrought1(node e) = [Function
+  e = Passthrought2(e)
+  Return e
+]
+
+Main(int c, node v) = [Function
+  integer i
+
+  'v = BubbleSort(v !<| 1) Cet operateur n'est pas encore codé
+  v = Passthrought1(v)
+  "Ecriture en sortie de la fonction BubbleSort"
+  For i = 0 to i < NbrCases(v) Step i = i + 1
+    $v[i]
+  Next
+  Return 0
+]
+

@@ -61,10 +61,7 @@ Expression		*expr_read_operand(const char		*code,
       if (readtext(code, i, "("))
 	{
 	  last->optor_family = Expression::LAST_OPERATOR_FAMILY;
-	  if (last->val.name != "integer"
-	      && last->val.name != "int"
-	      && last->val.name != "real"
-	      && last->val.name != "string")
+	  if (!bunny_configuration_is_type(NULL, last->val.name.c_str()))
 	    {
 	      if (expr_read_function_call(code, i, *last) == false)
 		{

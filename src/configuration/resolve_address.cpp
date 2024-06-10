@@ -130,6 +130,7 @@ t_bunny_configuration	*bunny_configuration_resolve_address(t_bunny_configuration
 	{
 	  // Ici, ca devrait etre une lecture d'expression recursive plutot qu'un simple check de type de caractère
 	  // Mais... bon. Ca va pas se changer en deux temps trois mouvements ca.
+	  /// CE MANQUE EMPECHE DE FAIRE v[i + 1] PAR EXEMPLE
 	  i = j;
 	  j = strtol(&addr[i], (char**)&str, 0);
 	  if (str == &addr[i])

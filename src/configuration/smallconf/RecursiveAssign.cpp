@@ -16,15 +16,23 @@ bool			SmallConf::RecursiveAssign(SmallConf		&a,
 
   a = b;
   if (hash)
-    for (it = b.Begin(); it != b.End(); ++it)
-      if (it->first[0] != '.')
-	if (RecursiveAssign(a[it->first], b[it->first], hash, array) == false)
-	  return (false);
+    {
+      while (a.nodes.size())
+	a.Remove(a.nodes.begin()->first);
+      for (it = b.Begin(); it != b.End(); ++it)
+	if (it->first[0] != '.')
+	  if (RecursiveAssign(a[it->first], b[it->first], hash, array) == false)
+	    return (false);
+    }
   if (array)
-    for (i = 0; i < b.Size(); ++i)
-      if (b[i].name[0] != '.')
-	if (RecursiveAssign(a[i], b[i], hash, array) == false)
-	  return (false);
+    {
+      while (a.array.size())
+	a.Remove(a.array.size() - 1);
+      for (i = 0; i < b.Size(); ++i)
+	if (b[i].name[0] != '.')
+	  if (RecursiveAssign(a[i], b[i], hash, array) == false)
+	    return (false);
+    }
   return (true);
 }
 

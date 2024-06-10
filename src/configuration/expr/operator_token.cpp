@@ -76,12 +76,12 @@ const std::string	Expression::OperatorToken[Expression::LAST_OPERATOR_FAMILY][64
       {"~="}, // Opérateur seulement surchargeable
     },
     { // Test d'ensembles
-      {"in", "∈", "dans"},
-      {"{in}", "{∈}", "{dans}"},
-      {"[in]", "[∈]", "[dans]"},
-      {"out", "dehors", "∉", "!∈"},
-      {"{out}", "{dehors}", "{∉}", "{!∈}"},
-      {"[out]", "[dehors]", "[∉]", "[!∈]"},
+      {"in", "∈", "e", "dans"},
+      {"{in}", "{∈}", "{e}", "{dans}"},
+      {"[in]", "[∈]", "[e]", "[dans]"},
+      {"out", "dehors", "!e", "∉", "!∈"},
+      {"{out}", "{dehors}", "{!e}", "{∉}", "{!∈}"},
+      {"[out]", "[dehors]", "[!e]", "[∉]", "[!∈]"},
     },
     { // LOW BINARY
       {"|"},

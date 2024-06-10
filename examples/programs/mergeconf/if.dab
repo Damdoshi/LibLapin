@@ -1,0 +1,8 @@
+
+Main(int c, node v) = [Function
+  If v[c + 1] != 0
+    "A"
+  EndIf
+  Return 0
+]
+

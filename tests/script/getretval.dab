@@ -5,4 +5,4 @@ RetVal(int a) = [Function
   Return 1 + RetVal(a - 1)
 ]
 
-main = RetVal(0) + RetVal(1) + RetVal(2)
+Main = RetVal(0) + RetVal(1) + RetVal(2)

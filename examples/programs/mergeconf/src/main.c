@@ -222,6 +222,7 @@ int			main(int					argc,
 
   if (call_main != -1)
     {
+      bunny_set_log_filter("syntax");
       t_bunny_configuration *params = bunny_new_configuration();
       int ret;
       int i;
