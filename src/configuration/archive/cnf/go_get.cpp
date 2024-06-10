@@ -117,11 +117,12 @@ bool			bunny_configuration_go_get_string_va(const t_bunny_configuration *config,
 t_bunny_configuration	*bunny_configuration_go_get_node(t_bunny_configuration		*config,
 							 const char			*addr)
 {
+  t_bunny_configuration	*cnfstack[2] = {config, bunny_configuration_get_root(config)};
   t_bunny_configuration	*cnf;
   ssize_t		i;
 
   i = 0;
-  if ((cnf = bunny_configuration_resolve_address(&config, 1, addr, i)) == NULL)
+  if ((cnf = bunny_configuration_resolve_address(cnfstack, 2, addr, i)) == NULL)
     scream_error_if(return (NULL), bunny_errno, PATTERN, "configuration", config, addr, cnf);
   scream_log_if(PATTERN, "configuration", config, addr, cnf);
   return (cnf);

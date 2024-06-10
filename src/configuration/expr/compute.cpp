@@ -51,8 +51,7 @@ bool			expr_compute(SmallConf			&exp,
   int			cmode = SmallConf::create_mode;
 
   cmode = true;
-  if ((variables = test_and_set_prototype(exp, variables)) == NULL)
-    return (false);
+  variables = test_and_set_prototype(exp, variables);
   if (exp.expression->optor_family == Expression::LAST_OPERATOR_FAMILY || exp.expression->optor_family == -1)
     {
       SmallConf		*ope;

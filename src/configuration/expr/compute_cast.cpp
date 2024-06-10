@@ -34,10 +34,10 @@ bool			expr_compute_cast(Expression		&exp,
 	scream_error_if
 	  (return (false), BE_BAD_ADDRESS,
 	   "Undefined variable or unresolvable address %s "
-	   "from context %s on line %s:%d",
+	   "from context '%s' on line %s:%d",
 	   "configuration,syntax",
 	   x.original_value.c_str(),
-	   artif->address.c_str(),
+	   artif ? artif->address.c_str() : "",
 	   exp.file.c_str(), exp.line);
     }
 

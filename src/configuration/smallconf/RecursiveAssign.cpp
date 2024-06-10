@@ -14,7 +14,7 @@ bool			SmallConf::RecursiveAssign(SmallConf		&a,
   std::map<std::string, SmallConf*>::const_iterator it;
   size_t		i;
 
-  a = b;
+  a.NoComputeAssign(b);
   if (hash)
     {
       while (a.nodes.size())

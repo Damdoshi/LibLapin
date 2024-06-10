@@ -90,6 +90,8 @@ struct				SmallConf
   Expression			*expression;
   int				line;
 
+  SmallConf			&NoComputeAssign(const SmallConf		&a);
+  
   SmallConf			&Assign(const SmallConf				&a,
 					SmallConf				*root = NULL,
 					SmallConf				*local = NULL,

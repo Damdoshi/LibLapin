@@ -44,14 +44,15 @@ bool			SmallConf::GetString(const char		**out,
       return (true);
     }
 
+  if (root == NULL)
+    root = (SmallConf*)bunny_configuration_get_root((t_bunny_configuration*)this);
+  if (local == NULL)
+    local = (SmallConf*)bunny_configuration_get_parent((t_bunny_configuration*)this);
+  if (artif == NULL)
+    artif = local;
+  
   if (expression && (root || local || artif || param))
     {
-      if (root == NULL)
-	root = (SmallConf*)bunny_configuration_get_root((t_bunny_configuration*)this);
-      if (local == NULL)
-	local = (SmallConf*)bunny_configuration_get_parent((t_bunny_configuration*)this);
-      if (artif == NULL)
-	artif = local;
       if (expr_compute((SmallConf&)*this, false, root, local, artif, param) == false)
 	return (false);
     }

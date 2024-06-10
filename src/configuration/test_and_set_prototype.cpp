@@ -38,7 +38,7 @@ SmallConf		*test_and_set_prototype(SmallConf	&function,
   size_t		i;
   
   // Méthode classique d'appel
-  if (parameters->Size())
+  if (gparameters.Size())
     {
       if (gparameters.Size() > proto.Size())
 	scream_error_if
@@ -51,7 +51,10 @@ SmallConf		*test_and_set_prototype(SmallConf	&function,
       for (i = 0; i < gparameters.Size(); ++i)
 	SmallConf::RecursiveAssign(vars[proto[i].name], gparameters[i]);
       for (i = 0; i < proto.Size(); ++i)
-	if (vars[proto[i].name].have_value)
+	if (vars[proto[i].name].have_value /// CHECK DE TYPE EVENTUEL ?
+	    || vars[proto[i].name].array.size()
+	    || vars[proto[i].name].nodes.size()
+	    )
 	  continue ;
 	else if (!proto[i].have_value)
 	  scream_error_if
