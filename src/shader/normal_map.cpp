@@ -61,6 +61,7 @@ const std::string	BodyStart =
   "  vec2 Coord = gl_TexCoord[0].xy;\n"
   "\n"
   "  vec2 LPos;\n"
+  "  vec2 SpecularPosition;\n"
   "  vec4 DiffuseColor = texture2D(ColorMap, Coord);\n"
   "  vec4 NormalColor = texture2D(NormalMap, Coord);\n"
   "  vec4 SpecularColor = texture2D(SpecularMap, Coord);\n"
@@ -108,7 +109,8 @@ const std::string	StretchedBody =
   "    AmbientResult = Attenuation * AmbientColor%d.rgb * AmbientColor%d.a;\n"
   "\n"
   // Compute specular light
-  "    DistanceOnScreen = vec3(PositionOnScreen, SpecularDepth%d);\n"
+  "    SpecularPosition = PositionOnScreen; // vec2(PositionOnScreen.x, WindowSize.y - PositionOnScreen.y);\n"
+  "    DistanceOnScreen = vec3(SpecularPosition, SpecularDepth%d);\n"
   "    Direction = normalize(DistanceOnScreen);\n"
   "    DotNormalDirection = dot(Normal, Direction);\n"
   "    D = SpecularAttenuation%d * length(DistanceOnScreen);\n"

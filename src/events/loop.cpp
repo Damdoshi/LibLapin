@@ -378,3 +378,4 @@ t_bunny_response	bunny_loop(t_bunny_window	*window,
   scream_log_if("%p window, %u frequency, %p parameter -> %d (Exiting)", "event", window, freq, data, rep);
   return (rep);
 }
+

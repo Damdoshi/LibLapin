@@ -9,7 +9,8 @@
 #define			PATTERN		"%f -> %p"
 
 t_bunny_effect		*_bunny_new_effect(double		duration,
-					   int			sample_per_second)
+					   int			sample_per_second,
+					   int			channel)
 {
   struct bunny_effect	*eff;
   int			len = duration * sample_per_second;
@@ -20,7 +21,7 @@ t_bunny_effect		*_bunny_new_effect(double		duration,
     goto FailStruct;
   if ((eff->sample = (int16_t*)bunny_malloc(sizeof(*eff->sample) * len)) == NULL)
     goto FailEffect;
-  if (eff->effect->loadFromSamples(eff->sample, len, 1, sample_per_second) == false)
+  if (eff->effect->loadFromSamples(eff->sample, len, channel, sample_per_second) == false)
     goto FailSample;
   if ((eff->sound = new (std::nothrow) sf::Sound) == NULL)
     goto FailSample;

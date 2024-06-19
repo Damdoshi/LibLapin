@@ -8,7 +8,7 @@
 ## Configuration --------------------------------------------------------------
 
   BIN		=	`pwd | rev | cut -d "/" -f1 | rev`
-  FLAG		=	-W -Wall -Werror -g -g3 -ggdb
+  FLAG		=	-W -Wall -g -g3 -ggdb
 
   INCLUDE	=	-I./include/
   SRC		=	$(wildcard src/*.c)

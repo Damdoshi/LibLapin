@@ -19,6 +19,10 @@ Robert="Dreyfus"
   6
 }
 
-{Pushed
+{PushedArray
   @push "dir/"
 }
+
+[PushedScope
+  @insert "dir/"
+]

@@ -53,7 +53,7 @@ int			main(void)
   assert(bunny_is_shader_available());
   assert(shader = bunny_new_shader());
   assert(bunny_load_shader(shader, NULL, "scene.frag"));
-  assert(win = bunny_start(1024, 1024, false, "Shiny things are shiny"));
+  assert(win = bunny_start(1920, 1080, true, "Shiny things are shiny"));
   assert(color = bunny_load_picture("color.png"));
   assert(normal = bunny_load_picture("normal.png"));
   assert(specular = bunny_load_picture("specular.png"));

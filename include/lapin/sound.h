@@ -84,10 +84,12 @@ t_bunny_music			*bunny_read_music(t_bunny_configuration		*cnf);
 ** \param duration The duration of the sound effect in seconds
 ** \return A valid t_bunny_effect or NULL on error.
 */
-# define			bunny_new_effect(d)				_bunny_new_effect(d, SAMPLE_PER_SECONDS)
+# define			bunny_new_effect(d)				_bunny_new_effect(d, SAMPLE_PER_SECONDS, 1)
 # define			bunny_create_effect(d, s)			_bunny_new_effect(d, s)
+# define			bunny_new_sound(d, s, c)			_bunny_new_effect(d, s, c)
 t_bunny_effect			*_bunny_new_effect(double			duration,
-						   int				sample_per_second);
+						   int				sample_per_second,
+						   int				channel);
 
 /*!
 ** The bunny_load_effect function load a sound file and return a matching t_bunny_effect.
