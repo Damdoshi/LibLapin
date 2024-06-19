@@ -25,6 +25,7 @@ typedef struct			s_bunny_queue
 {
   const size_t			length;
   const void * const * const	front;
+  const void * const * const	back;
 }				t_bunny_queue;
 
 /*!

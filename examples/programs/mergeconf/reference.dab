@@ -1,0 +1,12 @@
+
+
+[Schmol
+  Duc = 42
+]
+
+CurrentCharacter = AddressOf([].Schmol)
+
+Main(int c, node v) = [Function
+  $CurrentCharacter->Duc
+]
+
