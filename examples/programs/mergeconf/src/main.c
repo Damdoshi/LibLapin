@@ -87,6 +87,7 @@ int			main(int					argc,
   t_bunny_configuration_type oformat = BC_CUSTOM;
   bool			resolve = false;
   int			call_main = -1;
+  bool			keepsave = false;
 
   bunny_set_log_mode(false);
   bunny_set_error_descriptor(2);
@@ -97,6 +98,13 @@ int			main(int					argc,
 	resolve = true;
       if (strcmp("!", argv[i]) == 0)
 	{
+	  keepsave = false;
+	  call_main = i;
+	  break ;
+	}
+      else if (strcmp("+", argv[i]) == 0)
+	{
+	  keepsave = true;
 	  call_main = i;
 	  break ;
 	}
@@ -107,9 +115,9 @@ int			main(int					argc,
 	      fprintf(stderr, "%s: Cannot mix option '-if' with option '-i'.\n", *argv);
 	      return (EXIT_FAILURE);
 	    }
-	  for (i += 1; i < argc && argv[i][0] != '-' && argv[i][0] != '!'; ++i)
+	  for (i += 1; i < argc && argv[i][0] != '-' && argv[i][0] != '!' && argv[i][0] != '+'; ++i)
 	    inputs[nbr_inputs++] = argv[i];
-	  if (i < argc && (argv[i][0] == '-' || argv[i][0] == '!'))
+	  if (i < argc && (argv[i][0] == '-' || argv[i][0] == '!' || argv[i][0] == '+'))
 	    i -= 1;
 	}
       else if (!strcmp("-if", argv[i]))
@@ -143,9 +151,9 @@ int			main(int					argc,
 	      fprintf(stderr, "%s: Cannot mix option '-of' with option '-o'.\n", *argv);
 	      return (EXIT_FAILURE);
 	    }
-	  for (i += 1; i < argc && argv[i][0] != '-' && argv[i][0] != '!'; ++i)
+	  for (i += 1; i < argc && argv[i][0] != '-' && argv[i][0] != '!' && argv[i][0] != '+'; ++i)
 	    outputs[nbr_outputs++] = argv[i];
-	  if (i < argc && (argv[i][0] == '-' || argv[i][0] == '!'))
+	  if (i < argc && (argv[i][0] == '-' || argv[i][0] == '!' || argv[i][0] == '+'))
 	    i -= 1;
 	}
       else if (!strcmp("-of", argv[i]))
@@ -232,11 +240,11 @@ int			main(int					argc,
 	bunny_configuration_setf(params, argv[i], "[1][%d]", i - call_main);
       if (!bunny_configuration_executef(cnf, &ret, false, params, "Main"))
 	return (EXIT_FAILURE);
-      return (ret);
+      if (!keepsave)
+	return (ret);
     }
-  else if (write_all_files(*argv, oformat, cnf, outputs, nbr_outputs) == false)
+  if (write_all_files(*argv, oformat, cnf, outputs, nbr_outputs) == false)
     return (EXIT_FAILURE);
-
   return (EXIT_SUCCESS);
 }
 

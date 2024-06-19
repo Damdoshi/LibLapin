@@ -6,7 +6,14 @@
 
 CurrentCharacter = AddressOf([].Schmol)
 
+Func(int v) = [Function
+  "J'affiche ", v
+]
+
 Main(int c, node v) = [Function
   $CurrentCharacter->Duc
+  Func(5)
+  Func(6)
+  Func(7)
 ]
 

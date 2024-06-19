@@ -73,60 +73,64 @@ bool			expr_compute_function_call(Expression	&exp,
   SmallConf::create_mode = true;
   proto = &(*ope)[".prototype"];
 
-  // Les paramètres sont ils passé par ordre?
-  if (exp.operand[0]->val.name == "")
+  // Y a t il des paramètres ?
+  if (exp.operand.size())
     {
-      for (i = 0; i < exp.operand.size() && i < (*proto).Size(); ++i)
-	if (exp.operand[i] != NULL)
-	  {
-	    Expression	&arg = *exp.operand[i];
-	    SmallConf	*oparg, *tmp;
+      // Les paramètres sont ils passé par ordre?
+      if (exp.operand[0]->val.name == "")
+	{
+	  for (i = 0; i < exp.operand.size() && i < (*proto).Size(); ++i)
+	    if (exp.operand[i] != NULL)
+	      {
+		Expression	&arg = *exp.operand[i];
+		SmallConf	*oparg, *tmp;
 
-	    if (arg.operand.size() > 1)
-	      if (gl_expr_computation[arg.optor_family]
+		if (arg.operand.size() > 1)
+		  if (gl_expr_computation[arg.optor_family]
+		      (arg, dry, root, local, artif, variables) == false)
+		    {
+		      SmallConf::create_mode = cmode;
+		      return (false);
+		    }
+		oparg = &arg.val;
+		// Le résultat peut etre une adresse ou un nom de variable.
+		// Par exemple func(v)... v est le resultat.
+		// Donc il faut pouvoir résoudre le nom de variable final.
+		if (oparg->last_type == SmallConf::RAWSTRING)
+		  {
+		    if ((tmp = expr_get_variable
+			 (*oparg, dry, root, local, artif, variables)) == NULL)
+		      if (!bunny_configuration_is_type(root, arg.val.original_value.c_str()))
+			scream_error_if
+			  (return (false), BE_BAD_ADDRESS,
+			   "Undefined variable or unresolvable address %s "
+			   "from context %s on line %s:%d",
+			   "ressource,configuration,syntax",
+			   arg.val.original_value.c_str(),
+			   artif->address.c_str(),
+			   exp.file.c_str(), exp.line);
+		    if (tmp)
+		      oparg = tmp;
+		  }
+		SmallConf::RecursiveAssign(temp_param[(*proto)[i].name], *oparg);
+	      }
+	}
+      // Ils sont envoyé par nom
+      else
+	for (i = 0; i < exp.operand.size(); ++i)
+	  if (exp.operand[i] != NULL)
+	    {
+	      Expression	&arg = *exp.operand[i];
+	  
+	      if (arg.optor_family != -1 && gl_expr_computation[arg.optor_family]
 		  (arg, dry, root, local, artif, variables) == false)
 		{
 		  SmallConf::create_mode = cmode;
 		  return (false);
 		}
-	    oparg = &arg.val;
-	    // Le résultat peut etre une adresse ou un nom de variable.
-	    // Par exemple func(v)... v est le resultat.
-	    // Donc il faut pouvoir résoudre le nom de variable final.
-	    if (oparg->last_type == SmallConf::RAWSTRING)
-	      {
-		if ((tmp = expr_get_variable
-		     (*oparg, dry, root, local, artif, variables)) == NULL)
-		  if (!bunny_configuration_is_type(root, arg.val.original_value.c_str()))
-		    scream_error_if
-		      (return (false), BE_BAD_ADDRESS,
-		       "Undefined variable or unresolvable address %s "
-		       "from context %s on line %s:%d",
-		       "ressource,configuration,syntax",
-		       arg.val.original_value.c_str(),
-		       artif->address.c_str(),
-		       exp.file.c_str(), exp.line);
-		if (tmp)
-		  oparg = tmp;
-	      }
-	    SmallConf::RecursiveAssign(temp_param[(*proto)[i].name], *oparg);
-	  }
-    }
-  // Ils sont envoyé par nom
-  else
-    for (i = 0; i < exp.operand.size(); ++i)
-      if (exp.operand[i] != NULL)
-	{
-	  Expression	&arg = *exp.operand[i];
-	  
-	  if (arg.optor_family != -1 && gl_expr_computation[arg.optor_family]
-	      (arg, dry, root, local, artif, variables) == false)
-	    {
-	      SmallConf::create_mode = cmode;
-	      return (false);
+	      SmallConf::RecursiveAssign(temp_param[arg.val.name], arg.val);
 	    }
-	  SmallConf::RecursiveAssign(temp_param[arg.val.name], arg.val);
-	}
+    }
   parameters = &temp_param;
   SmallConf::create_mode = cmode;
 

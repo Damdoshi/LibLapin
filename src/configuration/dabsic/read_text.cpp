@@ -127,8 +127,6 @@ Decision		dabsic_read_text_conf(const char	*code,
   return (BD_OK);
 }
 
-
-
 Decision		dabsic_read_text(const char		*code,
 					 ssize_t		&i,
 					 SmallConf		&conf,

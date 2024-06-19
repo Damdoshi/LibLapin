@@ -25,7 +25,7 @@ Decision		dabsic_read_inside_array(const char		*code,
   dabsic_read_separator(code, i);
   if (code[i] == '}' || code[i] == ']')
     return (BD_OK);
-
+  
   conf.construct = SmallConf::ARRAY;
   do
     {
@@ -86,6 +86,9 @@ Decision		dabsic_read_inside_array(const char		*code,
     }
   while (readtext(code, i, ","));
   dabsic_read_separator(code, i);
+  if (conf.Access(".prototype"))
+    if (dabsic_functionize(conf, conf) == false)
+      return (BD_ERROR);
   return (BD_OK);
 }
 

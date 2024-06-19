@@ -1,0 +1,15 @@
+
+
+Var = 8
+Func() = "Abc" # string(Var)
+Cunf = "Abc" # string(Var)
+
+Main = [Function
+  Var = 2
+  "A ", Cunf
+  "B ", Func()
+  Var = 4
+  "A ", Cunf
+  "B ", Func()
+]
+

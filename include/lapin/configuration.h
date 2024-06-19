@@ -262,13 +262,13 @@ bool			bunny_configuration_vgetf_bool(t_bunny_configuration		*config,
 	   int*: bunny_configuration_getf_int)(cnf, data, fmt, ##__VA_ARGS__)
 #  define		bunny_configuration_vgetf(cnf, data, fmt, va)			\
   _Generic((data),									\
-	   void*: bunny_configuration_getf_node,					\
-	   const t_bunny_configuration**: bunny_configuration_getf_node,		\
-	   t_bunny_configuration**: bunny_configuration_getf_node,			\
-	   const char**: bunny_configuration_getf_string,				\
-	   double*: bunny_configuration_getf_double,					\
-	   bool*: bunny_configuration_getf_bool,					\
-	   int*: bunny_configuration_getf_int)(cnf, data, fmt, va)
+	   void*: bunny_configuration_vgetf_node,					\
+	   const t_bunny_configuration**: bunny_configuration_vgetf_node,		\
+	   t_bunny_configuration**: bunny_configuration_vgetf_node,			\
+	   const char**: bunny_configuration_vgetf_string,				\
+	   double*: bunny_configuration_vgetf_double,					\
+	   bool*: bunny_configuration_vgetf_bool,					\
+	   int*: bunny_configuration_vgetf_int)(cnf, data, fmt, va)
 # endif
 
 #  define		bunny_configuration_existsf(cnf, fmt, ...)			\
@@ -345,34 +345,29 @@ bool			bunny_configuration_get_case_named(t_bunny_configuration	*cnf,
 
 bool			bunny_configuration_executef_node(t_bunny_configuration		*config,
 							  t_bunny_configuration		**data,
-							  bool				rec,
 							  t_bunny_configuration		*parameters,
 							  const char			*pattern,
-							  ...) _BFMT(5, 6);
+							  ...) _BFMT(4, 5);
 bool			bunny_configuration_executef_string(t_bunny_configuration	*config,
 							    const char			**data,
-							    bool			rec,
 							    t_bunny_configuration	*parameters,
 							    const char			*pattern,
-							    ...) _BFMT(5, 6);
+							    ...) _BFMT(4, 5);
 bool			bunny_configuration_executef_double(t_bunny_configuration	*config,
 							    double			*data,
-							    bool			rec,
 							    t_bunny_configuration	*parameters,
 							    const char			*pattern,
-							    ...) _BFMT(5, 6);
+							    ...) _BFMT(4, 5);
 bool			bunny_configuration_executef_int(t_bunny_configuration		*config,
 							 int				*data,
-							 bool				rec,
 							 t_bunny_configuration		*parameters,
 							 const char			*pattern,
-							 ...) _BFMT(5, 6);
+							 ...) _BFMT(4, 5);
 bool			bunny_configuration_executef_bool(t_bunny_configuration		*config,
 							  bool				*data,
-							  bool				rec,
 							  t_bunny_configuration		*parameters,
 							  const char			*pattern,
-							  ...) _BFMT(5, 6);
+							  ...) _BFMT(4, 5);
 
 # if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 #  define		bunny_configuration_executef(cnf, data, rec, params, fmt, ...)	\

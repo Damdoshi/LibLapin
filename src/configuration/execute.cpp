@@ -6,59 +6,64 @@
 #include		"lapin_private.h"
 
 bool			bunny_configuration_execute(t_bunny_configuration	*cnf,
-						    bool			rec,
-						    t_bunny_configuration	*par)
+						    t_bunny_configuration	*par,
+						    t_bunny_configuration	*art)
 {
   bool			cmode = SmallConf::create_mode;
   bool			ret;
+  SmallConf		*local = (SmallConf*)cnf;
   SmallConf		*root = (SmallConf*)bunny_configuration_get_root(cnf);
-  SmallConf		*artif = (SmallConf*)cnf;
+  SmallConf		*artif = (SmallConf*)(art ? ((SmallConf*)art)->father : local->father);
   SmallConf		*param = (SmallConf*)par;
 
   SmallConf::create_mode = true;
-  if (artif->expression)
+  // Si on a une fonction rattachée, on a QUE ca
+  if (local->function)
     {
-      ret = expr_compute(*artif, false, root, NULL, artif->father, param);
+      ret = dabsic_compute(*local, false, root, artif, param);
       SmallConf::create_mode = cmode;
       return (ret);
     }
 
-  if (artif->function)
+  // Sinon on peut avoir une expression dans la valeur
+  if (local->expression)
     {
-      ret = dabsic_compute(*artif, false, root, artif->father, param);
+      ret = expr_compute(*local, false, root, local, artif, param);
       SmallConf::create_mode = cmode;
-      return (ret);
+      // Une fois le calcul effectué, on dégage.
+      delete artif->expression;
+      artif->expression = NULL;
+      if (!ret)
+	return (ret);
     }
 
-  if (rec)
-    {
-      std::map<std::string, SmallConf*>::iterator it;
-      size_t		i;
+  // On peut même avoir tout plein de noeuds en dessous qui sont aussi
+  // des prototypes (mais ne sont pas des fonctions) grace a dabsic_functionize
+  std::map<std::string, SmallConf*>::iterator it;
+  size_t		i;
 
-      for (it = artif->Begin(); it != artif->End(); ++it)
-	if (bunny_configuration_execute
-	    ((t_bunny_configuration*)it->second, rec, par)
-	    == false)
-	  {
-	    SmallConf::create_mode = cmode;
-	    return (false);
-	  }
-      for (i = 0; i < artif->Size(); ++i)
-	if (bunny_configuration_execute
-	    ((t_bunny_configuration*)&(*artif)[i], rec, par)
-	    == false)
-	  {
-	    SmallConf::create_mode = cmode;
-	    return (false);
-	  }
-    }
+  for (it = local->Begin(); it != local->End(); ++it)
+    if (bunny_configuration_execute
+	((t_bunny_configuration*)it->second, par, art)
+	== false)
+      {
+	SmallConf::create_mode = cmode;
+	return (false);
+      }
+  for (i = 0; i < local->Size(); ++i)
+    if (bunny_configuration_execute
+	((t_bunny_configuration*)&(*local)[i], par, art)
+	== false)
+      {
+	SmallConf::create_mode = cmode;
+	return (false);
+      }
   SmallConf::create_mode = cmode;
   return (true);
 }
 
 bool			bunny_configuration_executef_node(t_bunny_configuration		*conf,
 							  t_bunny_configuration		**data,
-							  bool				rec,
 							  t_bunny_configuration		*params,
 							  const char			*pat,
 							  ...)
@@ -79,7 +84,7 @@ bool			bunny_configuration_executef_node(t_bunny_configuration		*conf,
       return (false);
     }
   SmallConf::create_mode = cmode;
-  if (bunny_configuration_execute(got, rec, params) == false)
+  if (bunny_configuration_execute(got, params, NULL) == false)
     return (false);
   if (data == NULL)
     return (true);
@@ -91,7 +96,6 @@ bool			bunny_configuration_executef_node(t_bunny_configuration		*conf,
 
 bool			bunny_configuration_executef_string(t_bunny_configuration	*conf,
 							    const char			**data,
-							    bool			rec,
 							    t_bunny_configuration	*params,
 							    const char			*pat,
 							    ...)
@@ -113,7 +117,7 @@ bool			bunny_configuration_executef_string(t_bunny_configuration	*conf,
     }
   SmallConf::create_mode = cmode;
   
-  if (bunny_configuration_execute(got, rec, params) == false)
+  if (bunny_configuration_execute(got, params, NULL) == false)
     return (false);
   SmallConf	*res = (SmallConf*)got;
 
@@ -123,7 +127,6 @@ bool			bunny_configuration_executef_string(t_bunny_configuration	*conf,
 
 bool			bunny_configuration_executef_double(t_bunny_configuration	*conf,
 							    double			*data,
-							    bool			rec,
 							    t_bunny_configuration	*params,
 							    const char			*pat,
 							    ...)
@@ -145,7 +148,7 @@ bool			bunny_configuration_executef_double(t_bunny_configuration	*conf,
     }
   SmallConf::create_mode = cmode;
   
-  if (bunny_configuration_execute(got, rec, params) == false)
+  if (bunny_configuration_execute(got, params, NULL) == false)
     return (false);
   SmallConf	*res = (SmallConf*)got;
 
@@ -155,7 +158,6 @@ bool			bunny_configuration_executef_double(t_bunny_configuration	*conf,
 
 bool			bunny_configuration_executef_int(t_bunny_configuration		*conf,
 							 int				*data,
-							 bool				rec,
 							 t_bunny_configuration		*params,
 							 const char			*pat,
 							 ...)
@@ -177,7 +179,7 @@ bool			bunny_configuration_executef_int(t_bunny_configuration		*conf,
     }
   SmallConf::create_mode = cmode;
   
-  if (bunny_configuration_execute(got, rec, params) == false)
+  if (bunny_configuration_execute(got, params, NULL) == false)
     return (false);
   SmallConf	*res = (SmallConf*)got;
 
@@ -187,7 +189,6 @@ bool			bunny_configuration_executef_int(t_bunny_configuration		*conf,
 
 bool			bunny_configuration_executef_bool(t_bunny_configuration		*conf,
 							  bool				*data,
-							  bool				rec,
 							  t_bunny_configuration		*params,
 							  const char			*pat,
 							  ...)
@@ -209,7 +210,7 @@ bool			bunny_configuration_executef_bool(t_bunny_configuration		*conf,
     }
   SmallConf::create_mode = cmode;
   
-  if (bunny_configuration_execute(got, rec, params) == false)
+  if (bunny_configuration_execute(got, params, NULL) == false)
     return (false);
   SmallConf	*res = (SmallConf*)got;
 

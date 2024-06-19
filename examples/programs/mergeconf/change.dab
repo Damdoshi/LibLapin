@@ -1,0 +1,15 @@
+
+
+
+Value = 5
+
+Main = [Function
+  "Valeur est ", Value
+  Value = 2
+  "Valeur est ", Value
+  Stuff()
+]
+
+Stuff() = [Function
+  "Valeur est ", Value
+]

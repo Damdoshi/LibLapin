@@ -71,7 +71,7 @@ static void		restore_value(std::ostream			&ss,
 	ss << " ";
       ss << "]";
     }
-  else if (conf.expression && conf.expression->optor_family != -1)
+  else if (conf.expression) // && conf.expression->optor_family != -1)
     restore_expression(ss, *conf.expression, true);
   else if (conf.have_value)
     writevalue(ss, conf, false, false, true);

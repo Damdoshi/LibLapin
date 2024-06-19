@@ -1,0 +1,6 @@
+
+
+Val = 2
+
+ABC() = 5 + Val
+DEF = 5 + Val

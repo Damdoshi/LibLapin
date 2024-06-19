@@ -8,10 +8,20 @@
 
 void			SmallConf::Remove(const std::string	&str)
 {
-  delete nodes[str];
+  if (nodes[str])
+    {
+      nodes[str]->father = NULL;
+      delete nodes[str];
+    }
+  nodes.erase(str);
 }
 
 void			SmallConf::Remove(size_t		i)
 {
-  delete array[i];
+  if (array[i])
+    {
+      array[i]->father = NULL;
+      delete array[i];
+    }
+  array.erase(array.begin() + i);
 }

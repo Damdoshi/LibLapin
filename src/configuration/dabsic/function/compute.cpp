@@ -40,6 +40,7 @@ t_compute_result	dabsic_compute_build(Function		&func,
   const char		*res;
   bool			cmode;
 
+  (void)mainnod;
   if (dry)
     return (CR_OK);
   if (func.lines.size() < 1)

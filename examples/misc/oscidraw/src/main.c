@@ -137,7 +137,7 @@ bool			collide_racket(t_racket		*rack,
 void			move_player(t_player		*player,
 				    double		position)
 {
-  player->racket[0].pos.y = (position / 255.0) * BOARDHEIGHT;
+  player->racket[0].pos.y = (position) * BOARDHEIGHT;
 }
 
 t_bunny_response	key(t_bunny_event_state		state,

@@ -48,9 +48,9 @@ bool			expr_compute(SmallConf			&exp,
     artif = (SmallConf*)bunny_configuration_get_parent((SmallConf*)&exp);
   if (!local)
     local = &exp;
-  int			cmode = SmallConf::create_mode;
+  // int			cmode = SmallConf::create_mode;
 
-  cmode = true;
+  // SmallConf::crate_mode = true;
   variables = test_and_set_prototype(exp, variables);
   if (exp.expression->optor_family == Expression::LAST_OPERATOR_FAMILY || exp.expression->optor_family == -1)
     {
@@ -85,10 +85,10 @@ bool			expr_compute(SmallConf			&exp,
   SmallConf::RecursiveAssign(exp, exp.expression->val);
 
  ResetAndTrue:
-  SmallConf::create_mode = cmode;
+  // SmallConf::create_mode = cmode;
   return (true);
  ResetAndFalse:
-  SmallConf::create_mode = cmode;
+  // SmallConf::create_mode = cmode;
   return (false);
 }
 

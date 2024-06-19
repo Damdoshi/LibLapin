@@ -52,13 +52,9 @@ bool			_bunny_queue_push(t_bunny_queue		*queue,
   nod->next = NULL;
   if (que->front == NULL)
     que->front = nod;
-  if (que->back == NULL)
-    que->back = nod;
-  else
-    {
-      que->back->next = nod;
-      que->back = nod;
-    }
+  if (que->back != NULL)
+    que->back->next = nod;
+  que->back = nod;
   que->length += 1;
   scream_log_if(PATTERN, "container", queue, data, "true");
   return (true);
@@ -76,7 +72,8 @@ void			*_bunny_queue_pop(t_bunny_queue		*queue)
   if ((nod = que->front) == NULL)
     scream_error_if
       (return (NULL), BE_CONTAINER_IS_EMPTY, PATTERN, "container", queue, nod);
-  que->front = nod->next;
+  if ((que->front = nod->next) == NULL)
+    que->back = NULL;
   dat = nod->data;
   bunny_free(nod);
   que->length -= 1;

@@ -1,0 +1,12 @@
+
+
+
+Stuff = -6
+
+Main = [Function
+  If ![].Stuff
+  "Stuff is false"
+  Else
+  "Stuff is true"
+  EndIf
+]

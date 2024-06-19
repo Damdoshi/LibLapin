@@ -75,6 +75,9 @@ SmallConf		*dabsic_field_name(const char			*code,
 					   SmallConf			&conf,
 					   bool				manda = true);
 
+bool			dabsic_functionize(SmallConf			&funcroot,
+					   SmallConf			&node);
+
 char			*_bunny_write_dabsic(const t_bunny_configuration *config);
 
 #endif	/*		__LAPIN_PRIVATE_DABSIC_HPP__			*/

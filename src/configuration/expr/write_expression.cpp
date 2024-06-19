@@ -20,8 +20,11 @@ void			restore_expression(std::ostream		&ss,
     }
   if (expr.optor_family == Expression::LAST_OPERATOR_FAMILY)
     {
-      ss << expr.val.name;
-      ss << "(";
+      if (expr.val.name != "") // Verrue
+	{
+	  ss << expr.val.name;
+	  ss << "(";
+	}
       if (expr.type_cast == Expression::NO_CAST)
 	for (j = 0; j < expr.operand.size(); ++j)
 	  {
@@ -36,7 +39,8 @@ void			restore_expression(std::ostream		&ss,
 	  }
       else
 	restore_expression(ss, *expr.operand[0], complete, hexscape);
-      ss << ")";
+      if (expr.val.name != "") // Verrue
+	ss << ")";
       return ;
     }
   for (i = 0; i < expr.operand.size(); ++i)

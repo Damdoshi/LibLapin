@@ -24,6 +24,7 @@ SmallConf		&SmallConf::NoComputeAssign(const SmallConf	&o)
 	}
       if (!o.is_converted)
 	break ;
+      [[fallthrough]];
     case INTEGER:
     case DOUBLE:
       converted_2 = o.converted_2;
@@ -35,6 +36,8 @@ SmallConf		&SmallConf::NoComputeAssign(const SmallConf	&o)
 	*distant_int = converted;
       if (distant_double)
 	*distant_double = converted_2;
+    case NOTYPE:
+      break ;
     }
   // is_const = o.is_const;
   return (*this);

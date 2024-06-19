@@ -1,0 +1,15 @@
+
+Variable = 5
+
+FuncText() = [Text($,EOF)
+  Chaine en dur et la variable '$(Variable)' et voila
+EOF]
+
+Main = [Function
+  "Texte: ", FuncText()
+  Variable = 3
+  "Texte: ", FuncText()
+  Variable = 5
+  "Texte: ", FuncText()
+]
+
