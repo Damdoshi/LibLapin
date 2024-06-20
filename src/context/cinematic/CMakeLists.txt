@@ -1,0 +1,5 @@
+list(APPEND LAPIN_SRC
+${CMAKE_CURRENT_LIST_DIR}/clear.cpp
+${CMAKE_CURRENT_LIST_DIR}/empty.cpp
+${CMAKE_CURRENT_LIST_DIR}/init.cpp
+)

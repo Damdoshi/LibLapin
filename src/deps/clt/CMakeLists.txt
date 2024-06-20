@@ -1,0 +1,10 @@
+list(APPEND LAPIN_SRC
+${CMAKE_CURRENT_LIST_DIR}/CheckFullPacket.cpp
+${CMAKE_CURRENT_LIST_DIR}/Client.cpp
+${CMAKE_CURRENT_LIST_DIR}/Disconnected.cpp
+${CMAKE_CURRENT_LIST_DIR}/InitFdSet.cpp
+${CMAKE_CURRENT_LIST_DIR}/Operator.cpp
+${CMAKE_CURRENT_LIST_DIR}/ReadOnNetwork.cpp
+${CMAKE_CURRENT_LIST_DIR}/Write.cpp
+${CMAKE_CURRENT_LIST_DIR}/WriteOnNetwork.cpp
+)

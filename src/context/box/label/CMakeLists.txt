@@ -1,0 +1,3 @@
+list(APPEND LAPIN_SRC
+${CMAKE_CURRENT_LIST_DIR}/display.cpp
+)

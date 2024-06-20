@@ -1,0 +1,16 @@
+list(APPEND LAPIN_SRC
+${CMAKE_CURRENT_LIST_DIR}/Add.cpp
+${CMAKE_CURRENT_LIST_DIR}/AddThread.cpp
+${CMAKE_CURRENT_LIST_DIR}/EvaluateTheLoad.cpp
+${CMAKE_CURRENT_LIST_DIR}/GetAwaitingThreads.cpp
+${CMAKE_CURRENT_LIST_DIR}/GetHowManyTasks.cpp
+${CMAKE_CURRENT_LIST_DIR}/GetHowManyThreads.cpp
+${CMAKE_CURRENT_LIST_DIR}/GetHowManyWorkers.cpp
+${CMAKE_CURRENT_LIST_DIR}/GetMessage.cpp
+${CMAKE_CURRENT_LIST_DIR}/IsWorking.cpp
+${CMAKE_CURRENT_LIST_DIR}/JumpToLoop.cpp
+${CMAKE_CURRENT_LIST_DIR}/Loop.cpp
+${CMAKE_CURRENT_LIST_DIR}/RemoveThread.cpp
+${CMAKE_CURRENT_LIST_DIR}/SetMessage.cpp
+${CMAKE_CURRENT_LIST_DIR}/Workers.cpp
+)

@@ -1,0 +1,12 @@
+list(APPEND LAPIN_SRC
+${CMAKE_CURRENT_LIST_DIR}/Communicator.cpp
+${CMAKE_CURRENT_LIST_DIR}/Comparator.cpp
+${CMAKE_CURRENT_LIST_DIR}/Error.cpp
+${CMAKE_CURRENT_LIST_DIR}/GetFd.cpp
+${CMAKE_CURRENT_LIST_DIR}/MicroSeconds.cpp
+${CMAKE_CURRENT_LIST_DIR}/Obsolete.cpp
+${CMAKE_CURRENT_LIST_DIR}/PacketMaxSize.cpp
+${CMAKE_CURRENT_LIST_DIR}/RetError.cpp
+${CMAKE_CURRENT_LIST_DIR}/RetExpired.cpp
+${CMAKE_CURRENT_LIST_DIR}/s_WriteRequest.cpp
+)

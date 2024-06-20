@@ -1,0 +1,6 @@
+list(APPEND LAPIN_SRC
+${CMAKE_CURRENT_LIST_DIR}/get_value.cpp
+${CMAKE_CURRENT_LIST_DIR}/go_get.cpp
+${CMAKE_CURRENT_LIST_DIR}/go_set.cpp
+${CMAKE_CURRENT_LIST_DIR}/set_value.cpp
+)
