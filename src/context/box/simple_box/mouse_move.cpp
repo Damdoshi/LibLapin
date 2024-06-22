@@ -51,7 +51,7 @@ static t_bunny_response	bunny_mmove_simple_box_dabsic(t_bunny_position		pos,
     return (EXIT_ON_ERROR);
   if (bunny_configuration_setf_int(params, (int)pos.x, "[0]") == false ||
       bunny_configuration_setf_int(params, (int)pos.y, "[1]") == false ||
-      bunny_configuration_execute(box->mouse_move_node, false, params) == false)
+      bunny_configuration_execute(box->mouse_move_node, params, NULL) == false)
     {
       bunny_delete_configuration(params);
       return (EXIT_ON_ERROR);

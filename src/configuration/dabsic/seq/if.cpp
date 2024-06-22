@@ -19,7 +19,7 @@ t_bunny_sequence_decision bunny_sequence_if(t_bunny_configuration	*_seq,
   if (params[1]->GetString(&str) == false)
     return (BSD_ERROR);
 
-  if (bunny_configuration_execute(params[0], false, NULL) == false)
+  if (bunny_configuration_execute(params[0], NULL, NULL) == false)
     return (BSD_ERROR);
   if (bunny_configuration_getf_int(_seq, &res, ".") == false)
     return (BSD_ERROR);

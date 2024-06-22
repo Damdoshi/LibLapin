@@ -15,7 +15,7 @@ static t_bunny_response	bunny_focus_simple_box_dabsic(t_bunny_event_state	state,
   if ((cnf = bunny_new_configuration()) == NULL)
     return (EXIT_ON_ERROR);
   if (bunny_configuration_setf_int(cnf, (int)state, "[0]") == false ||
-      bunny_configuration_execute(box->focus_node, false, cnf) == false)
+      bunny_configuration_execute(box->focus_node, cnf, NULL) == false)
     {
       bunny_delete_configuration(cnf);
       return (EXIT_ON_ERROR);

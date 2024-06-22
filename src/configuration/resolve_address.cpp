@@ -37,7 +37,7 @@ t_bunny_configuration	*bunny_configuration_resolve_address(t_bunny_configuration
 
       if ((sc = (SmallConf*)bunny_configuration_resolve_address(config, nbrconfig, addr, ++i)) == NULL)
 	return (NULL);
-      bunny_configuration_execute(sc, true, NULL);
+      bunny_configuration_execute(sc, NULL, NULL);
       if (sc->last_type != SmallConf::RAWSTRING)
 	return (NULL);
       return (bunny_configuration_resolve_address(config, nbrconfig, sc->original_value.c_str(), k));

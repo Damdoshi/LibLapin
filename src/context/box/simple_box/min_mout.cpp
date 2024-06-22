@@ -13,7 +13,7 @@ t_bunny_response	bunny_min_simple_box_dabsic(t_bunny_box_system		*sys,
   (void)sys;
   if ((cnf = bunny_new_configuration()) == NULL)
     return (EXIT_ON_ERROR);
-  if (bunny_configuration_execute(box->mouse_in_node, false, cnf) == false)
+  if (bunny_configuration_execute(box->mouse_in_node, cnf, NULL) == false)
     {
       bunny_delete_configuration(cnf);
       return (EXIT_ON_ERROR);
@@ -45,7 +45,7 @@ t_bunny_response	bunny_mout_simple_box_dabsic(t_bunny_box_system		*sys,
   (void)sys;
   if ((cnf = bunny_new_configuration()) == NULL)
     return (EXIT_ON_ERROR);
-  if (bunny_configuration_execute(box->mouse_out_node, false, cnf) == false)
+  if (bunny_configuration_execute(box->mouse_out_node, cnf, NULL) == false)
     {
       bunny_delete_configuration(cnf);
       return (EXIT_ON_ERROR);

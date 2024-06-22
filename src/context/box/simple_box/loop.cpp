@@ -15,7 +15,7 @@ t_bunny_response	bunny_loop_simple_box_dabsic(t_bunny_box_system		*sys,
   if ((cnf = bunny_new_configuration()) == NULL)
     return (EXIT_ON_ERROR);
   if (bunny_configuration_setf_double(cnf, delay, "[0]") == false ||
-      bunny_configuration_execute(box->loop_node, false, cnf) == false)
+      bunny_configuration_execute(box->loop_node, cnf, NULL) == false)
     {
       bunny_delete_configuration(cnf);
       return (EXIT_ON_ERROR);

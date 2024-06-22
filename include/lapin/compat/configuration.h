@@ -412,7 +412,7 @@ size_t			bunny_configuration_get_nbr_case(const t_bunny_configuration	*config);
 ** stored inside executed nodes theiselves.
 */
 bool			bunny_configuration_execute(t_bunny_configuration		*config,
-						    bool				rec,
-						    t_bunny_configuration		*parameters);
+						    t_bunny_configuration		*parameters,
+						    t_bunny_configuration		*art);
 
 #endif
