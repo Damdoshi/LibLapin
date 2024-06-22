@@ -1,0 +1,18 @@
+{
+    "FirstCycle": {
+	"cycle": 0,
+	"first_day": "1/2/2020",
+	"user": [
+	    "Mordanis",
+	    "User1"
+	]
+    },
+    "SecondCycle": {
+	"cycle": 1,
+	"first_day": "2/3/2021",
+	"user": [
+	    "Mordanis"
+	]
+    }
+}
+

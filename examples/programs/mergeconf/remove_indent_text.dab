@@ -1,0 +1,29 @@
+
+
+This = [Text($,@)
+  Spaces on the left is supposed to be removed.
+  Yeah, supposed to.
+@]
+
+[Scope
+  [To
+    [Get
+      [A
+        [Tabulation
+          This = [Text($,@)
+	    There is a tabulation and 4 spaces on the left.
+            And here only spaces. But space amount of columns
+          @]
+	]
+      ]
+    ]
+  ]
+]
+
+[DifferentIndentNow
+  This = [Text($,@)
+    It starts well.
+End then "oh no"
+  @]
+]
+

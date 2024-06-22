@@ -8,6 +8,7 @@
 static bool		_bunny_collide(const t_bunny_collision		*a,
 				       const t_bunny_collision		*b)
 {
+  // An array of function pointer would have been nicer than this huge pile of shit.
   switch (a->type)
     {
     case BCT_DOT:
@@ -30,6 +31,7 @@ static bool		_bunny_collide(const t_bunny_collision		*a,
 	case LAST_COLLISION_TYPE:
 	  return (false);
 	}
+      return (false);
     case BCT_CIRCLE:
       switch (b->type)
 	{
@@ -50,6 +52,7 @@ static bool		_bunny_collide(const t_bunny_collision		*a,
 	case LAST_COLLISION_TYPE:
 	  return (false);
 	}
+      return (false);
     case BCT_LINE:
       switch (b->type)
 	{
@@ -70,6 +73,7 @@ static bool		_bunny_collide(const t_bunny_collision		*a,
 	case LAST_COLLISION_TYPE:
 	  return (false);
 	}
+      return (false);
     case BCT_TRIANGLE:
       switch (b->type)
 	{
@@ -90,6 +94,7 @@ static bool		_bunny_collide(const t_bunny_collision		*a,
 	case LAST_COLLISION_TYPE:
 	  return (false);
 	}
+      return (false);
     case BCT_RECTANGLE:
       switch (b->type)
 	{
@@ -110,6 +115,7 @@ static bool		_bunny_collide(const t_bunny_collision		*a,
 	case LAST_COLLISION_TYPE:
 	  return (false);
 	}
+      return (false);
     case BCT_QUAD:
       switch (b->type)
 	{
@@ -130,6 +136,7 @@ static bool		_bunny_collide(const t_bunny_collision		*a,
 	case LAST_COLLISION_TYPE:
 	  return (false);
 	}
+      return (false);
     case BCT_EQUATION:
       switch (b->type)
 	{
@@ -150,6 +157,7 @@ static bool		_bunny_collide(const t_bunny_collision		*a,
 	case LAST_COLLISION_TYPE:
 	  return (false);
 	}
+      return (false);
     case LAST_COLLISION_TYPE:
       return (false);
     }

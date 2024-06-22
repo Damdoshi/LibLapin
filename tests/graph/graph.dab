@@ -1,0 +1,16 @@
+
+Name = "The Graph"
+Oriented = false
+
+[Nodes
+  Node00
+  [Node01
+    Name = "Node01_AlternativeName"
+  ]
+  [Node02
+    Position = 1, 2
+  ]
+  [Node03
+    Shape = 42 'Not implemented yet
+  ]
+]

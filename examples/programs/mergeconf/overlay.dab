@@ -1,0 +1,13 @@
+[AllGlobalsAreConst
+  _FR = [Text($,E)
+    Les variables globales **doivent** être constantes.
+  E]
+  _EN = [Text($,E)
+    Global variables **must** be const.
+  E]
+  FR = Points && Value ? _FR : ""
+  EN = Points && Value ? _EN : ""
+  Value = true
+  Points = 1
+]
+
