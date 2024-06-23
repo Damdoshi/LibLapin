@@ -1,8 +1,8 @@
 #################################################################################
 
  ###############################################################################
- ## Jason Brillante "Damdoshi"                                                ##
- ## Hanged Bunny Studio 2014-2018                                             ##
+ ## Jason Brillante "Damdoshi"                  Hanged Bunny Studio 2014-2024 ##
+ ## Pentacle Technologie 2008-2024                           EFRITS 2022-2024 ##
  ## "MyLib" V9.12                                                             ##
  ##                                                                           ##
  ## ------------------------------------------------------------------------- ##
@@ -24,6 +24,10 @@
 
   NAME		=	liblapin.a
   TITLE		=	"LIBLAPIN - BUNNY LIBRARY"
+  LAPINOPTS	=	-DBUNNY_COMPILATION					\
+			-DBUNNY_ALLOCATOR_DEACTICATED
+  MODE		=	debug
+#  MODE		=	release
 
 #################################################################################
 ## Building details                                                            ##
@@ -31,24 +35,29 @@
 
   LINKER	?=	ar rcs
   COMPILER	?=	g++
+  STANDARD	?=	-std=c++14
+  WARNINGS	=	-W -Wall						\
+			-Wno-write-strings					\
+			-Wno-unused-result					\
+			-Wno-format-security					\
+			-Wno-frame-address					\
+			-Wno-narrowing						\
+			-Wno-cast-function-type
 
-  CONFIG	=	-W -Wall -fPIC -std=c++14 -Wno-write-strings		\
-			-Wno-unused-result -Wno-format-security			\
-			-Wno-frame-address -Wno-narrowing			\
-			-DBUNNY_COMPILATION					\
-			-Wno-cast-function-type -DBUNNY_ALLOCATOR_DEACTIVATED
+  DEBUGOPTS	=	-O0 -g -g3 -ggdb -fprofile-arcs -ftest-coverage		\
+			--coverage -fno-omit-frame-pointer -fno-align-functions	\
+			-fno-align-loops
+  RELEASEOPTS	=	-O3 -ffast-math -march=native -DNDEBUG
 
-  DEBUG		=	-O0 -g -g3 -ggdb
-#  OPTIM		=	-O2
+  ifeq ($(MODE), debug)
+    MODEOPTS	=	$(DEBUGOPTS)
+  else
+    MODEOPTS	=	$(RELEASEOPTS)
+  endif
 
   RM		=	rm -f
   ECHO		=	/bin/echo -e
   LOGDIR	=	errors/
-
-  HEADER	=	-I./include						\
-			-I./include/deps/					\
-			-I./external/include/					\
-			-I/opt/local/include/ -I/usr/include/opencv4/
 
   DEFAULT	=	"\033[00m"
   PINK		=	"\033[1;35m"
@@ -60,6 +69,11 @@
 ## Source                                                                      ##
 #################################################################################
 
+  HEADER	=	-I./include						\
+			-I./include/deps/					\
+			-I./external/include/					\
+			-I/opt/local/include/					\
+			-I/usr/include/opencv4/
   SRC		=	$(shell find src/ -name "*.cpp")
   OBJ		=	$(SRC:.cpp=.o)
 
@@ -67,7 +81,12 @@
 ## Rules                                                                       ##
 #################################################################################
 
-all:			erase $(NAME)
+  CXXFLAGS	=	$(STANDARD) $(WARNINGS) -fPIC $(LAPINOPTS) $(MODEOPTS)	\
+			$(HEADER)
+
+all:			erase $(NAME) tests
+tests:
+			(cd tests/ && $(MAKE))
 $(NAME):		title $(OBJ)
 			@$(LINKER) $(NAME) $(OBJ) 2>> $(LOGDIR)/$(NAME) &&	\
 			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $(NAME) $(DEFAULT) ||	\
@@ -75,7 +94,7 @@ $(NAME):		title $(OBJ)
 			@find $(LOGDIR)/$(NAME) -size 0 -delete || true
 .cpp.o:
 			@$(eval TRACE="$(addprefix $(LOGDIR), $(subst /,-, $<))")
-			@$(COMPILER) -c $< -o $@ $(DEBUG) $(OPTIM) $(CONFIG)	\
+			@$(COMPILER) -c $< -o $@ $(CXXFLAGS)			\
 			 $(HEADER) 2>> $(TRACE) &&				\
 			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $< $(DEFAULT) ||	\
 			 $(ECHO) $(RED)  "[KO]" $< $(DEFAULT)
@@ -101,3 +120,4 @@ erase:
 			@$(RM) -r $(LOGDIR)/*.*
 
 .POSIX:
+.PHONY:			tests

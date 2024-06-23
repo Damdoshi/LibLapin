@@ -24,8 +24,8 @@ int			main(void)
     }
   bunny_printl("Properties of the window:"); /* print litteral on stdout. (lapin/misc.h) */
   printf("Name: %s.\n", win->name);
-  printf("Width: %d.\n", win->buffer.width);
-  printf("Height: %d.\n", win->buffer.height);
+  printf("Width: %zu.\n", win->buffer.width);
+  printf("Height: %zu.\n", win->buffer.height);
 
   /* clear the content of the window with PINK2 color. (lapin/graphics.h, lapin/color.h) */
   /* bunny_clear takes a t_bunny_buffer. Because a window contains a t_bunny_buffer, */

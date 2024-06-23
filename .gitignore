@@ -2,3 +2,7 @@
 *~
 #*#
 liblapin.a
+*.gcno
+*.gcda
+tests/report/
+tests/coverage.info
