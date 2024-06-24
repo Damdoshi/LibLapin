@@ -193,7 +193,7 @@ void			bunny_list_sort(t_bunny_list		*list,
 #if			_WIN32 || __WIN32__ || __APPLE__
   bunny_shitty_sort(*array, bunny_list_size(list), sizeof(*array), param, cmp);
 #else
-  qsort_r(*array, bunny_list_size(list), sizeof(*array), to_qsort, &packet);
+  qsort_r(array, bunny_list_size(list), sizeof(*array), to_qsort, &packet);
 #endif
   for (node = bunny_list_begin(list), i = 0; node != NULL; node = bunny_list_next(node), ++i)
     node->data = (void*)array[i];
@@ -215,7 +215,7 @@ t_bunny_vector		*_bunny_list_tie(const t_bunny_list	*lst,
        (bunny_list_size(lst), elemsize, NULL, NULL, NULL)) == NULL)
     scream_error_if(return (NULL), bunny_errno, PATTERN, "container", lst, elemsize, vec);
   for (nod = bunny_list_begin(lst), i = 0; nod != NULL; nod = bunny_list_next(nod), ++i)
-    memcpy(bunny_vector_address(vec, i), &bunny_list_data(nod, void*), elemsize);
+    memcpy(bunny_vector_address(vec, i), bunny_list_data(nod, void*), elemsize);
   scream_log_if(PATTERN, "container", lst, elemsize, vec);
   return (vec);
 }
