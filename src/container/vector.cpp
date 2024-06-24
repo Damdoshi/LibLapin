@@ -40,11 +40,11 @@ t_bunny_vector		*_bunny_new_vector(size_t			nbr,
   vec->dtor = dtor;
   if (ctor)
     for (i = 0; i < (int)bunny_vector_size(vec); ++i)
-      if (ctor(bunny_vector_data(vec, i, void*), add) == false)
+      if (ctor(&vec->data[i * siz], add) == false)
 	{
 	  if (dtor)
 	    while (--i >= 0)
-	      dtor(bunny_vector_data(vec, i, void*));
+	      dtor(&vec->data[i * siz]);
 	  bunny_free(vec);
 	  return (NULL);
 	}
@@ -58,7 +58,7 @@ void			bunny_delete_vector(t_bunny_vector		*vec)
 
   if (vec->dtor)
     for (i = 0; i < (int)bunny_vector_size(vec); ++i)
-      vec->dtor(bunny_vector_data(vec, i, void*));
+      vec->dtor(&((struct bunny_vector*)vec)->data[i * vec->elemsize]);
   bunny_free(vec);
 }
 
@@ -76,7 +76,7 @@ t_bunny_vector		*bunny_vector_resize(t_bunny_vector		*vec,
     {
       if (vec->dtor)
 	for (i = bunny_vector_size(vec) - 1; i >= (int)newsize; --i)
-	  vec->dtor(bunny_vector_data(vec, i, void*));
+	  vec->dtor(&((struct bunny_vector*)vec)->data[i * vec->elemsize]);
       old->nmemb = newsize;
       scream_log_if(PATTERN, "container", vec, newsize, vec);
       return (vec);
@@ -86,13 +86,14 @@ t_bunny_vector		*bunny_vector_resize(t_bunny_vector		*vec,
     scream_error_if
       (return (NULL), bunny_errno, PATTERN, "container", vec, newsize, nw);
   nw->array = &nw->data[0];
+  vec = (t_bunny_vector*)nw;
   if (vec->ctor)
     for (i = nw->nmemb; i < (int)newsize; ++i)
-      if (vec->ctor(bunny_vector_data(vec, i, void*), add) == false)
+      if (vec->ctor(&((struct bunny_vector*)vec)->data[i * vec->elemsize], add) == false)
 	{
 	  if (vec->dtor)
 	    while (--i >= (int)nw->nmemb)
-	      vec->dtor(bunny_vector_data(vec, i, void*));
+	      vec->dtor(&((struct bunny_vector*)vec)->data[i * vec->elemsize]);
 	  return ((t_bunny_vector*)nw);
 	}
   nw->nmemb = newsize;
@@ -232,7 +233,7 @@ void			bunny_vector_foreach(t_bunny_vector	*vector,
   size_t		i;
 
   for (i = 0; i < bunny_vector_size(vector); ++i)
-    func(bunny_vector_data(vector, i, void*), param);
+    func(&((struct bunny_vector*)vector)->data[i * vector->elemsize], param);
 }
 
 #undef			PATTERN
@@ -254,7 +255,7 @@ bool			bunny_vector_fast_foreach(t_bunny_threadpool *pool,
 	err = bunny_errno;
 	while (i < bunny_vector_size(vector))
 	  {
-	    func(bunny_vector_data(vector, i, void*), par);
+	    func(&((struct bunny_vector*)vector)->data[i * vector->elemsize], par);
 	    ++i;
 	  }
 	bunny_thread_wait_completion(pool);
