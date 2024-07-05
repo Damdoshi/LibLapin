@@ -85,7 +85,7 @@ t_bunny_music			*bunny_read_music(t_bunny_configuration		*cnf);
 ** \return A valid t_bunny_effect or NULL on error.
 */
 # define			bunny_new_effect(d)				_bunny_new_effect(d, SAMPLE_PER_SECONDS, 1)
-# define			bunny_create_effect(d, s)			_bunny_new_effect(d, s)
+# define			bunny_create_effect(d, s)			_bunny_new_effect(d, s, 1)
 # define			bunny_new_sound(d, s, c)			_bunny_new_effect(d, s, c)
 t_bunny_effect			*_bunny_new_effect(double			duration,
 						   int				sample_per_second,
