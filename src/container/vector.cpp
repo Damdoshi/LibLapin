@@ -173,7 +173,7 @@ static int		to_qsort(const void			*a,
 {
   struct qsort_packet	*pq = (struct qsort_packet*)param;
 
-  return (pq->cmp(*(void**)a, *(void**)b, pq->ptr));
+  return (pq->cmp((void*)a, (void*)b, pq->ptr));
 }
 #else
 
@@ -221,7 +221,7 @@ void			bunny_vector_sort(t_bunny_vector		*vec,
 #if			_WIN32 || __WIN32__ || __APPLE__
   bunny_shitty_sort((void*)vec->array, vec->nmemb, vec->elemsize, param, cmp);
 #else
-  qsort_r((void*)vec->array, vec->nmemb, vec->elemsize, to_qsort, &packet);
+  qsort_r((void*)&((struct bunny_vector*)vec)->data[0], vec->nmemb, vec->elemsize, to_qsort, &packet);
 #endif
   scream_log_if("%p vector, %p cmp_func, %p param", "container", vec, cmp, param);
 }

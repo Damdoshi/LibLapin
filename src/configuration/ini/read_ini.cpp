@@ -63,7 +63,7 @@ static bool		read_inside_scope(t_bunny_configuration		*fileroot,
     {
       iteration = newnode.array.size();
       read_separator(code, i);
-      if (code[i] == '@')
+      if (code[i] == '@' && code[i + 1] != '"')
 	{
 	  if (_bunny_handle_directive
 	      (code, i, &newnode[iteration], fileroot, read_separator,
