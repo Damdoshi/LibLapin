@@ -15,6 +15,7 @@ Decision		csv_read(const char				*code,
   y = 0;
   x = 0;
   conf.construct = SmallConf::ARRAY;
+  skipspace_inline(code, i);
   while (code[i] && code[i] != ']')
     {
       skipspace_inline(code, i);
@@ -52,6 +53,7 @@ Decision		csv_read(const char				*code,
 	  else if (readtext(code, i, ";"))
 	    x += 1;
 	}
+      skipspace_inline(code, i);
     }
   return (BD_OK);
 }
