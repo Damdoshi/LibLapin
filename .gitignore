@@ -6,3 +6,8 @@ liblapin.a
 *.gcda
 tests/report/
 tests/coverage.info
+errors/*.cpp
+conf/incoming
+debian/files
+debian/.debhelper
+debian/liblapin-*

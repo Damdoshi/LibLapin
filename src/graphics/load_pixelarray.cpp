@@ -82,6 +82,7 @@ t_bunny_pixelarray	*bunny_load_pixelarray(const char		*file)
   pa->sprite->setTexture(*pa->tex);
 
   pa->type = SYSTEM_RAM;
+  pa->unused = 0;
   pa->width = pa->tex->getSize().x;
   pa->height = pa->tex->getSize().y;
 

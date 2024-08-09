@@ -7,8 +7,8 @@ export LIB_DIR=/usr/lib/
 	dh $@
 
 override_dh_auto_build:
-	make
+	make -j16
 
 override_dh_auto_test:
-	@(cd tests && bash ./browse.bash)
+	@(cd tests && make)
 

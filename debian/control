@@ -1,20 +1,29 @@
 Source: liblapin-dev
+Section: libdevel
 Priority: optional
 Maintainer: Jason Brillante Damdoshi <damdoshi@hotmail.com>
 Build-Depends:
-  debhelper (>= 9), make (>= 4.0), g++ (>= 5.0), libsfml-dev (>= 2.2), libusb-dev (>= 2)
-Standards-Version: 1.11
-Section: libdevel
-Homepage: http://hangedbunnystudio.com/sub/liblapin
+  debhelper (>= 9),
+  make (>= 4.0),
+  g++ (>= 9.0),
+  libsfml-dev (>= 2.2),
+  libusb-dev (>= 2),
+  libopencv-dev (>= 4.2),
+  libpthread-dev,
+  libffcall-dev (>= 2.4),
+  libudev-dev (>= 245)
+Standards-Version: 1.14
+Homepage: https://liblapin.org
 
 Package: liblapin-dev
 Architecture: all
 Depends:
-  debhelper (>= 9), make (>= 4.0), g++ (>= 5.0), libsfml-dev (>= 2.2), libusb-dev (>= 2),
+  ${shlibs:Depends},
   ${misc:Depends}
-Description: Daemon and API to monitor service status
- This package brings binaries and headers of the game library LibLapin.
- The LibLapin (aka "BunnyLibrary") was started as a library for rookies
- in C programming and as a game jam library.
-
+Description: This package brings binaries and headers of the multimedia library LibLapin.
+  This library use SFML as renderer and provide C bindings to most of its functionnalities.
+  It brings additionnaly game specific tools and a powerful configuration module that
+  handles most format and also provide an original turing-complet, Dabsic.
+  This library is used by some independant video game company and by several
+  computing school as a tool to teach C development and multimedia development.
 

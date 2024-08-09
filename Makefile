@@ -3,7 +3,7 @@
  ###############################################################################
  ## Jason Brillante "Damdoshi"                  Hanged Bunny Studio 2014-2024 ##
  ## Pentacle Technologie 2008-2024                           EFRITS 2022-2024 ##
- ## "MyLib" V9.12                                                             ##
+ ## "MyLib" V9.14                                                             ##
  ##                                                                           ##
  ## ------------------------------------------------------------------------- ##
  ## ------------------------------------ ---   -   --- ---- --  --   - --- -- ##
@@ -22,20 +22,24 @@
 ## Information about the project                                               ##
 #################################################################################
 
-  NAME		=	liblapin.a
+  NAME		=	lapin
+  PRODSO	=	lib$(NAME).so
+  PRODA		=	lib$(NAME).a
+  DBGSO		=	lib$(NAME)-dbg.so
+  DBGA		=	lib$(NAME)-dbg.a
+
   TITLE		=	"LIBLAPIN - BUNNY LIBRARY"
   LAPINOPTS	=	-DBUNNY_COMPILATION					\
 			-DBUNNY_ALLOCATOR_DEACTICATED
-  MODE		=	debug
-#  MODE		=	release
 
 #################################################################################
 ## Building details                                                            ##
 #################################################################################
 
-  LINKER	?=	ar rcs
+  ALINKER	?=	ar rcs
+  SOLINKER	?=	g++ -shared
   COMPILER	?=	g++
-  STANDARD	?=	-std=c++14
+  STANDARD	?=	-std=gnu++17
   WARNINGS	=	-W -Wall						\
 			-Wno-write-strings					\
 			-Wno-unused-result					\
@@ -47,18 +51,29 @@
   DEBUGOPTS	=	-O0 -g -g3 -ggdb -fprofile-arcs -ftest-coverage		\
 			--coverage -fno-omit-frame-pointer -fno-align-functions	\
 			-fno-align-loops
-  RELEASEOPTS	=	-O3 -ffast-math -march=native -DNDEBUG
+  PRODOPTS	=	-O3 -ffast-math -march=native -DNDEBUG
 
-  ifeq ($(MODE), debug)
-    MODEOPTS	=	$(DEBUGOPTS)
-  else
-    MODEOPTS	=	$(RELEASEOPTS)
-  endif
+#################################################################################
+## Source                                                                      ##
+#################################################################################
+
+  HEADER	=	-I./include						\
+			-I./include/lapin/deps/					\
+			-I./external/include/					\
+			-I/opt/local/include/					\
+			-I/usr/include/opencv4/
+  SRC		=	$(shell find src/ -name "*.cpp")
+  DBGSRC	=	$(shell find src/ -name "*.cpp")
+  OBJ		=	$(SRC:.cpp=.o)
+  DBGOBJ	=	$(DBGSRC:.cpp=-dbg.o)
+
+#################################################################################
+## Misc                                                                        ##
+#################################################################################
 
   RM		=	rm -f
   ECHO		=	/bin/echo -e
   LOGDIR	=	errors/
-
   DEFAULT	=	"\033[00m"
   PINK		=	"\033[1;35m"
   GREEN		=	"\033[0;32m"
@@ -66,35 +81,46 @@
   RED		=	"\033[0;31m"
 
 #################################################################################
-## Source                                                                      ##
-#################################################################################
-
-  HEADER	=	-I./include						\
-			-I./include/deps/					\
-			-I./external/include/					\
-			-I/opt/local/include/					\
-			-I/usr/include/opencv4/
-  SRC		=	$(shell find src/ -name "*.cpp")
-  OBJ		=	$(SRC:.cpp=.o)
-
-#################################################################################
 ## Rules                                                                       ##
 #################################################################################
 
-  CXXFLAGS	=	$(STANDARD) $(WARNINGS) -fPIC $(LAPINOPTS) $(MODEOPTS)	\
-			$(HEADER)
+  PRODFLAGS	=	$(STANDARD) $(WARNINGS) -fPIC $(LAPINOPTS) $(HEADER) $(PRODOPTS)
+  DBGFLAGS	=	$(STANDARD) $(WARNINGS) -fPIC $(LAPINOPTS) $(HEADER) $(DEBUGOPTS)
 
-all:			erase $(NAME) tests
-tests:
+all:			erase title $(PRODSO) $(PRODA) $(DBGSO) $(DBGA)
+tests:			$(DBGA)
 			(cd tests/ && $(MAKE))
-$(NAME):		title $(OBJ)
-			@$(LINKER) $(NAME) $(OBJ) 2>> $(LOGDIR)/$(NAME) &&	\
-			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $(NAME) $(DEFAULT) ||	\
-			 $(ECHO) $(RED)  "[KO]" $(NAME) $(DEFAULT)
-			@find $(LOGDIR)/$(NAME) -size 0 -delete || true
-.cpp.o:
+$(PRODSO):		$(OBJ)
+			@$(SOLINKER) $(PRODSO) $(OBJ) 2>> $(LOGDIR)/$(NAME) &&	\
+			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $(PRODSO) $(DEFAULT) ||\
+			 $(ECHO) $(RED)  "[KO]" $(PRODSO) $(DEFAULT)
+			@find $(LOGDIR)/$(PRODSO) -size 0 -delete || true
+$(PRODA):		$(OBJ)
+			@$(ALINKER) $(PRODA) $(OBJ) 2>> $(LOGDIR)/$(NAME) &&	\
+			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $(PRODA) $(DEFAULT) ||	\
+			 $(ECHO) $(RED)  "[KO]" $(PRODA) $(DEFAULT)
+			@find $(LOGDIR)/$(PRODA) -size 0 -delete || true
+$(DBGSO):		$(DBGOBJ)
+			@$(SOLINKER) $(DBGSO) $(OBJ) 2>> $(LOGDIR)/$(NAME) &&	\
+			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $(DBGSO) $(DEFAULT) ||\
+			 $(ECHO) $(RED)  "[KO]" $(DBGSO) $(DEFAULT)
+			@find $(LOGDIR)/$(PRODSO) -size 0 -delete || true
+$(DBGA):		$(DBGOBJ)
+			@$(ALINKER) $(DBGA) $(OBJ) 2>> $(LOGDIR)/$(NAME) &&	\
+			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $(DBGA) $(DEFAULT) ||	\
+			 $(ECHO) $(RED)  "[KO]" $(DBGAA) $(DEFAULT)
+			@find $(LOGDIR)/$(PRODA) -size 0 -delete || true
+
+$(OBJ):
 			@$(eval TRACE="$(addprefix $(LOGDIR), $(subst /,-, $<))")
-			@$(COMPILER) -c $< -o $@ $(CXXFLAGS)			\
+			@$(COMPILER) -c $< -o $@ $(PRODFLAGS)			\
+			 $(HEADER) 2>> $(TRACE) &&				\
+			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $< $(DEFAULT) ||	\
+			 $(ECHO) $(RED)  "[KO]" $< $(DEFAULT)
+			@find $(TRACE) -size 0 -delete || true
+$(DBGOBJ):
+			@$(eval TRACE="$(addprefix $(LOGDIR), $(subst /,-, $<))")
+			@$(COMPILER) -c $< -o $@ $(DBGLAGS)			\
 			 $(HEADER) 2>> $(TRACE) &&				\
 			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $< $(DEFAULT) ||	\
 			 $(ECHO) $(RED)  "[KO]" $< $(DEFAULT)
@@ -108,11 +134,11 @@ title:
 			@$(ECHO) $(TEAL) $(TITLE) $(DEFAULT)
 			@mkdir -p $(LOGDIR)
 clean:
-			@$(RM) $(OBJ) &&					\
+			@$(RM) $(OBJ) $(DBGOBJ) &&				\
 			 $(ECHO) $(GREEN) "Object file deleted" $(DEFAULT) ||	\
 			 $(ECHO) $(RED) "Error in clean rule!" $(DEFAULT)
 fclean:			clean erase
-			@$(RM) $(NAME) &&					\
+			@$(RM) $(DBGA) $(DBGSO) $(PRODA) $(PRODSO) &&		\
 			 $(ECHO) $(GREEN) "Program deleted!" $(DEFAULT) ||	\
 			 $(ECHO) $(RED) "Error in fclean rule!" $(DEFAULT)
 re:			fclean all
@@ -120,4 +146,5 @@ erase:
 			@$(RM) -r $(LOGDIR)/*.*
 
 .POSIX:
-.PHONY:			tests
+.PHONY:			tests title erase
+

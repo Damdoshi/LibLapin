@@ -727,14 +727,9 @@ bool				bunny_make_clipable_unique(t_bunny_clipable	*clipable);
 
 size_t				bunny_get_maximum_picture_width(void);
 
-/*!
-** This function reset OpenGL states.
-*/
-void				bunny_GL_reset_states(const t_bunny_window	*pic);
-
-void				bunny_GL_push_states(const t_bunny_window	*pic);
-
-void				bunny_GL_pop_states(const t_bunny_window	*pic);
+void				bunny_reset_gl_states(t_bunny_buffer		*buf);
+void				bunny_push_gl_states(t_bunny_buffer		*buf);
+void				bunny_pop_gl_states(t_bunny_buffer		*buf);
 
 #endif	/*			__LAPIN_GRAPHICS_H__	*/
 

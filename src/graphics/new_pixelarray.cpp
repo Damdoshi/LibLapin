@@ -36,6 +36,7 @@ t_bunny_pixelarray		*bunny_new_pixelarray(unsigned int		width,
     pa->rawpixels[i] = PINK2;
 
   pa->type = SYSTEM_RAM;
+  pa->unused = 0;
   pa->width = width;
   pa->height = height;
 

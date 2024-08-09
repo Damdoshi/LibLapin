@@ -161,7 +161,14 @@ extern const void		*last_scope;
 */
 # include			<unistd.h>
 # ifndef			EWOULDBLOCK
-#  define			EWOULDBLOCK				EAGAIN
+#  define			EWOULDBLOCK			EAGAIN
 # endif
+
+# define			bunny_GL_reset_states(cw)	\
+  bunny_reset_gl_states(&(cw)->buffer)
+# define			bunny_GL_push_states(cw)	\
+  bunny_push_gl_states(&(cw)->buffer)
+# define			bunny_GL_pop_states(cw)		\
+  bunny_pop_gl_states(&(cw)->buffer)
 
 #endif	/*			__LAPIN_COMPAT_H__		*/

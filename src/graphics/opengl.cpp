@@ -1,29 +1,60 @@
 // d0p1
+// Jason Brillante "Damdoshi"
 //
 // Lapin library
 
 #include		"lapin_private.h"
 
-void			bunny_GL_reset_states(const t_bunny_window	*pic)
+void			bunny_reset_gl_states(t_bunny_buffer		*pic)
 {
-  struct bunny_window	*win = (struct bunny_window *)pic;
+  if (*(size_t*)pic == WINDOW)
+    {
+      struct bunny_window	*win = (struct bunny_window*)pic;
 
-  win->window->resetGLStates();
+      win->window->resetGLStates();
+    }
+  else
+    {
+      struct bunny_picture	*bpc = (struct bunny_picture*)pic;
+
+      if (bpc->texture)
+	bpc->texture->resetGLStates();
+    }
   scream_log_if("%p", "graphics", pic);
 }
 
-void			bunny_GL_push_states(const t_bunny_window	*pic)
+void			bunny_push_gl_states(t_bunny_buffer		*pic)
 {
-  struct bunny_window	*win = (struct bunny_window *)pic;
+  if (*(size_t*)pic == WINDOW)
+    {
+      struct bunny_window	*win = (struct bunny_window*)pic;
 
-  win->window->pushGLStates();
+      win->window->pushGLStates();
+    }
+  else
+    {
+      struct bunny_picture	*bpc = (struct bunny_picture*)pic;
+
+      if (bpc->texture)
+	bpc->texture->resetGLStates();
+    }
   scream_log_if("%p", "graphics", pic);
 }
 
-void			bunny_GL_pop_states(const t_bunny_window	*pic)
+void			bunny_pop_gl_states(t_bunny_buffer		*pic)
 {
-  struct bunny_window	*win = (struct bunny_window *)pic;
+  if (*(size_t*)pic == WINDOW)
+    {
+      struct bunny_window	*win = (struct bunny_window*)pic;
 
-  win->window->popGLStates();
+      win->window->popGLStates();
+    }
+  else
+    {
+      struct bunny_picture	*bpc = (struct bunny_picture*)pic;
+
+      if (bpc->texture)
+	bpc->texture->resetGLStates();
+    }
   scream_log_if("%p", "graphics", pic);
 }
