@@ -83,6 +83,18 @@ typedef struct			s_bunny_clipable
     (dest)->mosaic = (ori)->mosaic;					\
   } while (0)
 
+typedef enum			e_bunny_bitwidth
+  {
+    BBW_BLACK_AND_WHITE,
+    BBW_4_COLORS,
+    BBW_16_COLORS,
+    BBW_256_COLORS,
+    BBW_64K_COLORS,
+    BBW_TRUE_COLOR,
+    BBW_ARGB_COLOR,
+    BBW_FLOAT_COLOR
+  }				t_bunny_bitwidth;
+
 /*!
 ** The t_bunny_pixelarray is a graphic element that is convenient to
 ** access pixels per pixel. It contains a t_bunny_clipable attribute that does not
@@ -114,6 +126,12 @@ typedef struct			s_bunny_pixelarray
 {
   t_bunny_clipable		clipable;
   void * const			pixels;
+  /* Definition of the organisation of the pixelarray */
+  const t_bunny_bitwidth	bits_per_pixels;
+  const bool			bitplane;
+  const unsigned char		color_palette_size;
+  t_bunny_color * const		color_palette;
+  const uint8_t			color_shifts[4];
 }				t_bunny_pixelarray;
 # pragma			pack()
 
@@ -121,6 +139,7 @@ typedef struct			s_bunny_pixelarray
 ** The bunny_new_pixelarray creates a manual access picture. The t_bunny_pixelarray
 ** picture is the system memory and is fast when you need to access each pixels
 ** one per one. The bunny_new_pixelarray picture is stored inside the bunny_malloc space.
+** 32 bpp, t_bunny_rgba shift (*8), bitplane false, no palette.
 ** \param wid The width of the picture
 ** \param hei The height of the picture
 ** \return Return a valid t_bunny_pixelarray structure or NULL if there is not
@@ -129,6 +148,14 @@ typedef struct			s_bunny_pixelarray
 t_bunny_pixelarray		*bunny_new_pixelarray(unsigned int		wid,
 						      unsigned int		hei);
 
+t_bunny_pixelarray		*bunny_forge_pixelarray(unsigned int		wid,
+							unsigned int		hei,
+							const uint8_t		shifts,
+							t_buny_bunny_bitwidth	bitw,
+							bool			bitplane,
+							t_bunny_color		*palette,
+							size_t			palette_size);
+
 /*!
 ** The bunny_load_pixelarray load a picture from a file. Supported formats are
 ** .png, .jpg, .gif and 24 bits bitmap. Output is a manual access picture.
@@ -136,6 +163,7 @@ t_bunny_pixelarray		*bunny_new_pixelarray(unsigned int		wid,
 ** \return Return a t_bunny_pixelarray filled with the picture or NULL on error.
 */
 t_bunny_pixelarray		*bunny_load_pixelarray(const char		*file);
+
 
 /*!
 ** The bunny_read_pixelarray_d load a picture from memory. Supported formats are

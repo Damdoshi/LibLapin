@@ -130,6 +130,12 @@ struct				bunny_pixelarray
   bool				mosaic;
   unsigned int			*rawpixels;
 
+  t_bunny_bitwidth		bits_per_pixels;
+  bool				bitplane;
+  uint8_t			palette_size;
+  t_bunny_color			*palette;
+  uint8_t			color_shifts[4];
+
   size_t			res_id;
   sf::Image			*image;
   sf::Texture			*tex;
