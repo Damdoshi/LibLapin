@@ -27,19 +27,20 @@
   PRODA		=	lib$(NAME).a
   DBGSO		=	lib$(NAME)-dbg.so
   DBGA		=	lib$(NAME)-dbg.a
+  TSTA		=	lib$(NAME)-test.a
 
   TITLE		=	"LIBLAPIN - BUNNY LIBRARY"
   LAPINOPTS	=	-DBUNNY_COMPILATION					\
-			-DBUNNY_ALLOCATOR_DEACTICATED
+			-DBUNNY_ALLOCATOR_DEACTICATED				\
+			-DBUNNY_EXTENDED_DATA_LENGTH=4
 
 #################################################################################
 ## Building details                                                            ##
 #################################################################################
 
   ALINKER	?=	ar rcs
-  SOLINKER	?=	g++ -shared
-  COMPILER	?=	g++
-  STANDARD	?=	-std=gnu++17
+  SOLINKER	?=	g++ -shared -o
+  COMPILER	?=	g++ -std=gnu++17
   WARNINGS	=	-W -Wall						\
 			-Wno-write-strings					\
 			-Wno-unused-result					\
@@ -48,10 +49,19 @@
 			-Wno-narrowing						\
 			-Wno-cast-function-type
 
-  DEBUGOPTS	=	-O0 -g -g3 -ggdb -fprofile-arcs -ftest-coverage		\
-			--coverage -fno-omit-frame-pointer -fno-align-functions	\
+  DEBUGOPTS	=	-O0 -g -g3 -ggdb					\
+			-fno-omit-frame-pointer					\
+			-fno-align-functions					\
 			-fno-align-loops
+  TESTOPTS	=	$(DEBUGOPTS) -fprofile-arcs -ftest-coverage		\
+			--coverage
   PRODOPTS	=	-O3 -ffast-math -march=native -DNDEBUG
+  DEPS		=	-lsfml-graphics -lsfml-audio				\
+			-lsfml-window -lsfml-system				\
+			-lopencv_imgproc -lopencv_highgui			\
+			-lopencv_objdetect -lopencv_video			\
+			-lopencv_videoio -lopencv_core				\
+			-lavcall -lusb -ludev -lm -ldl -lpthread
 
 #################################################################################
 ## Source                                                                      ##
@@ -63,13 +73,17 @@
 			-I/opt/local/include/					\
 			-I/usr/include/opencv4/
   SRC		=	$(shell find src/ -name "*.cpp")
-  DBGSRC	=	$(shell find src/ -name "*.cpp")
-  OBJ		=	$(SRC:.cpp=.o)
-  DBGOBJ	=	$(DBGSRC:.cpp=-dbg.o)
 
 #################################################################################
 ## Misc                                                                        ##
 #################################################################################
+
+  PRODSRC	=	$(SRC)
+  DBGSRC	=	$(patsubst %.cpp,%-dbg.cpp,$(SRC))
+  TSTSRC	=	$(patsubst %.cpp,%-test.cpp,$(SRC))
+  PRODOBJ	=	$(PRODSRC:.cpp=.o)
+  DBGOBJ	=	$(DBGSRC:.cpp=.o)
+  TSTOBJ	=	$(TSTSRC:.cpp=.o)
 
   RM		=	rm -f
   ECHO		=	/bin/echo -e
@@ -84,46 +98,62 @@
 ## Rules                                                                       ##
 #################################################################################
 
-  PRODFLAGS	=	$(STANDARD) $(WARNINGS) -fPIC $(LAPINOPTS) $(HEADER) $(PRODOPTS)
-  DBGFLAGS	=	$(STANDARD) $(WARNINGS) -fPIC $(LAPINOPTS) $(HEADER) $(DEBUGOPTS)
+  COMMON	=	$(WARNINGS) -fPIC $(LAPINOPTS) $(HEADER)
+  PRODFLAGS	=	$(COMMON) $(PRODOPTS)
+  DBGFLAGS	=	$(COMMON) $(DEBUGOPTS)
+  TSTFLAGS	=	$(COMMON) $(TESTOPTS)
 
-all:			erase title $(PRODSO) $(PRODA) $(DBGSO) $(DBGA)
-tests:			$(DBGA)
+all:			erase title $(PRODSO) $(PRODA) $(DBGSO) $(DBGA) $(TSTA)
+prod:			$(PRODSO) $(PRODA)
+debug:			$(DBGSO) $(DBGA)
+tests:			$(TSTA)
 			(cd tests/ && $(MAKE))
-$(PRODSO):		$(OBJ)
-			@$(SOLINKER) $(PRODSO) $(OBJ) 2>> $(LOGDIR)/$(NAME) &&	\
-			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $(PRODSO) $(DEFAULT) ||\
-			 $(ECHO) $(RED)  "[KO]" $(PRODSO) $(DEFAULT)
+$(PRODSO):		$(PRODOBJ)
+			@$(SOLINKER) $(PRODSO) $(DEPS) $(PRODOBJ) 2>> $(LOGDIR)/$(PRODSO) && \
+			 $(ECHO) $(TEAL) "[PRD-OK]" $(GREEN) $(PRODSO) $(DEFAULT) ||\
+			 $(ECHO) $(RED)  "[PRD-KO]" $(PRODSO) $(DEFAULT)
 			@find $(LOGDIR)/$(PRODSO) -size 0 -delete || true
-$(PRODA):		$(OBJ)
-			@$(ALINKER) $(PRODA) $(OBJ) 2>> $(LOGDIR)/$(NAME) &&	\
-			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $(PRODA) $(DEFAULT) ||	\
-			 $(ECHO) $(RED)  "[KO]" $(PRODA) $(DEFAULT)
+$(PRODA):		$(PRODOBJ)
+			@$(ALINKER) $(PRODA) $(PRODOBJ) 2>> $(LOGDIR)/$(PRODA) && \
+			 $(ECHO) $(TEAL) "[PRD-OK]" $(GREEN) $(PRODA) $(DEFAULT) || \
+			 $(ECHO) $(RED)  "[PRD-KO]" $(PRODA) $(DEFAULT)
 			@find $(LOGDIR)/$(PRODA) -size 0 -delete || true
 $(DBGSO):		$(DBGOBJ)
-			@$(SOLINKER) $(DBGSO) $(OBJ) 2>> $(LOGDIR)/$(NAME) &&	\
-			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $(DBGSO) $(DEFAULT) ||\
-			 $(ECHO) $(RED)  "[KO]" $(DBGSO) $(DEFAULT)
-			@find $(LOGDIR)/$(PRODSO) -size 0 -delete || true
+			@$(SOLINKER) $(DBGSO) $(DEPS) $(DBGOBJ) 2>> $(LOGDIR)/$(DBGSO) &&	\
+			 $(ECHO) $(TEAL) "[DBG-OK]" $(GREEN) $(DBGSO) $(DEFAULT) ||\
+			 $(ECHO) $(RED)  "[DBG-KO]" $(DBGSO) $(DEFAULT)
+			@find $(LOGDIR)/$(DBGSO) -size 0 -delete || true
 $(DBGA):		$(DBGOBJ)
-			@$(ALINKER) $(DBGA) $(OBJ) 2>> $(LOGDIR)/$(NAME) &&	\
-			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $(DBGA) $(DEFAULT) ||	\
-			 $(ECHO) $(RED)  "[KO]" $(DBGAA) $(DEFAULT)
-			@find $(LOGDIR)/$(PRODA) -size 0 -delete || true
+			@$(ALINKER) $(DBGA) $(DBGOBJ) 2>> $(LOGDIR)/$(DBGA) &&	\
+			 $(ECHO) $(TEAL) "[DBG-OK]" $(GREEN) $(DBGA) $(DEFAULT) || \
+			 $(ECHO) $(RED)  "[DBG-KO]" $(DBGA) $(DEFAULT)
+			@find $(LOGDIR)/$(DBGA) -size 0 -delete || true
+$(TSTA):		$(TSTOBJ)
+			@$(ALINKER) $(TSTA) $(TSTOBJ) 2>> $(LOGDIR)/$(TSTA) &&	\
+			 $(ECHO) $(TEAL) "[TST-OK]" $(GREEN) $(TSTA) $(DEFAULT) || \
+			 $(ECHO) $(RED)  "[TST-KO]" $(TSTA) $(DEFAULT)
+			@find $(LOGDIR)/$(TSTA) -size 0 -delete || true
 
-$(OBJ):
+.cpp.o:
 			@$(eval TRACE="$(addprefix $(LOGDIR), $(subst /,-, $<))")
 			@$(COMPILER) -c $< -o $@ $(PRODFLAGS)			\
 			 $(HEADER) 2>> $(TRACE) &&				\
-			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $< $(DEFAULT) ||	\
-			 $(ECHO) $(RED)  "[KO]" $< $(DEFAULT)
+			 $(ECHO) $(TEAL) "[PRD-OK]" $(GREEN) $< $(DEFAULT) ||	\
+			 $(ECHO) $(RED)  "[PRD-KO]" $< $(DEFAULT)
 			@find $(TRACE) -size 0 -delete || true
-$(DBGOBJ):
+%-dbg.o:		%.cpp
 			@$(eval TRACE="$(addprefix $(LOGDIR), $(subst /,-, $<))")
-			@$(COMPILER) -c $< -o $@ $(DBGLAGS)			\
+			@$(COMPILER) -c $(subst -dbg,,$<) -o $@ $(DBGFLAGS)	\
 			 $(HEADER) 2>> $(TRACE) &&				\
-			 $(ECHO) $(TEAL) "[OK]" $(GREEN) $< $(DEFAULT) ||	\
-			 $(ECHO) $(RED)  "[KO]" $< $(DEFAULT)
+			 $(ECHO) $(TEAL) "[DBG-OK]" $(GREEN) $< $(DEFAULT) ||	\
+			 $(ECHO) $(RED)  "[DBG-KO]" $< $(DEFAULT)
+			@find $(TRACE) -size 0 -delete || true
+%-test.o:		%.cpp
+			@$(eval TRACE="$(addprefix $(LOGDIR), $(subst /,-, $<))")
+			@$(COMPILER) -c $(subst -test,,$<) -o $@ $(TSTFLAGS)	\
+			 $(HEADER) 2>> $(TRACE) &&				\
+			 $(ECHO) $(TEAL) "[TST-OK]" $(GREEN) $< $(DEFAULT) ||	\
+			 $(ECHO) $(RED)  "[TST-KO]" $< $(DEFAULT)
 			@find $(TRACE) -size 0 -delete || true
 
 #################################################################################
@@ -134,9 +164,9 @@ title:
 			@$(ECHO) $(TEAL) $(TITLE) $(DEFAULT)
 			@mkdir -p $(LOGDIR)
 clean:
-			@$(RM) $(OBJ) $(DBGOBJ) &&				\
-			 $(ECHO) $(GREEN) "Object file deleted" $(DEFAULT) ||	\
-			 $(ECHO) $(RED) "Error in clean rule!" $(DEFAULT)
+			@find . -name "*.o" -delete
+			@find . -name "*.gcno" -delete
+			@find . -name "*.gcda" -delete
 fclean:			clean erase
 			@$(RM) $(DBGA) $(DBGSO) $(PRODA) $(PRODSO) &&		\
 			 $(ECHO) $(GREEN) "Program deleted!" $(DEFAULT) ||	\

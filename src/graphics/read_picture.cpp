@@ -67,6 +67,7 @@ t_bunny_picture		*bunny_read_picture_id(const void	*_pic,
   pic->color_mask.full = WHITE;
   pic->smooth = false;
   pic->mosaic = false;
+  pic->glactive = false;
 
   scream_log_if(PATTERN, "ressource,graphics", _pic, len, file, pic);
   return ((t_bunny_picture*)pic);

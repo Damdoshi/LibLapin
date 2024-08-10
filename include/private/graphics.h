@@ -75,6 +75,7 @@ struct				bunny_window
 {
   size_t			type;
   sf::RenderWindow		*window;
+  size_t			glactive;
   size_t			unused;
   ssize_t			width;
   ssize_t			height;
@@ -91,6 +92,7 @@ struct				bunny_picture
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;
@@ -113,6 +115,7 @@ struct				bunny_pixelarray
 {
   size_t			type;
   size_t			unused;
+  size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;
@@ -137,6 +140,7 @@ struct				bunny_gfx_font
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;
@@ -177,6 +181,7 @@ struct				bunny_ttf_font
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;
@@ -218,6 +223,7 @@ struct				bunny_sprite
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;
@@ -255,6 +261,7 @@ struct				bunny_dressed_sprite
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;
@@ -296,6 +303,7 @@ struct				bunny_tilemap
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;

@@ -76,6 +76,7 @@ t_bunny_pixelarray	*bunny_read_pixelarray_id(const void		*buf,
   pa->color_mask.full = WHITE;
   pa->smooth = false;
   pa->mosaic = false;
+  pa->glactive = false;
 
   scream_log_if(PATTERN, "ressource,graphics", buf, len, file, pa);
   return ((t_bunny_pixelarray*)pa);

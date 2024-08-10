@@ -545,6 +545,14 @@ typedef void			(*t_bunny_my_set_polygon)(t_bunny_pixelarray	*pix,
 */
 extern t_bunny_my_set_polygon	gl_bunny_my_set_polygon;
 
+void				bunny_set_zpolygon(t_bunny_buffer		*buf,
+						   const t_bunny_accurate_zposition *pos,
+						   const unsigned int		*col);
+typedef void			(*t_bunny_my_set_zpolygon)(t_bunny_pixelarray	*pix,
+							   const t_bunny_accurate_zposition *pos,
+							   const unsigned int	*col);
+extern t_bunny_my_set_zpolygon	gl_bunny_my_set_zpolygon;
+
 /*!
 ** The bunny_fill function apply a color on the top of the clipped part of the sent picture.
 ** Because it applies a color, it means it apply alpha.

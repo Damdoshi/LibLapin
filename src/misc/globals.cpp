@@ -14,6 +14,7 @@ t_bunny_my_set_pixel		gl_bunny_my_set_pixel = NULL;
 t_bunny_my_set_line		gl_bunny_my_set_line = NULL;
 t_bunny_my_set_disk		gl_bunny_my_set_disk = NULL;
 t_bunny_my_set_polygon		gl_bunny_my_set_polygon = NULL;
+t_bunny_my_set_zpolygon		gl_bunny_my_set_zpolygon = NULL;
 t_bunny_my_fill			gl_bunny_my_fill = NULL;
 t_bunny_my_clear		gl_bunny_my_clear = NULL;
 t_bunny_my_blit			gl_bunny_my_blit = NULL;

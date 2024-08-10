@@ -56,6 +56,7 @@ t_bunny_pixelarray		*bunny_new_pixelarray(unsigned int		width,
   pa->mosaic = false;
 
   pa->res_id = 0;
+  pa->glactive = false;
 
   scream_log_if(PATTERN, "ressource,graphics", width, height, pa);
   return ((t_bunny_pixelarray*)pa);

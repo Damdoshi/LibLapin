@@ -88,6 +88,7 @@ t_bunny_sprite		*_bunny_fill_sprite(t_bunny_sprite	*_spr,
   sprite->color_mask.full = WHITE;
   sprite->smooth = false;
   sprite->mosaic = false;
+  sprite->glactive = false;
 
   if (bunny_set_clipable_attribute
       (NULL, (t_bunny_clipable**)&sprite, &conf, BCT_SPRITE) == false)
