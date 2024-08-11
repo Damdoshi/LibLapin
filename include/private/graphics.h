@@ -130,7 +130,7 @@ struct				bunny_pixelarray
   bool				mosaic;
   unsigned int			*rawpixels;
 
-  t_bunny_bitwidth		bits_per_pixels;
+  uint8_t			bits_per_pixels;
   bool				bitplane;
   uint8_t			palette_size;
   t_bunny_color			*palette;
@@ -393,6 +393,7 @@ struct				bunny_parallax
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;

@@ -52,6 +52,7 @@ t_bunny_parallax	*bunny_read_parallax_wh(t_bunny_configuration	*cnf,
   px->color_mask.full = WHITE;
   px->smooth = false;
   px->mosaic = false;
+  px->glactive = false;
 
   if (bunny_set_clipable_attribute(NULL, (t_bunny_clipable**)&px, &cnf, BCT_PARALLAX) == false)
     goto DeleteTexture;

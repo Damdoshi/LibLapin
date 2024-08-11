@@ -26,7 +26,7 @@ t_bunny_pixelarray	*bunny_forge_pixelarray(unsigned int	w,
   struct bunny_pixelarray *pa;
   size_t		siz;
   size_t		i;
-  static const size_t	bitwm[] = {1, 2, 4, 8, 16, 24, 32, 128};
+  static const size_t	bitwm[] = {1, 2, 4, 8, 16, 32, 128};
   size_t		bpp = bitwm[bitw];
 
   // Vérification de la validité du bitage de l'image
@@ -70,6 +70,7 @@ t_bunny_pixelarray	*bunny_forge_pixelarray(unsigned int	w,
       ((unsigned char*)pa->rawpixels)[i] = rand();
 
   pa->type = SYSTEM_RAM;
+  pa->unused = 0;
   pa->width = w;
   pa->height = h;
 
@@ -89,11 +90,11 @@ t_bunny_pixelarray	*bunny_forge_pixelarray(unsigned int	w,
   pa->mosaic = false;
   pa->glactive = false;
 
-  pa->bits_per_pixel = bitw;
+  pa->bits_per_pixels = bitw;
   pa->bitplane = bitplane;
   if (palette)
     {
-      if (!(pa->palette = bunny_memdup(palette, palette_size * sizeof(*pa->palette))))
+      if (!(pa->palette = (t_bunny_color*)bunny_memdup(palette, palette_size * sizeof(*pa->palette))))
 	goto DeleteSprite;
       pa->palette_size = palette_size;
     }
@@ -104,9 +105,9 @@ t_bunny_pixelarray	*bunny_forge_pixelarray(unsigned int	w,
     }
 
   if (shifts)
-    memcpy(pa->color_shift, shifts, sizeof(pa->color_shift));
+    memcpy(pa->color_shifts, shifts, sizeof(pa->color_shifts));
   else
-    memcpy(pa->color_shift, default_shift, sizeof(pa->color_shift));
+    memcpy(pa->color_shifts, default_shift, sizeof(pa->color_shifts));
   pa->res_id = 0;
 
   scream_log_if(PATTERN, "ressource,graphics", w, h, pa);

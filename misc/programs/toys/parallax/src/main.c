@@ -68,7 +68,7 @@ t_bunny_response	display(void			*unused)
 
 int			main(void)
 {
-  assert(win = bunny_begin("./window.dab"));
+  assert((win = bunny_begin("./window.dab")));
   if (!(pax = bunny_load_parallax_wh("./parallax.dab", win->buffer.width, win->buffer.height)))
     {
       bunny_perror("bunny_load_tilemap");

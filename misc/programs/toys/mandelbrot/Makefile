@@ -10,14 +10,14 @@
   MOD		=	`pwd | rev | cut -d "/" -f3 | rev`
 
   BIN		=	`pwd | rev | cut -d "/" -f1 | rev`
-  FLAG		=	-W -Wall -ffast-math -O3
+  FLAG		=	-W -Wall -Werror -g -g3 -ggdb
 
   INCLUDE	=	-I./include/ -I../../include/
   SRC		=	$(wildcard src/*.c)
   OBJ		=	$(SRC:.c=.o)
-  LIBPATH	=	-L../../
-  LIB		=	-llapin -lsfml-graphics -lsfml-audio -lsfml-window	\
-			-lsfml-system -lstdc++ -lm -ldl -lpthread
+  LIBPATH	=	-L../../../../
+  LIB		=	../../../../liblapin-dbg.a -lsfml-graphics -lsfml-audio -lsfml-window	\
+			-lsfml-system -lstdc++ -lm -ldl -lpthread -lavcall
 
   ## Rules ------------------------------------------------------------------
   all:		bin

@@ -56,19 +56,19 @@ typedef enum			e_bunny_rgb
 ** The TO_ALPHA macro transforms the given parameter into an alpha component for a color.
 ** For example, TO_ALPHA(42) will return 0x2a000000 (0x2a being 42 in hex)
 */
-# define			TO_ALPHA(a)			(((a) & 0xFF) << (ALPHA_CMP * 8))
+# define			TO_ALPHA(a)			(((int)(a) & 0xFF) << (ALPHA_CMP * 8))
 /*!
 ** The TO_RED macro transforms the given parameter into a red component for a color.
 */
-# define			TO_RED(a)			(((a) & 0xFF) << (RED_CMP * 8))
+# define			TO_RED(a)			(((int)(a) & 0xFF) << (RED_CMP * 8))
 /*!
 ** The TO_GREEN macro transforms the given parameter into a green component for a color.
 */
-# define			TO_GREEN(a)			(((a) & 0xFF) << (GREEN_CMP * 8))
+# define			TO_GREEN(a)			(((int)(a) & 0xFF) << (GREEN_CMP * 8))
 /*!
 ** The TO_BLUE macro transforms the given parameter into a blue component for a color.
 */
-# define			TO_BLUE(a)			(((a) & 0xFF) << (BLUE_CMP * 8))
+# define			TO_BLUE(a)			(((int)(a) & 0xFF) << (BLUE_CMP * 8))
 /*!
 ** The GET_COLOR macro removes the alpha component of the given color.
 ** For example, TO_ALPHA(WHITE) will return 0x00FFFFFF (WHITE being 0xFFFFFFFF)
@@ -90,13 +90,13 @@ typedef enum			e_bunny_rgb
 ** Compose your gray with alpha level
 */
 # define			ALPHA_GRAY(a, g)		\
-  COLOR(a, g, g, g)
+  COLOR(a, (g), (g), (g))
 
 /*!
 ** Compose your plain grey
 */
 # define			GRAY(g)				\
-  COLOR(255, g, g, g)
+  COLOR(255, (g), (g), (g))
 
 /*!
 ** The t_bunny_color union represents a pixel color.

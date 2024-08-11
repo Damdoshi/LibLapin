@@ -12,7 +12,7 @@ bool			expr_compute_test(Expression		&exp,
 					  SmallConf		*artif,
 					  SmallConf		*variables)
 {
-  bool			cnst;
+  bool			cnst = false;
   size_t		i;
   bool			res;
 

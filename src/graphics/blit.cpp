@@ -17,6 +17,191 @@
 
 #include			"lapin_private.h"
 
+static inline unsigned int	extract_bitplane(struct bunny_pixelarray		&pic,
+						 uint8_t				*px,
+						 int					x,
+						 int					y)
+{
+  unsigned int			data = 0;
+  int				plansize = x + y * pic.width;
+
+  // La taille d'un plan de bit.
+  plansize += plansize % 8 ? (8 - plansize % 8) : 0;
+  for (int i = 0; i < pic.bits_per_pixels; ++i)
+    {
+      data <<= 1;
+      data |= bunny_bitfield_get(&px[i * plansize], x + y * pic.width);
+    }
+  if (pic.palette)
+    return (pic.palette[data % pic.palette_size].full);
+  switch ((int)pic.bits_per_pixels)
+    {
+    case 1:
+      return (GRAY((data / 1.0) * 255));
+    case 2:
+      return (GRAY((data / 3.0) * 255));
+    case 3:
+      return (GRAY((data / 7.0) * 255));
+    case 4:
+      return (COLOR
+	      (data & (1 << pic.color_shifts[ALPHA_CMP]) ? 255 : 0,
+	       data & (1 << pic.color_shifts[RED_CMP]) ? 255 : 0,
+	       data & (1 << pic.color_shifts[GREEN_CMP]) ? 255 : 0,
+	       data & (1 << pic.color_shifts[BLUE_CMP]) ? 255 : 0
+	       ));
+    case 5:
+      if (!(data & 0x10))
+	return (COLOR
+		(data & (1 << pic.color_shifts[ALPHA_CMP]) ? 255 : 0,
+		 data & (1 << pic.color_shifts[RED_CMP]) ? 255 : 0,
+		 data & (1 << pic.color_shifts[GREEN_CMP]) ? 255 : 0,
+		 data & (1 << pic.color_shifts[BLUE_CMP]) ? 255 : 0
+		 ));
+      return (COLOR
+	      (data & (1 << pic.color_shifts[ALPHA_CMP]) ? 128 : 0,
+	       data & (1 << pic.color_shifts[RED_CMP]) ? 128 : 0,
+	       data & (1 << pic.color_shifts[GREEN_CMP]) ? 128 : 0,
+	       data & (1 << pic.color_shifts[BLUE_CMP]) ? 128 : 0
+	       ));
+    case 8:
+      return (COLOR
+	      (data >> (2 * pic.color_shifts[ALPHA_CMP]) & 3,
+	       data >> (2 * pic.color_shifts[RED_CMP]) & 3,
+	       data >> (2 * pic.color_shifts[GREEN_CMP]) & 3,
+	       data >> (2 * pic.color_shifts[BLUE_CMP]) & 3
+	       ));
+    case 12:
+      return (COLOR
+	      (data >> (3 * pic.color_shifts[ALPHA_CMP]) & 7,
+	       data >> (3 * pic.color_shifts[RED_CMP]) & 7,
+	       data >> (3 * pic.color_shifts[GREEN_CMP]) & 7,
+	       data >> (3 * pic.color_shifts[BLUE_CMP]) & 7
+	       ));
+    default:
+      return (rand() | BLACK);
+    }
+  return (rand() | BLACK);
+}
+
+static inline unsigned int	extract_color(struct bunny_pixelarray			&pic,
+					      void					*_px,
+					      int					x,
+					      int					y)
+{
+  if (pic.bitplane)
+    return (extract_bitplane(pic, (uint8_t*)_px, x, y));
+  unsigned int			data;
+  uint8_t			*px = (uint8_t*)_px;
+  uint16_t			*px16 = (uint16_t*)_px;
+  float				*pxf = (float*)_px;
+
+  switch (pic.bits_per_pixels)
+    {
+    case BBW_BLACK_AND_WHITE:
+      data = (px[(x + y * pic.width) / 8] >> (1 * ((x + y * pic.width) % 8))) & 0b00000001;
+      if (pic.palette)
+	return (pic.palette[data % pic.palette_size].full);
+      return (GRAY((data / 1.0) * 255));
+    case BBW_4_COLORS:
+      data = (px[(x + y * pic.width) / 4] >> (2 * ((x + y * pic.width) % 4))) & 0b00000011;
+      if (pic.palette)
+	return (pic.palette[data % pic.palette_size].full);
+      return (GRAY((data / 3.0) * 255));
+    case BBW_16_COLORS:
+      data = (px[(x + y * pic.width) / 2] >> (4 * ((x + y * pic.width) % 2))) & 0b00001111;
+      if (pic.palette)
+	return (pic.palette[data % pic.palette_size].full);
+      return (COLOR
+	      (data & (1 << pic.color_shifts[ALPHA_CMP]) ? 255 : 0,
+	       data & (1 << pic.color_shifts[RED_CMP]) ? 255 : 0,
+	       data & (1 << pic.color_shifts[GREEN_CMP]) ? 255 : 0,
+	       data & (1 << pic.color_shifts[BLUE_CMP]) ? 255 : 0
+	       ));
+    case BBW_256_COLORS:
+      {
+	data = px[x + y * pic.width];
+	if (pic.palette)
+	  return (pic.palette[data % pic.palette_size].full);
+	return (COLOR
+		(255 * (data >> (2 * pic.color_shifts[ALPHA_CMP]) & 3) / 7.0,
+		 255 * (data >> (2 * pic.color_shifts[RED_CMP]) & 3) / 7.0,
+		 255 * (data >> (2 * pic.color_shifts[GREEN_CMP]) & 3) / 7.0,
+		 255 * (data >> (2 * pic.color_shifts[BLUE_CMP]) & 3) / 7.0
+		 ));
+      }
+    case BBW_64K_COLORS:
+      {
+	data = px16[x + y * pic.width];
+	return (COLOR
+		(255 * (data >> (4 * pic.color_shifts[ALPHA_CMP]) & 0xF) / 15.0,
+		 255 * (data >> (4 * pic.color_shifts[RED_CMP]) & 0xF) / 15.0,
+		 255 * (data >> (4 * pic.color_shifts[GREEN_CMP]) & 0xF) / 15.0,
+		 255 * (data >> (4 * pic.color_shifts[BLUE_CMP]) & 0xF) / 15.0
+		 ));
+      }
+    case BBW_ARGB_COLORS:
+      return (((unsigned int*)_px)[x + y * pic.width]);
+    default:
+      float	f[4] =
+	{
+	 bunny_clamp(pxf[(x + y * pic.width) * 4 + 0], 0, 1),
+	 bunny_clamp(pxf[(x + y * pic.width) * 4 + 1], 0, 1),
+	 bunny_clamp(pxf[(x + y * pic.width) * 4 + 2], 0, 1),
+	 bunny_clamp(pxf[(x + y * pic.width) * 4 + 3], 0, 1)
+	};
+      return (COLOR(f[0], f[1], f[2], f[3]));
+    }
+  return (BLACK);
+}
+
+static sf::Sprite		*blit_pixelarray(struct bunny_pixelarray		&pic,
+						 const t_bunny_position			&pos)
+{
+  sf::IntRect			rect;
+  int				i;
+  int				j;
+
+  rect.left = pic.rect.x;
+  rect.top = pic.rect.y;
+  rect.width = pic.rect.w;
+  rect.height = pic.rect.h;
+  for (j = pic.rect.y; j < pic.rect.y + pic.rect.h; ++j)
+    for (i = pic.rect.x; i < pic.rect.x + pic.rect.w; ++i)
+      if (i >= 0 && j >= 0 && i < pic.width && j < pic.height)
+	{
+	  t_bunny_color c;
+
+	  c.full = extract_color(pic, pic.rawpixels, i, j);
+	  pic.image->setPixel
+	    (i, j,
+	     sf::Color
+	     (c.argb[RED_CMP],
+	      c.argb[GREEN_CMP],
+	      c.argb[BLUE_CMP],
+	      c.argb[ALPHA_CMP]
+	      )
+	     );
+	}
+  pic.tex->loadFromImage(*pic.image, rect);
+  pic.sprite->setPosition(pos.x, pos.y);
+  if (gl_full_blit)
+    {
+      pic.sprite->setOrigin(pic.origin.x, pic.origin.y);
+      pic.sprite->setScale(pic.scale.x, pic.scale.y);
+      pic.sprite->setRotation(pic.rotation);
+      pic.sprite->setColor
+	(sf::Color(pic.color_mask.argb[RED_CMP],
+		   pic.color_mask.argb[GREEN_CMP],
+		   pic.color_mask.argb[BLUE_CMP],
+		   pic.color_mask.argb[ALPHA_CMP]
+		   ));
+      pic.tex->setSmooth(pic.smooth);
+      pic.tex->setRepeated(pic.mosaic);
+    }
+  pic.sprite->setTexture(*pic.tex, true);
+  return (pic.sprite);
+}
+
 void				merge_clothe(t_bunny_map		*nod,
 					     void			*pnw);
 
@@ -131,49 +316,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
       }
     case SYSTEM_RAM:
       {
-	struct bunny_pixelarray	*pic = (struct bunny_pixelarray*)picture;
-	sf::IntRect		rect;
-	int			i;
-	int			j;
-
-	rect.left = pic->rect.x;
-	rect.top = pic->rect.y;
-	rect.width = pic->rect.w;
-	rect.height = pic->rect.h;
-	for (j = picture->clip_y_position; j < picture->clip_y_position + picture->clip_height; ++j)
-	  for (i = picture->clip_x_position; i < picture->clip_x_position + picture->clip_width; ++i)
-	    if (i >= 0 && j >= 0 && i < picture->buffer.width && j < picture->buffer.height)
-	      {
-		unsigned int	c = pic->rawpixels[i + j * pic->width];
-
-		pic->image->setPixel
-		  (i, j,
-		   sf::Color
-		   ((c >> (RED_CMP * 8)) & 0xFF,
-		    (c >> (GREEN_CMP * 8)) & 0xFF,
-		    (c >> (BLUE_CMP * 8)) & 0xFF,
-		    (c >> (ALPHA_CMP * 8)) & 0xFF
-		    )
-		 );
-	      }
-	pic->tex->loadFromImage(*pic->image, rect);
-	pic->sprite->setPosition(pos->x, pos->y);
-	if (gl_full_blit)
-	  {
-	    pic->sprite->setOrigin(pic->origin.x, pic->origin.y);
-	    pic->sprite->setScale(pic->scale.x, pic->scale.y);
-	    pic->sprite->setRotation(pic->rotation);
-	    pic->sprite->setColor
-	      (sf::Color(pic->color_mask.argb[RED_CMP],
-			 pic->color_mask.argb[GREEN_CMP],
-			 pic->color_mask.argb[BLUE_CMP],
-			 pic->color_mask.argb[ALPHA_CMP]
-			 ));
-	    pic->tex->setSmooth(pic->smooth);
-	    pic->tex->setRepeated(pic->mosaic);
-	  }
-	pic->sprite->setTexture(*pic->tex, true);
-	spr = pic->sprite;
+	spr = blit_pixelarray(*(struct bunny_pixelarray*)picture, *pos);
 	break ;
       }
     default:

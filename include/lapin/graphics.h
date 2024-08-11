@@ -90,9 +90,8 @@ typedef enum			e_bunny_bitwidth
     BBW_16_COLORS,
     BBW_256_COLORS,
     BBW_64K_COLORS,
-    BBW_TRUE_COLOR,
-    BBW_ARGB_COLOR,
-    BBW_FLOAT_COLOR
+    BBW_ARGB_COLORS,
+    BBW_FLOAT_COLORS
   }				t_bunny_bitwidth;
 
 /*!
@@ -127,7 +126,8 @@ typedef struct			s_bunny_pixelarray
   t_bunny_clipable		clipable;
   void * const			pixels;
   /* Definition of the organisation of the pixelarray */
-  const t_bunny_bitwidth	bits_per_pixels;
+  // If bitplane is false, bits_per_pixels is a t_bunny_bitwidth, else it is a int inside [1;8]
+  const unsigned char		bits_per_pixels;
   const bool			bitplane;
   const unsigned char		color_palette_size;
   t_bunny_color * const		color_palette;
@@ -150,8 +150,8 @@ t_bunny_pixelarray		*bunny_new_pixelarray(unsigned int		wid,
 
 t_bunny_pixelarray		*bunny_forge_pixelarray(unsigned int		wid,
 							unsigned int		hei,
-							const uint8_t		shifts,
-							t_buny_bunny_bitwidth	bitw,
+							const uint8_t		*shifts,
+							t_bunny_bitwidth	bitw,
 							bool			bitplane,
 							t_bunny_color		*palette,
 							size_t			palette_size);

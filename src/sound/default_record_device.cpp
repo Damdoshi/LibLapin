@@ -3,15 +3,16 @@
 //
 // LibLapin
 
-#include			"lapin_private.h"
+#include	<stdio.h>
+#include	"lapin_private.h"
 
-const char			*bunny_default_record_device(void)
+const char	*bunny_default_record_device(void)
 {
-  static char			buf[512];
+  static char	buf[512];
 
   if (buf[0] != '\0')
     return (&buf[0]);
-  strncpy(&buf[0], sf::SoundBufferRecorder::getDefaultDevice().c_str(), sizeof(buf));
+  snprintf(buf, sizeof(buf), "%s", sf::SoundBufferRecorder::getDefaultDevice().c_str());
   return (&buf[0]);
 }
 

@@ -41,6 +41,14 @@ void				bunny_consistancy(void)
   do_assert(&usr_pix->clipable.smooth, &prv_pix->smooth);
   do_assert(&usr_pix->clipable.mosaic, &prv_pix->mosaic);
   do_assert(&usr_pix->pixels, &prv_pix->rawpixels);
+  do_assert(&usr_pix->bits_per_pixels, &prv_pix->bits_per_pixels);
+  do_assert(&usr_pix->bitplane, &prv_pix->bitplane);
+  do_assert(&usr_pix->color_palette_size, &prv_pix->palette_size);
+  do_assert(&usr_pix->color_palette, &prv_pix->palette);
+  do_assert(&usr_pix->color_shifts[0], &prv_pix->color_shifts[0]);
+  do_assert(&usr_pix->color_shifts[1], &prv_pix->color_shifts[1]);
+  do_assert(&usr_pix->color_shifts[2], &prv_pix->color_shifts[2]);
+  do_assert(&usr_pix->color_shifts[3], &prv_pix->color_shifts[3]);
 
   t_bunny_sprite		*usr_sprite = NULL;
   struct bunny_sprite		*prv_sprite = NULL;
