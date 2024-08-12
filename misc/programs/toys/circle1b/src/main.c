@@ -15,13 +15,15 @@ int			main(void)
      2
      );
 
+  bunny_vertical_sync(win, true);
+
   t_bunny_position	pos;
   int			i;
   int			j;
   int			k;
 
   k = 0;
-  while (1)
+  while (k < 50)
     {
       for (j = 0; j < win->buffer.height; ++j)
 	for (i = 0; i < win->buffer.width; ++i)
@@ -46,8 +48,15 @@ int			main(void)
       bunny_usleep(1e5);
       if (++k % 10 == 0)
 	{
-	  pix->color_palette[0].full = rand() | BLACK;
-	  pix->color_palette[1].full = ~pix->color_palette[0].full | BLACK;
+	  if (pix->color_palette)
+	    {
+	      pix->color_palette[0].full = rand() | BLACK;
+	      pix->color_palette[1].full = ~pix->color_palette[0].full | BLACK;
+	    }
+	  if (k >= 30)
+	    pix->color_palette_size = 1;
+	  if (k >= 40)
+	    pix->color_palette_size = 0;
 	}
     }
   bunny_delete_clipable(&pix->clipable);

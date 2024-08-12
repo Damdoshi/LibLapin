@@ -32,7 +32,7 @@ static inline unsigned int	extract_bitplane(struct bunny_pixelarray		&pic,
       data <<= 1;
       data |= bunny_bitfield_get(&px[i * plansize], x + y * pic.width);
     }
-  if (pic.palette)
+  if (pic.palette && pic.palette_size)
     return (pic.palette[data % pic.palette_size].full);
   switch ((int)pic.bits_per_pixels)
     {
@@ -99,17 +99,17 @@ static inline unsigned int	extract_color(struct bunny_pixelarray			&pic,
     {
     case BBW_BLACK_AND_WHITE:
       data = (px[(x + y * pic.width) / 8] >> (1 * ((x + y * pic.width) % 8))) & 0b00000001;
-      if (pic.palette)
+      if (pic.palette && pic.palette_size)
 	return (pic.palette[data % pic.palette_size].full);
       return (GRAY((data / 1.0) * 255));
     case BBW_4_COLORS:
       data = (px[(x + y * pic.width) / 4] >> (2 * ((x + y * pic.width) % 4))) & 0b00000011;
-      if (pic.palette)
+      if (pic.palette && pic.palette_size)
 	return (pic.palette[data % pic.palette_size].full);
       return (GRAY((data / 3.0) * 255));
     case BBW_16_COLORS:
       data = (px[(x + y * pic.width) / 2] >> (4 * ((x + y * pic.width) % 2))) & 0b00001111;
-      if (pic.palette)
+      if (pic.palette && pic.palette_size)
 	return (pic.palette[data % pic.palette_size].full);
       return (COLOR
 	      (data & (1 << pic.color_shifts[ALPHA_CMP]) ? 255 : 0,
@@ -120,7 +120,7 @@ static inline unsigned int	extract_color(struct bunny_pixelarray			&pic,
     case BBW_256_COLORS:
       {
 	data = px[x + y * pic.width];
-	if (pic.palette)
+	if (pic.palette && pic.palette_size)
 	  return (pic.palette[data % pic.palette_size].full);
 	return (COLOR
 		(255 * (data >> (2 * pic.color_shifts[ALPHA_CMP]) & 3) / 7.0,
@@ -140,14 +140,20 @@ static inline unsigned int	extract_color(struct bunny_pixelarray			&pic,
 		 ));
       }
     case BBW_ARGB_COLORS:
-      return (((unsigned int*)_px)[x + y * pic.width]);
+      data = ((unsigned int*)_px)[x + y * pic.width];
+      return (COLOR
+	      (255 * (data >> (8 * pic.color_shifts[ALPHA_CMP]) & 0xFF) / 255.0,
+	       255 * (data >> (8 * pic.color_shifts[RED_CMP]) & 0xFF) / 255.0,
+	       255 * (data >> (8 * pic.color_shifts[GREEN_CMP]) & 0xFF) / 255.0,
+	       255 * (data >> (8 * pic.color_shifts[BLUE_CMP]) & 0xFF) / 255.0
+	       ));
     default:
       float	f[4] =
 	{
-	 bunny_clamp(pxf[(x + y * pic.width) * 4 + 0], 0, 1),
-	 bunny_clamp(pxf[(x + y * pic.width) * 4 + 1], 0, 1),
-	 bunny_clamp(pxf[(x + y * pic.width) * 4 + 2], 0, 1),
-	 bunny_clamp(pxf[(x + y * pic.width) * 4 + 3], 0, 1)
+	 bunny_clamp(pxf[(x + y * pic.width) * 4 + pic.color_shifts[ALPHA_CMP]], 0, 1) * 255,
+	 bunny_clamp(pxf[(x + y * pic.width) * 4 + pic.color_shifts[RED_CMP]], 0, 1) * 255,
+	 bunny_clamp(pxf[(x + y * pic.width) * 4 + pic.color_shifts[GREEN_CMP]], 0, 1) * 255,
+	 bunny_clamp(pxf[(x + y * pic.width) * 4 + pic.color_shifts[BLUE_CMP]], 0, 1) * 255
 	};
       return (COLOR(f[0], f[1], f[2], f[3]));
     }
@@ -171,7 +177,14 @@ static sf::Sprite		*blit_pixelarray(struct bunny_pixelarray		&pic,
 	{
 	  t_bunny_color c;
 
-	  c.full = extract_color(pic, pic.rawpixels, i, j);
+	  if (pic.bits_per_pixels == BBW_ARGB_COLORS &&
+	      pic.color_shifts[ALPHA_CMP] == ALPHA_CMP &&
+	      pic.color_shifts[RED_CMP] == RED_CMP &&
+	      pic.color_shifts[GREEN_CMP] == GREEN_CMP &&
+	      pic.color_shifts[BLUE_CMP] == BLUE_CMP)
+	    c.full = ((unsigned int*)pic.rawpixels)[i + j * pic.width];
+	  else
+	    c.full = extract_color(pic, pic.rawpixels, i, j);
 	  pic.image->setPixel
 	    (i, j,
 	     sf::Color

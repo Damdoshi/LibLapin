@@ -94,13 +94,13 @@ t_bunny_pixelarray	*bunny_forge_pixelarray(unsigned int	w,
   pa->bitplane = bitplane;
   if (palette)
     {
-      if (!(pa->palette = (t_bunny_color*)bunny_memdup(palette, palette_size * sizeof(*pa->palette))))
-	goto DeleteSprite;
+      memset(pa->palette, 0, sizeof(pa->palette));
+      memcpy(pa->palette, palette, palette_size * sizeof(pa->palette[0]));
       pa->palette_size = palette_size;
     }
   else
     {
-      pa->palette = NULL;
+      memset(pa->palette, 0, sizeof(pa->palette));
       pa->palette_size = 0;
     }
 
@@ -113,9 +113,6 @@ t_bunny_pixelarray	*bunny_forge_pixelarray(unsigned int	w,
   scream_log_if(PATTERN, "ressource,graphics", w, h, pa);
   return ((t_bunny_pixelarray*)pa);
 
- DeleteSprite:
-  if (pa->sprite)
-    delete pa->sprite;
  DeleteTexture:
   if (pa->tex)
     delete pa->tex;

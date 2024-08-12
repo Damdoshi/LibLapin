@@ -129,9 +129,9 @@ typedef struct			s_bunny_pixelarray
   // If bitplane is false, bits_per_pixels is a t_bunny_bitwidth, else it is a int inside [1;8]
   const unsigned char		bits_per_pixels;
   const bool			bitplane;
-  const unsigned char		color_palette_size;
-  t_bunny_color * const		color_palette;
-  const uint8_t			color_shifts[4];
+  unsigned short		color_palette_size; // [0-256]
+  t_bunny_color			color_palette[256];
+  uint8_t			color_shifts[4];
 }				t_bunny_pixelarray;
 # pragma			pack()
 

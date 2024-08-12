@@ -132,8 +132,8 @@ struct				bunny_pixelarray
 
   uint8_t			bits_per_pixels;
   bool				bitplane;
-  uint8_t			palette_size;
-  t_bunny_color			*palette;
+  uint16_t			palette_size;
+  t_bunny_color			palette[256];
   uint8_t			color_shifts[4];
 
   size_t			res_id;
