@@ -12,7 +12,7 @@ void			__bunny_draw_cinematic(struct bunny_cinematic	*cin)
 
   if (cin->background_color.argb[ALPHA_CMP] != 0)
     bunny_fill((t_bunny_buffer*)cin, cin->background_color.full);
-  
+
   for (bunny_map_all(cin->pictures, node))
     {
       pic = bunny_map_data(*node, t_bunny_sprite*);

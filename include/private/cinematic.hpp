@@ -10,6 +10,7 @@ struct				bunny_cinematic
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
   ssize_t			height;

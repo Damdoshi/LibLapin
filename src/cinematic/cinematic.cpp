@@ -25,7 +25,7 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
        ++argc)
     argv[argc] = seq.lines[cin->current_command].parameters[argc];
   argv[argc] = 0;
-  
+
   t_bunny_cinematic_command cmd;
   char			*res;
   char			*res2;
@@ -44,7 +44,7 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
   // Erreur. Le détail est dans la commande.
   if (res != NULL && *res == '\0')
     return (EXIT_ON_ERROR);
-  
+
   // On nettoie toujours les commandes d'instructions, sauf
   // si l'on reste sur la même instruction
   if (res == NULL || strcmp(res, ".stay") != 0)

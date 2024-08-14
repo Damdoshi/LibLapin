@@ -20,12 +20,25 @@ char			*cinematic_sleep(PARAMS)
     bool		waiting;
     double		end_date;
   }			*sd = (struct sdt*)cin->stack_frame;
+  const char		*str;
 
   if (argc < 1)
     return (NULL);
   if (!sd->waiting)
     {
-      if (!bunny_configuration_getf_double(argv[0], &sd->end_date, "."))
+      if (!bunny_configuration_getf_string(argv[0], &str, "."))
+	scream_error_if(return (""), BE_SYNTAX_ERROR,
+			"Invalid instruction parameter for %s. "
+			"A double was expected. "
+			"Line %d in sequence %s",
+			"cinematic,syntax",
+			__func__,
+			cin->current_command,
+			bunny_configuration_get_address(cin->program)
+			);
+      if (*str != '$')
+	str = ".";
+      if (!bunny_configuration_getf_double(argv[0], &sd->end_date, "%s", str))
 	scream_error_if(return (""), BE_SYNTAX_ERROR,
 			"Invalid instruction parameter for %s. "
 			"A double was expected. "
@@ -44,7 +57,7 @@ char			*cinematic_sleep(PARAMS)
   return (NULL);
 }
 
-char			*cinematic_color(PARAMS, bool fore)
+static char		*cinematic_color(PARAMS, bool fore)
 {
   t_bunny_color		col;
   double		dtmp;
@@ -135,7 +148,7 @@ char			*cinematic_text(PARAMS)
       if (!event)
 	{
 	  size_t	tlen = strlen(cte->tex);
-	  
+
 	  if ((cte->fnt->string_len += elapsed * fabs(cte->speed)) >= tlen)
 	    {
 	      cte->fnt->string_len = tlen;
@@ -148,7 +161,7 @@ char			*cinematic_text(PARAMS)
 	{
 	  /////////////////
 	}
-      
+
       /// Gestion des events
       return (NULL);
     }
@@ -181,7 +194,7 @@ char			*cinematic_text(PARAMS)
 		    cin->current_command,
 		    bunny_configuration_get_address(cin->program)
 		    );
-  
+
   // Pour la voix
   if (argc <= 3)
     return (".stay");
@@ -248,6 +261,9 @@ char			*cinematic_display(PARAMS)
     {
       if (!bunny_configuration_getf_string(argv[i], &str, "."))
 	goto Bad;
+      if (*str == '$') // Variables
+	if (!bunny_configuration_getf_string(cin->configuration, &str, "%s", &str[1]))
+	  goto Bad;
       if ((pic = bunny_map_get_data(cin->pictures, str, t_bunny_clipable*)) == NULL)
 	goto Bad;
       pic->color_mask.argb[ALPHA_CMP] = 255;
@@ -276,6 +292,9 @@ char			*cinematic_hide(PARAMS)
     {
       if (!bunny_configuration_getf_string(argv[i], &str, "."))
 	goto Bad;
+      if (*str == '$') // Variables
+	if (!bunny_configuration_getf_string(cin->configuration, &str, "%s", &str[1]))
+	  goto Bad;
       if ((pic = bunny_map_get_data(cin->pictures, str, t_bunny_clipable*)) == NULL)
 	goto Bad;
       pic->color_mask.argb[ALPHA_CMP] = 0;
@@ -322,4 +341,3 @@ char			*cinematic_go(PARAMS)
   VOID();
   return (NULL);
 }
-
