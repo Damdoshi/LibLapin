@@ -23,15 +23,13 @@ static inline unsigned int	extract_bitplane(struct bunny_pixelarray		&pic,
 						 int					y)
 {
   unsigned int			data = 0;
-  int				plansize = x + y * pic.width;
+  int				plansize = pic.height * pic.width;
 
   // La taille d'un plan de bit.
   plansize += plansize % 8 ? (8 - plansize % 8) : 0;
+  plansize *= pic.bits_per_pixels / 8.0;
   for (int i = 0; i < pic.bits_per_pixels; ++i)
-    {
-      data <<= 1;
-      data |= bunny_bitfield_get(&px[i * plansize], x + y * pic.width);
-    }
+    data = data | (bunny_bitfield_get(&px[i * plansize], x + y * pic.width) ? 1 << i : 0);
   if (pic.palette && pic.palette_size)
     return (pic.palette[data % pic.palette_size].full);
   switch ((int)pic.bits_per_pixels)

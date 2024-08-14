@@ -27,12 +27,21 @@ t_bunny_pixelarray	*bunny_forge_pixelarray(unsigned int	w,
   size_t		siz;
   size_t		i;
   static const size_t	bitwm[] = {1, 2, 4, 8, 16, 32, 128};
-  size_t		bpp = bitwm[bitw];
+  size_t		bpp;
 
-  // Vérification de la validité du bitage de l'image
-  if (bitplane && bitw > BBW_256_COLORS)
-    return (NULL);
-  siz = ceil((double)bpp * w * h / 8);
+  if (bitplane)
+    {
+      if ((bpp = (size_t)bitw) > 32)
+	return (NULL);
+      size_t plansize = w * h;
+      plansize += plansize % 8 ? (8 - plansize % 8) : 0;
+      siz = plansize * (bpp / 8.0);
+    }
+  else
+    {
+      bpp = bitwm[bitw];
+      siz = ceil((double)bpp * w * h / 8);
+    }
 
   if ((pa = new (std::nothrow) struct bunny_pixelarray) == NULL)
     goto ReturnNull;
@@ -61,7 +70,7 @@ t_bunny_pixelarray	*bunny_forge_pixelarray(unsigned int	w,
       pa->tex = NULL;
       pa->sprite = NULL;
     }
-  
+
   if (bpp == 32 && bitplane == false && shifts && memcmp(shifts, default_shift, sizeof(default_shift)))
     for (i = 0; i < w * h; ++i)
       ((unsigned int*)pa->rawpixels)[i] = PINK2;
@@ -126,5 +135,4 @@ t_bunny_pixelarray	*bunny_forge_pixelarray(unsigned int	w,
  ReturnNull:
   scream_error_if(return (NULL), ENOMEM, PATTERN, "ressource,graphics", w, h, (void*)NULL);
   return (NULL);
-
 }
