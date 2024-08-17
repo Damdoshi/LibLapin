@@ -102,4 +102,19 @@ typedef uint8_t			t_bunny_auto_bitfield8;
 # define			bunny_auto_bitfield_get(bf, bit)	\
   bunny_bitfield_get(&bf, bit)
 
+# define			bunny_left_binary_rotation(data, shift)	\
+  (((data) << (shift)) | ( (data) >> ((sizeof(data) * 8) - (shift))))
+
+# define			bunny_right_binary_rotation(data, shift)\
+  (((data) >> (shift)) | ((data) << ((sizeof(data) * 8) - (shift))))
+
+void				bunny_left_bitfield_rotation(t_bunny_bitfield	*bf,
+							     size_t		len,
+							     size_t		shift);
+
+void				bunny_right_bitfield_rotation(t_bunny_bitfield	*bf,
+							      size_t		len,
+							      size_t		shift);
+
+
 #endif	/*			__LAPIN_BITFIELD_H__			*/
