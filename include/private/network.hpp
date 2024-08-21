@@ -7,6 +7,7 @@
 
 #ifndef			__LAPIN_NETWORK_HPP__
 # define		__LAPIN_NETWORK_HPP__
+# include		"network/descriptor.hpp"
 
 class			Network
 {
