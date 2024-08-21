@@ -8,36 +8,70 @@
 #ifndef					__LAPIN_NETWORK_DESCRIPTOR_HPP__
 # define				__LAPIN_NETWORK_DESCRIPTOR_HPP__
 
+class					Network;
 namespace				network
 {
   class					Descriptor
   {
   public:
+    struct				Info
+    {
+      char				identity[32];
+      struct sockaddr_in		sockaddr;
+      socklen_t				socklen;
+
+      Info				&operator=(const Info		&info)
+      {
+	if (this != &info)
+	  memcpy(*this, info, sizeof(*this));
+	return (*this);
+      }
+      Info(void)
+      {
+	memset(identity, 0, sizeof(identity));
+	memset(&sockaddr, 0, sizeof(sockaddr));
+	memset(&socklen, 0, sizeof(socklen));
+      }
+      Info(const Info			&info)
+      {
+	*this = info;
+      }
+    };
+
+    struct				Communication
+    {
+      Info				info;
+      std::vector<char>			datas;
+    };
+
     enum				Protocol
       {
-       IMMEDIATE_RETRIEVE,
-       FIXED_SIZE,
-       SIZE_PLUS_DATA, // Size INCLUDE the size field
-       TERMINATED,
+        IMMEDIATE_RETRIEVE,		// UDP
+        FIXED_SIZE,			// TCP - If all your packets have the same size.
+        SIZE_PLUS_DATA,			// TCP - Size INCLUDE the size field
+        TERMINATED			// TCP - Prefer SIZE_PLUS_DATA if possible. It is more efficent.
       };
 
   protected:
+    Network				&network;
+    // To update our little case, accordingly to what outqueue contains
+    struct pollfd			*pollfd;
+
     Protocol				protocol;
     size_t				size;
     bool				active;
     bool				doomed;
     int					fd;
-    char				identity[32];
-    struct sockaddr_in			sockaddr;
-    socklen_t				socklen;
-
-    // To update our little case, accordingly to what outqueue contains
-    struct pollfd			*pollfd;
+    Info				info;
+    uint32_t				ip;
+    uint16_t				port;
 
     std::queue<std::vector<char>>	outqueue;
-    std::list<std::vector<char>>	inqueue;
+    size_t				wcursor;
+
+    std::list<Communication>		inqueue;
     std::vector<char>			inbuffer;
-    size_t				cursor;
+    size_t				rcursor;
 
     struct size_plus_data
     {
@@ -46,24 +80,17 @@ namespace				network
     };
     size_plus_data			*spdbuffer;
 
-    // To use read of receivefrom, to use sendto or write.
-    virtual ssize_t			Write(const char		*data,
-					      size_t			datalen) const = 0;
-    virtual ssize_t			Read(char			*data,
-					     size_t			datalen) const = 0;
-
     // To be used by Network
     virtual bool			Declare(struct pollfd		*fds,
 						size_t			&cursize,
 						size_t			maxsize) const;
-    virtual Descriptor			*Accept(struct pollfd		*fds,
+    Descriptor				*Accept(struct pollfd		*fds,
 						size_t			&cursize,
 						size_t			maxsize) const;
-
     // Handle protocol
     bool				Write(void);
     bool				Read(void);
-    bool				ShiftInBuffer(void);
+    bool				ShiftInBuffer(const Info	&info);
     bool				ExtractFromInBuffer(size_t	len);
 
     bool				IsDoomed(void) const
@@ -86,6 +113,11 @@ namespace				network
       return (identity);
     }
 
+    Descriptor				&operator(Protocol		&pro)
+    {
+      protocol = pro;
+      return (*this);
+    }
     Descriptor				&operator=(const char		*id)
     {
       snprintf(identity, sizeof(identity), "%s", id);
@@ -154,12 +186,16 @@ namespace				network
       fd = -1;
     }
 
-    Descriptor(Protocol			protocol = SIZE_PLUS_DATA,
+    Descriptor(Protocol			protocol = IMMEDIATE_RETRIEVE,
+	       size_t			_size = 1024 * 64,
+	       uint16_t			port = 0x6279, // "by"
+	       const std::string	&ip = "");
+    Descriptor(int			fd,
+	       Protocol			protocol = IMMEDIATE_RETRIEVE
 	       // default bufsize, fixed size, max size or terminator
 	       // any value inferior to 16 will be set to 16, except if it is a terminator
 	       // the terminator is only constituted of a single byte
-	       size_t			size = 4096,
-	       int			fd = -1);
+	       size_t			size = 1024 * 64);
     virtual ~Descriptor(void);
   };
 }
