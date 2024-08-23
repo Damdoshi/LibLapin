@@ -11,13 +11,7 @@
 
 class			Network
 {
-  class			SendToReceiveFromPeer : public Descriptor
-  {
-
-  };
 public:
-
-
 };
 
 #endif	//		__LAPIN_NETWORK_HPP__

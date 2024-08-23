@@ -5,12 +5,13 @@
 //
 // Bibliothèque Lapin
 
+#include		<poll.h>
 #include		"private/network.hpp"
 
 bool			network::Descriptor::Read(void)
 {
   ssize_t		len;
-  Info			info;
+  Info			rinfo;
 
   // Si le buffer n'est pas établi, on l'établi. Si ca ne marche pas, on re essayera la prochaine fois
   try {
@@ -29,8 +30,8 @@ bool			network::Descriptor::Read(void)
 	    &inbuffer[rcursor],
 	    inbuffer.size() - rcursor,
 	    0,
-	    &info.sockaddr,
-	    &info.socklen
+	    (struct sockaddr*)&rinfo.sockaddr,
+	    &rinfo.socklen
 	    )) == -1)
 	return (false);
       // La connexion est perdue
@@ -48,13 +49,17 @@ bool			network::Descriptor::Read(void)
 
   // UDP
   if (protocol == IMMEDIATE_RETRIEVE)
-    return (ShiftInBuffer(info));
+    {
+      if (len == 0)
+	return (true);
+      return (ShiftInBuffer(rinfo));
+    }
 
   /// TCP
   if (protocol == FIXED_SIZE)
     {
       if (len + rcursor == inbuffer.size())
-	return (ShiftInBuffer());
+	return (ShiftInBuffer(info));
       rcursor += len;
     }
 
@@ -71,8 +76,8 @@ bool			network::Descriptor::Read(void)
 	  return (false);
 	}
       // Si le buffer ne permet pas d'enregistrer le paquet entier, on augmente sa taille
-      if (spdbuffer->size() > inbuffer.size())
-	inbuffer.resize(spdbuffer->size(), 0);
+      if (spdbuffer->size > inbuffer.size())
+	inbuffer.resize(spdbuffer->size, 0);
       // Au cas où l'on ai recu plusieurs paquets d'un coup
       // ce que la LibLapin ne fait *pas*
       while (rcursor > spdbuffer->size)
@@ -87,7 +92,7 @@ bool			network::Descriptor::Read(void)
       char		*term;
 
       rcursor += len;
-      while ((term = memchr(&inbuffer[0], size & 0xFF, rcursor)) != NULL)
+      while ((term = (char*)memchr(&inbuffer[0], size & 0xFF, rcursor)) != NULL)
 	if (ExtractFromInBuffer(term - &inbuffer[0]) == false)
 	  return (false);
       // Infraction au protocole

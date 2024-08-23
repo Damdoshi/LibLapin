@@ -5,11 +5,12 @@
 //
 // Bibliothèque Lapin
 
+#include		<poll.h>
 #include		"private/network.hpp"
 
 bool			network::Descriptor::Declare(struct pollfd	*fds,
 						     size_t		&cursize,
-						     size_t		maxsize) const
+						     size_t		maxsize)
 {
   if (cursize >= maxsize)
     return (false);

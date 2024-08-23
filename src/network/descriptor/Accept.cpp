@@ -7,7 +7,7 @@
 
 #include		"private/network.hpp"
 
-Descriptor		*network::Descriptor::Accept(struct pollfd	*fds,
+network::Descriptor	*network::Descriptor::Accept(struct pollfd	*fds,
 						     size_t		&cursize,
 						     size_t		maxsize) const
 {
@@ -17,10 +17,10 @@ Descriptor		*network::Descriptor::Accept(struct pollfd	*fds,
 
   if ((ndesc = new (std::nothrow) Descriptor(protocol, size)) == NULL)
     return (NULL);
-  if ((ndesc->fd = accept(fd, &_socklen, &socklen_t)) == -1)
+  if ((ndesc->fd = accept(fd, (struct sockaddr*)&_sockaddr, &_socklen)) == -1)
     return (NULL);
-  memcpy(&ndesc->sockaddr, &_sockaddr, sizeof(ndesc->sockaddr));
-  memcpy(&ndesc->socklen, &_socklen, sizeof(ndesc->socklen));
+  memcpy(&ndesc->info.sockaddr, &_sockaddr, sizeof(ndesc->info.sockaddr));
+  memcpy(&ndesc->info.socklen, &_socklen, sizeof(ndesc->info.socklen));
   if (ndesc->Declare(fds, cursize, maxsize) == false)
     {
       delete ndesc;

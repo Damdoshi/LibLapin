@@ -7,13 +7,16 @@
 
 #include		<string.h>
 #include		<errno.h>
+#include		<netinet/in.h>
+#include		<arpa/inet.h>
 #include		"private/network.hpp"
 
-network::Descriptor::Descriptor(Protocol		_protocol,
+network::Descriptor::Descriptor(Network			&_network,
+				Protocol		_protocol,
 				size_t			_size,
 				uint16_t		_port,
 				const std::string	&_ip)
-  : Descriptor(-1, _protocol, _size)
+  : Descriptor(_network, -1, _protocol, _size)
 {
   unsigned int		tmp;
 
@@ -28,17 +31,17 @@ network::Descriptor::Descriptor(Protocol		_protocol,
   info.sockaddr.sin_port = port;
   info.socklen = sizeof(info.sockaddr);
 
-  if (_protocol == IMMEDIATE_RETURN)
+  if (_protocol == IMMEDIATE_RETRIEVE)
     fd = socket(info.sockaddr.sin_family, SOCK_DGRAM, 0);
   else
-    fd = socket(info.sockaddr_sin.family, SOCK_STREAM, 0);
+    fd = socket(info.sockaddr.sin_family, SOCK_STREAM, 0);
   if (fd == -1)
     goto Leave;
 
   tmp = 1;
   setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &tmp, sizeof(tmp));
 
-  if (_protocol == IMMEDIATE_RETURN)
+  if (_protocol == IMMEDIATE_RETRIEVE)
     {
       tmp = 65536;
       setsockopt(fd, SOL_SOCKET, SO_RCVBUF, &tmp, sizeof(tmp));
@@ -49,11 +52,11 @@ network::Descriptor::Descriptor(Protocol		_protocol,
     {
       if (bind(fd, (struct sockaddr*)&info.sockaddr, info.socklen) == -1)
 	goto CloseAndLeave;
-      if (_protocol != IMMEDIATE_RETURN
+      if (_protocol != IMMEDIATE_RETRIEVE
 	  && listen(fd, SOMAXCONN) == -1)
 	goto CloseAndLeave;
     }
-  else if (_protocol != IMMEDIATE_RETURN
+  else if (_protocol != IMMEDIATE_RETRIEVE
 	   && connect(fd, (struct sockaddr*)&info.sockaddr, info.socklen) == -1)
     goto CloseAndLeave;
 
@@ -61,18 +64,20 @@ network::Descriptor::Descriptor(Protocol		_protocol,
  CloseAndLeave:
   close(fd);
  Leave:
-  throw std::runtime_error("Cannot achieve Descriptor's construction. {}", strerror(errno));
+  throw std::runtime_error(std::string("Cannot achieve Descriptor's construction. ") + strerror(errno));
 }
 
-network::Descriptor::Descriptor(int		_fd,
+network::Descriptor::Descriptor(Network		&_network,
+				int		_fd,
 				Protocol	_protocol,
 				size_t		_size)
-  : protocol(_protocol),
+  : network(_network),
+    pollfd(NULL),
+    protocol(_protocol),
     size(_size),
     active(_fd != -1),
     doomed(false),
     fd(_fd),
-    polllfd(NULL),
     wcursor(0),
     rcursor(0),
     spdbuffer(NULL)
@@ -80,8 +85,8 @@ network::Descriptor::Descriptor(int		_fd,
   if (size < 16)
     size = 16;
   inbuffer.resize(size);
-  spdbuffer = &inbuffer[0];
-  memset(identity, 0, sizeof(identity));
+  spdbuffer = (size_plus_data*)&inbuffer[0];
+  memset(info.identity, 0, sizeof(info.identity));
 }
 
 network::Descriptor::~Descriptor(void)

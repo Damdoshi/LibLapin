@@ -7,6 +7,16 @@
 
 #ifndef					__LAPIN_NETWORK_DESCRIPTOR_HPP__
 # define				__LAPIN_NETWORK_DESCRIPTOR_HPP__
+# include				<sys/types.h>
+# include				<sys/socket.h>
+# include				<netinet/in.h>
+# include				<unistd.h>
+# include				<vector>
+# include				<queue>
+# include				<string>
+# include				<iostream>
+# include				<string.h>
+# include				<list>
 
 class					Network;
 namespace				network
@@ -14,6 +24,12 @@ namespace				network
   class					Descriptor
   {
   public:
+    class				IOException : public std::runtime_error
+    {
+    public:
+      IOException(const std::string	&str) : runtime_error(str) {}
+      ~IOException() {}
+    };
     struct				Info
     {
       char				identity[32];
@@ -23,7 +39,7 @@ namespace				network
       Info				&operator=(const Info		&info)
       {
 	if (this != &info)
-	  memcpy(*this, info, sizeof(*this));
+	  memcpy((void*)this, (void*)&info, sizeof(*this));
 	return (*this);
       }
       Info(void)
@@ -42,6 +58,10 @@ namespace				network
     {
       Info				info;
       std::vector<char>			datas;
+
+      Communication(const Info		&_info)
+	: info(_info)
+      {}
     };
 
     enum				Protocol
@@ -66,7 +86,7 @@ namespace				network
     uint32_t				ip;
     uint16_t				port;
 
-    std::queue<std::vector<char>>	outqueue;
+    std::list<Communication>		outqueue;
     size_t				wcursor;
 
     std::list<Communication>		inqueue;
@@ -81,9 +101,9 @@ namespace				network
     size_plus_data			*spdbuffer;
 
     // To be used by Network
-    virtual bool			Declare(struct pollfd		*fds,
+    bool				Declare(struct pollfd		*fds,
 						size_t			&cursize,
-						size_t			maxsize) const;
+						size_t			maxsize);
     Descriptor				*Accept(struct pollfd		*fds,
 						size_t			&cursize,
 						size_t			maxsize) const;
@@ -108,19 +128,23 @@ namespace				network
     {
       return (fd);
     }
+    operator				const Info & (void) const
+    {
+      return (info);
+    }
     operator				const char * (void) const
     {
-      return (identity);
+      return (info.identity);
     }
 
-    Descriptor				&operator(Protocol		&pro)
+    Descriptor				&operator=(Protocol		&pro)
     {
       protocol = pro;
       return (*this);
     }
     Descriptor				&operator=(const char		*id)
     {
-      snprintf(identity, sizeof(identity), "%s", id);
+      snprintf(info.identity, sizeof(info.identity), "%s", id);
       return (*this);
     }
     Descriptor				&operator=(int			_fd)
@@ -131,22 +155,40 @@ namespace				network
       return (*this);
     }
 
-    std::vector<char>			*Read(void)
+    bool				GetMessage(Communication	&com)
     {
       if (inqueue.empty())
-	return (NULL);
-      std::vector<char>			nw = std::move(inqueue.front());
-
-      inqueue.pop();
-      return (nw);
+	return (false);
+      com.info = inqueue.front().info;
+      com.datas = std::move(inqueue.front().datas);
+      inqueue.pop_front();
+      return (true);
     }
 
-    // Push write requests
-    bool				Write(const char		*data,
-					      size_t			len)
+    // Push write requests for TCP protocols
+    bool				SetMessage(const char		*data,
+						   size_t		len)
     {
+      if (protocol == IMMEDIATE_RETRIEVE)
+	return (false);
       try {
-	outqueue.push(std::move(std::vector{}.assign(data, &data[len])));
+	outqueue.push_back(Communication{info});
+	outqueue.back().datas.assign(data, &data[len]);
+      } catch (...) {
+	return (false);
+      }
+      return (true);
+    }
+    // PUsh write requests for UDP protocols
+    bool				SetMessage(const char		*data,
+						   size_t		len,
+						   const Info		&_info)
+    {
+      if (protocol != IMMEDIATE_RETRIEVE)
+	return (false);
+      try {
+	outqueue.push_back(Communication{_info});
+	outqueue.back().datas.assign(data, &data[len]);
       } catch (...) {
 	return (false);
       }
@@ -156,21 +198,7 @@ namespace				network
     Descriptor				&operator<<(T const		&data)
     {
       if (Write(&data, sizeof(data)) == false)
-	throw WriteFailure();
-      return (*this);
-    }
-    template <>
-    Descriptor				&operator<<<std::string>(std::string const &data)
-    {
-      if (Write(data.c_str(), data.size()) == false)
-	throw WriteFailure();
-      return (*this);
-    }
-    template <>
-    Descriptor				&operator<<<const char *>(char const *&data)
-    {
-      if (Write(data, strlen(data)) == false)
-	throw WriteFailure();
+	throw IOException(__PRETTY_FUNCTION__);
       return (*this);
     }
 
@@ -186,18 +214,35 @@ namespace				network
       fd = -1;
     }
 
-    Descriptor(Protocol			protocol = IMMEDIATE_RETRIEVE,
+    Descriptor(Network			&network,
+	       Protocol			protocol = IMMEDIATE_RETRIEVE,
 	       size_t			_size = 1024 * 64,
 	       uint16_t			port = 0x6279, // "by"
 	       const std::string	&ip = "");
-    Descriptor(int			fd,
-	       Protocol			protocol = IMMEDIATE_RETRIEVE
+    Descriptor(Network			&network,
+	       int			fd,
+	       Protocol			protocol = IMMEDIATE_RETRIEVE,
 	       // default bufsize, fixed size, max size or terminator
 	       // any value inferior to 16 will be set to 16, except if it is a terminator
 	       // the terminator is only constituted of a single byte
 	       size_t			size = 1024 * 64);
     virtual ~Descriptor(void);
   };
+
+  template <>
+  Descriptor				&Descriptor::operator<<<std::string>(std::string const &data)
+  {
+    if (SetMessage(data.c_str(), data.size()) == false)
+      throw IOException(__PRETTY_FUNCTION__);
+    return (*this);
+  }
+  template <>
+  Descriptor				&Descriptor::operator<<<const char * const>(const char * const &data)
+  {
+    if (SetMessage(data, strlen(data)) == false)
+      throw IOException(__PRETTY_FUNCTION__);
+    return (*this);
+  }
 }
 
 #endif	//		__LAPIN_NETWORK_DESCRIPTOR_HPP__

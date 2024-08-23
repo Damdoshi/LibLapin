@@ -5,13 +5,14 @@
 //
 // Bibliothèque Lapin
 
+#include		<poll.h>
 #include		"private/network.hpp"
 
 bool			network::Descriptor::Write(void)
 {
   if (outqueue.empty())
     return (true);
-  std::vector<char>	&next = outqueue.front();
+  Communication		&next = outqueue.front();
   ssize_t		wt;
 
   ///
