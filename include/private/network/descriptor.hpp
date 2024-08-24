@@ -7,16 +7,13 @@
 
 #ifndef					__LAPIN_NETWORK_DESCRIPTOR_HPP__
 # define				__LAPIN_NETWORK_DESCRIPTOR_HPP__
-# include				<sys/types.h>
-# include				<sys/socket.h>
-# include				<netinet/in.h>
+# include				<stdint.h>
 # include				<unistd.h>
-# include				<vector>
 # include				<queue>
 # include				<string>
 # include				<iostream>
-# include				<string.h>
 # include				<list>
+# include				"communication.hpp"
 
 class					Network;
 namespace				network
@@ -29,41 +26,6 @@ namespace				network
     public:
       IOException(const std::string	&str) : runtime_error(str) {}
       ~IOException() {}
-    };
-    struct				Info
-    {
-      char				identity[32];
-      struct sockaddr_in		sockaddr;
-      socklen_t				socklen;
-
-      Info				&operator=(const Info		&info)
-      {
-	if (this != &info)
-	  memcpy((void*)this, (void*)&info, sizeof(*this));
-	return (*this);
-      }
-      Info(void)
-      {
-	memset(identity, 0, sizeof(identity));
-	memset(&sockaddr, 0, sizeof(sockaddr));
-	memset(&socklen, 0, sizeof(socklen));
-      }
-      Info(const Info			&info)
-      {
-	*this = info;
-      }
-    };
-
-    struct				Communication
-    {
-      Info				info;
-      std::vector<char>			datas;
-
-      Communication(const Info		&_info,
-		    size_t		len = 0)
-	: info(_info),
-	  datas(len)
-      {}
     };
 
     enum				Protocol
@@ -230,21 +192,6 @@ namespace				network
 	       size_t			size = 1024 * 64);
     virtual ~Descriptor(void);
   };
-
-  template <>
-  Descriptor				&Descriptor::operator<<<std::string>(std::string const &data)
-  {
-    if (SetMessage(data.c_str(), data.size()) == false)
-      throw IOException(__PRETTY_FUNCTION__);
-    return (*this);
-  }
-  template <>
-  Descriptor				&Descriptor::operator<<<const char * const>(const char * const &data)
-  {
-    if (SetMessage(data, strlen(data)) == false)
-      throw IOException(__PRETTY_FUNCTION__);
-    return (*this);
-  }
 }
 
 #endif	//		__LAPIN_NETWORK_DESCRIPTOR_HPP__

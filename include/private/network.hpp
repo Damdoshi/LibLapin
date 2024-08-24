@@ -7,11 +7,20 @@
 
 #ifndef			__LAPIN_NETWORK_HPP__
 # define		__LAPIN_NETWORK_HPP__
+# include		<sys/select.h>
+# include		<poll.h>
 # include		"network/descriptor.hpp"
 
 class			Network
 {
+protected:
+  struct pollfd		pollfd[FD_SETSIZE];
+  size_t		nbr_pollfd;
+
+std:queue<Communication>
+  
 public:
+  
 };
 
 #endif	//		__LAPIN_NETWORK_HPP__
