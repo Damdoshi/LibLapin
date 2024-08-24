@@ -15,7 +15,7 @@ network::Descriptor	*network::Descriptor::Accept(struct pollfd	*fds,
   socklen_t		_socklen;
   Descriptor		*ndesc;
 
-  if ((ndesc = new (std::nothrow) Descriptor(protocol, size)) == NULL)
+  if ((ndesc = new (std::nothrow) Descriptor(network, protocol, size)) == NULL)
     return (NULL);
   if ((ndesc->fd = accept(fd, (struct sockaddr*)&_sockaddr, &_socklen)) == -1)
     return (NULL);
