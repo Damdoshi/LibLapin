@@ -11,13 +11,13 @@ bool			network::Descriptor::ShiftInBuffer(const Info		&info)
 {
   try
     {
-      inqueue.push_back({info, std::vector<char>{}});
+      inqueue.push_back(Communication{info});
     }
   catch (...)
     {
       return (false);
     }
-  inqueue.back().second = std::move(inbuffer);
+  inqueue.back().datas = std::move(inbuffer);
   inbuffer.clear();
   rcursor = 0;
   try

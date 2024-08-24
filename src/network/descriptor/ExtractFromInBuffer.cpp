@@ -10,7 +10,7 @@
 bool			network::Descriptor::ExtractFromInBuffer(size_t		len)
 {
   try {
-    inqueue.push_back(std::vector<char>{len});
+    inqueue.push_back(Communication{info, len});
   } catch (...) {
     return (false);
   }
@@ -18,9 +18,9 @@ bool			network::Descriptor::ExtractFromInBuffer(size_t		len)
   size_t		j;
 
   for (i = 0; i < len; ++i)
-    inqueue.back()[i] = inbuffer[i];
-  for (j = 0; i < inbuffer[i].size(); ++i, ++j)
-    inbuffer[j] = inbuffer[î];
+    inqueue.back().datas[i] = inbuffer[i];
+  for (j = 0; i < inbuffer.size(); ++i, ++j)
+    inbuffer[j] = inbuffer[i];
   rcursor -= len;
   return (true);
 }

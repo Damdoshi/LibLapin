@@ -59,8 +59,10 @@ namespace				network
       Info				info;
       std::vector<char>			datas;
 
-      Communication(const Info		&_info)
-	: info(_info)
+      Communication(const Info		&_info,
+		    size_t		len = 0)
+	: info(_info),
+	  datas(len)
       {}
     };
 
