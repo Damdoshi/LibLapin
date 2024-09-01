@@ -15,28 +15,29 @@ static void		broadcast_animate(t_bunny_map			*nod,
 }
 
 static void		_set_frame(struct bunny_sprite			&spr,
-				   t_bunny_animation			&anim)
+				   t_bunny_animation			&anim,
+				   size_t				cfr)
 {
   if (anim.browsing == BFB_LEFT_TO_RIGHT ||
-      (anim.browsing == BFB_BACK_AND_FORTH && spr.current_frame < anim.nbr_frame))
+      (anim.browsing == BFB_BACK_AND_FORTH && cfr < anim.nbr_frame))
     spr.rect.x =
       anim.position.x +
       (spr.rect.w + anim.intertile.x)
-      * spr.current_frame
+      * cfr
       + anim.intertile.x
       ;
-  else if (anim.browsing == BFB_RIGHT_TO_LEFT)
+  else if (anim.browsing == BFB_RIGHT_TO_LEFT || anim.browsing == BFB_RANDOM)
     spr.rect.x =
       anim.position.x +
       ((spr.rect.w + anim.intertile.x) *
-       (anim.nbr_frame - spr.current_frame - 1))
+       (anim.nbr_frame - cfr - 1))
       + anim.intertile.x
       ;
   else if (anim.browsing == BFB_BACK_AND_FORTH && spr.current_frame >= anim.nbr_frame)
     spr.rect.x =
       anim.position.x +
       ((spr.rect.w + anim.intertile.x) *
-       (2 * anim.nbr_frame - spr.current_frame - 1))
+       (2 * anim.nbr_frame - cfr - 1))
       + anim.intertile.x
       ;
 
@@ -76,6 +77,7 @@ void			bunny_sprite_animate(t_bunny_sprite		*spr,
       if (++sprite.current_frame_repeat >= frep)
 	{
 	  sprite.current_frame_repeat = 0;
+	  sprite.random = rand() % anim->nbr_frame;
 	  if (++sprite.current_frame >=
 	      anim->nbr_frame * (anim->browsing == BFB_BACK_AND_FORTH ? 2 : 1)
 	      )
@@ -103,7 +105,10 @@ void			bunny_sprite_animate(t_bunny_sprite		*spr,
 	    }
 	}
     }
-  _set_frame(sprite, *anim);
+  if (anim->browsing == BFB_RANDOM)
+    _set_frame(sprite, *anim, sprite.random);
+  else
+    _set_frame(sprite, *anim, sprite.current_frame);
   return ;
 }
 
@@ -113,6 +118,14 @@ void			bunny_sprite_animate_date(t_bunny_sprite	*spr,
   struct bunny_sprite	&sprite = *(struct bunny_sprite*)spr;
 
   bunny_sprite_animate(spr, now - sprite.current_time);
+}
+
+void			bunny_sprite_animate_elapsed(t_bunny_sprite	*spr,
+						     double		elapsed)
+{
+  struct bunny_sprite	&sprite = *(struct bunny_sprite*)spr;
+
+  bunny_sprite_animate(spr, elapsed);
 }
 
 void			bunny_sprite_animate_now(t_bunny_sprite		*spr)

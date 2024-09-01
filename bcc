@@ -5,4 +5,5 @@ if [[ " $* " == *" -g "* ]]
 then
     DEBUG="-dbg"
 fi
+
 gcc "$@" -std=gnu11 -llapin$DEBUG -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system -lGL -lstdc++ -lm -ldl -lpthread -lopencv_imgproc -lopencv_highgui -lopencv_objdetect -lopencv_video -lopencv_videoio -lopencv_core -lavcall -lusb -ludev

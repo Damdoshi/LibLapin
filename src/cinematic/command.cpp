@@ -10,7 +10,7 @@
   struct bunny_cinematic *cin,				\
     int argc,						\
     t_bunny_configuration **argv,			\
-    t_bunny_event *event __attribute__((unused)),	\
+    t_bunny_cinematic_event event __attribute__((unused)), \
     double elapsed __attribute__((unused))
 #define			VOID() (void)cin; (void)argc; (void)argv; (void)elapsed
 
@@ -143,28 +143,68 @@ char			*cinematic_text(PARAMS)
   struct cinematic_text	*cte = (struct cinematic_text*)cin->stack_frame;
   const char		*str;
 
+  // font_id display_speed text_id voice_id mouth(picture)_id
+
   if (cte->init)
     {
-      if (!event)
-	{
-	  size_t	tlen = strlen(cte->tex);
+      size_t	tlen = strlen(cte->tex);
 
-	  if ((cte->fnt->string_len += elapsed * fabs(cte->speed)) >= tlen)
+      if (cte->cursor == 0 && cte->voi)
+	{
+	  if (cte->voice_label[0])
+	    bunny_sound_sprite_play_slice_name(cte->voi, BST_TRACK_03, cte->voice_label);
+	  // else bunny_sound_manager_play_sound(&gl_bunny_sound_manager, (t_bunny_effect*)cte->voi);
+	}
+
+      // Rien ne se passe, ou on demande simplement à aller plus vite
+      if (event == BCE_NO_EVENT || event == BCE_FASTER_EVENT)
+	{
+	  double	coef = event == BCE_NO_EVENT ? 1 : 2;
+
+	  if ((cte->cursor += elapsed * fabs(cte->speed) * coef) >= tlen)
 	    {
-	      cte->fnt->string_len = tlen;
+	      cte->cursor = tlen;
+	      cte->fnt->string_len = cte->cursor;
 	      if (cte->speed < 0)
-		return (NULL);
+		{
+		  event = BCE_TERMINATE_EVENT;
+		  goto Leave;
+		}
 	    }
+	  while (cte->fnt->string[(int)cte->cursor] == ' ')
+	    cte->cursor = (int)cte->cursor + 1;
+	  cte->fnt->string_len = cte->cursor;
 	  return (".stay");
 	}
-      if (event->type == BET_KEY_RELEASED)
+    Leave:
+      // On demande à arriver a l'état de fin de l'évenement
+      // Si on y est pas, on y va, sinon on passe au suivant
+      if (event == BCE_TERMINATE_EVENT)
 	{
-	  /////////////////
+	  if (tlen - cte->cursor > 1)
+	    {
+	      cte->cursor = tlen;
+	      cte->fnt->string_len = cte->cursor;
+	      return (".stay");
+	    }
+	  event = BCE_NEXT_EVENT;
 	}
-
-      /// Gestion des events
+      // On demande a passer a l'evenement suivant
+      if (event == BCE_NEXT_EVENT)
+	{
+	  if (cte->voi)
+	    {
+	      if (cte->voice_label[0])
+		bunny_sound_sprite_stop_slice(cte->voi);
+	      // else bunny_sound_manager_stop_sound(&gl_bunny_sound_manager, (t_bunny_effect*)cte->voi);
+	    }
+	  cte->init = false;
+	  cte->cursor = 0;
+	  cte->fnt->string_len = 0;
+	}
       return (NULL);
     }
+
   if (argc < 3 || !bunny_configuration_getf_string(argv[0], &str, "."))
     goto BadCommand;
   cte->init = true;
@@ -180,7 +220,7 @@ char			*cinematic_text(PARAMS)
 		    cin->current_command,
 		    bunny_configuration_get_address(cin->program)
 		    );
-  if (!bunny_configuration_getf_int(argv[1], &cte->speed, "."))
+  if (!bunny_configuration_getf_double(argv[1], &cte->speed, "."))
     goto BadCommand;
   if (!bunny_configuration_getf_string(argv[2], &str, "."))
     goto BadCommand;
@@ -194,14 +234,27 @@ char			*cinematic_text(PARAMS)
 		    cin->current_command,
 		    bunny_configuration_get_address(cin->program)
 		    );
+  cte->fnt->string = cte->tex;
+  cte->fnt->string_len = 0;
 
-  // Pour la voix
+  ////////////////////////////////////////////////////////////////////
+  // Pour la voix ===================================================
   if (argc <= 3)
     return (".stay");
 
   if (!bunny_configuration_getf_string(argv[3], &str, "."))
     goto BadCommand;
-  if ((cte->voi = bunny_map_get_data(cin->voices, str, t_bunny_sound_sprite*)) == NULL)
+  char buffer[4096];
+  char *lab;
+  snprintf(buffer, sizeof(buffer), "%s", str);
+  if ((lab = strchr(buffer, ':')) != NULL)
+    {
+      *lab = '\0';
+      snprintf(cte->voice_label, sizeof(cte->voice_label), "%s", lab + 1);
+    }
+  else
+    cte->voice_label[0] = 0;
+  if ((cte->voi = bunny_map_get_data(cin->voices, buffer, t_bunny_sound_sprite*)) == NULL)
     scream_error_if(return (""), BE_SYNTAX_ERROR,
 		    "Invalid %s instruction parameter. "
 		    "Unknown voice named %s."
@@ -212,8 +265,8 @@ char			*cinematic_text(PARAMS)
 		    bunny_configuration_get_address(cin->program)
 		    );
 
-  cte->fnt->string_len = 0;
-  cte->fnt->string = cte->tex;
+  ////////////////////////////////////////////////////////////////////
+  // Pour la bouche =================================================
 
   if (argc <= 4)
     return (".stay");
@@ -247,8 +300,78 @@ char			*cinematic_text(PARAMS)
 
 char			*cinematic_tweak(PARAMS)
 {
-  VOID();
+  const char		*tmp;
+
+  if (argc < 4)
+    return ("");
+  if (!bunny_configuration_getf_string(argv[0], &tmp, "."))
+    return ("");
+  if (strcasecmp(tmp, "picture") == 0)
+    {
+      if (!bunny_configuration_getf_string(argv[1], &tmp, "."))
+	return ("");
+      t_bunny_picture	*pic = bunny_map_get_data(cin->pictures, tmp, t_bunny_picture*);
+
+      if (pic == NULL)
+	return ("");
+      if (!bunny_configuration_getf_string(argv[2], &tmp, "."))
+	return ("");
+      if (strcasecmp(tmp, "position") == 0)
+	{
+	  if (argc < 5)
+	    return ("");
+	  if (bunny_configuration_getf_double(argv[3], &pic->position.x, ".") == false ||
+	      bunny_configuration_getf_double(argv[4], &pic->position.y, ".") == false)
+	    return ("");
+	  return (NULL);
+	}
+      else
+	return (NULL);
+    }
   return (NULL);
+}
+
+char			*cinematic_move(PARAMS)
+{
+  struct cinematic_move	cte;
+  const char		*tmp;
+
+  if (argc < 4)
+    return ("");
+  if (!bunny_configuration_getf_string(argv[0], &tmp, "."))
+    return ("");
+  if ((cte.pic = bunny_map_get_data(cin->pictures, tmp, t_bunny_picture*)) == NULL)
+    return ("");
+  if (bunny_configuration_getf_double(argv[1], &cte.target.x, ".") == false ||
+      bunny_configuration_getf_double(argv[2], &cte.target.y, ".") == false ||
+      bunny_configuration_getf_double(argv[3], &cte.speed, ".") == false)
+    return ("");
+  double		xdiff = cte.target.x - cte.pic->position.x;
+  double		ydiff = cte.target.y - cte.pic->position.y;
+  double		angle = atan2(ydiff, xdiff);
+  double		dist = sqrt(xdiff * xdiff + ydiff * ydiff);
+  double		coef = 1;
+
+  if (event == BCE_TERMINATE_EVENT || event == BCE_NEXT_EVENT)
+    {
+      cte.pic->position.x = cte.target.x;
+      cte.pic->position.y = cte.target.y;
+      return (NULL);
+    }
+  if (event == BCE_FASTER_EVENT)
+    coef = 2;
+  if (dist < cte.speed)
+    {
+      cte.pic->position = cte.target;
+      return (NULL);
+    }
+
+  cte.pic->position.x += cos(angle) * cte.speed * coef * elapsed;
+  cte.pic->position.y += sin(angle) * cte.speed * coef * elapsed;
+
+  if (argc == 5 && bunny_configuration_getf_string(argv[4], &tmp, ".") && strcasecmp(tmp, "async") == 0)
+    return (NULL);
+  return (".stay");
 }
 
 char			*cinematic_display(PARAMS)
@@ -312,21 +435,148 @@ char			*cinematic_hide(PARAMS)
 		  "cinematic,syntax");
 }
 
-char			*cinematic_fade(PARAMS)
+char			*cinematic_fadeout(PARAMS)
+{
+  struct cinematic_fade	*cte = (struct cinematic_fade*)cin->stack_frame;
+  double		coef = 1;
+
+  VOID();
+  if (argc < 2)
+    return ("");
+  if (event == BCE_FASTER_EVENT)
+    coef = 2;
+  if (!cte->init)
+    {
+      cte->init = true;
+      cte->acc = 0;
+      if (!bunny_configuration_getf_double(argv[0], &cte->delay, "."))
+	return ("");
+    }
+  else if ((cte->acc += elapsed * coef) >= cte->delay)
+    cte->acc = cte->delay;
+
+  if (event == BCE_TERMINATE_EVENT || event == BCE_NEXT_EVENT)
+    cte->acc = cte->delay;
+
+  for (int i = 1; i + 1 < argc; i += 2)
+    {
+      const char	*tmp;
+
+      if (!bunny_configuration_getf_string(argv[i], &tmp, "."))
+	return ("");
+      if (strcasecmp(tmp, "picture") == 0)
+	{
+	  t_bunny_picture *pic;
+
+	  if (!bunny_configuration_getf_string(argv[i + 1], &tmp, "."))
+	    return ("");
+	  if (!(pic = bunny_map_get_data(cin->pictures, tmp, t_bunny_picture*)))
+	    return ("");
+	  if ((pic->color_mask.argb[ALPHA_CMP] = (1.0 - cte->acc / cte->delay) * 255) < 16)
+	    pic->color_mask.argb[ALPHA_CMP] = 0;
+	}
+      else if (strcasecmp(tmp, "music") == 0)
+	{
+	}
+      else if (strcasecmp(tmp, "effect") == 0)
+	{
+	}
+      else if (strcasecmp(tmp, "voice") == 0)
+	{
+	}
+    }
+  if (cte->acc >= cte->delay)
+    return (NULL);
+  return (".stay");
+}
+
+char			*cinematic_fadein(PARAMS)
+{
+  struct cinematic_fade	*cte = (struct cinematic_fade*)cin->stack_frame;
+  double		coef = 1;
+
+  VOID();
+  if (argc < 2)
+    return ("");
+  if (event == BCE_FASTER_EVENT)
+    coef = 2;
+  if (!cte->init)
+    {
+      cte->init = true;
+      cte->acc = 0;
+      if (!bunny_configuration_getf_double(argv[0], &cte->delay, "."))
+	return ("");
+    }
+  else if ((cte->acc += elapsed * coef) >= cte->delay)
+    cte->acc = cte->delay;
+
+  if (event == BCE_TERMINATE_EVENT || event == BCE_NEXT_EVENT)
+    cte->acc = cte->delay;
+
+  for (int i = 1; i + 1 < argc; i += 2)
+    {
+      const char	*tmp;
+
+      if (!bunny_configuration_getf_string(argv[i], &tmp, "."))
+	return ("");
+      if (strcasecmp(tmp, "picture") == 0)
+	{
+	  t_bunny_picture *pic;
+
+	  if (!bunny_configuration_getf_string(argv[i + 1], &tmp, "."))
+	    return ("");
+	  if (!(pic = bunny_map_get_data(cin->pictures, tmp, t_bunny_picture*)))
+	    return ("");
+	  if ((pic->color_mask.argb[ALPHA_CMP] = (cte->acc / cte->delay) * 255) < 16)
+	    pic->color_mask.argb[ALPHA_CMP] = 0;
+	}
+      else if (strcasecmp(tmp, "music") == 0)
+	{
+	}
+      else if (strcasecmp(tmp, "effect") == 0)
+	{
+	}
+      else if (strcasecmp(tmp, "voice") == 0)
+	{
+	}
+    }
+  if (cte->acc >= cte->delay)
+    return (NULL);
+  return (".stay");
+}
+
+char			*cinematic_playmusic(PARAMS)
 {
   VOID();
+  for (int i = 0; i < argc; ++i)
+    {
+      const char *tmp;
+      t_bunny_sound *snd;
+
+      if (!bunny_configuration_getf_string(argv[i], &tmp, "."))
+	return ("");
+      if ((snd = bunny_map_get_data(cin->musics, tmp, t_bunny_sound*)) == NULL)
+	return ("");
+      bunny_sound_loop(snd, true);
+      bunny_sound_play(snd);
+    }
   return (NULL);
 }
 
-char			*cinematic_start_music(PARAMS)
+char			*cinematic_stopmusic(PARAMS)
 {
   VOID();
-  return (NULL);
-}
+  for (int i = 0; i < argc; ++i)
+    {
+      const char *tmp;
+      t_bunny_sound *snd;
 
-char			*cinematic_stop_music(PARAMS)
-{
-  VOID();
+      if (!bunny_configuration_getf_string(argv[i], &tmp, "."))
+	return ("");
+      if ((snd = bunny_map_get_data(cin->musics, tmp, t_bunny_sound*)) == NULL)
+	return ("");
+      bunny_sound_stop(snd);
+    }
   return (NULL);
 }
 
@@ -339,5 +589,110 @@ char			*cinematic_test(PARAMS)
 char			*cinematic_go(PARAMS)
 {
   VOID();
+  const char		*tmp;
+
+  if (argc != 1)
+    return ("");
+  if (!bunny_configuration_getf_string(argv[0], &tmp, "."))
+    return ("");
+  return ((char*)tmp);
+}
+
+char			*cinematic_trace(PARAMS)
+{
+  VOID();
+  for (int i = 0; i < argc; ++i)
+    {
+      const char *tmp;
+
+      if (bunny_configuration_getf_string(argv[i], &tmp, "."))
+	puts(tmp);
+    }
   return (NULL);
 }
+
+char			*cinematic_playeffect(PARAMS)
+{
+  VOID();
+  for (int i = 0; i < argc; ++i)
+    {
+      const char *tmp;
+      t_bunny_sound *snd;
+
+      if (!bunny_configuration_getf_string(argv[i], &tmp, "."))
+	return ("");
+      if ((snd = bunny_map_get_data(cin->effects, tmp, t_bunny_sound*)) == NULL)
+	return ("");
+      bunny_sound_play(snd);
+    }
+  return (NULL);
+}
+
+char			*cinematic_skipif(PARAMS)
+{
+  const char		*tmp;
+  int			tmpi;
+
+  // skipif picture X position N
+  if (argc < 3)
+    return ("");
+  if (!bunny_configuration_getf_string(argv[0], &tmp, "."))
+    return ("");
+  if (strcasecmp(tmp, "picture") == 0)
+    {
+      t_bunny_sprite	*spr;
+      int		i;
+
+      if (!bunny_configuration_getf_string(argv[1], &tmp, "."))
+	return ("");
+      if (!(spr = bunny_map_get_data(cin->pictures, tmp, t_bunny_sprite*)))
+	return ("");
+      for (i = 2; i + 1 < argc; i += 2)
+	{
+	  if (!bunny_configuration_getf_string(argv[i], &tmp, "."))
+	    return ("");
+	  if (!bunny_configuration_getf_int(argv[i + 1], &tmpi, "."))
+	    return ("");
+	  if (strcasecmp(tmp, "x") == 0 && (int)spr->clipable.position.x == tmpi)
+	    return (".skip");
+	  if (strcasecmp(tmp, "y") == 0 && (int)spr->clipable.position.y == tmpi)
+	    return (".skip");
+	}
+    }
+  return (NULL);
+}
+
+char			*cinematic_noskipif(PARAMS)
+{
+  const char		*tmp;
+  int			tmpi;
+
+  // skipif picture X position N
+  if (argc < 3)
+    return ("");
+  if (!bunny_configuration_getf_string(argv[0], &tmp, "."))
+    return ("");
+  if (strcasecmp(tmp, "picture") == 0)
+    {
+      t_bunny_sprite	*spr;
+      int		i;
+
+      if (!bunny_configuration_getf_string(argv[1], &tmp, "."))
+	return ("");
+      if (!(spr = bunny_map_get_data(cin->pictures, tmp, t_bunny_sprite*)))
+	return ("");
+      for (i = 2; i + 1 < argc; i += 2)
+	{
+	  if (!bunny_configuration_getf_string(argv[i], &tmp, "."))
+	    return ("");
+	  if (!bunny_configuration_getf_int(argv[i + 1], &tmpi, "."))
+	    return ("");
+	  if (strcasecmp(tmp, "x") == 0 && (int)spr->clipable.position.x == tmpi)
+	    return (NULL);
+	  if (strcasecmp(tmp, "y") == 0 && (int)spr->clipable.position.y == tmpi)
+	    return (NULL);
+	}
+    }
+  return (".skip");
+}
+

@@ -173,7 +173,8 @@ static size_t		count_lines(t_bunny_font	*font,
 static int		put_letter(t_bunny_font		*font,
 				   t_bunny_position	&pos,
 				   const char		*str,
-				   size_t		i)
+				   size_t		i,
+				   int			outl)
 {
   size_t		*s = (size_t*)font;
   int			len = get_unicode_len(&str[i]);
@@ -192,23 +193,107 @@ static int		put_letter(t_bunny_font		*font,
   else
     {
       struct bunny_gfx_font *fnt = (struct bunny_gfx_font*)font;
+      t_bunny_position	tpos;
       int		n;
 
       n = str[i] * fnt->gfx->clip_width;
       fnt->gfx->clip_x_position = n % fnt->gfx->buffer.width;
       fnt->gfx->clip_y_position = n / fnt->gfx->buffer.width;
-      bunny_blit(&font->clipable.buffer, fnt->gfx, &pos);
+
+      if (outl == 0)
+	{
+	  t_bunny_color	tmp = fnt->gfx->color_mask;
+
+	  fnt->gfx->color_mask.full = fnt->outline_color;
+	  for (int l = -font->outline_size; l <= font->outline_size; ++l)
+	    for (int m = -font->outline_size; m <= font->outline_size; ++m)
+	      {
+		if (l == 0 && m == 0)
+		  continue ;
+		tpos = pos;
+		tpos.x += l;
+		tpos.y += m;
+		bunny_blit(&font->clipable.buffer, fnt->gfx, &tpos);
+	      }
+	  fnt->gfx->color_mask = tmp;
+	}
+      else
+	{
+	  tpos.x = pos.x + font->outline_size / 2;
+	  tpos.y = pos.y + font->outline_size / 2;
+	  bunny_blit(&font->clipable.buffer, fnt->gfx, &tpos);
+	}
     }
   return (len);
+}
+
+void			put_text(t_bunny_font		*font,
+				 struct cstring		*linemem,
+				 double			vpitch,
+				 t_bunny_position	startpos,
+				 t_bunny_position	iterat,
+				 int			bis)
+{
+  size_t		i, j, k;
+  double		hspace;
+  int			word;
+  int			space;
+
+  for (j = 0, k = 0; linemem[j].str != NULL; ++j, iterat.y += vpitch)
+    {
+      if (font->halign == BAL_JUSTIFY)
+	{
+	  space = sum_letter_space(font, linemem[j].str, linemem[j].len);
+	  word = count_word(linemem[j].str, linemem[j].len);
+	  hspace = (font->clipable.clip_width - space) / word;
+	  startpos.x = font->offset.x;
+	}
+      else
+	{
+	  space = total_len(font, linemem[j].str, linemem[j].len);
+	  hspace = get_char_width(font, " ", 0);
+	  if (font->halign == BAL_LEFT)
+	    startpos.x = font->offset.x;
+	  else if (font->halign == BAL_MIDDLE)
+	    startpos.x = (font->clipable.clip_width - space) / 2 + font->offset.x;
+	  else if (font->halign == BAL_RIGHT)
+	    startpos.x = font->clipable.clip_width - space + font->offset.x;
+	  else
+	    startpos.x = 0; // Never happen
+	}
+
+      iterat.x = startpos.x;
+      for (i = 0; linemem[j].str[i] && i < linemem[j].len; )
+	if (linemem[j].str[i] != '\n')
+	  {
+	    int		adv = 0;
+
+	    if (k >= font->string_offset && k < font->string_len)
+	      adv = put_letter(font, iterat, linemem[j].str, i, bis);
+
+	    if (linemem[j].str[i] != ' ')
+	      iterat.x += get_char_width(font, linemem[j].str, i);
+	    else
+	      iterat.x += hspace;
+
+	    if (++k > font->string_len)
+	      return ;
+	    i += adv;
+	  }
+	else
+	  ++i;
+
+      if (*(size_t*)font == TTF_TEXT || font->outline_size == 0)
+	break ;
+    }
 }
 
 void			_bunny_draw_text(t_bunny_font	*font)
 {
   struct cstring	linemem[LINEMEM_SIZE];
-  double		vpitch, hspace;
+  double		vpitch;
   t_bunny_position	startpos, iterat;
-  int			lines, word, space;
-  size_t		i, j, k;
+  int			lines;
 
   if (font->string == NULL)
     return ;
@@ -254,49 +339,7 @@ void			_bunny_draw_text(t_bunny_font	*font)
       iterat.y = startpos.y + vpitch;
     }
 
-  for (j = 0, k = 0; linemem[j].str != NULL; ++j, iterat.y += vpitch)
-    {
-      if (font->halign == BAL_JUSTIFY)
-	{
-	  space = sum_letter_space(font, linemem[j].str, linemem[j].len);
-	  word = count_word(linemem[j].str, linemem[j].len);
-	  hspace = (font->clipable.clip_width - space) / word;
-	  startpos.x = font->offset.x;
-	}
-      else
-	{
-	  space = total_len(font, linemem[j].str, linemem[j].len);
-	  hspace = get_char_width(font, " ", 0);
-	  if (font->halign == BAL_LEFT)
-	    startpos.x = font->offset.x;
-	  else if (font->halign == BAL_MIDDLE)
-	    startpos.x = (font->clipable.clip_width - space) / 2 + font->offset.x;
-	  else if (font->halign == BAL_RIGHT)
-	    startpos.x = font->clipable.clip_width - space + font->offset.x;
-	  else
-	    startpos.x = 0; // Never happen
-	}
-
-      iterat.x = startpos.x;
-      for (i = 0; linemem[j].str[i] && i < linemem[j].len; )
-	if (linemem[j].str[i] != '\n')
-	  {
-	    int		adv = 0;
-
-	    if (k >= font->string_offset)
-	      adv = put_letter(font, iterat, linemem[j].str, i);
-
-	    if (linemem[j].str[i] != ' ')
-	      iterat.x += get_char_width(font, linemem[j].str, i);
-	    else
-	      iterat.x += hspace;
-
-	    if (++k > font->string_len)
-	      return ;
-	    i += adv;
-	  }
-	else
-	  ++i;
-    }
+  for (int bis = 0; bis < 2; ++bis)
+    put_text(font, linemem, vpitch, startpos, iterat, bis);
 }
 

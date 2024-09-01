@@ -11,6 +11,15 @@
 #  error		You cannot include this file directly.
 # endif
 
+typedef enum		e_bunny_cinematic_event
+  {
+    BCE_NO_EVENT	= 0,
+    BCE_FASTER_EVENT,
+    BCE_TERMINATE_EVENT,
+    BCE_NEXT_EVENT,
+    BCE_SKIP_EVENT
+  }			t_bunny_cinematic_event;
+
 typedef struct		s_bunny_cinematic
 {
   t_bunny_clipable	clipable;
@@ -49,7 +58,7 @@ typedef struct		s_bunny_cinematic
 typedef char		*(*t_bunny_cinematic_command)(t_bunny_cinematic	*cin,
 						      int		argc,
 						      t_bunny_configuration **argv,
-						      const t_bunny_event *event,
+						      t_bunny_cinematic_event event,
 						      double		elapsed);
 
 t_bunny_cinematic	*bunny_load_cinematic_wh(const char		*file,
@@ -67,9 +76,13 @@ t_bunny_cinematic	*bunny_read_cinematic(t_bunny_configuration	*cnf,
 					      const char		*language);
 
 t_bunny_response	bunny_cinematic(t_bunny_cinematic		*cin,
-					const t_bunny_event		*event,
+					t_bunny_cinematic_event		event,
 					double				elapsed);
 
-void			bunny_delete_cinematic(t_bunny_cinematic	*cin);
+// Automatically called when a cinematic is done (if it is not a repeating one)
+void			bunny_cinematic_stop(t_bunny_cinematic		*cin);
+
+// It should be named bunny_cinematic_reset...
+void			bunny_reset_cinematic(t_bunny_cinematic		*cin);
 
 #endif	/*		__LAPIN_CINEMATIC_H__		*/

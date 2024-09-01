@@ -31,7 +31,8 @@ typedef enum		e_bunny_frame_browsing
   {
     BFB_LEFT_TO_RIGHT,
     BFB_RIGHT_TO_LEFT,
-    BFB_BACK_AND_FORTH
+    BFB_BACK_AND_FORTH,
+    BFB_RANDOM
   }			t_bunny_frame_browsing;
 
 /*!
@@ -128,6 +129,8 @@ void			bunny_sprite_animate(t_bunny_sprite		*sprite,
 					     double			elapsed);
 void			bunny_sprite_animate_date(t_bunny_sprite	*sprite,
 						  double		current_date);
+void			bunny_sprite_animate_elapsed(t_bunny_sprite	*spr,
+						     double		elapsed);
 void			bunny_sprite_animate_now(t_bunny_sprite		*sprite);
 
 /*!

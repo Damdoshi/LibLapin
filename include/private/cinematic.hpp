@@ -26,7 +26,7 @@ struct				bunny_cinematic
 
   bunny_cinematic() {}
   ~bunny_cinematic() {}
-  
+
   // Private fields of t_bunny_clipable
   size_t			res_id;
   const sf::Texture		*tex;
@@ -72,13 +72,30 @@ struct				bunny_cinematic
 struct				cinematic_text
 {
   bool				init;
-  t_bunny_font			*fnt;
+  t_bunny_font			*fnt; // A construire
   t_bunny_sprite		*fac;
   t_bunny_sound_sprite		*voi;
   const char			*tex;
-  int				speed;
+  double			speed;
+  double			cursor;
+  char				voice_label[64];
 };
 
-void				__bunny_draw_cinematic(struct bunny_cinematic *cin);
+struct				cinematic_move
+{
+  t_bunny_picture		*pic;
+  t_bunny_accurate_position	target;
+  double			speed;
+};
+
+struct				cinematic_fade
+{
+  bool				init;
+  double			delay;
+  double			acc;
+};
+
+void				__bunny_draw_cinematic(struct bunny_cinematic	*cin);
+void				bunny_delete_cinematic(t_bunny_cinematic	*cin);
 
 #endif	//			__LAPIN_PRIVATE_CINEMATIC_HPP__

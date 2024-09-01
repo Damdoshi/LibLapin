@@ -55,7 +55,7 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
        PATTERN ": Unknown animation %s",
        "sprite,syntax", &sprite, &config, "false", str);
 
-  sprite.current_animation = bunny_hash(BH_DJB2, str, strlen(str));
+  sprite.current_animation_hash = bunny_hash(BH_DJB2, str, strlen(str));
 
   // ALLOC
   sprite.nbr_animation = config["Animations"].NbrChild();
@@ -215,6 +215,7 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	  if ((*aconf)["Browsing"].GetString(&str) == false
 	      || (strcmp(str, "LeftToRight")
 		  && strcmp(str, "RightToLeft")
+		  && strcmp(str, "Random")
 		  && strcmp(str, "BackAndForth")))
 	    scream_error_if
 	      (goto DeleteMap, BE_SYNTAX_ERROR,
@@ -226,6 +227,8 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	    anim->browsing = BFB_RIGHT_TO_LEFT;
 	  else if (strcmp(str, "BackAndForth") == 0)
 	    anim->browsing = BFB_BACK_AND_FORTH;
+	  else if (strcmp(str, "Random") == 0)
+	    anim->browsing = BFB_RANDOM;
 	}
       else
 	anim->browsing = BFB_LEFT_TO_RIGHT;
@@ -279,8 +282,9 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	  (sprite.hashname_id, anim->next_animation, int);
     }
 
+  sprite.random = rand() % anim->nbr_frame;
   sprite.current_animation = bunny_map_get_data
-    (sprite.hashname_id, sprite.current_animation, int);
+    (sprite.hashname_id, sprite.current_animation_hash, int);
 
   return (true);
 

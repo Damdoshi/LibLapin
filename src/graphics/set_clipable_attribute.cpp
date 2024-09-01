@@ -76,11 +76,8 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
 
   bunny_configuration_go_get_double(cnf, &pic->rotation, "Rotation[0]");
 
-  if (bunny_color_configuration("ColorMask", &pic->color_mask, cnf) == BD_ERROR)
-    {
-      missing_field = "Invalid ColorMask field";
-      goto InvalidField;
-    }
+  pic->color_mask.full = WHITE;
+  bunny_color_configuration("ColorMask", &pic->color_mask, cnf);
 
   if (bunny_configuration_go_get_int(cnf, &tmp[0], "Transparency[0]"))
     pic->color_mask.argb[ALPHA_CMP] = tmp[0];
@@ -98,6 +95,15 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
 	missing_field = "Missing field Clip.Size[1]";
 	goto InvalidField;
       }
+
+  t_bunny_position		split;
+
+  if (bunny_configuration_go_get_int(cnf, &split.x, "Clip.Split[0]") && split.x != 0)
+    {
+      pic->clip_width = pic->buffer.width / split.x;
+      if (bunny_configuration_go_get_int(cnf, &split.y, "Clip.Split[1]") && split.y != 0)
+	pic->clip_height = pic->buffer.height / split.y;
+    }
 
   if (bunny_configuration_go_get_int(cnf, &tmp[0], "Clip.Selected[0]"))
     {

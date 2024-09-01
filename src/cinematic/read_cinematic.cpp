@@ -15,28 +15,35 @@
 typedef char		*t_cinematic_command(struct bunny_cinematic	*cin,
 					     int			argc,
 					     t_bunny_configuration	**argv,
-					     t_bunny_event		*event,
+					     t_bunny_cinematic_event	event,
 					     double			elapsed);
 
 /*
     {"sleep", &hbs::Cinematic::SleepCommand, true},
     {"text", &hbs::Cinematic::TextCommand, true},
-    {"fade", &hbs::Cinematic::FadeCommand, true},
+    {"fadeout", &hbs::Cinematic::FadeCommand, true},
+    {"fadein", &hbs::Cinematic::FadeCommand, true},
+    {"show", &hbs::Cinematic::FadeCommand, true},
     {"move", &hbs::Cinematic::MoveCommand, true},
+    {"place", &hbs::Cinematic::PlaceCommand, true},
+    {"hide", &hbs::Cinematic::HideCommand, false},
+    {"show", &hbs::Cinematic::HideCommand, false},
+    {"go", &hbs::Cinematic::GoToCommand, false},
+    {"skipif", &hbs::Cinematic::IfCommand, false},
+    {"tweak", &hbs::Cinematic::TweakCommand, false},
 
-    {"debug", &hbs::Cinematic::DebugCommand, false},
+    {"trace", &hbs::Cinematic::DebugCommand, false},
     {"display", &hbs::Cinematic::DisplayCommand, false},
+
     {"animate", &hbs::Cinematic::AnimateCommand, false}, // Anime de frame 0 a n
     {"displayx", &hbs::Cinematic::DisplayXCommand, false},
-    {"hide", &hbs::Cinematic::HideCommand, false},
     {"hidex", &hbs::Cinematic::HideXCommand, false},
     {"color", &hbs::Cinematic::ColorCommand, false},
     {"label", &hbs::Cinematic::LabelCommand, false},
-    {"goto", &hbs::Cinematic::GoToCommand, false},
-    {"if", &hbs::Cinematic::IfCommand, false},
+    {"notskipif", &hbs::Cinematic::IfCommand, false},
+
     {"else", &hbs::Cinematic::ElseCommand, false},
     {"endif", &hbs::Cinematic::EndIfCommand, false},
-    {"tweak", &hbs::Cinematic::TweakCommand, false},
     {"playmusic", &hbs::Cinematic::PlayMusicCommand, false},
     {"stopmusic", &hbs::Cinematic::StopMusicCommand, false},
     {"playeffect", &hbs::Cinematic::PlayEffectCommand, false},
@@ -49,14 +56,20 @@ t_cinematic_command
   cinematic_forecolor,
   cinematic_text,
   cinematic_tweak,
+  cinematic_move,
   cinematic_display,
   cinematic_hide,
-  cinematic_fade,
-  cinematic_start_music,
-  cinematic_stop_music,
+  cinematic_fadeout,
+  cinematic_fadein,
+  cinematic_playmusic,
+  cinematic_stopmusic,
   cinematic_test,
   cinematic_math,
-  cinematic_go
+  cinematic_go,
+  cinematic_trace,
+  cinematic_playeffect,
+  cinematic_skipif,
+  cinematic_noskipif
   ;
 
 static bool		cinematic_load_assets(struct bunny_cinematic	*cin,
@@ -66,7 +79,7 @@ static bool		cinematic_load_assets(struct bunny_cinematic	*cin,
   t_bunny_configuration	*section;
   t_bunny_configuration	*node;
   char			*str;
-  
+
   bunny_configuration_getf_double(cnf, &cin->volumes.music, "Volumes.Music");
   bunny_configuration_getf_double(cnf, &cin->volumes.voice, "Volumes.Voice");
   bunny_configuration_getf_double(cnf, &cin->volumes.effect, "Volumes.Effect");
@@ -75,7 +88,7 @@ static bool		cinematic_load_assets(struct bunny_cinematic	*cin,
     for (bunny_configuration_all_children(section, node))
       {
 	t_bunny_sprite	*spr;
-      
+
 	if (bunny_configuration_getf_string(node, (const char**)&str, "."))
 	  spr = bunny_load_sprite(str);
 	else
@@ -102,6 +115,7 @@ static bool		cinematic_load_assets(struct bunny_cinematic	*cin,
 	  mus = bunny_read_music(node);
 	if (!mus)
 	  return (false);
+	bunny_sound_volume(&mus->sound, cin->volumes.music * 100);
 	str = (char*)bunny_configuration_get_name(node);
 	if (_bunny_map_set_data(cin->musics, str, mus) == NULL)
 	  {
@@ -115,9 +129,13 @@ static bool		cinematic_load_assets(struct bunny_cinematic	*cin,
       {
 	t_bunny_effect	*eff;
 
-	eff = bunny_load_effect(str);
+	if (bunny_configuration_getf_string(node, (const char **)&str, "."))
+	  eff = bunny_load_effect(str);
+	else
+	  return ("");
 	if (!eff)
 	  return (false);
+	bunny_sound_volume(&eff->sound, cin->volumes.effect * 100);
 	str = (char*)bunny_configuration_get_name(node);
 	if (_bunny_map_set_data(cin->effects, str, eff) == NULL)
 	  {
@@ -137,6 +155,7 @@ static bool		cinematic_load_assets(struct bunny_cinematic	*cin,
 	  voi = bunny_read_sound_sprite(node);
 	if (!voi)
 	  return (false);
+	bunny_sound_volume(&voi->soundset.sound, cin->volumes.voice * 100);
 	str = (char*)bunny_configuration_get_name(node);
 	if (_bunny_map_set_data(cin->voices, str, voi) == NULL)
 	  {
@@ -181,11 +200,22 @@ static bool		cinematic_load_assets(struct bunny_cinematic	*cin,
   bunny_map_set_data(cin->commands, "forecolor", cinematic_forecolor, tcc);
   bunny_map_set_data(cin->commands, "text", cinematic_text, tcc);
   bunny_map_set_data(cin->commands, "tweak", cinematic_tweak, tcc);
+  bunny_map_set_data(cin->commands, "move", cinematic_move, tcc);
   bunny_map_set_data(cin->commands, "display", cinematic_display, tcc);
+  bunny_map_set_data(cin->commands, "show", cinematic_display, tcc);
   bunny_map_set_data(cin->commands, "hide", cinematic_hide, tcc);
-  bunny_map_set_data(cin->commands, "fade", cinematic_fade, tcc);
-  bunny_map_set_data(cin->commands, "start_music", cinematic_start_music, tcc);
-  bunny_map_set_data(cin->commands, "stop_music", cinematic_stop_music, tcc);
+  bunny_map_set_data(cin->commands, "fadeout", cinematic_fadeout, tcc);
+  bunny_map_set_data(cin->commands, "fadein", cinematic_fadein, tcc);
+  bunny_map_set_data(cin->commands, "playmusic", cinematic_playmusic, tcc);
+  bunny_map_set_data(cin->commands, "stopmusic", cinematic_stopmusic, tcc);
+  bunny_map_set_data(cin->commands, "play_music", cinematic_playmusic, tcc);
+  bunny_map_set_data(cin->commands, "stop_music", cinematic_stopmusic, tcc);
+
+  bunny_map_set_data(cin->commands, "skipif", cinematic_skipif, tcc);
+  bunny_map_set_data(cin->commands, "go", cinematic_go, tcc);
+  bunny_map_set_data(cin->commands, "playeffect", cinematic_playeffect, tcc);
+  bunny_map_set_data(cin->commands, "play_effect", cinematic_playeffect, tcc);
+  bunny_map_set_data(cin->commands, "trace", cinematic_trace, tcc);
 
   cin->current_command = 0;
   memset(cin->command_data, 0, sizeof(cin->command_data));
@@ -195,7 +225,7 @@ static bool		cinematic_load_assets(struct bunny_cinematic	*cin,
 
   cin->background_color.full = PINK2;
   cin->foreground_color.full = TRANSPARENT;
-  
+
   return (true);
 }
 
@@ -239,7 +269,7 @@ t_bunny_cinematic	*bunny_read_cinematic_wh(t_bunny_configuration	*cnf,
   for (i = 0; i < NBRCELL(cin->maps); ++i)
     if ((cin->maps[i] = bunny_new_map(string_map)) == NULL)
       goto DeleteMaps;
-  
+
   cin->volumes.music = 0.6;
   cin->volumes.effect = 0.8;
   cin->volumes.voice = 1.0;
@@ -249,7 +279,7 @@ t_bunny_cinematic	*bunny_read_cinematic_wh(t_bunny_configuration	*cnf,
       bunny_delete_cinematic((t_bunny_cinematic*)cin);
       return (NULL);
     }
-  
+
   return ((t_bunny_cinematic*)cin);
 
  DeleteMaps:

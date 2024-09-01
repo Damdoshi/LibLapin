@@ -167,6 +167,8 @@ bool			bunny_set_font_attribute(const char		*conf_file,
 	fnt->offset.y = tmp;
     }
 
+  fnt->glactive = false;
+
   if (config == NULL)
     bunny_delete_configuration(cnf);
   else

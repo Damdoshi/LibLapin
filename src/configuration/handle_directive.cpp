@@ -49,6 +49,7 @@ Decision		_bunny_handle_directive(const char		*code,
 						Expression::OperatorFamily family,
 						bool			check)
 {
+  ValLock		pushcnt(SmallConf::just_pushed);
   Directive		directives[] = {
     {"@include", (SmallConf*)bunny_configuration_get_root(fileroot)},
     {"@insert", (SmallConf*)node},
@@ -69,7 +70,7 @@ Decision		_bunny_handle_directive(const char		*code,
     return (BD_OK);
   readtext(code, i, directives[directive].token.c_str());
   read_separator(code, i);
-  
+
   /////////////////////////////////////////////////////////
   // Il y a peut etre un spécificateur de format ensuite
   t_bunny_configuration_type type = BC_CUSTOM;
@@ -78,7 +79,7 @@ Decision		_bunny_handle_directive(const char		*code,
   if (readfield(code, i))
     {
       char		buffer[32] = {'.', 0};
-      
+
       if (i - l < NBRCELL(buffer) - 1)
 	strncpy(&buffer[1], &code[l], i - l);
       type = bunny_which_format(buffer);
@@ -95,7 +96,7 @@ Decision		_bunny_handle_directive(const char		*code,
   if (readtext(code, i, "(") && directive != 3) // Ne fonctionne pas avec addpath
     {
       read_separator(code, i);
-      
+
       // @directive txt [(vartok[,endtok[,comtok]])] "file"
       if (type == BC_TEXT)
 	{
@@ -152,7 +153,7 @@ Decision		_bunny_handle_directive(const char		*code,
   // Il serait interessant plus tard de permettre de spécifier un
   // chargement récursif
   std::vector<std::string> flist;
-  
+
   if (isdir("", res))
     {
       struct dirent	*f;
@@ -185,7 +186,7 @@ Decision		_bunny_handle_directive(const char		*code,
     }
   else
     flist.push_back(res);
-  
+
   ////////////////////////////////////////////////////////////////////////
   // On parcoure l'ensemble des fichiers qui doivent etre chargé
   for (auto it = flist.begin(); it != flist.end(); ++it)
@@ -202,6 +203,7 @@ Decision		_bunny_handle_directive(const char		*code,
 
       if (directive == 2) // @push
 	{
+	  SmallConf::just_pushed += 1;
 	  if (!bunny_configuration_getf_node(node, (t_bunny_configuration**)&directives[directive].node, "_Temporary"))
 	    {
 	      if (!readtext(code, i, ")"))
@@ -235,7 +237,7 @@ Decision		_bunny_handle_directive(const char		*code,
       if (directive == 2) // @push
 	{
 	  SmallConf	*nod = (SmallConf*)node;
-	  
+
 	  nod = nod->father;
 	  SmallConf	*added = (SmallConf*)directives[directive].node;
 	  size_t	oldlen = nod->array.size() - 1;
@@ -266,7 +268,7 @@ Decision		_bunny_handle_directive(const char		*code,
 	    }
 	  bunny_delete_node(node, "_Temporary");
 	}
-      
+
       if (!chk)
 	scream_error_if
 	  (return (BD_ERROR), BE_SYNTAX_ERROR, PATTERN,
@@ -280,4 +282,3 @@ Decision		_bunny_handle_directive(const char		*code,
      &code[i], i, node, fileroot, "false", "Success", "", whichline(code, i));
   return (BD_OK);
 }
-

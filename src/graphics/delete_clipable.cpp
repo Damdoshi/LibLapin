@@ -145,6 +145,11 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 	bunny_delete_clipable(clip);
 	return ;
       }
+    case CINEMATIC:
+      {
+	bunny_delete_cinematic((t_bunny_cinematic*)clip);
+	return ;
+      }
     default:
       scream_error_if(return, EINVAL, "%p", "graphics", clip);
     }

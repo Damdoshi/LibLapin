@@ -47,6 +47,7 @@ t_bunny_font			*bunny_load_font(unsigned int		width,
   final->clipable.color_mask.full = WHITE;
   final->clipable.smooth = false;
   final->clipable.mosaic = false;
+  ((struct bunny_ttf_font*)final)->glactive = false;
 
   // Text properties
   final->string = NULL;

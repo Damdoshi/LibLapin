@@ -18,7 +18,7 @@ bool			SmallConf::RecursiveAssign(SmallConf		&a,
   if (hash)
     {
       std::set<std::string> names;
-      
+
       for (it = a.nodes.begin(); it != a.nodes.end(); ++it)
 	if (it->second->name[0] != '.')
 	  names.insert(it->second->name);
@@ -40,4 +40,3 @@ bool			SmallConf::RecursiveAssign(SmallConf		&a,
     }
   return (true);
 }
-

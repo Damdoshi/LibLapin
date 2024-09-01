@@ -8,6 +8,7 @@
 bool			SmallConf::create_mode = false;
 std::stack<std::string>	SmallConf::file_read;
 std::list<std::string>	SmallConf::file_path;
+int			SmallConf::just_pushed;
 
 t_bunny_configuration	*bunny_new_configuration(void)
 {

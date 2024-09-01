@@ -261,6 +261,7 @@ struct				bunny_sprite
   bool				stop_repeat;
   bool				draw_collision_shape;
   t_bunny_collision		working_collision; // private
+  int				random;
 };
 
 struct				bunny_dressed_sprite

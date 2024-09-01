@@ -21,10 +21,21 @@ Decision		dabsic_read_litterals(const char		*code,
 	return (BD_ERROR);
       dabsic_read_separator(code, i);
     }
+
+  int			iteration = 0;
+
+  if (SmallConf::just_pushed > 0)
+    {
+      iteration = conf.array.size();
+      SmallConf::just_pushed -= 1;
+    }
+  else
+    conf.array.clear();
+
   do
     {
       dabsic_read_separator(code, i);
-      if (expr_read_expression(code, i, conf[conf.Size()], Expression::BEOF_TERNARY) == BD_ERROR)
+      if (expr_read_expression(code, i, conf[iteration++], Expression::BEOF_TERNARY) == BD_ERROR)
 	return (BD_ERROR);
       dabsic_read_separator(code, i);
     }

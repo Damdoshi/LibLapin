@@ -31,7 +31,7 @@
 
   TITLE		=	"LIBLAPIN - BUNNY LIBRARY"
   LAPINOPTS	=	-DBUNNY_COMPILATION					\
-			-DBUNNY_ALLOCATOR_DEACTICATED				\
+			-DBUNNY_ALLOCATOR_DEACTIVATED				\
 			-DBUNNY_EXTENDED_DATA_LENGTH=4
 
 #################################################################################

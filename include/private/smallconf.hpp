@@ -12,6 +12,7 @@
 # include			<sstream>
 # include			<stack>
 # include			<list>
+# include			"vallock.hpp"
 
 struct				Sequence;
 struct				Expression;
@@ -64,6 +65,7 @@ struct				SmallConf
   static std::stack<std::string> file_read;
   static std::list<std::string> file_path;
   static int			additionnal_path_to_pop;
+  static int			just_pushed;
   SmallConf			*father;
   Type				last_type = NOTYPE;
   bool				symbol;
@@ -231,6 +233,7 @@ struct				SmallConf
   }
 
   SmallConf(const SmallConf &ptr)
+    : SmallConf()
   {
     RecursiveAssign(*this, ptr);
   }

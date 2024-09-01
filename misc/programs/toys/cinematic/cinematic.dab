@@ -39,6 +39,7 @@ Size = 1024, 768
 
 Animation = [Sequence
   backcolor 255, 255, 255
+  sleep 1
   backcolor
   sleep 1
   backcolor 128

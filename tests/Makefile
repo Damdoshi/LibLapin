@@ -63,14 +63,16 @@
 
 all:			rmlog $(REPORT)
 $(OBJ):
-			@$(COMPILER) $@.c -o $@ $(FLAGS)			\
-			 $(HEADER) $(LIB) $(ERRLOG)
-			@test -f $@ || $(ECHO) $(RED)  "[KO]" $@.c $(DEFLT)
-			@test -f $@ && $(ECHO) "------\n$@ :" $(FERRLOG) &&	\
-			 ($(LIB_TO_TEST) $@ $(FERRLOG) &&			\
-			 $(ECHO) $(TEAL) "[OK]" $(GREEN)$(notdir $@)		\
+			@$(COMPILER) $@.c -o $@.tmp $(FLAGS)			\
+			 $(HEADER) $(LIB) #$(ERRLOG)
+			@
+			@test -f $@.tmp || $(ECHO) $(RED)  "[KO]" $@.c $(DEFLT)
+			@test -f $@.tmp && $(ECHO) "------\n$@ :" $(FERRLOG) &&	\
+			 ($(LIB_TO_TEST) $@.tmp $(FERRLOG) &&			\
+			 $(ECHO) $(TEAL) "[OK]" $(GREEN)$(notdir $@.tmp)	\
 			 $(DEFLT) ||						\
-			 $(ECHO) $(RED) "[KO]" $(notdir $@) $(DEFLT))
+			 $(ECHO) $(RED) "[KO]" $(notdir $@.tmp) $(DEFLT))
+			@mv $@.tmp $@
 
 $(REPORT):		$(OBJ)
 			@lcov --directory . --directory $(SRC_DIR) -c		\
@@ -94,3 +96,4 @@ clean:
 fclean:			clean
 			@$(RM) $(REPORT)
 re:			fclean all
+

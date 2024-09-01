@@ -6,7 +6,7 @@
 #include		"lapin_private.h"
 
 t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
-					const t_bunny_event		*event,
+					t_bunny_cinematic_event		event,
 					double				elapsed)
 {
   struct bunny_cinematic *cin = (struct bunny_cinematic*)_cin;
@@ -27,10 +27,13 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
   argv[argc] = 0;
 
   t_bunny_cinematic_command cmd;
+  std::string		cmdmne = seq.lines[cin->current_command].command;
   char			*res;
   char			*res2;
 
-  if (!(cmd = bunny_map_get_data(cin->commands, seq.lines[cin->current_command].command.c_str(), t_bunny_cinematic_command)))
+  for (size_t i = 0; i < cmdmne.size(); ++i)
+    cmdmne[i] = tolower(cmdmne[i]);
+  if (!(cmd = bunny_map_get_data(cin->commands, cmdmne.c_str(), t_bunny_cinematic_command)))
     scream_error_if(return (EXIT_ON_ERROR), BE_SYNTAX_ERROR,
 		    "Invalid instruction %s on "
 		    "line %d in sequence %s",
@@ -39,11 +42,31 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
 		    cin->current_command,
 		    bunny_configuration_get_address(cin->program)
 		    );
+
+  // Animate pictures based on cinematic animaton
+  t_bunny_map		**node;
+  t_bunny_sprite	*pic;
+
+  for (bunny_map_all(cin->pictures, node))
+    {
+      pic = bunny_map_data(*node, t_bunny_sprite*);
+      if (!pic->clipable.color_mask.argb[ALPHA_CMP])
+	continue ;
+      bunny_sprite_animate_elapsed(pic, elapsed);
+    }
+
   res = cmd(_cin, argc, argv, event, elapsed);
 
   // Erreur. Le détail est dans la commande.
   if (res != NULL && *res == '\0')
-    return (EXIT_ON_ERROR);
+    scream_error_if(return (EXIT_ON_ERROR), BE_SYNTAX_ERROR,
+		    "Stopped at instruction %s on "
+		    "line %d in sequence %s",
+		    "cinematic,syntax",
+		    seq.lines[cin->current_command].command.c_str(),
+		    cin->current_command,
+		    bunny_configuration_get_address(cin->program)
+		    );
 
   // On nettoie toujours les commandes d'instructions, sauf
   // si l'on reste sur la même instruction
@@ -57,7 +80,10 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
       if ((cin->current_command += 1) >= seq.nbr_lines)
 	{
 	  if (!cin->repeat)
-	    return (EXIT_ON_SUCCESS);
+	    {
+	      bunny_cinematic_stop((t_bunny_cinematic*)cin);
+	      return (EXIT_ON_SUCCESS);
+	    }
 	  cin->current_command = 0;
 	  cin->stack_top = 0;
 	  memset(cin->command_data, 0, sizeof(cin->command_data));

@@ -12,12 +12,12 @@ t_bunny_cinematic	*bunny_load_cinematic_wh(const char	*file,
 {
   t_bunny_configuration	*cnf = NULL;
   struct bunny_cinematic *cin;
-  
+
   if ((cnf = bunny_open_configuration(file, NULL)) == NULL)
     return (NULL);
   bunny_configuration_resolve(cnf);
   if (!(cin = (struct bunny_cinematic*)bunny_read_cinematic_wh(cnf, w, h, language)))
-    bunny_delete_configuration(cin->configuration);
+    bunny_delete_configuration(cnf);
   // Pas de suppression de la configuration, celle-ci
   // reste stockée dans cinematic si succès
   return ((t_bunny_cinematic*)cin);
@@ -29,7 +29,7 @@ t_bunny_cinematic	*bunny_load_cinematic(const char	*file,
 {
   t_bunny_configuration	*cnf = NULL;
   struct bunny_cinematic *cin;
-  
+
   if ((cnf = bunny_open_configuration(file, NULL)) == NULL)
     return (NULL);
   bunny_configuration_resolve(cnf);

@@ -18,14 +18,14 @@ const t_bunny_context		gl_bunny_depth_context =
     NULL,
     NULL,
     NULL,
-    (t_bunny_loop)depth_loop,
-    (t_bunny_display)depth_display,
+    NULL, //(t_bunny_loop)depth_loop,
+    NULL, //(t_bunny_display)depth_display,
     NULL,
     NULL,
     NULL,
     NULL,
-    (t_bunny_loop)depth_entering,
-    (t_bunny_leaving_context)depth_leaving,
+    NULL, //(t_bunny_loop)depth_entering,
+    NULL, //(t_bunny_leaving_context)depth_leaving,
     NULL,
     NULL
   };

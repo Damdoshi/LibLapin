@@ -131,8 +131,31 @@ void				bunny_consistancy(void)
 
   do_assert(&usr_fnt->clipable.smooth, &prv_ttf->smooth);
   do_assert(&usr_fnt->clipable.mosaic, &prv_ttf->mosaic);
+  do_assert(&usr_fnt->string, &prv_ttf->string);
+  do_assert(&usr_fnt->string_offset, &prv_ttf->string_offset);
+  do_assert(&usr_fnt->string_len, &prv_ttf->string_len);
+  do_assert(&usr_fnt->halign, &prv_ttf->halign);
+  do_assert(&usr_fnt->valign, &prv_ttf->valign);
+  do_assert(&usr_fnt->color, &prv_ttf->color);
+  do_assert(&usr_fnt->outline, &prv_ttf->outline_color);
+  do_assert(&usr_fnt->outline_size, &prv_ttf->outline_size);
+  do_assert(&usr_fnt->offset, &prv_ttf->offset);
+  do_assert(&usr_fnt->glyph_size, &prv_ttf->glyph_size);
+  do_assert(&usr_fnt->interglyph_space, &prv_ttf->interglyph_space);
+
   do_assert(&usr_fnt->clipable.smooth, &prv_gfx->smooth);
   do_assert(&usr_fnt->clipable.mosaic, &prv_gfx->mosaic);
+  do_assert(&usr_fnt->string, &prv_gfx->string);
+  do_assert(&usr_fnt->string_offset, &prv_gfx->string_offset);
+  do_assert(&usr_fnt->string_len, &prv_gfx->string_len);
+  do_assert(&usr_fnt->halign, &prv_gfx->halign);
+  do_assert(&usr_fnt->valign, &prv_gfx->valign);
+  do_assert(&usr_fnt->color, &prv_gfx->color);
+  do_assert(&usr_fnt->outline, &prv_gfx->outline_color);
+  do_assert(&usr_fnt->outline_size, &prv_gfx->outline_size);
+  do_assert(&usr_fnt->offset, &prv_gfx->offset);
+  do_assert(&usr_fnt->glyph_size, &prv_gfx->glyph_size);
+  do_assert(&usr_fnt->interglyph_space, &prv_gfx->interglyph_space);
 
   t_bunny_tilemap		*usr_tmap = NULL;
   struct bunny_tilemap		*prv_tmap = NULL;
