@@ -21,9 +21,9 @@ RessourceFile = "./sprite.png"
     NextAnimation = "FirstLine"
     Browsing = "RightToLeft"
     {FramePlay
-      1, 1, 1, 3, 3, 3
+      1, 1, 1, 1, 1, 1
     }
-    RepeatAnimation=0
+    RepeatAnimation=1
   ]
 ]
 

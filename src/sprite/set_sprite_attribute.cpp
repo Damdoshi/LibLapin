@@ -190,7 +190,7 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	       "frame for animation '%s'",
 	       "sprite,syntax", &sprite, &config, "false", it->first.c_str());
 	  if ((anim->frame_repetition = (int*)bunny_calloc
-	       (tmp, sizeof(int))) == NULL)
+	       (anim->nbr_frame, sizeof(int))) == NULL)
 	    scream_error_if
 	      (goto DeleteMap, ENOMEM,
 	       PATTERN ": Not enough memory to store the 'Repetition' array "
@@ -273,6 +273,16 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	}
       else
 	anim->next_animation = -1;
+
+      if ((*aconf).Access("Loop"))
+	{
+	  if (anim->next_animation != -1)
+	    scream_error_if
+	      (goto DeleteMap, BE_SYNTAX_ERROR,
+	       PATTERN ": Loop and NextAnimation are mutually exclusive.",
+	       "sprite,syntax", &sprite, &config, "false");
+	  anim->next_animation = anim->hash;
+	}
     }
   for (i = 0; i < sprite.nbr_animation; ++i)
     {
@@ -282,9 +292,10 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	  (sprite.hashname_id, anim->next_animation, int);
     }
 
-  sprite.random = rand() % anim->nbr_frame;
   sprite.current_animation = bunny_map_get_data
     (sprite.hashname_id, sprite.current_animation_hash, int);
+  sprite.random = rand() % sprite.animation[sprite.current_animation].nbr_frame;
+
 
   return (true);
 

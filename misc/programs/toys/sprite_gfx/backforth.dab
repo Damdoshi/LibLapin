@@ -9,7 +9,7 @@ RessourceFile = "./sprite.png"
     Position = 0, 0
     Frame = 6
     Browsing = "BackAndForth"
-    RepeatAnimation=0
+    Loop
   ]
 ]
 
