@@ -42,9 +42,9 @@ bool			bunny_make_clipable_unique(t_bunny_clipable	*clip)
 
 	state.blendMode = sf::BlendNone;
 	pic->tex = &rtex->getTexture();
-	pic->sprite->setTexture(*pic->tex);
 	rtex->draw(*pic->sprite, state);
 	rtex->display();
+	pic->sprite->setTexture(*pic->tex);
 	pic->texture = rtex;
 	scream_log_if(PATTERN, "graphics", clip, "true");
 	pic->res_id = 0;

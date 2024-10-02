@@ -7,6 +7,13 @@
 
 #define			PATTERN		"%s -> %p"
 
+static const uint8_t		default_shift[4] = {
+  [RED_CMP] = RED_CMP,
+  [GREEN_CMP] = GREEN_CMP,
+  [BLUE_CMP] = BLUE_CMP,
+  [ALPHA_CMP] = ALPHA_CMP
+};
+
 t_bunny_pixelarray	*bunny_load_pixelarray(const char		*file)
 {
   struct bunny_pixelarray	*pa;
@@ -100,6 +107,11 @@ t_bunny_pixelarray	*bunny_load_pixelarray(const char		*file)
   pa->color_mask.full = WHITE;
   pa->smooth = false;
   pa->mosaic = false;
+  pa->bitplane = false;
+  pa->palette_size = 0;
+  memset(pa->palette, 0, sizeof(pa->palette));
+  pa->bits_per_pixels = BBW_ARGB_COLORS;
+  memcpy(pa->color_shifts, default_shift, sizeof(pa->color_shifts));
 
   scream_log_if(PATTERN, "ressource,graphics", file, pa);
   return ((t_bunny_pixelarray*)pa);
