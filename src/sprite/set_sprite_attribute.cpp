@@ -190,7 +190,7 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	       "frame for animation '%s'",
 	       "sprite,syntax", &sprite, &config, "false", it->first.c_str());
 	  if ((anim->frame_repetition = (int*)bunny_calloc
-	       (tmp, sizeof(int))) == NULL)
+	       (anim->nbr_frame, sizeof(int))) == NULL)
 	    scream_error_if
 	      (goto DeleteMap, ENOMEM,
 	       PATTERN ": Not enough memory to store the 'Repetition' array "
