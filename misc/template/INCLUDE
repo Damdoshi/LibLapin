@@ -1,0 +1,12 @@
+
+#ifndef				__CONTEXT_H__
+# define			__CONTEXT_H__
+
+struct				s_program;
+typedef struct			s_CONTEXT
+{
+  struct s_program		*program;
+  //
+}				t_CONTEXT;
+
+#endif	/*			__CONTEXT_H__		*/
