@@ -113,6 +113,7 @@ void			bunny_sprite_animate(t_bunny_sprite		*spr,
   return ;
 }
 
+// ca marche pas ca en fait...
 void			bunny_sprite_animate_date(t_bunny_sprite	*spr,
 						  double		now)
 {
@@ -131,6 +132,6 @@ void			bunny_sprite_animate_elapsed(t_bunny_sprite	*spr,
 
 void			bunny_sprite_animate_now(t_bunny_sprite		*spr)
 {
-  bunny_sprite_animate_date(spr, bunny_get_current_time());
+  bunny_sprite_animate(spr, bunny_get_delay());
 }
 

@@ -14,6 +14,11 @@
     double elapsed __attribute__((unused))
 #define			VOID() (void)cin; (void)argc; (void)argv; (void)elapsed
 
+char			*cinematic_refresh(PARAMS)
+{
+  return (".letgo");
+}
+
 char			*cinematic_sleep(PARAMS)
 {
   struct		sdt {
@@ -202,7 +207,7 @@ char			*cinematic_text(PARAMS)
 	  cte->cursor = 0;
 	  cte->fnt->string_len = 0;
 	}
-      return (NULL);
+      return (".letgo");
     }
 
   if (argc < 3 || !bunny_configuration_getf_string(argv[0], &str, "."))
@@ -349,7 +354,7 @@ char			*cinematic_move(PARAMS)
   double		xdiff = cte.target.x - cte.pic->position.x;
   double		ydiff = cte.target.y - cte.pic->position.y;
   double		angle = atan2(ydiff, xdiff);
-  double		dist = sqrt(xdiff * xdiff + ydiff * ydiff);
+  double		dist = xdiff * xdiff + ydiff * ydiff;
   double		coef = 1;
 
   if (event == BCE_TERMINATE_EVENT || event == BCE_NEXT_EVENT)
@@ -360,14 +365,19 @@ char			*cinematic_move(PARAMS)
     }
   if (event == BCE_FASTER_EVENT)
     coef = 2;
-  if (dist < cte.speed)
+
+  cte.pic->position.x += cos(angle) * cte.speed * coef * elapsed;
+  cte.pic->position.y += sin(angle) * cte.speed * coef * elapsed;
+
+  xdiff = cte.target.x - cte.pic->position.x;
+  ydiff = cte.target.y - cte.pic->position.y;
+  double		ndist = xdiff * xdiff + ydiff * ydiff;
+  
+  if (dist < ndist)
     {
       cte.pic->position = cte.target;
       return (NULL);
     }
-
-  cte.pic->position.x += cos(angle) * cte.speed * coef * elapsed;
-  cte.pic->position.y += sin(angle) * cte.speed * coef * elapsed;
 
   if (argc == 5 && bunny_configuration_getf_string(argv[4], &tmp, ".") && strcasecmp(tmp, "async") == 0)
     return (NULL);
@@ -642,22 +652,28 @@ char			*cinematic_skipif(PARAMS)
     {
       t_bunny_sprite	*spr;
       int		i;
+      bool		ret = true;
 
-      if (!bunny_configuration_getf_string(argv[1], &tmp, "."))
-	return ("");
-      if (!(spr = bunny_map_get_data(cin->pictures, tmp, t_bunny_sprite*)))
-	return ("");
-      for (i = 2; i + 1 < argc; i += 2)
+      for (i = 1; i < argc;)
 	{
 	  if (!bunny_configuration_getf_string(argv[i], &tmp, "."))
 	    return ("");
-	  if (!bunny_configuration_getf_int(argv[i + 1], &tmpi, "."))
+	  if (!(spr = bunny_map_get_data(cin->pictures, tmp, t_bunny_sprite*)))
 	    return ("");
-	  if (strcasecmp(tmp, "x") == 0 && (int)spr->clipable.position.x == tmpi)
-	    return (".skip");
-	  if (strcasecmp(tmp, "y") == 0 && (int)spr->clipable.position.y == tmpi)
-	    return (".skip");
+	  i += 1;
+	  if (!bunny_configuration_getf_string(argv[i], &tmp, "."))
+	    return ("");
+	  i += 1;
+	  if (!bunny_configuration_getf_int(argv[i], &tmpi, "."))
+	    return ("");
+	  i += 1;
+	  if (strcasecmp(tmp, "x") == 0 && (int)spr->clipable.position.x != tmpi)
+	    ret = false;
+	  if (strcasecmp(tmp, "y") == 0 && (int)spr->clipable.position.y != tmpi)
+	    ret = false;
 	}
+      if (ret)
+	return (".skip");
     }
   return (NULL);
 }

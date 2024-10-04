@@ -3,6 +3,7 @@
 //
 // Lapin library
 
+#include		<iostream>
 #include		"lapin_private.h"
 
 t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
@@ -31,6 +32,8 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
   char			*res;
   char			*res2;
 
+  // std::cout << cmdmne << std::endl;
+  
   for (size_t i = 0; i < cmdmne.size(); ++i)
     cmdmne[i] = tolower(cmdmne[i]);
   if (!(cmd = bunny_map_get_data(cin->commands, cmdmne.c_str(), t_bunny_cinematic_command)))
@@ -75,7 +78,7 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
   else
     return (GO_ON);
 
-  if (res == NULL)
+  if (res == NULL || strcmp(res, ".letgo") == 0)
     {
       if ((cin->current_command += 1) >= seq.nbr_lines)
 	{
@@ -89,6 +92,8 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
 	  memset(cin->command_data, 0, sizeof(cin->command_data));
 	  memset(cin->return_position, 0, sizeof(cin->return_position));
 	}
+      if (res == NULL)
+	return (bunny_cinematic(_cin, event, elapsed));
       return (GO_ON);
     }
   else if (strcmp(res, ".skip") == 0)

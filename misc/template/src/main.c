@@ -47,6 +47,16 @@ int			main(int		argc,
       fprintf(stderr, "Cannot open window.\n");
       return (EXIT_FAILURE);
     }
+  const char		*scale = "Stretch";
+
+  bunny_configuration_getf(program.configuration, &program.keep_pixel_ratio, "KeepPixelRatio");
+  bunny_configuration_getf(program.configuration, &program.scale_mode, "Scale");
+  if (strcasecmp(scale, "contain") == 0)
+    program.scale_mode = BST_CONTAIN;
+  else if (strcasecmp(scale, "cover") == 0)
+    program.scale_mode = BST_COVER;
+  bunny_scale_clipable(&program.window->buffer, program.screen, program.scale_mode, program.keep_pixel_ratio);
+  
   program.context = FIRST_CONTEXT;
   void			*data[LAST_CONTEXT];
 

@@ -6,3 +6,5 @@
 *]
 
 Screen = 320, 240
+Scale = "Contain"
+KeepPixelRatio = true

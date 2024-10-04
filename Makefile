@@ -68,6 +68,7 @@
 #################################################################################
 
   HEADER	=	-I./include						\
+			-I./include/lapin/					\
 			-I./include/lapin/deps/					\
 			-I./external/include/					\
 			-I/opt/local/include/					\

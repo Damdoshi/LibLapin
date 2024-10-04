@@ -127,6 +127,29 @@ t_bunny_event_response_function	bunny_subcontext_event_response;
   t_bunny_async_computation_response_function name ## _async_computation; \
   t_bunny_event_response_function name ## _event_response
 
+# define			bunny_fill_context(name)	\
+  .key = name ## _key,						\
+    .type = name ## _type,					\
+    .click = name ## _click,					\
+    .move = name ## _move,					\
+    .wheel = name ## _wheel,					\
+    .connect = name ## _joy_connect,				\
+    .axis = name ## _joy_axis,					\
+    .button = name ## _joy_button,				\
+    .get_focus = name ## _get_focus,				\
+    .lost_focus = name ## _lost_focus,				\
+    .resize = name ## _resize,					\
+    .close = name ## _close,					\
+    .loop = name ## _loop,					\
+    .display = name ## _display,				\
+    .netcom = NULL,						\
+    .netmessage = name ## _message,				\
+    .netconnect = name ## _connect,				\
+    .entering_context = name ## _entering,			\
+    .leaving_context = name ## _leaving,			\
+    .async_computation_response = name ## _async_computation,	\
+    .event = name ## _event_response
+
 # include			"context/box.h"
 // # include			"context/cinematic.h"
 # include			"context/splash.h"

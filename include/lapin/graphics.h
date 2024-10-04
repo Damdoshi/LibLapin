@@ -728,6 +728,23 @@ typedef void			(*t_bunny_my_geometry)(t_bunny_pixelarray	*pix,
 */
 extern t_bunny_my_geometry	gl_bunny_my_geometry;
 
+/*
+**
+**
+*/
+
+typedef enum			e_bunny_scale_type
+  {
+    BST_STRETCH,
+    BST_CONTAIN,
+    BST_COVER
+  }				t_bunny_scale_type;
+
+void				bunny_scale_clipable(const t_bunny_buffer	*target,
+						     t_bunny_clipable		*clip,
+						     t_bunny_scale_type		scale_type,
+						     bool			square_pixel);
+
 /*!
 ** This function enable the full support of t_bunny_pixelarray in bunny_blit.
 ** It enable the support of every t_bunny_clipable attributes and of the alpha channel.

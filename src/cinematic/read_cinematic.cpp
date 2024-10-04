@@ -51,6 +51,7 @@ typedef char		*t_cinematic_command(struct bunny_cinematic	*cin,
 */
 
 t_cinematic_command
+  cinematic_refresh,
   cinematic_sleep,
   cinematic_backcolor,
   cinematic_forecolor,
@@ -216,6 +217,7 @@ static bool		cinematic_load_assets(struct bunny_cinematic	*cin,
   bunny_map_set_data(cin->commands, "playeffect", cinematic_playeffect, tcc);
   bunny_map_set_data(cin->commands, "play_effect", cinematic_playeffect, tcc);
   bunny_map_set_data(cin->commands, "trace", cinematic_trace, tcc);
+  bunny_map_set_data(cin->commands, "refresh", cinematic_refresh, tcc);
 
   cin->current_command = 0;
   memset(cin->command_data, 0, sizeof(cin->command_data));

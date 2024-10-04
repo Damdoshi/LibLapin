@@ -26,7 +26,7 @@ echo -e "#include\t\t\t\"$NAME.h\"" >> context_headers.template
 echo -e "bunny_declare_context($NAME);" >> context_declaration.template
 echo -e "    $UNAME," | tr "[a-z]" "[A-Z]" >> context_enumeration.template
 echo -e "  t_$NAME\t\t\t$NAME;"  >> context_attribute.template
-echo -e "  program.$NAME.program = &program;" >> context_pointers.template
+echo -e "  program.$NAME.program = &program;\ndata[$UNAME] = program.$NAME;" >> context_pointers.template
 
 ./$0 ${@:2}
 

@@ -179,36 +179,6 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
       bunny_configuration_getf_int
 	((t_bunny_configuration*)aconf, &anim->intertile.y, "Intertile[1]");
 
-      // REPETITION
-      if ((*aconf).Access("FramePlay"))
-	{
-	  repet = &(*aconf)["FramePlay"];
-	  if (repet->Size() != anim->nbr_frame)
-	    scream_error_if
-	      (goto DeleteMap, BE_SYNTAX_ERROR,
-	       PATTERN ": The 'FramePlay' array size must match the amount of "
-	       "frame for animation '%s'",
-	       "sprite,syntax", &sprite, &config, "false", it->first.c_str());
-	  if ((anim->frame_repetition = (int*)bunny_calloc
-	       (anim->nbr_frame, sizeof(int))) == NULL)
-	    scream_error_if
-	      (goto DeleteMap, ENOMEM,
-	       PATTERN ": Not enough memory to store the 'Repetition' array "
-	       "for animation '%s'",
-	       "sprite,syntax", &sprite, &config, "false", it->first.c_str());
-	  for (j = 0; j < anim->nbr_frame; ++j)
-	    {
-	      if ((*repet)[j].GetInt(&tmp) == false || tmp < 0)
-		scream_error_if
-		  (goto DeleteMap, BE_SYNTAX_ERROR,
-		   PATTERN ": Invalid value 'Repetition[%u]' field for animation '%s'",
-		   "sprite,syntax", &sprite, &config, "false", j, it->first.c_str());
-	      anim->frame_repetition[j] = tmp;
-	    }
-	}
-      else
-	anim->frame_repetition = NULL;
-
       // ANIMATION BROWSING
       if ((*aconf).Access("Browsing"))
 	{
@@ -232,6 +202,38 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	}
       else
 	anim->browsing = BFB_LEFT_TO_RIGHT;
+
+      double coef = anim->browsing == BFB_BACK_AND_FORTH ? 2 : 1;
+
+      // REPETITION
+      if ((*aconf).Access("FramePlay"))
+	{
+	  repet = &(*aconf)["FramePlay"];
+	  if (repet->Size() != anim->nbr_frame * coef)
+	    scream_error_if
+	      (goto DeleteMap, BE_SYNTAX_ERROR,
+	       PATTERN ": The 'FramePlay' array size must match the amount of "
+	       "frame for animation '%s'",
+	       "sprite,syntax", &sprite, &config, "false", it->first.c_str());
+	  if ((anim->frame_repetition = (int*)bunny_calloc
+	       (anim->nbr_frame * coef, sizeof(int))) == NULL)
+	    scream_error_if
+	      (goto DeleteMap, ENOMEM,
+	       PATTERN ": Not enough memory to store the 'Repetition' array "
+	       "for animation '%s'",
+	       "sprite,syntax", &sprite, &config, "false", it->first.c_str());
+	  for (j = 0; j < anim->nbr_frame * coef; ++j)
+	    {
+	      if ((*repet)[j].GetInt(&tmp) == false || tmp < 0)
+		scream_error_if
+		  (goto DeleteMap, BE_SYNTAX_ERROR,
+		   PATTERN ": Invalid value 'Repetition[%u]' field for animation '%s'",
+		   "sprite,syntax", &sprite, &config, "false", j, it->first.c_str());
+	      anim->frame_repetition[j] = tmp;
+	    }
+	}
+      else
+	anim->frame_repetition = NULL;
 
       // ANIMATION REPEAT
       anim->animation_repeat = -1;
