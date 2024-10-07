@@ -92,7 +92,10 @@ void			bunny_sprite_animate(t_bunny_sprite		*spr,
 		  if (sprite.stop_repeat == false)
 		    {
 		      if (sprite.current_animation != -1)
-			anim = &sprite.animation[sprite.current_animation];
+			{
+			  anim = &sprite.animation[sprite.current_animation];
+			  sprite.current_animation_hash = anim->hash;
+			}
 		      else
 			{
 			  // Stay still on the last frame

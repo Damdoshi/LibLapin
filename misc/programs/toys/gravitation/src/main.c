@@ -1,4 +1,5 @@
 
+#include	<time.h>
 #include	<lapin.h>
 
 typedef struct s_bvap
@@ -89,6 +90,7 @@ t_bunny_response display(void *n)
 
 int		main(void)
 {
+  srand(time(NULL));
   win = bunny_start(1440, 900, false, "Window");
   int		i;
 
