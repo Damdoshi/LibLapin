@@ -9,6 +9,6 @@ uint64_t		bunny_sprite_get_animation(const t_bunny_sprite	*_sprite)
 {
   t_bunny_sprite	*sprite = (t_bunny_sprite*)_sprite;
 
-  return (sprite->animation[sprite->current_animation].hash);
+  return (sprite->current_animation_hash);
 }
 
