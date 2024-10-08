@@ -103,8 +103,10 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 	    if (a.frame_repetition)
 	      bunny_free(a.frame_repetition);
 	  }
-	bunny_free(pic->animation);
-	bunny_delete_map(pic->hashname_id);
+	if (pic->animation)
+	  bunny_free(pic->animation);
+	if (pic->hashname_id)
+	  bunny_delete_map(pic->hashname_id);
 	delete pic;
 	scream_log_if("%p", "graphics", clip);
 	return ;

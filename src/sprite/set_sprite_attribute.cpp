@@ -34,6 +34,8 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
   // ANIMATIONS MAP
   if (config.Access("Animations") == false)
     {
+      sprite.hashname_id = NULL;
+      sprite.nbr_animation = 0;
       sprite.animation = NULL;
       return (true);
     }
