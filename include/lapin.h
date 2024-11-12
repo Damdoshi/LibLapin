@@ -154,6 +154,7 @@ typedef enum			s_bunny_decision
 # include			"lapin/named_parameter.h"
 
 # include			"lapin/cinematic.h"
+# include			"lapin/waterbox.h"
 
 # include			"lapin/context.h"
 
