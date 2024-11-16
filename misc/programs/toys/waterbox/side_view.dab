@@ -1,0 +1,12 @@
+
+Size = 800, 600, 1
+Color = 0, 0, 255
+
+{Points
+  [
+    Position = 400, 0, 0
+    Type = "Source"
+    Strength = 3
+  ]
+}
+

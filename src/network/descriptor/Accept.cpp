@@ -5,7 +5,7 @@
 //
 // Bibliothèque Lapin
 
-#include		"private/network.hpp"
+#include		"lapin_private.h"
 
 network::Descriptor	*network::Descriptor::Accept(struct pollfd	*fds,
 						     size_t		&cursize,
@@ -13,19 +13,19 @@ network::Descriptor	*network::Descriptor::Accept(struct pollfd	*fds,
 {
   struct sockaddr_in	_sockaddr;
   socklen_t		_socklen;
-  Descriptor		*ndesc;
+  int			nfd;
 
-  if ((ndesc = new (std::nothrow) Descriptor(network, protocol, size)) == NULL)
+  if ((nfd = accept(fd, (struct sockaddr*)&_sockaddr, &_socklen)) == -1)
     return (NULL);
-  if ((ndesc->fd = accept(fd, (struct sockaddr*)&_sockaddr, &_socklen)) == -1)
-    return (NULL);
-  memcpy(&ndesc->info.sockaddr, &_sockaddr, sizeof(ndesc->info.sockaddr));
-  memcpy(&ndesc->info.socklen, &_socklen, sizeof(ndesc->info.socklen));
-  if (ndesc->Declare(fds, cursize, maxsize) == false)
+  if (cursize >= maxsize)
     {
-      delete ndesc;
+      close(fd);
       return (NULL);
     }
-  return (ndesc);
+  Descriptor		&ndesc = network.descriptors[network.nbr];
+
+  ndesc.Open(protocol, size, terminator, 0, "", nfd);
+  ndesc.Declare(fds, cursize, maxsize);
+  return (&ndesc);
 }
 

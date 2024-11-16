@@ -5,7 +5,7 @@
 //
 // Bibliothèque Lapin
 
-#include		"private/network.hpp"
+#include		"private/network/network.hpp"
 
 bool			network::Descriptor::ExtractFromInBuffer(size_t		len)
 {

@@ -6,7 +6,7 @@
 // Bibliothèque Lapin
 
 #include		<poll.h>
-#include		"private/network.hpp"
+#include		"private/network/network.hpp"
 
 bool			network::Descriptor::Read(void)
 {
@@ -50,6 +50,8 @@ bool			network::Descriptor::Read(void)
   // UDP
   if (protocol == IMMEDIATE_RETRIEVE)
     {
+      // Aucun traitement n'est à faire ici: on a ce qu'on veut
+      // On s'en va.
       if (len == 0)
 	return (true);
       return (ShiftInBuffer(rinfo));
@@ -58,8 +60,10 @@ bool			network::Descriptor::Read(void)
   /// TCP
   if (protocol == FIXED_SIZE)
     {
+      // Normalement, on ne peut pas dépasser inbufer.size()
+      // Car la lecture dans le buffer est conditionné à cette taille
       if (len + rcursor == inbuffer.size())
-	return (ShiftInBuffer(info));
+	return (ShiftInBuffer(rinfo));
       rcursor += len;
     }
 
@@ -79,7 +83,7 @@ bool			network::Descriptor::Read(void)
       if (spdbuffer->size > inbuffer.size())
 	inbuffer.resize(spdbuffer->size, 0);
       // Au cas où l'on ai recu plusieurs paquets d'un coup
-      // ce que la LibLapin ne fait *pas*
+      // ce que la LibLapin ne fait *pas* - donc en face,
       while (rcursor > spdbuffer->size)
 	if (ExtractFromInBuffer(spdbuffer->size) == false)
 	  return (false);
@@ -92,11 +96,11 @@ bool			network::Descriptor::Read(void)
       char		*term;
 
       rcursor += len;
-      while ((term = (char*)memchr(&inbuffer[0], size & 0xFF, rcursor)) != NULL)
+      while ((term = (char*)memchr(&inbuffer[0], terminator, rcursor)) != NULL)
 	if (ExtractFromInBuffer(term - &inbuffer[0]) == false)
 	  return (false);
       // Infraction au protocole
-      if (rcursor >= size)
+      if (rcursor >= size && size != 0)
 	{
 	  Close();
 	  return (false);

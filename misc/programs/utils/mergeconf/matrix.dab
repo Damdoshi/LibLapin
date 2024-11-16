@@ -1,0 +1,26 @@
+
+
+{Matrix(int val)
+  [* ICI CONFLIT GRAMMATICAL: {val ressemble a {Label, hors
+  ** ici, ma volonté était d'avoir une expression et non un label....
+  ** ce qui est ce que l'on comprend naturellement.
+  ** Il faut donc lorsque la dimension n'est pas racine, ne pas considérer
+  ** ce premier symbole comme étant un label.
+  *]
+  {val * 1, val * 2, val * 3},
+  {10 + val * 1, val * 2, val * 3},
+  {20 + val * 1, val * 2, val * 3},
+  [
+    Stuff = val * val
+  ]
+}
+
+Main = [Function
+  "Lol"
+  matrix = Matrix(1)
+  "Matrix is ",
+  matrix[0][0], " ", matrix[0][1], " ", matrix[0][2], " ",
+  matrix[1][0], " ", matrix[1][1], " ", matrix[1][2], " ",
+  matrix[2][0], " ", matrix[2][1], " ", matrix[2][2], " ",
+  matrix[3].Stuff, " and that's done."
+]

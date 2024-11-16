@@ -6,7 +6,7 @@
 // Bibliothèque Lapin
 
 #include		<poll.h>
-#include		"private/network.hpp"
+#include		"private/network/network.hpp"
 
 bool			network::Descriptor::Declare(struct pollfd	*fds,
 						     size_t		&cursize,

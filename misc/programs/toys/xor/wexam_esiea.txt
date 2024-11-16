@@ -1,0 +1,16 @@
+1-| Vous rendrez votre travail via l'adresse jason.brillante@efrits.fr
+  | Votre titre de mail sera [ESIEA]-Prénom NOM
+  | Votre pièce jointe sera une archive compressée au format tar.gz comprenant un dossier prenom_nom comprenant votre rendu
+
+2-| Votre rendu comportera l'extrait de votre base de données d'examen dans le fichier database.sql
+
+3-| Votre rendu comportera l'ensemble des scripts permettant de rendre le site demandé.
+  | Il disposera notamment d'un fichier index.php dont la lecture sera suffisante pour obtenir le rendu du site.
+
+4-| Votre base de données contiendra une table subdivision, disposant d'un identifiant et de l'information si la sous-division est verticale ou horizontale.
+    Votre table subdivision dispose également de l'identifiant de la sous-division parent, devant etre NULL si c'est la racine, supposée unique.
+    Chaque sous division peut avoir autant d'enfant sous division que possible, l'espace étant de fait partagé équitablement entre chaque.
+    Une sous division dispose d'un contenu, affiché *sous* les sous divisions. Si une sous division n'a pas d'enfant, de fait, son contenu est affiché
+    proprement.
+
+

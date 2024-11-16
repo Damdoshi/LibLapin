@@ -30,6 +30,7 @@
 # include			"private/history.hpp"
 # include			"private/cinematic.hpp"
 # include			"private/hardware.hpp"
-# undef				DELETE
+# include			"private/network/network.hpp"
 
+# undef				DELETE
 #endif	/*			__LAPIN_PRIVATE_H__	*/
