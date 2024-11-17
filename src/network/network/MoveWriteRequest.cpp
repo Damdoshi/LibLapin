@@ -11,7 +11,7 @@ void			Network::MoveWriteRequest(void)
 {
   std::map<Info, Peer>::iterator itp;
   std::set<Descriptor*>::iterator itd;
-  
+
   for (itp = peers.begin(); itp != peers.end(); ++itp)
     {
       // Le pair a t il quelque chose a ecrire?
@@ -20,8 +20,8 @@ void			Network::MoveWriteRequest(void)
       bool		fnd = false;
 
       // Le pair est il deja pris en charge?
-      for (itd = itp->descriptors.begin(); itd != itp->descriptors.end(); ++itd)
-	if (itd->IsWritingFor(itp->second.info))
+      for (itd = itp->second.descriptors.begin(); itd != itp->second.descriptors.end(); ++itd)
+	if ((*itd)->IsWritingFor(itp->second.info))
 	  {
 	    fnd = true;
 	    break ;
@@ -31,4 +31,3 @@ void			Network::MoveWriteRequest(void)
 	itp->second.Write(); // Si cela echoue, on re essayera
     }
 }
-

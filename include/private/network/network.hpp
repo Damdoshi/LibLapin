@@ -10,6 +10,7 @@
 # include		<sys/select.h>
 # include		<sys/types.h>
 # include		<poll.h>
+# include		<array>
 # include		<map>
 # include		"descriptor.hpp"
 # include		"peer.hpp"
@@ -26,7 +27,7 @@ protected:
   // Contacts identifiés
   std::map<Info, Peer>	peers;
   // Connexions réseaux diverses
-  Descriptor		descriptors[FD_SETSIZE];
+  std::array<Descriptor, FD_SETSIZE> descriptors;
   struct pollfd		pollfd[FD_SETSIZE];
   size_t		nbr;
 
@@ -34,7 +35,7 @@ protected:
 
   friend		network::Descriptor;
   friend		network::Peer;
-  
+
 public:
   // On veut ouvrir un serveur ou un client.
   const Info		*Open(const std::string		&name,

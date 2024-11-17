@@ -37,7 +37,7 @@ namespace			network
     struct pollfd		*pollfd;
     // Associated peers, that would be disconnected if this descriptor is closed
     std::set<Peer*>		associated_peers;
-    
+
     Protocol			protocol;
     size_t			size;
     char			terminator;
@@ -74,10 +74,11 @@ namespace			network
     bool			Write(void);
     bool			Read(void);
     bool			ShiftInBuffer(const Info	&info);
-    bool			ExtractFromInBuffer(size_t	len);
+    bool			ExtractFromInBuffer(const Info	&info,
+						    size_t	len);
 
     bool			IsWritingFor(const Info		&info);
-    
+
     bool			IsDoomed(void) const
     {
       return (doomed);
@@ -97,7 +98,7 @@ namespace			network
 				     = "",
 				     int			fd
 				     = -1);
-    
+
     // Getters
     operator			bool (void) const;
     operator			int (void) const;
@@ -108,7 +109,7 @@ namespace			network
     Peer			&operator<<(Peer		&desc);
     int				DetachPeer(const Peer		&desc);
     Peer			&operator>>(const Peer		&desc);
- 
+
     // Get last message and remove it from inbox
     bool			GetMessage(Communication	&com);
     int				GetReceivedPacketCount(void) const;

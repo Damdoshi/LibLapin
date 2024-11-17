@@ -9,9 +9,9 @@
 
 bool		network::Peer::AttachDescriptor(Descriptor	&desc)
 {
-  if (descriptors.contains(desc))
+  if (descriptors.find(&desc) == descriptors.end())
     return (false);
-  descriptors.insert(desc);
+  descriptors.insert(&desc);
   return (true);
 }
 

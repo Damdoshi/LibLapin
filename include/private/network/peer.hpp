@@ -32,9 +32,9 @@ namespace			network
 
     // Transfert de demande d'écriutre de Peer a Descriptor
     bool			Write(void);
-    
+
     friend			::Network;
-    
+
   public:
     operator			bool (void) const;
     operator			const Info & (void) const;
@@ -45,7 +45,7 @@ namespace			network
     Peer			&operator<<(Descriptor			&desc);
     bool			DetachDescriptor(const Descriptor	&desc);
     Peer			&operator>>(const Descriptor		&desc);
-    
+
     // Dépot d'une demande d'écriture
     bool			Write(const char			*data,
 				      size_t				len);
@@ -71,7 +71,7 @@ namespace			network
 
     bool			Doom(void);
     bool			Close(void);
-    
+
     Peer(void);
     ~Peer(void);
   };

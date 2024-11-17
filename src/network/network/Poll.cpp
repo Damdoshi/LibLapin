@@ -13,13 +13,17 @@ double			Network::Poll(double			tmout,
   struct timespec	bef;
   struct timespec	now;
   int			rd;
-  int			i;
+  size_t		i;
 
   do
     {
       clock_gettime(CLOCK_MONOTONIC, &bef);
-	
-      
+      MoveWriteRequest();
+      clock_gettime(CLOCK_MONOTONIC, &now);
+      if ((tmout -= (now.tv_sec - bef.tv_sec) + (now.tv_nsec - bef.tv_nsec) / 1e6) < 0)
+	tmout = 0; // Faut augmenter le timeout la...
+      bef = now;
+
       // Monitor I/O
       if ((rd = poll(pollfd, nbr, tmout)) == -1)
 	{
@@ -30,7 +34,7 @@ double			Network::Poll(double			tmout,
       for (i = 0; i < nbr && rd > 0; ++i)
 	if (pollfd[i].revents)
 	  {
-	    Descriptor &desc = descriptorsfd[pollfd[i].fd];
+	    Descriptor &desc = descriptors[pollfd[i].fd];
 
 	    if (pollfd[i].revents & POLLIN)
 	      desc.Read();
@@ -53,4 +57,3 @@ double			Network::operator()(double		tmout,
 {
   return (Poll(tmout, rasap));
 }
-

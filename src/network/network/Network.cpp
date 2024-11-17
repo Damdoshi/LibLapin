@@ -8,15 +8,12 @@
 #include		"lapin_private.h"
 
 Network::Network(void)
-  : nbr(0),
-    descriptors(*this)
+  : descriptors(*this),
+    nbr(0)
 {
   memset(pollfd, 0, sizeof(pollfd));
 }
 
 Network::~Network(void)
-{
-  for (auto it = descriptors.begin(); it != descriptors.end(); ++it)
-    delete it->second;
-}
+{}
 

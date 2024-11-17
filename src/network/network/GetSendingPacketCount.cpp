@@ -10,8 +10,8 @@
 int			Network::GetSendingPacketCount(void) const
 {
   int			ret = 0;
-  
-  for (auto it = descriptors.begin(); it != descriptors.end(); ++it)
+
+  for (size_t i = 0; i < nbr; ++i)
     ret += it->second->GetSendingPacketCount();
   return (ret);
 }

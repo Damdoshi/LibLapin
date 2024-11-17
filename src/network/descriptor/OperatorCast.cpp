@@ -17,25 +17,3 @@ network::Descriptor::operator	int (void) const
   return (fd);
 }
 
-network::Descriptor::operator	const Info & (void) const
-{
-  return (info);
-}
-
-network::Descriptor::operator	const Info * (void) const
-{
-  return (&info);
-}
-
-network::Descriptor::operator	const char * (void) const
-{
-  return (info.identity);
-}
-
-network::Descriptor::operator	std::string (void) const
-{
-  char				buffer[NBRCELL(info.identity) + 1];
-
-  strcpy(buffer, info.identity);
-  return (std::string(buffer));
-}

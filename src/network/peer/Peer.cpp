@@ -15,6 +15,6 @@ network::Peer::~Peer(void)
   std::set<Descriptor*>::iterator it;
 
   for (it = descriptors.begin(); it != descriptors.end(); ++it)
-    (*it)->DetachPeer();
+    (*it)->DetachPeer(*this);
 }
 

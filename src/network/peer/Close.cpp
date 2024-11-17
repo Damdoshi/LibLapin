@@ -9,10 +9,10 @@
 
 bool			network::Peer::Close(void)
 {
-  std::set<Descriptor*>:iterator it;
+  std::set<Descriptor*>::iterator it;
 
   for (it = descriptors.begin(); it != descriptors.end(); ++it)
-    (*it)->DetachPeer(this);
+    (*it)->DetachPeer(*this);
   return (true);
 }
 

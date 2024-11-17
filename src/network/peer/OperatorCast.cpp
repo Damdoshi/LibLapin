@@ -19,6 +19,6 @@ network::Peer::operator	const Info & (void) const
 
 network::Peer::operator	int (void) const
 {
-  retrn (outqueue.size());
+  return (outqueue.size());
 }
 

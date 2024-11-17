@@ -7,10 +7,11 @@
 
 #include		"private/network/network.hpp"
 
-bool			network::Descriptor::ExtractFromInBuffer(size_t		len)
+bool			network::Descriptor::ExtractFromInBuffer(const Info	&info,
+								 size_t		len)
 {
   try {
-    inqueue.push_back(Communication{info, len});
+    inqueue.emplace_back(info, len);
   } catch (...) {
     return (false);
   }

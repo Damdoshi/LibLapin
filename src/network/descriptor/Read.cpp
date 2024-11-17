@@ -85,7 +85,7 @@ bool			network::Descriptor::Read(void)
       // Au cas où l'on ai recu plusieurs paquets d'un coup
       // ce que la LibLapin ne fait *pas* - donc en face,
       while (rcursor > spdbuffer->size)
-	if (ExtractFromInBuffer(spdbuffer->size) == false)
+	if (ExtractFromInBuffer(rinfo, spdbuffer->size) == false)
 	  return (false);
       return (true);
     }
@@ -97,7 +97,7 @@ bool			network::Descriptor::Read(void)
 
       rcursor += len;
       while ((term = (char*)memchr(&inbuffer[0], terminator, rcursor)) != NULL)
-	if (ExtractFromInBuffer(term - &inbuffer[0]) == false)
+	if (ExtractFromInBuffer(rinfo, term - &inbuffer[0]) == false)
 	  return (false);
       // Infraction au protocole
       if (rcursor >= size && size != 0)
