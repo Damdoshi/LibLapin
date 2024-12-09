@@ -13,7 +13,7 @@ typedef struct			s_bunny_tile_property
 **   depending of the tilemap itself.
 */
 # ifdef				__MINGW32__
-#  pragma			pack(1)
+#  pragma			pack(4)
 # endif
 
 typedef struct			s_bunny_tileset

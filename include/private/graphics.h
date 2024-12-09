@@ -85,7 +85,7 @@ struct				bunny_window
 };
 
 # ifdef				__MINGW32__
-#  pragma			pack(1)
+#  pragma			pack(4)
 # endif
 
 struct				bunny_picture
