@@ -20,8 +20,11 @@ bool			network::Peer::Write(const char		*data,
 
 bool			network::Peer::Write(void)
 {
-  auto it = std::advance(outqueue.begin(), rand() % descriptors.size());
+  auto			it = descriptors.begin();
+  size_t		max = rand() % descriptors.size();
 
-  return (it->Write(outqueue.front().data(), outqueue.front().size(), info));
+  for (size_t i = 0; i < max; ++i)
+    ++it;
+  return ((*it)->Write(outqueue.front().data(), outqueue.front().size(), info));
 }
 

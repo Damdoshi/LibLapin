@@ -7,21 +7,16 @@
 
 #include		"lapin_private.h"
 
-bool			Network::GetMessage(Communication	&com,
-					    std::string		&id)
+bool			Network::GetMessage(Communication	&com)
 {
-  auto			it = descriptors.find(id);
+  for (size_t i = 0; i < nbr; ++i)
+    {
+      int		fd = pollfd[i].fd;
+      Descriptor	&desc = descriptors[fd];
 
-  if (it == descriptors.end())
-    return (false);
-  return (it->second->GetMessage(com));
-}
-
-bool			Network::GetMessage(Communication	&com,
-					    const Info		&info)
-{
-  std::string		id = info.identity;
-
-  return (GetMessage(com, id));
+      if (desc.GetMessage(com))
+	return (true);
+    }
+  return (false);
 }
 

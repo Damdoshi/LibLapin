@@ -11,8 +11,8 @@ int			Network::GetReceivedPacketCount(void) const
 {
   int			ret = 0;
   
-  for (auto it = descriptors.begin(); it != descriptors.end(); ++it)
-    ret += it->second->GetReceivedPacketCount();
+  for (size_t i = 0; i < nbr; ++i)
+    ret += descriptors[i].GetReceivedPacketCount();
   return (ret);
 }
 

@@ -17,13 +17,14 @@
 
 class			Network
 {
-protected:
+public:
   using Descriptor	= network::Descriptor;
   using Info		= network::Info;
   using Protocol	= network::Descriptor::Protocol;
   using Communication	= network::Communication;
   using Peer		= network::Peer;
 
+protected:
   // Contacts identifiés
   std::map<Info, Peer>	peers;
   // Connexions réseaux diverses
@@ -38,8 +39,7 @@ protected:
 
 public:
   // On veut ouvrir un serveur ou un client.
-  const Info		*Open(const std::string		&name,
-			      Protocol			protocol = Protocol::IMMEDIATE_RETRIEVE,
+  const Info		*Open(Protocol			protocol = Protocol::IMMEDIATE_RETRIEVE,
 			      size_t			size = 1024 * 64,
 			      char			terminator = 0,
 			      uint16_t			port = 0x6279, // "by"
@@ -70,8 +70,7 @@ public:
   }
 
   // Récupérer un message en attente
-  bool			GetMessage(Communication	&com,
-				   Info			&info);
+  bool			GetMessage(Communication	&com);
 
   // Commencer à clore la conversation avec un pair ou avec un service réseau
   bool			Doom(const Info			&info);
@@ -83,5 +82,7 @@ public:
   Network(void);
   ~Network(void);
 };
+
+extern Network		gl_network;
 
 #endif	//		__LAPIN_NETWORK_HPP__

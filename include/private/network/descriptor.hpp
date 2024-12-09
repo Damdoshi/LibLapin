@@ -32,11 +32,12 @@ namespace			network
       };
 
   protected:
-    Network			&network;
+    Network			*network;
     // To update our little case, accordingly to what outqueue contains
     struct pollfd		*pollfd;
     // Associated peers, that would be disconnected if this descriptor is closed
     std::set<Peer*>		associated_peers;
+    network::Info		info; // To be returned by Open, that's all.
 
     Protocol			protocol;
     size_t			size;
@@ -83,21 +84,21 @@ namespace			network
     {
       return (doomed);
     }
+
+    Descriptor(void) : network(NULL) {}
     friend class		::Network;
 
   public:
-    bool			Open(Protocol			protocol
-				     = IMMEDIATE_RETRIEVE,
-				     size_t			size
-				     = 1024 * 64,
-				     char			terminator
-				     = 0,
-				     uint16_t			port
-				     = 0x6279, // "by"
-				     const std::string		&ip
-				     = "",
-				     int			fd
-				     = -1);
+    const network::Info		*Open(Protocol			protocol,
+				      size_t			size,
+				      char			terminator,
+				      uint16_t			port,
+				      const std::string		&ip);
+    const network::Info		*Open(Protocol			protocol,
+				      size_t			size,
+				      char			term,
+				      int			fd,
+				      network::Info		info);
 
     // Getters
     operator			bool (void) const;
@@ -128,7 +129,7 @@ namespace			network
     }
 
     void			Doom(void);
-    void			Close(void);
+    bool			Close(void);
 
     Descriptor(Network		&network);
     virtual ~Descriptor(void);

@@ -16,8 +16,22 @@
 # if				!defined(__LAPIN_H__)
 #  error			You cannot include this file directly.
 # endif
+# include			<sys/types.h>
+# include			<sys/socket.h>
+# include			<netinet/in.h>
 
 typedef void			t_bunny_network;
+
+typedef struct			s_bunny_network_info
+{
+  struct sockaddr_in		sockaddr;
+  socklen_t			socklen;
+}				t_bunny_network_info;
+
+int				bunny_infocmp(const t_bunny_network_info	*a,
+					      const t_bunny_network_info	*b);
+t_bunny_network_info		bunny_new_network_info(const char		*ip,
+						       uint16_t			port);
 
 /*!
 ** Five types of answers are possible when you poll a network element:
@@ -32,10 +46,9 @@ typedef void			t_bunny_network;
 typedef enum			e_bunny_comtype
   {
     BCT_ERROR			= 0,
-    BCT_EXPIRED			= 1,
-    BCT_NETCONNECTED		= 2,
-    BCT_NETDISCONNECTED		= 3,
-    BCT_MESSAGE			= 4
+    BCT_NETCONNECTED		= 1,
+    BCT_NETDISCONNECTED		= 2,
+    BCT_MESSAGE			= 3
   }				t_bunny_comtype;
 
 /*!
@@ -60,19 +73,9 @@ typedef enum			e_bunny_comerror
 typedef struct			s_bunny_network_error
 {
   t_bunny_comtype		comtype;
-  unsigned int			time;
+  double			time;
   t_bunny_comerror		errortype;
 }				t_bunny_network_error;
-
-/*!
-** This structure resumes all informations about the nothingness that happened while polling.
-** The time attribute is the remaining time before the polling was suppose to end. In this case, it is 0.
-*/
-typedef struct			s_bunny_expired
-{
-  t_bunny_comtype		comtype;
-  unsigned int			time;
-}				t_bunny_expired;
 
 /*!
 ** This structure resumes all informations about the new connection that was opened.
@@ -83,8 +86,8 @@ typedef struct			s_bunny_expired
 typedef struct			s_bunny_connected
 {
   t_bunny_comtype		comtype;
-  unsigned int			time;
-  int				fd;
+  double			time;
+  t_bunny_network_info		info;
 }				t_bunny_connected;
 
 /*!
@@ -96,8 +99,8 @@ typedef struct			s_bunny_connected
 typedef struct			s_bunny_disconnected
 {
   t_bunny_comtype		comtype;
-  unsigned int			time;
-  int				fd;
+  double			time;
+  t_bunny_network_info		info;
 }				t_bunny_disconnected;
 
 /*!
@@ -111,8 +114,8 @@ typedef struct			s_bunny_disconnected
 typedef struct			s_bunny_message
 {
   t_bunny_comtype		comtype;
-  unsigned int			time;
-  int				fd;
+  double			time;
+  t_bunny_network_info		info;
   unsigned int			size;
   const char			*buffer;
 }				t_bunny_message;
@@ -126,11 +129,36 @@ typedef union			u_bunny_communication
 {
   t_bunny_comtype		comtype;
   t_bunny_network_error		error;
-  t_bunny_expired		expired;
   t_bunny_connected		connected;
   t_bunny_disconnected		disconnected;
   t_bunny_message		message;
 }				t_bunny_communication;
+
+typedef enum			e_bunny_protocol
+  {
+    BP_IMMEDIATE_RETRIEVE,	// UDP
+    BP_FIXED_SIZE_PACKET,	// TCP - If all your packets have the same size
+    BP_SIZE_PLUS_DATA_PACKET,	// TCP - uint32_t + data
+    BP_TERMINATED_PACKET	// TCP - data + uint8_t
+  }				t_bunny_protocol;
+
+// Functions that are supposed to be used by programmers
+const t_bunny_network_info	*bunny_network_open(t_bunny_protocol	pcol,
+						    size_t		size,
+						    char		terminator,
+						    uint16_t		port,
+						    const char		*ip);
+bool				bunny_network_close(const t_bunny_network_info *a);
+bool				bunny_network_doom(const t_bunny_network_info *a);
+bool				bunny_network_write(const t_bunny_network_info *a,
+						    const void		*data,
+						    size_t		len);
+
+// Functions to be used only by LibLapin's bunny_loop
+bool				bunny_network_poll(double		timeout);
+int				bunny_network_inbox(void);
+int				bunny_network_outbox(void);
+bool				bunny_network_read(t_bunny_communication *com);
 
 /*!
 ** The t_bunny_server contains data about the TCP server. It starts with private
@@ -146,12 +174,6 @@ typedef struct			s_bunny_server
   const uint16_t		port;
 }				t_bunny_server;
 #pragma				pack()
-
-typedef enum			e_bunny_protocol
-  {
-    BPT_UNIX,
-    BPT_TCP
-  }				t_bunny_protocol;
 
 /*!
 ** The bunny_new_server_opt function creates a server that listen on a specific port.

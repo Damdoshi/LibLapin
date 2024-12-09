@@ -7,15 +7,16 @@
 
 #include	"private/network/network.hpp"
 
-bool		network::Descriptor::SetMessage(const char	*data,
-						size_t		len)
+bool		network::Descriptor::Write(const char		*data,
+					   size_t		len,
+					   const Info		&info)
 {
-  if (protocol == IMMEDIATE_RETRIEVE)
-    return (false);
   if (size < len && size != 0)
     return (false);
   try {
-    if (protocol == FIXED_SIZE)
+    if (protocol == IMMEDIATE_RETRIEVE)
+      outqueue.emplace_back(info, data, len);
+    else if (protocol == FIXED_SIZE)
       {
 	outqueue.emplace_back(info, size);
 	memcpy(outqueue.back().datas.data(), data, len);
@@ -33,22 +34,6 @@ bool		network::Descriptor::SetMessage(const char	*data,
 	outqueue.emplace_back(info, data, len + 1);
 	outqueue.back().datas.data()[len] = terminator;
       }
-  } catch (...) {
-    return (false);
-  }
-  return (true);
-}
-
-bool		network::Descriptor::SetMessage(const char	*data,
-						size_t		len,
-						const Info	&_info)
-{
-  if (protocol != IMMEDIATE_RETRIEVE)
-    return (false);
-  if (size < len && size != 0)
-    return (false);
-  try {
-    outqueue.emplace_back(_info, data, len);
   } catch (...) {
     return (false);
   }

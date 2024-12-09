@@ -22,10 +22,10 @@ network::Descriptor	*network::Descriptor::Accept(struct pollfd	*fds,
       close(fd);
       return (NULL);
     }
-  Descriptor		&ndesc = network.descriptors[network.nbr];
+  Descriptor		&desc = network->descriptors[nfd];
 
-  ndesc.Open(protocol, size, terminator, 0, "", nfd);
-  ndesc.Declare(fds, cursize, maxsize);
-  return (&ndesc);
+  desc.Open(protocol, size, terminator, nfd, {_sockaddr, _socklen});
+  desc.Declare(fds, cursize, maxsize);
+  return (&desc);
 }
 

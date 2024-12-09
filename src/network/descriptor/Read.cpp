@@ -34,15 +34,10 @@ bool			network::Descriptor::Read(void)
 	    &rinfo.socklen
 	    )) == -1)
 	return (false);
+      
       // La connexion est perdue
-      if (len == 0)
-	{
-	  pollfd->fd *= -1;
-	  close(fd);
-	  fd = -1;
-	  active = false;
-	  return (true);
-	}
+      if (len == 0 && protocol != IMMEDIATE_RETRIEVE)
+	return (Close());
     }
   else
     len = 0;
@@ -51,9 +46,8 @@ bool			network::Descriptor::Read(void)
   if (protocol == IMMEDIATE_RETRIEVE)
     {
       // Aucun traitement n'est à faire ici: on a ce qu'on veut
-      // On s'en va.
-      if (len == 0)
-	return (true);
+      // On fait l'ajout, même si len est vide, car on
+      // peut recevoir un datagramme de longueur 0.
       return (ShiftInBuffer(rinfo));
     }
 

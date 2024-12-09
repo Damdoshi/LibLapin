@@ -30,6 +30,7 @@ double			Network::Poll(double			tmout,
 	  //
 	  return (nan(""));
 	}
+
       // Handle I/O
       for (i = 0; i < nbr && rd > 0; ++i)
 	if (pollfd[i].revents)
@@ -46,7 +47,8 @@ double			Network::Poll(double			tmout,
 	  }
       // Check if there is more time to do another loop
       clock_gettime(CLOCK_MONOTONIC, &now);
-      tmout -= (now.tv_sec - bef.tv_sec) + (now.tv_nsec - bef.tv_nsec) / 1e6;
+      if ((tmout -= (now.tv_sec - bef.tv_sec) + (now.tv_nsec - bef.tv_nsec) / 1e6) < 0)
+	tmout = 0;
     }
   while (!rasap && tmout > 0);
   return (tmout);

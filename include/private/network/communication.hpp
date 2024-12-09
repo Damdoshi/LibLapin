@@ -33,13 +33,23 @@ namespace		network
       {
 	CONNECTED,
 	DISCONNECTED,
-	DATA
+	DATA,
+	ERROR_POLL,
+	ERROR_SENDTO,
+	ERROR_RECVFROM,
+	ERROR_MALLOC
       };
 
     Info		info;
     Type		type;
     std::vector<char>	datas;
+    int			errno_code = 0;
 
+    Communication(Type			errfunc,
+		  int			errcode)
+      : type(errfunc),
+	errno_code(errcode)
+    {}
     Communication(const Info		&_info,
 		  bool			log)
       : info(_info),

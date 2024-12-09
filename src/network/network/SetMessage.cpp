@@ -7,26 +7,16 @@
 
 #include	"lapin_private.h"
 
-bool		Network::SetMessage(const std::string	&id,
-				    const char		*data,
-				    size_t		len)
-{
-  auto		it = descriptors.find(id);
-
-  if (it == descriptors.end())
-    return (false);
-  return (it->second->SetMessage(data, len));
-}
 
 bool		Network::SetMessage(const Info		&info,
 				    const char		*data,
 				    size_t		len)
 {
-  auto		it = descriptors.find(info.identity);
+  auto		it = peers.find(info);
 
-  if (it == descriptors.end())
+  if (it == peers.end())
     return (false);
-  return (it->second->SetMessage(data, len, info));
+  return (it->second.Write(data, len));
 }
 
 template <>

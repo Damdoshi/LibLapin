@@ -12,7 +12,7 @@ int			Network::GetSendingPacketCount(void) const
   int			ret = 0;
 
   for (size_t i = 0; i < nbr; ++i)
-    ret += it->second->GetSendingPacketCount();
+    ret += descriptors[i].GetSendingPacketCount();
   return (ret);
 }
 

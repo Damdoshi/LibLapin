@@ -48,6 +48,11 @@ namespace		network
     {
       memset((void*)this, 0, sizeof(*this));
     }
+    Info(const struct sockaddr_in	&in,
+	 const socklen_t		&le)
+      : sockaddr(in),
+	socklen(le)
+    {}
     Info(const Info			&info)
     {
       *this = info;

@@ -8,9 +8,11 @@
 #include		"lapin_private.h"
 
 Network::Network(void)
-  : descriptors(*this),
+  : descriptors({*this}),
     nbr(0)
 {
+  for (size_t i = 0; i < descriptors.size(); ++i)
+    descriptors[i].network = this;
   memset(pollfd, 0, sizeof(pollfd));
 }
 
