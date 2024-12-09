@@ -20,8 +20,27 @@ bool			load_all_files(const char			*prg,
 {
   if (len)
     {
+      char		*tmp;
+      
       for (size_t i = 0; i < len; ++i)
-	if (bunny_open_configuration(inputs[i], cnf) == NULL)
+	if ((tmp = strchr(inputs[i], '=')) != NULL)
+	  {
+	    *tmp = 0;
+	    char	buffer[strlen(tmp + 1) + 1];
+	    ssize_t	j = 0;
+	    
+	    if (tmp[1] != '"')
+	      strcpy(buffer, &tmp[1]);
+	    else if (bunny_read_cstring(tmp + 1, &j, buffer, sizeof(buffer)) == false)
+	      goto Bad;
+	    if (bunny_configuration_setf(cnf, buffer, "%s", inputs[i]) == false)
+	      goto Bad;
+	    continue ;
+	  Bad:
+	    fprintf(stderr, "%s: Cannoy apply transformation of %s into %s.\n", prg, inputs[i], tmp + 1);
+	    return (false);
+	  }
+	else if (bunny_open_configuration(inputs[i], cnf) == NULL)
 	  {
 	    fprintf(stderr, "%s: Cannot load file %s.\n", prg, inputs[i]);
 	    return (false);
@@ -120,6 +139,13 @@ int			main(int					argc,
 	  if (i < argc && (argv[i][0] == '-' || argv[i][0] == '!' || argv[i][0] == '+'))
 	    i -= 1;
 	}
+      else if (!strcmp("-m", argv[i]))
+	{
+	  for (i += 1; i < argc && argv[i][0] != '-' && argv[i][0] != '!' && argv[i][0] != '+'; ++i)
+	    inputs[nbr_inputs++] = argv[i];
+	  if (i < argc && (argv[i][0] == '-' || argv[i][0] == '!' || argv[i][0] == '+'))
+	    i -= 1;
+	}
       else if (!strcmp("-if", argv[i]))
 	{
 	  if (iformat != BC_CUSTOM)
@@ -194,6 +220,11 @@ int			main(int					argc,
 	 "  -of [format]\tSpecify the output format when using stdout. Default is Dabsic.\n"
 	 "  -i [files]+ \tSpecify input files. Cannot combine with if.\n"
 	 "  -o [files]+ \tSpecify output files. Cannot combine with of.\n"
+	 "  -m [address=value]+ Specifiy field value.\n"
+	 "\n"
+	 "  -if and -i are mutually exclusive.\n"
+	 "  -if/-i and -m can be chained.\n"
+	 "  Fields values and set in the command line order.\n"
 	 "\n"
 	 "Supported formats are:\n"
 	 "\n"
