@@ -41,7 +41,8 @@ bool		bunny_configuration_resolve(t_bunny_configuration	*par)
       else
 	{
 	  if (cnf.GetString(&str, root, parent))
-	    cnf.SetString(std::string(str, true));
+	    // cnf.SetString(std::string(...l'adresse...), true);
+	    cnf.SetString(std::string(str));
 	  // Ceci indique qu'on a un pointeur, en fait, car une RAWSTRING
 	  // est une sorte de pointeur.
 	  // Il faudrait formaliser plus fortement cet aspect, car il est crucial.
