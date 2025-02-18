@@ -139,6 +139,12 @@ int			main(int					argc,
 	  if (i < argc && (argv[i][0] == '-' || argv[i][0] == '!' || argv[i][0] == '+'))
 	    i -= 1;
 	}
+      else if (!strcmp("-I", argv[i]))
+	{
+	  i += 1;
+	  if (i < argc && argv[i][0] != '-' && argv[i][0] != '!' && argv[i][0] != '+')
+	    bunny_configuration_push_path(argv[i]);
+	}
       else if (!strcmp("-m", argv[i]))
 	{
 	  for (i += 1; i < argc && argv[i][0] != '-' && argv[i][0] != '!' && argv[i][0] != '+'; ++i)
@@ -210,6 +216,7 @@ int			main(int					argc,
 
   if (oformat == BC_CUSTOM)
     oformat = BC_DABSIC;
+  //  fprintf(stderr, "%d\n", nbr_inputs);
   if (argc == 1 || (iformat == BC_CUSTOM && nbr_inputs == 0))
     {
       fprintf
