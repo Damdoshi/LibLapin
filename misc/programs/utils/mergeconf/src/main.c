@@ -216,7 +216,6 @@ int			main(int					argc,
 
   if (oformat == BC_CUSTOM)
     oformat = BC_DABSIC;
-  //  fprintf(stderr, "%d\n", nbr_inputs);
   if (argc == 1 || (iformat == BC_CUSTOM && nbr_inputs == 0))
     {
       fprintf
