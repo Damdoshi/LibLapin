@@ -225,7 +225,7 @@ int			main(int					argc,
 	 "\n"
 	 "  -if [format]\tSpecify the input format when using stdin\n"
 	 "  -of [format]\tSpecify the output format when using stdout. Default is Dabsic.\n"
-	 "  -I [path]   \tSpecify an additional path for include or other files to be load.\n"
+	 "  -I [path]   \tSpecify an additional path for include or other files to be loaded.\n"
 	 "  -i [files]+ \tSpecify input files. Cannot combine with if.\n"
 	 "  -o [files]+ \tSpecify output files. Cannot combine with of.\n"
 	 "  -m [address=value]+ Specifiy field value.\n"
