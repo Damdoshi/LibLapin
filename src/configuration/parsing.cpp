@@ -619,9 +619,9 @@ bool			readvalue(const char			*code,
   // @suivi d'un chemin.
   else if (readpath(code, i, &buffer[0], sizeof(buffer)))
     {
-      const char	*tmp = bunny_configuration_resolve_path(&buffer[0]);
+      char	tmp[1024];
 
-      if (tmp == NULL)
+      if (bunny_configuration_resolve_path(&buffer[0], tmp, 1024))
 	nod.SetString(std::string(&buffer[0]));
       else
 	nod.SetString(std::string(tmp));

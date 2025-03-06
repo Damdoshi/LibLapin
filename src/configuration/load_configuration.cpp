@@ -6,6 +6,8 @@
 #include		<libgen.h>
 #include		"lapin_private.h"
 
+#include		<algorithm>
+
 #define			PATTERN		"%d type, %s file, %p config -> %p"
 
 Decision		dabsic_read_text_cont(const char				*code,
@@ -28,28 +30,21 @@ t_bunny_configuration	*bunny_load_configuration(t_bunny_configuration_type		type
   char			*code;
   size_t		siz;
 
-  if (SmallConf::file_path.size() == 0)
+  // AJouter "" si il n'y a pas deja ""
+  if (std::find(SmallConf::file_path.begin(), SmallConf::file_path.end(), "") == SmallConf::file_path.end())
     SmallConf::file_path.push_back("");
-
-  for (it = SmallConf::file_path.rbegin(); it != SmallConf::file_path.rend(); ++it)
-    {
-      if (*it != "")
-	snprintf(&buffer[0], sizeof(buffer), "%s/%s", it->c_str(), file);
-      else
-	snprintf(&buffer[0], sizeof(buffer), "%s", file);
-      if (bunny_load_file(&buffer[0], (void**)&code, &siz) != -1)
-	{
-	  if (gl_bunny_ressource_ciphering)
-	    gl_bunny_ressource_ciphering(code, siz, gl_bunny_ressource_data, false);
-	  break ;
-	}
-    }
-  if (it == SmallConf::file_path.rend())
+  
+  if (!bunny_configuration_resolve_path(file, buffer, sizeof(buffer)))
     scream_error_if
       (return (NULL), ENOENT, PATTERN,
        "ressource,configuration", type, file, config, outconf
        );
-
+  if (bunny_load_file(&buffer[0], (void**)&code, &siz) != -1)
+    {
+      if (gl_bunny_ressource_ciphering)
+	gl_bunny_ressource_ciphering(code, siz, gl_bunny_ressource_data, false);
+    }
+  
   SmallConf::file_read.push(file);
   snprintf(&because_dirname[0], sizeof(because_dirname), "%s", file);
   SmallConf::file_path.push_back(dirname(&because_dirname[0]));

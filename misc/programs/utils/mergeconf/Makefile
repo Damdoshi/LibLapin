@@ -22,7 +22,7 @@
   ## Rules ------------------------------------------------------------------
   all:		bin
   bin:		$(OBJ)
-		@gcc $(OBJ) -o $(BIN) $(LIBPATH) $(LIB)
+		@gcc $(OBJ) -g -ggdb -o $(BIN) $(LIBPATH) $(LIB)
 		@echo "[OUT] " $(BIN)
 		@echo $(BIN) | tr '[:lower:]' '[:upper:]'
   .c.o:

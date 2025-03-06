@@ -508,7 +508,9 @@ t_bunny_configuration_type bunny_which_format(const char				*file);
 
 void			bunny_configuration_push_path(const char			*file);
 void			bunny_configuration_pop_path(void);
-const char		*bunny_configuration_resolve_path(const char			*str);
+bool			bunny_configuration_resolve_path(const char			*str,
+							 char				*buffer,
+							 int				size_buffer);
 
 bool			bunny_configuration_read_time(const t_bunny_configuration	*cnf,
 						      const char			*fld,

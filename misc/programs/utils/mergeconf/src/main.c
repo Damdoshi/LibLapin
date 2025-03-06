@@ -139,6 +139,12 @@ int			main(int					argc,
 	  if (i < argc && (argv[i][0] == '-' || argv[i][0] == '!' || argv[i][0] == '+'))
 	    i -= 1;
 	}
+      else if (!strcmp("-I", argv[i]))
+	{
+	  i += 1;
+	  if (i < argc && argv[i][0] != '-' && argv[i][0] != '!' && argv[i][0] != '+')
+	    bunny_configuration_push_path(argv[i]);
+	}
       else if (!strcmp("-m", argv[i]))
 	{
 	  for (i += 1; i < argc && argv[i][0] != '-' && argv[i][0] != '!' && argv[i][0] != '+'; ++i)
@@ -218,6 +224,7 @@ int			main(int					argc,
 	 "\n"
 	 "  -if [format]\tSpecify the input format when using stdin\n"
 	 "  -of [format]\tSpecify the output format when using stdout. Default is Dabsic.\n"
+	 "  -I [path]   \tSpecify an additional path for include or other files to be loaded.\n"
 	 "  -i [files]+ \tSpecify input files. Cannot combine with if.\n"
 	 "  -o [files]+ \tSpecify output files. Cannot combine with of.\n"
 	 "  -m [address=value]+ Specifiy field value.\n"

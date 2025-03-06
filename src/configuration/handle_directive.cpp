@@ -138,9 +138,9 @@ Decision		_bunny_handle_directive(const char		*code,
   dirconf.GetString(&tmp, (SmallConf*)bunny_configuration_get_root(node), (SmallConf*)node, NULL, NULL);
 
   std::string		filepath = tmp;
-  const char		*res;
+  char			res[1024];
 
-  if ((res = bunny_configuration_resolve_path(filepath.c_str())) == NULL)
+  if (!bunny_configuration_resolve_path(filepath.c_str(), res, sizeof(res)))
     scream_error_if
       (return (BD_ERROR), BE_SYNTAX_ERROR, PATTERN,
        "ressource,configuration,syntax",
