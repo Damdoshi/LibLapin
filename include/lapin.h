@@ -172,8 +172,13 @@ typedef enum			s_bunny_decision
 
 # ifdef				__cplusplus
 #  include			"lapin/cpp_guard_end.hpp"
-#  include			"lapin/cpp_tools.hpp"
-#  include			"lapin/cpp_idstring.hpp"
+#  include			"lapin/cpp/tools.hpp"
+#  include			"lapin/cpp/WorldClock.hpp"
+#  include			"lapin/cpp/errors/NotInRange.hpp"
+#  include			"lapin/cpp/errors/ExcessiveLag.hpp"
+#  include			"lapin/cpp/idstring.hpp"
+#  include			"lapin/cpp/RangedValue.hpp"
+#  include			"lapin/cpp/Frame.hpp"
 # endif
 # ifdef				__cplusplus
 #  include			"lapin/context/Context.hpp"

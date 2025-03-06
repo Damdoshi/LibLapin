@@ -7,9 +7,9 @@
 #include		"lapin_private.h"
 
 #define			PARAMS				\
-  struct bunny_cinematic *cin,				\
-    int argc,						\
-    t_bunny_configuration **argv,			\
+  struct bunny_cinematic *cin __attribute__((unused)),	\
+    int argc __attribute__((unused)),			   \
+    t_bunny_configuration **argv __attribute__((unused)),  \
     t_bunny_cinematic_event event __attribute__((unused)), \
     double elapsed __attribute__((unused))
 #define			VOID() (void)cin; (void)argc; (void)argv; (void)elapsed

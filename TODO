@@ -3,6 +3,8 @@
 
 => Inventer un format de fichier impliquant normal map et image, le tout ensemble.
    Avec un logiciel utilisant la LibLapin, il sera possible de l'afficher et d'animer les lumières :p
+   Cela peut etre fait très simplement avec une boite en tete + deux fichiers PNGs qui se suivent.
+   L'en tete indiquera les positions de fichier de sorte à pouvoir les extraire sans comprendre le PNG.
 
 => Il faudra ajouter des versions de configuration qui prenne des va_list plutot que directivement
    les varidiques.

@@ -38,7 +38,7 @@ t_bunny_waterbox	*bunny_read_waterbox(t_bunny_configuration	*cnf)
   if (!bunny_configuration_getf_string(cnf, &str, "Points"))
     for (size_t i = 0; bunny_configuration_getf_node(cnf, &nod, "Points[%zu]", i); ++i)
       {
-	int		type;
+	int		type = BWP_NONE;
 	int		x = 0;
 	int		y = 0;
 	int		z = 0;

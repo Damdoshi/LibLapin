@@ -40,7 +40,7 @@
 
   ALINKER	?=	ar rcs
   SOLINKER	?=	g++ -shared -o
-  COMPILER	?=	g++ -std=gnu++17
+  COMPILER	?=	g++ -std=gnu++2a
   WARNINGS	=	-W -Wall						\
 			-Wno-write-strings					\
 			-Wno-unused-result					\

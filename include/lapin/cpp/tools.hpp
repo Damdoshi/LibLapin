@@ -5,6 +5,9 @@
 
 #ifndef				__LAPIN_CPP_TOOLS_HPP__
 # define			__LAPIN_CPP_TOOLS_HPP__
+# if				!defined(__LAPIN_H__)
+#  error			You cannot include this file directly.
+# endif
 # include			<string.h>
 # include			<ostream>
 

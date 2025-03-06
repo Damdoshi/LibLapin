@@ -5,6 +5,9 @@
 
 #ifndef				__LAPIN_CPP_IDSTRING_HPP__
 # define			__LAPIN_CPP_IDSTRING_HPP__
+# if				!defined(__LAPIN_H__)
+#  error			You cannot include this file directly.
+# endif
 # if				__cplusplus > 199711L
 #  include			<string.h>
 #  include			<stdint.h>
@@ -60,7 +63,9 @@ namespace			Bunny
 
     inline bool			operator==(const IdString		&b) const
     {
-      return (hash == b.hash);
+      if (hash != b.hash)
+	return (false);
+      return (strcmp(string, b.string) == 0);
     }
     inline bool			operator!=(const IdString		&b) const
     {
