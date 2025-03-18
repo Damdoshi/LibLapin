@@ -12,6 +12,7 @@
 # include			<sstream>
 # include			<stack>
 # include			<list>
+# include			<map>
 # include			"vallock.hpp"
 
 struct				Sequence;

@@ -14,18 +14,15 @@ t_bunny_picture		*bunny_new_picture(unsigned int		width,
 
   if ((pic = new (std::nothrow) struct bunny_picture) == NULL)
     goto Fail;
-  if ((pic->texture = new (std::nothrow) sf::RenderTexture) == NULL)
+  if ((pic->texture = new (std::nothrow) sf::RenderTexture({width, height})) == NULL)
     goto FailStruct;
-  if ((pic->sprite = new (std::nothrow) sf::Sprite) == NULL)
-    goto FailSprite;
-  if (pic->texture->create(width, height) == false)
-    goto FailSprite;
 
   pic->texture->clear(sf::Color(0, 0, 0, 0));
   pic->texture->display();
   pic->texture->setSmooth(false);
   pic->tex = &pic->texture->getTexture();
-  pic->sprite->setTexture(*pic->tex);
+  if ((pic->sprite = new (std::nothrow) sf::Sprite(*pic->tex)) == NULL)
+    goto FailSprite;
   pic->type = GRAPHIC_RAM;
   pic->width = width;
   pic->height = height;

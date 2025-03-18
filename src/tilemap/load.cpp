@@ -12,26 +12,21 @@ static t_bunny_tilemap	*bunny_load_tilemap_whc(const char	*file,
 						unsigned int	height,
 						t_bunny_configuration *conf)
 {
-  sf::Texture		txt;
-  sf::Sprite		spr;
   struct bunny_tilemap	*tmap;
   int			length;
 
   if ((tmap = new (std::nothrow) bunny_tilemap) == NULL)
     goto DeleteConfiguration;
-  if ((tmap->sprite = new (std::nothrow) sf::Sprite) == NULL)
+  if ((tmap->texture = new (std::nothrow) sf::RenderTexture({width, height})) == NULL)
     goto DeleteTilemap;
-  if ((tmap->texture = new (std::nothrow) sf::RenderTexture) == NULL)
-    goto DeleteSfSprite;
-  if (tmap->texture->create(width, height) == false)
-    goto DeleteSfTexture;
 
   length = sqrt(width * width + height * height) * 1.05;
   if ((tmap->working = bunny_new_picture(length, length)) == NULL)
     goto DeleteSfTexture;
 
   tmap->tex = &tmap->texture->getTexture();
-  tmap->sprite->setTexture(*tmap->tex);
+  if ((tmap->sprite = new (std::nothrow) sf::Sprite(*tmap->tex)) == NULL)
+    goto DeleteSfTexture;
 
   tmap->type = TILEMAP;
   tmap->width = tmap->tex->getSize().x;
@@ -105,10 +100,9 @@ static t_bunny_tilemap	*bunny_load_tilemap_whc(const char	*file,
 
  DeleteWorking:
   bunny_delete_clipable(tmap->working);
+  delete tmap->sprite;
  DeleteSfTexture:
   delete tmap->texture;
- DeleteSfSprite:
-  delete tmap->sprite;
  DeleteTilemap:
   delete tmap;
  DeleteConfiguration:

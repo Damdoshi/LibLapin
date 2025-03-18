@@ -10,8 +10,8 @@ const t_bunny_position		*bunny_get_screen_resolution(void)
   static t_bunny_position	screen;
   const sf::VideoMode		&mode = sf::VideoMode::getDesktopMode();
 
-  screen.x = mode.width;
-  screen.y = mode.height;
+  screen.x = mode.size.x;
+  screen.y = mode.size.y;
   scream_log_if("-> %p(%d, %d)", "system", &screen, screen.x, screen.y);
   return (&screen);
 }

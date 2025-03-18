@@ -56,11 +56,11 @@ void			bunny_clear(t_bunny_buffer		*picture,
 	    return ;
 	  }
 
-	sf::IntRect		rect(pic->rect.x, pic->rect.y, pic->rect.w, pic->rect.h);
+	sf::IntRect		rect({pic->rect.x, pic->rect.y}, {pic->rect.w, pic->rect.h});
 	sf::RectangleShape	shape;
 
-	shape.setPosition(sf::Vector2f(rect.left, rect.top));
-	shape.setSize(sf::Vector2f(rect.width, rect.height));
+	shape.setPosition(sf::Vector2f(rect.position.x, rect.position.y));
+	shape.setSize(sf::Vector2f(rect.size.x, rect.size.y));
 	shape.setFillColor(color);
 	pic->texture->draw(shape, sf::RenderStates(sf::BlendNone));
 	scream_log_if(PATTERN, "graphics", picture, (void*)(size_t)_color);

@@ -244,12 +244,9 @@ t_bunny_cinematic	*bunny_read_cinematic_wh(t_bunny_configuration	*cnf,
   cin->configuration = cnf;
   if (!bunny_configuration_getf_node(cnf, &cin->program, "Animation"))
     return (NULL);
-  if ((cin->sprite = new (std::nothrow) sf::Sprite) == NULL)
+  cin->sprite = NULL;
+  if ((cin->texture = new (std::nothrow) sf::RenderTexture({w, h})) == NULL)
     goto DeleteCin;
-  if ((cin->texture = new (std::nothrow) sf::RenderTexture) == NULL)
-    goto DeleteSprite;
-  if (cin->texture->create(w, h) == false)
-    goto DeleteTexture;
 
   cin->res_id = 0;
   cin->tex = &cin->texture->getTexture();
@@ -290,8 +287,6 @@ t_bunny_cinematic	*bunny_read_cinematic_wh(t_bunny_configuration	*cnf,
       bunny_delete_map(cin->maps[i]);
  DeleteTexture:
   delete cin->texture;
- DeleteSprite:
-  delete cin->sprite;
  DeleteCin:
   delete cin;
   return (NULL);

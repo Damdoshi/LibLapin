@@ -30,7 +30,7 @@ static inline unsigned int	extract_bitplane(struct bunny_pixelarray		&pic,
   plansize *= pic.bits_per_pixels / 8.0;
   for (int i = 0; i < pic.bits_per_pixels; ++i)
     data = data | (bunny_bitfield_get(&px[i * plansize], x + y * pic.width) ? 1 << i : 0);
-  if (pic.palette && pic.palette_size)
+  if (pic.palette_size)
     return (pic.palette[data % pic.palette_size].full);
   switch ((int)pic.bits_per_pixels)
     {
@@ -97,17 +97,17 @@ static inline unsigned int	extract_color(struct bunny_pixelarray			&pic,
     {
     case BBW_BLACK_AND_WHITE:
       data = (px[(x + y * pic.width) / 8] >> (1 * ((x + y * pic.width) % 8))) & 0b00000001;
-      if (pic.palette && pic.palette_size)
+      if (pic.palette_size)
 	return (pic.palette[data % pic.palette_size].full);
       return (GRAY((data / 1.0) * 255));
     case BBW_4_COLORS:
       data = (px[(x + y * pic.width) / 4] >> (2 * ((x + y * pic.width) % 4))) & 0b00000011;
-      if (pic.palette && pic.palette_size)
+      if (pic.palette_size)
 	return (pic.palette[data % pic.palette_size].full);
       return (GRAY((data / 3.0) * 255));
     case BBW_16_COLORS:
       data = (px[(x + y * pic.width) / 2] >> (4 * ((x + y * pic.width) % 2))) & 0b00001111;
-      if (pic.palette && pic.palette_size)
+      if (pic.palette_size)
 	return (pic.palette[data % pic.palette_size].full);
       return (COLOR
 	      (data & (1 << pic.color_shifts[ALPHA_CMP]) ? 255 : 0,
@@ -118,7 +118,7 @@ static inline unsigned int	extract_color(struct bunny_pixelarray			&pic,
     case BBW_256_COLORS:
       {
 	data = px[x + y * pic.width];
-	if (pic.palette && pic.palette_size)
+	if (pic.palette_size)
 	  return (pic.palette[data % pic.palette_size].full);
 	return (COLOR
 		(255 * (data >> (2 * pic.color_shifts[ALPHA_CMP]) & 3) / 7.0,
@@ -165,10 +165,10 @@ static sf::Sprite		*blit_pixelarray(struct bunny_pixelarray		&pic,
   int				i;
   int				j;
 
-  rect.left = pic.rect.x;
-  rect.top = pic.rect.y;
-  rect.width = pic.rect.w;
-  rect.height = pic.rect.h;
+  rect.position.x = pic.rect.x;
+  rect.position.y = pic.rect.y;
+  rect.size.x = pic.rect.w;
+  rect.size.y = pic.rect.h;
   for (j = pic.rect.y; j < pic.rect.y + pic.rect.h; ++j)
     for (i = pic.rect.x; i < pic.rect.x + pic.rect.w; ++i)
       if (i >= 0 && j >= 0 && i < pic.width && j < pic.height)
@@ -184,7 +184,7 @@ static sf::Sprite		*blit_pixelarray(struct bunny_pixelarray		&pic,
 	  else
 	    c.full = extract_color(pic, pic.rawpixels, i, j);
 	  pic.image->setPixel
-	    (i, j,
+	    ({i, j},
 	     sf::Color
 	     (c.argb[RED_CMP],
 	      c.argb[GREEN_CMP],
@@ -193,13 +193,20 @@ static sf::Sprite		*blit_pixelarray(struct bunny_pixelarray		&pic,
 	      )
 	     );
 	}
-  pic.tex->loadFromImage(*pic.image, rect);
-  pic.sprite->setPosition(pos.x, pos.y);
+  pic.tex->loadFromImage(*pic.image, false, rect);
+  if (pic.sprite == NULL)
+    {
+      if ((pic.sprite = new (std::nothrow) sf::Sprite(*pic.tex)) == NULL)
+	return (NULL);
+    }
+  else
+    pic.sprite->setTexture(*pic.tex, true); // Safe
+  pic.sprite->setPosition({pos.x, pos.y});
   if (gl_full_blit)
     {
-      pic.sprite->setOrigin(pic.origin.x, pic.origin.y);
-      pic.sprite->setScale(pic.scale.x, pic.scale.y);
-      pic.sprite->setRotation(pic.rotation);
+      pic.sprite->setOrigin({pic.origin.x, pic.origin.y});
+      pic.sprite->setScale({pic.scale.x, pic.scale.y});
+      pic.sprite->setRotation(sf::degrees(pic.rotation));
       pic.sprite->setColor
 	(sf::Color(pic.color_mask.argb[RED_CMP],
 		   pic.color_mask.argb[GREEN_CMP],
@@ -209,7 +216,6 @@ static sf::Sprite		*blit_pixelarray(struct bunny_pixelarray		&pic,
       pic.tex->setSmooth(pic.smooth);
       pic.tex->setRepeated(pic.mosaic);
     }
-  pic.sprite->setTexture(*pic.tex, true);
   return (pic.sprite);
 }
 
@@ -244,8 +250,6 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
   size_t			*input_type = (size_t*)picture;
   sf::Shader			*shader = (sf::Shader*)_shader;
   sf::Sprite			*spr;
-  sf::Texture			_txt;
-  sf::Sprite			_spr;
 
   switch (*input_type)
     {
@@ -303,19 +307,25 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	struct bunny_picture	*pic = (struct bunny_picture*)picture;
 	sf::IntRect		rect;
 
-	rect.left = pic->rect.x;
-	rect.top = pic->rect.y;
-	rect.width = pic->rect.w;
-	rect.height = pic->rect.h;
+	rect.position.x = pic->rect.x;
+	rect.position.y = pic->rect.y;
+	rect.size.x = pic->rect.w;
+	rect.size.y = pic->rect.h;
 	pic->texture->setSmooth(pic->smooth);
 	pic->texture->setRepeated(pic->mosaic);
 	pic->tex = &pic->texture->getTexture();
-	pic->sprite->setTexture(*pic->tex);
+	if (pic->sprite == NULL)
+	  {
+	    if ((pic->sprite = new (std::nothrow) sf::Sprite(*(pic->tex))) == NULL)
+	      return;
+	  }
+	else
+	  pic->sprite->setTexture(*(pic->tex)); // Safe
 	pic->sprite->setTextureRect(rect);
-	pic->sprite->setPosition(pos->x, pos->y);
-	pic->sprite->setOrigin(pic->origin.x, pic->origin.y);
-	pic->sprite->setScale(pic->scale.x, pic->scale.y);
-	pic->sprite->setRotation(pic->rotation);
+	pic->sprite->setPosition({pos->x, pos->y});
+	pic->sprite->setOrigin({pic->origin.x, pic->origin.y});
+	pic->sprite->setScale({pic->scale.x, pic->scale.y});
+	pic->sprite->setRotation(sf::degrees(pic->rotation));
 	pic->sprite->setColor
 	  (sf::Color(pic->color_mask.argb[RED_CMP],
 		     pic->color_mask.argb[GREEN_CMP],
@@ -415,12 +425,12 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 		sf::RenderStates stt = sf::BlendAlpha;
 
 		stt.blendMode = sf::BlendMode
-		  (sf::BlendMode::Zero, // Tuile
-		   sf::BlendMode::One,  // Ombre
-		   sf::BlendMode::Add,   // On garde la couleur de l'ombre
-		   sf::BlendMode::One,  // Tuile
-		   sf::BlendMode::One,   // Ombre
-		   sf::BlendMode::ReverseSubtract // La tuile retire de la transparence
+		  (sf::BlendMode::Factor::Zero, // Tuile
+		   sf::BlendMode::Factor::One,  // Ombre
+		   sf::BlendMode::Equation::Add,   // On garde la couleur de l'ombre
+		   sf::BlendMode::Factor::One,  // Tuile
+		   sf::BlendMode::Factor::One,   // Ombre
+		   sf::BlendMode::Equation::ReverseSubtract // La tuile retire de la transparence
 		   );
 		out->texture->draw(*spr, stt);
 	      }
@@ -481,7 +491,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	  {
 	    // This function is an horrible mess
 	    const bunny_pixelarray	*pic = (const bunny_pixelarray*)output;
-	    sf::Image			img = spr->getTexture()->copyToImage();
+	    sf::Image			img = spr->getTexture().copyToImage();
 	    int				i;
 	    int				j;
 
@@ -501,7 +511,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 		  if (posx.x >= 0 && posx.x < output->width &&
 		      posx.y >= 0 && posx.y < output->height)
 		    {
-		      sf::Color		c = img.getPixel(i, j);
+		      sf::Color		c = img.getPixel({i, j});
 		      int		d = posx.x + posx.y * pic->width;
 
 		      ((t_color*)pic->rawpixels)[d].argb[ALPHA_CMP] = c.a;

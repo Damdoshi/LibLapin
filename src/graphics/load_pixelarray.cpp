@@ -46,13 +46,11 @@ t_bunny_pixelarray	*bunny_load_pixelarray(const char		*file)
 
   if ((pa = new (std::nothrow) struct bunny_pixelarray) == NULL)
     goto ReturnNull;
-  if ((pa->sprite = new (std::nothrow) sf::Sprite) == NULL)
-    goto DeleteStructure;
   if (RessourceManager.disable_manager ||
       (pa->tex = (sf::Texture*)RessourceManager.TryGet(ResManager::SF_TEXTURE, hash)) == NULL)
     {
       if ((pa->tex = new (std::nothrow) sf::Texture) == NULL)
-	goto DeleteSprite;
+	goto DeleteStructure;
       if (pa->tex->loadFromFile(file) == false)
 	goto DeleteTexture;
       if ((pa->rawpixels =
@@ -86,7 +84,8 @@ t_bunny_pixelarray	*bunny_load_pixelarray(const char		*file)
     }
 
   pa->res_id = hash;
-  pa->sprite->setTexture(*pa->tex);
+  if ((pa->sprite = new (std::nothrow) sf::Sprite(*pa->tex)) == NULL)
+    goto DeleteImage;
 
   pa->type = SYSTEM_RAM;
   pa->unused = 0;

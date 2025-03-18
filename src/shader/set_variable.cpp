@@ -71,9 +71,9 @@ static void		get_transform(sf::Shader			*shader,
   sf::Transform		sft;
 
   (void)n;
-  sft.translate(tra->translation.x, tra->translation.y);
-  sft.rotate(tra->rotation, tra->origin.x, tra->origin.y);
-  sft.scale(tra->scale.x, tra->scale.y, tra->origin.x, tra->origin.y);
+  sft.translate({tra->translation.x, tra->translation.y});
+  sft.rotate(sf::degrees(tra->rotation), {tra->origin.x, tra->origin.y});
+  sft.scale({tra->scale.x, tra->scale.y}, {tra->origin.x, tra->origin.y});
   shader->setUniform(varname, sf::Glsl::Mat4(sft));
 }
 

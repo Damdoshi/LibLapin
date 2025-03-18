@@ -9,7 +9,6 @@ bool		bunny_pixel_collision(t_bunny_clipable		*_pic,
 				      const t_bunny_position	*_pos,
 				      double			alpha_margin)
 {
-
   struct bunny_picture *pic = (struct bunny_picture*)_pic;
   t_bunny_position	pos;
   sf::IntRect		rect;
@@ -36,6 +35,6 @@ bool		bunny_pixel_collision(t_bunny_clipable		*_pic,
     }
   sf::Image		img = pic->tex->copyToImage();
 
-  return (!(img.getPixel(pos.x, pos.y).a < alpha_margin * 255));
+  return (!(img.getPixel({pos.x, pos.y}).a < alpha_margin * 255));
 }
 

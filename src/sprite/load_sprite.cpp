@@ -13,11 +13,7 @@ struct bunny_sprite	*_bunny_new_sprite(void)
 
   if ((sprite = new (std::nothrow) bunny_sprite) == NULL)
     return (NULL);
-  if ((sprite->sprite = new (std::nothrow) sf::Sprite) == NULL)
-    {
-      delete sprite;
-      return (NULL);
-    }
+  sprite->sprite = NULL;
   sprite->texture = NULL;
   return (sprite);
 }
@@ -28,7 +24,6 @@ t_bunny_sprite		*_bunny_fill_sprite(t_bunny_sprite	*_spr,
 {
   struct bunny_sprite	*sprite = (struct bunny_sprite*)_spr;
   sf::Texture		txt;
-  sf::Sprite		spr;
   const char		*res;
   uint64_t		hash;
 
@@ -45,15 +40,10 @@ t_bunny_sprite		*_bunny_fill_sprite(t_bunny_sprite	*_spr,
     {
       if (txt.loadFromFile(res) == false)
 	return (NULL);
-      spr.setTexture(txt);
+      sf::Sprite		spr(txt);
 
-      if ((sprite->texture = new (std::nothrow) sf::RenderTexture) == NULL)
+      if ((sprite->texture = new (std::nothrow) sf::RenderTexture({txt.getSize().x, txt.getSize().y})) == NULL)
 	return (NULL);
-      if (sprite->texture->create(txt.getSize().x, txt.getSize().y) == false)
-	{
-	  delete sprite->texture;
-	  return (NULL);
-	}
 
       sprite->texture->clear(sf::Color(0, 0, 0, 0));
       sprite->texture->draw(spr);
@@ -67,7 +57,8 @@ t_bunny_sprite		*_bunny_fill_sprite(t_bunny_sprite	*_spr,
   sprite->res_id = hash;
 
   sprite->tex = &sprite->texture->getTexture();
-  sprite->sprite->setTexture(*sprite->tex);
+  if ((sprite->sprite = new (std::nothrow) sf::Sprite(*sprite->tex)) == NULL)
+      return (NULL);
 
   sprite->type = SPRITE;
   sprite->width = sprite->tex->getSize().x;

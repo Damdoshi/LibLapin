@@ -11,12 +11,18 @@ bool			bunny_font_resize(t_bunny_font		*fnt,
 {
   struct bunny_picture	*pic = (struct bunny_picture*)fnt;
 
-  if (pic->texture->create(width, height) == false)
+  if (pic->texture->resize({width, height}) == false)
     return (false);
   pic->texture->clear(sf::Color(0, 0, 0, 0));
   pic->texture->display();
   pic->tex = &pic->texture->getTexture();
-  pic->sprite->setTexture(*pic->tex);
+  if (pic->sprite == NULL)
+    {
+      if ((pic->sprite = new (std::nothrow) sf::Sprite(*pic->tex)) == NULL)
+	return (false);
+    }
+  else
+    pic->sprite->setTexture(*pic->tex); // Safe
   if (pic->rect.w == pic->width && pic->rect.h == pic->height)
     {
       pic->rect.w = width;

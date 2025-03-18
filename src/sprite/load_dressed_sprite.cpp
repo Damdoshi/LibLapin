@@ -115,10 +115,9 @@ t_bunny_dressed_sprite	*_bunny_read_dressed_sprite(t_bunny_configuration	*config
 
   if ((sprite = new (std::nothrow) bunny_dressed_sprite) == NULL)
     return (NULL);
-  if ((sprite->sprite = new (std::nothrow) sf::Sprite) == NULL)
-    goto DeleteDressedSprite;
+  sprite->sprite = NULL;
   if (_bunny_fill_sprite((t_bunny_sprite*)sprite, config, file) == NULL)
-    goto DeleteSfSprite;
+    goto DeleteDressedSprite;
   sprite->type = DRESSED_SPRITE;
   sprite->have_wardrobe = !!wardrobe;
 
@@ -133,7 +132,7 @@ t_bunny_dressed_sprite	*_bunny_read_dressed_sprite(t_bunny_configuration	*config
       return ((t_bunny_dressed_sprite*)sprite);
     }
   if ((sprite->closets = bunny_new_map(NULL, NULL, NULL, NULL)) == NULL)
-    goto DeleteSfSprite;
+    goto DeleteDressedSprite;
   if ((sprite->clothes = bunny_new_map(NULL, NULL, NULL, NULL)) == NULL)
     goto DeleteCloset;
 
@@ -151,8 +150,6 @@ t_bunny_dressed_sprite	*_bunny_read_dressed_sprite(t_bunny_configuration	*config
   bunny_delete_map(sprite->clothes);
  DeleteCloset:
   bunny_delete_map(sprite->closets);
- DeleteSfSprite:
-  delete sprite->sprite;
  DeleteDressedSprite:
   delete sprite;
   return (NULL);

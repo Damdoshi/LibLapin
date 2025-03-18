@@ -35,7 +35,8 @@ void			_bunny_delete_sound(t_bunny_sound		*sound)
       if (rec->sample)
 	bunny_free(rec->sample);
       delete rec->recorder;
-      delete rec->sound;
+      if (rec->sound)
+	delete rec->sound;
       delete rec;
     }
   else

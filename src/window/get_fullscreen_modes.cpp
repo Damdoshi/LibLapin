@@ -19,8 +19,8 @@ const t_bunny_size			*bunny_get_fullscreen_modes(void)
 
   for (i = 0, it = modes.begin(); i < 1024 / sizeof(t_bunny_position) && it != modes.end(); ++i, ++it)
     {
-      array[i].x = it->width;
-      array[i].y = it->height;
+      array[i].x = it->size.x;
+      array[i].y = it->size.y;
     }
   if (it != modes.end())
     --i;

@@ -14,8 +14,8 @@ void			bunny_stop_record(t_bunny_recorder	*recorder)
     return ;
   rec->recorder->stop();
   rec->effect = (sf::SoundBuffer*)&rec->recorder->getBuffer();
-  rec->sound->setBuffer(*rec->effect);
-
+  if ((rec->sound = new (std::nothrow) sf::Sound(*rec->effect)) == NULL)
+      return;
   len = rec->effect->getSampleCount();
   if (rec->sample != NULL)
     {

@@ -21,9 +21,9 @@ t_bunny_effect		*_bunny_new_effect(double		duration,
     goto FailStruct;
   if ((eff->sample = (int16_t*)bunny_malloc(sizeof(*eff->sample) * len)) == NULL)
     goto FailEffect;
-  if (eff->effect->loadFromSamples(eff->sample, len, channel, sample_per_second) == false)
+  if (eff->effect->loadFromSamples(eff->sample, len, channel, sample_per_second, gl_channels[channel]) == false)
     goto FailSample;
-  if ((eff->sound = new (std::nothrow) sf::Sound) == NULL)
+  if ((eff->sound = new (std::nothrow) sf::Sound(*eff->effect)) == NULL)
     goto FailSample;
 
   eff->file = bunny_strdup("");
@@ -40,7 +40,6 @@ t_bunny_effect		*_bunny_new_effect(double		duration,
   eff->sound_manager = NULL;
   eff->sample_per_second = sample_per_second;
   eff->duration = duration;
-  eff->sound->setBuffer(*eff->effect);
   eff->type = EFFECT;
 
   eff->res_id = 0;

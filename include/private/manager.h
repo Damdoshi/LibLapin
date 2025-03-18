@@ -11,6 +11,7 @@
 # include			<unordered_map>
 # include			<array>
 # include			<list>
+# include			<set>
 
 class				ResManager
 {

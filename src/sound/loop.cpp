@@ -13,7 +13,7 @@ void			bunny_sound_loop(t_bunny_sound		*sound,
   sound->loop = lop;
   scream_log_if("%p sound, %s loop", "ressource,sound", sound, lop ? "true" : "false");
   if (*type == MUSIC)
-    ((struct bunny_music*)sound)->music.setLoop(lop);
+    ((struct bunny_music*)sound)->music.setLooping(lop);
   else
-    ((struct bunny_effect*)sound)->sound->setLoop(lop);
+    ((struct bunny_effect*)sound)->sound->setLooping(lop);
 }

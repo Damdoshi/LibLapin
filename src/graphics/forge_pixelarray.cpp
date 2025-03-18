@@ -53,16 +53,14 @@ t_bunny_pixelarray	*bunny_forge_pixelarray(unsigned int	w,
   // de pont vers SFML.
   if (getenv("TECHNOCORE") == NULL)
     {
-      if ((pa->image = new (std::nothrow) sf::Image) == NULL)
+      if ((pa->image = new (std::nothrow) sf::Image({w, h}, sf::Color(255, 105, 180, 255))) == NULL)
 	goto DeleteRawPixels;
-      pa->image->create(w, h, sf::Color(255, 105, 180, 255));
       if (pa->image->getSize() != sf::Vector2u(w, h))
 	goto DeleteImage;
       if ((pa->tex = new (std::nothrow) sf::Texture) == NULL)
 	goto DeleteImage;
-      if ((pa->sprite = new (std::nothrow) sf::Sprite) == NULL)
+      if ((pa->sprite = new (std::nothrow) sf::Sprite(*pa->tex)) == NULL)
 	goto DeleteTexture;
-      pa->sprite->setTexture(*pa->tex);
     }
   else
     {

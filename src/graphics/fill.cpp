@@ -26,8 +26,8 @@ void			bunny_fill(t_bunny_buffer		*picture,
       {
 	struct bunny_window	*win = (struct bunny_window*)picture;
 
-	sh.setSize(sf::Vector2f(win->width, win->height));
-	sh.setPosition(0, 0);
+	sh.setSize({win->width, win->height});
+	sh.setPosition({0, 0});
 	win->window->draw(sh);
 	scream_log_if(PATTERN, "graphics", picture, (void*)(size_t)_color);
 	return ;
@@ -49,12 +49,12 @@ void			bunny_fill(t_bunny_buffer		*picture,
     case CINEMATIC:
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)picture;
-	sf::IntRect		rect(pic->rect.x, pic->rect.y, pic->rect.w, pic->rect.h);
+	sf::IntRect		rect({pic->rect.x, pic->rect.y}, {pic->rect.w, pic->rect.h});
 
 	if (pic->res_id != 0)
 	  bunny_make_clipable_unique((t_bunny_clipable*)pic);
-	sh.setSize(sf::Vector2f(rect.width, rect.height));
-	sh.setPosition(rect.left, rect.top);
+	sh.setSize({rect.size.x, rect.size.y});
+	sh.setPosition({rect.position.x, rect.position.y});
 	pic->texture->draw(sh);
 	scream_log_if(PATTERN, "graphics", picture, (void*)(size_t)_color);
 	return ;

@@ -87,7 +87,7 @@ chmod 644 ${LIB_DIR}/*.a			|| get_out "Failed to change mode of binaries."
 echo "Adding variables to your shell configuration. Do not forget to restart it after."
 
 test_and_add_bash ~/.shrc
-test_and_add_bash ~/.bashrc
+test_and_add_bash ~/.my_bashrc
 test_and_add_bash ~/.kshrc
 test_and_add_bash ~/.zshrc
 

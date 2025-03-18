@@ -20,14 +20,8 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
   bunny_errno = ENOMEM;
   if ((ttf = new (std::nothrow) struct bunny_ttf_font) == NULL)
     goto ReturnNull;
-  if ((ttf->text = new (std::nothrow) sf::Text) == NULL)
+  if ((ttf->texture = new (std::nothrow) sf::RenderTexture({width, height})) == NULL)
     goto DeleteStructure;
-  if ((ttf->sprite = new (std::nothrow) sf::Sprite) == NULL)
-    goto DeleteText;
-  if ((ttf->texture = new (std::nothrow) sf::RenderTexture) == NULL)
-    goto DeleteSprite;
-  if (ttf->texture->create(width, height) == false)
-    goto DeleteTexture;
 
   hash = bunny_hash(BH_FNV, file, strlen(file));
   if (RessourceManager.disable_manager ||
@@ -35,7 +29,7 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
     {
       if ((ttf->font = new (std::nothrow) sf::Font) == NULL)
 	goto DeleteTexture;
-      if (ttf->font->loadFromFile(file) == false)
+      if (ttf->font->openFromFile(file) == false)
 	{
 	  bunny_errno = EINVAL;
 	  goto DeleteFont;
@@ -49,7 +43,8 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
   ttf->texture->clear(sf::Color(0, 0, 0, 0));
   ttf->texture->display();
   ttf->tex = &ttf->texture->getTexture();
-  ttf->sprite->setTexture(*ttf->tex);
+  if ((ttf->sprite = new (std::nothrow) sf::Sprite(*ttf->tex)) == NULL)
+    goto DeleteFont;
   ttf->type = TTF_TEXT;
   ttf->conf_string = NULL;
   ttf->text->setFont(*ttf->font);
@@ -66,18 +61,18 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
   ttf->glyph_size.x = size->x;
   ttf->glyph_size.y = size->y;
   ttf->text->setCharacterSize(size->y);
+  if ((ttf->text = new (std::nothrow) sf::Text(*ttf->font, "", size->y)) == NULL)
+    goto DeleteSprite;
 
   scream_log_if(PATTERN, "ressource,text", width, height, file, size, size->x, size->y, ttf);
   return ((t_bunny_font*)ttf);
 
- DeleteTexture:
-  delete ttf->texture;
- DeleteFont:
-  delete ttf->font;
  DeleteSprite:
   delete ttf->sprite;
- DeleteText:
-  delete ttf->text;
+ DeleteFont:
+  delete ttf->font;
+ DeleteTexture:
+  delete ttf->texture;
  DeleteStructure:
   delete ttf;
  ReturnNull:

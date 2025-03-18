@@ -21,9 +21,8 @@ t_bunny_recorder	*bunny_new_recorder(const char			*dev,
     goto FailString;
   if (rec->recorder->setDevice(std::string(dev)) == false)
     goto FailRecorder;
-  if ((rec->sound = new (std::nothrow) sf::Sound) == NULL)
-    goto FailRecorder;
 
+  rec->sound = NULL;
   rec->file = bunny_strdup("");
   rec->volume = 50;
   rec->pitch = 1;

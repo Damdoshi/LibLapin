@@ -28,13 +28,8 @@ bool			bunny_make_clipable_unique(t_bunny_clipable	*clip)
 	    scream_log_if(PATTERN, "graphics", clip, "true");
 	    return (true);
 	  }
-	if ((rtex = new (std::nothrow) sf::RenderTexture) == NULL)
+	if ((rtex = new (std::nothrow) sf::RenderTexture({pic->texture->getSize().x, pic->texture->getSize().y})) == NULL)
 	  scream_error_if(return (false), ENOMEM, PATTERN, "graphics", clip, "false");
-	if (rtex->create(pic->texture->getSize().x, pic->texture->getSize().y) == false)
-	  {
-	    delete rtex;
-	    scream_error_if(return (false), ENOMEM, PATTERN, "graphics", clip, "false");
-	  }
 
 	RessourceManager.TryRemove(ResManager::SF_RENDERTEXTURE, pic->res_id, pic);
 
@@ -44,7 +39,13 @@ bool			bunny_make_clipable_unique(t_bunny_clipable	*clip)
 	pic->tex = &rtex->getTexture();
 	rtex->draw(*pic->sprite, state);
 	rtex->display();
-	pic->sprite->setTexture(*pic->tex);
+	if (pic->sprite == NULL)
+	  {
+	    if ((pic->sprite = new (std::nothrow) sf::Sprite(*pic->tex)) == NULL)
+	      return (false);
+	  }
+	else
+	  pic->sprite->setTexture(*pic->tex); // Safe
 	pic->texture = rtex;
 	scream_log_if(PATTERN, "graphics", clip, "true");
 	pic->res_id = 0;
@@ -68,9 +69,8 @@ bool			bunny_make_clipable_unique(t_bunny_clipable	*clip)
 	    return (true);
 	  }
 
-	if ((img = new (std::nothrow) sf::Image) == NULL)
+	if ((img = new (std::nothrow) sf::Image({pic->width, pic->height})) == NULL)
 	  scream_error_if(return (false), ENOMEM, PATTERN, "graphics", clip, "false");
-	img->create(pic->width, pic->height);
 	if (img->getSize() != pic->tex->getSize() || (tex = new (std::nothrow) sf::Texture) == NULL)
 	  {
 	    delete img;
@@ -92,7 +92,13 @@ bool			bunny_make_clipable_unique(t_bunny_clipable	*clip)
 	pic->rawpixels = pixels;
 	pic->image = img;
 	pic->tex = tex;
-	pic->sprite->setTexture(*pic->tex);
+	if (pic->sprite == NULL)
+	  {
+	    if ((pic->sprite = new (std::nothrow) sf::Sprite(*pic->tex)) == NULL)
+	      return (false);
+	  }
+	else
+	  pic->sprite->setTexture(*pic->tex); // Safe
 	pic->res_id = 0;
 	scream_log_if(PATTERN, "graphics", clip, "true");
 	return (true);

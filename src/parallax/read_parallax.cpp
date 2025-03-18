@@ -23,18 +23,14 @@ t_bunny_parallax	*bunny_read_parallax_wh(t_bunny_configuration	*cnf,
   px->viewpoint.y = px->inside_size.y / 2;
   if (bunny_accurate_position_configuration("ViewPoint", &px->viewpoint, cnf) == BD_ERROR)
     goto DeleteParallax;
-
-  if ((px->sprite = new (std::nothrow) sf::Sprite) == NULL)
+  if ((px->texture = new (std::nothrow) sf::RenderTexture({width, height})) == NULL)
     goto DeleteParallax;
-  if ((px->texture = new (std::nothrow) sf::RenderTexture) == NULL)
-    goto DeleteSprite;
-  if (px->texture->create(width, height) == false)
-    goto DeleteTexture;
   px->res_id = 0;
   px->texture->clear(sf::Color(0, 0, 0, 0));
   px->texture->display();
   px->tex = &px->texture->getTexture();
-  px->sprite->setTexture(*px->tex);
+  if ((px->sprite = new (std::nothrow) sf::Sprite(*px->tex)) == NULL)
+    goto DeleteTexture;
   px->type = PARALLAX;
   px->width = width;
   px->height = height;

@@ -16,24 +16,24 @@ void			bunny_set_line(t_bunny_buffer		*buffer,
   sf::Vertex		vert[2] =
     {
       sf::Vertex
-      (sf::Vector2f(position[0].x, position[0].y),
+      {sf::Vector2f(position[0].x, position[0].y),
        sf::Color
        ((color[0] >> (RED_CMP * 8)) & 0xFF,
 	(color[0] >> (GREEN_CMP * 8)) & 0xFF,
 	(color[0] >> (BLUE_CMP * 8)) & 0xFF,
 	(color[0] >> (ALPHA_CMP * 8)) & 0xFF
 	)
-       ),
+      },
 
       sf::Vertex
-      (sf::Vector2f(position[1].x, position[1].y),
+      {sf::Vector2f(position[1].x, position[1].y),
        sf::Color
        ((color[1] >> (RED_CMP * 8)) & 0xFF,
 	(color[1] >> (GREEN_CMP * 8)) & 0xFF,
 	(color[1] >> (BLUE_CMP * 8)) & 0xFF,
 	(color[1] >> (ALPHA_CMP * 8)) & 0xFF
 	)
-       )
+      }
     };
 
   switch (*type)
@@ -42,7 +42,7 @@ void			bunny_set_line(t_bunny_buffer		*buffer,
       {
 	struct bunny_window	*pic = (struct bunny_window*)buffer;
 
-	pic->window->draw(vert, 2, sf::Lines);
+	pic->window->draw(vert, 2, sf::PrimitiveType::Lines);
 	scream_log_if
 	  (PATTERN, "graphics", buffer,
 	   position, position[0].x, position[0].y, position[1].x, position[1].y,
@@ -60,7 +60,7 @@ void			bunny_set_line(t_bunny_buffer		*buffer,
 
 	if (pic->res_id != 0)
 	  bunny_make_clipable_unique((t_bunny_clipable*)buffer);
-	pic->texture->draw(vert, 2, sf::Lines);
+	pic->texture->draw(vert, 2, sf::PrimitiveType::Lines);
 	scream_log_if
 	  (PATTERN, "graphics", buffer,
 	   position, position[0].x, position[0].y, position[1].x, position[1].y,

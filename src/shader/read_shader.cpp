@@ -17,7 +17,7 @@ bool			bunny_read_shader(t_bunny_shader		*_shader,
     scream_error_if(return (false), EINVAL, PATTERN, "ressource,graphics", shader, vertex, fragment, "false");
   if (vertex == NULL)
     {
-      if (shader->loadFromMemory(fragment, sf::Shader::Fragment) == false)
+      if (shader->loadFromMemory(fragment, sf::Shader::Type::Fragment) == false)
 	scream_error_if(return (false), BE_SYNTAX_ERROR, PATTERN, "ressource,graphics,syntax", shader, vertex, fragment, "false");
       scream_log_if(PATTERN, "ressource,graphics", shader, vertex, fragment, "true");
       return (true);
