@@ -19,13 +19,9 @@ t_bunny_font			*__bunny_load_gfx(unsigned int		width,
   bunny_errno = ENOMEM;
   if ((gfx = new (std::nothrow) struct bunny_gfx_font) == NULL)
     goto ReturnNull;
-  if ((gfx->sprite = new (std::nothrow) sf::Sprite) == NULL)
+  if ((gfx->texture = new (std::nothrow) sf::RenderTexture({width, height})) == NULL)
     goto DeleteStructure;
-  if ((gfx->texture = new (std::nothrow) sf::RenderTexture) == NULL)
-    goto DeleteSprite;
   gfx->tex = &gfx->texture->getTexture();
-  if (gfx->texture->create(width, height) == false)
-    goto DeleteTexture;
 
   hash = bunny_hash(BH_FNV, file, strlen(file));
   if (RessourceManager.disable_manager ||
@@ -45,7 +41,8 @@ t_bunny_font			*__bunny_load_gfx(unsigned int		width,
   gfx->texture->clear(sf::Color(0, 0, 0, 0));
   gfx->texture->display();
   gfx->tex = &gfx->texture->getTexture();
-  gfx->sprite->setTexture(*gfx->tex);
+  if ((gfx->sprite = new (std::nothrow) sf::Sprite(*gfx->tex)) == NULL)
+    goto DeletePicture;
   gfx->type = GRAPHIC_TEXT;
 
   /*
@@ -69,14 +66,10 @@ t_bunny_font			*__bunny_load_gfx(unsigned int		width,
   scream_log_if(PATTERN, "ressource,graphics", width, height, file, size, size->x, size->y, gfx);
   return ((t_bunny_font*)gfx);
 
-  /*
-    DeletePicture:
-    bunny_delete_clipable(gfx->gfx);
-  */
+ DeletePicture:
+  bunny_delete_clipable(gfx->gfx);
  DeleteTexture:
   delete gfx->texture;
- DeleteSprite:
-  delete gfx->sprite;
  DeleteStructure:
   delete gfx;
  ReturnNull:

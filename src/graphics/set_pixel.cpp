@@ -17,14 +17,14 @@ void			bunny_set_pixel(t_bunny_buffer		*buffer,
   sf::Vertex		vert[1] =
     {
       sf::Vertex
-      (sf::Vector2f(position.x, position.y),
+      {sf::Vector2f(position.x, position.y),
        sf::Color
        ((color >> (RED_CMP * 8)) & 0xFF,
 	(color >> (GREEN_CMP * 8)) & 0xFF,
 	(color >> (BLUE_CMP * 8)) & 0xFF,
 	(color >> (ALPHA_CMP * 8)) & 0xFF
 	)
-       )
+      }
     };
 
   switch (*type)
@@ -33,7 +33,7 @@ void			bunny_set_pixel(t_bunny_buffer		*buffer,
       {
 	struct bunny_window	*pic = (struct bunny_window*)buffer;
 
-	pic->window->draw(vert, 1, sf::Points);
+	pic->window->draw(vert, 1, sf::PrimitiveType::Points);
 	scream_log_if(PATTERN, "graphics", buffer, position.x, position.y, (void*)(size_t)color);
 	return ;
       }
@@ -48,7 +48,7 @@ void			bunny_set_pixel(t_bunny_buffer		*buffer,
 
 	if (pic->res_id != 0)
 	  bunny_make_clipable_unique((t_bunny_clipable*)buffer);
-	pic->texture->draw(vert, 1, sf::Points);
+	pic->texture->draw(vert, 1, sf::PrimitiveType::Points);
 	scream_log_if(PATTERN, "graphics", buffer, position.x, position.y, (void*)(size_t)color);
 	return ;
       }

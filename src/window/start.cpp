@@ -46,11 +46,11 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
   win->window_name = bunny_strdup(window_name);
   if (winstyle & ANTIALIASING)
     {
-      settings.antialiasingLevel = 2;
-      win->window->create(sf::VideoMode(width, height, 32), win->window_name, winstyle & ~ANTIALIASING, settings);
+      settings.antiAliasingLevel = 2;
+      win->window->create(sf::VideoMode({width, height}, 32), {win->window_name}, (uint32_t)(winstyle & ~ANTIALIASING), (winstyle & FULLSCREEN) ? sf::State::Fullscreen : sf::State::Windowed, settings);
     }
   else
-    win->window->create(sf::VideoMode(width, height, 32), win->window_name, winstyle);
+    win->window->create(sf::VideoMode({width, height}, 32), {win->window_name}, winstyle);
   win->type = WINDOW;
   win->width = width;
   win->height = height;

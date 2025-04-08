@@ -12,7 +12,6 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
 {
   struct bunny_picture	*pic;
   sf::Texture		txt;
-  sf::Sprite		spr;
   uint64_t		hash;
 
   if (bunny_which_format(file) != BC_CUSTOM)
@@ -42,21 +41,18 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
 
   if ((pic = new (std::nothrow) struct bunny_picture) == NULL)
     goto ReturnNull;
-  if ((pic->sprite = new (std::nothrow) sf::Sprite) == NULL)
-    goto DeleteStructure;
+
   if (RessourceManager.disable_manager ||
       (pic->texture = (sf::RenderTexture*)
        RessourceManager.TryGet(ResManager::SF_RENDERTEXTURE, hash)) == NULL)
     {
       // We use a temporary texture because RenderTexture cannot load files.
       if (txt.loadFromFile(file) == false)
-	goto DeleteSprite;
-      spr.setTexture(txt);
+	goto DeleteStructure;
+      sf::Sprite		spr(txt);
 
-      if ((pic->texture = new (std::nothrow) sf::RenderTexture) == NULL)
-	goto DeleteSprite;
-      if (pic->texture->create(txt.getSize().x, txt.getSize().y) == false)
-	goto DeleteRenderTexture;
+      if ((pic->texture = new (std::nothrow) sf::RenderTexture({txt.getSize().x, txt.getSize().y})) == NULL)
+	goto DeleteStructure;
 
       pic->texture->clear(sf::Color(0, 0, 0, 0));
       pic->texture->draw(spr);
@@ -68,7 +64,8 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
 
   pic->res_id = hash;
   pic->tex = &pic->texture->getTexture();
-  pic->sprite->setTexture(*pic->tex);
+  if ((pic->sprite = new (std::nothrow) sf::Sprite(*pic->tex)) == NULL)
+    goto DeleteRenderTexture;
 
   pic->type = GRAPHIC_RAM;
   pic->width = pic->tex->getSize().x;
@@ -96,8 +93,6 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
 
  DeleteRenderTexture:
   delete pic->texture;
- DeleteSprite:
-  delete pic->sprite;
  DeleteStructure:
   delete pic;
  ReturnNull:

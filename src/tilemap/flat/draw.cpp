@@ -43,7 +43,7 @@ static void		draw_layer(struct bunny_tilemap			*tmap,
   int			last_vx = 0;
   sf::VertexArray	vertex = sf::VertexArray
     {
-     sf::Triangles, (size_t)((right - left + 1) * (bot - top + 1) * 6)
+      sf::PrimitiveType::Triangles, (size_t)((right - left + 1) * (bot - top + 1) * 6)
     };
 
   for (int v = top; v <= bot; ++v)

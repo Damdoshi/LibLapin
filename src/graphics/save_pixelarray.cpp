@@ -21,7 +21,7 @@ bool			bunny_save_pixelarray(const t_bunny_pixelarray	*pix,
 	unsigned int	c = pic->rawpixels[i + j * pic->width];
 
 	pic->image->setPixel
-	  (i, j,
+	  ({i, j},
 	   sf::Color
 	   ((c >> (RED_CMP * 8)) & 0xFF,
 	    (c >> (GREEN_CMP * 8)) & 0xFF,

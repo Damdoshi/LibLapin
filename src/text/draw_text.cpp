@@ -35,7 +35,7 @@ static size_t		get_char_width(t_bunny_font	*font,
   struct bunny_gfx_font	*gfx;
   int			len = get_unicode_len(&str[i]);
   std::string		x(str, i, len);
-  std::basic_string<sf::Uint32> conv;
+  std::string		conv;
 
   sf::Utf8::toUtf32(x.begin(), x.end(), std::back_inserter(conv));
 
@@ -182,7 +182,7 @@ static int		put_letter(t_bunny_font		*font,
   if (*s == TTF_TEXT)
     {
       struct bunny_ttf_font *fnt = (struct bunny_ttf_font*)font;
-      std::basic_string<sf::Uint32>			conv;
+      std::string					conv;
       std::string					x(str, i, len);
 
       sf::Utf8::toUtf32(x.begin(), x.end(), std::back_inserter(conv));
@@ -282,9 +282,6 @@ void			put_text(t_bunny_font		*font,
 	  }
 	else
 	  ++i;
-
-      if (*(size_t*)font == TTF_TEXT || font->outline_size == 0)
-	break ;
     }
 }
 
@@ -340,6 +337,11 @@ void			_bunny_draw_text(t_bunny_font	*font)
     }
 
   for (int bis = 0; bis < 2; ++bis)
-    put_text(font, linemem, vpitch, startpos, iterat, bis);
+    {
+      put_text(font, linemem, vpitch, startpos, iterat, bis);
+      if (*(size_t*)font == TTF_TEXT || font->outline_size == 0)
+	break ;
+    }
+
 }
 

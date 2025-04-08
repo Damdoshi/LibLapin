@@ -10,6 +10,7 @@
 # define			__LAPIN_PRIVATE_SOUND_H__
 # include			<SFML/Audio.hpp>
 # include			<map>
+# include			<vector>
 # include			<array>
 # pragma			pack(4)
 
@@ -19,6 +20,8 @@ enum				_music_or_sound
     EFFECT,
     RECORDER
   };
+
+extern				std::vector<sf::SoundChannel> gl_channels[5];
 
 struct				bunny_sound
 {

@@ -11,8 +11,8 @@ void			bunny_set_window_icon(t_bunny_window		*_win,
   struct bunny_window	*win = (struct bunny_window*)_win;
 
   win->window->setIcon
-    (px->clipable.buffer.width,
-     px->clipable.buffer.height,
-     (const sf::Uint8*)px->pixels);
+    ({px->clipable.buffer.width,
+       px->clipable.buffer.height},
+      (uint8_t *)px->pixels);
 }
 

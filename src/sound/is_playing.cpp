@@ -13,10 +13,10 @@ bool			bunny_sound_is_playing(const t_bunny_sound	*sound)
     {
       struct bunny_music *mus = (struct bunny_music*)sound;
 
-      return (mus->playing = mus->music.getStatus() == sf::SoundSource::Playing);
+      return (mus->playing = mus->music.getStatus() == sf::SoundSource::Status::Playing);
     }
   struct bunny_effect *snd = (struct bunny_effect*)sound;
 
-  return (snd->playing = snd->sound->getStatus() == sf::SoundSource::Playing);
+  return (snd->playing = snd->sound->getStatus() == sf::SoundSource::Status::Playing);
 }
 

@@ -14,8 +14,8 @@ bool				bunny_compute_effect(t_bunny_effect		*effect)
 	 (eff->sample,
 	  eff->duration * eff->sample_per_second,
 	  1,
-	  eff->sample_per_second)
-	 );
+	  eff->sample_per_second,
+	  gl_channels[1]));
   if (ret == false)
     scream_error_if(return (false), bunny_errno, "%p -> %s", "sound", effect, "false");
   scream_log_if("%p -> %s", "sound", effect, "true");

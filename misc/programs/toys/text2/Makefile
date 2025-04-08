@@ -15,18 +15,18 @@
   INCLUDE	=	-I./include/
   SRC		=	$(wildcard src/*.c)
   OBJ		=	$(SRC:.c=.o)
-  LIBPATH	=	-L${HOME}/.froot/lib/ -L/usr/local/lib
+  LIBPATH	=	-L${HOME}/.froot/lib/
   LIB		=	-llapin -lsfml-graphics -lsfml-audio -lsfml-window	\
-			-lsfml-system -lstdc++ -lm -ldl -lpthread -lavcall
+			-lsfml-system -lstdc++ -lm -ldl -lpthread
 
   ## Rules ------------------------------------------------------------------
   all:		bin
   bin:		$(OBJ)
-		@gcc $(OBJ) -o $(BIN) $(LIBPATH) $(LIB)
+		@bcc $(OBJ) -o $(BIN) $(LIBPATH) $(FLAG)
 		@echo "[OUT] " $(BIN)
 		@echo $(BIN) | tr '[:lower:]' '[:upper:]'
   .c.o:
-		@gcc $(INCLUDE) $(FLAG) -c $< -o $@
+		@bcc $(INCLUDE) $(FLAG) -c $< -o $@
 		@echo "[GCC]" $<
   clean:
 		@rm -f $(OBJ)

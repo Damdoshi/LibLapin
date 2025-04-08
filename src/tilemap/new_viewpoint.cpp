@@ -21,15 +21,12 @@ t_bunny_tilemap		*bunny_tilemap_new_viewpoint(t_bunny_tilemap	*tm,
   nw->res_id = 0;
 
   // Create a new clipable inside the tilemap
-  if ((nw->texture = new (std::nothrow) sf::RenderTexture) == NULL)
+  if ((nw->texture = new (std::nothrow) sf::RenderTexture({width, height})) == NULL)
     goto DeleteTilemap;
-  if (nw->texture->create(width, height) == false)
-    goto DeleteTexture;
-  if ((nw->sprite = new (std::nothrow) sf::Sprite) == NULL)
-    goto DeleteTexture;
+
   length = sqrt(width * width + height * height) * 1.05;
   if ((nw->working = bunny_new_picture(length, length)) == NULL)
-    goto DeleteSprite;
+    goto DeleteTexture;
 
   // Set basic values
   nw->width = width;
@@ -44,7 +41,10 @@ t_bunny_tilemap		*bunny_tilemap_new_viewpoint(t_bunny_tilemap	*tm,
   nw->texture->display();
   nw->texture->setSmooth(false);
   nw->tex = &nw->texture->getTexture();
-  nw->sprite->setTexture(*nw->tex);
+
+  // Sprite n'a pas plus de constructeur par défaut depuis SFML 3.0
+  if ((nw->sprite = new (std::nothrow) sf::Sprite(*nw->tex)) == NULL)
+    goto DeleteTexture;
 
   // Set working picture status
   nw->working->origin.x = nw->working->buffer.width / 2.0;
@@ -56,8 +56,6 @@ t_bunny_tilemap		*bunny_tilemap_new_viewpoint(t_bunny_tilemap	*tm,
 
   return ((t_bunny_tilemap*)nw);
 
- DeleteSprite:
-  delete nw->sprite;
  DeleteTexture:
   delete nw->texture;
  DeleteTilemap:

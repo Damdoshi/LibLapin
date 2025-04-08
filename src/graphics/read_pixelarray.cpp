@@ -17,14 +17,12 @@ t_bunny_pixelarray	*bunny_read_pixelarray_id(const void		*buf,
   hash = bunny_hash(BH_FNV, file, strlen(file));
   if ((pa = new (std::nothrow) struct bunny_pixelarray) == NULL)
     goto ReturnNull;
-  if ((pa->sprite = new (std::nothrow) sf::Sprite) == NULL)
-    goto DeleteStructure;
   if (RessourceManager.disable_manager ||
       file == NULL ||
       (pa->tex = (sf::Texture*)RessourceManager.TryGet(ResManager::SF_TEXTURE, hash)) == NULL)
     {
       if ((pa->tex = new (std::nothrow) sf::Texture) == NULL)
-	goto DeleteSprite;
+	goto DeleteStructure;
       if (pa->tex->loadFromMemory(buf, len) == false)
 	goto DeleteTexture;
       if ((pa->rawpixels =
@@ -56,7 +54,8 @@ t_bunny_pixelarray	*bunny_read_pixelarray_id(const void		*buf,
     }
 
   pa->res_id = hash;
-  pa->sprite->setTexture(*pa->tex);
+  if ((pa->sprite = new (std::nothrow) sf::Sprite(*pa->tex)) == NULL)
+    goto DeleteImage;
 
   pa->type = SYSTEM_RAM;
   pa->width = pa->tex->getSize().x;
@@ -87,8 +86,6 @@ t_bunny_pixelarray	*bunny_read_pixelarray_id(const void		*buf,
   bunny_free(pa->rawpixels);
  DeleteTexture:
   delete pa->tex;
- DeleteSprite:
-  delete pa->sprite;
  DeleteStructure:
   delete pa;
  ReturnNull:

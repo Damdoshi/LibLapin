@@ -13,8 +13,8 @@ static void		copy_all(t_bunny_map		*node,
 
 t_bunny_sprite		*bunny_duplicate_sprite(t_bunny_sprite	*s)
 {
-  sf::Sprite		sprite;
   struct bunny_sprite	*spr = (struct bunny_sprite*)s;
+  sf::Sprite		sprite(*spr->tex);
   struct bunny_sprite	*nw;
   int			i, j;
 
@@ -24,14 +24,11 @@ t_bunny_sprite		*bunny_duplicate_sprite(t_bunny_sprite	*s)
   nw->type = SPRITE; // Because it may be a sprite derivated (like a dressed sprite)
   nw->res_id = 0;
 
-  if ((nw->texture = new (std::nothrow) sf::RenderTexture) == NULL)
+  if ((nw->texture = new (std::nothrow) sf::RenderTexture({spr->width, spr->height})) == NULL)
     goto DeleteSprite;
-  if (nw->texture->create(spr->width, spr->height) == false)
-    goto DeleteInnerTexture;
   nw->tex = &nw->texture->getTexture();
-  if ((nw->sprite = new (std::nothrow) sf::Sprite) == NULL)
+  if ((nw->sprite = new (std::nothrow) sf::Sprite(*nw->tex)) == NULL)
     goto DeleteInnerTexture;
-  nw->sprite->setTexture(*nw->tex);
 
   // Deep copy of animations
   if ((nw->animation = (t_bunny_animation*)bunny_calloc
@@ -59,7 +56,7 @@ t_bunny_sprite		*bunny_duplicate_sprite(t_bunny_sprite	*s)
   bunny_map_foreach(s->hashname_id, copy_all, nw->hashname_id);
 
   // Draw the previous picture on the new one
-  sprite.setTexture(*spr->tex);
+
   nw->texture->clear(sf::Color(0, 0, 0, 0));
   nw->texture->draw(sprite);
   nw->texture->display();
