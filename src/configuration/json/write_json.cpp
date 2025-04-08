@@ -54,6 +54,19 @@ static void		restore_scope(std::stringstream		&ss,
   std::map<std::string, SmallConf*>::iterator it;
   ssize_t		i;
 
+  if (conf.expression || conf.have_value)
+    {
+      for (i = 0; i < indent; ++i)
+	ss << " ";
+      writestring(ss, ".this");
+      ss << ": ";
+      if (conf.expression)
+	restore_expression(ss, *conf.expression, true, true);
+      else if (conf.have_value)
+	writevalue(ss, conf, true, true);
+      if (conf.Begin() != conf.End())
+	ss << "," << std::endl;
+    }
   for (it = conf.Begin(); it != conf.End(); )
     {
       for (i = 0; i < indent; ++i)

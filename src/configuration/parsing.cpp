@@ -621,7 +621,7 @@ bool			readvalue(const char			*code,
     {
       char	tmp[1024];
 
-      if (bunny_configuration_resolve_path(&buffer[0], tmp, 1024))
+      if (!bunny_configuration_resolve_path(&buffer[0], tmp, sizeof(tmp)))
 	nod.SetString(std::string(&buffer[0]));
       else
 	nod.SetString(std::string(tmp));

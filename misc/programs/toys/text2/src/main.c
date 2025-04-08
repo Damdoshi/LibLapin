@@ -32,12 +32,14 @@ int				main(int	argc,
 
   assert(fnt);
   srand(time(NULL));
+  fnt->outline_size = 1;
+  fnt->outline = BLACK;
 
   bunny_clear(&win->buffer, BLACK);
   bunny_clear(&fnt->clipable.buffer, PINK2);
   bunny_clear(&pic->buffer, GREEN);
 
-  fnt->string = "Celui qui controle l'epice controle l'univers.";
+  fnt->string = "Celui qui controle l'epice controle l'univers.\nIl saura, OUI, il saura, que c'est moi VLADIMIR HARKONNEN, qui l'a mené a sa perte";
   /*
   fnt->halign = BAL_JUSTIFY;
   fnt->valign = BAL_TOP;

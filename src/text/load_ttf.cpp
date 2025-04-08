@@ -47,7 +47,6 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
     goto DeleteFont;
   ttf->type = TTF_TEXT;
   ttf->conf_string = NULL;
-  ttf->text->setFont(*ttf->font);
   /*
   if (bunny_which_format(file) != BC_CUSTOM)
     {
@@ -60,10 +59,10 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
 
   ttf->glyph_size.x = size->x;
   ttf->glyph_size.y = size->y;
-  ttf->text->setCharacterSize(size->y);
   if ((ttf->text = new (std::nothrow) sf::Text(*ttf->font, "", size->y)) == NULL)
     goto DeleteSprite;
 
+  ttf->text->setCharacterSize(size->y);
   scream_log_if(PATTERN, "ressource,text", width, height, file, size, size->x, size->y, ttf);
   return ((t_bunny_font*)ttf);
 
