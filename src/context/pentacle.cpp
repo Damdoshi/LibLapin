@@ -201,13 +201,15 @@ static void			center_vertices(t_bunny_vertex_array		*v,
     siz.y = siz.x;
   else
     siz.x = siz.y;
+  auto pos = &v->vertex[0];
+  
 
   for (size_t i = 0; i < v->length; ++i)
     {
-      v->vertex[i].pos.x *= siz.y * sizcoef;
-      v->vertex[i].pos.y *= siz.y * sizcoef;
-      v->vertex[i].pos.x += p.x;
-      v->vertex[i].pos.y += p.y;
+      pos[i].pos.x *= siz.y * sizcoef;
+      pos[i].pos.y *= siz.y * sizcoef;
+      pos[i].pos.x += p.x;
+      pos[i].pos.y += p.y;
     }
 }
 

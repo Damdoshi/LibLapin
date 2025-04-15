@@ -72,10 +72,12 @@ void			bunny_waterbox(t_bunny_waterbox		*wb)
 
 	      continue ;
 	    }
+	  /*
 	  int		nbr;
 
 	  nbr = (int)point - (int)BWP_SOURCE + 1;
 	  // Créer de l'eau
+	  */
 	}
 }
 

@@ -16,6 +16,7 @@ bool		bunny_collision_quad_quad(const t_bunny_collision	*a,
   t_bunny_line_collision tline;
   t_bunny_accurate_position tmp;
   size_t	i;
+  size_t	j;
 
   for (i = 0, arra->length = 4; i < arra->length; ++i)
     {
@@ -40,23 +41,25 @@ bool		bunny_collision_quad_quad(const t_bunny_collision	*a,
   qline.intermediate_points = 0;
   tline.intermediate_points = 0;
 
-  qline.coord[0] = tline.coord[0];
-  qline.coord[1] = tline.coord[1];
-  if (bunny_collision_line_line((t_bunny_collision*)&qline, (t_bunny_collision*)&tline))
-    goto collide;
-  qline.coord[0] = tline.coord[1];
-  qline.coord[1] = tline.coord[2];
-  if (bunny_collision_line_line((t_bunny_collision*)&qline, (t_bunny_collision*)&tline))
-    goto collide;
-  qline.coord[0] = tline.coord[2];
-  qline.coord[1] = tline.coord[3];
-  if (bunny_collision_line_line((t_bunny_collision*)&qline, (t_bunny_collision*)&tline))
-    goto collide;
-  qline.coord[0] = tline.coord[3];
-  qline.coord[1] = tline.coord[0];
-  if (bunny_collision_line_line((t_bunny_collision*)&qline, (t_bunny_collision*)&tline))
-    goto collide;
-
+  for (i = 0; i < 4; ++i)
+    {
+      qline.coord[0] = aquad->coord[i];
+      if (i == 3)
+	qline.coord[1] = aquad->coord[0];
+      else
+	qline.coord[1] = aquad->coord[i + 1];
+      for (j = 0; j < 4; ++j)
+	{
+	  tline.coord[0] = bquad->coord[j];
+	  if (i == 3)
+	    tline.coord[1] = bquad->coord[0];
+	  else
+	    tline.coord[1] = bquad->coord[j + 1];
+	  if (bunny_collision_line_line((t_bunny_collision*)&qline, (t_bunny_collision*)&tline))
+	    goto collide;
+	}
+    }
+  
   bunny_freea(arra);
   bunny_freea(arrb);
   return (false);

@@ -20,7 +20,7 @@ bool			bunny_configuration_resolve_path(const char	*file,
 	siz = snprintf(&buffer[0], size_buffer, "%s/%s", it->c_str(), file);
       else
 	siz = snprintf(&buffer[0], size_buffer, "%s", file);
-      if (siz == size_buffer)
+      if (siz == (size_t)size_buffer)
 	continue ;
       if (access(&buffer[0], R_OK) == 0)
 	return (true);
