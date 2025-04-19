@@ -80,7 +80,7 @@ namespace			network
     bool			Close(void);
 
     bool			Dump(t_bunny_configuration		*cnf) const;
-    
+
     Peer(void);
     ~Peer(void);
   };

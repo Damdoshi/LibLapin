@@ -84,7 +84,7 @@ public:
   bool			Close(const Info		&info);
 
   int			Dump(int			fd) const;
-  
+
   Network(void);
   ~Network(void);
 };

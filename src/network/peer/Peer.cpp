@@ -7,7 +7,7 @@
 
 #include	"lapin.h"
 #include	"private/network/network.hpp"
-#include	<iostream>
+#include	<set>
 
 network::Peer::Peer(void)
 {}

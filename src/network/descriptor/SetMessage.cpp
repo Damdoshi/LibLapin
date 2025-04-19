@@ -29,7 +29,7 @@ bool		network::Descriptor::SetMessage(const char	*data,
     else if (protocol == SIZE_PLUS_DATA)
       {
 	struct size_plus_data *spd = NULL;
-	
+
 	if (len > UINT32_MAX)
 	  return (false);
 	outqueue.emplace_back(info, len + sizeof(spd->size), wt, wtdata);

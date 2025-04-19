@@ -61,7 +61,7 @@ namespace		network
       wtdata = com.wtdata;
       return (*this);
     }
-    
+
     Communication(void)
     {}
     Communication(t_bunny_comtype	errfunc,

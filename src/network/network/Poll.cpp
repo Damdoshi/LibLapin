@@ -1,4 +1,3 @@
-
 // Jason Brillante "Damdoshi"
 // Hanged Bunny Studio 2014-2025
 // EFRITS SAS 2022-2025
@@ -55,10 +54,10 @@ double			Network::Poll(double			tmout,
       // Check if there is more time to do another loop
       clock_gettime(CLOCK_MONOTONIC, &now);
       if ((tmout -= (now.tv_sec - bef.tv_sec) + (now.tv_nsec - bef.tv_nsec) / 1e9) < 0)
-	tmout = 0;      
+	tmout = 0;
     }
   while (!rasap && tmout > 0);
-  
+
   // Manage doomed Peers
   for (auto it = peers.begin(); it != peers.end(); ++it)
     {
@@ -76,3 +75,4 @@ double			Network::operator()(double		tmout,
 {
   return (Poll(tmout, rasap));
 }
+

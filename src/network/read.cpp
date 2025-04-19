@@ -14,4 +14,3 @@ t_bunny_communication		bunny_network_read(void)
   memcpy(&packet, &com, sizeof(packet));
   return (packet);
 }
-

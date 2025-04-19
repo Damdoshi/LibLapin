@@ -183,7 +183,7 @@ int		main(int	argc,
       else
 	return (usage());
     }
-  
+
   if ((vars.net = bunny_network_open(vars.pcol,  max, '\v', port, ip)) == NULL)
     {
       printf("Failed to open connexion.\n");

@@ -57,6 +57,7 @@ namespace			network
     size_t			wcursor;
 
     std::list<Communication>	inqueue;
+
     char			*inbuffer; // NULL si unbuffer_size 0
     size_t			inbuffer_size;
     size_t			rcursor;
@@ -140,7 +141,7 @@ namespace			network
 
     bool			Dump(t_bunny_configuration	*cnf,
 				     size_t			index) const;
-    
+
     Descriptor(Network		&network);
     virtual ~Descriptor(void);
   };

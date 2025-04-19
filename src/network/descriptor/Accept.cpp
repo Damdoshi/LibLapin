@@ -25,10 +25,10 @@ const network::Info	*network::Descriptor::Accept(size_t			&cursize,
       return (NULL);
     }
 
-  const network::Info	*inf;	
+  const network::Info	*inf;
   size_t		tmp;
   size_t		i;
-  
+
   for (i = 0; i < network->descriptors.size(); ++i)
     if (!network->descriptors[i])
       {

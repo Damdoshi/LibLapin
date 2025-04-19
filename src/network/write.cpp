@@ -13,7 +13,6 @@ bool		bunny_network_writec(const t_bunny_network_info	*info,
 {
   if (!info || !data)
     return (false);
-  
   return (gl_network.SetMessage
 	  (*(network::Info*)info,
 	   (const char*)data,

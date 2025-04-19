@@ -49,7 +49,7 @@ const network::Info	*Network::Descriptor::Open(Protocol		_protocol,
   if (_ip == "")
     if (bind(fd, (struct sockaddr*)&info.sockaddr, info.socklen) == -1)
       goto CloseAndLeave;
-  
+
   // TCP
   if (_protocol != IMMEDIATE_RETRIEVE)
     {
@@ -68,7 +68,7 @@ const network::Info	*Network::Descriptor::Open(Protocol		_protocol,
     }
   else if (_size == 0)
     _size = 65507; // Maximum size of a UDP packet
-  
+
   size = _size;
   terminator = _terminator;
   protocol = _protocol;

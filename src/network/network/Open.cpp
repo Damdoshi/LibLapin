@@ -16,10 +16,10 @@ const network::Info	*Network::Open(Protocol			protocol,
   const network::Info	*inf;
   size_t		tmp;
   size_t		i;
-  
+
   for (i = 0; i < descriptors.size(); ++i)
     if (!descriptors[i])
-      {	
+      {
 	if (!(inf = descriptors[i].Open(protocol, size, terminator, port, ip)))
 	  goto Failure;
 	// Si c'est une écoute, ce n'est pas un pair.
