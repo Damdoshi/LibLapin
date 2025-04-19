@@ -56,7 +56,7 @@ namespace		network
 
     t_bunny_written	wt;
     void		*wtdata;
-    
+
     Communication(Type			errfunc,
 		  int			errcode)
       : type(errfunc),

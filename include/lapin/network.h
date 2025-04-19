@@ -72,7 +72,7 @@ typedef enum			e_bunny_comerror
 */
 typedef struct			s_bunny_network_error
 {
-  t_bunny_comtype		comtype;
+  t_bunny_comtype		type;
   double			time;
   t_bunny_comerror		errortype;
 }				t_bunny_network_error;
@@ -85,7 +85,7 @@ typedef struct			s_bunny_network_error
 */
 typedef struct			s_bunny_connected
 {
-  t_bunny_comtype		comtype;
+  t_bunny_comtype		type;
   double			time;
   t_bunny_network_info		info;
 }				t_bunny_connected;
@@ -98,7 +98,7 @@ typedef struct			s_bunny_connected
 */
 typedef struct			s_bunny_disconnected
 {
-  t_bunny_comtype		comtype;
+  t_bunny_comtype		type;
   double			time;
   t_bunny_network_info		info;
 }				t_bunny_disconnected;
@@ -113,7 +113,7 @@ typedef struct			s_bunny_disconnected
 */
 typedef struct			s_bunny_message
 {
-  t_bunny_comtype		comtype;
+  t_bunny_comtype		type;
   double			time;
   t_bunny_network_info		info;
   unsigned int			size;
@@ -127,7 +127,7 @@ typedef struct			s_bunny_message
 */
 typedef union			u_bunny_communication
 {
-  t_bunny_comtype		comtype;
+  t_bunny_comtype		type;
   t_bunny_network_error		error;
   t_bunny_connected		connected;
   t_bunny_disconnected		disconnected;

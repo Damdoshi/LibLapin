@@ -10,6 +10,8 @@
 # define			__LAPIN_PRIVATE_NETWORK_H__
 # include			"network/network.hpp"
 
+t_bunny_response		bunny_network_event(double		tmout,
+						    void		*data);
 bool				bunny_network_poll(double		timeout);
 int				bunny_network_inbox(void);
 int				bunny_network_outbox(void);
