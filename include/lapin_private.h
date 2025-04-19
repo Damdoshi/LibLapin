@@ -27,7 +27,6 @@
 # include			"private/manager.h"
 # include			"private/monitor.h"
 # include			"private/context.h"
-# include			"private/history.hpp"
 # include			"private/cinematic.hpp"
 # include			"private/hardware.hpp"
 # undef				DELETE
