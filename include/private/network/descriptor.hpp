@@ -1,0 +1,143 @@
+// Jason Brillante "Damdoshi"
+// Hanged Bunny Studio 2014-2024
+// EFRITS SAS 2022-2024
+// Pentacle Technologie 2008-2024
+//
+// Bibliothèque Lapin
+
+#ifndef				__LAPIN_NETWORK_DESCRIPTOR_HPP__
+# define			__LAPIN_NETWORK_DESCRIPTOR_HPP__
+# include			<stdint.h>
+# include			<unistd.h>
+# include			<queue>
+# include			<string>
+# include			<iostream>
+# include			<list>
+# include			<set>
+# include			"communication.hpp"
+
+class				Network;
+namespace			network
+{
+  class				Peer;
+  class				Descriptor
+  {
+  public:
+    enum			Protocol
+      {
+        IMMEDIATE_RETRIEVE,	// UDP
+        FIXED_SIZE,		// TCP - If all your packets have the same size.
+        SIZE_PLUS_DATA,		// TCP - Size INCLUDE the size field
+        TERMINATED		// TCP - Prefer SIZE_PLUS_DATA if possible. It is more efficent.
+      };
+
+  protected:
+    Network			*network;
+    // To update our little case, accordingly to what outqueue contains
+    struct pollfd		*pollfd;
+    // Associated peers, that would be disconnected if this descriptor is closed
+    std::set<Peer*>		associated_peers;
+    network::Info		info; // To be returned by Open, that's all.
+
+    Protocol			protocol;
+    size_t			size;
+    char			terminator;
+
+    bool			active;
+    bool			doomed;
+    int				fd;
+
+    uint32_t			ip;
+    uint16_t			port;
+
+    std::list<Communication>	outqueue;
+    size_t			wcursor;
+
+    std::list<Communication>	inqueue;
+    std::vector<char>		inbuffer;
+    size_t			rcursor;
+
+    struct size_plus_data
+    {
+      uint32_t			size;
+      char			data[0];
+    };
+    size_plus_data		*spdbuffer;
+
+    // To be used by Network
+    bool			Declare(struct pollfd		*fds,
+					size_t			&cursize,
+					size_t			maxsize);
+    Descriptor			*Accept(struct pollfd		*fds,
+					size_t			&cursize,
+					size_t			maxsize) const;
+    // Handle protocol
+    bool			Write(void);
+    bool			Read(void);
+    bool			ShiftInBuffer(const Info	&info);
+    bool			ExtractFromInBuffer(const Info	&info,
+						    size_t	len);
+
+    bool			IsWritingFor(const Info		&info);
+
+    bool			IsDoomed(void) const
+    {
+      return (doomed);
+    }
+
+    Descriptor(void) : network(NULL) {}
+    friend class		::Network;
+
+  public:
+    const network::Info		*Open(Protocol			protocol,
+				      size_t			size,
+				      char			terminator,
+				      uint16_t			port,
+				      const std::string		&ip);
+    const network::Info		*Open(Protocol			protocol,
+				      size_t			size,
+				      char			term,
+				      int			fd,
+				      network::Info		info);
+
+    // Getters
+    operator			bool (void) const;
+    operator			int (void) const;
+
+    // Associer ou retirer un pair du descripteur.
+    // Renvoi le nombre de pairs restants
+    int				AttachPeer(Peer			&desc);
+    Peer			&operator<<(Peer		&desc);
+    int				DetachPeer(const Peer		&desc);
+    Peer			&operator>>(const Peer		&desc);
+
+    // Get last message and remove it from inbox
+    bool			GetMessage(Communication	&com);
+    int				GetReceivedPacketCount(void) const;
+    int				GetSendingPacketCount(void) const;
+
+    bool			SetMessage(const char		*data,
+					   size_t		len,
+					   const Info		&info,
+					   t_bunny_written	wt = NULL,
+					   void			*wtdata = NULL);
+    template <typename T>
+    bool			SetMessage(T const		&data,
+					   const Info		&info,
+					   t_bunny_written	wt = NULL,
+					   void			*wtdata = NULL)
+    {
+      if (SetMessage(&data, sizeof(data), info, wt, wtdata) == false)
+	throw IOException(__PRETTY_FUNCTION__);
+      return (*this);
+    }
+
+    void			Doom(void);
+    bool			Close(void);
+
+    Descriptor(Network		&network);
+    virtual ~Descriptor(void);
+  };
+}
+
+#endif	//		__LAPIN_NETWORK_DESCRIPTOR_HPP__

@@ -505,41 +505,12 @@ double				bunny_get_delay(void);
 ** Network event
 */
 
-/*!
-** Add the sent client into the bunny_loop event system.
-** This client will be automatically removed if it died.
-** Only one network device can be inserted inside the bunny_loop.
-** \param clt The client to add
-*/
-void				bunny_set_client_to_scheduler(t_bunny_client	*clt);
-
-/*!
-** Add the sent server into the bunny_loop event system.
-** This server will be automatically removed if it died.
-** Only one network device can be inserted inside the bunny_loop.
-** \param srv The server to add
-*/
-void				bunny_set_server_to_scheduler(t_bunny_server	*srv);
-
-/*!
-** Remove the network scheduling from bunny_loop.
-*/
-void				bunny_remove_network_from_scheduler(void);
-
-/*!
-** The type of the function that will be called when a t_bunny_client or a connection
-** opened throught a t_bunny_server receive a message.
-** \param fd The file descriptor that receive the message.
-** \param buffer The data. It will be freed automatically, make your copy if you need it.
-** \param size The length of the filled part of the buffer
-** \param data The data parameter of bunny_loop
-*/
-typedef t_bunny_response	(*t_bunny_message_response)(int			fd,
+typedef t_bunny_response	(*t_bunny_message_response)(const t_bunny_network_info *clt,
 							    const void		*buffer,
 							    size_t		size,
 							    void		*data);
 
-typedef t_bunny_response	t_bunny_message_response_function(int		fd,
+typedef t_bunny_response	t_bunny_message_response_function(const t_bunny_network_info *clt,
 								  const void	*buffer,
 								  size_t	size,
 								  void		*data);
@@ -558,11 +529,11 @@ void				bunny_set_message_response(t_bunny_message_response func);
 ** \param data The data parameter of bunny_loop
 ** \return A t_bunny_response in order to keep the loop or break it.
 */
-typedef t_bunny_response	(*t_bunny_connect_response)(int			fd,
+typedef t_bunny_response	(*t_bunny_connect_response)(const t_bunny_network_info *clt,
 							    t_bunny_event_state	state,
 							    void		*data);
 
-typedef t_bunny_response	t_bunny_connect_response_function(int		fd,
+typedef t_bunny_response	t_bunny_connect_response_function(const t_bunny_network_info *cnt,
 								  t_bunny_event_state state,
 								  void		*data);
 
