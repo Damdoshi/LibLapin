@@ -104,7 +104,7 @@
   DBGFLAGS	=	$(COMMON) $(DEBUGOPTS)
   TSTFLAGS	=	$(COMMON) $(TESTOPTS)
 
-all:			erase title $(PRODSO) $(PRODA) $(DBGSO) $(DBGA) $(TSTA)
+all:			erase title $(PRODA) $(DBGA) $(TSTA) # $(DBGSO) $(PRODSO)
 prod:			$(PRODSO) $(PRODA)
 debug:			$(DBGSO) $(DBGA)
 tests:			$(TSTA)

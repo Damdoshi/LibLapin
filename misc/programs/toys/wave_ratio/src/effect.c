@@ -35,7 +35,7 @@ int		main(int	argc,
 		     char	**argv)
 {
   t_bunny_effect *eff;
-  double	ref;
+  double	ref = 0;
   int		smooth;
 
   if (argc == 1)
