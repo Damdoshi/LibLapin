@@ -13,6 +13,9 @@
 **
 ** Note that this is not for true security reasons that this
 ** module is here: the real purpose is to prevent cheating.
+**
+** Right now, all cipherings algorithms works on the data directly.
+** So it size can't be changed.
 */
 
 #ifndef				__LAPIN_SECURITY_H__
@@ -21,17 +24,6 @@
 #  error			You cannot include this file directly.
 # endif
 
-/*!
-** t_bunny_ciphering's values are ciphering algorithm.
-** BS_XOR use the '^' operator to cipher.
-** BS_CAESAR use the '+' / '-' operator to cipher / uncipher.
-** BS_SHAKER swap the currently ciphered data chunk with another chunk at
-** a specified offset
-** BE_SWITCH transform state bit into change bit => 1100 become 1010
-** BS_CUSTOM (and greater values) means that you want to use
-** a custom algorithm, so the system will call the function defined
-** in gl_bunny_my_cipher or gl_bunny_my_uncipher.
-*/
 typedef enum			e_bunny_ciphering
   {
     BS_XOR,			/* ^ */
@@ -40,8 +32,11 @@ typedef enum			e_bunny_ciphering
     BS_SWITCH,			/* state bit to switch bit - no key, not meant to be used alone */
     BS_BYTBIT,			/* Serialize bit on bytess - no key */
     BS_BITSHAKE,		/* Like shaker, but on bits */
+    /* BS_1D_TRANSFORM,		Consider the data as a collection of 1D array to be reversed or not */
+    /* BS_2D_TRANSFORM,		Consider the data as a collection of 2D arrays to be reversed or rotated */
+    /* BS_3D_TRANSFORM,		Consider the data as a collection of 3D arrays to be reversed or rotated */
     /* BS_MIXER,		Reverse N bytes according to key */
-    /* BS_COKTLAIL		The bunny special: bytes of the key indicates which operation will be done */
+    /* BS_COKTAIL		The bunny special: bytes of the key indicates which operation will be done */
     BS_CUSTOM			/* any >= BS_CUSTOM */
   }				t_bunny_ciphering;
 
