@@ -24,14 +24,15 @@ extern size_t		border0;
 extern size_t		border1;
 
 void			*bunny_realloc(void		*ptr,
-                         size_t		data)
+				       size_t		data)
 {
+  size_t		ptrv = (size_t)ptr;
   void			*rel = NULL;
 
 #ifdef			LAPIN_ALLOCATOR_DEACTIVATED
   if ((rel = realloc(ptr, data)) == NULL)
-    scream_error_if(return (NULL), errno, PATTERN, "allocator", ptr, data, rel);
-  scream_log_if(PATTERN, "allocator", ptr, data, rel);
+    scream_error_if(return (NULL), errno, PATTERN, "allocator", (void*)ptrv, data, rel);
+  scream_log_if(PATTERN, "allocator", (void*)ptrv, data, rel);
   return (rel);
 #endif
 
@@ -49,7 +50,7 @@ void			*bunny_realloc(void		*ptr,
   chunk = (struct memchunk*)&((char*)ptr)[-sizeof(struct memchunk)];
   if (chunk->border0 != border0 || chunk->border1 != border1)
     {
-      fprintf(stderr, "Bad pointer or altered memory detected while reallocing 0x%p.\n", ptr);
+      fprintf(stderr, "Bad pointer or altered memory detected while reallocing 0x%zu.\n", ptrv);
       check_memory_state();
       scream_error_if(dprintf(bunny_get_error_descriptor(), "Sending SIGSEGV"),
 		      errno, PATTERN, "allocator", ptr, data, rel);
@@ -70,7 +71,7 @@ void			*bunny_realloc(void		*ptr,
     memcpy(rel, ptr, data);
 
   bunny_free(ptr);
-  scream_log_if(PATTERN, "allocator", ptr, data, rel);
+  scream_log_if(PATTERN, "allocator", (size_t)ptrv, data, rel);
   return (rel);
 }
 

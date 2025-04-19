@@ -22,8 +22,8 @@ extern size_t		border1;
 void			bunny_free(void		*data)
 {
 #ifdef			LAPIN_ALLOCATOR_DEACTIVATED
-  free(data);
   scream_log_if("%p", "allocator", data);
+  free(data);
   return ;
 #endif
   if (data == NULL)

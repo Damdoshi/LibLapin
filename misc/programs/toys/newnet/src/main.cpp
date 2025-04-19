@@ -13,7 +13,7 @@ static t_bunny_response connect(const t_bunny_network_info	*info,
   if (state == DISCONNECTED)
     {
       int i = 0;
-      
+
       while (i < nbr_clients && clients[i] != info)
 	i = i + 1;
       printf("User %d disconnected.\n", i);
@@ -138,7 +138,7 @@ int		main(int	argc,
 	    return (usage());
 	  ip = argv[i];
 	}
-      else if (port != 0)
+      else if (port == 0)
 	{
 	  if ((port = atoi(argv[i])) <= 0 || port > 65535)
 	    return (usage());

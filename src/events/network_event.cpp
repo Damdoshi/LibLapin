@@ -7,6 +7,7 @@
 
 #define			PATTERN		"%p communication, %p data ("
 
+/*
 static t_bunny_response	notify(const t_bunny_communication	*com,
 			       void				*data)
 {
@@ -34,10 +35,13 @@ static t_bunny_response	notify(const t_bunny_communication	*com,
 
   return (GO_ON);
 }
-
+*/
 t_bunny_response	network_event(unsigned int		v,
 				     void			*data)
 {
+  (void)v;
+  (void)data;
+  /*
   t_bunny_response	res;
 
   if (*(size_t*)gl_callback.netcom == false)
@@ -50,6 +54,7 @@ t_bunny_response	network_event(unsigned int		v,
       if ((res = notify(bunny_server_poll((t_bunny_server*)gl_callback.netcom, v), data)) != GO_ON)
 	return (res);
     while ((bunny_server_packet_ready((t_bunny_server*)gl_callback.netcom)));
+  */
   return (GO_ON);
 }
 
