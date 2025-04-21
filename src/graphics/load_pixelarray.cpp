@@ -121,8 +121,6 @@ t_bunny_pixelarray	*bunny_load_pixelarray(const char		*file)
   bunny_free(pa->rawpixels);
  DeleteTexture:
   delete pa->tex;
- DeleteSprite:
-  delete pa->sprite;
  DeleteStructure:
   delete pa;
  ReturnNull:

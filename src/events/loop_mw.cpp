@@ -367,15 +367,8 @@ t_bunny_response	bunny_loop_mw(t_bunny_window		**window,
 	    display_cnt += 1;
 	}
 
-      /// Let the CPU rest a little...
-      if (gl_callback.netcom == NULL)
-	{
-	  if (delay > now - prev)
-	    bunny_usleep(delay - (now - prev));
-	}
-      else
-	if ((rep = network_event((delay - (now - prev)) / 1000.0, data)) != GO_ON)
-	  return (rep);
+      if ((rep = network_event((delay - (now - prev)) / 1000.0, data)) < GO_ON)
+	goto end;
     }
  end:
   if (gl_callback.leaving_context != NULL)

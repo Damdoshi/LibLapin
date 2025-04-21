@@ -128,8 +128,6 @@ void			bunny_sprite_animate_date(t_bunny_sprite	*spr,
 void			bunny_sprite_animate_elapsed(t_bunny_sprite	*spr,
 						     double		elapsed)
 {
-  struct bunny_sprite	&sprite = *(struct bunny_sprite*)spr;
-
   bunny_sprite_animate(spr, elapsed);
 }
 

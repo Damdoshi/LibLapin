@@ -463,7 +463,6 @@ const t_bunny_context		gl_bunny_pentacle_context =
    (t_bunny_loop)pentacle_loop,
    (t_bunny_display)pentacle_display,
    bunny_context_close,
-   NULL,
    bunny_context_message,
    bunny_context_connect,
    (t_bunny_loop)pentacle_entering,

@@ -23,7 +23,6 @@ const t_bunny_context		gl_bunny_depth_context =
     NULL,
     NULL,
     NULL,
-    NULL,
     NULL, //(t_bunny_loop)depth_entering,
     NULL, //(t_bunny_leaving_context)depth_leaving,
     NULL,

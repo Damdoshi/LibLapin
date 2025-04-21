@@ -686,11 +686,13 @@ typedef struct			s_bunny_vertex
 ** fill(&array->vertex[0]);
 ** fill(&array->vertex[1]);
 */
+#pragma GCC diagnostic ignored "-Warray-bounds"
 typedef struct			s_bunny_vertex_array
 {
   size_t			length;
   t_bunny_vertex  		vertex[__ZERO_LENGTH__];
 }				t_bunny_vertex_array;
+#pragma GCC diagnostic pop
 
 /*!
 ** The bunny_set_geometry function draw a shape in a buffer. The shape is determined

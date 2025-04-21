@@ -160,7 +160,7 @@ t_bunny_response	bunny_context_message(const t_bunny_network_info *info,
 {
   t_bunny_context_runtime_info *x = (t_bunny_context_runtime_info*)data;
 
-  if (x->subcontext.netmessage && x->subcontext.netcom)
+  if (x->subcontext.netmessage)
     return (x->subcontext.netmessage(info, buffer, siz, data));
   return (GO_ON);
 }
@@ -171,7 +171,7 @@ t_bunny_response	bunny_context_connect(const t_bunny_network_info *info,
 {
   t_bunny_context_runtime_info *x = (t_bunny_context_runtime_info*)data;
 
-  if (x->subcontext.netconnect && x->subcontext.netcom)
+  if (x->subcontext.netconnect)
     return (x->subcontext.netconnect(info, state, data));
   return (GO_ON);
 }

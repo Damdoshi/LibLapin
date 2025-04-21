@@ -729,7 +729,6 @@ typedef struct			s_bunny_context
   t_bunny_loop			loop;
   t_bunny_display		display;
   t_bunny_close			close;
-  t_bunny_network		*netcom;
   t_bunny_message_response	netmessage;
   t_bunny_connect_response	netconnect;
   t_bunny_loop			entering_context;
@@ -767,7 +766,6 @@ typedef struct			s_bunny_anonymous_context
   void				*loop;
   void				*display;
   void				*close;
-  void				*netcom;
   void				*netmessage;
   void				*netconnect;
   void				*entering_context;

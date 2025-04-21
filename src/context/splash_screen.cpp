@@ -282,8 +282,6 @@ static t_bunny_response		splash_entering(struct bunny_splash_screen *bss)
   bss->up_speed =
     (bss->head.screen->height + bss->bunny->buffer.height * bss->bunny->scale.y)
     / 2.0;
-  t_bunny_response	ret;
-  
   if (bss->head.subcontext.entering_context)
     if (bss->head.subcontext.entering_context(bss) != GO_ON)
       goto DeleteFalling;
@@ -334,7 +332,6 @@ const t_bunny_context		gl_bunny_splash_context =
     (t_bunny_loop)splash_loop,
     (t_bunny_display)splash_display,
     bunny_context_close,
-    NULL,
     bunny_context_message,
     bunny_context_connect,
     (t_bunny_loop)splash_entering,

@@ -10,6 +10,8 @@ t_bunny_response	network_event(double			v,
 {
   t_bunny_communication com;
 
+  if (v < 0)
+    v = 1;
   if (!bunny_network_poll(v) <= 0)
     return (GO_ON);
   while (bunny_network_inbox() && bunny_network_read(&com))

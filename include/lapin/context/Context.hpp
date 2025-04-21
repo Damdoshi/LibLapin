@@ -223,7 +223,7 @@ namespace			Bunny
 
     //////////////////////////////////////////////////////////////////////
 
-    virtual t_bunny_network	*Netcom(void)
+    virtual t_bunny_network	*Netcom(void) _BDEPREC()
     {
       return (NULL);
     }
@@ -344,7 +344,6 @@ namespace			Bunny
     _TAS(loop, Loop);
     _TAS(display, Display);
     _TAS(close, Close);
-    out.netcom = (void*)const_cast<T&>(inctx).Netcom();
     _TAS(netmessage, NetMessage);
     _TAS(netconnect, NetConnect);
     _TAS(entering_context, Entering);

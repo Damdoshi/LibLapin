@@ -23,7 +23,6 @@ const t_bunny_context	gl_bunny_dressing_context =
     (t_bunny_loop)dressing_loop,
     (t_bunny_display)dressing_display,
     bunny_context_close,
-    NULL,
     bunny_context_message,
     bunny_context_connect,
     (t_bunny_loop)dressing_entering,

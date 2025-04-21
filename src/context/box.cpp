@@ -41,7 +41,6 @@ const t_bunny_context	gl_bunny_box_context =
     bunny_box_display,
 
     bunny_context_close,
-    NULL,
     bunny_context_message,
     bunny_context_connect,
 

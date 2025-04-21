@@ -19,7 +19,7 @@ void				bunny_update_joysticks(void)
 	gl_joystick[i].product = id.productId;
 	gl_joystick[i].nb_button = sf::Joystick::getButtonCount(i);
 	gl_joystick[i].axis = 0;
-	for (int j = 0; j < sf::Joystick::AxisCount; ++j)
+	for (unsigned int j = 0; j < sf::Joystick::AxisCount; ++j)
 	  gl_joystick[i].axis |=
 	    (sf::Joystick::hasAxis(i, (sf::Joystick::Axis)j) ? 1 : 0) << j;
       }
