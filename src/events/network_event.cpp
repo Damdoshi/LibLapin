@@ -8,21 +8,26 @@
 t_bunny_response	network_event(double			v,
 				      void			*data)
 {
-  t_bunny_communication com;
+  network::Communication	com;
 
   if (v < 0)
     v = 1;
   if (!bunny_network_poll(v) <= 0)
     return (GO_ON);
-  while (bunny_network_inbox() && bunny_network_read(&com))
+  while (bunny_network_inbox() && gl_network.GetMessage(com))
     {
-      if ((com.type == CONNECTED || com.type == DISCONNECTED) && gl_callback.netconnect)
-	gl_callback.netconnect(&com.info,
+      if ((com.type == network::Communication::CONNECTED ||
+	   com.type == network::Communication::DISCONNECTED) &&
+	  gl_callback.netconnect)
+	gl_callback.netconnect((t_bunny_network_info *)&com.info,
 			       com.type == network::Communication::CONNECTED ?
 			       ::CONNECTED : ::DISCONNECTED,
 			       data);
-      else if (com.type == DATA)
-	gl_callback.netmessage(&com.info, com.datas.data(), com.datas.size(), data);
+      else if (com.type == network::Communication::DATA)
+	gl_callback.netmessage((t_bunny_network_info *)&com.info,
+			       com.datas.data(),
+			       com.datas.size(),
+			       data);
       else
 	return (GO_ON); // Erreur... bunny_set_network_error_response?
     }

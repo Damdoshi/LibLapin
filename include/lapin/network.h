@@ -45,10 +45,10 @@ t_bunny_network_info		bunny_new_network_info(const char		*ip,
 */
 typedef enum			e_bunny_comtype
   {
-    BCT_ERROR			= 0,
-    BCT_NETCONNECTED		= 1,
-    BCT_NETDISCONNECTED		= 2,
-    BCT_MESSAGE			= 3
+    BCT_NETCONNECTED		= 0,
+    BCT_NETDISCONNECTED		= 1,
+    BCT_MESSAGE			= 2,
+    BCT_ERROR			= 3,
   }				t_bunny_comtype;
 
 /*!

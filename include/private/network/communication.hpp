@@ -60,6 +60,8 @@ namespace		network
     t_bunny_written	wt;
     void		*wtdata;
 
+    Communication()
+    {}
     Communication(Type			errfunc,
 		  int			errcode)
       : type(errfunc),
@@ -67,16 +69,16 @@ namespace		network
     {}
     Communication(const Info		&_info,
 		  bool			log)
-      : info(_info),
-	type(log ? CONNECTED : DISCONNECTED),
+      : type(log ? CONNECTED : DISCONNECTED),
+	info(_info),
 	datas(0)
     {}
     Communication(const Info		&_info,
 		  size_t		len = 0,
 		  t_bunny_written	w = NULL,
 		  void			*wtd = NULL)
-      : info(_info),
-	type(DATA),
+      : type(DATA),
+	info(_info),
 	datas(len),
 	wt(w),
 	wtdata(wtd)
@@ -86,8 +88,8 @@ namespace		network
 		  size_t		len,
 		  t_bunny_written	w = NULL,
 		  void			*wtd = NULL)
-      : info(_info),
-	type(DATA),
+      :	type(DATA),
+	info(_info),
 	datas(data, data + len),
 	wt(w),
 	wtdata(wtd)
