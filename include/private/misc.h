@@ -116,6 +116,7 @@ bool				bunny_filter_label(const char		*labels);
     }									\
   while (0)
 # endif
+
 # define			usleep(a)				bunny_usleep(a)
 #endif	/*			__LAPIN_PRIVATE_MISC_H__		*/
 
