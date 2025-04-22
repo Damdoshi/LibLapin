@@ -66,72 +66,14 @@ typedef enum			e_bunny_comerror
     LAST_NETWORK_ERROR
   }				t_bunny_comerror;
 
-/*!
-** This structure resumes all informations about the error that occured while polling.
-** The time attribute is the remaining time before the polling was suppose to end.
-*/
-typedef struct			s_bunny_network_error
+typedef struct			s_bunny_communication
 {
-  t_bunny_comtype		type;
-  double			time;
-  t_bunny_comerror		errortype;
-}				t_bunny_network_error;
-
-/*!
-** This structure resumes all informations about the new connection that was opened.
-** The time attribute is the remaining time before the polling was suppose to end.
-** The fd attribute is the file descriptor of the connection. Do not try to read or write on it,
-** use functions instead.
-*/
-typedef struct			s_bunny_connected
-{
-  t_bunny_comtype		type;
-  double			time;
+  t_bunny_comtype		comtype;
   t_bunny_network_info		info;
-}				t_bunny_connected;
-
-/*!
-** This structure resumes all informations about the connection that was lost.
-** The time attribute is the remaining time before the polling was suppose to end.
-** The fd attribute is the file descriptor of the connection that was closed. Do not use it,
-** it is closed.
-*/
-typedef struct			s_bunny_disconnected
-{
-  t_bunny_comtype		type;
   double			time;
-  t_bunny_network_info		info;
-}				t_bunny_disconnected;
-
-/*!
-** This structure resumes all informations about a received packet.
-** The time attribute is the remaining time before the polling was suppose to end.
-** The fd attribute if the file descriptor from where the message is coming.
-** The size attribute is the size of the data.
-** The buffer attribute is the received data. Its length is size. Duplicate it
-** if you want to keep it. It will be freed by the system on the next polling.
-*/
-typedef struct			s_bunny_message
-{
-  t_bunny_comtype		type;
-  double			time;
-  t_bunny_network_info		info;
-  unsigned int			size;
-  const char			*buffer;
-}				t_bunny_message;
-
-/*!
-** The t_bunny_communication union contains every previous structure.
-** In order to know which one is really in the union, you need to read comtype.
-** The t_bunny_communication union is returned by polling functions.
-*/
-typedef union			u_bunny_communication
-{
-  t_bunny_comtype		type;
-  t_bunny_network_error		error;
-  t_bunny_connected		connected;
-  t_bunny_disconnected		disconnected;
-  t_bunny_message		message;
+  char				*data;
+  size_t			size;
+  int				errno_code;
 }				t_bunny_communication;
 
 typedef enum			e_bunny_protocol

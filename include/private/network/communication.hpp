@@ -49,11 +49,14 @@ namespace		network
 	ERROR_MALLOC
       };
 
-    Info		info;
     Type		type;
-    std::vector<char>	datas;
+    Info		info;
+    double		time;
+    char		*data;
+    size_t		size;
     int			errno_code = 0;
 
+    std::vector<char>	datas;
     t_bunny_written	wt;
     void		*wtdata;
 
