@@ -16,14 +16,12 @@ t_bunny_response	network_event(double			v,
     return (GO_ON);
   while (bunny_network_inbox() && gl_network.GetMessage(com))
     {
-      if ((com.type == network::Communication::CONNECTED ||
-	   com.type == network::Communication::DISCONNECTED) &&
+      if ((com.type == ::BCT_NETCONNECTED || com.type == ::BCT_NETDISCONNECTED) &&
 	  gl_callback.netconnect)
 	gl_callback.netconnect((t_bunny_network_info *)&com.info,
-			       com.type == network::Communication::CONNECTED ?
-			       ::CONNECTED : ::DISCONNECTED,
+			       com.type == ::BCT_NETCONNECTED ? ::CONNECTED : ::DISCONNECTED,
 			       data);
-      else if (com.type == network::Communication::DATA)
+      else if (com.type == ::BCT_MESSAGE)
 	gl_callback.netmessage((t_bunny_network_info *)&com.info,
 			       com.datas.data(),
 			       com.datas.size(),

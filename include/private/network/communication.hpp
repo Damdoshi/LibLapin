@@ -17,7 +17,7 @@ namespace		network
     std::vector<char>	data;
     t_bunny_written	wt = NULL;
     void		*wtdata = NULL;
-    
+
     WriteRequest(const char *start, const char *end, t_bunny_written w, void *wtd)
       : data(start, end), wt(w), wtdata(wtd)
     {}
@@ -28,7 +28,7 @@ namespace		network
     IOException(const std::string &str) : runtime_error(str) {}
       ~IOException() {}
   };
-  
+
   template <typename	T>
   struct		Pair
   {
@@ -38,18 +38,7 @@ namespace		network
 
   struct		Communication
   {
-    enum		Type
-      {
-	CONNECTED,
-	DISCONNECTED,
-	DATA,
-	ERROR_POLL,
-	ERROR_SENDTO,
-	ERROR_RECVFROM,
-	ERROR_MALLOC
-      };
-
-    Type		type;
+    t_bunny_comtype	type;
     Info		info;
     double		time;
     char		*data;
@@ -62,14 +51,14 @@ namespace		network
 
     Communication()
     {}
-    Communication(Type			errfunc,
+    Communication(t_bunny_comtype	errfunc,
 		  int			errcode)
       : type(errfunc),
 	errno_code(errcode)
     {}
     Communication(const Info		&_info,
 		  bool			log)
-      : type(log ? CONNECTED : DISCONNECTED),
+      : type(log ? BCT_NETCONNECTED : BCT_NETDISCONNECTED),
 	info(_info),
 	datas(0)
     {}
@@ -77,7 +66,7 @@ namespace		network
 		  size_t		len = 0,
 		  t_bunny_written	w = NULL,
 		  void			*wtd = NULL)
-      : type(DATA),
+      : type(BCT_MESSAGE),
 	info(_info),
 	datas(len),
 	wt(w),
@@ -88,12 +77,12 @@ namespace		network
 		  size_t		len,
 		  t_bunny_written	w = NULL,
 		  void			*wtd = NULL)
-      :	type(DATA),
+      :	type(BCT_MESSAGE),
 	info(_info),
 	datas(data, data + len),
 	wt(w),
 	wtdata(wtd)
-    {}		  
+    {}
   };
 }
 

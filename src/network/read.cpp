@@ -3,22 +3,16 @@
 //
 // Bibliotheque Lapin
 
-#include	"lapin_private.h"
+#include		"lapin_private.h"
 
-bool		bunny_network_read(t_bunny_communication	*com)
+t_bunny_communication	bunny_network_read(void)
 {
-  if (!com)
-    return (false);
-  network::Communication	cppCom;
-  bool				success;
+  t_bunny_communication		packet;
+  network::Communication	com;
 
-  success = gl_network.GetMessage(cppCom);
-  com->comtype = (t_bunny_comtype)cppCom.type;
-  com->info = (t_bunny_network_info)cppCom.info;
-  com->time = cppCom.time;
-  com->data = cppCom.data;
-  com->size = cppCom.size;
-  com->errno_code = cppCom.errno_code;
-  return (success);
+  memset(&packet, 0, sizeof(packet));
+  gl_network.GetMessage(com);
+  memcpy(&packet, &com, sizeof(packet));
+  return (packet);
 }
 

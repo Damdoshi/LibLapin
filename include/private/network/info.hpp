@@ -37,7 +37,7 @@ namespace		network
     {
       return (!(*this == info));
     }
-    
+
     Info		&operator=(const Info		&info)
     {
       if (this != &info)

@@ -15,6 +15,6 @@ t_bunny_response		bunny_network_event(double		tmout,
 bool				bunny_network_poll(double		timeout);
 int				bunny_network_inbox(void);
 int				bunny_network_outbox(void);
-bool				bunny_network_read(t_bunny_communication *com);
+t_bunny_communication		bunny_network_read(void);
 
 #endif	/*			__LAPIN_PRIVATE_NETWORK_H__	*/

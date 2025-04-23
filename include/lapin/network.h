@@ -33,38 +33,17 @@ int				bunny_infocmp(const t_bunny_network_info	*a,
 t_bunny_network_info		bunny_new_network_info(const char		*ip,
 						       uint16_t			port);
 
-/*!
-** Five types of answers are possible when you poll a network element:
-** - An error happened
-** - Nothing happened
-** - A new connection has been opened
-** - A connection was closed
-** - A message was received
-** There is currently no "Packet sent" notification.
-** This enumeration is the incarnation of this mechanism.
-*/
 typedef enum			e_bunny_comtype
   {
-    BCT_NETCONNECTED		= 0,
-    BCT_NETDISCONNECTED		= 1,
-    BCT_MESSAGE			= 2,
-    BCT_ERROR			= 3,
+    BCT_NOTHING			= 0,
+    BCT_NETCONNECTED		= 1,
+    BCT_NETDISCONNECTED		= 2,
+    BCT_MESSAGE			= 3,
+    BCT_POLL_ERROR		= 4,
+    BCT_SENDTO_ERROR		= 5,
+    BCT_RECVFROM_ERROR		= 6,
+    BCT_MALLOC_ERROR		= 7
   }				t_bunny_comtype;
-
-/*!
-** Errors that can occur when the polling is made.
-*/
-typedef enum			e_bunny_comerror
-  {
-    BCE_SYSTEM_FAIL		= 0,
-    BCE_SELECT_FAIL		= 1,
-    BCE_ACCEPT_FAIL		= 2,
-    BCE_WRITE_FAIL		= 3,
-    BCE_READ_FAIL		= 4,
-    BCE_ALLOC_FAIL		= 5,
-    BCE_GETTIME_FAIL		= 6,
-    LAST_NETWORK_ERROR
-  }				t_bunny_comerror;
 
 typedef struct			s_bunny_communication
 {
