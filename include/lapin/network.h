@@ -53,6 +53,7 @@ typedef struct			s_bunny_communication
   char				*data;
   size_t			size;
   int				errno_code;
+  void				*_private[2];
 }				t_bunny_communication;
 
 typedef enum			e_bunny_protocol
