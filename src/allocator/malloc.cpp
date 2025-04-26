@@ -176,8 +176,10 @@ void			bunny_malloc_failure(bool	f)
 
 void			*bunny_malloc(size_t		data)
 {
-
   if (malloc_failure)
+    return (NULL);
+  // To ensure a precise behaviour everywhere
+  if (data == 0)
     return (NULL);
 
 #ifdef			LAPIN_ALLOCATOR_DEACTIVATED

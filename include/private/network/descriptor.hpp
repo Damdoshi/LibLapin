@@ -54,7 +54,8 @@ namespace			network
     size_t			wcursor;
 
     std::list<Communication>	inqueue;
-    std::vector<char>		inbuffer;
+    char			*inbuffer; // NULL si unbuffer_size 0
+    size_t			inbuffer_size;
     size_t			rcursor;
 
     struct size_plus_data

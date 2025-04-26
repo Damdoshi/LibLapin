@@ -38,18 +38,31 @@ namespace		network
 
   struct		Communication
   {
-    t_bunny_comtype	type;
+    t_bunny_comtype	type = BCT_NOTHING;
     Info		info;
-    double		time;
-    char		*data;
-    size_t		size;
+    double		time = 0;
+    char		*data = NULL;
+    size_t		size = 0;
     int			errno_code = 0;
 
-    std::vector<char>	datas;
-    t_bunny_written	wt;
-    void		*wtdata;
+    t_bunny_written	wt = NULL;
+    void		*wtdata = NULL;
 
-    Communication()
+    // Shallow copy
+    Communication	&operator=(Communication	&com)
+    {
+      type = com.type;
+      info = com.info;
+      time = com.time;
+      data = com.data;
+      size = com.size;
+      errno_code = com.errno_code;
+      wt = com.wt;
+      wtdata = com.wtdata;
+      return (*this);
+    }
+    
+    Communication(void)
     {}
     Communication(t_bunny_comtype	errfunc,
 		  int			errcode)
@@ -60,7 +73,7 @@ namespace		network
 		  bool			log)
       : type(log ? BCT_NETCONNECTED : BCT_NETDISCONNECTED),
 	info(_info),
-	datas(0)
+	time(bunny_get_current_time())
     {}
     Communication(const Info		&_info,
 		  size_t		len = 0,
@@ -68,21 +81,33 @@ namespace		network
 		  void			*wtd = NULL)
       : type(BCT_MESSAGE),
 	info(_info),
-	datas(len),
 	wt(w),
 	wtdata(wtd)
-    {}
+    {
+      if (len)
+	if ((data = (char*)bunny_malloc(len)) == NULL)
+	  throw std::bad_alloc();
+      size = len;
+    }
     Communication(const Info		&_info,
-		  const char		*data,
+		  const char		*dat,
 		  size_t		len,
 		  t_bunny_written	w = NULL,
 		  void			*wtd = NULL)
       :	type(BCT_MESSAGE),
 	info(_info),
-	datas(data, data + len),
 	wt(w),
 	wtdata(wtd)
-    {}
+    {
+      if (!(data = (char*)bunny_malloc(len)))
+	throw std::bad_alloc();
+      memcpy(data, dat, len);
+      size = len;
+    }
+    ~Communication(void)
+    {
+      // Do NOT free data. The user must do it.
+    }
   };
 }
 

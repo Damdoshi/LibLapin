@@ -14,7 +14,7 @@ bool			network::Descriptor::Write(void)
   // Simple vérification de cohérence
   if (outqueue.empty())
     return (true);
-  if (outqueue.front().datas.size() == wcursor)
+  if (outqueue.front().size == wcursor)
     {
       outqueue.pop_front();
       wcursor = 0;
@@ -28,8 +28,8 @@ bool			network::Descriptor::Write(void)
 
   if ((len = sendto
        (fd,
-	&next.datas[wcursor],
-	next.datas.size() - wcursor,
+	&next.data[wcursor],
+	next.size - wcursor,
 	0,
 	(const struct sockaddr*)&next.info.sockaddr,
 	next.info.socklen
@@ -38,7 +38,7 @@ bool			network::Descriptor::Write(void)
 
   // Si tout est écrit.
   wcursor += len;
-  if (next.datas.size() == wcursor)
+  if (next.size == wcursor)
     {
       if (next.wt != NULL)
 	next.wt((t_bunny_network_info*)&next.info, next.wtdata);

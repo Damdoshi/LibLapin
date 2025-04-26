@@ -23,8 +23,8 @@ t_bunny_response	network_event(double			v,
 			       data);
       else if (com.type == ::BCT_MESSAGE)
 	gl_callback.netmessage((t_bunny_network_info *)&com.info,
-			       com.datas.data(),
-			       com.datas.size(),
+			       com.data,
+			       com.size,
 			       data);
       else
 	return (GO_ON); // Erreur... bunny_set_network_error_response?

@@ -192,7 +192,7 @@ static t_bunny_response		pentacle_loop(struct bunny_pentacle_screen	*bss)
   return (GO_ON);
 }
 
-static void			center_vertices(t_bunny_vertex_array		*v,
+static void			center_vertices(struct vertex_array		*v,
 						t_bunny_size			siz,
 						t_bunny_position		p,
 						double				sizcoef)
@@ -216,7 +216,7 @@ static void			center_vertices(t_bunny_vertex_array		*v,
 static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
 {
   char				pentacle_mem[sizeof(gl_normal_pentacle)];
-  t_bunny_vertex_array		*pentacle = (t_bunny_vertex_array*)&pentacle_mem;
+  struct vertex_array		*pentacle = (struct vertex_array*)&pentacle_mem;
   t_bunny_color			color;
   size_t			i;
 
@@ -252,7 +252,7 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
 	else
 	  coef = 0.33;
 	center_vertices(pentacle, bss->size_of_screen, bss->middle_of_screen, coef);
-	bunny_set_geometry(bss->head.screen, BGY_TRIANGLES, pentacle, NULL);
+	bunny_set_geometry(bss->head.screen, BGY_TRIANGLES, (t_bunny_vertex_array*)pentacle, NULL);
 	break ;
       }
     case TRANSFORMATION:
@@ -273,7 +273,7 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
     case NEW_PAUSE:
       {
 	center_vertices(pentacle, bss->size_of_screen, bss->middle_of_screen, 0.33);
-	bunny_set_geometry(bss->head.screen, BGY_TRIANGLES, pentacle, NULL);
+	bunny_set_geometry(bss->head.screen, BGY_TRIANGLES, (t_bunny_vertex_array*)pentacle, NULL);
 	break ;
       }
     case SHIFT_LEFT:
@@ -295,7 +295,7 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
 	pos.x = (dest - ori) * step + ori;
 	pos.y = bss->middle_of_screen.y;
 	center_vertices(pentacle, bss->size_of_screen, pos, 0.33);
-	bunny_set_geometry(bss->head.screen, BGY_TRIANGLES, pentacle, NULL);
+	bunny_set_geometry(bss->head.screen, BGY_TRIANGLES, (t_bunny_vertex_array*)pentacle, NULL);
 	if (bss->animation_step < TEXT_DISPLAY)
 	  break ;
 	if (bss->animation_step == TEXT_DISPLAY)

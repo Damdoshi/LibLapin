@@ -86,6 +86,9 @@
 # include			<stdbool.h>
 # include			<stdint.h>
 # include			<stdlib.h>
+# if				defined (__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+#  include			<stdckdint.h>
+# endif
 
 /*!
 ** LAPIN_MAJOR_VERSION expands into an integer that contains the current version of the library

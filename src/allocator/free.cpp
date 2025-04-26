@@ -21,13 +21,14 @@ extern size_t		border1;
 
 void			bunny_free(void		*data)
 {
+  // To ensure a precise behaviour everywhere
+  if (data == NULL)
+    return ;
 #ifdef			LAPIN_ALLOCATOR_DEACTIVATED
   scream_log_if("%p", "allocator", data);
   free(data);
   return ;
 #endif
-  if (data == NULL)
-    return ;
   struct memchunk	*chunk;
   bool			bad;
   size_t		i;

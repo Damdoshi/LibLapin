@@ -19,6 +19,18 @@ Main = [Function
 
 => Operateur d'assignation alternatif autorisant le changement de type de l'opérande de gauche.
 => L'opérateur = classique serait fortement typé tandis que l'autre non. Un mot clef indiquant la solidité du type des champs était prévu dans le livre de référence, a voir comment cela peut s'articuler.
+
+
+Idée issue de LibLapinV2 qui pourraient être dans Dabsic:
+
+- Définir des fonctions comme étant "frontière", permettant de limiter les logs ou au moins de les classer: un utilisateur est
+  interessé par les logs d'une fonction frontière, mais moins par les elements interne. Exemple typique:
+  => Une fonction cherche un fichier dans une arborescence. L'utilisateur est interessé par un "impossible de trouver le fichier",
+  mais pas par le "impossible de trouver le fichier dans le dossier X", "...dans le dossier Y", "... dans le dossier Z" qui souvent
+  arrivent avec le systeme de log actuel.
+- Si il y a des pointeurs, que free mette à NULL le pointeur passé.
+
+
 =======
 Reference sur noeud. Normalement c'est geré mais... je ne sais plus ^^'
 

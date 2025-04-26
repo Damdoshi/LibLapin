@@ -12,8 +12,7 @@ bool		network::Descriptor::GetMessage(Communication	&com)
 {
   if (inqueue.empty())
     return (false);
-  com.info = inqueue.front().info;
-  com.datas = std::move(inqueue.front().datas);
+  com = inqueue.front();
   inqueue.pop_front();
   return (true);
 }

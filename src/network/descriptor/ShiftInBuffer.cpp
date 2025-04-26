@@ -18,17 +18,14 @@ bool			network::Descriptor::ShiftInBuffer(const Info		&info)
     {
       return (false);
     }
-  inqueue.back().datas = std::move(inbuffer);
-  inbuffer.clear();
+  inqueue.back().data = inbuffer;
+  inqueue.back().size = inbuffer_size;
+  inbuffer = NULL;
+  inbuffer_size = 0;
   rcursor = 0;
-  try
-    {
-      inbuffer.resize(size);
-    }
-  catch (...)
-    {
-      return (false);
-    }
+  if ((inbuffer = (char*)bunny_malloc(size)) == NULL)
+    return (false);
+  inbuffer_size = size;
   return (true);
 }
 

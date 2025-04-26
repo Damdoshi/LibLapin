@@ -15,21 +15,20 @@ bool			network::Descriptor::Read(void)
   Info			rinfo;
 
   // Si le buffer n'est pas établi, on l'établi. Si ca ne marche pas, on re essayera la prochaine fois
-  try {
-    if (inbuffer.size() == 0)
-      inbuffer.resize(size);
-  }
-  catch (...) {
-    return (false);
-  }
+  if (inbuffer_size == 0)
+    {
+      if ((inbuffer = (char*)bunny_malloc(size)) == NULL)
+	return (false);
+      inbuffer_size = size;
+    }
 
   // Si il reste de la place dans le buffer, on lit, sinon on indique qu'on a rien lu
-  if (inbuffer.size() - rcursor)
+  if (inbuffer_size - rcursor > 0)
     {
       if ((len = recvfrom
 	   (fd,
 	    &inbuffer[rcursor],
-	    inbuffer.size() - rcursor,
+	    inbuffer_size - rcursor,
 	    0,
 	    (struct sockaddr*)&rinfo.sockaddr,
 	    &rinfo.socklen
@@ -57,7 +56,7 @@ bool			network::Descriptor::Read(void)
     {
       // Normalement, on ne peut pas dépasser inbufer.size()
       // Car la lecture dans le buffer est conditionné à cette taille
-      if (len + rcursor == inbuffer.size())
+      if (len + rcursor == inbuffer_size)
 	return (ShiftInBuffer(rinfo));
       rcursor += len;
     }
@@ -75,8 +74,16 @@ bool			network::Descriptor::Read(void)
 	  return (false);
 	}
       // Si le buffer ne permet pas d'enregistrer le paquet entier, on augmente sa taille
-      if (spdbuffer->size > inbuffer.size())
-	inbuffer.resize(spdbuffer->size, 0);
+      if (spdbuffer->size > inbuffer_size)
+	{
+	  char *tmp;
+
+	  if ((tmp = (char*)bunny_realloc(inbuffer, spdbuffer->size)) == NULL)
+	    return (false);
+	  while (inbuffer_size < spdbuffer->size)
+	    tmp[inbuffer_size++] = 0;
+	  inbuffer = tmp;
+	}
       // Au cas où l'on ai recu plusieurs paquets d'un coup
       // ce que la LibLapin ne fait *pas* - donc en face,
       while (rcursor > spdbuffer->size)

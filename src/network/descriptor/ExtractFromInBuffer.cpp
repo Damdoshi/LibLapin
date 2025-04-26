@@ -20,8 +20,8 @@ bool			network::Descriptor::ExtractFromInBuffer(const Info	&info,
   size_t		j;
 
   for (i = 0; i < len; ++i)
-    inqueue.back().datas[i] = inbuffer[i];
-  for (j = 0; i < inbuffer.size(); ++i, ++j)
+    inqueue.back().data[i] = inbuffer[i];
+  for (j = 0; i < inbuffer_size; ++i, ++j)
     inbuffer[j] = inbuffer[i];
   rcursor -= len;
   return (true);
