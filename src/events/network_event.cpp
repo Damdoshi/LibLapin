@@ -3,10 +3,10 @@
 //
 // Bibliotheque Lapin
 
-#include		"lapin_private.h"
+#include			"lapin_private.h"
 
-t_bunny_response	network_event(double			v,
-				      void			*data)
+t_bunny_response		network_event(double			v,
+					      void			*data)
 {
   network::Communication	com;
 
@@ -16,7 +16,8 @@ t_bunny_response	network_event(double			v,
     return (GO_ON);
   while (bunny_network_inbox() && gl_network.GetMessage(com))
     {
-      if ((com.type == ::BCT_NETCONNECTED || com.type == ::BCT_NETDISCONNECTED) &&
+      if ((com.type == ::BCT_NETCONNECTED
+	   || com.type == ::BCT_NETDISCONNECTED) &&
 	  gl_callback.netconnect)
 	gl_callback.netconnect((t_bunny_network_info *)&com.info,
 			       com.type == ::BCT_NETCONNECTED ? ::CONNECTED : ::DISCONNECTED,
