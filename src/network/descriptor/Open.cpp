@@ -33,11 +33,7 @@ const network::Info	*Network::Descriptor::Open(Protocol		_protocol,
   info.sockaddr.sin_port = port;
   info.socklen = sizeof(info.sockaddr);
 
-  if (_protocol == IMMEDIATE_RETRIEVE)
-    fd = socket(info.sockaddr.sin_family, SOCK_DGRAM, 0);
-  else
-    fd = socket(info.sockaddr.sin_family, SOCK_STREAM, 0);
-  if (fd == -1)
+  if ((fd = socket(info.sockaddr.sin_family, _protocol == IMMEDIATE_RETRIEVE ? SOCK_DGRAM : SOCK_STREAM, 0)) == -1)
     return (NULL);
 
   tmp = 1;
@@ -50,9 +46,10 @@ const network::Info	*Network::Descriptor::Open(Protocol		_protocol,
       setsockopt(fd, SOL_SOCKET, SO_SNDBUF, &tmp, sizeof(tmp));
     }
 
-  if (bind(fd, (struct sockaddr*)&info.sockaddr, info.socklen) == -1)
-    goto CloseAndLeave;
-
+  if (_ip == "")
+    if (bind(fd, (struct sockaddr*)&info.sockaddr, info.socklen) == -1)
+      goto CloseAndLeave;
+  
   // TCP
   if (_protocol != IMMEDIATE_RETRIEVE)
     {
