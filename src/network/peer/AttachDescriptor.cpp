@@ -8,10 +8,13 @@
 #include	"lapin.h"
 #include	"private/network/network.hpp"
 
-bool		network::Peer::AttachDescriptor(Descriptor	&desc)
+bool		network::Peer::AttachDescriptor(Descriptor	&desc,
+						const Info	*_info)
 {
   if (descriptors.find(&desc) != descriptors.end())
     return (false);
+  if (_info)
+    info = *_info;
   descriptors.insert(&desc);
   return (true);
 }

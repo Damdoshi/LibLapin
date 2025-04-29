@@ -16,7 +16,10 @@ bool		network::Peer::TransfertWriteRequest(void)
   for (size_t i = 0; i < max; ++i)
     ++it;
   network::WriteRequest	&wr = outqueue.front();
+
+  bool result = (*it)->SetMessage(wr.data.data(), wr.data.size(), info, wr.wt, wr.wtdata);
+  outqueue.pop_front();
   
-  return ((*it)->SetMessage(wr.data.data(), wr.data.size(), info, wr.wt, wr.wtdata));
+  return (result);
 }
 

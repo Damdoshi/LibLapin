@@ -43,7 +43,7 @@ bool		network::Descriptor::SetMessage(const char	*data,
 	memcpy(outqueue.back().data, data, len);
 	memcpy(&outqueue.back().data[len], &terminator, sizeof(terminator));
       }
-    pollfd->events = POLLOUT;
+    pollfd->events |= POLLOUT;
   } catch (...) {
     return (false);
   }

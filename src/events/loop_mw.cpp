@@ -367,6 +367,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window		**window,
 	    display_cnt += 1;
 	}
 
+      // delay, now and prev are un µs, we transform them into miliseconds.
       if ((rep = network_event((delay - (now - prev)) / 1000.0, data)) < GO_ON)
 	goto end;
     }

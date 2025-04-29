@@ -22,7 +22,7 @@ const network::Info	*Network::Open(Protocol			protocol,
       {	
 	if (!(inf = descriptors[i].Open(protocol, size, terminator, port, ip)))
 	  goto Failure;
-	if (peers[*inf].AttachDescriptor(descriptors[i]) == false)
+	if (peers[*inf].AttachDescriptor(descriptors[i], inf) == false)
 	  goto Close;
 	tmp = nbr;
 	if (!descriptors[i].Declare(pollfd, nbr, NBRCELL(pollfd)))

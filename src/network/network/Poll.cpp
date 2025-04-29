@@ -15,17 +15,18 @@ double			Network::Poll(double			tmout,
   int			rd;
   size_t		i;
 
+  tmout /= 1000.0;
   do
     {
       clock_gettime(CLOCK_MONOTONIC, &bef);
       MoveWriteRequest();
       clock_gettime(CLOCK_MONOTONIC, &now);
-      if ((tmout -= (now.tv_sec - bef.tv_sec) + (now.tv_nsec - bef.tv_nsec) / 1e6) < 0)
+      if ((tmout -= (now.tv_sec - bef.tv_sec) + (now.tv_nsec - bef.tv_nsec) / 1e9) < 0)
 	tmout = 0; // Faut augmenter le timeout la...
       bef = now;
 
       // Monitor I/O
-      if ((rd = poll(pollfd, nbr, tmout)) == -1)
+      if ((rd = poll(pollfd, nbr, tmout * 1000)) == -1)
 	{
 	  //
 	  return (nan(""));
@@ -35,7 +36,7 @@ double			Network::Poll(double			tmout,
       for (i = 0; i < nbr && rd > 0; ++i)
 	if (pollfd[i].revents)
 	  {
-	    Descriptor &desc = descriptors[pollfd[i].fd];
+	    Descriptor &desc = descriptors[i];
 
 	    if (pollfd[i].revents & POLLIN)
 	      desc.Read();
@@ -47,8 +48,8 @@ double			Network::Poll(double			tmout,
 	  }
       // Check if there is more time to do another loop
       clock_gettime(CLOCK_MONOTONIC, &now);
-      if ((tmout -= (now.tv_sec - bef.tv_sec) + (now.tv_nsec - bef.tv_nsec) / 1e6) < 0)
-	tmout = 0;
+      if ((tmout -= (now.tv_sec - bef.tv_sec) + (now.tv_nsec - bef.tv_nsec) / 1e9) < 0)
+	tmout = 0;      
     }
   while (!rasap && tmout > 0);
   return (tmout);

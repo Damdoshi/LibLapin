@@ -33,6 +33,7 @@ static t_bunny_response message(const t_bunny_network_info	*info,
 				size_t				size,
 				void *)
 {
+  puts("I received something !");
   int i = 0;
 
   while (i < nbr_clients && clients[i] != info)
@@ -50,10 +51,12 @@ static t_bunny_response loop(void*)
   time_t now = time(NULL);
   int len;
 
+  puts("loop\n");
   if (now - start < 2)
     return (GO_ON);
   start = now;
-  len = snprintf(buffer, sizeof(buffer), "sent at %ld", now);
+  len = snprintf(buffer, sizeof(buffer), "sent at %ld\n", now);
+  printf("Nbr clients : %d\n", nbr_clients);
   if (nbr_clients != 0)
     {
       for (int i = 0; i < nbr_clients; ++i)
@@ -131,6 +134,8 @@ int		main(int	argc,
 		if ((max = atoi(argv[i])) <= 0)
 		  return (usage());
 	    }
+	  else
+	    return (usage());
 	}
       else if (ip == NULL)
 	{
@@ -147,6 +152,8 @@ int		main(int	argc,
 	return (usage());
     }
 
+  puts("wesh");
+  
   if ((net = bunny_network_open(pcol,  max, '\v', port, ip)) == NULL)
     {
       printf("Failed to open connexion.\n");

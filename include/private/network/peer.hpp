@@ -41,7 +41,8 @@ namespace			network
     operator			int (void) const;
 
     // Associer ou retirer un descripteur du pair
-    bool			AttachDescriptor(Descriptor		&desc);
+    bool			AttachDescriptor(Descriptor		&desc,
+						 const Info		*info = NULL);
     Peer			&operator<<(Descriptor			&desc);
     bool			DetachDescriptor(const Descriptor	&desc);
     Peer			&operator>>(const Descriptor		&desc);
