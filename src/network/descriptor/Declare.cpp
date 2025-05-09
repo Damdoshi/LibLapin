@@ -9,15 +9,12 @@
 #include		"lapin.h"
 #include		"private/network/network.hpp"
 
-bool			network::Descriptor::Declare(struct pollfd	*fds,
-						     size_t		&cursize,
-						     size_t		maxsize)
+bool			network::Descriptor::Declare(void)
 {
   if (cursize >= maxsize)
     return (false);
   if (!active || doomed || fd == -1)
     return (false);
-  pollfd = &fds[cursize++];
   pollfd->fd = fd;
   pollfd->events = POLLIN;
   if (outqueue.size())
