@@ -15,6 +15,7 @@ network::Descriptor	*network::Descriptor::Accept(struct pollfd	*fds,
   socklen_t		_socklen;
   int			nfd;
 
+  _socklen = sizeof(_sockaddr);
   if ((nfd = accept(fd, (struct sockaddr*)&_sockaddr, &_socklen)) == -1)
     return (NULL);
   if (cursize >= maxsize)
@@ -22,10 +23,34 @@ network::Descriptor	*network::Descriptor::Accept(struct pollfd	*fds,
       close(fd);
       return (NULL);
     }
-  Descriptor		&desc = network->descriptors[nfd];
+  size_t		tmp;
+  size_t		i;
+  const network::Info	*inf;	
 
-  desc.Open(protocol, size, terminator, nfd, {_sockaddr, _socklen});
-  desc.Declare(fds, cursize, maxsize);
-  return (&desc);
+  for (i = 0; i < network->descriptors.size(); ++i)
+    {
+      if (!network->descriptors[i])
+	{
+	  Descriptor		&desc = network->descriptors[i];
+
+	  inf = desc.Open(protocol, size, terminator, nfd, {_sockaddr, _socklen});
+	  if (!inf)
+	    goto Failure;
+	  if (network->peers[*inf].AttachDescriptor(desc, inf) == false)
+	    goto Close;
+	  tmp = cursize;
+	  if (!desc.Declare(fds, cursize, maxsize))
+	    goto Detach;
+	  return (&desc);
+	}
+    }
+  return (NULL);
+ Detach:
+  cursize = tmp;
+  network->peers[*inf].DetachDescriptor(network->descriptors[i]);
+ Close:
+  network->descriptors[i].Close();
+ Failure:
+  return (NULL);
 }
 

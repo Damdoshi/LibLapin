@@ -63,7 +63,11 @@ const network::Info	*Network::Descriptor::Open(Protocol		_protocol,
 	  if (connect(fd, (struct sockaddr*)&info.sockaddr, info.socklen) == -1)
 	    goto CloseAndLeave;
 	}
+      if (_size == 0)
+	size = BUNNY_NETWORK_MAXIMUM_PACKET_SIZE;
     }
+  else if (_size == 0)
+    _size = 65507; // Maximum size of a UDP packet
   
   size = _size;
   terminator = _terminator;
@@ -84,8 +88,8 @@ const network::Info	*network::Descriptor::Open(Protocol		_protocol,
 {
   if (active)
     Close();
-  ip = 0;
-  port = 0;
+  ip = _info.sockaddr.sin_addr.s_addr;
+  port = ntohs(_info.sockaddr.sin_port);
   info = _info;
   fd = _fd;
   protocol = _protocol;

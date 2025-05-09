@@ -19,12 +19,14 @@ bool			network::Descriptor::Read(void)
     {
       if ((inbuffer = (char*)bunny_malloc(size)) == NULL)
 	return (false);
+      spdbuffer = (struct size_plus_data*)inbuffer;
       inbuffer_size = size;
     }
 
   // Si il reste de la place dans le buffer, on lit, sinon on indique qu'on a rien lu
   if (inbuffer_size - rcursor > 0)
     {
+      rinfo.socklen = sizeof(rinfo.sockaddr);
       if ((len = recvfrom
 	   (fd,
 	    &inbuffer[rcursor],
@@ -34,6 +36,9 @@ bool			network::Descriptor::Read(void)
 	    &rinfo.socklen
 	    )) == -1)
 	return (false);
+
+      if (len == 0)
+	puts("aze");
       
       // La connexion est perdue
       if (len == 0 && protocol != IMMEDIATE_RETRIEVE)
@@ -65,6 +70,7 @@ bool			network::Descriptor::Read(void)
   if (protocol == SIZE_PLUS_DATA)
     {
       rcursor += len;
+      // Si on a pas encore recu toute la taille, on ne fait rien, on l'attend
       if (rcursor < sizeof(spdbuffer->size))
 	return (true);
       // Infraction au protocole
@@ -83,11 +89,12 @@ bool			network::Descriptor::Read(void)
 	  while (inbuffer_size < spdbuffer->size)
 	    tmp[inbuffer_size++] = 0;
 	  inbuffer = tmp;
+	  spdbuffer = (struct size_plus_data*)inbuffer;
 	}
       // Au cas où l'on ai recu plusieurs paquets d'un coup
       // ce que la LibLapin ne fait *pas* - donc en face,
-      while (rcursor > spdbuffer->size)
-	if (ExtractFromInBuffer(rinfo, spdbuffer->size) == false)
+      while (rcursor > spdbuffer->size + sizeof(spdbuffer->size))
+	if (ExtractFromInBuffer(rinfo, spdbuffer->size + sizeof(spdbuffer->size)) == false)
 	  return (false);
       return (true);
     }

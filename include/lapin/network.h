@@ -20,6 +20,8 @@
 # include			<sys/socket.h>
 # include			<netinet/in.h>
 
+# define			BUNNY_NETWORK_MAXIMUM_PACKET_SIZE		(128 * 1024)
+
 typedef void			t_bunny_network;
 
 typedef struct			s_bunny_network_info

@@ -107,7 +107,7 @@ namespace			network
 
     // Associer ou retirer un pair du descripteur.
     // Renvoi le nombre de pairs restants
-    int				AttachPeer(Peer			&desc);
+    bool			AttachPeer(Peer			&desc);
     Peer			&operator<<(Peer		&desc);
     int				DetachPeer(const Peer		&desc);
     Peer			&operator>>(const Peer		&desc);
