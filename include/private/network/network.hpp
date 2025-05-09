@@ -30,6 +30,7 @@ protected:
   // Connexions réseaux diverses
   std::array<Descriptor, FD_SETSIZE> descriptors;
   struct pollfd		pollfd[FD_SETSIZE];
+  // Plus grand index dans pollfd/descriptors a avoir été utilisé
   size_t		nbr;
 
   void			MoveWriteRequest(void);

@@ -1,8 +1,8 @@
 #################################################################################
 
  ###############################################################################
- ## Jason Brillante "Damdoshi"                  Hanged Bunny Studio 2014-2024 ##
- ## Pentacle Technologie 2008-2024                           EFRITS 2022-2024 ##
+ ## Jason Brillante "Damdoshi"                  Hanged Bunny Studio 2014-2025 ##
+ ## Pentacle Technologie 2008-2025                           EFRITS 2022-2025 ##
  ## "MyLib" V9.14                                                             ##
  ##                                                                           ##
  ## ------------------------------------------------------------------------- ##
@@ -62,6 +62,9 @@
 			-lopencv_objdetect -lopencv_video			\
 			-lopencv_videoio -lopencv_core				\
 			-lavcall -lusb -ludev -lm -ldl -lpthread
+  INSTALL_BIN_DIR =	/usr/local/bin/
+  INSTALL_INC_DIR =	/usr/local/include/
+  INSTALL_LIB_DIR =	/usr/local/lib/
 
 #################################################################################
 ## Source                                                                      ##
@@ -175,7 +178,12 @@ fclean:			clean erase
 re:			fclean all
 erase:
 			@$(RM) -r $(LOGDIR)/*.*
-
+install:		all
+			cp bcc b++  $(INSTALL_BIN_DIR)
+			cp include/lapin.h $(INSTALL_INC_DIR)
+			mkdir -p $(INSTALL_INC_DIR)lapin/
+			cp -r include/lapin/* $(INSTALL_INC_DIR)lapin/
+			cp $(PRODA) $(DBGA) $(INSTALL_LIB_DIR)
 .POSIX:
 .PHONY:			tests title erase
 

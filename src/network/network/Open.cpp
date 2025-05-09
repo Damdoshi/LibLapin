@@ -25,8 +25,10 @@ const network::Info	*Network::Open(Protocol			protocol,
 	if (peers[*inf].AttachDescriptor(descriptors[i], inf) == false)
 	  goto Close;
 	tmp = nbr;
-	if (!descriptors[i].Declare(pollfd, nbr, NBRCELL(pollfd)))
+	if (!descriptors[i].Declare())
 	  goto Detach;
+	if (i == nbr)
+	  nbr++;
 	return (inf);
       }
   return (NULL);

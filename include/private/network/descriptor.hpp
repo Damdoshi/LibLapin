@@ -35,6 +35,9 @@ namespace			network
     Network			*network;
     // To update our little case, accordingly to what outqueue contains
     struct pollfd		*pollfd;
+    // Position inside network class
+    size_t			position;
+
     // Associated peers, that would be disconnected if this descriptor is closed
     std::set<Peer*>		associated_peers;
     network::Info		info; // To be returned by Open, that's all.
@@ -66,9 +69,7 @@ namespace			network
     size_plus_data		*spdbuffer;
 
     // To be used by Network
-    bool			Declare(struct pollfd		*fds,
-					size_t			&cursize,
-					size_t			maxsize);
+    bool			Declare(void);
     Descriptor			*Accept(struct pollfd		*fds,
 					size_t			&cursize,
 					size_t			maxsize) const;

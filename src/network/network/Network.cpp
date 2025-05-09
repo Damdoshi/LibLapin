@@ -12,7 +12,11 @@ Network::Network(void)
     nbr(0)
 {
   for (size_t i = 0; i < descriptors.size(); ++i)
-    descriptors[i].network = this;
+    {
+      descriptors[i].network = this;
+      descriptors[i].pollfd = &pollfd[i];
+      descriptors[i].position = i;
+    }
   memset(pollfd, 0, sizeof(pollfd));
 }
 
