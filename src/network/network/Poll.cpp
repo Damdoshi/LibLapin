@@ -39,11 +39,16 @@ double			Network::Poll(double			tmout,
 	    Descriptor &desc = descriptors[i];
 
 	    if (pollfd[i].revents & POLLIN)
-	      desc.Read();
+	      {
+		if (desc.protocol != network::Descriptor::IMMEDIATE_RETRIEVE && desc.ip == 0)
+		  desc.Accept(nbr, NBRCELL(pollfd));
+		else
+		  desc.Read();
+	      }
 	    if (pollfd[i].revents & POLLOUT)
 	      desc.Write();
 	    if (desc.IsDoomed() && !desc.GetReceivedPacketCount() && !desc.GetSendingPacketCount())
-	      Close(pollfd[i].fd);
+	      Close(i);
 	    rd -= 1;
 	  }
       // Check if there is more time to do another loop

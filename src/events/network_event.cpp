@@ -19,16 +19,26 @@ t_bunny_response		network_event(double			v,
       if ((com.type == ::BCT_NETCONNECTED
 	   || com.type == ::BCT_NETDISCONNECTED) &&
 	  gl_callback.netconnect)
-	gl_callback.netconnect((t_bunny_network_info *)&com.info,
-			       com.type == ::BCT_NETCONNECTED ? ::CONNECTED : ::DISCONNECTED,
-			       data);
+	{
+	  puts("Connected\n");
+	  gl_callback.netconnect((t_bunny_network_info *)&com.info,
+				 com.type == ::BCT_NETCONNECTED ? ::CONNECTED : ::DISCONNECTED,
+				 data);
+	}
       else if (com.type == ::BCT_MESSAGE)
-	gl_callback.netmessage((t_bunny_network_info *)&com.info,
-			       com.data,
-			       com.size,
-			       data);
+	{
+	  puts("Received\n");
+	  gl_callback.netmessage((t_bunny_network_info *)&com.info,
+				 com.data,
+				 com.size,
+				 data);
+	}
       else
-	return (GO_ON); // Erreur... bunny_set_network_error_response?
+	{
+	  puts("Unknown type\n");
+	  printf("type : %d\n", com.type);
+	  return (GO_ON); // Erreur... bunny_set_network_error_response?
+	}
     }
   return (GO_ON);
 }

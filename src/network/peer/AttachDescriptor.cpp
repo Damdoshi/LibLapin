@@ -16,7 +16,7 @@ bool		network::Peer::AttachDescriptor(Descriptor	&desc,
   if (_info)
     info = *_info;
   descriptors.insert(&desc);
-  return (true);
+  return (desc.AttachPeer(*this));
 }
 
 network::Peer	&network::Peer::operator<<(Descriptor		&desc)

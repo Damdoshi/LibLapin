@@ -44,6 +44,7 @@ typedef enum			e_bunny_error
     BE_CONFIGURED_FUNCTION_NOT_FOUND,
     BE_TOO_MANY_PARAMETERS,
     BE_MISSING_CONTEXT,
+    BE_PEER_IS_A_SERVER,
     LAST_ERROR
   }				t_bunny_error;
 

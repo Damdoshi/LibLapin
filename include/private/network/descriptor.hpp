@@ -70,9 +70,8 @@ namespace			network
 
     // To be used by Network
     bool			Declare(void);
-    Descriptor			*Accept(struct pollfd		*fds,
-					size_t			&cursize,
-					size_t			maxsize) const;
+    const network::Info		*Accept(size_t			&cursize,
+					size_t			maxsize);
     // Handle protocol
     bool			Write(void);
     bool			Read(void);
@@ -108,7 +107,7 @@ namespace			network
 
     // Associer ou retirer un pair du descripteur.
     // Renvoi le nombre de pairs restants
-    int				AttachPeer(Peer			&desc);
+    bool			AttachPeer(Peer			&desc);
     Peer			&operator<<(Peer		&desc);
     int				DetachPeer(const Peer		&desc);
     Peer			&operator>>(const Peer		&desc);

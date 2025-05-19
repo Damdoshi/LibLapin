@@ -9,6 +9,9 @@
 #include		"lapin.h"
 #include		"private/network/network.hpp"
 
+///////IL FAUDRAIT POP LA WRITE REQUEST DE PEER SEULEMENT UNE FOIS QUE DESCRIPTOR A BIEN*
+////// TOUT ECRIT
+
 bool			network::Descriptor::Write(void)
 {
   // Simple vérification de cohérence

@@ -10,6 +10,8 @@
 
 bool		network::Peer::TransfertWriteRequest(void)
 {
+  if (!descriptors.size())
+    return (false);
   auto		it = descriptors.begin();
   size_t	max = rand() % descriptors.size();
 

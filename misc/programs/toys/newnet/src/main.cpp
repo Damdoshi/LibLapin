@@ -1,42 +1,50 @@
-
 #include	"lapin.h"
 
-const t_bunny_network_info *net;
-const t_bunny_network_info *clients[1024];
-int nbr_clients;
-time_t start;
+struct s_data {
+  const t_bunny_network_info	*net;
+  const t_bunny_network_info	*clients[1024];
+  int				nbr_clients = 0;
+  time_t			start;
+  t_bunny_protocol		pcol = BP_IMMEDIATE_RETRIEVE;
+  bool				is_server = false;
+};
 
 static t_bunny_response connect(const t_bunny_network_info	*info,
 				t_bunny_event_state		state,
-				void *)
+				void				*data)
 {
+  s_data		*vars = (s_data*) data;
   if (state == DISCONNECTED)
     {
       int i = 0;
 
-      while (i < nbr_clients && clients[i] != info)
+      while (i < vars->nbr_clients && vars->clients[i] != info)
 	i = i + 1;
       printf("User %d disconnected.\n", i);
-      printf("User %d will now be user %d.\n", nbr_clients - 1, i);
-      clients[i] = clients[nbr_clients - 1];
-      nbr_clients -= 1;
+      printf("User %d will now be user %d.\n", vars->nbr_clients - 1, i);
+      vars->clients[i] = vars->clients[vars->nbr_clients - 1];
+      vars->nbr_clients -= 1;
       return (GO_ON);
     }
-  clients[nbr_clients] = info;
-  printf("New user, user %d\n", nbr_clients);
-  nbr_clients += 1;
+  vars->clients[vars->nbr_clients] = info;
+  printf("New user, user %d\n", vars->nbr_clients);
+  vars->nbr_clients += 1;
+  for (int i = 0; i <vars->nbr_clients; ++i)
+    printf("Client %d %p\n", i, vars->clients[i]);
+  printf("End Connect\n");
   return (GO_ON);
 }
 
 static t_bunny_response message(const t_bunny_network_info	*info,
 				const void			*buffer,
 				size_t				size,
-				void *)
+				void				*data)
 {
+  s_data		*vars = (s_data*) data;
   puts("I received something !");
   int i = 0;
 
-  while (i < nbr_clients && clients[i] != info)
+  while (i < vars->nbr_clients && vars->clients[i] != info)
     i = i + 1;
   printf("Message received from %d: ", i);
   fflush(stdout);
@@ -45,26 +53,39 @@ static t_bunny_response message(const t_bunny_network_info	*info,
   return (GO_ON);
 }
 
-static t_bunny_response loop(void*)
+static t_bunny_response loop(void				*data)
 {
-  char buffer[128];
-  time_t now = time(NULL);
-  int len;
-
-  puts("loop\n");
-  if (now - start < 2)
+  char			buffer[128];
+  time_t		now = time(NULL);
+  int			len;
+  s_data		*vars = (s_data *) data;
+  
+  if (now - vars->start < 2)
     return (GO_ON);
-  start = now;
+
+  for (int i = 0; i <vars->nbr_clients; ++i)
+    printf("Client %d %p\n", i, vars->clients[i]);
+  
+  vars->start = now;
   len = snprintf(buffer, sizeof(buffer), "sent at %ld\n", now);
-  printf("Nbr clients : %d\n", nbr_clients);
-  if (nbr_clients != 0)
+  printf("Loop with %d clients\n", vars->nbr_clients);
+  if (vars->nbr_clients != 0)
     {
-      for (int i = 0; i < nbr_clients; ++i)
-	if (bunny_network_write(clients[i], buffer, len) == false)
-	  fprintf(stderr, "failed to write '%s' to nbr %d\n", buffer, i);
+      for (int i = 0; i < vars->nbr_clients; ++i)
+	{
+	  if (bunny_network_write(vars->clients[i], buffer, len) == false)
+	    fprintf(stderr, "failed to write '%s' to nbr %d\n", buffer, i);
+	  else
+	    printf("\tThe write went fine !\n");
+	}
     }
-  else if (bunny_network_write(net, buffer, len) == false)
-    fprintf(stderr, "failed to write '%s'\n", buffer);
+  else if ((vars->pcol == BP_IMMEDIATE_RETRIEVE || !vars->is_server)
+	   && bunny_network_write(vars->net, buffer, len) == false)
+      fprintf(stderr, "failed to write '%s'\n", buffer);
+  else if (vars->pcol == BP_IMMEDIATE_RETRIEVE || !vars->is_server)
+    printf("\tThe write went fine !\n");
+  else
+    printf("\tHas send nothing. Good news or bad news ??\n");
   return (GO_ON);
 }
 
@@ -86,11 +107,10 @@ static int	usage(void)
 int		main(int	argc,
 		     char	**argv)
 {
-  t_bunny_protocol pcol = BP_IMMEDIATE_RETRIEVE;
-  bool		listen = false;
   char		*ip = NULL;
   int		port = 0;
   int		max = 0;
+  s_data	vars;
 
   if (argc == 1)
     return (usage());
@@ -100,7 +120,7 @@ int		main(int	argc,
 	{
 	  if ((i += 1) >= argc)
 	    return (usage());
-	  listen = true;
+	  vars.is_server = true;
 	  if ((port = atoi(argv[i])) <= 0 || port > 65535)
 	    return (usage());
 	}
@@ -109,37 +129,46 @@ int		main(int	argc,
 	  if ((i += 1) >= argc)
 	    return (usage());
 	  if (strcasecmp(argv[i], "udp") == 0)
-	    pcol = BP_IMMEDIATE_RETRIEVE;
+	    vars.pcol = BP_IMMEDIATE_RETRIEVE;
 	  else if (strcasecmp(argv[i], "fixed") == 0)
 	    {
-	      pcol = BP_FIXED_SIZE_PACKET;
+	      vars.pcol = BP_FIXED_SIZE_PACKET;
 	      max = 1460;
 	      if (i + 1 < argc)
-		if ((max = atoi(argv[i])) <= 0)
-		  return (usage());
+		{
+		  i += 1;
+		  if ((max = atoi(argv[i])) <= 0)
+		    return (usage());
+		}
 	    }
 	  else if (strcasecmp(argv[i], "size") == 0)
 	    {
-	      pcol = BP_SIZE_PLUS_DATA_PACKET;
+	      vars.pcol = BP_SIZE_PLUS_DATA_PACKET;
 	      max = 1024 * 1024;
 	      if (i + 1 < argc)
-		if ((max = atoi(argv[i])) <= 0)
-		  return (usage());
+		{
+		  i += 1;
+		  if ((max = atoi(argv[i])) <= 0)
+		    return (usage());
+		}
 	    }
 	  else if (strcasecmp(argv[i], "term") == 0)
 	    {
-	      pcol = BP_TERMINATED_PACKET;
+	      vars.pcol = BP_TERMINATED_PACKET;
 	      max = 1460;
 	      if (i + 1 < argc)
-		if ((max = atoi(argv[i])) <= 0)
-		  return (usage());
+		{ 
+		  i += 1;
+		  if ((max = atoi(argv[i])) <= 0)
+		    return (usage());
+		}
 	    }
 	  else
 	    return (usage());
 	}
       else if (ip == NULL)
 	{
-	  if (listen)
+	  if (vars.is_server)
 	    return (usage());
 	  ip = argv[i];
 	}
@@ -151,22 +180,20 @@ int		main(int	argc,
       else
 	return (usage());
     }
-
-  puts("wesh");
   
-  if ((net = bunny_network_open(pcol,  max, '\v', port, ip)) == NULL)
+  if ((vars.net = bunny_network_open(vars.pcol,  max, '\v', port, ip)) == NULL)
     {
       printf("Failed to open connexion.\n");
       return (1);
     }
 
-  start = time(NULL);
+  vars.start = time(NULL);
   bunny_set_loop_main_function(loop);
   bunny_set_connect_response(connect);
   bunny_set_message_response(message);
-  bunny_loop(NULL, 100, NULL);
+  bunny_loop(NULL, 100, &vars);
 
-  bunny_network_close(net);
+  bunny_network_close(vars.net);
   printf("Bye.\n");
   return (0);
 }
