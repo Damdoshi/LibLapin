@@ -36,13 +36,14 @@ bool			network::Descriptor::Read(void)
 	    &rinfo.socklen
 	    )) == -1)
 	return (false);
-
-      if (len == 0)
-	puts("aze");
       
       // La connexion est perdue
       if (len == 0 && protocol != IMMEDIATE_RETRIEVE)
-	return (Close());
+	{
+	  // Préviens la déconnexion d'un client
+	  inqueue.push_back(Communication{info, false}); 
+	  return (Close());
+	}
     }
   else
     len = 0;

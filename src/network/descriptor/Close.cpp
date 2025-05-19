@@ -21,9 +21,12 @@ bool		network::Descriptor::Close(void)
   active = false;
   doomed = false;
 
-  // Si l'element qu'on ferme est le plus sur la droite dans le tableau
-  if (network->nbr == position + 1)
-    for (int i = position; i >= 0 && !network->descriptor[i]; --i)
+  // On réarrange la taille du tableau si :
+  //	- Il n'y a plus rien à lire (Sinon on le fera dans GetMessage)
+  //    - Que le descriptor n'est plus actif
+  //	- Que c'est l'élément le plus à droit du tableau
+  if (!active && inqueue.empty() && network->nbr == position + 1)
+    for (int i = position; i >= 0 && !network->descriptors[i]; --i)
       network->nbr -= 1;
 
   return (true);

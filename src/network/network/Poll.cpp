@@ -41,7 +41,7 @@ double			Network::Poll(double			tmout,
 	    if (pollfd[i].revents & POLLIN)
 	      {
 		if (desc.protocol != network::Descriptor::IMMEDIATE_RETRIEVE && desc.ip == 0)
-		  desc.Accept(pollfd, nbr, NBRCELL(pollfd));
+		  desc.Accept(nbr, NBRCELL(pollfd));
 		else
 		  desc.Read();
 	      }

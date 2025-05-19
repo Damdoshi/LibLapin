@@ -23,6 +23,13 @@ namespace		network
     {
       return (socklen != 0);
     }
+    bool		operator<(const Info		&info) const
+    {
+      std::cout << "\n\n\t\t Passage opérateur < !! \n\n" << std::endl;
+      if (this == &info)
+	return (false);
+      return (memcmp((void*)&sockaddr, (void*)&info.sockaddr, socklen) < 0);
+    }
     bool		operator==(const Info		&info) const
     {
       if (this == &info)

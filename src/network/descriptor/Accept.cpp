@@ -6,10 +6,11 @@
 // Bibliothèque Lapin
 
 #include		"lapin_private.h"
+#include		<arpa/inet.h>
 
-network::Descriptor	*network::Descriptor::Accept(struct pollfd	*fds,
-						     size_t		&cursize,
-						     size_t		maxsize) const
+
+const network::Info	*network::Descriptor::Accept(size_t			&cursize,
+						     size_t			maxsize)
 {
   struct sockaddr_in	_sockaddr;
   socklen_t		_socklen;
@@ -20,30 +21,32 @@ network::Descriptor	*network::Descriptor::Accept(struct pollfd	*fds,
     return (NULL);
   if (cursize >= maxsize)
     {
-      close(fd);
+      close(nfd);
       return (NULL);
     }
+
+  const network::Info	*inf;	
   size_t		tmp;
   size_t		i;
-  const network::Info	*inf;	
-
+  
   for (i = 0; i < network->descriptors.size(); ++i)
-    {
-      if (!network->descriptors[i])
-	{
-	  Descriptor		&desc = network->descriptors[i];
+    if (!network->descriptors[i])
+      {
+	network::Info	tmpInfo(_sockaddr, _socklen);
 
-	  inf = desc.Open(protocol, size, terminator, nfd, {_sockaddr, _socklen});
-	  if (!inf)
-	    goto Failure;
-	  if (network->peers[*inf].AttachDescriptor(desc, inf) == false)
-	    goto Close;
-	  tmp = cursize;
-	  if (!desc.Declare(fds, cursize, maxsize))
-	    goto Detach;
-	  return (&desc);
-	}
-    }
+	if (!(inf = network->descriptors[i].Open(protocol, size, terminator, nfd, tmpInfo)))
+	  goto Failure;
+	if (network->peers[*inf].AttachDescriptor(network->descriptors[i], inf) == false)
+	  goto Close;
+	tmp = cursize;
+	if (!network->descriptors[i].Declare())
+	  goto Detach;
+	if (i == cursize)
+	  cursize++;
+	// Préviens la connexion d'un client
+	inqueue.push_back(Communication{*inf, true});
+	return (inf);
+      }
   return (NULL);
  Detach:
   cursize = tmp;

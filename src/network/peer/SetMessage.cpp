@@ -5,8 +5,9 @@
 //
 // Bibliothèque Lapin
 
-#include	"lapin.h"
-#include	"private/network/network.hpp"
+#include	"lapin_private.h"
+
+#define		PAT "%p data, %zu len, %p wt, %p wtdata -> %s"
 
 bool		network::Peer::SetMessage(const char		*data,
 					  size_t		len,
@@ -14,6 +15,8 @@ bool		network::Peer::SetMessage(const char		*data,
 					  void			*wtdata)
 {
   try {
+    if (info.sockaddr.sin_addr.s_addr == htonl(INADDR_ANY))
+      scream_error_if(return (false), BE_PEER_IS_A_SERVER, PAT, "network", data, len, wt, wtdata, "false");
     outqueue.emplace_back(data, data + len, wt, wtdata);
   } catch (...) {
     return (false);

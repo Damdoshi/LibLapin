@@ -11,8 +11,6 @@
 
 bool			network::Descriptor::Declare(void)
 {
-  if (cursize >= maxsize)
-    return (false);
   if (!active || doomed || fd == -1)
     return (false);
   pollfd->fd = fd;

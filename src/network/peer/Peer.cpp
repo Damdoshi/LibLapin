@@ -7,9 +7,12 @@
 
 #include	"lapin.h"
 #include	"private/network/network.hpp"
+#include	<iostream>
 
 network::Peer::Peer(void)
-{}
+{
+  std::cout << "A new peer has been created !" << std::endl;
+}
 
 network::Peer::~Peer(void)
 {

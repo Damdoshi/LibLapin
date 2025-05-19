@@ -70,9 +70,8 @@ namespace			network
 
     // To be used by Network
     bool			Declare(void);
-    Descriptor			*Accept(struct pollfd		*fds,
-					size_t			&cursize,
-					size_t			maxsize) const;
+    const network::Info		*Accept(size_t			&cursize,
+					size_t			maxsize);
     // Handle protocol
     bool			Write(void);
     bool			Read(void);
