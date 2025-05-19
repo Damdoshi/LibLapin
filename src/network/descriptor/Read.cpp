@@ -36,12 +36,12 @@ bool			network::Descriptor::Read(void)
 	    &rinfo.socklen
 	    )) == -1)
 	return (false);
-      
+
       // La connexion est perdue
       if (len == 0 && protocol != IMMEDIATE_RETRIEVE)
 	{
 	  // Préviens la déconnexion d'un client
-	  inqueue.push_back(Communication{rinfo, false}); 
+	  inqueue.push_back(Communication{rinfo, false});
 	  return (Close());
 	}
 
@@ -133,4 +133,3 @@ bool			network::Descriptor::Read(void)
     }
   return (true);
 }
-

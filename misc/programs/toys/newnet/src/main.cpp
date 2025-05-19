@@ -61,13 +61,12 @@ static t_bunny_response loop(void				*data)
   time_t		now = time(NULL);
   int			len;
   s_data		*vars = (s_data *) data;
-  
+
   if (now - vars->start < 2)
     return (GO_ON);
 
   for (int i = 0; i < vars->nbr_clients; ++i)
     printf("Client %d %p\n", i, &vars->clients[i]);
-  
   vars->start = now;
   len = snprintf(buffer, sizeof(buffer), "sent at %ld\n", now);
   printf("Loop with %d clients\n", vars->nbr_clients);
@@ -160,7 +159,7 @@ int		main(int	argc,
 	      vars.pcol = BP_TERMINATED_PACKET;
 	      max = 1460;
 	      if (i + 1 < argc)
-		{ 
+		{
 		  i += 1;
 		  if ((max = atoi(argv[i])) <= 0)
 		    return (usage());
@@ -200,4 +199,3 @@ int		main(int	argc,
   printf("Bye.\n");
   return (0);
 }
-

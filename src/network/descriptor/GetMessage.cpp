@@ -22,6 +22,7 @@ bool		network::Descriptor::GetMessage(Communication	&com)
   if (!active && inqueue.empty() && network->nbr == position + 1)
     for (int i = position; i >= 0 && !network->descriptors[i]; --i)
       network->nbr -= 1;
+
   return (true);
 }
 
