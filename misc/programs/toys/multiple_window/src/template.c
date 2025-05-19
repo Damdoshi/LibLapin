@@ -50,28 +50,42 @@ t_bunny_response	closew(const t_bunny_window		*win,
   return (EXIT_ON_CROSS);
 }
 
-int			main(void)
+int			main(int		argc,
+			     char		**argv)
 {
   int			i;
 
-  puts("Clique sur une fenetre pour la rendre rouge. Ferme en une, cela les fermera toutes");
-  
-  r = rand() % 3 + 2;
-  win = bunny_alloca(r * sizeof(*win));
-  for (i = 0; i < r; ++i)
+  if (argc == 1)
     {
-      win[i] = bunny_start(320, 240, false, "Window");
-      bunny_clear(&win[i]->buffer, BLACK);
-      bunny_display(win[i]);
+      puts("Clique sur une fenetre pour la rendre rouge. Ferme en une, cela les fermera toutes");
+      r = rand() % 3 + 2;
+      win = bunny_alloca(r * sizeof(*win));
+      for (i = 0; i < r; ++i)
+	{
+	  win[i] = bunny_start(320, 240, false, "Window");
+	  bunny_clear(&win[i]->buffer, BLACK);
+	  bunny_display(win[i]);
+	}
+    }
+  else
+    {
+      if ((win = bunny_begin(argv[1])) == NULL)
+	return (EXIT_FAILURE);
+      for (r = 0; win[r]; ++r);
     }
 
   bunny_set_close_response(closew);
   bunny_set_click_response(click);
   bunny_loop_mw(win, r, 25, NULL);
 
-  for (i = 0; i < r; ++i)
-    bunny_stop(win[i]);
-  bunny_freea(win);
+  if (argc == 1)
+    {
+      for (i = 0; i < r; ++i)
+	bunny_stop(win[i]);
+      bunny_freea(win);
+    }
+  else
+    bunny_end(win);
   return (0);
 }
 

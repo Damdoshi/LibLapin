@@ -60,7 +60,7 @@ static t_bunny_response loop(void*)
   if (nbr_clients != 0)
     {
       for (int i = 0; i < nbr_clients; ++i)
-	if (bunny_network_write(net, buffer, len) == false)
+	if (bunny_network_write(clients[i], buffer, len) == false)
 	  fprintf(stderr, "failed to write '%s' to nbr %d\n", buffer, i);
     }
   else if (bunny_network_write(net, buffer, len) == false)

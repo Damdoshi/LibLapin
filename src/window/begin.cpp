@@ -5,55 +5,112 @@
 
 #include		"lapin_private.h"
 
-t_bunny_window		*bunny_begin_configuration(t_bunny_configuration	*cnf)
+static int		get_style(t_bunny_configuration				*cnf)
+{
+  const char		*stl;
+  int			style = 0;
+  int			i;
+  
+  for (i = 0; bunny_configuration_getf_string(cnf, &stl, "Style[%d]", i); ++i)
+    {
+      if (!bunny_strcasecmp(stl, "Simple"))
+	style |= NO_BORDER;
+      else if (!bunny_strcasecmp(stl, "Titlebar"))
+	style |= TITLEBAR;
+      else if (!bunny_strcasecmp(stl, "ResizeButton"))
+	style |= RESIZE_BUTTON;
+      else if (!bunny_strcasecmp(stl, "CloseButton"))
+	style |= CLOSE_BUTTON;
+      else if (!bunny_strcasecmp(stl, "Fullscreen"))
+	style |= FULLSCREEN;
+      else if (!bunny_strcasecmp(stl, "Default"))
+	style |= DEFAULT_WIN_STYLE;
+      else if (!bunny_strcasecmp(stl, "Antialiasing"))
+	style |= ANTIALIASING;
+      else
+	return (-2);
+    }
+  if (i == 0)
+    return (-1);
+  return (style);
+}
+
+static t_bunny_window	*open_single_window(t_bunny_configuration		*cnf,
+					    t_bunny_configuration		*root)
 {
   int			style = 0;
+  t_bunny_position	size;
   int			width;
   int			height;
   const char		*name;
-  const char		*stl;
-  int			i;
 
-  if (bunny_configuration_getf_int(cnf, &width, "Size[0]"))
-    {
-      if (!bunny_configuration_getf_int(cnf, &height, "Size[1]"))
-	return (NULL);
-    }
-  else
-    {
-      if (!bunny_configuration_getf_int(cnf, &width, "Width"))
-	return (NULL);
-      if (!bunny_configuration_getf_int(cnf, &height, "Height"))
-	return (NULL);
-    }
-
-  if (!bunny_configuration_getf_string(cnf, &name, "Name"))
-    name = "LibLapin";
-
-  for (i = 0; bunny_configuration_getf_string(cnf, &stl, "Style[%d]", i); ++i)
-    if (!strcmp(stl, "Simple"))
-      style |= NO_BORDER;
-    else if (!strcmp(stl, "Titlebar"))
-      style |= TITLEBAR;
-    else if (!strcmp(stl, "ResizeButton"))
-      style |= RESIZE_BUTTON;
-    else if (!strcmp(stl, "CloseButton"))
-      style |= CLOSE_BUTTON;
-    else if (!strcmp(stl, "Fullscreen"))
-      style |= FULLSCREEN;
-    else if (!strcmp(stl, "Default"))
-      style |= DEFAULT_WIN_STYLE;
-    else if (!strcmp(stl, "Antialiasing"))
-      style |= ANTIALIASING;
-    else
+  if (bunny_position_configuration("Size", &size, cnf) != BD_OK)
+    if (bunny_position_configuration("Size", &size, root) != BD_OK)
       return (NULL);
-  if (i == 0)
+  if (!bunny_configuration_getf_string(cnf, &name, "Name"))
+    if (!bunny_configuration_getf_string(root, &name, "Name"))
+      name = "LibLapin";
+
+  if ((style = get_style(cnf)) == -2)
+    return (NULL);
+  if (style == -1)
+    if ((style = get_style(root)) == -2)
+      return (NULL);
+  if (style == -1)
     style = DEFAULT_WIN_STYLE;
 
-  return (bunny_start_style(width, height, (t_bunny_window_style)style, name));
+  t_bunny_window	*win;
+  t_bunny_position	position;
+
+  if ((win = bunny_start_style(size.x, size.y, (t_bunny_window_style)style, name)) == NULL)
+    return (NULL);
+  if (bunny_position_configuration("Position", &position, cnf) == BD_OK ||
+      bunny_position_configuration("Position", &position, root) == BD_OK)
+    bunny_move_window(win, position);
+  return (win);
 }
 
-t_bunny_window		*bunny_begin(const char					*file)
+t_bunny_window		**bunny_begin_configuration(t_bunny_configuration	*cnf)
+{
+  t_bunny_window	**wins;
+  t_bunny_configuration	*root = cnf;
+  t_bunny_configuration	*sub;
+  int			len;
+  int			i;
+
+  if (bunny_configuration_getf_int(cnf, NULL, "Size[0]"))
+    {
+      if ((wins = (t_bunny_window**)bunny_malloc(sizeof(*wins) * 2)) == NULL)
+	return (NULL);
+      wins[1] = NULL;
+      if ((wins[0] = open_single_window(cnf, root)) == NULL)
+	goto FreeWindows;
+      return (wins);
+    }
+  if (!bunny_configuration_getf_node(cnf, &sub, "Windows"))
+    sub = cnf;
+  if ((len = bunny_configuration_casesf(sub, ".")) <= 0)
+    return (NULL);
+  if ((wins = (t_bunny_window**)bunny_malloc(sizeof(*wins) * (len + 1))) == NULL)
+    return (NULL);
+  wins[len] = NULL;
+  for (i = 0; i < len; ++i)
+    {
+      wins[i] = NULL;
+      if (!bunny_configuration_getf_node(sub, &cnf, "[%d]", i))
+	goto FreeWindows;
+      if ((wins[i] = open_single_window(cnf, root)) == NULL)
+	goto FreeWindows;
+    }
+  return (wins);
+ FreeWindows:
+  for (i = 0; wins[i]; ++i)
+    bunny_stop(wins[i]);
+  bunny_free(wins);
+  return (NULL);
+}
+
+t_bunny_window		**bunny_begin(const char			*file)
 {
   t_bunny_configuration	*cnf;
 
