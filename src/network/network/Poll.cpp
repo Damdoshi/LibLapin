@@ -62,7 +62,10 @@ double			Network::Poll(double			tmout,
   for (auto it = peers.begin(); it != peers.end(); ++it)
     {
       if (it->second.doomed && !it->second.outqueue.size())
-	it = peers.erase(it);
+	{
+	  peers.erase(it);
+	  return (tmout);
+	}
     }
   return (tmout);
 }
