@@ -505,12 +505,12 @@ double				bunny_get_delay(void);
 ** Network event
 */
 
-typedef t_bunny_response	(*t_bunny_message_response)(const t_bunny_network_info *clt,
+typedef t_bunny_response	(*t_bunny_message_response)(t_bunny_network_info clt,
 							    const void		*buffer,
 							    size_t		size,
 							    void		*data);
 
-typedef t_bunny_response	t_bunny_message_response_function(const t_bunny_network_info *clt,
+typedef t_bunny_response	t_bunny_message_response_function(t_bunny_network_info clt,
 								  const void	*buffer,
 								  size_t	size,
 								  void		*data);
@@ -529,11 +529,11 @@ void				bunny_set_message_response(t_bunny_message_response func);
 ** \param data The data parameter of bunny_loop
 ** \return A t_bunny_response in order to keep the loop or break it.
 */
-typedef t_bunny_response	(*t_bunny_connect_response)(const t_bunny_network_info *clt,
+typedef t_bunny_response	(*t_bunny_connect_response)(t_bunny_network_info clt,
 							    t_bunny_event_state	state,
 							    void		*data);
 
-typedef t_bunny_response	t_bunny_connect_response_function(const t_bunny_network_info *cnt,
+typedef t_bunny_response	t_bunny_connect_response_function(t_bunny_network_info cnt,
 								  t_bunny_event_state state,
 								  void		*data);
 

@@ -48,7 +48,7 @@
 			-Wno-frame-address					\
 			-Wno-narrowing						\
 			-Wno-cast-function-type					\
-			-Wpedantic -fsanitize=address
+			-Wpedantic
 
   DEBUGOPTS	=	-O0 -g -g3 -ggdb					\
 			-fno-omit-frame-pointer					\

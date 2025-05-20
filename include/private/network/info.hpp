@@ -14,10 +14,10 @@
 
 namespace		network
 {
-  struct		Info
+  struct		Info : public t_bunny_network_info
   {
-    struct sockaddr_in	sockaddr;
-    socklen_t		socklen;
+    // struct sockaddr_in	sockaddr;
+    // socklen_t		socklen;
 
     operator		bool (void) const
     {
@@ -28,7 +28,7 @@ namespace		network
       std::cout << "\n\n\t\t Passage opérateur < !! \n\n" << std::endl;
       if (this == &info)
 	return (false);
-      return (memcmp((void*)&sockaddr, (void*)&info.sockaddr, socklen) < 0);
+      return (memcmp((void*)this, (void*)&info, socklen) < 0);
     }
     bool		operator==(const Info		&info) const
     {
@@ -57,9 +57,10 @@ namespace		network
     }
     Info(const struct sockaddr_in	&in,
 	 const socklen_t		&le)
-      : sockaddr(in),
-	socklen(le)
-    {}
+    {
+      memcpy(&sockaddr, &in, sizeof(sockaddr));
+      socklen = le;
+    }
     Info(const Info			&info)
     {
       *this = info;

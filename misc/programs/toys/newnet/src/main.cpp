@@ -3,10 +3,10 @@
 struct s_data {
   const t_bunny_network_info	*net;
   const t_bunny_network_info	*clients[1024];
-  int				nbr_clients = 0;
+  int				nbr_clients;
   time_t			start;
-  t_bunny_protocol		pcol = BP_IMMEDIATE_RETRIEVE;
-  bool				is_server = false;
+  t_bunny_protocol		pcol;
+  bool				is_server;
 };
 
 static t_bunny_response connect(const t_bunny_network_info	*info,
@@ -110,8 +110,9 @@ int		main(int	argc,
   char		*ip = NULL;
   int		port = 0;
   int		max = 0;
-  s_data	vars;
+  static s_data	vars;
 
+  memset(&vars, 0, sizeof(vars));
   if (argc == 1)
     return (usage());
   for (int i = 1; i < argc; ++i)
