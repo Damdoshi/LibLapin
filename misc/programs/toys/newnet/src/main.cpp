@@ -73,12 +73,8 @@ static t_bunny_response loop(void				*data)
   if (vars->nbr_clients != 0)
     {
       for (int i = 0; i < vars->nbr_clients; ++i)
-	{
-	  if (bunny_network_write(&vars->clients[i], buffer, len) == false)
-	    fprintf(stderr, "failed to write '%s' to nbr %d\n", buffer, i);
-	  else
-	    printf("\tThe write went fine !\n");
-	}
+	if (bunny_network_write(&vars->clients[i], buffer, len) == false)
+	  fprintf(stderr, "failed to write '%s' to nbr %d\n", buffer, i);
     }
   else if ((vars->pcol == BP_IMMEDIATE_RETRIEVE || !vars->is_server)
 	   && bunny_network_write(vars->net, buffer, len) == false)
