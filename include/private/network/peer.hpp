@@ -29,7 +29,6 @@ namespace			network
     std::set<Descriptor*>	descriptors;
     std::list<network::WriteRequest> outqueue;
     bool			doomed;
-    time_t			last_activity;
 
     // Transfert de demande d'écriture de Peer a Descriptor
     bool			TransfertWriteRequest(void);
