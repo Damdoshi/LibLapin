@@ -2,23 +2,25 @@
 
 struct s_data {
   const t_bunny_network_info	*net;
-  const t_bunny_network_info	*clients[1024];
+  t_bunny_network_info		clients[1024];
   int				nbr_clients;
   time_t			start;
   t_bunny_protocol		pcol;
   bool				is_server;
 };
 
-static t_bunny_response connect(const t_bunny_network_info	*info,
+static t_bunny_response connect(t_bunny_network_info		info,
 				t_bunny_event_state		state,
 				void				*data)
 {
   s_data		*vars = (s_data*) data;
   if (state == DISCONNECTED)
     {
+      if (!vars->nbr_clients)
+	return (EXIT_ON_SUCCESS);
       int i = 0;
 
-      while (i < vars->nbr_clients && vars->clients[i] != info)
+      while (i < vars->nbr_clients && !memcmp(&vars->clients[i], &info, sizeof(info)))
 	i = i + 1;
       printf("User %d disconnected.\n", i);
       printf("User %d will now be user %d.\n", vars->nbr_clients - 1, i);
@@ -29,13 +31,13 @@ static t_bunny_response connect(const t_bunny_network_info	*info,
   vars->clients[vars->nbr_clients] = info;
   printf("New user, user %d\n", vars->nbr_clients);
   vars->nbr_clients += 1;
-  for (int i = 0; i <vars->nbr_clients; ++i)
-    printf("Client %d %p\n", i, vars->clients[i]);
+  for (int i = 0; i < vars->nbr_clients; ++i)
+    printf("Client %d %p\n", i, &vars->clients[i]);
   printf("End Connect\n");
   return (GO_ON);
 }
 
-static t_bunny_response message(const t_bunny_network_info	*info,
+static t_bunny_response message(t_bunny_network_info		info,
 				const void			*buffer,
 				size_t				size,
 				void				*data)
@@ -44,7 +46,7 @@ static t_bunny_response message(const t_bunny_network_info	*info,
   puts("I received something !");
   int i = 0;
 
-  while (i < vars->nbr_clients && vars->clients[i] != info)
+  while (i < vars->nbr_clients && !memcmp(&vars->clients[i], &info, sizeof(info)))
     i = i + 1;
   printf("Message received from %d: ", i);
   fflush(stdout);
@@ -63,8 +65,8 @@ static t_bunny_response loop(void				*data)
   if (now - vars->start < 2)
     return (GO_ON);
 
-  for (int i = 0; i <vars->nbr_clients; ++i)
-    printf("Client %d %p\n", i, vars->clients[i]);
+  for (int i = 0; i < vars->nbr_clients; ++i)
+    printf("Client %d %p\n", i, &vars->clients[i]);
   
   vars->start = now;
   len = snprintf(buffer, sizeof(buffer), "sent at %ld\n", now);
@@ -73,7 +75,7 @@ static t_bunny_response loop(void				*data)
     {
       for (int i = 0; i < vars->nbr_clients; ++i)
 	{
-	  if (bunny_network_write(vars->clients[i], buffer, len) == false)
+	  if (bunny_network_write(&vars->clients[i], buffer, len) == false)
 	    fprintf(stderr, "failed to write '%s' to nbr %d\n", buffer, i);
 	  else
 	    printf("\tThe write went fine !\n");

@@ -16,6 +16,7 @@ network::Peer::Peer(void)
 
 network::Peer::~Peer(void)
 {
+  std::cout << "A peer has been destroy !" << std::endl;
   std::set<Descriptor*>::iterator it;
 
   for (it = descriptors.begin(); it != descriptors.end(); ++it)

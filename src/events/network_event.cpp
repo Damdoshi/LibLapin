@@ -21,17 +21,17 @@ t_bunny_response		network_event(double			v,
 	  gl_callback.netconnect)
 	{
 	  puts("Connected\n");
-	  gl_callback.netconnect(com.info,
+	  return (gl_callback.netconnect(com.info,
 				 com.type == ::BCT_NETCONNECTED ? ::CONNECTED : ::DISCONNECTED,
-				 data);
+					 data));
 	}
       else if (com.type == ::BCT_MESSAGE)
 	{
 	  puts("Received\n");
-	  gl_callback.netmessage(com.info,
+	  return (gl_callback.netmessage(com.info,
 				 com.data,
 				 com.size,
-				 data);
+					 data));
 	}
       else
 	{
