@@ -10,7 +10,11 @@
 
 bool		network::Peer::DetachDescriptor(const Descriptor &desc)
 {
-  return (descriptors.erase((Descriptor*)&desc));
+  bool		result = descriptors.erase((Descriptor*)&desc);
+
+  if (descriptors.size() == 0)
+    Close();
+  return (result);
 }
 
 network::Peer	&network::Peer::operator>>(const Descriptor	&desc)

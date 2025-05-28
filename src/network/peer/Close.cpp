@@ -13,6 +13,7 @@ bool			network::Peer::Close(void)
 
   for (it = descriptors.begin(); it != descriptors.end(); ++it)
     (*it)->DetachPeer(*this);
+  doomed = true;
   return (true);
 }
 

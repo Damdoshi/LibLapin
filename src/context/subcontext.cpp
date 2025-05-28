@@ -153,7 +153,7 @@ t_bunny_response	bunny_subcontext_display(void			*data)
   return (GO_ON);
 }
 
-t_bunny_response	bunny_subcontext_message(const t_bunny_network_info *info,
+t_bunny_response	bunny_subcontext_message(t_bunny_network_info	info,
 						 const void		*buffer,
 						 size_t			siz,
 						 void			*data)
@@ -165,7 +165,7 @@ t_bunny_response	bunny_subcontext_message(const t_bunny_network_info *info,
   return (GO_ON);
 }
 
-t_bunny_response	bunny_subcontext_connect(const t_bunny_network_info *info,
+t_bunny_response	bunny_subcontext_connect(t_bunny_network_info	info,
 						 t_bunny_event_state	state,
 						 void			*data)
 {

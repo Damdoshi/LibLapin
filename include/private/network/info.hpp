@@ -25,7 +25,6 @@ namespace		network
     }
     bool		operator<(const Info		&info) const
     {
-      std::cout << "\n\n\t\t Passage opérateur < !! \n\n" << std::endl;
       if (this == &info)
 	return (false);
       return (memcmp((void*)this, (void*)&info, socklen) < 0);
