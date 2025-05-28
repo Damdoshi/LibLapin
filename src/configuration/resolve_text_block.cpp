@@ -7,6 +7,10 @@
 
 #include		"lapin_private.h"
 
+#warning Gerer les champs qui sont des pointeurs NULL ou qui n'ont pas de valeur
+// C'est un cas particulier des blocs de données de considérer que NULL vaut chaine vide
+// afin de permettre d'avoir des champs optionnels dans une configuration type doque bouildeur
+
 static std::string	tab_to_space(const std::string		&code)
 {
   std::stringstream	ss;
