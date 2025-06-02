@@ -7,10 +7,6 @@
 
 #include		"lapin_private.h"
 
-#warning Gerer les champs qui sont des pointeurs NULL ou qui n'ont pas de valeur
-// C'est un cas particulier des blocs de données de considérer que NULL vaut chaine vide
-// afin de permettre d'avoir des champs optionnels dans une configuration type doque bouildeur
-
 static std::string	tab_to_space(const std::string		&code)
 {
   std::stringstream	ss;
@@ -93,10 +89,13 @@ bool			_bunny_resolve_text_block(SmallConf	&variable,
   if (!variable.was_text_block)
     return (true);
   for (itv = variable.array.begin(); itv != variable.array.end(); ++itv)
-    if ((*itv)->GetString(&out, root, local, artif, params) == false)
-      return (false);
-    else
+    {
+      if ((*itv)->have_value == false)
+	continue ;
+      if ((*itv)->GetString(&out, root, local, artif, params) == false)
+	return (false);
       ss << out;
+    }
   variable.SetString(remove_space_offset(tab_to_space(ss.str())));
   variable.array.clear();
   variable.construct = SmallConf::PLAIN;

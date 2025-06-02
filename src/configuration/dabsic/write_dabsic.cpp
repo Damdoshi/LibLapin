@@ -207,8 +207,10 @@ static void		dabsic_array(std::ostream			&ss,
 	  restore_value(ss, conf[i], indent + 2);
 	  ss << "]";
 	}
-      else
+      else if (conf[i].have_value)
 	restore_value(ss, conf[i], indent + 2);
+      else
+	ss << "NULL";
       if (i + 1 < (ssize_t)conf.Size())
 	ss << ",";
       if (shortform == false)

@@ -42,7 +42,7 @@ static void		restore_array(std::stringstream		&ss,
       else if (conf[j].have_value)
 	writevalue(ss, conf[j], true, true);
       else
-	ss << ": null";
+	ss << "null";
 #warning restauration des valeurs sans valeur (lol) dans write json
       if (j + 1 < conf.Size())
 	ss << ",";
@@ -102,7 +102,7 @@ static void		restore_scope(std::stringstream		&ss,
 	  writevalue(ss, *it->second, true);
 	}
       else
-	ss << ": """;
+	ss << ": null";
       if (++it != conf.End())
 	ss << ",";
       ss << std::endl;
