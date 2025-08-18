@@ -52,6 +52,8 @@ t_bunny_response	bunny_loop_mw(t_bunny_window		**window,
   prev = clock.getElapsedTime().asMicroseconds();
   while (rep == GO_ON)
     {
+      auto m = sf::Mouse::getPosition();
+      gl_mouse = {m.x, m.y};
       once = false;
       now = clock.getElapsedTime().asMicroseconds();
       while (now - prev > delay)
