@@ -13,6 +13,13 @@
   "xrandr | grep ' connected'"
 #endif
 
+static t_bunny_position		gl_monitor_origin = {0, 0};
+
+t_bunny_position		bunny_get_monitors_origin(void)
+{
+  return (gl_monitor_origin);
+}
+
 static bool			get_output(char			*buf,
 					   size_t		buflen,
 					   const char		*cmd)
@@ -69,12 +76,21 @@ static size_t			read_output(const char		*str,
 
   for (i = 0, p = str; i < len; ++i)
     {
+      bool			primary = false;
+
       if ((p = strstr(p, " connected")) == NULL)
 	return (i);
+      if (strncmp(p + 10, " primary", 8) == 0)
+	primary = true;
       while (*p && *p != '\n' && !isdigit(*p))
 	p += 1;
       if (sscanf(p, "%dx%d+%d+%d (", &siz[i].w, &siz[i].h, &siz[i].x, &siz[i].y) != 4)
 	return (i);
+      if (primary)
+	{
+	  gl_monitor_origin.x = siz[i].x;
+	  gl_monitor_origin.y = siz[i].y;
+	}
       if ((p = strchr(p, '\n')) == NULL)
 	return (i);
       p += 1;
