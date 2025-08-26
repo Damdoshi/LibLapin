@@ -7,12 +7,60 @@
 #include		<string>
 #include		"lapin_private.h"
 
+#if			defined(_WIN32)
+# define		WIN32_LEAN_AND_MEAN
+# include		<windows.h>
+#elif			defined(__linux__)
+# include		<X11/Xlib.h>
+# include		<X11/Xatom.h>
+#endif
+
 t_bunny_window		*bunny_start(unsigned int		width,
 				     unsigned int		height,
 				     bool			fullscreen,
 				     const char			*winname)
 {
   return (bunny_start_style(width, height, fullscreen ? FULLSCREEN : DEFAULT_WIN_STYLE, winname));
+}
+
+void			convert_window(sf::RenderWindow		&window)
+{
+#if			defined(_WIN32)
+  // Généralement inutile : détéction automatique par explorer du pseudo fullscreen.
+  // HWND			hwnd = static_cast<HWND>(window.getNativeHandle());
+
+  // SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+#else
+  Display		*dpy;
+
+  if ((dpy = XOpenDisplay(NULL)) == NULL)
+    return ;
+
+  Window		win = static_cast<Window>(window.getNativeHandle());
+
+  bunny_usleep(100e3);
+  XMapRaised(dpy, win);
+
+  Atom			state = XInternAtom(dpy, "_NET_WM_STATE", False);
+  Atom			stateval = XInternAtom(dpy, "_NET_WM_STATE_FULLSCREEN", False);
+  XEvent		e = {};
+
+  e.type = ClientMessage;
+  e.xclient.window = win;
+  e.xclient.message_type = state;
+  e.xclient.format = 32;
+  e.xclient.data.l[0] = 1; // _NET_WM_STATE_ADD
+  e.xclient.data.l[1] = stateval;
+  e.xclient.data.l[2] = 0;
+  e.xclient.data.l[3] = 0;
+  e.xclient.data.l[4] = 0;
+
+  Window		root = DefaultRootWindow(dpy);
+
+  auto a = XSendEvent(dpy, root, False, SubstructureRedirectMask | SubstructureNotifyMask, &e);
+  auto b = XFlush(dpy);
+  auto c = XCloseDisplay(dpy);
+#endif
 }
 
 #define			PATTERN			\
@@ -23,6 +71,7 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
 					   t_bunny_window_style	winstyle,
 					   const char		*window_name)
 {
+  hbs::Init		init; (void)init;
   sf::ContextSettings	settings;
   struct bunny_window	*win;
   const char		*str;
@@ -56,6 +105,9 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
   win->height = height;
   win->style = winstyle;
   win->glactive = false;
+
+  if (winstyle == NO_BORDER)
+    convert_window(*win->window);
 
   bunny_update_joysticks();
   scream_log_if(PATTERN, "window", width, height, winstyle, window_name, win);

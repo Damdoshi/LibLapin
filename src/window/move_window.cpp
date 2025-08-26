@@ -12,6 +12,9 @@ void			bunny_move_window(t_bunny_window	*_win,
   sf::Vector2i		vec(pos.x, pos.y);
 
   win->window->setPosition(vec);
+  auto ppos = win->window->getPosition();
+  win->position.x = ppos.x;
+  win->position.y = ppos.y;
   scream_log_if("%p window, (%d, %d) position", "window", _win, pos.x, pos.y);
 }
 

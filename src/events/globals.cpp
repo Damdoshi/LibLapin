@@ -124,3 +124,4 @@ const char			*bunny_get_keyname(t_bunny_keysym	sym)
     return (gl_bunny_keysym[sym]);
   return (gl_bunny_keysym[0]);
 }
+

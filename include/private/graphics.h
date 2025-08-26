@@ -82,6 +82,7 @@ struct				bunny_window
   t_bunny_extended_data		data[BUNNY_EXTENDED_DATA_LENGTH];
   const char			*window_name;
   t_bunny_window_style		style;
+  t_bunny_position		position;
 };
 
 # ifdef				__MINGW32__

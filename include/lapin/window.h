@@ -43,6 +43,7 @@ typedef struct			s_bunny_window
   t_bunny_buffer		buffer;
   const char * const		name;
   const int			style;
+  const t_bunny_position	position;
 }				t_bunny_window;
 
 /*!
@@ -85,6 +86,8 @@ const t_bunny_size		*bunny_get_screen_resolution(void);
 const t_bunny_area		*bunny_list_monitors(void);
 
 const t_bunny_area		*bunny_list_autonomous_monitors(void);
+
+t_bunny_position		bunny_get_monitors_origin(void);
 
 /*!
 ** bunny_start_style works the same way as bunny_start but allow you to specify

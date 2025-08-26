@@ -54,6 +54,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window		**window,
     {
       auto m = sf::Mouse::getPosition();
       gl_mouse = {m.x, m.y};
+
       once = false;
       now = clock.getElapsedTime().asMicroseconds();
       while (now - prev > delay)
@@ -62,6 +63,10 @@ t_bunny_response	bunny_loop_mw(t_bunny_window		**window,
 	  for (i = 0; i < nwin; ++i)
 	    {
 	      struct bunny_window	*win = (struct bunny_window*)window[i];
+
+	      auto ppos = win->window->getPosition();
+	      win->position.x = ppos.x;
+	      win->position.y = ppos.y;
 
 	      gl_window = window[i];
 	      if (win)

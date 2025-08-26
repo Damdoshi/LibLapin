@@ -15,6 +15,9 @@ void			bunny_resize_window(t_bunny_window	*_win,
   win->window->setView(sf::View(sf::FloatRect({0.f, 0.f}, {pos.x, pos.y})));
   win->width = pos.x;
   win->height = pos.y;
+  auto ppos = win->window->getPosition();
+  win->position.x = ppos.x;
+  win->position.y = ppos.y;
   scream_log_if("%p window, (%d, %d) size", "window", win, pos.x, pos.y);
 }
 

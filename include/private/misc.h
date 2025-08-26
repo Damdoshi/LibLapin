@@ -117,5 +117,27 @@ bool				bunny_filter_label(const char		*labels);
   while (0)
 # endif
 # define			usleep(a)				bunny_usleep(a)
+
+namespace			hbs
+{
+  class				Init
+  {
+  public:
+    static bool			init;
+
+    Init(void)
+    {
+      if (init)
+	return ;
+      auto m = sf::Mouse::getPosition();
+      gl_mouse = {m.x, m.y};
+      init = true;
+    }
+    ~Init(void)
+    {}
+  };
+}
+
+
 #endif	/*			__LAPIN_PRIVATE_MISC_H__		*/
 
