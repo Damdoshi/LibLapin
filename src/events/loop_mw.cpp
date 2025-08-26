@@ -332,10 +332,10 @@ t_bunny_response	bunny_loop_mw(t_bunny_window		**window,
 	    }
 
 	  /// ASYNCHRONOUS COMPUTATION
-	  if (gl_callback.async_computation_response)
+	  if (gl_callback.async_computation)
 	    {
 	      while (gl_completed_tasks.empty() == false)
-		if ((gl_callback.async_computation_response(gl_completed_tasks.front(), data)) < GO_ON)
+		if ((gl_callback.async_computation(gl_completed_tasks.front(), data)) < GO_ON)
 		  {
 		    gl_completed_tasks.pop();
 		    goto end;

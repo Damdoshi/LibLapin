@@ -28,12 +28,14 @@ namespace			network
     // Which descriptor are currently used for this peer
     std::set<Descriptor*>	descriptors;
     std::list<network::WriteRequest> outqueue;
-    bool			doomed;
+    bool			doomed = false;
+    double			last_message = 0;
 
     // Transfert de demande d'écriture de Peer a Descriptor
     bool			TransfertWriteRequest(void);
 
-    friend			::Network;
+    friend class		::Network;
+    friend class		Descriptor;
 
   public:
     operator			bool (void) const;
@@ -77,6 +79,8 @@ namespace			network
     bool			Doom(void);
     bool			Close(void);
 
+    bool			Dump(t_bunny_configuration		*cnf) const;
+    
     Peer(void);
     ~Peer(void);
   };

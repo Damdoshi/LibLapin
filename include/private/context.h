@@ -40,6 +40,8 @@ struct				bunny_splash_screen
   t_bunny_effect		*boom;
   t_bunny_effect		*outch;
   t_bunny_effect		*falling;
+
+  t_bunny_picture		*picture;
 };
 
 struct				bunny_pentacle_screen
@@ -60,6 +62,8 @@ struct				bunny_pentacle_screen
   bool				jingle_played;
   t_bunny_font			*text;
   t_bunny_effect		*jingle;
+
+  t_bunny_picture		*picture;
 };
 
 struct				bunny_loading_screen
@@ -82,6 +86,8 @@ struct				bunny_loading_screen
   int				list_cnt;
   t_bunny_node			*node;
   bool				failure;
+
+  t_bunny_picture		*picture;
 };
 
 ///////////////////////
@@ -166,6 +172,17 @@ void				display_single_tile(struct bunny_depth_engine &eng,
 						    int			height);
 
 /// GUI BOX
+struct				bunny_box_system
+{
+  t_bunny_context_runtime_info	head;
+  t_bunny_context_runtime_info	*subhead;
+  t_bunny_gui_box		screen;
+  t_bunny_gui_box		*focus;
+  t_bunny_gui_box		*hovered;
+  t_bunny_gui_box		*down_clicked;
+
+  t_bunny_picture		*picture;
+};
 
 t_bunny_gui_box			*bunny_fetch_box(t_bunny_gui_box	*box,
 						 const t_bunny_position	*pos);

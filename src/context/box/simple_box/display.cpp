@@ -5,10 +5,11 @@
 
 #include		"lapin_private.h"
 
-t_bunny_response	bunny_display_simple_box(t_bunny_box_system		*sys,
+t_bunny_response	bunny_display_simple_box(t_bunny_box_system		*_sys,
 						 t_bunny_gui_box		*box,
 						 const t_bunny_accurate_position *off)
 {
+  struct bunny_box_system *sys = (struct bunny_box_system*)_sys;
   t_bunny_accurate_position n = {off->x + box->position.x, off->y + box->position.y};
   t_bunny_vertex_array	*vx;
   t_bunny_picture	*pic;
@@ -89,7 +90,7 @@ t_bunny_response	bunny_display_simple_box(t_bunny_box_system		*sys,
 	  vx->vertex[3].tex.y = pic->clip_y_position + pic->clip_height;
 	}
     }
-  bunny_set_geometry(sys->head.screen, BGY_QUADS, vx, pic);
+  bunny_set_geometry(&sys->picture->buffer, BGY_QUADS, vx, pic);
   bunny_freea(vx);
 
   return (GO_ON);

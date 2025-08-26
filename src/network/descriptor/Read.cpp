@@ -41,9 +41,23 @@ bool			network::Descriptor::Read(void)
       if (len == 0 && protocol != IMMEDIATE_RETRIEVE)
 	{
 	  // Préviens la déconnexion d'un client
-	  inqueue.push_back(Communication{info, false}); 
+	  inqueue.push_back(Communication{rinfo, false}); 
 	  return (Close());
 	}
+
+      // On regarde si le pair dont on a recu un message est deja present
+      auto it = network->peers.find(rinfo);
+      if (it == network->peers.end())
+	inqueue.push_back(Communication{rinfo, true});
+      auto &peer = network->peers[rinfo];
+
+      // On ajoute le pair au descripteur si ce n'est pas deja fait
+      if (peer.descriptors.find(this) == peer.descriptors.end())
+	if (AttachPeer(peer) == false && peer.descriptors.size() == 0)
+	  network->peers.erase(rinfo);
+
+      // Purement indicatif - non exploité actuellement
+      peer.last_message = bunny_get_time() / 1e9;
     }
   else
     len = 0;
@@ -54,7 +68,7 @@ bool			network::Descriptor::Read(void)
       // Aucun traitement n'est à faire ici: on a ce qu'on veut
       // On fait l'ajout, même si len est vide, car on
       // peut recevoir un datagramme de longueur 0.
-      return (ShiftInBuffer(rinfo));
+      return (ShiftInBuffer(rinfo, len));
     }
 
   /// TCP

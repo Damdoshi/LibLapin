@@ -75,7 +75,8 @@ namespace			network
     // Handle protocol
     bool			Write(void);
     bool			Read(void);
-    bool			ShiftInBuffer(const Info	&info);
+    bool			ShiftInBuffer(const Info	&info,
+					      size_t		len = 0);
     bool			ExtractFromInBuffer(const Info	&info,
 						    size_t	len);
 
@@ -88,6 +89,7 @@ namespace			network
 
     Descriptor(void) : network(NULL) {}
     friend class		::Network;
+    friend class		Peer;
 
   public:
     const network::Info		*Open(Protocol			protocol,
@@ -136,6 +138,9 @@ namespace			network
     void			Doom(void);
     bool			Close(void);
 
+    bool			Dump(t_bunny_configuration	*cnf,
+				     size_t			index) const;
+    
     Descriptor(Network		&network);
     virtual ~Descriptor(void);
   };

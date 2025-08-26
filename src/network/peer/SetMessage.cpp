@@ -15,8 +15,11 @@ bool		network::Peer::SetMessage(const char		*data,
 					  void			*wtdata)
 {
   try {
-    if (info.sockaddr.sin_addr.s_addr == htonl(INADDR_ANY))
-      scream_error_if(return (false), BE_PEER_IS_A_SERVER, PAT, "network", data, len, wt, wtdata, "false");
+    //// CE TRUC FAIT QU'ON NE PEUT PAS AVOIR DE "SERVER" UDP.
+    //// HORS CETTE LIMITATION NE CONCERNE QUE LES SERVEURS TCP
+    //// => LES SERVEURS TCPS NE DEVRAIENT PAS AVOIR DE PEER CREE, TOUT SIMPLEMENT.
+    // if (info.sockaddr.sin_addr.s_addr == htonl(INADDR_ANY))
+    //  scream_error_if(return (false), BE_PEER_IS_A_SERVER, PAT, "network", data, len, wt, wtdata, "false");
     outqueue.emplace_back(data, data + len, wt, wtdata);
   } catch (...) {
     return (false);

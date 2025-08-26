@@ -18,24 +18,21 @@ t_bunny_response		network_event(double			v,
     {
       if ((com.type == ::BCT_NETCONNECTED
 	   || com.type == ::BCT_NETDISCONNECTED) &&
-	  gl_callback.netconnect)
+	  gl_callback.net_connect)
 	{
-	  puts("Connected\n");
-	  return (gl_callback.netconnect(com.info,
-				 com.type == ::BCT_NETCONNECTED ? ::CONNECTED : ::DISCONNECTED,
-					 data));
+	  return (gl_callback.net_connect(com.info,
+					  com.type == ::BCT_NETCONNECTED ? ::CONNECTED : ::DISCONNECTED,
+					  data));
 	}
       else if (com.type == ::BCT_MESSAGE)
 	{
-	  puts("Received\n");
-	  return (gl_callback.netmessage(com.info,
-				 com.data,
-				 com.size,
-					 data));
+	  return (gl_callback.net_message(com.info,
+					  com.data,
+					  com.size,
+					  data));
 	}
       else
 	{
-	  puts("Unknown type\n");
 	  printf("type : %d\n", com.type);
 	  return (GO_ON); // Erreur... bunny_set_network_error_response?
 	}

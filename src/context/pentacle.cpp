@@ -217,10 +217,11 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
 {
   char				pentacle_mem[sizeof(gl_normal_pentacle)];
   struct vertex_array		*pentacle = (struct vertex_array*)&pentacle_mem;
+  t_bunny_buffer		*screen = &bss->picture->buffer;
   t_bunny_color			color;
   size_t			i;
 
-  bunny_fill(bss->head.screen, ALPHA(64, BLACK));
+  bunny_fill(screen, ALPHA(64, BLACK));
 
   if (bss->animation_step < NEW_PAUSE)
     memcpy(pentacle, &gl_normal_pentacle, sizeof(gl_normal_pentacle));
@@ -229,7 +230,7 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
   switch (bss->animation_step)
     {
     case BEFORE_ANIMATION:
-      bunny_clear(bss->head.screen, BLACK);
+      bunny_clear(screen, BLACK);
       break ;
     case FALLING:
       color.full = BLACK;
@@ -252,12 +253,12 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
 	else
 	  coef = 0.33;
 	center_vertices(pentacle, bss->size_of_screen, bss->middle_of_screen, coef);
-	bunny_set_geometry(bss->head.screen, BGY_TRIANGLES, (t_bunny_vertex_array*)pentacle, NULL);
+	bunny_set_geometry(screen, BGY_TRIANGLES, (t_bunny_vertex_array*)pentacle, NULL);
 	break ;
       }
     case TRANSFORMATION:
       if (bss->time_counter == 0)
-	bunny_fill(bss->head.screen, RED);
+	bunny_fill(screen, RED);
       for (i = 0; i < pentacle->length; ++i)
 	{
 	  pentacle->vertex[i].pos.x =
@@ -273,7 +274,7 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
     case NEW_PAUSE:
       {
 	center_vertices(pentacle, bss->size_of_screen, bss->middle_of_screen, 0.33);
-	bunny_set_geometry(bss->head.screen, BGY_TRIANGLES, (t_bunny_vertex_array*)pentacle, NULL);
+	bunny_set_geometry(screen, BGY_TRIANGLES, (t_bunny_vertex_array*)pentacle, NULL);
 	break ;
       }
     case SHIFT_LEFT:
@@ -295,7 +296,7 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
 	pos.x = (dest - ori) * step + ori;
 	pos.y = bss->middle_of_screen.y;
 	center_vertices(pentacle, bss->size_of_screen, pos, 0.33);
-	bunny_set_geometry(bss->head.screen, BGY_TRIANGLES, (t_bunny_vertex_array*)pentacle, NULL);
+	bunny_set_geometry(screen, BGY_TRIANGLES, (t_bunny_vertex_array*)pentacle, NULL);
 	if (bss->animation_step < TEXT_DISPLAY)
 	  break ;
 	if (bss->animation_step == TEXT_DISPLAY)
@@ -304,15 +305,15 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
 	       bss->text->clipable.position.y - bss->text->clipable.buffer.height * 0.05,
 	       bss->text->clipable.clip_width,
 	       bss->text->clipable.buffer.height * 0.1,
-	       bss->head.screen
+	       screen
 	       );
 	  square(bss->text->clipable.position.x,
 		 bss->text->clipable.position.y - bss->text->clipable.buffer.height * 0.05 + bss->text->clipable.buffer.height,
 		 bss->text->clipable.clip_width,
 		 bss->text->clipable.buffer.height * 0.1,
-		 bss->head.screen
+		 screen
 		 );
-	bunny_blit(bss->head.screen, &bss->text->clipable, NULL);
+	bunny_blit(screen, &bss->text->clipable, NULL);
       }
       [[fallthrough]];
     case FINAL_BLACK:
@@ -321,7 +322,11 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
     }
   if (bss->head.subcontext.display)
     return (bss->head.subcontext.display(bss));
-  bunny_display((t_bunny_window*)bss->head.screen);
+  for (size_t i = 0; bss->head.screens[i]; ++i)
+    {
+      bunny_blit(bss->head.screens[i], bss->picture, NULL);
+      bunny_display((t_bunny_window*)bss->head.screens[i]);
+    }
   return (GO_ON);
 }
 
@@ -373,15 +378,20 @@ void				spread_coords(struct vertex_array		*vec,
 
 static t_bunny_response		pentacle_entering(struct bunny_pentacle_screen *bss)
 {
+  t_bunny_picture		*screen;
   t_bunny_size			font_size;
   int				i;
+  
+  if ((bss->picture = bunny_new_picture(1920, 1080)) == NULL)
+    return (EXIT_ON_ERROR);
+  screen = bss->picture;
 
   bss->animation_step = BEFORE_ANIMATION;
   bss->time_counter = 0.0;
-  bss->size_of_screen.x = bss->head.screen->width;
-  bss->size_of_screen.y = bss->head.screen->height;
-  bss->middle_of_screen.x = bss->head.screen->width / 2;
-  bss->middle_of_screen.y = bss->head.screen->height / 2;
+  bss->size_of_screen.x = screen->buffer.width;
+  bss->size_of_screen.y = screen->buffer.height;
+  bss->middle_of_screen.x = screen->buffer.width / 2;
+  bss->middle_of_screen.y = screen->buffer.height / 2;
   bss->jingle_played = false;
 
   font_size.x = bss->size_of_screen.x * 0.10;
@@ -405,6 +415,7 @@ static t_bunny_response		pentacle_entering(struct bunny_pentacle_screen *bss)
       if (bss->jingle == NULL)
 	if ((bss->jingle = bunny_load_effect(bss->jingle_sound_file)) == NULL)
 	  {
+	    bunny_delete_clipable(bss->picture);
 	    bunny_delete_clipable(&bss->text->clipable);
 	    return (EXIT_ON_ERROR);
 	  }
@@ -445,6 +456,8 @@ static void			pentacle_leaving(t_bunny_response		resp,
     bunny_delete_sound(&bss->jingle->sound);
   if (bss->text)
     bunny_delete_clipable(&bss->text->clipable);
+  if (bss->picture)
+    bunny_delete_clipable(bss->picture);
 }
 
 const t_bunny_context		gl_bunny_pentacle_context =

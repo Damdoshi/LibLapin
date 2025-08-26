@@ -35,13 +35,38 @@ static int		get_style(t_bunny_configuration				*cnf)
   return (style);
 }
 
+static t_bunny_window	**mono_fullscreen(t_bunny_configuration			*cnf)
+{
+  const char		*name;
+  t_bunny_window	**wins;
+
+  if (!bunny_configuration_getf_string(cnf, &name, "Name"))
+    name = "LibLapin";
+  if ((wins = (t_bunny_window**)bunny_malloc(sizeof(*wins) * 2)) == NULL)
+    return (NULL);
+  if ((wins[0] = bunny_single_fullscreen(name)) == NULL)
+    {
+      bunny_free(wins);
+      return (NULL);
+    }
+  wins[1] = NULL;
+  return (wins);
+}
+
+static t_bunny_window	**full_fullscreen(t_bunny_configuration			*cnf)
+{
+  const char		*name;
+
+  if (!bunny_configuration_getf_string(cnf, &name, "Name"))
+      name = "LibLapin";
+  return (bunny_all_fullscreen(name));
+}
+
 static t_bunny_window	*open_single_window(t_bunny_configuration		*cnf,
 					    t_bunny_configuration		*root)
 {
   int			style = 0;
   t_bunny_position	size;
-  int			width;
-  int			height;
   const char		*name;
 
   if (bunny_position_configuration("Size", &size, cnf) != BD_OK)
@@ -113,10 +138,24 @@ t_bunny_window		**bunny_begin_configuration(t_bunny_configuration	*cnf)
 t_bunny_window		**bunny_begin(const char			*file)
 {
   t_bunny_configuration	*cnf;
+  const char		*str;
 
   if ((cnf = bunny_open_configuration(file, NULL)) == NULL)
     return (NULL);
-  auto r = bunny_begin_configuration(cnf);
+  t_bunny_window	**r;
+
+  if (bunny_configuration_getf_string(cnf, &str, "Mode"))
+    {
+      if (bunny_strcasecmp(str, "Fullscreen") == 0 ||
+	  bunny_strcasecmp(str, "MonoFullscreen") == 0)
+	r = mono_fullscreen(cnf);
+      else if (bunny_strcasecmp(str, "AllFullscreen") == 0)
+	r = full_fullscreen(cnf);
+      else
+	r = NULL;
+    }
+  else
+    r = bunny_begin_configuration(cnf);
   bunny_delete_configuration(cnf);
   return (r);
 }

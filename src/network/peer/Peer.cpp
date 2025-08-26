@@ -10,13 +10,10 @@
 #include	<iostream>
 
 network::Peer::Peer(void)
-{
-  std::cout << "A new peer has been created !" << std::endl;
-}
+{}
 
 network::Peer::~Peer(void)
 {
-  std::cout << "A peer has been destroy !" << std::endl;
   std::set<Descriptor*>::iterator it;
 
   for (it = descriptors.begin(); it != descriptors.end(); ++it)

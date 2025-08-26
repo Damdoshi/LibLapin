@@ -294,7 +294,6 @@ bool			bunny_configuration_setf_int(t_bunny_configuration		*config,
 						     const char				*format,
 						     ...) _BFMT(3, 4);
 
-
 bool			bunny_configuration_vsetf_node(t_bunny_configuration		*config,
 						       const t_bunny_configuration	*node,
 						       const char			*format,

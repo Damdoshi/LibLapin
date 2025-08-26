@@ -186,4 +186,8 @@ struct s_bunny_pixelarray;
 void				bunny_set_window_icon(t_bunny_window		*win,
 						      struct s_bunny_pixelarray	*px);
 
+t_bunny_window			*bunny_single_fullscreen(const char		*name);
+
+t_bunny_window			**bunny_all_fullscreen(const char		*name);
+
 #endif	/*			__LAPIN_WINDOW_H__		*/

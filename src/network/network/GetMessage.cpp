@@ -11,7 +11,6 @@ bool			Network::GetMessage(Communication	&com)
 {
   for (size_t i = 0; i < nbr; ++i)
     {
-      int		fd = pollfd[i].fd;
       Descriptor	&desc = descriptors[i];
 
       if (desc.GetMessage(com))

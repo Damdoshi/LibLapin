@@ -506,12 +506,12 @@ double				bunny_get_delay(void);
 */
 
 typedef t_bunny_response	(*t_bunny_message_response)(t_bunny_network_info clt,
-							    const void		*buffer,
+							    void		*buffer,
 							    size_t		size,
 							    void		*data);
 
 typedef t_bunny_response	t_bunny_message_response_function(t_bunny_network_info clt,
-								  const void	*buffer,
+								  void		*buffer,
 								  size_t	size,
 								  void		*data);
 
@@ -720,20 +720,38 @@ typedef struct			s_bunny_context
   t_bunny_click			click;
   t_bunny_move			move;
   t_bunny_wheel			wheel;
-  t_bunny_joy_connect		connect;
-  t_bunny_joy_button		button;
-  t_bunny_joy_axis		axis;
+  union {
+    t_bunny_joy_connect		connect;
+    t_bunny_joy_connect		joy_connect;
+  };
+  union {
+    t_bunny_joy_button		button;
+    t_bunny_joy_button		joy_button;
+  };
+  union {
+    t_bunny_joy_axis		axis;
+    t_bunny_joy_axis		joy_axis;
+  };
   t_bunny_get_focus		get_focus;
   t_bunny_lost_focus		lost_focus;
   t_bunny_resize		resize;
   t_bunny_loop			loop;
   t_bunny_display		display;
   t_bunny_close			close;
-  t_bunny_message_response	netmessage;
-  t_bunny_connect_response	netconnect;
+  union {
+    t_bunny_message_response	net_message;
+    t_bunny_message_response	netmessage _BDEPREC();
+  };
+  union {
+    t_bunny_connect_response	net_connect;
+    t_bunny_connect_response	netconnect _BDEPREC();
+  };
   t_bunny_loop			entering_context;
   t_bunny_leaving_context	leaving_context;
-  t_bunny_async_computation_response async_computation_response;
+  union {
+    t_bunny_async_computation_response async_computation;
+    t_bunny_async_computation_response async_computation_response _BDEPREC();
+  };
   t_bunny_event_response	event;
 }				t_bunny_context;
 
@@ -749,6 +767,11 @@ typedef struct			s_bunny_context
 ** for example. This, without a cast.
 **
 ** Of course it breaks the type safety, but at least, you are free to choose.
+**
+**
+** Deprecation notice: using bunny_declare_context locally allow you to trick the
+** compiler into thinking your functions are taking a void* instead of the real
+** type I'm sure it takes. Use bunny_declare_context and t_bunny_context instead.
 */
 typedef struct			s_bunny_anonymous_context
 {
@@ -772,7 +795,7 @@ typedef struct			s_bunny_anonymous_context
   void				*leaving_context;
   void				*async_computation_response;
   void				*event;
-}				t_bunny_anonymous_context;
+}				t_bunny_anonymous_context _BDEPREC();
 
 /*!
 ** Set the event context.

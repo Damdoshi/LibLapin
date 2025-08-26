@@ -82,8 +82,9 @@ public:
   bool			Doom(int			fd);
   // Arreter de parler a un pair ou fermer un service réseau tout de suite
   bool			Close(const Info		&info);
-  bool			Close(int			fd);
 
+  int			Dump(int			fd) const;
+  
   Network(void);
   ~Network(void);
 };

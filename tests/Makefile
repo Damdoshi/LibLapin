@@ -1,8 +1,8 @@
 #################################################################################
 
  ###############################################################################
- ## Jason Brillante "Damdoshi"                  Hanged Bunny Studio 2014-2024 ##
- ## Pentacle Technologie 2008-2024                           EFRITS 2022-2024 ##
+ ## Jason Brillante "Damdoshi"                  Hanged Bunny Studio 2014-2025 ##
+ ## Pentacle Technologie 2008-2025                           EFRITS 2022-2025 ##
  ## "MyLib" V9.12                                                             ##
  ##                                                                           ##
  ## ------------------------------------------------------------------------- ##
@@ -23,7 +23,6 @@
   SRC_DIR	=	../src/
   REPORT	?=	./report/
   COMPILER	?=	../bcc -L./ -L../
-  LIB_TO_TEST	=	LD_LIBRARY_PATH=../
 
   INC_DIR	?=	/usr/include/
 
@@ -48,6 +47,8 @@
   GREEN		=	"\033[0;32m"
   TEAL		=	"\033[1;36m"
   RED		=	"\033[0;31m"
+  SBAR		=	"----------------------------------------"
+  BAR		=	$(SBAR)$(SBAR)"\n"
 
 #################################################################################
 ## Source                                                                      ##
@@ -55,26 +56,27 @@
 
   HEADER	=	-I./../include/
   SRC		=	$(wildcard src/*.c)
-  OBJ		=	$(basename $(SRC))
+  NAME		=	$(notdir $(SRC:.c=))
+  BINS		=	$(addprefix src/,$(NAME))
+  TRACE		=	$(addsuffix -trace, $(NAME))
 
 #################################################################################
 ## Rules                                                                       ##
 #################################################################################
 
 all:			rmlog $(REPORT)
-$(OBJ):
-			@$(COMPILER) $@.c -o $@.tmp $(FLAGS)			\
-			 $(HEADER) $(LIB) #$(ERRLOG)
-			@
-			@test -f $@.tmp || $(ECHO) $(RED)  "[KO]" $@.c $(DEFLT)
-			@test -f $@.tmp && $(ECHO) "------\n$@ :" $(FERRLOG) &&	\
-			 ($(LIB_TO_TEST) $@.tmp $(FERRLOG) &&			\
-			 $(ECHO) $(TEAL) "[OK]" $(GREEN)$(notdir $@.tmp)	\
-			 $(DEFLT) ||						\
-			 $(ECHO) $(RED) "[KO]" $(notdir $@.tmp) $(DEFLT))
-			@mv $@.tmp $@
+src/%:			src/%.c
+			@$(COMPILER) $< -o $@ $(FLAGS)				\
+			 $(HEADER) $(LIB) $(ERRLOG) || echo -n
+			@test -f $@ || $(ECHO) $(RED)  "[XX]" $< $(DEFLT)
+%-trace:		src/%
+			@$(ECHO) $(BAR) "$<\n" $(BAR) $(FERRLOG)
+			@(./$< 1> /dev/null 2> $@ &&				\
+			 $(ECHO) $(TEAL) "[OK]" $(GREEN)$< $(DEFLT)		\
+			 ) ||							\
+			 $(ECHO) $(RED) "[KO]" $< $(DEFLT)
 
-$(REPORT):		$(OBJ)
+$(REPORT):		$(TRACE)
 			@lcov --directory . --directory $(SRC_DIR) -c		\
 			 -o coverage_raw.info $(NEGATE) &&			\
 			 lcov --remove coverage_raw.info '$(INC_DIR)*' '7/*'	\
@@ -92,8 +94,9 @@ rmlog:
 clean:
 			@find . -name "*.gc*" -delete
 			@find . -name "*.info" -delete
-			@$(RM) $(OBJ)
+			@$(RM) $(BINS)
 fclean:			clean
-			@$(RM) $(REPORT)
+			@$(RM) $(REPORT) $(TRACE) $(LOGFILE)
 re:			fclean all
 
+.PRECIOUS:		$(BINS)

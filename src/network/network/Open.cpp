@@ -13,7 +13,7 @@ const network::Info	*Network::Open(Protocol			protocol,
 				       uint16_t			port,
 				       const std::string	&ip)
 {
-  const network::Info	*inf;	
+  const network::Info	*inf;
   size_t		tmp;
   size_t		i;
   
@@ -22,8 +22,10 @@ const network::Info	*Network::Open(Protocol			protocol,
       {	
 	if (!(inf = descriptors[i].Open(protocol, size, terminator, port, ip)))
 	  goto Failure;
-	if (peers[*inf].AttachDescriptor(descriptors[i], inf) == false)
-	  goto Close;
+	// Si c'est une écoute, ce n'est pas un pair.
+	if (ip != "")
+	  if (peers[*inf].AttachDescriptor(descriptors[i], inf) == false)
+	    goto Close;
 	tmp = nbr;
 	if (!descriptors[i].Declare())
 	  goto Detach;

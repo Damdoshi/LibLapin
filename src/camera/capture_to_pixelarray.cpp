@@ -4,7 +4,7 @@
 //
 //
 
-#include		<opencv2/opencv.hpp>
+#include		"private/ocv.h"
 #include		"lapin_private.h"
 
 #define			PATTERN		"%p capture, %p pix -> %s"

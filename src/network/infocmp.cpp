@@ -12,10 +12,14 @@ int			bunny_infocmp(const t_bunny_network_info	*a,
   int			diff;
 
   i = 0;
-  while (i < a->socklen && i < b->socklen)
+  while (i < a->socklen && i < sizeof(a->sockaddr) &&
+	 i < b->socklen && i < sizeof(b->sockaddr))
     if ((diff = ((char*)&a->sockaddr)[i] - ((char*)&b->sockaddr)[i]) != 0)
       return (diff);
-  if (i == a->socklen && i == b->socklen)
+    else
+      i = i + 1;
+  if ((i == a->socklen || i == sizeof(a->sockaddr)) &&
+      (i == b->socklen || i == sizeof(b->sockaddr)))
     return (0);
   return (((char*)&a->sockaddr)[i] - ((char*)&b->sockaddr)[i]);
 }

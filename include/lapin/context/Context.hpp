@@ -1,358 +1,411 @@
-/*
-** Jason Brillante "Damdoshi"
-** Hanged Bunny Studio 2014-2018
-**
-**
-** Bibliotheque Lapin
-*/
+// Jason Brillante "Damdoshi"
+// Hanged Bunny Studio 2014-2025
+// EFRITS SAS 2022-2025
+// Pentacle Technologie 2008-2025
+//
+// Not Alone
 
-#ifndef				__LAPIN_CONTEXT_HPP__
-# define			__LAPIN_CONTEXT_HPP__
+#ifndef				__CONTEXT_HPP__
+# define			__CONTEXT_HPP__
+# include			<lapin.h>
+# include			<span>
 
-namespace			Bunny
+namespace			hbs
 {
-  template<typename		SubContext>
-  class				Context
+  class				Context : public t_bunny_context
   {
+  protected:
+    Context(void)
+    {
+      memset(static_cast<t_bunny_context*>(this), 0, sizeof(t_bunny_context));
+    }
+
   public:
-    t_bunny_response		Key(t_bunny_event_state		state,
-				    t_bunny_keysym		sym)
-    {
-      (void)state;
-      (void)sym;
-      return (GO_ON);
-    }
-    static t_bunny_response	KeyHook(t_bunny_event_state	state,
-					t_bunny_keysym		sym,
-					SubContext		*data)
-    {
-      return (data->Key(state, sym));
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		Text(t_bunny_type		type)
-    {
-      (void)type;
-      return (GO_ON);
-    }
-    static t_bunny_response	TextHook(t_bunny_type		type,
-					 SubContext		*data)
-    {
-      return (data->Text(type));
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		Click(t_bunny_event_state	state,
-				      t_bunny_mouse_button	button)
-    {
-      (void)state;
-      (void)button;
-      return (GO_ON);
-    }
-    static t_bunny_response	ClickHook(t_bunny_event_state	state,
-					  t_bunny_mouse_button	button,
-					  SubContext		*data)
-    {
-      return (data->Click(state, button));
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		Move(const t_bunny_position	*relative)
-    {
-      (void)relative;
-      return (GO_ON);
-    }
-    static t_bunny_response	MoveHook(const t_bunny_position	*relative,
-					 SubContext		*data)
-    {
-      return (data->Move(relative));
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		Wheel(int			wheelid,
-				      int			delta)
-    {
-      (void)wheelid;
-      (void)delta;
-      return (GO_ON);
-    }
-    static t_bunny_response	WheelHook(int			wheelid,
-					  int			delta,
-					  SubContext		*data)
-    {
-      return (data->Wheel(wheelid, delta));
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		JoyConnect(t_bunny_event_state	state,
-					   int			joyid,
-					   const t_bunny_joystick *info)
-    {
-      (void)state;
-      (void)joyid;
-      (void)info;
-      return (GO_ON);
-    }
-    static t_bunny_response	JoyConnectHook(t_bunny_event_state state,
-					       int		joyid,
-					       const t_bunny_joystick *info,
-					       SubContext	*data)
-    {
-      return (data->JoyConnect(state, joyid, info));
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		JoyAxis(int			id,
-					t_bunny_axis		axis,
-					float			value)
-    {
-      (void)id;
-      (void)axis;
-      (void)value;
-      return (GO_ON);
-    }
-    static t_bunny_response	JoyAxisHook(int			id,
-					    t_bunny_axis	axis,
-					    float		value,
-					    SubContext		*data)
-    {
-      return (data->JoyAxis(id, axis, value));
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		JoyButton(t_bunny_event_state	state,
-					  int			joyid,
-					  int			button)
-    {
-      (void)state;
-      (void)joyid;
-      (void)button;
-      return (GO_ON);
-    }
-    static t_bunny_response	JoyButtonHook(t_bunny_event_state state,
-					      int		joyid,
-					      int		button,
-					      SubContext	*data)
-    {
-      return (data->JoyButton(state, joyid, button));
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		GetFocus(const t_bunny_window	*win)
-    {
-      (void)win;
-      return (GO_ON);
-    }
-    static t_bunny_response	GetFocusHook(const t_bunny_window *win,
-					     SubContext		*data)
-    {
-      return (data->GetFocus(win));
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		LostFocus(const t_bunny_window	*win)
-    {
-      (void)win;
-      return (GO_ON);
-    }
-    static t_bunny_response	LostFocusHook(const t_bunny_window *win,
-					      SubContext	*data)
-    {
-      return (data->LostFocus(win));
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		Resize(const t_bunny_window	*win,
-				       const t_bunny_position	*size)
-    {
-      (void)win;
-      (void)size;
-      return (GO_ON);
-    }
-    static t_bunny_response	ResizeHook(const t_bunny_window	*win,
-					   const t_bunny_position *size,
-					   SubContext		*data)
-    {
-      return (data->Resize(win, size));
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		Close(const t_bunny_window	*win)
-    {
-      (void)win;
-      return (GO_ON);
-    }
-    static t_bunny_response	CloseHook(const t_bunny_window	*win,
-					  SubContext		*data)
-    {
-      return (data->Close(win));
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		Loop(void)
-    {
-      return (GO_ON);
-    }
-    static t_bunny_response	LoopHook(SubContext		*data)
-    {
-      return (data->Loop());
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		Display(void)
-    {
-      return (GO_ON);
-    }
-    static t_bunny_response	DisplayHook(SubContext		*data)
-    {
-      return (data->Display());
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    virtual t_bunny_network	*Netcom(void) _BDEPREC()
-    {
-      return (NULL);
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		NetMessage(int			fd,
-					   const void		*buffer,
-					   size_t		bufsize)
-    {
-      (void)fd;
-      (void)buffer;
-      (void)bufsize;
-      return (GO_ON);
-    }
-    static t_bunny_response	NetMessageHook(int		fd,
-					       const void	*buffer,
-					       size_t		bufsize,
-					       SubContext	*data)
-    {
-      return (data->NetMessage(fd, buffer, bufsize));
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		NetConnect(int			fd,
-					   t_bunny_event_state	state)
-    {
-      (void)fd;
-      (void)state;
-      return (GO_ON);
-    }
-    static t_bunny_response	NetConnectHook(int		fd,
-					       t_bunny_event_state state,
-					       SubContext	*data)
-    {
-      return (data->NetConnect(fd, state));
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		Entering(void)
-    {
-      return (GO_ON);
-    }
-    static t_bunny_response	EnteringHook(SubContext		*data)
-    {
-      return (data->Entering());
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    void			Leaving(t_bunny_response	return_value)
-    {
-      (void)return_value;
-    }
-    static void			LeavingHook(t_bunny_response	return_value,
-					    SubContext		*data)
-    {
-      return (data->Leaving(return_value));
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    t_bunny_response		AsyncComputation(void		*computed_val)
-    {
-      (void)computed_val;
-      return (GO_ON);
-    }
-    static t_bunny_response	AsyncComputationHook(void	*computed_val,
-						     SubContext	*data)
-    {
-      return (data->AsyncComputation(computed_val));
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    Context(void) {}
+    virtual t_bunny_response	Key(t_bunny_event_state		state,
+				    t_bunny_keysym		sym) = 0;
+    virtual t_bunny_response	Type(uint32_t			unicode) = 0;
+    virtual t_bunny_response	Click(t_bunny_event_state	state,
+				      t_bunny_mouse_button	but) = 0;
+    virtual t_bunny_response	Move(const t_bunny_position	&rel) = 0;
+    virtual t_bunny_response	Wheel(int			wid,
+				      int			delta) = 0;
+    virtual t_bunny_response	Connect(t_bunny_event_state	state,
+					int			jid,
+					const t_bunny_joystick	&jinfo) = 0;
+    virtual t_bunny_response	Button(t_bunny_event_state	state,
+				       int			jid,
+				       int			button) = 0;
+    virtual t_bunny_response	Axis(int			jid,
+				     t_bunny_axis		axis,
+				     float			value) = 0;
+    virtual t_bunny_response	GetFocus(const t_bunny_window	&win) = 0;
+    virtual t_bunny_response	LostFocus(const t_bunny_window	&win) = 0;
+    virtual t_bunny_response	Resize(const t_bunny_window	&win,
+				       const t_bunny_position	&siz) = 0;
+    virtual t_bunny_response	Loop(void) = 0;
+    virtual t_bunny_response	Display(void) = 0;
+    virtual t_bunny_response	Close(const t_bunny_window	&win) = 0;
+    virtual t_bunny_response	NetMessage(t_bunny_network_info	clt,
+					   std::span<std::byte>	tmp) = 0;
+    virtual t_bunny_response	NetConnect(t_bunny_network_info	clt,
+					   t_bunny_event_state	state) = 0;
+    virtual t_bunny_response	EnteringContext(void) = 0;
+    virtual void		LeavingContext(t_bunny_response	ret) = 0;
+    virtual t_bunny_response	AsyncComputation(void		*cmd) = 0;
+    virtual t_bunny_response	Event(const t_bunny_event	&event) = 0;
     virtual ~Context(void) {}
   };
 
-  template <typename T> // Ultimate cast
-  void				*UC(const T		&v)
+  template <typename		T>
+  class				ContextBridge : public Context
   {
-    union {
-      const T	*t;
-      void *v;
-    } x;
+  private:
+    static t_bunny_response	KeyF(t_bunny_event_state	state,
+				     t_bunny_keysym		sym,
+				     T				*data)
+    {
+      return (data->Key(state, sym));
+    }
+  public:
+    virtual t_bunny_response	Key(t_bunny_event_state		state,
+				    t_bunny_keysym		sym) override
+    {
+      (void)state; (void)sym;
+      this->key = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
 
-    x.t = &v;
-    return (x.v);
-  }
+  private:
+    static t_bunny_response	TypeF(uint32_t			unicode,
+				      T				*data)
+    {
+      return (data->Type(unicode));
+    }
+  public:
+    virtual t_bunny_response	Type(uint32_t			unicode) override
+    {
+      (void)unicode;
+      this->type = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
 
-# define			_TAS(d, o)		\
-  if (&T::o != &Bunny::Context<T>::o) {			\
-    out.d = UC(T::o ## Hook);				\
-  } else {						\
-    out.d = NULL;					\
-  }
+  private:
+    static t_bunny_response	ClickF(t_bunny_event_state	state,
+				       t_bunny_mouse_button	but,
+				       T			*data)
+    {
+      return (data->Click(state, but));
+    }
+  public:
+    virtual t_bunny_response	Click(t_bunny_event_state	state,
+				      t_bunny_mouse_button	but) override
+    {
+      (void)state; (void)but;
+      this->click = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
 
-  template <typename T>
-  void				SetContext(const T	&inctx)
-  {
-    t_bunny_anonymous_context	out;
+  private:
+    static t_bunny_response	MoveF(const t_bunny_position	*rel,
+				      T				*data)
+    {
+      return (data->Move(*rel));
+    }
+  public:
+    virtual t_bunny_response	Move(const t_bunny_position	&rel) override
+    {
+      (void)rel;
+      this->move = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
 
-    (void)inctx;
-    _TAS(key, Key);
-    _TAS(type, Text);
-    _TAS(click, Click);
-    _TAS(move, Move);
-    _TAS(wheel, Wheel);
-    _TAS(connect, JoyConnect);
-    _TAS(button, JoyButton);
-    _TAS(axis, JoyAxis);
-    _TAS(get_focus, GetFocus);
-    _TAS(lost_focus, LostFocus);
-    _TAS(resize, Resize);
-    _TAS(loop, Loop);
-    _TAS(display, Display);
-    _TAS(close, Close);
-    _TAS(netmessage, NetMessage);
-    _TAS(netconnect, NetConnect);
-    _TAS(entering_context, Entering);
-    _TAS(leaving_context, Leaving);
-    _TAS(async_computation_response, AsyncComputation);
-    bunny_set_context((t_bunny_context*)&out);
-  }
+  private:
+    static t_bunny_response	WheelF(int			wid,
+				       int			delta,
+				       T			*data)
+    {
+      return (data->Wheel(wid, delta));
+    }
+  public:
+    virtual t_bunny_response	Wheel(int			wid,
+				      int			delta) override
+    {
+      (void)wid; (void)delta;
+      this->wheel = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
 
-# undef				_TAS
+  private:
+    static t_bunny_response	ConnectF(t_bunny_event_state	state,
+					 int			joyid,
+					 const t_bunny_joystick	*jinfo,
+					 T			*data)
+    {
+      return (data->Connect(state, joyid, *jinfo));
+    }
+  public:
+    virtual t_bunny_response	Connect(t_bunny_event_state	state,
+					int			jid,
+					const t_bunny_joystick	&jinfo) override
+    {
+      (void)state; (void)jid; (void)jinfo;
+      this->joy_connect = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
+
+  private:
+    static t_bunny_response	ButtonF(t_bunny_event_state	state,
+					int			jid,
+					int			button,
+					T			*data)
+    {
+      return (data->Button(state, jid, button));
+    }
+  public:
+    virtual t_bunny_response	Button(t_bunny_event_state	state,
+				       int			jid,
+				       int			button) override
+    {
+      (void)state; (void)jid; (void)button;
+      this->joy_button = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
+
+  private:
+    static t_bunny_response	AxisF(int			jid,
+				      t_bunny_axis		axis,
+				      float			value,
+				      T				*data)
+    {
+      return (data->Axis(jid, axis, value));
+    }
+  public:
+    virtual t_bunny_response	Axis(int			jid,
+				     t_bunny_axis		axis,
+				     float			value) override
+    {
+      (void)jid; (void)axis; (void)value;
+      this->joy_axis = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
+
+  private:
+    static t_bunny_response	GetFocusF(const t_bunny_window	*win,
+					  T			*data)
+    {
+      return (data->GetFocus(*win));
+    }
+  public:
+    virtual t_bunny_response	GetFocus(const t_bunny_window	&win) override
+    {
+      (void)win;
+      this->get_focus = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
+
+  private:
+    static t_bunny_response	LostFocusF(const t_bunny_window	*win,
+					   T			*data)
+    {
+      return (data->LostFocus(*win));
+    }
+  public:
+    virtual t_bunny_response	LostFocus(const t_bunny_window	&win) override
+    {
+      (void)win;
+      this->lost_focus = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
+
+  private:
+    static t_bunny_response	ResizeF(const t_bunny_window	*win,
+					const t_bunny_position	*siz,
+					T			*data)
+    {
+      return (data->Resize(*win, *siz));
+    }
+  public:
+    virtual t_bunny_response	Resize(const t_bunny_window	&win,
+				       const t_bunny_position	&siz) override
+    {
+      (void)win; (void)siz;
+      this->resize = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
+
+  private:
+    static t_bunny_response	LoopF(T				*data)
+    {
+      return (data->Loop());
+    }
+  public:
+    virtual t_bunny_response	Loop(void) override
+    {
+      this->loop = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
+
+  private:
+    static t_bunny_response	DisplayF(T			*data)
+    {
+      return (data->Display());
+    }
+  public:
+    virtual t_bunny_response	Display(void) override
+    {
+      this->display = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
+
+  private:
+    static t_bunny_response	CloseF(const t_bunny_window	*win,
+				       T			*data)
+    {
+      return (data->Close(*win));
+    }
+  public:
+    virtual t_bunny_response	Close(const t_bunny_window	&win) override
+    {
+      (void)win;
+      this->close = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
+
+  private:
+    static t_bunny_response	NetMessageF(t_bunny_network_info clt,
+					    void		*buffer,
+					    size_t		size,
+					    T			*data)
+    {
+      return (data->NetMessage(clt, std::span<std::byte>{(std::byte*)buffer, size}));
+    }
+  public:
+    virtual t_bunny_response	NetMessage(t_bunny_network_info	clt,
+					   std::span<std::byte>	tmp) override
+    {
+      (void)clt; (void)tmp;
+      this->net_message = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
+
+  private:
+    static t_bunny_response	NetConnectF(t_bunny_network_info clt,
+					    t_bunny_event_state	state,
+					    T			*data)
+    {
+      return (data->NetConnect(clt, state));
+    }
+  public:
+    virtual t_bunny_response	NetConnect(t_bunny_network_info	clt,
+					   t_bunny_event_state	state) override
+    {
+      (void)clt; (void)state;
+      this->net_connect = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
+
+  private:
+    static t_bunny_response	EnteringContextF(T		*data)
+    {
+      return (data->EnteringContext());
+    }
+  public:
+    virtual t_bunny_response	EnteringContext(void) override
+    {
+      this->entering_context = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
+
+  private:
+    static void			LeavingContextF(t_bunny_response ret,
+						T		*data)
+    {
+      return (data->LeavingContext(ret));
+    }
+  public:
+    virtual void		LeavingContext(t_bunny_response	ret) override
+    {
+      (void)ret;
+      this->leaving_context = NULL;
+      bunny_set_context(this);
+    }
+
+  private:
+    static t_bunny_response	AsyncComputationF(void		*cmd,
+						  T		*data)
+    {
+      return (data->AsyncComputation(cmd));
+    }
+  public:
+    virtual t_bunny_response	AsyncComputation(void		*cmd) override
+    {
+      (void)cmd;
+      this->async_computation = NULL;
+      bunny_set_context(this);
+      return (GO_ON);
+    }
+
+  private:
+    static t_bunny_response	EventF(const t_bunny_event	*event,
+				       T			*data)
+    {
+      return (data->Event(*event));
+    }
+  public:
+    virtual t_bunny_response	Event(const t_bunny_event	&event) override
+    {
+      (void)event;
+      this->event = NULL;
+      return (GO_ON);
+    }	
+    
+  public:
+    ContextBridge(void)
+    {
+      key = (t_bunny_key)KeyF;
+      type = (t_bunny_type)TypeF;
+      click = (t_bunny_click)ClickF;
+      move = (t_bunny_move)MoveF;
+      wheel = (t_bunny_wheel)WheelF;
+      joy_connect = (t_bunny_joy_connect)ConnectF;
+      joy_button = (t_bunny_joy_button)ButtonF;
+      joy_axis = (t_bunny_joy_axis)AxisF;
+      get_focus = (t_bunny_get_focus)GetFocusF;
+      lost_focus = (t_bunny_lost_focus)LostFocusF;
+      resize = (t_bunny_resize)ResizeF;
+      loop = (t_bunny_loop)LoopF;
+      display = (t_bunny_display)DisplayF;
+      close = (t_bunny_close)CloseF;
+      net_message = (t_bunny_message_response)NetMessageF;
+      net_connect = (t_bunny_connect_response)NetConnectF;
+      entering_context = (t_bunny_loop)EnteringContextF;
+      leaving_context = (t_bunny_leaving_context)LeavingContextF;
+      async_computation = (t_bunny_async_computation_response)AsyncComputationF;
+      event = (t_bunny_event_response)EventF;
+    }
+    ContextBridge(t_bunny_context const &ctx)
+    {
+      *static_cast<t_bunny_context*>(this) = ctx;
+    }
+    virtual ~ContextBridge(void) {}
+  };
 }
 
-#endif	/*			__LAPIN_CONTEXT_HPP__		*/
+#endif	//			__CONTEXT_HPP__

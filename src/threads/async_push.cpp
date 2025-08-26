@@ -12,7 +12,7 @@ void			async_wrap(void					*data,
 
   (void)add;
   ord->func(ord->data_to_compute, ord->add_ptr);
-  if (gl_callback.async_computation_response)
+  if (gl_callback.async_computation)
     gl_completed_tasks.push(ord->data_to_compute);
 }
 

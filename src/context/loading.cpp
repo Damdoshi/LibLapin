@@ -25,9 +25,9 @@ static t_bunny_response	loading_async_response(t_bunny_ressource_to_load *_res,
     return (EXIT_ON_ERROR);
   ld->count++;
   pthread_mutex_unlock(&gl_loading_lock);
-  if (ld->head.subcontext.async_computation_response)
+  if (ld->head.subcontext.async_computation)
     {
-      if ((ret = ld->head.subcontext.async_computation_response
+      if ((ret = ld->head.subcontext.async_computation
 	   ((void*)_res, (void*)ld->head.main_structure)) != GO_ON)
 	return (ret);
     }

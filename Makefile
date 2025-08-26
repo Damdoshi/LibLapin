@@ -3,7 +3,7 @@
  ###############################################################################
  ## Jason Brillante "Damdoshi"                  Hanged Bunny Studio 2014-2025 ##
  ## Pentacle Technologie 2008-2025                           EFRITS 2022-2025 ##
- ## "MyLib" V9.14                                                             ##
+ ## "libmy" V9.14                                                             ##
  ##                                                                           ##
  ## ------------------------------------------------------------------------- ##
  ## ------------------------------------ ---   -   --- ---- --  --   - --- -- ##
@@ -47,8 +47,7 @@
 			-Wno-format-security					\
 			-Wno-frame-address					\
 			-Wno-narrowing						\
-			-Wno-cast-function-type					\
-			-Wpedantic
+			-Wno-cast-function-type
 
   DEBUGOPTS	=	-O0 -g -g3 -ggdb					\
 			-fno-omit-frame-pointer					\

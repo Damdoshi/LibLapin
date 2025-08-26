@@ -126,6 +126,8 @@ typedef enum			s_bunny_decision
 # include			"lapin/window.h"
 # include			"lapin/graphics.h"
 # include			"lapin/shader.h"
+# include			"lapin/hash.h"
+# include			"lapin/security.h"
 # include			"lapin/network.h"
 # include			"lapin/events.h"
 # include			"lapin/sequence.h"
@@ -135,10 +137,8 @@ typedef enum			s_bunny_decision
 # include			"lapin/sound_manager.h"
 # include			"lapin/threads.h"
 # include			"lapin/asynclock.h"
-# include			"lapin/security.h"
 # include			"lapin/self_test.h"
 # include			"lapin/collide.h"
-# include			"lapin/hash.h"
 # include			"lapin/text.h"
 # include			"lapin/unix.h"
 # include			"lapin/camera.h"
@@ -181,9 +181,8 @@ typedef enum			s_bunny_decision
 #  include			"lapin/cpp/idstring.hpp"
 #  include			"lapin/cpp/RangedValue.hpp"
 #  include			"lapin/cpp/Frame.hpp"
-# endif
-# ifdef				__cplusplus
 #  include			"lapin/context/Context.hpp"
+#  include			"lapin/context/Splash.hpp"
 #  include			"lapin/configuration.hpp"
 # endif
 #endif	/*			__LAPIN_H__					*/

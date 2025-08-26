@@ -154,14 +154,14 @@ t_bunny_response	bunny_subcontext_display(void			*data)
 }
 
 t_bunny_response	bunny_subcontext_message(t_bunny_network_info	info,
-						 const void		*buffer,
+						 void			*buffer,
 						 size_t			siz,
 						 void			*data)
 {
   t_bunny_context_runtime_info *x = (t_bunny_context_runtime_info*)data;
 
-  if (x->subcontext.netmessage)
-    return (x->subcontext.netmessage(info, buffer, siz, x->main_structure));
+  if (x->subcontext.net_message)
+    return (x->subcontext.net_message(info, (void*)buffer, siz, x->main_structure));
   return (GO_ON);
 }
 
@@ -171,8 +171,8 @@ t_bunny_response	bunny_subcontext_connect(t_bunny_network_info	info,
 {
   t_bunny_context_runtime_info *x = (t_bunny_context_runtime_info*)data;
 
-  if (x->subcontext.netconnect)
-    return (x->subcontext.netconnect(info, state, x->main_structure));
+  if (x->subcontext.net_connect)
+    return (x->subcontext.net_connect(info, state, x->main_structure));
   return (GO_ON);
 }
 
@@ -199,8 +199,8 @@ t_bunny_response	bunny_subcontext_async_computation(void		*cmt,
 {
   t_bunny_context_runtime_info *x = (t_bunny_context_runtime_info*)data;
 
-  if (x->subcontext.async_computation_response)
-    return (x->subcontext.async_computation_response(cmt, x->main_structure));
+  if (x->subcontext.async_computation)
+    return (x->subcontext.async_computation(cmt, x->main_structure));
   return (GO_ON);
 }
 

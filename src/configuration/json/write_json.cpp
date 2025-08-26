@@ -43,7 +43,6 @@ static void		restore_array(std::stringstream		&ss,
 	writevalue(ss, conf[j], true, true);
       else
 	ss << "null";
-#warning restauration des valeurs sans valeur (lol) dans write json
       if (j + 1 < conf.Size())
 	ss << ",";
       ss << std::endl;

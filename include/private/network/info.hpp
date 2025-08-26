@@ -16,9 +16,6 @@ namespace		network
 {
   struct		Info : public t_bunny_network_info
   {
-    // struct sockaddr_in	sockaddr;
-    // socklen_t		socklen;
-
     operator		bool (void) const
     {
       return (socklen != 0);
@@ -49,6 +46,24 @@ namespace		network
       if (this != &info)
 	memcpy((void*)this, (void*)&info, sizeof(*this));
       return (*this);
+    }
+    bool		Dump(t_bunny_configuration	*cnf) const
+    {
+      char		buf[512];
+      uint8_t		*iptr = (uint8_t*)&sockaddr;
+      size_t		len;
+
+      len = 0;
+      buf[0] = 0;
+      if (!socklen)
+	snprintf(buf, sizeof(buf), "Invalid network info.\n");
+      else
+	{
+	  for (size_t j = 0; j < socklen; ++j)
+	    len += snprintf(&buf[len], sizeof(buf) - len, "%hhu.", iptr[j]);
+	  buf[len - 1] = 0;
+	}
+      return (bunny_configuration_setf_string(cnf, buf, "NetInfo"));
     }
     Info(void)
     {
