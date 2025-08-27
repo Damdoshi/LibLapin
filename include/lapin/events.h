@@ -529,7 +529,6 @@ void				bunny_set_message_response(t_bunny_message_response func);
 ** \param data The data parameter of bunny_loop
 ** \return A t_bunny_response in order to keep the loop or break it.
 */
-<<<<<<< HEAD
 typedef t_bunny_response	(*t_bunny_connect_response)(t_bunny_network_info clt,
 							    t_bunny_event_state	state,
 							    void		*data);

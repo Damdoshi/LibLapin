@@ -40,7 +40,7 @@
 
   ALINKER	?=	ar rcs
   SOLINKER	?=	g++ -shared -o
-  COMPILER	?=	g++ -std=gnu++2a
+  COMPILER	?=	g++ -std=gnu++23
   WARNINGS	=	-W -Wall						\
 			-Wno-write-strings					\
 			-Wno-unused-result					\
@@ -48,7 +48,7 @@
 			-Wno-frame-address					\
 			-Wno-narrowing						\
 			-Wno-cast-function-type					\
-			-Wpedantic -fsanitize=address
+			-fsanitize=address
 
   DEBUGOPTS	=	-O0 -g -g3 -ggdb					\
 			-fno-omit-frame-pointer					\
