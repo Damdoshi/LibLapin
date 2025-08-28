@@ -7,6 +7,7 @@ struct s_data {
   time_t			start;
   t_bunny_protocol		pcol;
   bool				is_server;
+  bool				verbose;
 };
 
 static t_bunny_response connect(t_bunny_network_info		info,
@@ -22,8 +23,7 @@ static t_bunny_response connect(t_bunny_network_info		info,
 
       while (i < vars->nbr_clients && !memcmp(&vars->clients[i], &info, sizeof(info)))
 	i = i + 1;
-      printf("User %d disconnected.\n", i);
-      printf("User %d will now be user %d.\n", vars->nbr_clients - 1, i);
+      printf("User %d disconnected. User %d will now be user %d.\n", i, vars->nbr_clients - 1, i);
       vars->clients[i] = vars->clients[vars->nbr_clients - 1];
       vars->nbr_clients -= 1;
       return (GO_ON);
@@ -31,9 +31,8 @@ static t_bunny_response connect(t_bunny_network_info		info,
   vars->clients[vars->nbr_clients] = info;
   printf("New user, user %d\n", vars->nbr_clients);
   vars->nbr_clients += 1;
-  for (int i = 0; i < vars->nbr_clients; ++i)
-    printf("Client %d %p\n", i, &vars->clients[i]);
-  printf("End Connect\n");
+  // for (int i = 0; i < vars->nbr_clients; ++i)
+  // printf("Client %d %p\n", i, &vars->clients[i]);
   return (GO_ON);
 }
 
@@ -43,8 +42,7 @@ static t_bunny_response message(t_bunny_network_info		info,
 				void				*data)
 {
   s_data		*vars = (s_data*) data;
-  puts("I received something !");
-  int i = 0;
+  int			i = 0;
 
   while (i < vars->nbr_clients && !memcmp(&vars->clients[i], &info, sizeof(info)))
     i = i + 1;
@@ -66,22 +64,21 @@ static t_bunny_response loop(void				*data)
 
   if (cnt % 10 == 0)
     {
-      bunny_network_dump(2);
+      if (vars->verbose)
+	bunny_network_dump(2);
       vars->start = now;
       len = snprintf(buffer, sizeof(buffer), "sent at %ld\n", now);
+      // Si on est un serveur TCP
       if (vars->nbr_clients != 0)
 	{
 	  for (int i = 0; i < vars->nbr_clients; ++i)
 	    if (bunny_network_write(&vars->clients[i], buffer, len) == false)
 	      fprintf(stderr, "failed to write '%s' to nbr %d\n", buffer, i);
 	}
-      else if ((vars->pcol == BP_IMMEDIATE_RETRIEVE || !vars->is_server)
-	       && bunny_network_write(vars->net, buffer, len) == false)
-	fprintf(stderr, "failed to write '%s'\n", buffer);
-      else if (vars->pcol == BP_IMMEDIATE_RETRIEVE || !vars->is_server)
-	printf("\tThe write went fine !\n");
-      else
-	printf("\tHas send nothing. Good news or bad news ??\n");
+      // Sinon
+      else if (!vars->is_server)
+	if (bunny_network_write(vars->net, buffer, len) == false)
+	  fprintf(stderr, "failed to write '%s'\n", buffer);
     }
   cnt += 1;
   return (GO_ON);
@@ -115,7 +112,9 @@ int		main(int	argc,
     return (usage());
   for (int i = 1; i < argc; ++i)
     {
-      if (strcmp("-l", argv[i]) == 0)
+      if (strcmp("-v", argv[i]) == 0)
+	vars.verbose = true;
+      else if (strcmp("-l", argv[i]) == 0)
 	{
 	  if ((i += 1) >= argc)
 	    return (usage());
@@ -132,7 +131,7 @@ int		main(int	argc,
 	  else if (strcasecmp(argv[i], "fixed") == 0)
 	    {
 	      vars.pcol = BP_FIXED_SIZE_PACKET;
-	      max = 1460;
+	      max = 64;
 	      if (i + 1 < argc)
 		{
 		  i += 1;
@@ -179,6 +178,10 @@ int		main(int	argc,
       else
 	return (usage());
     }
+
+  // Pas de notion de serveur en UDP
+  if (vars.is_server && vars.pcol == BP_IMMEDIATE_RETRIEVE)
+    vars.is_server = false;
 
   if ((vars.net = bunny_network_open(vars.pcol,  max, '\v', port, ip)) == NULL)
     {

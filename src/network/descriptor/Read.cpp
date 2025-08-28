@@ -48,12 +48,13 @@ bool			network::Descriptor::Read(void)
       // On regarde si le pair dont on a recu un message est deja present
       auto it = network->peers.find(rinfo);
       if (it == network->peers.end())
+	// On indique qu'il y a un nouveau pair
 	inqueue.push_back(Communication{rinfo, true});
       auto &peer = network->peers[rinfo];
 
       // On ajoute le pair au descripteur si ce n'est pas deja fait
       if (peer.descriptors.find(this) == peer.descriptors.end())
-	if (AttachPeer(peer) == false && peer.descriptors.size() == 0)
+	if (peer.AttachDescriptor(*this, &rinfo) == false && peer.descriptors.size() == 0)
 	  network->peers.erase(rinfo);
 
       // Purement indicatif - non exploité actuellement
@@ -117,11 +118,12 @@ bool			network::Descriptor::Read(void)
   /// TCP
   if (protocol == TERMINATED)
     {
+      char		*begin = &inbuffer[rcursor];
       char		*term;
 
-      rcursor += len;
-      while ((term = (char*)memchr(&inbuffer[0], terminator, rcursor)) != NULL)
-	if (ExtractFromInBuffer(rinfo, term - &inbuffer[0]) == false)
+      rcursor += len; /// On gèrera tous les paquets qu'on a recu.
+      while ((term = (char*)memchr(begin, terminator, rcursor)) != NULL)
+	if (ExtractFromInBuffer(rinfo, term - begin) == false)
 	  return (false);
       // Infraction au protocole
       if (rcursor >= size && size != 0)

@@ -21,9 +21,11 @@ bool			network::Descriptor::ExtractFromInBuffer(const Info	&info,
 
   for (i = 0; i < len; ++i)
     inqueue.back().data[i] = inbuffer[i];
+  i += sizeof(terminator);
   for (j = 0; i < inbuffer_size; ++i, ++j)
     inbuffer[j] = inbuffer[i];
   rcursor -= len;
+  rcursor -= sizeof(terminator);
   return (true);
 }
 

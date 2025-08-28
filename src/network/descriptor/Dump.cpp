@@ -25,7 +25,8 @@ bool		network::Descriptor::Dump(t_bunny_configuration	*cnf,
   ok = ok && bunny_configuration_setf_int(cnf, doomed, "Descriptors[%zu].Doomed", index);
   ok = ok && bunny_configuration_setf_int(cnf, fd, "Descriptors[%zu].Descriptor", index);
   ok = ok && bunny_configuration_setf_int(cnf, ip, "Descriptors[%zu].IP", index);
-  ok = ok && bunny_configuration_setf_int(cnf, (int)port, "Descriptors[%zu].Port", index);
+  auto _port = htons(port);
+  ok = ok && bunny_configuration_setf_int(cnf, (int)_port, "Descriptors[%zu].Port", index);
 
   // Outqueue data
   int		i = 0;

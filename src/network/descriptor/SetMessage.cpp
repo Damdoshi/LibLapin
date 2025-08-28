@@ -22,9 +22,14 @@ bool		network::Descriptor::SetMessage(const char	*data,
       outqueue.emplace_back(info, data, len, wt, wtdata);
     else if (protocol == FIXED_SIZE)
       {
-	if (size != len)
-	  return (false);
-	outqueue.emplace_back(info, data, len, wt, wtdata);
+	if (size == len)
+	  outqueue.emplace_back(info, data, len, wt, wtdata);
+	else
+	  {
+	    outqueue.emplace_back(info, size, wt, wtdata);
+	    memcpy(outqueue.back().data, data, len);
+	    memset(&outqueue.back().data[len], 0, size - len);
+	  }
       }
     else if (protocol == SIZE_PLUS_DATA)
       {
