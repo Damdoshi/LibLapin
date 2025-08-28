@@ -162,10 +162,6 @@ typedef enum			s_bunny_decision
 
 # include			"lapin/compat.h"
 
-# ifdef				BUNNY_DATABASE
-#  include			"working/database.h"
-# endif
-
 # include			"lapin/hardware.h"
 
 # ifdef				BUNNY_MACRO
