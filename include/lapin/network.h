@@ -1,6 +1,6 @@
 /*
 ** Jason Brillante "Damdoshi"
-** Hanged Bunny Studio 2014-2016
+** Hanged Bunny Studio 2014-2025
 **
 ** Bibliotheque Lapin
 */
@@ -16,279 +16,219 @@
 # if				!defined(__LAPIN_H__)
 #  error			You cannot include this file directly.
 # endif
+# include			<sys/types.h>
+# include			<sys/socket.h>
+# include			<netinet/in.h>
+
+# define			BUNNY_NETWORK_MAXIMUM_PACKET_SIZE		(128 * 1024)
 
 typedef void			t_bunny_network;
 
-/*!
-** Five types of answers are possible when you poll a network element:
-** - An error happened
-** - Nothing happened
-** - A new connection has been opened
-** - A connection was closed
-** - A message was received
-** There is currently no "Packet sent" notification.
-** This enumeration is the incarnation of this mechanism.
-*/
+typedef struct			s_bunny_network_info
+{
+  struct sockaddr_in		sockaddr;
+  socklen_t			socklen;
+}				t_bunny_network_info;
+
+int				bunny_infocmp(const t_bunny_network_info	*a,
+					      const t_bunny_network_info	*b);
+t_bunny_network_info		bunny_new_network_info(const char		*ip,
+						       uint16_t			port);
+
 typedef enum			e_bunny_comtype
   {
-    BCT_ERROR			= 0,
-    BCT_EXPIRED			= 1,
-    BCT_NETCONNECTED		= 2,
-    BCT_NETDISCONNECTED		= 3,
-    BCT_MESSAGE			= 4
+    BCT_NOTHING			= 0,
+    BCT_NETCONNECTED		= 1,
+    BCT_NETDISCONNECTED		= 2,
+    BCT_MESSAGE			= 3,
+    BCT_POLL_ERROR		= 4,
+    BCT_SENDTO_ERROR		= 5,
+    BCT_RECVFROM_ERROR		= 6,
+    BCT_MALLOC_ERROR		= 7
   }				t_bunny_comtype;
 
-/*!
-** Errors that can occur when the polling is made.
-*/
-typedef enum			e_bunny_comerror
-  {
-    BCE_SYSTEM_FAIL		= 0,
-    BCE_SELECT_FAIL		= 1,
-    BCE_ACCEPT_FAIL		= 2,
-    BCE_WRITE_FAIL		= 3,
-    BCE_READ_FAIL		= 4,
-    BCE_ALLOC_FAIL		= 5,
-    BCE_GETTIME_FAIL		= 6,
-    LAST_NETWORK_ERROR
-  }				t_bunny_comerror;
-
-/*!
-** This structure resumes all informations about the error that occured while polling.
-** The time attribute is the remaining time before the polling was suppose to end.
-*/
-typedef struct			s_bunny_network_error
+typedef struct			s_bunny_communication
 {
   t_bunny_comtype		comtype;
-  unsigned int			time;
-  t_bunny_comerror		errortype;
-}				t_bunny_network_error;
-
-/*!
-** This structure resumes all informations about the nothingness that happened while polling.
-** The time attribute is the remaining time before the polling was suppose to end. In this case, it is 0.
-*/
-typedef struct			s_bunny_expired
-{
-  t_bunny_comtype		comtype;
-  unsigned int			time;
-}				t_bunny_expired;
-
-/*!
-** This structure resumes all informations about the new connection that was opened.
-** The time attribute is the remaining time before the polling was suppose to end.
-** The fd attribute is the file descriptor of the connection. Do not try to read or write on it,
-** use functions instead.
-*/
-typedef struct			s_bunny_connected
-{
-  t_bunny_comtype		comtype;
-  unsigned int			time;
-  int				fd;
-}				t_bunny_connected;
-
-/*!
-** This structure resumes all informations about the connection that was lost.
-** The time attribute is the remaining time before the polling was suppose to end.
-** The fd attribute is the file descriptor of the connection that was closed. Do not use it,
-** it is closed.
-*/
-typedef struct			s_bunny_disconnected
-{
-  t_bunny_comtype		comtype;
-  unsigned int			time;
-  int				fd;
-}				t_bunny_disconnected;
-
-/*!
-** This structure resumes all informations about a received packet.
-** The time attribute is the remaining time before the polling was suppose to end.
-** The fd attribute if the file descriptor from where the message is coming.
-** The size attribute is the size of the data.
-** The buffer attribute is the received data. Its length is size. Duplicate it
-** if you want to keep it. It will be freed by the system on the next polling.
-*/
-typedef struct			s_bunny_message
-{
-  t_bunny_comtype		comtype;
-  unsigned int			time;
-  int				fd;
-  unsigned int			size;
-  const char			*buffer;
-}				t_bunny_message;
-
-/*!
-** The t_bunny_communication union contains every previous structure.
-** In order to know which one is really in the union, you need to read comtype.
-** The t_bunny_communication union is returned by polling functions.
-*/
-typedef union			u_bunny_communication
-{
-  t_bunny_comtype		comtype;
-  t_bunny_network_error		error;
-  t_bunny_expired		expired;
-  t_bunny_connected		connected;
-  t_bunny_disconnected		disconnected;
-  t_bunny_message		message;
+  t_bunny_network_info		info;
+  double			time;
+  char				*data;
+  size_t			size;
+  int				errno_code;
+  void				*_private[2];
 }				t_bunny_communication;
-
-/*!
-** The t_bunny_server contains data about the TCP server. It starts with private
-** fields you cannot access.
-** The fd attribute is the file descriptor of the server: the listening socket.
-** The port attribute is the port where the server is listening.
-*/
-#pragma				pack(4)
-typedef struct			s_bunny_server
-{
-  const void * const		_private[2];
-  const int			fd;
-  const uint16_t		port;
-}				t_bunny_server;
-#pragma				pack()
 
 typedef enum			e_bunny_protocol
   {
-    BPT_UNIX,
-    BPT_TCP
+    BP_IMMEDIATE_RETRIEVE,	// UDP
+    BP_FIXED_SIZE_PACKET,	// TCP - If all your packets have the same size
+    BP_SIZE_PLUS_DATA_PACKET,	// TCP - uint32_t + data
+    BP_TERMINATED_PACKET	// TCP - data + uint8_t
   }				t_bunny_protocol;
 
-/*!
-** The bunny_new_server_opt function creates a server that listen on a specific port.
-** \param port The port where to listen
-** \param prt The protocol you want to use
-** \return A pointer on a t_bunny_server, NULL on error.
-*/
-t_bunny_server			*bunny_new_server_opt(uint16_t			port,
-						      t_bunny_protocol		prt);
+// Functions that are supposed to be used by programmers
+const t_bunny_network_info	*bunny_network_open(t_bunny_protocol	pcol,
+						    size_t		size,
+						    char		terminator,
+						    uint16_t		port,
+						    const char		*ip);
+bool				bunny_network_doom(const t_bunny_network_info *a);
+bool				bunny_network_close(const t_bunny_network_info *a);
 
-/*!
-** The bunny_new_server macro creates a TCP server that listen on a specific port.
-** \param port The port to use
-** \return A pointer on a t_bunny_server, NULL on error.
-*/
-# define			bunny_new_server(p)				\
-  bunny_new_server_opt(p, BPT_TCP)
+int				bunny_network_dump(int			fd);
 
-/*!
-** The bunny_delete_server function destroy a TCP server. All connections dies
-** when the listening socket is closed.
-** \param srv The server to close.
-*/
-void				bunny_delete_server(t_bunny_server		*srv);
+typedef void			(*t_bunny_written)(const t_bunny_network_info *a,
+						   void			*wtdata);
 
-/*!
-** Try to read and write on every connection and look if there is new or closed connection
-** on the sent server. Return a t_bunny_communication that resume what happened.
-** If a full packet is ready to be returned, timout is ignored and it returns immediatly.
-** \param srv The TCP server.
-** \param timout The maximum time to wait before returning an "expired packet".
-** \return A t_bunny_communication. It cannot be NULL.
-*/
-const t_bunny_communication	*bunny_server_poll(t_bunny_server		*srv,
-						   uint32_t			timout);
+bool				bunny_network_writec(const t_bunny_network_info *a,
+						     const void		*data,
+						     size_t		len,
+						     t_bunny_written	wt,
+						     void		*wtdata);
+# define			bunny_network_write(a, d, l)	\
+  bunny_network_writec(a, d, l, NULL, NULL)
 
-/*!
-** Ask to the server to write a data at the next call to bunny_server_poll.
-** \param srv The server from where is the fd
-** \param dat The data to send
-** \param len The length of data
-** \param fd The connection where to write
-** \return True if everything went well, false on error: not enough memory
-** or the connection was doomed or fd was not found.
-*/
-bool				bunny_server_write(t_bunny_server		*srv,
-						   const void			*dat,
-						   size_t			len,
-						   int				fd);
+typedef enum			e_bunny_identity_status
+  {
+    BIS_IDENTITY_REFUSED	= -1,
+    BIS_AWAITING_CONFIRMATION	=  0,
+    BIS_IDENTITY_CONFIRMED	= +1
+  }				t_bunny_identity_status;
 
-/*!
-** Return true if there is a ready packet inside the TCP server. In this case, calling
-** bunny_server_poll returns immediatly.
-** \param srv The server to look at
-** \return True if there is completed packets.
-*/
-bool				bunny_server_packet_ready(const t_bunny_server	*srv);
-
-/*!
-** Close the given connection after it have sent every datas he was requested to send.
-** \param srv The TCP server that created fd.
-** \param fd The connection to close
-** \return True if everything went well, false on error: fd was not found.
-*/
-bool				bunny_server_doom_client(t_bunny_server		*srv,
-							 int			fd);
-
-/*!
-** The t_bunny_client contains data abouth the TCP client. It starts with private
-** fields you cannot access.
-** The fd attribute is the file descriptor of the client.
-** The host attribute is the IP of the server.
-** The port attribute is the port we are talking with on the server.
-*/
-#pragma				pack(4)
-typedef struct			s_bunny_client
+// An array of t_bunny_identity is terminated by an empty char identity
+# define			IDENTITY_SIZE				64
+# define			IDENTITY_SECRET_SIZE			64
+typedef struct			s_bunny_identity
 {
-  const void * const		_private[2];
-  const int			fd;
-  const char * const		host;
-  uint16_t			port;
-}				t_bunny_client;
-#pragma				pack()
+  char				identity[IDENTITY_SIZE]; // nul terminated
+  char				secret[IDENTITY_SECRET_SIZE]; // 512 bits
+  t_bunny_identity_status	validated;
+  t_bunny_hash			last_challenge;
+  t_bunny_network_info		info;
+  double			usual_delay; // Last Back and forth / 2 delay
+  double			estimated_clock_difference;
+  double			last_exchange; // Last exchange date
+}				t_bunny_identity;
 
-/*!
-** The bunny_new_client_opt function creates a client that will talk with a server.
-** \param host The IP address of the server.
-** \param port The port on the server.
-** \param prt The protocol to use.
-** \return A t_bunny_client or NULL on error.
-*/
-t_bunny_client			*bunny_new_client_opt(const char		*host,
-						      uint16_t			port,
-						      t_bunny_protocol		prt);
+// Currently connected users
+extern t_bunny_identity		gl_bunny_identity[1025];
 
-/*!
-** The bunny_new_client function create a TCP client that will talk with a server.
-** \param h The IP address of the server.
-** \param p The port to use
-** \return A pointer on a t_bunny_client, NULL on error.
-*/
-# define			bunny_new_client(h, p)				\
-  bunny_new_client_opt(h, p, BPT_TCP)
+t_bunny_identity		*bunny_resolve_identity
+  (t_bunny_identity		*id,
+   const t_bunny_network_info	*in
+   );
 
-/*!
-** The bunny_delete_client function destroy a TCP client.
-** \param clt The client to close.
-*/
-void				bunny_delete_client(t_bunny_client		*clt);
+typedef enum			s_bunny_standard_command_type
+  {
+    BSCT_HEARTBEAT		= 0,
+    BSCT_HEARTBEAT_RESPONSE,
+    BSCT_CHALLENGE_REQUEST,
+    BSCT_CHALLENGE,
+    BSCT_CHALLENGE_RESPONSE,
+    BSCT_CHALLENGE_RESULT,
+    BSCT_LAST_STANDARD_COMMAND
+    // To be freely extended, starting by number BCST_LAST_STANDARD_COMMAND
+  }				t_bunny_standard_command_type;
 
-/*!
-** Try to read and write on the socket.
-** \param clt The TCP client
-** \param timout The maximum time to wait before returning an "expired packet".
-** \return A t_bunny_communication. It cannot be NULL.
-*/
-const t_bunny_communication	*bunny_client_poll(t_bunny_client		*clt,
-						   uint32_t			timout);
+typedef struct			s_bunny_heartbeat_command
+{
+  uint8_t			ciphered:1; // 0
+  uint32_t			command:31; // BSCT_HEARTBEAT
+  float				declared_sending_date;
+}				t_bunny_heartbeat_command;
 
-/*!
-** Return true if there is a ready packet inside the TCP client. In this case, calling
-** bunny_client_poll returns immediatly.
-** \param clt The client to look at
-** \return True if there is completed packets.
-*/
-bool				bunny_client_packet_ready(const t_bunny_client	*clt);
+typedef struct			s_bunny_heartbeat_response_command
+{
+  uint8_t			ciphered:1; // 0
+  uint32_t			command:31; // BSCT_HEARTBEAT_RESPONSE
+  float				declared_sending_date;
+  float				original_sending_date;
+}				t_bunny_heartbeat_response_command;
 
-/*!
-** Ask to the client to write data at the next call to bunny_client_write.
-** \param clt The TCP client
-** \param data The data to write
-** \param len The length of the data
-** \return True if everything went well, false on error: not enough memory
-** or the connection is dead.
-*/
-bool				bunny_client_write(t_bunny_client		*clt,
-						   const void			*data,
-						   size_t			len);
+typedef struct			s_bunny_challenge_request_command
+{
+  uint8_t			ciphered:1; // 0
+  uint32_t			command:31; // BSCT_CHALLENGE_REQUEST
+  float				declared_sending_date;
+  char				identity[IDENTITY_SIZE]; // Who are you?
+}				t_bunny_challenge_request_command;
 
-#endif	/*			__LAPIN_NETWORK_H__				*/
+typedef struct			s_bunny_challenge_command
+{
+  uint8_t			ciphered:1; // 0
+  uint32_t			command:31; // BSCT_CHALLENGE
+  float				declared_sending_date;
+  uint8_t			challenge[24];
+}				t_bunny_challenge_command;
+
+typedef struct			s_bunny_challenge_response_command
+{
+  uint8_t			ciphered:1; // 0
+  uint32_t			command:31; // BSCT_CHALLENGE_RESPONSE
+  float				declared_sending_date;
+  uint64_t			response;
+}				t_bunny_challenge_response_command;
+
+typedef struct			s_bunny_challenge_result_command
+{
+  uint8_t			ciphered:1; // 0
+  uint32_t			command:31; // BSCT_CHALLENGE_RESPONSE
+  float				declared_sending_date;
+  uint8_t			result;
+}				t_bunny_challenge_result_command;
+
+typedef struct			s_bunny_clear_standard_command_header
+{
+  uint8_t			ciphered:1;
+  uint32_t			command:31;
+  float				declared_sending_date;
+}				t_bunny_clear_standard_command_header;
+
+typedef struct			s_bunny_ciphered_standard_command_header
+{
+  uint8_t			ciphered:1;
+  uint32_t			command:31;
+  float				declared_sending_date;
+  uint8_t			mask_source[8];
+}				t_bunny_ciphered_standard_command_header;
+
+typedef union			u_bunny_standard_command
+{
+  struct {
+    uint8_t			ciphered:1;
+    uint32_t			command:31;
+    float			declared_sending_date;
+    uint8_t			mask_source[8]; // to do wide_hash(mask.secret, data_size); and then uncipher
+  };
+  t_bunny_heartbeat_command	heartbeat;
+  t_bunny_heartbeat_response_command heartbeat_response;
+  t_bunny_challenge_request_command challenge_request;
+  t_bunny_challenge_command	challenge;
+  t_bunny_challenge_response_command challenge_response;
+  t_bunny_challenge_result_command challenge_result;
+}				t_bunny_standard_command;
+
+typedef enum			e_bunny_standard_command_handling
+  {
+    BSCH_FAILURE		= -1, // Standard command was a bunny one and failed
+    BSCH_TO_BE_DONE		= 0, // Standard command is to be handled by lib user
+    BSCH_SUCCESS		= 1 // Standard command done. Cmd can be free
+  }				t_bunny_standard_command_handling;
+
+t_bunny_standard_command_handling bunny_handle_standard_command
+  (t_bunny_identity		*id, // Server side: who's talking. Client side: me
+   t_bunny_standard_command	*cmd,
+   size_t			cmd_size,
+   t_bunny_hash_algorithm	hash,
+   t_bunny_ciphering		ciphering
+   );
+
+bool				bunny_cipher_standard_command
+  (t_bunny_identity		*id, // Server side, the target. Client side: me
+   t_bunny_standard_command	*cmd,
+   size_t			cmd_size,
+   t_bunny_hash_algorithm	hash,
+   t_bunny_ciphering		ciphering
+   );
+
+#endif	/*			__LAPIN_NETWORK_H__			*/

@@ -18,7 +18,18 @@
 void			*bunny_calloc(size_t		nmemb,
 				      size_t		data)
 {
+  size_t		i;
   void			*ptr;
+
+  // To ensure a precise behaviour everywhere
+  if (!nmemb || !data)
+    return (NULL);
+# if			defined (__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+  if (!ckd_mul(&i, nmemb, data))
+    return (NULL);
+#else
+  i = nmemb * data;
+#endif
 
 #ifdef			LAPIN_ALLOCATOR_DEACTIVATED
   if ((ptr = calloc(nmemb, data)) == NULL)
@@ -26,12 +37,8 @@ void			*bunny_calloc(size_t		nmemb,
   scream_log_if(PATTERN, "allocator", nmemb, data, ptr);
   return (ptr);
 #endif
-
-  int			i;
-
-  if ((ptr = bunny_malloc(i = nmemb * data)) == NULL)
+  if ((ptr = bunny_malloc(i)) == NULL)
     scream_error_if(return (NULL), errno, PATTERN, "allocator", nmemb, data, ptr);
-
   scream_log_if(PATTERN, "allocator", nmemb, data, ptr);
   return (memset(ptr, 0, i));
 }

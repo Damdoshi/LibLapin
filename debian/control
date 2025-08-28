@@ -1,25 +1,24 @@
-Source: liblapin-dev
-Section: libdevel
+Source: liblapin
 Priority: optional
-Maintainer: Jason Brillante Damdoshi <damdoshi@hotmail.com>
+Maintainer: Jason Brillante "Damdoshi" <jason.brillante@efrits.fr>
 Build-Depends:
-  debhelper (>= 9),
+  debhelper (>= 13),
   make (>= 4.0),
   g++ (>= 9.0),
-  libsfml-dev (>= 2.2),
+  libsfml-dev (>= 3),
   libusb-dev (>= 2),
   libopencv-dev (>= 4.2),
   libpthread-dev,
   libffcall-dev (>= 2.4),
   libudev-dev (>= 245)
-Standards-Version: 1.14
+Standards-Version: 4.6.2
 Homepage: https://liblapin.org
 
 Package: liblapin-dev
-Architecture: all
-Depends:
-  ${shlibs:Depends},
-  ${misc:Depends}
+Section: libdevel
+Priority: optional
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: This package brings binaries and headers of the multimedia library LibLapin.
   This library use SFML as renderer and provide C bindings to most of its functionnalities.
   It brings additionnaly game specific tools and a powerful configuration module that

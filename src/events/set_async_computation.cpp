@@ -7,6 +7,6 @@
 
 void			bunny_set_async_computation_response(t_bunny_async_computation_response func)
 {
-  gl_callback.async_computation_response = func;
+  gl_callback.async_computation = func;
 }
 

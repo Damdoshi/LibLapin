@@ -65,6 +65,7 @@ static void			step(struct bunny_splash_screen		*bss)
 
 static t_bunny_response		splash_loop(struct bunny_splash_screen	*bss)
 {
+  t_bunny_picture		*screen = bss->picture;
   double			mulspeed = bunny_get_keyboard()[BKS_SPACE] ? 3 : 1;
   double			speed = mulspeed * (1.0 / bunny_get_frequency());
   t_bunny_response		ret;
@@ -103,7 +104,7 @@ static t_bunny_response		splash_loop(struct bunny_splash_screen	*bss)
 	{
 	  bunny_sound_play(&bss->boom->sound);
 	  bunny_sound_play(&bss->outch->sound);
-	  bss->rope_wave_length = 1.5 * M_PI / bss->head.screen->height;
+	  bss->rope_wave_length = 1.5 * M_PI / screen->buffer.height;
 	  step(bss);
 	}
       break ;
@@ -113,7 +114,7 @@ static t_bunny_response		splash_loop(struct bunny_splash_screen	*bss)
       if ((bss->rope_amplitude *= 0.95) < 1)
 	{
 	  bss->rope_amplitude = 100;
-	  bss->rope_wave_length = 0.1 * M_PI / bss->head.screen->height;
+	  bss->rope_wave_length = 0.1 * M_PI / screen->buffer.height;
 	  bss->shake_amplitude = 0;
 	  step(bss);
 	}
@@ -122,7 +123,7 @@ static t_bunny_response		splash_loop(struct bunny_splash_screen	*bss)
     case GET_UP:
       bss->shake_amplitude += 0.1 * mulspeed;
       bss->bunny->position.y -= speed * bss->up_speed;
-      if (bss->bunny->position.y < bss->head.screen->height * 0.28)
+      if (bss->bunny->position.y < screen->buffer.height * 0.28)
 	step(bss);
       break ;
 
@@ -142,7 +143,7 @@ static t_bunny_response		splash_loop(struct bunny_splash_screen	*bss)
       bss->bunny->position.y -= speed * bss->up_speed * 2;
       if (bss->bunny->position.y <
 	  -bss->bunny->buffer.height * bss->bunny->scale.y * 1.2 &&
-	  bss->title->position.y > bss->head.screen->height * 1.2)
+	  bss->title->position.y > screen->buffer.height * 1.2)
 	step(bss);
       break ;
 
@@ -174,12 +175,13 @@ static double		exp(double					x,
 
 static t_bunny_response		splash_display(struct bunny_splash_screen *bss)
 {
+  t_bunny_picture		*screen = bss->picture;
   int				init, y;
 
   if (bss->animation_step < GO_AWAY)
-    bunny_clear(bss->head.screen, BLACK);
+    bunny_clear(&screen->buffer, BLACK);
   else
-    bunny_clear(bss->head.screen, ALPHA(16, BLACK));
+    bunny_clear(&screen->buffer, ALPHA(16, BLACK));
 
   switch (bss->animation_step)
     {
@@ -198,10 +200,10 @@ static t_bunny_response		splash_display(struct bunny_splash_screen *bss)
 	    * cos(bss->shake_amplitude)
 	    ;
 	  bss->rope->position.y = y;
-	  bunny_blit(bss->head.screen, bss->rope, NULL);
+	  bunny_blit(&screen->buffer, bss->rope, NULL);
 	  y -= 1;
 	}
-      bunny_blit(bss->head.screen, bss->bunny, NULL);
+      bunny_blit(&screen->buffer, bss->bunny, NULL);
       break ;
 
     case GET_UP:
@@ -216,13 +218,13 @@ static t_bunny_response		splash_display(struct bunny_splash_screen *bss)
 	    * sin(bss->shake_amplitude)
 	    ;
 	  bss->rope->position.y = y;
-	  bunny_blit(bss->head.screen, bss->rope, NULL);
+	  bunny_blit(&screen->buffer, bss->rope, NULL);
 	}
       bss->bunny->position.x = bss->rope->position.x;
       bss->bunny->position.y = bss->bunny->position.y;
       bss->bunny->rotation = -sin(bss->shake_amplitude) * 5;
 
-      bunny_blit(bss->head.screen, bss->bunny, NULL);
+      bunny_blit(&screen->buffer, bss->bunny, NULL);
 
       if (bss->animation_step != GO_AWAY)
 	{
@@ -233,7 +235,7 @@ static t_bunny_response		splash_display(struct bunny_splash_screen *bss)
 	    + bss->bunny->buffer.height * bss->bunny->scale.y
 	    ;
 	}
-      bunny_blit(bss->head.screen, bss->title, NULL);
+      bunny_blit(&screen->buffer, bss->title, NULL);
       break ;
 
     default:
@@ -244,7 +246,11 @@ static t_bunny_response		splash_display(struct bunny_splash_screen *bss)
   if (bss->head.subcontext.display)
     if ((ret = bss->head.subcontext.display(bss)) != GO_ON)
       return (ret == LEAVE_EVENT ? GO_ON : ret);
-  bunny_display((t_bunny_window*)bss->head.screen);
+  for (size_t i = 0; bss->head.screens[i]; ++i)
+    {
+      bunny_blit(bss->head.screens[i], screen, NULL);
+      bunny_display((t_bunny_window*)bss->head.screens[i]);
+    }
   return (GO_ON);
 }
 
@@ -264,31 +270,36 @@ static t_bunny_response		splash_entering(struct bunny_splash_screen *bss)
     goto DeleteOutch;
   if ((bss->falling = bunny_load_effect(bss->falling_sound_file)) == NULL)
     goto DeleteFalling;
+  t_bunny_picture		*screen;
+  
+  if ((bss->picture = bunny_new_picture(1920, 1080)) == NULL)
+    goto DeleteNewPicture;
 
+  screen = bss->picture;
   bss->animation_step = BEFORE_ANIMATION;
   bss->time_counter = 0.0;
-  bss->middle_of_screen = bss->head.screen->width / 2;
+  bss->middle_of_screen = screen->buffer.width / 2;
   bss->jingle_played = false;
 
   bss->bunny->position.x = bss->middle_of_screen;
   bss->bunny->position.y = -bss->bunny->buffer.height * bss->bunny->scale.y;
   bss->bunny_fall_speed =
-    (1.3 * bss->head.screen->height + bss->bunny->buffer.height * bss->bunny->scale.y)
+    (1.3 * screen->buffer.height + screen->buffer.height * bss->bunny->scale.y)
     / 1.0;
   bss->rope_wave_length = (2 * M_PI) / 1080.0;
   bss->bunny->rotation = 45;
   bss->rope_amplitude = 100;
   bss->shake_amplitude = 0;
   bss->up_speed =
-    (bss->head.screen->height + bss->bunny->buffer.height * bss->bunny->scale.y)
+    (screen->buffer.height + bss->bunny->buffer.height * bss->bunny->scale.y)
     / 2.0;
-  t_bunny_response	ret;
-  
   if (bss->head.subcontext.entering_context)
     if (bss->head.subcontext.entering_context(bss) != GO_ON)
       goto DeleteFalling;
   return (GO_ON);
 
+ DeleteNewPicture:
+  bunny_delete_sound(&bss->falling->sound);
  DeleteFalling:
   bunny_delete_sound(&bss->outch->sound);
  DeleteOutch:
@@ -310,6 +321,7 @@ static void			splash_leaving(t_bunny_response		resp,
 {
   if (bss->head.subcontext.leaving_context)
     bss->head.subcontext.leaving_context(resp, bss);
+  bunny_delete_clipable(bss->picture);
   bunny_delete_sound(&bss->outch->sound);
   bunny_delete_sound(&bss->boom->sound);
   bunny_delete_sound(&bss->jingle->sound);
@@ -334,7 +346,6 @@ const t_bunny_context		gl_bunny_splash_context =
     (t_bunny_loop)splash_loop,
     (t_bunny_display)splash_display,
     bunny_context_close,
-    NULL,
     bunny_context_message,
     bunny_context_connect,
     (t_bunny_loop)splash_entering,

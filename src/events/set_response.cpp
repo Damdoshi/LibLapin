@@ -37,7 +37,7 @@ void			bunny_set_joy_axis_response(t_bunny_joy_axis	j)
 
 void			bunny_set_connect_response(t_bunny_connect_response func)
 {
-  gl_callback.netconnect = func;
+  gl_callback.net_connect = func;
 }
 
 void			bunny_set_click_response(t_bunny_click	click)
@@ -67,7 +67,7 @@ void			bunny_set_key_response(t_bunny_key	key)
 
 void			bunny_set_message_response(t_bunny_message_response func)
 {
-  gl_callback.netmessage = func;
+  gl_callback.net_message = func;
 }
 
 void			bunny_set_resize_response(t_bunny_resize	j)

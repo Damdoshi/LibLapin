@@ -153,26 +153,26 @@ t_bunny_response	bunny_context_display(void		*data)
   return (GO_ON);
 }
 
-t_bunny_response	bunny_context_message(int		fd,
-					      const void	*buffer,
+t_bunny_response	bunny_context_message(t_bunny_network_info info,
+					      void		*buffer,
 					      size_t		siz,
 					      void		*data)
 {
   t_bunny_context_runtime_info *x = (t_bunny_context_runtime_info*)data;
 
-  if (x->subcontext.netmessage && x->subcontext.netcom)
-    return (x->subcontext.netmessage(fd, buffer, siz, data));
+  if (x->subcontext.net_message)
+    return (x->subcontext.net_message(info, (void*)buffer, siz, data));
   return (GO_ON);
 }
 
-t_bunny_response	bunny_context_connect(int		fd,
+t_bunny_response	bunny_context_connect(t_bunny_network_info info,
 					      t_bunny_event_state state,
 					      void		*data)
 {
   t_bunny_context_runtime_info *x = (t_bunny_context_runtime_info*)data;
 
-  if (x->subcontext.netconnect && x->subcontext.netcom)
-    return (x->subcontext.netconnect(fd, state, data));
+  if (x->subcontext.net_connect)
+    return (x->subcontext.net_connect(info, state, data));
   return (GO_ON);
 }
 
@@ -199,8 +199,8 @@ t_bunny_response	bunny_context_async_computation(void	*cmt,
 {
   t_bunny_context_runtime_info *x = (t_bunny_context_runtime_info*)data;
 
-  if (x->subcontext.async_computation_response)
-    return (x->subcontext.async_computation_response(cmt, data));
+  if (x->subcontext.async_computation)
+    return (x->subcontext.async_computation(cmt, data));
   return (GO_ON);
 }
 

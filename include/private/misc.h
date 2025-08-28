@@ -43,7 +43,7 @@ extern void			*gl_loop_data;
 
 extern t_bunny_threadpool	*gl_bunny_loop_threadpool;
 
-t_bunny_response		network_event(unsigned int		v,
+t_bunny_response		network_event(double			v,
 					      void			*dat);
 
 void				_real_call(const t_bunny_prototype	*function,
@@ -116,6 +116,7 @@ bool				bunny_filter_label(const char		*labels);
     }									\
   while (0)
 # endif
+
 # define			usleep(a)				bunny_usleep(a)
 
 namespace			hbs

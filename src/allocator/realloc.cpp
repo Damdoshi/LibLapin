@@ -24,35 +24,39 @@ extern size_t		border0;
 extern size_t		border1;
 
 void			*bunny_realloc(void		*ptr,
-                         size_t		data)
+				       size_t		data_size)
 {
+  size_t		ptrv = (size_t)ptr;
   void			*rel = NULL;
 
-#ifdef			LAPIN_ALLOCATOR_DEACTIVATED
-  if ((rel = realloc(ptr, data)) == NULL)
-    scream_error_if(return (NULL), errno, PATTERN, "allocator", ptr, data, rel);
-  scream_log_if(PATTERN, "allocator", ptr, data, rel);
-  return (rel);
-#endif
-
+  // To ensure a precise behaviour everywhere
   if (ptr == NULL)
-    return (bunny_malloc(data));
-  if (data == 0)
+    return (bunny_malloc(data_size));
+  if (data_size == 0)
     {
       bunny_free(ptr);
       bunny_errno = 0;
       return (NULL);
     }
+
+#ifdef			LAPIN_ALLOCATOR_DEACTIVATED
+  if ((rel = realloc(ptr, data_size)) == NULL)
+    scream_error_if(return (NULL), errno, PATTERN, "allocator", (void*)ptrv, data_size, rel);
+  scream_log_if(PATTERN, "allocator", (void*)ptrv, data_size, rel);
+  return (rel);
+#endif
+
+  
   struct memchunk	*chunk;
 
   /// Get the chunk from the data pointer
   chunk = (struct memchunk*)&((char*)ptr)[-sizeof(struct memchunk)];
   if (chunk->border0 != border0 || chunk->border1 != border1)
     {
-      fprintf(stderr, "Bad pointer or altered memory detected while reallocing 0x%p.\n", ptr);
+      fprintf(stderr, "Bad pointer or altered memory detected while reallocing 0x%zu.\n", ptrv);
       check_memory_state();
       scream_error_if(dprintf(bunny_get_error_descriptor(), "Sending SIGSEGV"),
-		      errno, PATTERN, "allocator", ptr, data, rel);
+		      errno, PATTERN, "allocator", ptr, data_size, rel);
 #ifdef			__linux__
       kill(getpid(), SIGSEGV); /* die Die DIE! */
       while (1);
@@ -61,16 +65,16 @@ void			*bunny_realloc(void		*ptr,
 #endif
     }
 
-  if ((rel = bunny_malloc(data)) == NULL)
+  if ((rel = bunny_malloc(data_size)) == NULL)
     return (NULL);
 
-  if (data >= chunk->tree->chunk_size)
+  if (data_size >= chunk->tree->chunk_size)
     memcpy(rel, ptr, chunk->tree->chunk_size);
   else
-    memcpy(rel, ptr, data);
+    memcpy(rel, ptr, data_size);
 
   bunny_free(ptr);
-  scream_log_if(PATTERN, "allocator", ptr, data, rel);
+  scream_log_if(PATTERN, "allocator", (size_t)ptrv, data_size, rel);
   return (rel);
 }
 

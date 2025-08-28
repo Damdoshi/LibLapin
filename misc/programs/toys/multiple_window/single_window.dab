@@ -1,0 +1,6 @@
+
+Size = 400, 300
+Name = "Single Window"
+Position = 1920 / 2, 1080 / 2
+Style = "TitleBar", "CloseButton"
+

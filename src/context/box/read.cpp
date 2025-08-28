@@ -50,12 +50,28 @@ static bool		_bunny_read_box(t_bunny_box_system	*bs,
 bool			bunny_read_box(t_bunny_box_system	*bs,
 				       t_bunny_configuration	*cnf)
 {
+  struct bunny_box_system *sys = (struct bunny_box_system*)bs;
+
   if (bunny_configuration_getf_node(cnf, &bs->screen.configuration, "Screen") == false)
     return (false);
-  if ((bs->screen.id = bunny_strdup("Screen")) == NULL)
+  bs->screen.size.x = 0;
+  bs->screen.size.y = 0;
+  for (size_t i = 0; i < bs->head.nbr_screen; ++i)
+    {
+      bs->screen.size.x += bs->head.screens[i]->width;
+      if (bs->screen.size.y < bs->head.screens[i]->height)
+	bs->screen.size.y = bs->head.screens[i]->height;
+    }
+  if ((sys->picture = bunny_new_picture(bs->screen.size.x, bs->screen.size.y)) == NULL)
     return (false);
+  if ((bs->screen.id = bunny_strdup("Screen")) == NULL)
+    {
+      bunny_delete_clipable(sys->picture);
+      return (false);
+    }
   if ((bs->screen.children = bunny_new_map(string_map)) == NULL)
     {
+      bunny_delete_clipable(sys->picture);
       bunny_free((char*)bs->screen.id);
       return (false);
     }
@@ -65,8 +81,7 @@ bool			bunny_read_box(t_bunny_box_system	*bs,
   bs->screen.destructor = NULL;
   bs->screen.position.x = 0;
   bs->screen.position.y = 0;
-  bs->screen.size.x = bs->head.screen->width;
-  bs->screen.size.y = bs->head.screen->height;
+  
   bs->screen.color.full = 0;
   bs->focus = NULL;
   bs->hovered = NULL;
@@ -77,6 +92,7 @@ bool			bunny_read_box(t_bunny_box_system	*bs,
 
       for (bunny_map_all(bs->screen.children, node))
 	bunny_delete_box(bunny_map_data(*node, t_bunny_gui_box*));
+      bunny_delete_clipable(sys->picture);
       bunny_delete_map(bs->screen.children);
       bunny_free((void*)bs->screen.id);
       return (false);

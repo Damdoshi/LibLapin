@@ -1,9 +1,9 @@
 #################################################################################
 
  ###############################################################################
- ## Jason Brillante "Damdoshi"                  Hanged Bunny Studio 2014-2024 ##
- ## Pentacle Technologie 2008-2024                           EFRITS 2022-2024 ##
- ## "MyLib" V9.14                                                             ##
+ ## Jason Brillante "Damdoshi"                  Hanged Bunny Studio 2014-2025 ##
+ ## Pentacle Technologie 2008-2025                           EFRITS 2022-2025 ##
+ ## "libmy" V9.14                                                             ##
  ##                                                                           ##
  ## ------------------------------------------------------------------------- ##
  ## ------------------------------------ ---   -   --- ---- --  --   - --- -- ##
@@ -40,14 +40,15 @@
 
   ALINKER	?=	ar rcs
   SOLINKER	?=	g++ -shared -o
-  COMPILER	?=	g++ -std=gnu++2a
+  COMPILER	?=	g++ -std=gnu++23
   WARNINGS	=	-W -Wall						\
 			-Wno-write-strings					\
 			-Wno-unused-result					\
 			-Wno-format-security					\
 			-Wno-frame-address					\
 			-Wno-narrowing						\
-			-Wno-cast-function-type
+			-Wno-cast-function-type					\
+			-fsanitize=address
 
   DEBUGOPTS	=	-O0 -g -g3 -ggdb					\
 			-fno-omit-frame-pointer					\
@@ -55,13 +56,16 @@
 			-fno-align-loops
   TESTOPTS	=	$(DEBUGOPTS) -fprofile-arcs -ftest-coverage		\
 			--coverage
-  PRODOPTS	=	-O3 -ffast-math -march=native -DNDEBUG
+  PRODOPTS	=	-O3 -ffast-math -DNDEBUG
   DEPS		=	-lsfml-graphics -lsfml-audio				\
 			-lsfml-window -lsfml-system				\
 			-lopencv_imgproc -lopencv_highgui			\
 			-lopencv_objdetect -lopencv_video			\
 			-lopencv_videoio -lopencv_core				\
 			-lavcall -lusb -ludev -lm -ldl -lpthread
+  INSTALL_BIN_DIR =	/usr/local/bin/
+  INSTALL_INC_DIR =	/usr/local/include/
+  INSTALL_LIB_DIR =	/usr/local/lib/
 
 #################################################################################
 ## Source                                                                      ##
@@ -175,7 +179,14 @@ fclean:			clean erase
 re:			fclean all
 erase:
 			@$(RM) -r $(LOGDIR)/*.*
-
+install:		all
+			cp bcc b++  $(INSTALL_BIN_DIR)
+			cp include/lapin.h $(INSTALL_INC_DIR)
+			mkdir -p $(INSTALL_INC_DIR)lapin/
+			cp -r include/lapin/* $(INSTALL_INC_DIR)lapin/
+			cp $(PRODA) $(DBGA) $(INSTALL_LIB_DIR)
+package:		all
+			dpkg-buildpackage -us -uc -d
 .POSIX:
 .PHONY:			tests title erase
 

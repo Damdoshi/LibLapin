@@ -1,0 +1,21 @@
+// Jason Brillante "Damdoshi"
+// Hanged Bunny Studio 2014-2025
+// EFRITS SAS 2022-2025
+// Pentacle Technologie 2008-2025
+//
+// Bibliothèque Lapin
+
+#include	<set>
+#include	"lapin_private.h"
+
+network::Peer::Peer(void)
+{}
+
+network::Peer::~Peer(void)
+{
+  std::set<Descriptor*>::iterator it;
+
+  for (it = descriptors.begin(); it != descriptors.end(); ++it)
+    (*it)->DetachPeer(*this);
+}
+

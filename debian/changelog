@@ -1,4 +1,4 @@
-liblapin-dev (1.14) unstable; urgency=low
+liblapin (1.14) unstable; urgency=low
 
   * Add cinematic module, visual novel like scene.
   * Add to Dabsic programming language a lot of stuff
@@ -6,9 +6,9 @@ liblapin-dev (1.14) unstable; urgency=low
   * Notice that a lot of things does not work or are not proven enough to be used - especially programming in Dabsic and provided contexts.
   * Start unit test development to increase LibLapin reliability beyond its basics.
 
- -- Jason Brillante <damdoshi@hotmail.com>  Fri, 09 Aug 2024 00:00:00 +0100
+ -- Jason Brillante 'Damdoshi' <jason.brillante@efrits.fr>  Wed, 28 Jul 2025 00:00:00 +0100
 
-liblapin-dev (1.13) unstable; urgency=low
+liblapin (1.13) unstable; urgency=low
 
   * Fix the list container.
   * Add a loading context.
@@ -43,7 +43,9 @@ liblapin-dev (1.13) unstable; urgency=low
     - Add a bunny_memswap function to swap memory chunk content
     - Add a bunny_shuffle function to shuffle a memory chunk
 
-liblapin-dev (1.12) UNRELEASED; urgency=low
+  -- Jason Brillante 'Damdoshi' <jason.brillante@gmail.com>  22 Jun 2018 00:00:00 +0100
+
+liblapin (1.12) UNRELEASED; urgency=low
 
   * Edit the repository and build system:
     - Switch from a single file errors~ to a directory with errors and
@@ -269,7 +271,7 @@ liblapin-dev (1.12) UNRELEASED; urgency=low
 
  -- Jason Brillante <damdoshi@hotmail.com>  Tue, 12 March 2018 12:00:00 +0100
 
-liblapin-dev (1.11) stable; urgency=low
+liblapin (1.11) stable; urgency=low
 
   * Add a text module that can handle png font and real font and act as textbox.
     Based on clipable.
@@ -305,7 +307,7 @@ liblapin-dev (1.11) stable; urgency=low
 
  -- Jason Brillante <damdoshi@hotmail.com>  Tue, 23 May 2017 12:00:00 +0100
 
-liblapin-dev (1.10) stable; urgency=low
+liblapin (1.10) stable; urgency=low
 
   * Remove basic.h, advanced.h and extra.h to organize functions around modules instead.
   * Fully documented with Doxygen.
@@ -314,7 +316,7 @@ liblapin-dev (1.10) stable; urgency=low
 
  -- Jason Brillante <damdoshi@hotmail.com>  Wed, 10 Aug 2016 00:00:00 +0100
 
-liblapin-dev (1.9) stable; urgency=low
+liblapin (1.9) stable; urgency=low
 
   * Add lapin/extra.h and lapin/extra_type.h
   * Add bunny_server_ and bunny_client_ for network programming
@@ -331,7 +333,7 @@ liblapin-dev (1.9) stable; urgency=low
 
  -- Jason Brillante <damdoshi@hotmail.com>  Thu, 19 Jul 2016 00:00:00 +0100
 
-liblapin-dev (1.8) stable; urgency=low
+liblapin (1.8) stable; urgency=low
 
   * Add DEFAULT_SCOPE symbolic constant
   * Add a color field in clipable for color masking
@@ -347,7 +349,7 @@ liblapin-dev (1.8) stable; urgency=low
 
  -- Jason Brillante <damdoshi@hotmail.com>  Tue, 14 Jun 2016 00:00:00 +0100
 
-liblapin-dev (1.7) stable; urgency=low
+liblapin (1.7) stable; urgency=low
 
   * Split lapin.h into lapin/basic.h and lapin/advanced.h
   * Define t_bunny_sound and t_bunny_effect as real structure instead of void pointer.
@@ -367,7 +369,7 @@ liblapin-dev (1.7) stable; urgency=low
 
  -- Jason Brillante <damdoshi@hotmail.com> Mon, 21 Mar 2016 00:00:00 +0100
 
-liblapin-dev (1.6) stable; urgency=high
+liblapin (1.6) stable; urgency=high
 
   * Add bunny_set_mouse_position_window, set_mouse_position to move the mouse on window or screen
   * Add bunny_set_mouse_visibility to hide or display the cursor.
@@ -385,14 +387,14 @@ liblapin-dev (1.6) stable; urgency=high
 
  -- Jason Brillante <damdoshi@hotmail.com>  Fri, 27 Nov 2015 00:00:00 +0100
 
-liblapin-dev (1.5.1) stable; urgency=high
+liblapin (1.5.1) stable; urgency=high
 
   * Constify t_bunny_window.name and its characters
   * Constify t_bunny_pixelarray.pixels but not its pixels
 
  -- Jason Brillante <damdoshi@hotmail.com>  Tue, 3 Nov 2015 00:00:00 +0100
 
-liblapin-dev (1.5) stable; urgency=medium
+liblapin (1.5) stable; urgency=medium
 
   * Add bunny_set/get_context to load and save all callbacks in one shot.
   * Add bunny_ini_first, ini_scope_name, ini_next, ini_scope_get_field and ini_scope_set_field
@@ -415,27 +417,27 @@ liblapin-dev (1.5) stable; urgency=medium
 
  -- Jason Brillante <damdoshi@hotmail.com>  Mon, 2 Nov 2015 00:00:00 +0100
 
-liblapin-dev (1.4) stable; urgency=low
+liblapin (1.4) stable; urgency=low
 
   * Add a mod attribute in the t_color union to create color offsets.
 
  -- Jason Brillante <damdoshi@hotmail.com>  Mon, 2 Nov 2015 00:00:00 +0100
 
-liblapin-dev (1.3) stable; urgency=low
+liblapin (1.3) stable; urgency=low
 
   * Add bunny_start_style that allow to define a window style.
   * Use int instead of unsigned int everywhere
 
  -- Jason Brillante <damdoshi@hotmail.com>  Thu, 23 Sep 2015 00:00:00 +0100
 
-liblapin-dev (1.2) stable; urgency=low
+liblapin (1.2) stable; urgency=low
 
   * Bring bunny_malloc, a custom allocator to limit and monitor allocations
   * Add an enumeration for keyboard keys
 
  -- Jason Brillante <damdoshi@hotmail.com>  Mon, 21 Sep 2015 00:00:00 +0100
 
-liblapin-dev (1.1) stable; urgency=low
+liblapin (1.1) stable; urgency=low
 
   * Add functions pointers gl_bunny_my_* that makes drawing functions handle cpu pictures.
   * Set pink as default color for new pictures
@@ -445,7 +447,7 @@ liblapin-dev (1.1) stable; urgency=low
 
  -- Jason Brillante <damdoshi@hotmail.com>  Tue, 17 Jun 2015 00:00:00 +0100
 
-liblapin-dev (1.0) stable; urgency=low
+liblapin (1.0) stable; urgency=low
 
   * First version of the "Bunny Library"
   * Brings pixel-per-pixel throught CPU

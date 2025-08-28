@@ -69,7 +69,9 @@ namespace			Bunny
     }
     inline bool			operator!=(const IdString		&b) const
     {
-      return (hash != b.hash);
+      if (hash != b.hash)
+	return (true);
+      return (strcmp(string, b.string) != 0);
     }
     inline bool			operator<(const IdString		&b) const
     {

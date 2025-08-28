@@ -89,10 +89,13 @@ bool			_bunny_resolve_text_block(SmallConf	&variable,
   if (!variable.was_text_block)
     return (true);
   for (itv = variable.array.begin(); itv != variable.array.end(); ++itv)
-    if ((*itv)->GetString(&out, root, local, artif, params) == false)
-      return (false);
-    else
+    {
+      if ((*itv)->have_value == false)
+	continue ;
+      if ((*itv)->GetString(&out, root, local, artif, params) == false)
+	return (false);
       ss << out;
+    }
   variable.SetString(remove_space_offset(tab_to_space(ss.str())));
   variable.array.clear();
   variable.construct = SmallConf::PLAIN;

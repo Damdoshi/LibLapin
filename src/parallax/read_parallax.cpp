@@ -51,9 +51,9 @@ t_bunny_parallax	*bunny_read_parallax_wh(t_bunny_configuration	*cnf,
   px->glactive = false;
 
   if (bunny_set_clipable_attribute(NULL, (t_bunny_clipable**)&px, &cnf, BCT_PARALLAX) == false)
-    goto DeleteTexture;
+    goto DeleteSprite;
   if ((px->layers = (t_bunny_parallax_layer*)bunny_calloc(px->nbr_layers, sizeof(*px->layers))) == NULL)
-    goto DeleteTexture;
+    goto DeleteSprite;
   for (size_t i = 0; i < px->nbr_layers; ++i)
     {
       t_bunny_parallax_layer &layer = px->layers[i];
@@ -136,10 +136,10 @@ t_bunny_parallax	*bunny_read_parallax_wh(t_bunny_configuration	*cnf,
     if (px->layers[i].picture)
       bunny_delete_clipable(px->layers[i].picture);
   bunny_free(px->layers);
- DeleteTexture:
-  delete px->texture;
  DeleteSprite:
   delete px->sprite;
+ DeleteTexture:
+  delete px->texture;
  DeleteParallax:
   delete px;
   return (NULL);

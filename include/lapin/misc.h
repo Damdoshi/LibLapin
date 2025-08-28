@@ -366,5 +366,8 @@ extern char			bunny_big_buffer[16 * 1024 * 1024];
 # define			bunny_erase(a, b)			\
   memset((void*)((b) > (a) ? (a) : (b)), 0, (b) > (a) ? (b) - (a) : (a) - (b))
 
+void				bunny_erase_and_free(void		*ptr,
+						     size_t		len);
+
 #endif	/*			__LAPIN_MISC_H__			*/
 

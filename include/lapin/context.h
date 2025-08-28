@@ -52,7 +52,8 @@ typedef struct			s_bunny_context_runtime_info
 {
   void				*main_structure;
   t_bunny_context		subcontext;
-  t_bunny_buffer		*screen;
+  t_bunny_buffer		**screens;
+  size_t			nbr_screen;
   size_t			next_context;
 }				t_bunny_context_runtime_info;
 

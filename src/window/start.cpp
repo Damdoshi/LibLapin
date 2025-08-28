@@ -57,9 +57,10 @@ void			convert_window(sf::RenderWindow		&window)
 
   Window		root = DefaultRootWindow(dpy);
 
-  auto a = XSendEvent(dpy, root, False, SubstructureRedirectMask | SubstructureNotifyMask, &e);
-  auto b = XFlush(dpy);
-  auto c = XCloseDisplay(dpy);
+
+  XSendEvent(dpy, root, False, SubstructureRedirectMask | SubstructureNotifyMask, &e);
+  XFlush(dpy);
+  XCloseDisplay(dpy);
 #endif
 }
 

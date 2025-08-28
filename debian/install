@@ -1,4 +1,6 @@
 include/lapin.h /usr/include/
-include/lapin/* /usr/include/lapin/
-include/deps/* /usr/include/deps
+include/lapin/ /usr/include/lapin/
 liblapin.a /usr/lib/
+liblapin-dbg.a /usr/lib/
+bcc /usr/bin/
+b++ /usr/bin/

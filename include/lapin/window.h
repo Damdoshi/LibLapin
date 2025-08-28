@@ -106,9 +106,10 @@ t_bunny_window			*bunny_start_style(unsigned int			wid,
 						   t_bunny_window_style		sty,
 						   const char			*nam);
 
-t_bunny_window			*bunny_begin(const char				*cnf);
-t_bunny_window			*bunny_begin_configuration(t_bunny_configuration *cnf);
-# define			bunny_end(w)					bunny_stop(w)
+t_bunny_window			**bunny_begin(const char				*cnf);
+t_bunny_window			**bunny_begin_configuration(t_bunny_configuration *cnf);
+
+void				bunny_end(t_bunny_window			**w);
 
 /*!
 ** bunny_get_fullscreen_modes return an array of valid full screen modes.
@@ -187,5 +188,9 @@ void				bunny_vertical_sync(t_bunny_window		*win,
 struct s_bunny_pixelarray;
 void				bunny_set_window_icon(t_bunny_window		*win,
 						      struct s_bunny_pixelarray	*px);
+
+t_bunny_window			*bunny_single_fullscreen(const char		*name);
+
+t_bunny_window			**bunny_all_fullscreen(const char		*name);
 
 #endif	/*			__LAPIN_WINDOW_H__		*/

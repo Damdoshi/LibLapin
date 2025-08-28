@@ -1,0 +1,114 @@
+// Jason Brillante "Damdoshi"
+// Hanged Bunny Studio 2014-2024
+// EFRITS SAS 2022-2024
+// Pentacle Technologie 2008-2024
+//
+// Bibliothèque Lapin
+
+#ifndef			__LAPIN_NETWORK_COMMUNICATION_HPP__
+# define		__LAPIN_NETWORK_COMMUNICATION_HPP__
+# include		<vector>
+# include		"info.hpp"
+
+namespace		network
+{
+  struct		WriteRequest
+  {
+    std::vector<char>	data;
+    t_bunny_written	wt = NULL;
+    void		*wtdata = NULL;
+
+    WriteRequest(const char *start, const char *end, t_bunny_written w, void *wtd)
+      : data(start, end), wt(w), wtdata(wtd)
+    {}
+  };
+  class			IOException : public std::runtime_error
+  {
+  public:
+    IOException(const std::string &str) : runtime_error(str) {}
+      ~IOException() {}
+  };
+
+  template <typename	T>
+  struct		Pair
+  {
+    Info const		&info;
+    T const		&data;
+  };
+
+  struct		Communication
+  {
+    t_bunny_comtype	type = BCT_NOTHING;
+    Info		info;
+    double		time = 0;
+    char		*data = NULL;
+    size_t		size = 0;
+    int			errno_code = 0;
+
+    t_bunny_written	wt = NULL;
+    void		*wtdata = NULL;
+
+    // Shallow copy
+    Communication	&operator=(Communication	&com)
+    {
+      type = com.type;
+      info = com.info;
+      time = com.time;
+      data = com.data;
+      size = com.size;
+      errno_code = com.errno_code;
+      wt = com.wt;
+      wtdata = com.wtdata;
+      return (*this);
+    }
+
+    Communication(void)
+    {}
+    Communication(t_bunny_comtype	errfunc,
+		  int			errcode)
+      : type(errfunc),
+	errno_code(errcode)
+    {}
+    Communication(const Info		&_info,
+		  bool			log)
+      : type(log ? BCT_NETCONNECTED : BCT_NETDISCONNECTED),
+	info(_info),
+	time(bunny_get_current_time())
+    {}
+    Communication(const Info		&_info,
+		  size_t		len = 0,
+		  t_bunny_written	w = NULL,
+		  void			*wtd = NULL)
+      : type(BCT_MESSAGE),
+	info(_info),
+	wt(w),
+	wtdata(wtd)
+    {
+      if (len)
+	if ((data = (char*)bunny_malloc(len)) == NULL)
+	  throw std::bad_alloc();
+      size = len;
+    }
+    Communication(const Info		&_info,
+		  const char		*dat,
+		  size_t		len,
+		  t_bunny_written	w = NULL,
+		  void			*wtd = NULL)
+      :	type(BCT_MESSAGE),
+	info(_info),
+	wt(w),
+	wtdata(wtd)
+    {
+      if (!(data = (char*)bunny_malloc(len)))
+	throw std::bad_alloc();
+      memcpy(data, dat, len);
+      size = len;
+    }
+    ~Communication(void)
+    {
+      // Do NOT free data. The user must do it.
+    }
+  };
+}
+
+#endif	//		__LAPIN_NETWORK_COMMUNICATION_HPP__

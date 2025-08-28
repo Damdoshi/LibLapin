@@ -244,7 +244,7 @@ bool			bunny_configuration_vgetf_bool(t_bunny_configuration		*config,
 						       const char			*format,
 						       va_list				lst);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /*!
 ** Get a value inside the configuration. Its type will match of the type of val.
 ** \param cnf The configuration to browse
@@ -293,7 +293,6 @@ bool			bunny_configuration_setf_int(t_bunny_configuration		*config,
 						     int				integer,
 						     const char				*format,
 						     ...) _BFMT(3, 4);
-
 
 bool			bunny_configuration_vsetf_node(t_bunny_configuration		*config,
 						       const t_bunny_configuration	*node,

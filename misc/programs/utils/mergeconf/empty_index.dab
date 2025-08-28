@@ -1,0 +1,16 @@
+
+
+A = 5
+B
+C = 8
+
+{Array
+  [].A,
+  [].B,
+  [].C
+}
+
+Text = [Text($,EOF)
+  A $([].A) B $([].B) C $([].C)
+EOF]
+

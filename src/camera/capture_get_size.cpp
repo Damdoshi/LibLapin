@@ -4,7 +4,7 @@
 //
 //
 
-#include		<opencv2/opencv.hpp>
+#include		"private/ocv.h"
 #include		"lapin_private.h"
 
 void			bunny_capture_get_size(const t_bunny_capture	*capture,

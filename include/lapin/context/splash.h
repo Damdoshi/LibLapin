@@ -52,7 +52,7 @@ typedef struct			s_bunny_splash_screen
   char				*boom_sound_file;
   char				*outch_sound_file;
   char				*falling_sound_file;
-  const char			_private[512];
+  char				_private[512];
 }				t_bunny_splash_screen;
 
 extern const t_bunny_context	gl_bunny_splash_context;

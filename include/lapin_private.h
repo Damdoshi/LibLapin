@@ -29,6 +29,7 @@
 # include			"private/context.h"
 # include			"private/cinematic.hpp"
 # include			"private/hardware.hpp"
+# include			"private/network.h"
 # undef				DELETE
 
 #endif	/*			__LAPIN_PRIVATE_H__	*/

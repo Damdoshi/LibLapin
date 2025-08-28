@@ -3,53 +3,40 @@
 //
 // Bibliotheque Lapin
 
-#include		"lapin_private.h"
+#include			"lapin_private.h"
 
-#define			PATTERN		"%p communication, %p data ("
-
-static t_bunny_response	notify(const t_bunny_communication	*com,
-			       void				*data)
+t_bunny_response		network_event(double			v,
+					      void			*data)
 {
-  if (com->comtype == BCT_MESSAGE && gl_callback.netmessage)
+  network::Communication	com;
+
+  if (v < 0)
+    v = 1;
+  if (!bunny_network_poll(v) <= 0)
+    return (GO_ON);
+  while (bunny_network_inbox() && gl_network.GetMessage(com))
     {
-      scream_log_if(PATTERN "network_message)", "even,network", com, data);
-      return (gl_callback.netmessage
-	      (com->message.fd, (const void*)com->message.buffer, com->message.size, data));
-    }
-
-  if (gl_callback.netconnect)
-    {
-      if (com->comtype == BCT_NETCONNECTED)
+      if ((com.type == ::BCT_NETCONNECTED
+	   || com.type == ::BCT_NETDISCONNECTED) &&
+	  gl_callback.net_connect)
 	{
-	  scream_log_if(PATTERN "network_connect)", "even,network", com, data);
-	  return (gl_callback.netconnect(com->connected.fd, CONNECTED, data));
+	  return (gl_callback.net_connect(com.info,
+					  com.type == ::BCT_NETCONNECTED ? ::CONNECTED : ::DISCONNECTED,
+					  data));
 	}
-
-      if (com->comtype == BCT_NETDISCONNECTED)
+      else if (com.type == ::BCT_MESSAGE)
 	{
-	  scream_log_if(PATTERN "network_connect)", "even,network", com, data);
-	  return (gl_callback.netconnect(com->connected.fd, DISCONNECTED, data));
+	  return (gl_callback.net_message(com.info,
+					  com.data,
+					  com.size,
+					  data));
+	}
+      else
+	{
+	  printf("type : %d\n", com.type);
+	  return (GO_ON); // Erreur... bunny_set_network_error_response?
 	}
     }
-
-  return (GO_ON);
-}
-
-t_bunny_response	network_event(unsigned int		v,
-				     void			*data)
-{
-  t_bunny_response	res;
-
-  if (*(size_t*)gl_callback.netcom == false)
-    do
-      if ((res = notify(bunny_client_poll((t_bunny_client*)gl_callback.netcom, v), data)) != GO_ON)
-	return (res);
-    while (bunny_client_packet_ready((t_bunny_client*)gl_callback.netcom));
-  else
-    do
-      if ((res = notify(bunny_server_poll((t_bunny_server*)gl_callback.netcom, v), data)) != GO_ON)
-	return (res);
-    while ((bunny_server_packet_ready((t_bunny_server*)gl_callback.netcom)));
   return (GO_ON);
 }
 

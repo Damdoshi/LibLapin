@@ -5,7 +5,7 @@
 //
 //
 
-#include		<opencv2/opencv.hpp>
+#include		"private/ocv.h"
 #include		"lapin_private.h"
 
 void			bunny_capture(t_bunny_camera		*camera,

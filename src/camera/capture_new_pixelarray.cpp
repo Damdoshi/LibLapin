@@ -4,7 +4,7 @@
 //
 //
 
-#include		<opencv2/opencv.hpp>
+#include		"private/ocv.h"
 #include		"lapin_private.h"
 
 t_bunny_pixelarray	*bunny_capture_new_pixelarray(const t_bunny_capture	*capture)

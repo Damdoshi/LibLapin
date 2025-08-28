@@ -9,17 +9,18 @@ t_bunny_response	bunny_display_simple_box(t_bunny_box_system		*sys,
 						 t_bunny_gui_box		*box,
 						 const t_bunny_accurate_position *off);
 
-t_bunny_response	bunny_display_label_box(t_bunny_box_system		*sys,
+t_bunny_response	bunny_display_label_box(t_bunny_box_system		*_sys,
 						t_bunny_gui_box			*box,
 						const t_bunny_accurate_position	*off)
 {
+  struct bunny_box_system *sys = (struct bunny_box_system*)_sys;
   t_bunny_accurate_position n = {off->x + box->position.x, off->y + box->position.y};
   t_bunny_gui_label	*lab = (t_bunny_gui_label*)box;
   t_bunny_picture	*pic = &lab->text->clipable;
   t_bunny_vertex_array	*vx;
   t_bunny_response	ret;
 
-  if ((ret = bunny_display_simple_box(sys, box, off)) < GO_ON)
+  if ((ret = bunny_display_simple_box(_sys, box, off)) < GO_ON)
     return (ret);
 
   bunny_clear(&lab->text->clipable.buffer, 0);
@@ -53,7 +54,7 @@ t_bunny_response	bunny_display_label_box(t_bunny_box_system		*sys,
   vx->vertex[3].tex.x = pic->clip_x_position;
   vx->vertex[3].tex.y = pic->clip_y_position + pic->clip_height;
 
-  bunny_set_geometry(sys->head.screen, BGY_QUADS, vx, pic);
+  bunny_set_geometry(&sys->picture->buffer, BGY_QUADS, vx, pic);
   bunny_freea(vx);
   return (GO_ON);
 }
