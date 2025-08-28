@@ -56,7 +56,7 @@
 			-fno-align-loops
   TESTOPTS	=	$(DEBUGOPTS) -fprofile-arcs -ftest-coverage		\
 			--coverage
-  PRODOPTS	=	-O3 -ffast-math -march=native -DNDEBUG
+  PRODOPTS	=	-O3 -ffast-math -DNDEBUG
   DEPS		=	-lsfml-graphics -lsfml-audio				\
 			-lsfml-window -lsfml-system				\
 			-lopencv_imgproc -lopencv_highgui			\
@@ -185,6 +185,8 @@ install:		all
 			mkdir -p $(INSTALL_INC_DIR)lapin/
 			cp -r include/lapin/* $(INSTALL_INC_DIR)lapin/
 			cp $(PRODA) $(DBGA) $(INSTALL_LIB_DIR)
+package:		all
+			dpkg-buildpackage -us -uc -d
 .POSIX:
 .PHONY:			tests title erase
 
