@@ -2,7 +2,7 @@ Source: liblapin
 Priority: optional
 Maintainer: Jason Brillante "Damdoshi" <jason.brillante@efrits.fr>
 Build-Depends:
-  debhelper (>= 9),
+  debhelper (>= 13),
   make (>= 4.0),
   g++ (>= 9.0),
   libsfml-dev (>= 3),
