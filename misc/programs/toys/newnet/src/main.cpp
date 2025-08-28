@@ -38,7 +38,7 @@ static t_bunny_response connect(t_bunny_network_info		info,
 }
 
 static t_bunny_response message(t_bunny_network_info		info,
-				const void			*buffer,
+				void				*buffer,
 				size_t				size,
 				void				*data)
 {
@@ -52,37 +52,38 @@ static t_bunny_response message(t_bunny_network_info		info,
   fflush(stdout);
   write(1, buffer, size);
   write(1, "\n", 1);
+  bunny_free(buffer);
   return (GO_ON);
 }
 
 static t_bunny_response loop(void				*data)
 {
+  static int		cnt = 0;
   char			buffer[128];
   time_t		now = time(NULL);
   int			len;
   s_data		*vars = (s_data *) data;
 
-  if (now - vars->start < 2)
-    return (GO_ON);
-
-  for (int i = 0; i < vars->nbr_clients; ++i)
-    printf("Client %d %p\n", i, &vars->clients[i]);
-  vars->start = now;
-  len = snprintf(buffer, sizeof(buffer), "sent at %ld\n", now);
-  printf("Loop with %d clients\n", vars->nbr_clients);
-  if (vars->nbr_clients != 0)
+  if (cnt % 10 == 0)
     {
-      for (int i = 0; i < vars->nbr_clients; ++i)
-	if (bunny_network_write(&vars->clients[i], buffer, len) == false)
-	  fprintf(stderr, "failed to write '%s' to nbr %d\n", buffer, i);
+      bunny_network_dump(2);
+      vars->start = now;
+      len = snprintf(buffer, sizeof(buffer), "sent at %ld\n", now);
+      if (vars->nbr_clients != 0)
+	{
+	  for (int i = 0; i < vars->nbr_clients; ++i)
+	    if (bunny_network_write(&vars->clients[i], buffer, len) == false)
+	      fprintf(stderr, "failed to write '%s' to nbr %d\n", buffer, i);
+	}
+      else if ((vars->pcol == BP_IMMEDIATE_RETRIEVE || !vars->is_server)
+	       && bunny_network_write(vars->net, buffer, len) == false)
+	fprintf(stderr, "failed to write '%s'\n", buffer);
+      else if (vars->pcol == BP_IMMEDIATE_RETRIEVE || !vars->is_server)
+	printf("\tThe write went fine !\n");
+      else
+	printf("\tHas send nothing. Good news or bad news ??\n");
     }
-  else if ((vars->pcol == BP_IMMEDIATE_RETRIEVE || !vars->is_server)
-	   && bunny_network_write(vars->net, buffer, len) == false)
-      fprintf(stderr, "failed to write '%s'\n", buffer);
-  else if (vars->pcol == BP_IMMEDIATE_RETRIEVE || !vars->is_server)
-    printf("\tThe write went fine !\n");
-  else
-    printf("\tHas send nothing. Good news or bad news ??\n");
+  cnt += 1;
   return (GO_ON);
 }
 
@@ -189,7 +190,7 @@ int		main(int	argc,
   bunny_set_loop_main_function(loop);
   bunny_set_connect_response(connect);
   bunny_set_message_response(message);
-  bunny_loop(NULL, 100, &vars);
+  bunny_loop(NULL, 10, &vars);
 
   bunny_network_close(vars.net);
   printf("Bye.\n");

@@ -1,5 +1,5 @@
 cd ../../../../
-make -j12
-./school_install.sh
+make -j4
+sudo make install
 cd -
 make re
