@@ -9,8 +9,8 @@
 void			bunny_display_monitored_value(t_bunny_font		*f,
 						      const char		*n)
 {
-  _bunny_monitor_prepare_buffer(&bunny_big_buffer[0], sizeof(bunny_big_buffer), n);
-  f->string = &bunny_big_buffer[0];
+  _bunny_monitor_prepare_buffer(&gl_monitor_buffer[0], sizeof(gl_monitor_buffer), n);
+  f->string = &gl_monitor_buffer[0];
   bunny_draw(&f->clipable);
   f->string = NULL;
 }

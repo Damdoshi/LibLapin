@@ -9,6 +9,13 @@
 #ifndef				__LAPIN_PRIVATE_MONITOR_H__
 # define			__LAPIN_PRIVATE_MONITOR_H__
 
+extern t_bunny_configuration	*gl_monitor_conf[512];
+extern size_t			gl_monitor_top;
+extern char			gl_monitor_buffer[1024 * 1024];
+
+
+// Tout ca doit partir
+
 struct bunny_monitored_value
 {
   t_bunny_monitored_type	type;

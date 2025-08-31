@@ -1,6 +1,6 @@
 /*
 ** Jason Brillante "Damdoshi"
-** Hanged Bunny Studio 2014-2016
+** Hanged Bunny Studio 2014-2025
 **
 **
 ** Bibliotheque Lapin
@@ -27,75 +27,36 @@ typedef enum		e_bunny_monitored_type
     BMT_DOUBLE
   }			t_bunny_monitored_type;
 
-/*!
-** Add a value into the debug monitor. No copies are done, neither for the name
-** nor the pointer!
-** \param name The name of the variable you sent.
-** \param type The type of the variable. Serve to display it well.
-** \param ptr The address of the variable you want to monitor:
-**  char*
-**  int*,
-**  double*
-** \return True if everything went well.
-*/
-bool			_bunny_add_monitored_value(const char		*name,
-						   t_bunny_monitored_type type,
-						   const void		*ptr);
+// Registers a pointer - pay attention to avoid giving local variables addresses instead
+// you know you will not leave the current scope with monitoring on.
+bool			_bunny_monitor_setf(t_bunny_monitored_type	type,
+					    void			*data,
+					    const char			*pattern,
+					    ...);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
-/*!
-** Add a value into the debug monitor. No copies are done, neither for the name
-** nor the pointer!
-** \param name The name of the variable you sent.
-** \param ptr The address of the variable you want to monitor:
-**  char*
-**  int*,
-**  double*
-** \return True if everything went well.
-*/
-#  define		bunny_add_monitored_value(name, ptr)		\
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
+#  define		bunny_monitor_setf(data, pattern, ...)		\
   _Generic								\
-  ((ptr),								\
-   char*: _bunny_add_monitored_value(name, BMT_STRING, ptr),		\
-   int*: _bunny_add_monitored_value(name, BMT_INTEGER, ptr),		\
-   double*: _bunny_add_monitored_value(name, BMT_DOUBLE, ptr)		\
+  ((data),								\
+   char**: _bunny_monitor_setf(BMT_STRING, data, pattern, ##__VA_ARGS__), \
+   int*: _bunny_monitor_setf(BMT_INTEGER, data, pattern, ##__VA_ARGS__), \
+   double*: _bunny_monitor_setf(BMT_DOUBLE, data, pattern, ##__VA_ARGS__) \
    )
 # endif
+# define		bunny_monitor_removef(pattern, ...)		\
+  _bunny_monitor_setf(BMT_STRING, NULL, pattern, ##__VA_ARGS__)
 
-/*!
-** Remove a monitor that was inserted into the system.
-** \param name The name of the monitored value you want to remove. NULL to remove them
-** all.
-** \return True if it was found and removed.
-*/
-bool			bunny_remove_monitored_value(const char		*name);
+bool			bunny_monitor_duplicate_layer(void);
+bool			bunny_monitor_new_layer(void);
+bool			bunny_monitor_pop_layer(void);
+bool			bunny_monitor_clear_layer(void);
+bool			bunny_monitor_clear(void);
 
-void			bunny_store_monitored_value(void);
-void			bunny_reset_stored_monitored_value(void);
+void			bunny_monitor_print(int				fd,
+					    const char			*glob);
+void			bunny_monitor_display(t_bunny_font		*textarea,
+					      const char		*glob);
 
-/*!
-** Display inside the sent text area monitored value(s).
-** Space may be insufficient. Tweaking the textarea to display whatever you
-** like is on your charge.
-** Use the bunny_big_buffer.
-** \param textarea The area where the value(s) will be displayed.
-** \param n The name of the value to display or NULL to display all.
-** You can also use * as last character to display all values associated with
-** a name starting with what's before the *.
-*/
-void			bunny_display_monitored_value(t_bunny_font	*textarea,
-						      const char	*n);
 
-/*!
-** Write at the sent file descriptor monitored value(s).
-** Use the bunny_big_buffer.
-** \param fd The file descriptor where to write
-** \param n The name of the value to print or NULL to print all.
-** You can also use * as last character to print all values associated with
-** a name starting with what's before the *.
-** \return The amount of bytes written or -1 on error.
-*/
-ssize_t			bunny_print_monitored_value(int			fd,
-						    const char		*n);
 
 #endif	/*		__LAPIN_MONITOR_H__			*/

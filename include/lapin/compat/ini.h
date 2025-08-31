@@ -61,7 +61,7 @@ typedef void			t_bunny_ini;
 ** The new bunny_configuration API does not need it.
 **
 */
-extern const char		*DEFAULT_SCOPE;
+extern const char		*DEFAULT_SCOPE _BDEPREC();
 
 /*!
 ** The REMOVE_SCOPE symbolic constant is useful to remove a scope from a INI configuration.
@@ -99,7 +99,7 @@ extern const char		*DEFAULT_SCOPE;
 ** This type is obsolete and should not be used anymore.
 ** Use bunny_new_configuration instead.
 */
-t_bunny_ini			*bunny_new_ini(void);
+t_bunny_ini			*bunny_new_ini(void) _BDEPREC();
 //# define			bunny_new_ini()					bunny_new_configuration(BC_INI);
 
 /*!
@@ -110,7 +110,7 @@ t_bunny_ini			*bunny_new_ini(void);
 ** This type is obsolete and should not be used anymore.
 ** Use bunny_load_configuration instead.
 */
-t_bunny_ini			*bunny_load_ini(const char			*file);
+t_bunny_ini			*bunny_load_ini(const char			*file) _BDEPREC();
 //# define			bunny_load_ini(file)				bunny_load_configuration(BC_INI, NULL, file); // NULL is where to add the data. NULL means new
 
 /*!
@@ -121,7 +121,7 @@ t_bunny_ini			*bunny_load_ini(const char			*file);
 ** This type is obsolete and should not be used anymore.
 ** Use bunny_read_configuration instead.
 */
-t_bunny_ini			*bunny_read_ini(const char			*ini);
+t_bunny_ini			*bunny_read_ini(const char			*ini) _BDEPREC();
 
 /*!
 ** The bunny_ini_get_error return a description of the last error encountered by
@@ -131,7 +131,7 @@ t_bunny_ini			*bunny_read_ini(const char			*ini);
 ** This type is obsolete and should not be used anymore.
 ** Use bunny_configuration_get_error instead.
 */
-const char			*bunny_ini_get_error(void);
+const char			*bunny_ini_get_error(void) _BDEPREC();
 
 /*!
 ** The bunny_save_ini function save the content of the sent t_bunny_ini in the specified
@@ -144,7 +144,7 @@ const char			*bunny_ini_get_error(void);
 ** Use bunny_save_configuration instead.
 */
 bool				bunny_save_ini(t_bunny_ini			*ini,
-					       const char			*file);
+					       const char			*file) _BDEPREC();
 
 /*!
 ** The bunny_write_ini function write INI from the given INI to a string.
@@ -154,7 +154,7 @@ bool				bunny_save_ini(t_bunny_ini			*ini,
 ** This type is obsolete and should not be used anymore.
 ** Use bunny_write_configuration instead.
 */
-char				*bunny_write_ini(const t_bunny_ini		*ini);
+char				*bunny_write_ini(const t_bunny_ini		*ini) _BDEPREC();
 
 
 /*!
@@ -171,7 +171,7 @@ char				*bunny_write_ini(const t_bunny_ini		*ini);
 const char			*bunny_ini_get_field(const t_bunny_ini		*ini,
 						     const char			*scope,
 						     const char			*field,
-						     unsigned int		index);
+						     unsigned int		index) _BDEPREC();
 
 /*!
 ** Return how many elements there is in scope.field.
@@ -182,7 +182,7 @@ const char			*bunny_ini_get_field(const t_bunny_ini		*ini,
 */
 size_t				bunny_ini_count_field(const t_bunny_ini		*ini,
 						      const char		*scope,
-						      const char		*field);
+						      const char		*field) _BDEPREC();
 
 /*!
 ** The bunny_ini_set_field function write a data inside a specific point in the INI
@@ -199,7 +199,7 @@ void				bunny_ini_set_field(t_bunny_ini			*ini,
 						    const char			*scope,
 						    const char			*field,
 						    unsigned int		index,
-						    const char			*value);
+						    const char			*value) _BDEPREC();
 
 /*!
 ** The bunny_delete_ini destroy an INI configuration.
@@ -207,7 +207,7 @@ void				bunny_ini_set_field(t_bunny_ini			*ini,
 ** or your program may crash.
 ** \param ini The INI configuration to delete.
 */
-void				bunny_delete_ini(t_bunny_ini			*ini);
+void				bunny_delete_ini(t_bunny_ini			*ini) _BDEPREC();
 
 /*!
 ** The t_bunny_ini_scope is a fully private element that is useful to browse scopes
@@ -235,7 +235,7 @@ typedef void			t_bunny_ini_scope;
 ** \param ini The INI configuration to browse.
 ** \return The first scope in the INI configuration. NULL if there is no scope.
 */
-t_bunny_ini_scope		*bunny_ini_first_scope(t_bunny_ini		*ini);
+t_bunny_ini_scope		*bunny_ini_first_scope(t_bunny_ini		*ini) _BDEPREC();
 
 /*!
 ** Get the next scope inside the INI configuration.
@@ -244,7 +244,7 @@ t_bunny_ini_scope		*bunny_ini_first_scope(t_bunny_ini		*ini);
 ** \return Return the scope after the given one. LAST_SCOPE if it was the last one.
 */
 t_bunny_ini_scope		*bunny_ini_next_scope(t_bunny_ini		*ini,
-						      t_bunny_ini_scope		*scope);
+						      t_bunny_ini_scope		*scope) _BDEPREC();
 
 /*!
 ** Get the name of the sent scope.
@@ -253,7 +253,7 @@ t_bunny_ini_scope		*bunny_ini_next_scope(t_bunny_ini		*ini,
 ** \return The name of the scope.
 */
 const char			*bunny_ini_scope_name(const t_bunny_ini		*ini,
-						      const t_bunny_ini_scope	*scope);
+						      const t_bunny_ini_scope	*scope) _BDEPREC();
 
 /*!
 ** The bunny_ini_scope_get_field returns a value stored in a specific point in
@@ -268,7 +268,7 @@ const char			*bunny_ini_scope_name(const t_bunny_ini		*ini,
 */
 const char			*bunny_ini_scope_get_field(const t_bunny_ini_scope *scope,
 							   const char		*field,
-							   unsigned int		index);
+							   unsigned int		index) _BDEPREC();
 
 /*!
 ** The bunny_ini_set_field function write a data inside a specific point in the INI
@@ -283,7 +283,7 @@ const char			*bunny_ini_scope_get_field(const t_bunny_ini_scope *scope,
 void				bunny_ini_scope_set_field(t_bunny_ini_scope	*scope,
 							  const char		*field,
 							  unsigned int		index,
-							  const char		*value);
+							  const char		*value) _BDEPREC();
 
 /*!
 ** Get a t_bunny_ini_scope by name instead of browsing throught the INI configuration.
@@ -292,7 +292,7 @@ void				bunny_ini_scope_set_field(t_bunny_ini_scope	*scope,
 ** \return The requested t_bunny_ini_scope. NULL if it does not exist.
 */
 t_bunny_ini_scope		*bunny_ini_get_scope(t_bunny_ini		*ini,
-						     const char			*scope);
+						     const char			*scope) _BDEPREC();
 
 /*!
 ** The t_bunny_ini_field is a fully private element that is useful to browse fields
@@ -319,7 +319,7 @@ typedef void			t_bunny_ini_field;
 ** \param scope The scope to browse inside a INI configuration.
 ** \return The first field in the scope. NULL if there is no scope.
 */
-t_bunny_ini_field		*bunny_ini_first_field(t_bunny_ini_scope	*scope);
+t_bunny_ini_field		*bunny_ini_first_field(t_bunny_ini_scope	*scope) _BDEPREC();
 
 /*!
 ** Get the next field inside the given scope from an INI configuration.
@@ -328,7 +328,7 @@ t_bunny_ini_field		*bunny_ini_first_field(t_bunny_ini_scope	*scope);
 ** \return Return the field after the given one, LAST_FIELD if it was the last one.
 */
 t_bunny_ini_field		*bunny_ini_next_field(t_bunny_ini_scope		*scope,
-						      t_bunny_ini_field		*field);
+						      t_bunny_ini_field		*field) _BDEPREC();
 
 /*!
 ** Get the name of the sent field.
@@ -337,7 +337,7 @@ t_bunny_ini_field		*bunny_ini_next_field(t_bunny_ini_scope		*scope,
 ** \return The name of the field
 */
 const char			*bunny_ini_field_name(const t_bunny_ini_scope	*scope,
-						      const t_bunny_ini_field	*field);
+						      const t_bunny_ini_field	*field) _BDEPREC();
 
 /*!
 ** The bunny_ini_field_get_value returns a value stored in a specific point in the
@@ -350,7 +350,7 @@ const char			*bunny_ini_field_name(const t_bunny_ini_scope	*scope,
 ** after closing the INI configuration) if the data exists, else it returns NULL.
 */
 const char			*bunny_ini_field_get_value(const t_bunny_ini_field *field,
-							   unsigned int		index);
+							   unsigned int		index) _BDEPREC();
 
 /*!
 ** The bunny_ini_field_set_value function write a data inside a specific point in
@@ -363,7 +363,7 @@ const char			*bunny_ini_field_get_value(const t_bunny_ini_field *field,
 */
 void				bunny_ini_field_set_value(t_bunny_ini_field	*field,
 							  unsigned int		index,
-							  const char		*value);
+							  const char		*value) _BDEPREC();
 
 
 #endif	/*			__LAPIN_COMPAT_INI_H__		*/

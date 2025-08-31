@@ -11,7 +11,7 @@ ssize_t			bunny_print_monitored_value(int			fd,
 {
   size_t		l;
 
-  l = _bunny_monitor_prepare_buffer(&bunny_big_buffer[0], sizeof(bunny_big_buffer), n);
-  return (write(fd, bunny_big_buffer, l));
+  l = _bunny_monitor_prepare_buffer(&gl_monitor_buffer[0], sizeof(gl_monitor_buffer), n);
+  return (write(fd, gl_monitor_buffer, l));
 }
 

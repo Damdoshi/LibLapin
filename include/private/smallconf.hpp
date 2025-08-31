@@ -94,7 +94,7 @@ struct				SmallConf
   int				line;
 
   SmallConf			&NoComputeAssign(const SmallConf		&a);
-  
+
   SmallConf			&Assign(const SmallConf				&a,
 					SmallConf				*root = NULL,
 					SmallConf				*local = NULL,
@@ -216,7 +216,7 @@ struct				SmallConf
     const SmallConf		*cnf = this;
     std::vector<const SmallConf*> tmp;
     std::string			str;
-    
+
     tmp.reserve(20);
     while (cnf->father != NULL)
       {
@@ -232,6 +232,8 @@ struct				SmallConf
       }
     return (str);
   }
+
+  void				FullCopy(const SmallConf		&a);
 
   SmallConf(const SmallConf &ptr)
     : SmallConf()

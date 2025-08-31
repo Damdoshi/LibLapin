@@ -79,7 +79,7 @@ int				bunny_dprintf(int		fd,
 **
 */
 void				*bunny_pool_getv(t_bunny_pool		*pol,
-						 size_t			*id);
+						 size_t			*id) _BDEPREC();
 
 
 /*!
@@ -89,7 +89,7 @@ void				*bunny_pool_getv(t_bunny_pool		*pol,
 ** \param offset The offset [0; +100]
 */
 void				bunny_set_joy_axis_minimum_offset(t_bunny_axis	axis,
-								  float		offset);
+								  float		offset) _BDEPREC();
 
 /*!
 ** Signal that the sent element is free again.
@@ -111,15 +111,15 @@ void				bunny_set_joy_axis_minimum_offset(t_bunny_axis	axis,
 # define			bunny_pool_occupied_elem(pool)		(pool)->nbr_occupied
 
 extern int			memory_check;
-void				set_max_heap_size(size_t	s);
+void				set_max_heap_size(size_t	s) _BDEPREC();
 typedef t_bunny_color		t_color;
 typedef t_bunny_rgb		t_rgb;
 typedef t_bunny_mouse_button	t_bunny_mousebutton;
-extern const char		*default_scope;
-extern const char		*erase_scope;
-extern const unsigned int	erase_field;
-extern const char		*erase_index;
-extern const void		*last_scope;
+extern const char		*default_scope _BDEPREC();
+extern const char		*erase_scope _BDEPREC();
+extern const unsigned int	erase_field _BDEPREC();
+extern const char		*erase_index _BDEPREC();
+extern const void		*last_scope _BDEPREC();
 
 # define			ALPHA_GREY(a, g)		\
   COLOR(a, g, g, g)
@@ -155,6 +155,27 @@ extern const void		*last_scope;
 # define			bunny_delete_harware(a)		bunny_delete_vm110n(a)
 # define			bunny_hardware_read(a)		bunny_vm110n_read(a)
 # define			bunny_hardware_write(a)		bunny_vm110n_write(a)
+
+bool			_bunny_add_monitored_value(const char		*name,
+						   t_bunny_monitored_type type,
+						   const void		*ptr) _BDEPREC();
+
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
+#  define		bunny_add_monitored_value(name, ptr)		\
+  _Generic								\
+  ((ptr),								\
+   char*: _bunny_add_monitored_value(name, BMT_STRING, ptr),		\
+   int*: _bunny_add_monitored_value(name, BMT_INTEGER, ptr),		\
+   double*: _bunny_add_monitored_value(name, BMT_DOUBLE, ptr)		\
+   )
+# endif
+bool			bunny_remove_monitored_value(const char		*name) _BDEPREC();
+void			bunny_store_monitored_value(void) _BDEPREC();
+void			bunny_reset_stored_monitored_value(void) _BDEPREC();
+void			bunny_display_monitored_value(t_bunny_font	*textarea,
+						      const char	*n) _BDEPREC();
+ssize_t			bunny_print_monitored_value(int			fd,
+						    const char		*n) _BDEPREC();
 
 /*
 ** For MinGW

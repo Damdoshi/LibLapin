@@ -58,7 +58,7 @@ ssize_t			_bunny_monitor_prepare_buffer(char		*buf,
     {
       for (it = gl_monitor.begin(), acc = 0; it != gl_monitor.end(); ++it)
 	enqueue_values(ss, it->first, it->second);
-      snprintf(buf, len, "%s", ss.str().c_str());
+      acc = snprintf(buf, len, "%s", ss.str().c_str());
       return (acc);
     }
 
@@ -69,7 +69,7 @@ ssize_t			_bunny_monitor_prepare_buffer(char		*buf,
       for (it = gl_monitor.begin(), acc = 0; it != gl_monitor.end(); ++it)
 	if (strncmp(it->first.c_str(), n, i) == 0)
 	  enqueue_values(ss, it->first, it->second);
-      snprintf(buf, len, "%s", ss.str().c_str());
+      acc = snprintf(buf, len, "%s", ss.str().c_str());
       return (acc);
     }
 
@@ -77,7 +77,6 @@ ssize_t			_bunny_monitor_prepare_buffer(char		*buf,
     return (0);
 
   enqueue_values(ss, it->first, it->second);
-  snprintf(buf, len, "%s", ss.str().c_str());
-  return (acc);
+  return (snprintf(buf, len, "%s", ss.str().c_str()));
 }
 

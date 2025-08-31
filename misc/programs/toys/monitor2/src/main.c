@@ -46,9 +46,8 @@ int			main(void)
 {
   static const t_bunny_position siz = {10 * 3, 14 * 3};
 
-  assert(win = bunny_start(800, 600, false, "Monitor"));
-  assert(font = bunny_load_font
-	 (win->buffer.width, win->buffer.height, "./font.ttf", &siz));
+  assert((win = bunny_start(800, 600, false, "Monitor")));
+  assert((font = bunny_load_font(win->buffer.width, win->buffer.height, "./font.ttf", &siz)));
   font->clipable.position.x = 50;
   font->clipable.position.y = 50;
 
