@@ -185,8 +185,8 @@ install:		all
 			mkdir -p $(INSTALL_INC_DIR)lapin/
 			cp -r include/lapin/* $(INSTALL_INC_DIR)lapin/
 			cp $(PRODA) $(DBGA) $(INSTALL_LIB_DIR)
-package:		all
-			dpkg-buildpackage -us -uc -d
+package:
+			dpkg-buildpackage -us -uc -b
 .POSIX:
 .PHONY:			tests title erase
 
