@@ -63,9 +63,9 @@
 			-lopencv_objdetect -lopencv_video			\
 			-lopencv_videoio -lopencv_core				\
 			-lavcall -lusb -ludev -lm -ldl -lpthread
-  INSTALL_BIN_DIR =	/usr/local/bin/
-  INSTALL_INC_DIR =	/usr/local/include/
-  INSTALL_LIB_DIR =	/usr/local/lib/
+  INSTALL_BIN_DIR =	/usr/bin/
+  INSTALL_INC_DIR =	/usr/include/
+  INSTALL_LIB_DIR =	/usr/lib/
 
 #################################################################################
 ## Source                                                                      ##
