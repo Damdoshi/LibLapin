@@ -6,7 +6,7 @@ liblapin (1.14) unstable; urgency=low
   * Notice that a lot of things does not work or are not proven enough to be used - especially programming in Dabsic and provided contexts.
   * Start unit test development to increase LibLapin reliability beyond its basics.
 
--- Jason Brillante 'Damdoshi' <jason.brillante@efrits.fr>  Wed, 28 Jul 2025 00:00:00 +0100
+ -- Jason Brillante 'Damdoshi' <jason.brillante@efrits.fr>  Wed, 28 Jul 2025 00:00:00 +0100
 
 liblapin (1.13) unstable; urgency=low
 
@@ -43,7 +43,7 @@ liblapin (1.13) unstable; urgency=low
     - Add a bunny_memswap function to swap memory chunk content
     - Add a bunny_shuffle function to shuffle a memory chunk
 
- -- Jason Brillante 'Damdoshi' <jason.brillante@gmail.com>  22 Jun 2018 00:00:00 +0100
+  -- Jason Brillante 'Damdoshi' <jason.brillante@gmail.com>  22 Jun 2018 00:00:00 +0100
 
 liblapin (1.12) unstable; urgency=low
 
@@ -269,7 +269,7 @@ liblapin (1.12) unstable; urgency=low
     - Add support for base64.
     - Use the environment parameter in bunny_evaluate.
 
--- Jason Brillante <damdoshi@hotmail.com>  Tue, 12 Mar 2018 12:00:00 +0100
+ -- Jason Brillante <damdoshi@hotmail.com>  Tue, 12 Mar 2018 12:00:00 +0100
 
 liblapin (1.11) stable; urgency=low
 
@@ -305,7 +305,7 @@ liblapin (1.11) stable; urgency=low
 
   * Add the geosquare demo.
 
--- Jason Brillante <damdoshi@hotmail.com>  Tue, 23 May 2017 12:00:00 +0100
+ -- Jason Brillante <damdoshi@hotmail.com>  Tue, 23 May 2017 12:00:00 +0100
 
 liblapin (1.10) stable; urgency=low
 
@@ -314,7 +314,7 @@ liblapin (1.10) stable; urgency=low
   * New Makefile
   * Simple project template
 
--- Jason Brillante <damdoshi@hotmail.com>  Wed, 10 Aug 2016 00:00:00 +0100
+ -- Jason Brillante <damdoshi@hotmail.com>  Wed, 10 Aug 2016 00:00:00 +0100
 
 liblapin (1.9) stable; urgency=low
 
@@ -331,7 +331,7 @@ liblapin (1.9) stable; urgency=low
   * Add a demo script for shader, window resize, network, thread and hardware
   * Codeblock project for Windows
 
--- Jason Brillante <damdoshi@hotmail.com>  Thu, 19 Jul 2016 00:00:00 +0100
+ -- Jason Brillante <damdoshi@hotmail.com>  Thu, 19 Jul 2016 00:00:00 +0100
 
 liblapin (1.8) stable; urgency=low
 
@@ -347,7 +347,7 @@ liblapin (1.8) stable; urgency=low
   * Fix bunny_save_pixelarray
   * Fix the segmentation fault in the INI error handling. (Discovered by users)
 
--- Jason Brillante <damdoshi@hotmail.com>  Tue, 14 Jun 2016 00:00:00 +0100
+ -- Jason Brillante <damdoshi@hotmail.com>  Tue, 14 Jun 2016 00:00:00 +0100
 
 liblapin (1.7) stable; urgency=low
 
@@ -367,7 +367,7 @@ liblapin (1.7) stable; urgency=low
   * Remove vsync
   * Remove C++ wrapper: C symbols are reachable anyway.
 
--- Jason Brillante <damdoshi@hotmail.com> Mon, 21 Mar 2016 00:00:00 +0100
+ -- Jason Brillante <damdoshi@hotmail.com> Mon, 21 Mar 2016 00:00:00 +0100
 
 liblapin (1.6) stable; urgency=high
 
@@ -385,14 +385,14 @@ liblapin (1.6) stable; urgency=high
   * Fix bunny_blit from gpu to cpu (again)
   * Fix the conflit between clic and mouse move event that turn into invalid values in callbacks.
 
--- Jason Brillante <damdoshi@hotmail.com>  Fri, 27 Nov 2015 00:00:00 +0100
+ -- Jason Brillante <damdoshi@hotmail.com>  Fri, 27 Nov 2015 00:00:00 +0100
 
 liblapin (1.5.1) stable; urgency=high
 
   * Constify t_bunny_window.name and its characters
   * Constify t_bunny_pixelarray.pixels but not its pixels
 
--- Jason Brillante <damdoshi@hotmail.com>  Tue, 3 Nov 2015 00:00:00 +0100
+ -- Jason Brillante <damdoshi@hotmail.com>  Tue, 3 Nov 2015 00:00:00 +0100
 
 liblapin (1.5) stable; urgency=medium
 
@@ -415,27 +415,27 @@ liblapin (1.5) stable; urgency=medium
   * Add a font.png file
   * Add the joystick_panel program that is useful to test your joystick
 
--- Jason Brillante <damdoshi@hotmail.com>  Mon, 2 Nov 2015 00:00:00 +0100
+ -- Jason Brillante <damdoshi@hotmail.com>  Mon, 2 Nov 2015 00:00:00 +0100
 
 liblapin (1.4) stable; urgency=low
 
   * Add a mod attribute in the t_color union to create color offsets.
 
--- Jason Brillante <damdoshi@hotmail.com>  Mon, 2 Nov 2015 00:00:00 +0100
+ -- Jason Brillante <damdoshi@hotmail.com>  Mon, 2 Nov 2015 00:00:00 +0100
 
 liblapin (1.3) stable; urgency=low
 
   * Add bunny_start_style that allow to define a window style.
   * Use int instead of unsigned int everywhere
 
--- Jason Brillante <damdoshi@hotmail.com>  Thu, 23 Sep 2015 00:00:00 +0100
+ -- Jason Brillante <damdoshi@hotmail.com>  Thu, 23 Sep 2015 00:00:00 +0100
 
 liblapin (1.2) stable; urgency=low
 
   * Bring bunny_malloc, a custom allocator to limit and monitor allocations
   * Add an enumeration for keyboard keys
 
--- Jason Brillante <damdoshi@hotmail.com>  Mon, 21 Sep 2015 00:00:00 +0100
+ -- Jason Brillante <damdoshi@hotmail.com>  Mon, 21 Sep 2015 00:00:00 +0100
 
 liblapin (1.1) stable; urgency=low
 
@@ -445,7 +445,7 @@ liblapin (1.1) stable; urgency=low
   * Fix color constant to have the same colors on cpu and gpu pictures
   * Fix bunny_blit from cpu to gpu
 
--- Jason Brillante <damdoshi@hotmail.com>  Tue, 17 Jun 2015 00:00:00 +0100
+ -- Jason Brillante <damdoshi@hotmail.com>  Tue, 17 Jun 2015 00:00:00 +0100
 
 liblapin (1.0) stable; urgency=low
 
@@ -460,5 +460,5 @@ liblapin (1.0) stable; urgency=low
   * Explicity: avoid the need to read the doc for each function
   * Pedagogic: beginners must be able to progress in graphics, but also in C programming
 
--- Jason Brillante <damdoshi@hotmail.com>  Sun, 01 Mar 2015 00:00:00 +0100
+ -- Jason Brillante <damdoshi@hotmail.com>  Sun, 01 Mar 2015 00:00:00 +0100
 
