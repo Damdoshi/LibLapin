@@ -34,9 +34,9 @@ network::Info		network::Descriptor::Accept(size_t			&cursize,
       {
 	network::Info	tmpInfo(_sockaddr, _socklen);
 
-	if (!(inf = network->descriptors[i].Open(protocol, size, terminator, timeout, nfd, tmpInfo)))
+	if (!(inf = network->descriptors[i].Open(protocol, nfd, tmpInfo)))
 	  goto Failure;
-	if (network->peers[inf].AttachDescriptor(network->descriptors[i], &inf) == false)
+	if (network->peers[inf].AttachDescriptor(network->descriptors[i], protocol, &inf) == false)
 	  goto Close;
 	tmp = cursize;
 	if (!network->descriptors[i].Declare())

@@ -11,16 +11,17 @@
 
 bool			network::Descriptor::Read(void)
 {
+  ProtoSpec		specs;
   ssize_t		len;
   Info			rinfo;
 
   // Si le buffer n'est pas établi, on l'établi. Si ca ne marche pas, on re essayera la prochaine fois
   if (inbuffer_size == 0)
     {
-      if ((inbuffer = (char*)bunny_malloc(size)) == NULL)
+      if ((inbuffer = (char*)bunny_malloc(specs.size)) == NULL)
 	return (false);
       spdbuffer = (struct size_plus_data*)inbuffer;
-      inbuffer_size = size;
+      inbuffer_size = specs.size; // Default len
     }
 
   // Si il reste de la place dans le buffer, on lit, sinon on indique qu'on a rien lu
@@ -37,24 +38,29 @@ bool			network::Descriptor::Read(void)
 	    )) == -1)
 	return (false);
 
+      // On regarde si le pair dont on a recu un message est deja present
+      auto it = network->peers.find(rinfo);
+      if (it == network->peers.end())
+	// On indique qu'il y a un nouveau pair
+	inqueue.push_back(Communication{rinfo, true});
+
+      // Création eventuelle du nouveau pair - ou récupération de l'existant
+      auto &peer = network->peers[rinfo];
+
+      // Récupération du protocole du pair
+      specs = peer.protocol;
+      
       // La connexion est perdue
-      if (len == 0 && istcp(protocol))
+      if (len == 0 && istcp(specs.protocol))
 	{
 	  // Préviens la déconnexion d'un client
 	  inqueue.push_back(Communication{rinfo, false});
 	  return (Close());
 	}
 
-      // On regarde si le pair dont on a recu un message est deja present
-      auto it = network->peers.find(rinfo);
-      if (it == network->peers.end())
-	// On indique qu'il y a un nouveau pair
-	inqueue.push_back(Communication{rinfo, true});
-      auto &peer = network->peers[rinfo];
-
       // On ajoute le pair au descripteur si ce n'est pas deja fait
       if (peer.descriptors.find(this) == peer.descriptors.end())
-	if (peer.AttachDescriptor(*this, &rinfo) == false && peer.descriptors.size() == 0)
+	if (peer.AttachDescriptor(*this, specs, &rinfo) == false && peer.descriptors.size() == 0)
 	  network->peers.erase(rinfo);
 
       // Purement indicatif - non exploité actuellement
@@ -64,33 +70,33 @@ bool			network::Descriptor::Read(void)
     len = 0;
 
   // UDP, RDM ou TCP IMMEDIATE
-  if (isimmediate(protocol))
+  if (isimmediate(specs.protocol))
     {
       // Aucun traitement n'est à faire ici: on a ce qu'on veut
       // On fait l'ajout, même si len est vide, car on
       // peut recevoir un datagramme de longueur 0.
-      return (ShiftInBuffer(rinfo, len));
+      return (ShiftInBuffer(rinfo, specs, len));
     }
 
   /// TCP
-  if (protocol == BP_TCP_FIXED_SIZE)
+  if (specs.protocol == BP_TCP_FIXED_SIZE)
     {
       // Normalement, on ne peut pas dépasser inbufer.size()
       // Car la lecture dans le buffer est conditionné à cette taille
       if (len + rcursor == inbuffer_size)
-	return (ShiftInBuffer(rinfo));
+	return (ShiftInBuffer(rinfo, specs));
       rcursor += len;
     }
 
   /// TCP
-  if (protocol == BP_TCP_SIZED_PLUS_DATA)
+  if (specs.protocol == BP_TCP_SIZED_PLUS_DATA)
     {
       rcursor += len;
       // Si on a pas encore recu toute la taille, on ne fait rien, on l'attend
       if (rcursor < sizeof(spdbuffer->size))
 	return (true);
       // Infraction au protocole
-      if (spdbuffer->size > size)
+      if (spdbuffer->size > specs.size)
 	{
 	  Close();
 	  return (false);
@@ -110,7 +116,7 @@ bool			network::Descriptor::Read(void)
       // Au cas où l'on ai recu plusieurs paquets d'un coup
       // ce que la LibLapin ne fait *pas* - donc en face,
       while (rcursor > spdbuffer->size + sizeof(spdbuffer->size))
-	if (ExtractFromInBuffer(rinfo, spdbuffer->size + sizeof(spdbuffer->size)) == false)
+	if (ExtractFromInBuffer(rinfo, specs, spdbuffer->size + sizeof(spdbuffer->size)) == false)
 	  return (false);
       return (true);
     }
@@ -122,11 +128,11 @@ bool			network::Descriptor::Read(void)
       char		*term;
 
       rcursor += len; /// On gèrera tous les paquets qu'on a recu.
-      while ((term = (char*)memchr(begin, terminator, rcursor)) != NULL)
-	if (ExtractFromInBuffer(rinfo, term - begin) == false)
+      while ((term = (char*)memchr(begin, specs.terminator, rcursor)) != NULL)
+	if (ExtractFromInBuffer(rinfo, specs, term - begin) == false)
 	  return (false);
       // Infraction au protocole
-      if (rcursor >= size && size != 0)
+      if (rcursor >= specs.size && specs.size != 0)
 	{
 	  Close();
 	  return (false);

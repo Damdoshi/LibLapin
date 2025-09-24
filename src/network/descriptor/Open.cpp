@@ -12,10 +12,7 @@
 #include		"lapin.h"
 #include		"private/network/network.hpp"
 
-network::Info		Network::Descriptor::Open(Protocol		_protocol,
-						  size_t		_size,
-						  char			_terminator,
-						  int			_tmout,
+network::Info		Network::Descriptor::Open(const ProtoSpec	&specs,
 						  uint16_t		_port,
 						  const std::string	&_ip)
 {
@@ -34,13 +31,13 @@ network::Info		Network::Descriptor::Open(Protocol		_protocol,
   info.sockaddr.sin_port = port;
   info.socklen = sizeof(info.sockaddr);
 
-  if ((fd = socket(info.sockaddr.sin_family, !istcp(_protocol) ? SOCK_DGRAM : SOCK_STREAM, 0)) == -1)
+  if ((fd = socket(info.sockaddr.sin_family, !istcp(specs.protocol) ? SOCK_DGRAM : SOCK_STREAM, 0)) == -1)
     return (Info{});
 
   tmp = 1;
   setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &tmp, sizeof(tmp));
 
-  if (!istcp(_protocol))
+  if (!istcp(specs.protocol))
     {
       tmp = 65536;
       setsockopt(fd, SOL_SOCKET, SO_RCVBUF, &tmp, sizeof(tmp));
@@ -52,7 +49,7 @@ network::Info		Network::Descriptor::Open(Protocol		_protocol,
       goto CloseAndLeave;
 
   // TCP
-  if (istcp(_protocol))
+  if (istcp(specs.protocol))
     {
       if (_ip == "")
 	{
@@ -64,16 +61,13 @@ network::Info		Network::Descriptor::Open(Protocol		_protocol,
 	  if (connect(fd, (struct sockaddr*)&info.sockaddr, info.socklen) == -1)
 	    goto CloseAndLeave;
 	}
-      if (_size == 0)
-	size = BUNNY_NETWORK_MAXIMUM_PACKET_SIZE;
+      if (specs.size == 0)
+	protocol.size = BUNNY_NETWORK_MAXIMUM_PACKET_SIZE;
     }
-  else if (_size == 0)
-    _size = 65507; // Maximum size of a UDP packet
+  else if (specs.size == 0)
+    protocol.size = 65507; // Maximum size of a UDP packet
 
-  size = _size;
-  terminator = _terminator;
-  protocol = _protocol;
-  timeout = _tmout;
+  protocol = specs;
   active = true;
   doomed = false;
   return (info);
@@ -82,10 +76,7 @@ network::Info		Network::Descriptor::Open(Protocol		_protocol,
   return (Info{});
 }
 
-network::Info		network::Descriptor::Open(Protocol		_protocol,
-						  size_t		_size,
-						  char			_term,
-						  int			_tmout,
+network::Info		network::Descriptor::Open(const ProtoSpec	&specs,
 						  int			_fd,
 						  network::Info		_info)
 {
@@ -95,10 +86,7 @@ network::Info		network::Descriptor::Open(Protocol		_protocol,
   port = ntohs(_info.sockaddr.sin_port);
   info = _info;
   fd = _fd;
-  protocol = _protocol;
-  size = _size;
-  timeout = _tmout;
-  terminator = _term;
+  protocol = specs;
   active = true;
   doomed = false;
   return (info);

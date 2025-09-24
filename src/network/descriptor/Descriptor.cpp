@@ -15,9 +15,6 @@
 network::Descriptor::Descriptor(Network			&_network)
   : network(&_network),
     pollfd(NULL),
-    protocol(BP_UDP_RELIABLE),
-    size(-1),
-    terminator(0),
     active(false),
     doomed(false),
     fd(-1),

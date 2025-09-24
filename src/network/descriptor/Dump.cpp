@@ -14,7 +14,7 @@ bool		network::Descriptor::Dump(t_bunny_configuration	*cnf,
     {
       t_bunny_configuration *p;
 
-      ok = ok && bunny_configuration_getf(cnf, &p, "Descriptors[%zu]", index);
+      ok = ok && bunny_configuration_getf_node(cnf, &p, "Descriptors[%zu]", index);
       ok = ok && protocol.Dump(p);
     }
   ok = ok && bunny_configuration_setf_int(cnf, position, "Descriptors[%zu].PollPosition", index);

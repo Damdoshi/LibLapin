@@ -9,6 +9,7 @@
 #include	"private/network/network.hpp"
 
 bool		network::Peer::AttachDescriptor(Descriptor	&desc,
+						const ProtoSpec	&proto,
 						const Info	*_info)
 {
   if (descriptors.find(&desc) != descriptors.end())
@@ -16,12 +17,13 @@ bool		network::Peer::AttachDescriptor(Descriptor	&desc,
   if (_info)
     info = *_info;
   descriptors.insert(&desc);
+  protocol = proto;
   return (desc.AttachPeer(*this));
 }
 
 network::Peer	&network::Peer::operator<<(Descriptor		&desc)
 {
-  if (AttachDescriptor(desc) == false)
+  if (AttachDescriptor(desc, desc.protocol) == false)
     throw IOException("Cannot attach descriptor to peer");
   return (*this);
 }

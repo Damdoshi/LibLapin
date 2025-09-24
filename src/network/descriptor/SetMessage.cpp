@@ -12,26 +12,27 @@
 bool		network::Descriptor::SetMessage(const char	*data,
 						size_t		len,
 						const Info	&info,
+						const ProtoSpec	&specs,
 						t_bunny_written	wt,
 						void		*wtdata)
 {
-  if (len > size && size != 0)
+  if (len > specs.size && specs.size != 0)
     return (false);
   try {
-    if (protocol <= BP_UDP_RELIABLE)
+    if (specs.protocol <= BP_UDP_RELIABLE)
       outqueue.emplace_back(info, data, len, wt, wtdata);
-    else if (protocol == BP_TCP_FIXED_SIZE)
+    else if (specs.protocol == BP_TCP_FIXED_SIZE)
       {
-	if (size == len)
+	if (specs.size == len)
 	  outqueue.emplace_back(info, data, len, wt, wtdata);
 	else
 	  {
-	    outqueue.emplace_back(info, size, wt, wtdata);
+	    outqueue.emplace_back(info, specs.size, wt, wtdata);
 	    memcpy(outqueue.back().data, data, len);
-	    memset(&outqueue.back().data[len], 0, size - len);
+	    memset(&outqueue.back().data[len], 0, specs.size - len);
 	  }
       }
-    else if (protocol == BP_TCP_SIZED_PLUS_DATA)
+    else if (specs.protocol == BP_TCP_SIZED_PLUS_DATA)
       {
 	struct size_plus_data *spd = NULL;
 
@@ -44,9 +45,9 @@ bool		network::Descriptor::SetMessage(const char	*data,
       }
     else // BP_TCP_TERMINATED_DATA
       {
-	outqueue.emplace_back(info, len + sizeof(terminator), wt, wtdata);
+	outqueue.emplace_back(info, len + sizeof(specs.terminator), wt, wtdata);
 	memcpy(outqueue.back().data, data, len);
-	memcpy(&outqueue.back().data[len], &terminator, sizeof(terminator));
+	memcpy(&outqueue.back().data[len], &specs.terminator, sizeof(specs.terminator));
       }
     pollfd->events |= POLLOUT;
   } catch (...) {

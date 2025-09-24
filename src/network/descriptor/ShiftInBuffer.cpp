@@ -9,6 +9,7 @@
 #include		"private/network/network.hpp"
 
 bool			network::Descriptor::ShiftInBuffer(const Info		&info,
+							   const ProtoSpec	&specs,
 							   size_t		len)
 {
   // On est potentiellement en UDP.
@@ -32,9 +33,9 @@ bool			network::Descriptor::ShiftInBuffer(const Info		&info,
   inbuffer = NULL;
   inbuffer_size = 0;
   rcursor = 0;
-  if ((inbuffer = (char*)bunny_malloc(size)) == NULL)
+  if ((inbuffer = (char*)bunny_malloc(specs.size)) == NULL)
     return (false);
-  inbuffer_size = size;
+  inbuffer_size = specs.size;
   return (true);
 }
 

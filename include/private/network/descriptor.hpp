@@ -34,6 +34,7 @@ namespace			network
     std::set<Peer*>		associated_peers;
     network::Info		info; // To be returned by Open, that's all.
 
+    // Seulement pour les serveurs TCP.
     ProtoSpec			protocol;
     
     bool			active;
@@ -67,8 +68,10 @@ namespace			network
     bool			Write(void);
     bool			Read(void);
     bool			ShiftInBuffer(const Info	&info,
+					      const ProtoSpec	&spec,
 					      size_t		len = 0);
     bool			ExtractFromInBuffer(const Info	&info,
+						    const ProtoSpec &spec,
 						    size_t	len);
 
     bool			IsWritingFor(const Info		&info);
@@ -109,15 +112,17 @@ namespace			network
     bool			SetMessage(const char		*data,
 					   size_t		len,
 					   const Info		&info,
+					   const ProtoSpec	&specs,
 					   t_bunny_written	wt = NULL,
 					   void			*wtdata = NULL);
     template <typename T>
     bool			SetMessage(T const		&data,
 					   const Info		&info,
+					   const ProtoSpec	&specs,
 					   t_bunny_written	wt = NULL,
 					   void			*wtdata = NULL)
     {
-      if (SetMessage(&data, sizeof(data), info, wt, wtdata) == false)
+      if (SetMessage(&data, sizeof(data), info, specs, wt, wtdata) == false)
 	throw IOException(__PRETTY_FUNCTION__);
       return (*this);
     }

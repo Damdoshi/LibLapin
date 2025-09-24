@@ -21,6 +21,13 @@ namespace		network
     int			timeout = 3000;
     bool		resend = true;
 
+    ProtoSpec		&operator=(const ProtoSpec	&proto)
+    {
+      if (this != &proto)
+	memcpy(this, &proto, sizeof(*this));
+      return (*this);
+    }
+    
     bool		operator==(Protocol		proto) const
     {
       return (pcol_set && protocol == proto);
@@ -31,7 +38,7 @@ namespace		network
       return (pcol_set);
     }
 
-    bool		Dump(t_bunny_configuration	*cnf)
+    bool		Dump(t_bunny_configuration	*cnf) const
     {
       const char	*proto[] = {"UDP", "TCP", "RDM", "FixedTCP", "SizedTCP", "TerminatedTCP"};
       bool		ok = true;

@@ -54,6 +54,7 @@ namespace			network
 
     // Associer ou retirer un descripteur du pair
     bool			AttachDescriptor(Descriptor		&desc,
+						 const ProtoSpec	&proto,
 						 const Info		*info = NULL);
     Peer			&operator<<(Descriptor			&desc);
     bool			DetachDescriptor(const Descriptor	&desc);
