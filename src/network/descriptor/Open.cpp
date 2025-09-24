@@ -12,11 +12,12 @@
 #include		"lapin.h"
 #include		"private/network/network.hpp"
 
-const network::Info	*Network::Descriptor::Open(Protocol		_protocol,
-						   size_t		_size,
-						   char			_terminator,
-						   uint16_t		_port,
-						   const std::string	&_ip)
+network::Info		Network::Descriptor::Open(Protocol		_protocol,
+						  size_t		_size,
+						  char			_terminator,
+						  int			_tmout,
+						  uint16_t		_port,
+						  const std::string	&_ip)
 {
   unsigned int		tmp;
 
@@ -25,7 +26,7 @@ const network::Info	*Network::Descriptor::Open(Protocol		_protocol,
   if (_ip == "")
     ip = htonl(INADDR_ANY);
   else if ((ip = inet_addr(_ip.c_str())) == 0)
-    return (NULL);
+    return (Info{});
   port = htons(_port);
 
   info.sockaddr.sin_family = AF_INET;
@@ -33,13 +34,13 @@ const network::Info	*Network::Descriptor::Open(Protocol		_protocol,
   info.sockaddr.sin_port = port;
   info.socklen = sizeof(info.sockaddr);
 
-  if ((fd = socket(info.sockaddr.sin_family, _protocol == IMMEDIATE_RETRIEVE ? SOCK_DGRAM : SOCK_STREAM, 0)) == -1)
-    return (NULL);
+  if ((fd = socket(info.sockaddr.sin_family, !istcp(_protocol) ? SOCK_DGRAM : SOCK_STREAM, 0)) == -1)
+    return (Info{});
 
   tmp = 1;
   setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &tmp, sizeof(tmp));
 
-  if (_protocol == IMMEDIATE_RETRIEVE)
+  if (!istcp(_protocol))
     {
       tmp = 65536;
       setsockopt(fd, SOL_SOCKET, SO_RCVBUF, &tmp, sizeof(tmp));
@@ -51,7 +52,7 @@ const network::Info	*Network::Descriptor::Open(Protocol		_protocol,
       goto CloseAndLeave;
 
   // TCP
-  if (_protocol != IMMEDIATE_RETRIEVE)
+  if (istcp(_protocol))
     {
       if (_ip == "")
 	{
@@ -72,19 +73,21 @@ const network::Info	*Network::Descriptor::Open(Protocol		_protocol,
   size = _size;
   terminator = _terminator;
   protocol = _protocol;
+  timeout = _tmout;
   active = true;
   doomed = false;
-  return (&info);
+  return (info);
  CloseAndLeave:
   close(fd);
-  return (NULL);
+  return (Info{});
 }
 
-const network::Info	*network::Descriptor::Open(Protocol		_protocol,
-						   size_t		_size,
-						   char			_term,
-						   int			_fd,
-						   network::Info	_info)
+network::Info		network::Descriptor::Open(Protocol		_protocol,
+						  size_t		_size,
+						  char			_term,
+						  int			_tmout,
+						  int			_fd,
+						  network::Info		_info)
 {
   if (active)
     Close();
@@ -94,8 +97,9 @@ const network::Info	*network::Descriptor::Open(Protocol		_protocol,
   fd = _fd;
   protocol = _protocol;
   size = _size;
+  timeout = _tmout;
   terminator = _term;
   active = true;
   doomed = false;
-  return (&info);
+  return (info);
 }

@@ -38,7 +38,7 @@ bool			network::Descriptor::Read(void)
 	return (false);
 
       // La connexion est perdue
-      if (len == 0 && protocol != IMMEDIATE_RETRIEVE)
+      if (len == 0 && istcp(protocol))
 	{
 	  // Préviens la déconnexion d'un client
 	  inqueue.push_back(Communication{rinfo, false});
@@ -63,8 +63,8 @@ bool			network::Descriptor::Read(void)
   else
     len = 0;
 
-  // UDP
-  if (protocol == IMMEDIATE_RETRIEVE)
+  // UDP, RDM ou TCP IMMEDIATE
+  if (isimmediate(protocol))
     {
       // Aucun traitement n'est à faire ici: on a ce qu'on veut
       // On fait l'ajout, même si len est vide, car on
@@ -73,7 +73,7 @@ bool			network::Descriptor::Read(void)
     }
 
   /// TCP
-  if (protocol == FIXED_SIZE)
+  if (protocol == BP_TCP_FIXED_SIZE)
     {
       // Normalement, on ne peut pas dépasser inbufer.size()
       // Car la lecture dans le buffer est conditionné à cette taille
@@ -83,7 +83,7 @@ bool			network::Descriptor::Read(void)
     }
 
   /// TCP
-  if (protocol == SIZE_PLUS_DATA)
+  if (protocol == BP_TCP_SIZED_PLUS_DATA)
     {
       rcursor += len;
       // Si on a pas encore recu toute la taille, on ne fait rien, on l'attend
@@ -116,7 +116,7 @@ bool			network::Descriptor::Read(void)
     }
 
   /// TCP
-  if (protocol == TERMINATED)
+  if (protocol == BP_TCP_TERMINATED_DATA)
     {
       char		*begin = &inbuffer[rcursor];
       char		*term;

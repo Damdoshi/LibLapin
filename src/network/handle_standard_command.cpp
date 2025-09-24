@@ -67,7 +67,7 @@ t_bunny_standard_command_handling bunny_handle_standard_command
 	  cmd->heartbeat.declared_sending_date
 	};
 
-	if (bunny_network_write(&id->info, &resp, sizeof(resp)) == false)
+	if (bunny_network_write(id->info, &resp, sizeof(resp)) == false)
 	  return (BSCH_FAILURE);
 	return (BSCH_SUCCESS);
       }
@@ -107,7 +107,7 @@ t_bunny_standard_command_handling bunny_handle_standard_command
 	id->last_challenge = bunny_hash(hash, buffer, sizeof(buffer));
 
 	// On envoit le défi
-	if (bunny_network_write(&id->info, &resp, sizeof(resp)) == false)
+	if (bunny_network_write(id->info, &resp, sizeof(resp)) == false)
 	  return (BSCH_FAILURE);
 	return (BSCH_SUCCESS);
       }
@@ -128,7 +128,7 @@ t_bunny_standard_command_handling bunny_handle_standard_command
 	resp.response = bunny_hash(hash, buffer, sizeof(buffer));
 
 	// On renvoi la réponse au défi
-	if (bunny_network_write(&id->info, &resp, sizeof(resp)) == false)
+	if (bunny_network_write(id->info, &resp, sizeof(resp)) == false)
 	  return (BSCH_FAILURE);
 	return (BSCH_SUCCESS);
       }
@@ -149,7 +149,7 @@ t_bunny_standard_command_handling bunny_handle_standard_command
 	  id->validated ? 1 : 0
 	};
 
-	if (bunny_network_write(&id->info, &resp, sizeof(resp)) == false)
+	if (bunny_network_write(id->info, &resp, sizeof(resp)) == false)
 	  return (BSCH_FAILURE);
 	return (BSCH_SUCCESS);
       }

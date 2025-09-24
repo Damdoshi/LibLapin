@@ -18,9 +18,9 @@ bool		network::Descriptor::SetMessage(const char	*data,
   if (len > size && size != 0)
     return (false);
   try {
-    if (protocol == IMMEDIATE_RETRIEVE)
+    if (protocol <= BP_UDP_RELIABLE)
       outqueue.emplace_back(info, data, len, wt, wtdata);
-    else if (protocol == FIXED_SIZE)
+    else if (protocol == BP_TCP_FIXED_SIZE)
       {
 	if (size == len)
 	  outqueue.emplace_back(info, data, len, wt, wtdata);
@@ -31,7 +31,7 @@ bool		network::Descriptor::SetMessage(const char	*data,
 	    memset(&outqueue.back().data[len], 0, size - len);
 	  }
       }
-    else if (protocol == SIZE_PLUS_DATA)
+    else if (protocol == BP_TCP_SIZED_PLUS_DATA)
       {
 	struct size_plus_data *spd = NULL;
 
@@ -42,7 +42,7 @@ bool		network::Descriptor::SetMessage(const char	*data,
 	spd->size = len;
 	memcpy(spd->data, data, len);
       }
-    else
+    else // BP_TCP_TERMINATED_DATA
       {
 	outqueue.emplace_back(info, len + sizeof(terminator), wt, wtdata);
 	memcpy(outqueue.back().data, data, len);

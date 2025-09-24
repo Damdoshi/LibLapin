@@ -5,17 +5,16 @@
 
 #include	"lapin_private.h"
 
-bool		bunny_network_writec(const t_bunny_network_info	*info,
+bool		bunny_network_writec(t_bunny_network_info	info,
 				     const void			*data,
 				     size_t			len,
 				     t_bunny_written		wt,
 				     void			*wtdata)
 {
-  if (!info || !data)
-    return (false);
-  
+  if (!data)
+    return (false); 
   return (gl_network.SetMessage
-	  (*(network::Info*)info,
+	  (*(network::Info*)&info,
 	   (const char*)data,
 	   len, wt, wtdata)
 	  );

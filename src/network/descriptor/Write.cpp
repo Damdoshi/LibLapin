@@ -44,7 +44,7 @@ bool			network::Descriptor::Write(void)
   if (next.size == wcursor)
     {
       if (next.wt != NULL)
-	next.wt((t_bunny_network_info*)&next.info, next.wtdata);
+	next.wt(*(t_bunny_network_info*)&next.info, next.wtdata);
       outqueue.pop_front();
       wcursor = 0;
     }

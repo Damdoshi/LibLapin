@@ -8,6 +8,7 @@
 #ifndef				__LAPIN_NETWORK_PEER_HPP__
 # define			__LAPIN_NETWORK_PEER_HPP__
 # include			<set>
+# include			"protocol.hpp"
 # include			"communication.hpp"
 
 /*
@@ -31,6 +32,8 @@ namespace			network
     bool			doomed = false;
     double			last_message = 0;
 
+    ProtoSpec			protocol;
+    
     // Transfert de demande d'écriture de Peer a Descriptor
     bool			TransfertWriteRequest(void);
 
@@ -41,6 +44,13 @@ namespace			network
     operator			bool (void) const;
     operator			const Info & (void) const;
     operator			int (void) const;
+
+    void			SetProtocol(Protocol			pcol,
+					    size_t			size,
+					    char			terminator,
+					    int				timeout,
+					    bool			resed);
+    void			SetProtocol(ProtoSpec const		&spec);
 
     // Associer ou retirer un descripteur du pair
     bool			AttachDescriptor(Descriptor		&desc,

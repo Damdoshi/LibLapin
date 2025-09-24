@@ -11,7 +11,7 @@
 bool			network::Descriptor::ShiftInBuffer(const Info		&info,
 							   size_t		len)
 {
-  // On est en UDP.
+  // On est potentiellement en UDP.
   // On est susceptible de rencontrer de nouveaux pairs par cette socket
   // Donc on doit créer des peer en fonction de la dispo de certains info.
 

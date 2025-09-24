@@ -20,7 +20,7 @@ class			Network
 public:
   using Descriptor	= network::Descriptor;
   using Info		= network::Info;
-  using Protocol	= network::Descriptor::Protocol;
+  using Protocol	= network::Protocol;
   using Communication	= network::Communication;
   using Peer		= network::Peer;
 
@@ -40,11 +40,9 @@ protected:
 
 public:
   // On veut ouvrir un serveur ou un client.
-  const Info		*Open(Protocol			protocol = Protocol::IMMEDIATE_RETRIEVE,
-			      size_t			size = 1024 * 64,
-			      char			terminator = 0,
-			      uint16_t			port = 0x6279, // "by"
-			      const std::string		&ip = "");
+  Info			Open(network::ProtoSpec const	&protocol,
+			     uint16_t			port = 0x6279, // "by"
+			     const std::string		&ip = "");
 
   // Résoudre les opérations d'écriture et de lecture
   double		operator()(double		timeout = 0.02,
@@ -60,13 +58,13 @@ public:
   operator		bool (void) const;
 
   // Ecrire un message a quelqu'un
-  bool			SetMessage(const Info		&info,
+  bool			SetMessage(Info			info,
 				   const char		*data,
 				   size_t		len,
 				   t_bunny_written	wt = NULL,
 				   void			*wtdata = NULL);
   template <typename T>
-  bool			SetMessage(const Info		&info,
+  bool			SetMessage(Info			info,
 				   T const		&r,
 				   t_bunny_written	wt = NULL,
 				   void			*wtdata = NULL)

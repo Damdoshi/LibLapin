@@ -10,8 +10,16 @@
 # include		<vector>
 # include		"info.hpp"
 
+# define		istcp(a)					\
+  ((a) != BP_UDP_IMMEDIATE && (a) != BP_UDP_RELIABLE)
+# define		isudp(a) (!istcp(a))
+# define		isimmediate(a)					\
+  ((a) != BP_UDP_IMMEDIATE && (a) != BP_TCP_IMMEDIATE && (a) != BP_UDP_RELIABLE)
+
 namespace		network
 {
+  using Protocol = t_bunny_protocol;
+
   struct		WriteRequest
   {
     std::vector<char>	data;
@@ -32,7 +40,7 @@ namespace		network
   template <typename	T>
   struct		Pair
   {
-    Info const		&info;
+    Info		info;
     T const		&data;
   };
 

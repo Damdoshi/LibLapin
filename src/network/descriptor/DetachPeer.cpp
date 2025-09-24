@@ -12,7 +12,7 @@ int			network::Descriptor::DetachPeer(const Peer	&peer)
 {
   associated_peers.erase((network::Peer*)&peer);
   // Si on fait du TCP
-  if (protocol != IMMEDIATE_RETRIEVE)
+  if (istcp(protocol))
     Close();
   return (associated_peers.size());
 }

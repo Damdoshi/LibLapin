@@ -30,8 +30,8 @@ typedef struct			s_bunny_network_info
   socklen_t			socklen;
 }				t_bunny_network_info;
 
-int				bunny_infocmp(const t_bunny_network_info	*a,
-					      const t_bunny_network_info	*b);
+int				bunny_infocmp(t_bunny_network_info		a,
+					      t_bunny_network_info		b);
 t_bunny_network_info		bunny_new_network_info(const char		*ip,
 						       uint16_t			port);
 
@@ -60,27 +60,30 @@ typedef struct			s_bunny_communication
 
 typedef enum			e_bunny_protocol
   {
-    BP_IMMEDIATE_RETRIEVE,	// UDP
-    BP_FIXED_SIZE_PACKET,	// TCP - If all your packets have the same size
-    BP_SIZE_PLUS_DATA_PACKET,	// TCP - uint32_t + data
-    BP_TERMINATED_PACKET	// TCP - data + uint8_t
+    BP_UDP_IMMEDIATE,		// UDP - Return immediatly read data
+    BP_TCP_IMMEDIATE,		// TCP - Return immediatly read data
+    BP_UDP_RELIABLE,		// UDP - In/out messages, heartbeat, reception confirmation, automatic resend and ping estimation
+    BP_TCP_FIXED_SIZE,		// TCP - All packets have the same size
+    BP_TCP_SIZED_PLUS_DATA,	// TCP - uint32_t + data
+    BP_TCP_TERMINATED_DATA	// TCP - data + uint8_t
   }				t_bunny_protocol;
 
 // Functions that are supposed to be used by programmers
-const t_bunny_network_info	*bunny_network_open(t_bunny_protocol	pcol,
-						    size_t		size,
-						    char		terminator,
-						    uint16_t		port,
-						    const char		*ip);
-bool				bunny_network_doom(const t_bunny_network_info *a);
-bool				bunny_network_close(const t_bunny_network_info *a);
+t_bunny_network_info		bunny_network_open(t_bunny_protocol	pcol,
+						   size_t		size,
+						   char			terminator,
+						   int			timeout, // mseconds
+						   uint16_t		port,
+						   const char		*ip);
+bool				bunny_network_doom(t_bunny_network_info	a);
+bool				bunny_network_close(t_bunny_network_info a);
 
 int				bunny_network_dump(int			fd);
 
-typedef void			(*t_bunny_written)(const t_bunny_network_info *a,
+typedef void			(*t_bunny_written)(t_bunny_network_info	a,
 						   void			*wtdata);
 
-bool				bunny_network_writec(const t_bunny_network_info *a,
+bool				bunny_network_writec(t_bunny_network_info a,
 						     const void		*data,
 						     size_t		len,
 						     t_bunny_written	wt,
@@ -115,7 +118,7 @@ extern t_bunny_identity		gl_bunny_identity[1025];
 
 t_bunny_identity		*bunny_resolve_identity
   (t_bunny_identity		*id,
-   const t_bunny_network_info	*in
+   t_bunny_network_info		in
    );
 
 typedef enum			s_bunny_standard_command_type

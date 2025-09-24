@@ -7,25 +7,27 @@
 
 #include		"lapin_private.h"
 
-const network::Info	*Network::Open(Protocol			protocol,
-				       size_t			size,
-				       char			terminator,
-				       uint16_t			port,
-				       const std::string	&ip)
+network::Info		Network::Open(Protocol			protocol,
+				      size_t			size,
+				      char			terminator,
+				      int			tmout,
+				      uint16_t			port,
+				      const std::string		&ip)
 {
-  const network::Info	*inf;
+  network::Info		inf;
   size_t		tmp;
   size_t		i;
 
   for (i = 0; i < descriptors.size(); ++i)
     if (!descriptors[i])
       {
-	if (!(inf = descriptors[i].Open(protocol, size, terminator, port, ip)))
+	if (!(inf = descriptors[i].Open(protocol, size, terminator, tmout, port, ip)))
 	  goto Failure;
 	// Si c'est une écoute, ce n'est pas un pair.
 	if (ip != "")
-	  if (peers[*inf].AttachDescriptor(descriptors[i], inf) == false)
+	  if (peers[inf].AttachDescriptor(descriptors[i], &inf) == false)
 	    goto Close;
+	peers[inf].SetProtocol(protocol, size, terminator, tmout);
 	tmp = nbr;
 	if (!descriptors[i].Declare())
 	  goto Detach;
@@ -33,13 +35,13 @@ const network::Info	*Network::Open(Protocol			protocol,
 	  nbr++;
 	return (inf);
       }
-  return (NULL);
+  return (Info{});
  Detach:
   nbr = tmp;
-  peers[*inf].DetachDescriptor(descriptors[i]);
+  peers[inf].DetachDescriptor(descriptors[i]);
  Close:
   descriptors[i].Close();
  Failure:
-  return (NULL);
+  return (Info{});
 }
 
