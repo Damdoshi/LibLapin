@@ -73,6 +73,7 @@ t_bunny_network_info		bunny_network_open(t_bunny_protocol	pcol,
 						   size_t		size,
 						   char			terminator,
 						   int			timeout, // mseconds
+						   bool			resend,
 						   uint16_t		port,
 						   const char		*ip);
 bool				bunny_network_doom(t_bunny_network_info	a);

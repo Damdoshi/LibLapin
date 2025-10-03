@@ -9,11 +9,12 @@ t_bunny_network_info		bunny_network_open(t_bunny_protocol	pcol,
 						   size_t		size,
 						   char			term,
 						   int			tmout,
+						   bool			resend,
 						   uint16_t		port,
 						   const char		*ip)
 {
   if (!ip)
     ip = "";
-  return (gl_network.Open((Network::Protocol)pcol, size, term, tmout, port, ip));
+  return (gl_network.Open({true, pcol, size, term, tmout, resend}, port, ip));
 }
 

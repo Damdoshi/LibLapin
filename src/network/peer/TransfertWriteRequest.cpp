@@ -19,7 +19,7 @@ bool		network::Peer::TransfertWriteRequest(void)
     ++it;
   network::WriteRequest	&wr = outqueue.front();
 
-  bool result = (*it)->SetMessage(wr.data.data(), wr.data.size(), info, wr.wt, wr.wtdata);
+  bool result = (*it)->SetMessage(wr.data.data(), wr.data.size(), info, protocol, wr.wt, wr.wtdata);
   outqueue.pop_front();
 
   return (result);

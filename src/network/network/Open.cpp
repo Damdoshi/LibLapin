@@ -6,11 +6,9 @@
 // Bibliothèque Lapin
 
 #include		"lapin_private.h"
+#include		"private/network/network.hpp"
 
-network::Info		Network::Open(Protocol			protocol,
-				      size_t			size,
-				      char			terminator,
-				      int			tmout,
+network::Info		Network::Open(network::ProtoSpec const	&spec,
 				      uint16_t			port,
 				      const std::string		&ip)
 {
@@ -21,13 +19,13 @@ network::Info		Network::Open(Protocol			protocol,
   for (i = 0; i < descriptors.size(); ++i)
     if (!descriptors[i])
       {
-	if (!(inf = descriptors[i].Open(protocol, size, terminator, tmout, port, ip)))
+	if (!(inf = descriptors[i].Open(spec, port, ip)))
 	  goto Failure;
 	// Si c'est une écoute, ce n'est pas un pair.
 	if (ip != "")
-	  if (peers[inf].AttachDescriptor(descriptors[i], &inf) == false)
+	  if (peers[inf].AttachDescriptor(descriptors[i], spec, &inf) == false)
 	    goto Close;
-	peers[inf].SetProtocol(protocol, size, terminator, tmout);
+	peers[inf].SetProtocol(spec);
 	tmp = nbr;
 	if (!descriptors[i].Declare())
 	  goto Detach;
