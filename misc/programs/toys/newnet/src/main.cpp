@@ -1,7 +1,7 @@
 #include	"lapin.h"
 
 struct s_data {
-  const t_bunny_network_info	*net;
+  t_bunny_network_info		net;
   t_bunny_network_info		clients[1024];
   int				nbr_clients;
   time_t			start;
@@ -72,7 +72,7 @@ static t_bunny_response loop(void				*data)
       if (vars->nbr_clients != 0)
 	{
 	  for (int i = 0; i < vars->nbr_clients; ++i)
-	    if (bunny_network_write(&vars->clients[i], buffer, len) == false)
+	    if (bunny_network_write(vars->clients[i], buffer, len) == false)
 	      fprintf(stderr, "failed to write '%s' to nbr %d\n", buffer, i);
 	}
       // Sinon
@@ -91,6 +91,8 @@ static int	usage(void)
 	 "  ./prog ([-l port] | [ip port]) [-p protocol]\n\n"
 	 "  Protocols are:\n\n"
 	 "\t- udp (default)\n"
+	 "\t- tcp - no packet shape. an optional maximum size can be given, default is 1Mo\n"
+	 "\t- rudp [udp] - an optional timeout and resend can be specified\n"
 	 "\t- fixed [tcp] - an optional defined size can be given, default is 1460\n"
 	 "\t- size [tcp] - an optional maximum size can be given, default is 1Mo\n"
 	 "\t- term [tcp] - an optional maximum size can be given, default is 1460\n"
@@ -127,10 +129,23 @@ int		main(int	argc,
 	  if ((i += 1) >= argc)
 	    return (usage());
 	  if (strcasecmp(argv[i], "udp") == 0)
-	    vars.pcol = BP_IMMEDIATE_RETRIEVE;
+	    vars.pcol = BP_UDP_IMMEDIATE;
+	  else if (strcasecmp(argv[i], "tcp") == 0)
+	    {
+	      vars.pcol = BP_TCP_IMMEDIATE;
+	      max = 1024 * 1024;
+	      if (i + 1 < argc)
+		{
+		  i += 1;
+		  if ((max = atoi(argv[i])) <= 0)
+		    return (usage());
+		}
+	    }
+	  else if (strcasecmp(argv[i], "rudp") == 0)
+	    vars.pcol = BP_UDP_RELIABLE;
 	  else if (strcasecmp(argv[i], "fixed") == 0)
 	    {
-	      vars.pcol = BP_FIXED_SIZE_PACKET;
+	      vars.pcol = BP_TCP_FIXED_SIZE;
 	      max = 64;
 	      if (i + 1 < argc)
 		{
@@ -141,7 +156,7 @@ int		main(int	argc,
 	    }
 	  else if (strcasecmp(argv[i], "size") == 0)
 	    {
-	      vars.pcol = BP_SIZE_PLUS_DATA_PACKET;
+	      vars.pcol = BP_TCP_SIZED_PLUS_DATA;
 	      max = 1024 * 1024;
 	      if (i + 1 < argc)
 		{
@@ -152,7 +167,7 @@ int		main(int	argc,
 	    }
 	  else if (strcasecmp(argv[i], "term") == 0)
 	    {
-	      vars.pcol = BP_TERMINATED_PACKET;
+	      vars.pcol = BP_TCP_TERMINATED_DATA;
 	      max = 1460;
 	      if (i + 1 < argc)
 		{
@@ -180,10 +195,11 @@ int		main(int	argc,
     }
 
   // Pas de notion de serveur en UDP
-  if (vars.is_server && vars.pcol == BP_IMMEDIATE_RETRIEVE)
+  if (vars.is_server && (vars.pcol == BP_UDP_IMMEDIATE || vars.pcol == BP_UDP_RELIABLE))
     vars.is_server = false;
 
-  if ((vars.net = bunny_network_open(vars.pcol,  max, '\v', port, ip)) == NULL)
+  vars.net = bunny_network_open(vars.pcol,  max, '\v', 200, true, port, ip);
+  if (vars.net.socklen == 0)
     {
       printf("Failed to open connexion.\n");
       return (1);

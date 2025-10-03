@@ -5,10 +5,8 @@
 
 #include	"lapin_private.h"
 
-bool		bunny_network_close(const t_bunny_network_info		*inf)
+bool		bunny_network_close(t_bunny_network_info		inf)
 {
-  if (!inf)
-    return (false);
-  return (gl_network.Close(*(network::Info*)inf));
+  return (gl_network.Close(*(network::Info*)&inf));
 }
 
