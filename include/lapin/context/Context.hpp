@@ -374,8 +374,8 @@ namespace			hbs
       (void)event;
       this->event = NULL;
       return (GO_ON);
-    }	
-    
+    }
+
   public:
     ContextBridge(void)
     {
