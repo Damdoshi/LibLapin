@@ -180,6 +180,7 @@ typedef enum			s_bunny_decision
 #  include			"lapin/context/Context.hpp"
 #  include			"lapin/context/Splash.hpp"
 #  include			"lapin/configuration.hpp"
+#  include			"lapin/cpp/DimIterator.hpp"
 # endif
 #endif	/*			__LAPIN_H__					*/
 
