@@ -47,8 +47,7 @@
 			-Wno-format-security					\
 			-Wno-frame-address					\
 			-Wno-narrowing						\
-			-Wno-cast-function-type					\
-			-fsanitize=address
+			-Wno-cast-function-type
 
   DEBUGOPTS	=	-O0 -g -g3 -ggdb					\
 			-fno-omit-frame-pointer					\
@@ -63,9 +62,9 @@
 			-lopencv_objdetect -lopencv_video			\
 			-lopencv_videoio -lopencv_core				\
 			-lavcall -lusb -ludev -lm -ldl -lpthread
-  INSTALL_BIN_DIR =	/usr/local/bin/
-  INSTALL_INC_DIR =	/usr/local/include/
-  INSTALL_LIB_DIR =	/usr/local/lib/
+  INSTALL_BIN_DIR =	/usr/bin/
+  INSTALL_INC_DIR =	/usr/include/
+  INSTALL_LIB_DIR =	/usr/lib/
 
 #################################################################################
 ## Source                                                                      ##
@@ -185,8 +184,8 @@ install:		all
 			mkdir -p $(INSTALL_INC_DIR)lapin/
 			cp -r include/lapin/* $(INSTALL_INC_DIR)lapin/
 			cp $(PRODA) $(DBGA) $(INSTALL_LIB_DIR)
-package:		all
-			dpkg-buildpackage -us -uc -d
+package:
+			dpkg-buildpackage -us -uc
 .POSIX:
 .PHONY:			tests title erase
 

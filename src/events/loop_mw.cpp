@@ -52,8 +52,9 @@ t_bunny_response	bunny_loop_mw(t_bunny_window		**window,
   prev = clock.getElapsedTime().asMicroseconds();
   while (rep == GO_ON)
     {
-      auto m = sf::Mouse::getPosition();
-      gl_mouse = {m.x, m.y};
+      // Relative to which window? None. So let's move this out.
+      // auto m = sf::Mouse::getPosition();
+      // gl_mouse = {m.x, m.y};
 
       once = false;
       now = clock.getElapsedTime().asMicroseconds();
@@ -310,10 +311,10 @@ t_bunny_response	bunny_loop_mw(t_bunny_window		**window,
 		      //
 		      if (event.type == BET_MOUSE_WHEEL)
 			{
-			  gl_mouse.x = event.wheel.x;
-			  gl_mouse.y = event.wheel.y;
 			  if (gl_callback.wheel != NULL)
 			    {
+			      gl_mouse.x = event.wheel.x;
+			      gl_mouse.y = event.wheel.y;
 			      scream_log_if(PATTERN "mousewheel)", "event", window, nwin, freq, data);
 			      if ((rep = gl_callback.wheel
 				   ((int)event.wheel.wheel,
@@ -325,7 +326,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window		**window,
 		      ////
 		      /// MOUSE MOVE
 		      //
-		      if (event.type == BET_MOUSE_MOVED || event.type == BET_MOUSE_MOVED_RAW)
+		      if (event.type == BET_MOUSE_MOVED) // || event.type == BET_MOUSE_MOVED_RAW)
 			{
 			  t_bunny_position	pos;
 

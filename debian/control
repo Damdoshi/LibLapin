@@ -2,27 +2,27 @@ Source: liblapin
 Priority: optional
 Maintainer: Jason Brillante "Damdoshi" <jason.brillante@efrits.fr>
 Build-Depends:
-  debhelper (>= 13),
+  debhelper-compat (= 13),
   make (>= 4.0),
   g++ (>= 9.0),
   libsfml-dev (>= 3),
   libusb-dev (>= 2),
   libopencv-dev (>= 4.2),
-  libpthread-dev,
   libffcall-dev (>= 2.4),
   libudev-dev (>= 245)
 Standards-Version: 4.6.2
 Homepage: https://liblapin.org
+Rules-Requires-Root: no
 
 Package: liblapin-dev
 Section: libdevel
 Priority: optional
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: This package brings binaries and headers of the multimedia library LibLapin.
-  This library use SFML as renderer and provide C bindings to most of its functionnalities.
-  It brings additionnaly game specific tools and a powerful configuration module that
-  handles most format and also provide an original turing-complet, Dabsic.
-  This library is used by some independant video game company and by several
-  computing school as a tool to teach C development and multimedia development.
-
+Depends: ${misc:Depends}
+Description: Multimedia/game development library with C bindings (static)
+ LibLapin is a multimedia/game development library built on top of SFML,
+ providing C bindings, additional game-specific tools, and a configuration
+ module that handles most formats and includes an original Turing-complete
+ language, Dabsic. It is used by independent game studios and by several
+ computing schools to teach C development and multimedia programming.
+ 

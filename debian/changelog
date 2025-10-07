@@ -45,7 +45,7 @@ liblapin (1.13) unstable; urgency=low
 
   -- Jason Brillante 'Damdoshi' <jason.brillante@gmail.com>  22 Jun 2018 00:00:00 +0100
 
-liblapin (1.12) UNRELEASED; urgency=low
+liblapin (1.12) unstable; urgency=low
 
   * Edit the repository and build system:
     - Switch from a single file errors~ to a directory with errors and
@@ -269,7 +269,7 @@ liblapin (1.12) UNRELEASED; urgency=low
     - Add support for base64.
     - Use the environment parameter in bunny_evaluate.
 
- -- Jason Brillante <damdoshi@hotmail.com>  Tue, 12 March 2018 12:00:00 +0100
+ -- Jason Brillante <damdoshi@hotmail.com>  Tue, 12 Mar 2018 12:00:00 +0100
 
 liblapin (1.11) stable; urgency=low
 

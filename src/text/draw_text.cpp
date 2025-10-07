@@ -336,12 +336,8 @@ void			_bunny_draw_text(t_bunny_font	*font)
       iterat.y = startpos.y + vpitch;
     }
 
-  for (int bis = 0; bis < 2; ++bis)
-    {
-      put_text(font, linemem, vpitch, startpos, iterat, bis);
-      if (*(size_t*)font == TTF_TEXT || font->outline_size == 0)
-	break ;
-    }
-
+  if (font->outline_size != 0 && *(size_t*)font != TTF_TEXT)
+    put_text(font, linemem, vpitch, startpos, iterat, 0);
+  put_text(font, linemem, vpitch, startpos, iterat, 1);
 }
 

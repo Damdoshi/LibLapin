@@ -2,17 +2,11 @@
 
 export DH_VERBOSE=1
 export DEB_BUILD_MAINT_OPTIONS=hardening=+all
-export INCLUDE_DIR=/usr/include/
-export LIB_DIR=/usr/lib/
 MAKEFLAGS=-j16 prod debug
 
 %:
 	dh $@
 
 override_dh_auto_build:
-	$(MAKE)
-
-
-override_dh_auto_test:
-	@(cd tests && make)
+	$(MAKE) prod debug
 
