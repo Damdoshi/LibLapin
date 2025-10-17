@@ -6,7 +6,6 @@ std::vector<sf::SoundChannel> gl_channels[5] =
       sf::SoundChannel::Unspecified,
     },
     {
-      sf::SoundChannel::Unspecified,
       sf::SoundChannel::Mono
     },
     {
