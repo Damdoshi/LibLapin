@@ -95,10 +95,17 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
 
   win->window_name = bunny_strdup(window_name);
   if (winstyle & ANTIALIASING)
+    settings.antiAliasingLevel = 2;
+  if (winstyle & DEPTH_BUFFER)
     {
-      settings.antiAliasingLevel = 2;
-      win->window->create(sf::VideoMode({width, height}, 32), {win->window_name}, (uint32_t)(winstyle & ~ANTIALIASING), (winstyle & FULLSCREEN) ? sf::State::Fullscreen : sf::State::Windowed, settings);
+      settings.depthBits = 24;
+      settings.stencilBits = 8;
+      settings.antiAliasingLevel = 4;
+      settings.majorVersion = 3;
+      settings.minorVersion = 0;
     }
+  if (winstyle & (ANTIALIASING | DEPTH_BUFFER))
+    win->window->create(sf::VideoMode({width, height}, 32), {win->window_name}, (uint32_t)(winstyle & 0x0F), (winstyle & FULLSCREEN) ? sf::State::Fullscreen : sf::State::Windowed, settings);
   else
     win->window->create(sf::VideoMode({width, height}, 32), {win->window_name}, winstyle);
   win->type = WINDOW;

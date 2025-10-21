@@ -31,7 +31,8 @@ typedef enum			e_bunny_window_style
     CLOSE_BUTTON		= 4,
     FULLSCREEN			= 8,
     DEFAULT_WIN_STYLE		= TITLEBAR | RESIZE_BUTTON | CLOSE_BUTTON,
-    ANTIALIASING		= 16
+    ANTIALIASING		= 16,
+    DEPTH_BUFFER		= 32
   }				t_bunny_window_style;
 
 /*!
