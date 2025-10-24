@@ -6,5 +6,5 @@ then
     DEBUG="-dbg"
 fi
 
-gcc -std=gnu23 "$@" -llapin$DEBUG -lao -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system -lharfbuzz -lfreetype -lvorbis -lvorbisfile -logg -lvorbisenc -lX11 -lXrandr -lXcursor -lXi -lXext -lFLAC -lstdc++ -lm -ldl -lpthread -lopencv_imgproc -lopencv_objdetect -lopencv_highgui -lopencv_video -lopencv_core -lavcall -lusb -lopencv_videoio -ludev -lfreetype -lstdc++
+gcc -std=gnu23 "$@" -llapin$DEBUG -lao -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system -lharfbuzz -lSheenBidi -lfreetype -lvorbis -lvorbisfile -logg -lvorbisenc -lX11 -lXrandr -lXcursor -lXi -lXext -lFLAC -lstdc++ -lm -ldl -lpthread -lopencv_imgproc -lopencv_objdetect -lopencv_highgui -lopencv_video -lopencv_core -lavcall -lusb -lopencv_videoio -ludev -lfreetype -lstdc++
 
