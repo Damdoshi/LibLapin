@@ -1,4 +1,4 @@
-liblapin (1.14) unstable; urgency=low
+liblapin (1.14+XXX) unstable; urgency=low
 
   * Add cinematic module, visual novel like scene.
   * Add to Dabsic programming language a lot of stuff
