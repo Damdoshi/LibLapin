@@ -178,7 +178,7 @@ fclean:			clean erase
 re:			fclean all
 erase:
 			@$(RM) -r $(LOGDIR)/*.*
-install:		all
+local_install:		all
 			cp bcc b++  $(INSTALL_BIN_DIR)
 			cp include/lapin.h $(INSTALL_INC_DIR)
 			mkdir -p $(INSTALL_INC_DIR)lapin/
