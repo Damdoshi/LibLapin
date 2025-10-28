@@ -104,10 +104,7 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
       settings.majorVersion = 3;
       settings.minorVersion = 0;
     }
-  if (winstyle & (ANTIALIASING | DEPTH_BUFFER))
-    win->window->create(sf::VideoMode({width, height}, 32), {win->window_name}, (uint32_t)(winstyle & 0x0F), (winstyle & FULLSCREEN) ? sf::State::Fullscreen : sf::State::Windowed, settings);
-  else
-    win->window->create(sf::VideoMode({width, height}, 32), {win->window_name}, winstyle);
+  win->window->create(sf::VideoMode({width, height}, 32), {win->window_name}, (uint32_t)(winstyle & 0x07), (winstyle & FULLSCREEN) ? sf::State::Fullscreen : sf::State::Windowed, settings);
   win->type = WINDOW;
   win->width = width;
   win->height = height;
