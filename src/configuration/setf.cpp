@@ -32,7 +32,7 @@ bool		bunny_configuration_vsetf_node(t_bunny_configuration	*cnf,
 
   a = (SmallConf*)got;
   b = (const SmallConf*)data;
-  *a = *b;
+  SmallConf::RecursiveAssign(*a, *b, true, true);
   bunny_configuration_create_mode(cmode);
   return (true);
 }
