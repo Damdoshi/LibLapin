@@ -1,6 +1,11 @@
 
 => Gestion du globbing dans les @directive
 
+=> DANS Dabsic, permettre de donner un nom au type de retour. Par exemple:
+   bool:is_dead get_hit(t_unit *me, double hitpower);
+   et du coup, a la fois return et is_dead = peuvent donner une valeur au type de retour
+   sauf que return break aussi
+
 => Inventer un format de fichier impliquant normal map et image, le tout ensemble.
    Avec un logiciel utilisant la LibLapin, il sera possible de l'afficher et d'animer les lumières :p
    Cela peut etre fait très simplement avec une boite en tete + deux fichiers PNGs qui se suivent.
