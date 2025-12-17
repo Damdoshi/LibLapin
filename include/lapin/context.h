@@ -143,7 +143,6 @@ t_bunny_event_response_function	bunny_subcontext_event_response;
     .close = name ## _close,					\
     .loop = name ## _loop,					\
     .display = name ## _display,				\
-    .netcom = NULL,						\
     .netmessage = name ## _message,				\
     .netconnect = name ## _connect,				\
     .entering_context = name ## _entering,			\
