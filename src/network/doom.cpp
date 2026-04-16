@@ -5,10 +5,8 @@
 
 #include	"lapin_private.h"
 
-bool		bunny_network_doom(const t_bunny_network	*a)
+bool		bunny_network_doom(t_bunny_network_info		a)
 {
-  if (!a)
-    return (false);
-  return (gl_network.Doom(*(network::Info*)a));
+  return (gl_network.Doom(*(network::Info*)&a));
 }
 

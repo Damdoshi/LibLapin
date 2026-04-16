@@ -27,12 +27,12 @@ namespace		network
 	memcpy(this, &proto, sizeof(*this));
       return (*this);
     }
-    
+
     bool		operator==(Protocol		proto) const
     {
       return (pcol_set && protocol == proto);
     }
-    
+
     operator		bool(void) const
     {
       return (pcol_set);
@@ -49,7 +49,7 @@ namespace		network
       if (protocol == BP_TCP_TERMINATED_DATA)
 	{
 	  char	term[2] = {terminator, 0};
-	  
+
 	  ok = ok && bunny_configuration_setf_string(cnf, &term[0], "Terminator");
 	}
       if (protocol == BP_UDP_RELIABLE)

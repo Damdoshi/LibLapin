@@ -14,7 +14,7 @@
   ((a) != BP_UDP_IMMEDIATE && (a) != BP_UDP_RELIABLE)
 # define		isudp(a) (!istcp(a))
 # define		isimmediate(a)					\
-  ((a) != BP_UDP_IMMEDIATE && (a) != BP_TCP_IMMEDIATE && (a) != BP_UDP_RELIABLE)
+  ((a) == BP_UDP_IMMEDIATE || (a) == BP_TCP_IMMEDIATE || (a) == BP_UDP_RELIABLE)
 
 namespace		network
 {

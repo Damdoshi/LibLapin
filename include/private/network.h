@@ -12,7 +12,7 @@
 
 t_bunny_response		bunny_network_event(double		tmout,
 						    void		*data);
-bool				bunny_network_poll(double		timeout);
+double				bunny_network_poll(double		timeout);
 int				bunny_network_inbox(void);
 int				bunny_network_outbox(void);
 t_bunny_communication		bunny_network_read(void);

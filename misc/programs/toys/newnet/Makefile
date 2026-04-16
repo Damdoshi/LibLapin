@@ -10,20 +10,18 @@
   BIN		=	`pwd | rev | cut -d "/" -f1 | rev`
   FLAG		=	-W -Wall -Werror -g -g3 -ggdb -lasan
 
-  INCLUDE	=	-I./include/ -I./../../../../include/
-  SRC		=	$(wildcard src/*.cpp)
-  OBJ		=	$(SRC:.cpp=.o)
-  LIBPATH	=	-L./../../../../
+  SRC		=	$(wildcard src/*.c)
+  OBJ		=	$(SRC:.c=.o)
 
   ## Rules ------------------------------------------------------------------
   all:		bin
   bin:		$(OBJ)
-		@../../../../b++ $(OBJ) -o $(BIN) $(LIBPATH) $(LIB) $(FLAG)
+		@bcc $(OBJ) -o $(BIN) $(LIBPATH) $(LIB) $(FLAG)
 		@echo "[OUT] " $(BIN)
 		@echo $(BIN) | tr '[:lower:]' '[:upper:]'
-  .cpp.o:
-		@../../../../b++ $(INCLUDE) $(FLAG) -c $< -o $@
-		@echo "[B++]" $<
+  .c.o:
+		@bcc $(INCLUDE) $(FLAG) -c $< -o $@
+		@echo "[BCC]" $<
   clean:
 		@rm -f $(OBJ)
   fclean:	clean
