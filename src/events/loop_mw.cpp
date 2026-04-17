@@ -65,13 +65,9 @@ t_bunny_response	bunny_loop_mw(t_bunny_window		**window,
 	    {
 	      struct bunny_window	*win = (struct bunny_window*)window[i];
 
-	      auto ppos = win->window->getPosition();
-	      win->position.x = ppos.x;
-	      win->position.y = ppos.y;
-
-	      gl_window = window[i];
 	      if (win)
 		{
+		  gl_window = window[i];
 		  auto ppos = win->window->getPosition();
 		  win->position.x = ppos.x;
 		  win->position.y = ppos.y;

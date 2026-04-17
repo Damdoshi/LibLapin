@@ -5,7 +5,7 @@
 
 #include	"lapin_private.h"
 
-bool		bunny_network_poll(double		tmout)
+double		bunny_network_poll(double		tmout)
 {
   return (gl_network.Poll(tmout, false));
 }

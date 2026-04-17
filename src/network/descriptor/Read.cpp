@@ -11,7 +11,7 @@
 
 bool			network::Descriptor::Read(void)
 {
-  ProtoSpec		specs;
+  ProtoSpec		specs = protocol;
   ssize_t		len;
   Info			rinfo;
 
@@ -49,7 +49,7 @@ bool			network::Descriptor::Read(void)
 
       // Récupération du protocole du pair
       specs = peer.protocol;
-      
+
       // La connexion est perdue
       if (len == 0 && istcp(specs.protocol))
 	{
@@ -122,7 +122,7 @@ bool			network::Descriptor::Read(void)
     }
 
   /// TCP
-  if (protocol == BP_TCP_TERMINATED_DATA)
+  if (specs.protocol == BP_TCP_TERMINATED_DATA)
     {
       char		*begin = &inbuffer[rcursor];
       char		*term;

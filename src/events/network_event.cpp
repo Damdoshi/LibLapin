@@ -12,8 +12,7 @@ t_bunny_response		network_event(double			v,
 
   if (v < 0)
     v = 1;
-  if (!bunny_network_poll(v) <= 0)
-    return (GO_ON);
+  (void)bunny_network_poll(v);
   while (bunny_network_inbox() && gl_network.GetMessage(com))
     {
       if ((com.type == ::BCT_NETCONNECTED

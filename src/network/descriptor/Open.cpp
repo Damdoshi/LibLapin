@@ -48,6 +48,8 @@ network::Info		Network::Descriptor::Open(const ProtoSpec	&specs,
     if (bind(fd, (struct sockaddr*)&info.sockaddr, info.socklen) == -1)
       goto CloseAndLeave;
 
+  protocol = specs;
+
   // TCP
   if (istcp(specs.protocol))
     {
@@ -67,7 +69,6 @@ network::Info		Network::Descriptor::Open(const ProtoSpec	&specs,
   else if (specs.size == 0)
     protocol.size = 65507; // Maximum size of a UDP packet
 
-  protocol = specs;
   active = true;
   doomed = false;
   return (info);

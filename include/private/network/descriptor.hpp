@@ -36,7 +36,7 @@ namespace			network
 
     // Seulement pour les serveurs TCP.
     ProtoSpec			protocol;
-    
+
     bool			active;
     bool			doomed;
     int				fd;
