@@ -19,6 +19,8 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
   if (seq.lines.size() <= cin->current_command)
     return (EXIT_ON_SUCCESS);
 
+  cin->stack_frame = cin->command_data[cin->stack_top];
+
   for (argc = 0;
        argc < seq.lines[cin->current_command].nbr_parameters
 	 && argc < NBRCELL(argv) - 1
@@ -89,6 +91,8 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
 	    }
 	  cin->current_command = 0;
 	  cin->stack_top = 0;
+	  cin->stack_frame = cin->command_data[cin->stack_top];
+	  memset(cin->stack_frame, 0, sizeof(cin->command_data[0]));
 	  memset(cin->command_data, 0, sizeof(cin->command_data));
 	  memset(cin->return_position, 0, sizeof(cin->return_position));
 	}
@@ -107,6 +111,7 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
       if (cin->stack_top == 0)
 	return (EXIT_ON_ERROR);
       cin->stack_top -= 1;
+      cin->stack_frame = cin->command_data[cin->stack_top];
       cin->current_command = cin->return_position[cin->stack_top];
     }
   else
@@ -118,6 +123,7 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
 	{
 	  if (cin->stack_top + 1 >= NBRCELL(cin->command_data))
 	    return (EXIT_ON_ERROR);
+	  cin->stack_frame = cin->command_data[cin->stack_top];
 	  memcpy(buf, res, res2 - res);
 	  buf[res2 - res] = 0;
 	  cin->return_position[cin->stack_top] = cin->current_command + 1;

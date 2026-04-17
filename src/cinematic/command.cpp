@@ -372,7 +372,7 @@ char			*cinematic_move(PARAMS)
   xdiff = cte.target.x - cte.pic->position.x;
   ydiff = cte.target.y - cte.pic->position.y;
   double		ndist = xdiff * xdiff + ydiff * ydiff;
-  
+
   if (dist < ndist)
     {
       cte.pic->position = cte.target;
