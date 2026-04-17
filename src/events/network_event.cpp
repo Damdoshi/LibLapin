@@ -25,10 +25,8 @@ t_bunny_response		network_event(double			v,
 	}
       else if (com.type == ::BCT_MESSAGE)
 	{
-	  return (gl_callback.net_message(com.info,
-					  com.data,
-					  com.size,
-					  data));
+	  com.DoNotFreeData();
+	  return (gl_callback.net_message(com.info, com.data, com.size, data));
 	}
       else
 	{

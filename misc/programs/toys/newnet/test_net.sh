@@ -8,6 +8,15 @@ mkdir -p "$TMPDIR"
 PASS=0
 FAIL=0
 
+# Base de ports pseudo-aléatoire dans une zone haute
+BASE_PORT="${BASE_PORT:-$((40000 + ($$ % 20000)))}"
+
+PORT_TCP=$((BASE_PORT + 0))
+PORT_TERM=$((BASE_PORT + 1))
+PORT_SIZE=$((BASE_PORT + 2))
+PORT_FIXED=$((BASE_PORT + 3))
+PORT_UDP=$((BASE_PORT + 4))
+
 run_bg() {
   stdbuf -oL -eL "$@"
 }
@@ -65,15 +74,16 @@ contains_send_fail() {
   grep -q "\[SEND\].*FAIL" "$file"
 }
 
-contains_open() {
+contains_open_failed() {
   local file="$1"
-  grep -q "\[OPEN\]" "$file"
+  grep -q "\[OPEN\] failed" "$file"
 }
 
 run_server_client_case() {
   local name="$1"
-  local server_args="$2"
-  local client_args="$3"
+  local port="$2"
+  local server_args="$3"
+  local client_args="$4"
 
   local srv_log="$TMPDIR/${name}_server.log"
   local cli_log="$TMPDIR/${name}_client.log"
@@ -99,35 +109,38 @@ run_server_client_case() {
   show_log_excerpt "server log ($name)" "$srv_log"
   show_log_excerpt "client log ($name)" "$cli_log"
 
-  if { contains_message "$srv_log" || contains_message "$cli_log"; } \
-     && ! contains_send_fail "$srv_log" \
-     && ! contains_send_fail "$cli_log"; then
+  if contains_open_failed "$srv_log"; then
+    fail "$name (server open failed on port $port)"
+  elif { contains_message "$srv_log" || contains_message "$cli_log"; } \
+       && ! contains_send_fail "$srv_log" \
+       && ! contains_send_fail "$cli_log"; then
     pass "$name"
   elif contains_message "$srv_log" || contains_message "$cli_log"; then
     fail "$name (messages seen, but send failures present)"
   elif contains_connect "$srv_log" || contains_connect "$cli_log"; then
     fail "$name (connect seen, but no message)"
-  elif contains_open "$srv_log" || contains_open "$cli_log"; then
-    fail "$name (opened, but no connect/message detected)"
   else
-    fail "$name (no output captured)"
+    fail "$name (no connect/message detected)"
   fi
+
+  sleep 1
 }
 
 run_udp_case() {
   local name="udp"
+  local port="$1"
   local a_log="$TMPDIR/${name}_A.log"
   local b_log="$TMPDIR/${name}_B.log"
 
   log "=== CASE $name ==="
-  log "peer A: $PROG -p udp -L 34571 -n 5 -i 300 -m A"
-  run_bg "$PROG" -p udp -L 34571 -n 5 -i 300 -m A >"$a_log" 2>&1 &
+  log "peer A: $PROG -p udp -L $port -n 5 -i 300 -m A"
+  run_bg "$PROG" -p udp -L "$port" -n 5 -i 300 -m A >"$a_log" 2>&1 &
   local a_pid=$!
 
   sleep 1
 
-  log "peer B: $PROG -p udp -R 127.0.0.1 34571 -n 5 -i 300 -m B"
-  run_bg "$PROG" -p udp -R 127.0.0.1 34571 -n 5 -i 300 -m B >"$b_log" 2>&1 &
+  log "peer B: $PROG -p udp -R 127.0.0.1 $port -n 5 -i 300 -m B"
+  run_bg "$PROG" -p udp -R 127.0.0.1 "$port" -n 5 -i 300 -m B >"$b_log" 2>&1 &
   local b_pid=$!
 
   sleep 5
@@ -148,10 +161,8 @@ run_udp_case() {
     fail "$name (messages seen, but send failures present)"
   elif contains_connect "$a_log" || contains_connect "$b_log"; then
     fail "$name (connect seen, but no message)"
-  elif contains_open "$a_log" || contains_open "$b_log"; then
-    fail "$name (opened, but no connect/message detected)"
   else
-    fail "$name (no output captured)"
+    fail "$name (no connect/message detected)"
   fi
 }
 
@@ -160,6 +171,7 @@ summary() {
   echo "=============================="
   echo "PASS: $PASS"
   echo "FAIL: $FAIL"
+  echo "BASE_PORT: $BASE_PORT"
   echo "Logs: $TMPDIR"
   echo "=============================="
   echo
@@ -168,28 +180,29 @@ summary() {
 
 main() {
   require_prog
+  log "Using BASE_PORT=$BASE_PORT"
 
   run_server_client_case \
-    "tcp" \
-    "-p tcp -L 34567 -n 5 -i 300 -m server" \
-    "-p tcp -R 127.0.0.1 34567 -n 5 -i 300 -m client"
+    "tcp" "$PORT_TCP" \
+    "-p tcp -L $PORT_TCP -n 5 -i 300 -m server" \
+    "-p tcp -R 127.0.0.1 $PORT_TCP -n 5 -i 300 -m client"
 
   run_server_client_case \
-    "term" \
-    "-p term -L 34570 -n 5 -i 300 -m server" \
-    "-p term -R 127.0.0.1 34570 -n 5 -i 300 -m client"
+    "term" "$PORT_TERM" \
+    "-p term -L $PORT_TERM -n 5 -i 300 -m server" \
+    "-p term -R 127.0.0.1 $PORT_TERM -n 5 -i 300 -m client"
 
   run_server_client_case \
-    "size" \
-    "-p size -L 34569 -n 5 -i 300 -s 128 -m server" \
-    "-p size -R 127.0.0.1 34569 -n 5 -i 300 -s 128 -m client"
+    "size" "$PORT_SIZE" \
+    "-p size -L $PORT_SIZE -n 5 -i 300 -s 128 -m server" \
+    "-p size -R 127.0.0.1 $PORT_SIZE -n 5 -i 300 -s 128 -m client"
 
   run_server_client_case \
-    "fixed" \
-    "-p fixed -L 34568 -n 5 -i 300 -s 64 --hex -m server" \
-    "-p fixed -R 127.0.0.1 34568 -n 5 -i 300 -s 64 --hex -m client"
+    "fixed" "$PORT_FIXED" \
+    "-p fixed -L $PORT_FIXED -n 5 -i 300 -s 64 --hex -m server" \
+    "-p fixed -R 127.0.0.1 $PORT_FIXED -n 5 -i 300 -s 64 --hex -m client"
 
-  run_udp_case
+  run_udp_case "$PORT_UDP"
 
   summary
 }

@@ -20,6 +20,25 @@
 # endif
 
 /*!
+** Return the current bunny time.
+** This is not a real time clock: it is updated by bunny_asynclock,
+** so it is your-program-time.
+** \return The current bunny time, in seconds.
+*/
+double			bunny_get_current_time(void);
+
+# define		bunny_time_old(tim)		(tim < bunny_get_current_time())
+# define		bunny_time_alive(tim)		(tim >= bunny_get_current_time())
+# define		bunny_time_plus(tim)		(bunny_get_current_time() + tim)
+# define		bunny_time_minus(tim)		(bunny_get_current_time() - tim)
+
+/*!
+** Set the bunny clock (the program time, not real time) to the current real time
+** \return The new program time.
+*/
+double			bunny_reset_clock(void);
+
+/*!
 ** A timestamp with nanosecond precision.
 */
 typedef uint64_t	t_bunny_time;
@@ -159,23 +178,4 @@ void			bunny_delete_trap(t_bunny_trap			*trap);
 int			bunny_asynclock(double				elapsed_time,
 					t_bunny_call_order		order);
 
-/*!
-** Set the bunny clock (the program time, not real time) to the current real time
-** \return The new program time.
-*/
-double			bunny_reset_clock(void);
-
-/*!
-** Return the current bunny time.
-** This is not a real time clock: it is updated by bunny_asynclock,
-** so it is your-program-time.
-** \return The current bunny time, in seconds.
-*/
-double			bunny_get_current_time(void);
-
-# define		bunny_time_old(tim)		(tim < bunny_get_current_time())
-# define		bunny_time_alive(tim)		(tim >= bunny_get_current_time())
-# define		bunny_time_plus(tim)		(bunny_get_current_time() + tim)
-# define		bunny_time_minus(tim)		(bunny_get_current_time() - tim)
-
-#endif	/*			__LAPIN_ASYNCLOCK_H__	*/
+#endif	/*		__LAPIN_ASYNCLOCK_H__	*/

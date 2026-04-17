@@ -91,6 +91,8 @@ bool			network::Descriptor::Read(void)
   /// TCP
   if (specs.protocol == BP_TCP_SIZED_PLUS_DATA)
     {
+      size_t total;
+
       rcursor += len;
       // Si on a pas encore recu toute la taille, on ne fait rien, on l'attend
       if (rcursor < sizeof(spdbuffer->size))
@@ -101,22 +103,23 @@ bool			network::Descriptor::Read(void)
 	  Close();
 	  return (false);
 	}
+      total = spdbuffer->size + sizeof(spdbuffer->size);
       // Si le buffer ne permet pas d'enregistrer le paquet entier, on augmente sa taille
-      if (spdbuffer->size > inbuffer_size)
+      if (total > inbuffer_size)
 	{
 	  char *tmp;
 
-	  if ((tmp = (char*)bunny_realloc(inbuffer, spdbuffer->size)) == NULL)
+	  if ((tmp = (char*)bunny_realloc(inbuffer, total)) == NULL)
 	    return (false);
-	  while (inbuffer_size < spdbuffer->size)
+	  while (inbuffer_size < total)
 	    tmp[inbuffer_size++] = 0;
 	  inbuffer = tmp;
 	  spdbuffer = (struct size_plus_data*)inbuffer;
 	}
       // Au cas où l'on ai recu plusieurs paquets d'un coup
       // ce que la LibLapin ne fait *pas* - donc en face,
-      while (rcursor > spdbuffer->size + sizeof(spdbuffer->size))
-	if (ExtractFromInBuffer(rinfo, specs, spdbuffer->size + sizeof(spdbuffer->size)) == false)
+      while (rcursor >= (total = spdbuffer->size + sizeof(spdbuffer->size)))
+	if (ExtractFromInBuffer(rinfo, specs, total) == false)
 	  return (false);
       return (true);
     }

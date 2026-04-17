@@ -20,7 +20,7 @@ namespace		network
     char		terminator = '\0';
     int			timeout = 3000;
     bool		resend = true;
-
+    
     ProtoSpec		&operator=(const ProtoSpec	&proto)
     {
       if (this != &proto)
