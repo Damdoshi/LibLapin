@@ -61,7 +61,7 @@ namespace		network
     {
       free_data = false;
     }
-    
+
     // Shallow copy
     Communication	&operator=(Communication	&com)
     {
@@ -122,7 +122,7 @@ namespace		network
     ~Communication(void)
     {
       // Do NOT free data if it is data for user. The user must do it.
-      if (free_data && data != NULL)
+      if (free_data && data != NULL && 0)
 	bunny_free(data);
     }
   };

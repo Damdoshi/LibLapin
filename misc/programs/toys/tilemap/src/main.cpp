@@ -10,6 +10,8 @@
 #include		<stdio.h>
 #include		<lapin.h>
 
+#include		"../../../../../include/private/graphics.h"
+
 t_bunny_window		*win;
 t_bunny_tilemap		*tmap;
 t_bunny_tilemap		*tdup;
@@ -65,11 +67,13 @@ t_bunny_response	loop(void			*unused)
     if ((tmap->zoom.x = (tmap->zoom.y *= 0.95)) < 0.1)
       tmap->zoom.x = tmap->zoom.y = 0.1;
 
+  /*
   if (bunny_get_keyboard()[BKS_SPACE])
     {
       tdup->zoom = tmap->zoom;
       tdup->rotation = tmap->rotation;
     }
+  */
 
   bunny_sprite_animate(spr, 1.0 / bunny_get_frequency());
 
@@ -81,7 +85,7 @@ static void		render_tilemap(t_bunny_tilemap	*tm)
   bunny_fill(&tm->clipable.buffer, RED);
 
   tm->layer_clip[0] = 0;
-  tm->layer_clip[1] = 1;
+  tm->layer_clip[1] = 0;
   bunny_draw(&tm->clipable);
 
   bunny_blit(&tm->clipable.buffer, &spr->clipable, NULL);
@@ -102,13 +106,10 @@ t_bunny_response	display(void			*unused)
     bunny_fill(&win->buffer, PINK);
 
   render_tilemap(tmap);
-  render_tilemap(tdup);
 
-  tdup->clipable.rotation = tmap->clipable.rotation;
-  tdup->clipable.scale = tmap->clipable.scale;
-
+  // t_bunny_position p{100, 100};
+  // bunny_blit(&win->buffer, ((struct bunny_tilemap*)tmap)->working, &p);
   bunny_blit(&win->buffer, &tmap->clipable, NULL);
-  bunny_blit(&win->buffer, &tdup->clipable, NULL);
 
   bunny_display(win);
   return (GO_ON);
@@ -120,13 +121,15 @@ int			main(int	argc,
   const char		*file = "./tilemap.dab";
   int			cnt;
 
+  bunny_consistancy();
   // bunny_consistancy();
   bunny_set_log_mode(true);
   bunny_enable_full_blit(true);
   bunny_set_log_filter("tilemap");
+  bunny_set_log_descriptor(2);
   bunny_set_error_descriptor(2);
 
-  assert((win = bunny_start_style(800, 800, DEFAULT_WIN_STYLE | ANTIALIASING, "TileMap!")));
+  assert((win = bunny_start_style(800, 800, ((t_bunny_window_style)(DEFAULT_WIN_STYLE | ANTIALIASING)), "TileMap!")));
   //bunny_set_error_descriptor(2);
   if (argc >= 2)
     file = argv[1];
@@ -185,6 +188,7 @@ int			main(int	argc,
       bunny_tilemap_set_camera(tmap, bunny_accurate_position(tmap->map_size.x / 2, tmap->map_size.y / 2));
     }
 
+  /*
   if (!(tdup = bunny_tilemap_new_viewpoint(tmap, 100, 100)))
     {
       bunny_perror("bunny_tilemap_new_viewpoint");
@@ -196,6 +200,7 @@ int			main(int	argc,
   tdup->clipable.origin.y = tdup->clipable.buffer.height / 2;
   tdup->clipable.position.x = 2 * win->buffer.width / 3;
   tdup->clipable.position.y = 2 * win->buffer.height / 3;
+  */
 
   if (!(spr = bunny_load_sprite("./dinelo.ini")))
     {

@@ -26,6 +26,7 @@ int				main(void)
   static t_program		program;
   t_bunny_response		response;
 
+  bunny_set_error_descriptor(2);
   if (!(program.joystick = bunny_malloc(sizeof(*program.joystick) * LAST_BUNNY_JOYSTICK)))
     {
       bunny_printlerr("Cannot reserve space for joysticks.");

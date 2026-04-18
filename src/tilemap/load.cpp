@@ -7,7 +7,7 @@
 
 #define			PATTERN	"%s file, %ud width, %ud height -> %p"
 
-static t_bunny_tilemap	*bunny_load_tilemap_whc(const char	*file,
+t_bunny_tilemap		*bunny_load_tilemap_whc(const char	*file,
 						unsigned int	width,
 						unsigned int	height,
 						t_bunny_configuration *conf)

@@ -74,9 +74,9 @@ static void		draw_layer(struct bunny_tilemap			*tmap,
 	    // Simple tile - clip its graphics
 	    clip = ts.tileset;
 	    tleft =
-	      (tile % ts.tileset_size.x) * (ts.tile_size.x + ts.intertile.x) + ts.margin.x;
+	      (tile % ts.tileset_size.x) * (ts.tile_size.x + ts.intertile.x) + ts.position.x;
 	    ttop =
-	      (tile / ts.tileset_size.x) * (ts.tile_size.y + ts.intertile.y) + ts.margin.y;
+	      (tile / ts.tileset_size.x) * (ts.tile_size.y + ts.intertile.y) + ts.position.y;
 	  }
 	else
 	  {

@@ -64,10 +64,16 @@ static bool		load_tileset(t_bunny_configuration			*cnf,
        	ts->tile_size.y = tmap->tile_size.y;
 
   // Intertile
+  ts->intertile.x = 0;
+  ts->intertile.y = 0;
   bunny_configuration_getf_int(cnf, &ts->intertile.x, "Intertile[0]");
   bunny_configuration_getf_int(cnf, &ts->intertile.y, "Intertile[1]");
-  bunny_configuration_getf_int(cnf, &ts->margin.x, "Intertile[0]");
-  bunny_configuration_getf_int(cnf, &ts->margin.y, "Intertile[1]");
+
+  // Marge
+  ts->position.x = 0;
+  ts->position.y = 0;
+  bunny_configuration_getf_int(cnf, &ts->position.x, "Position[0]");
+  bunny_configuration_getf_int(cnf, &ts->position.y, "Position[1]");
 
   // Misc
   if (!(ts->name = bunny_strdup(ts->name)))
@@ -126,6 +132,11 @@ static bool		load_tileset(t_bunny_configuration			*cnf,
 	bunny_configuration_setf_int(cnf, ts->intertile.x, "AnimatedTiles[%d].Intertile[0]", i);
       if (!bunny_configuration_getf_int(cnf, NULL, "AnimatedTiles[%d].Intertile[1]", i))
 	bunny_configuration_setf_int(cnf, ts->intertile.y, "AnimatedTiles[%d].Intertile[1]", i);
+
+      if (!bunny_configuration_getf_int(cnf, NULL, "AnimatedTiles[%d].Position[0]", i))
+	bunny_configuration_setf_int(cnf, ts->position.x, "AnimatedTiles[%d].Position[0]", i);
+      if (!bunny_configuration_getf_int(cnf, NULL, "AnimatedTiles[%d].Position[1]", i))
+	bunny_configuration_setf_int(cnf, ts->position.y, "AnimatedTiles[%d].Position[1]", i);
 
       bunny_configuration_getf_node(cnf, &pic, "AnimatedTiles[%d]", i);
       if (!(ts->animated_tiles[i] = bunny_read_sprite(pic)))
@@ -259,12 +270,12 @@ t_bunny_tilemap		*__bunny_load_dabsic_tilemap(t_bunny_configuration	*conf,
     return (NULL);
   if (!bunny_configuration_getf_int(map, &tmap->map_size.x, "Width"))
     if (!bunny_configuration_getf_int(map, &tmap->map_size.x, "MapWidth"))
-      if (!bunny_configuration_getf_int(map, &tmap->map_size.x, "Size[0]"))
+      // if (!bunny_configuration_getf_int(map, &tmap->map_size.x, "Size[0]"))
 	if (!bunny_configuration_getf_int(map, &tmap->map_size.x, "MapSize[0]"))
 	  return (NULL);
   if (!bunny_configuration_getf_int(map, &tmap->map_size.y, "Height"))
     if (!bunny_configuration_getf_int(map, &tmap->map_size.y, "MapHeight"))
-      if (!bunny_configuration_getf_int(map, &tmap->map_size.y, "Size[1]"))
+      // if (!bunny_configuration_getf_int(map, &tmap->map_size.y, "Size[1]"))
 	if (!bunny_configuration_getf_int(map, &tmap->map_size.y, "MapSize[1]"))
 	  return (NULL);
   if (!bunny_configuration_getf_int(map, &tmap->tile_size.x, "TileWidth"))
@@ -297,6 +308,9 @@ t_bunny_tilemap		*__bunny_load_dabsic_tilemap(t_bunny_configuration	*conf,
   else
     tmap->method = BTM_FLAT;
 
+  tmap->normal_map = false;
+  bunny_configuration_getf_bool(map, &tmap->normal_map, "NormalMap");
+
   // Count layers and tilesets
   tmap->nbr_tilesets = bunny_configuration_casesf(map, "Tilesets");
   tmap->nbr_layers = bunny_configuration_casesf(map, "Layers");
@@ -315,7 +329,7 @@ t_bunny_tilemap		*__bunny_load_dabsic_tilemap(t_bunny_configuration	*conf,
     {
       tmap->tilesets[i].first_tile = j;
       tmap->tilesets[i].last_tile = tmap->tilesets[i].nbr_tiles + j;
-      j += 1;
+      j += tmap->tilesets[i].nbr_tiles;
     }
 
   // Load layer
@@ -334,7 +348,7 @@ t_bunny_tilemap		*__bunny_load_dabsic_tilemap(t_bunny_configuration	*conf,
 
   if (!bunny_configuration_getf_double(map, &tmap->zoom.x, "Zoom[0]"))
     bunny_configuration_getf_double(map, &tmap->zoom.x, "Zoom.X");
-  if (!bunny_configuration_getf_double(map, &tmap->zoom.y, "Zoom[0]"))
+  if (!bunny_configuration_getf_double(map, &tmap->zoom.y, "Zoom[1]"))
     bunny_configuration_getf_double(map, &tmap->zoom.y, "Zoom.Y");
 
   if (!bunny_configuration_getf_bool(map, &tmap->loop[0], "Loop[0]"))
@@ -345,7 +359,7 @@ t_bunny_tilemap		*__bunny_load_dabsic_tilemap(t_bunny_configuration	*conf,
   bunny_configuration_getf_bool(map, &tmap->lock_borders, "LockBorders");
   bunny_configuration_getf_int(map, &tmap->layer_clip[0], "LayerClip[0]");
   bunny_configuration_getf_int(map, &tmap->layer_clip[1], "LayerClip[1]");
-  bunny_configuration_getf_double(map, &tmap->rotation, "Rotation");
+  bunny_configuration_getf_double(map, &tmap->tile_rotation, "Rotation");
 
   // Custom properties
   if (bunny_configuration_getf_node(map, &nod, "Properties"))

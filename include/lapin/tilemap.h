@@ -35,7 +35,7 @@ typedef struct			s_bunny_tileset
   const char			*name;
   t_bunny_picture		*tileset;
   t_bunny_size			tile_size;
-  t_bunny_size			margin;
+  t_bunny_size			position;
   t_bunny_size			intertile;
   t_bunny_size			tileset_size;
   t_bunny_sprite		**animated_tiles_id; // nbr_tiles length
@@ -125,6 +125,10 @@ typedef struct			s_bunny_tilemap
 t_bunny_tilemap			*bunny_load_tilemap_wh(const char			*cnf,
 						       unsigned int			width,
 						       unsigned int			height);
+t_bunny_tilemap			*bunny_load_tilemap_whc(const char			*file,
+							unsigned int			width,
+							unsigned int			height,
+							t_bunny_configuration		*conf);
 
 t_bunny_tilemap			*bunny_load_tilemap(const char				*cnf);
 

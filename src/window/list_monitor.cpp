@@ -130,12 +130,13 @@ const t_bunny_area		*bunny_list_autonomous_monitors(void)
       if (j >= 0)
 	continue ;
       // If no one is found, store it.
-      screens[count].x = screens[i].x;
-      screens[count].y = screens[i].y;
-      screens[count].w = screens[i].w;
-      screens[count].h = screens[i].h;
+      screens[count] = screens[i];
       count += 1;
     }
+  screens[count].x = 0;
+  screens[count].y = 0;
+  screens[count].w = 0;
+  screens[count].h = 0;
   return (screens);
 }
 

@@ -17,6 +17,19 @@
 
 #include			"lapin_private.h"
 
+template <typename T>
+std::ostream &operator<<(std::ostream &os, sf::Vector2<T> const &f) {
+  os << f.x << " " << f.y;
+  return (os);
+}
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os, sf::Rect<T> const &f) {
+  os << f.position.x << " " << f.position.y << " " << f.size.x << " " << f.size.y;
+  return (os);
+}
+
+
 static inline unsigned int	extract_bitplane(struct bunny_pixelarray		&pic,
 						 uint8_t				*px,
 						 int					x,
@@ -294,7 +307,9 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 
 	tmap->working->rotation = tmap->tile_rotation;
 	tmap->type = GRAPHIC_RAM;
+	((struct bunny_picture*)tmap->working)->texture->display();
 	bunny_blit((t_bunny_buffer*)tmap, tmap->working, NULL);
+	tmap->texture->display();
 	tmap->type = TILEMAP;
 	// NO BREAK -> Graphic ram scope is needed too.
 	[[fallthrough]];
@@ -354,6 +369,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	if (*input_type == GRAPHIC_RAM
 	    || *input_type == SPRITE
 	    || *input_type == TTF_TEXT
+	    || *input_type == TILEMAP
 	    || *input_type == DRESSED_SPRITE)
 	  {
 	    if (shader)

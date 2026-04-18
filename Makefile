@@ -24,10 +24,10 @@
 
   NAME		=	lapin
   PRODSO	=	lib$(NAME).so
-  PRODA		=	lib$(NAME).a
+  PRODA		=	/tmp/lib$(NAME).a
   DBGSO		=	lib$(NAME)-dbg.so
-  DBGA		=	lib$(NAME)-dbg.a
-  TSTA		=	lib$(NAME)-test.a
+  DBGA		=	/tmp/lib$(NAME)-dbg.a
+  TSTA		=	/tmp/lib$(NAME)-test.a
 
   TITLE		=	"LIBLAPIN - BUNNY LIBRARY"
   LAPINOPTS	=	-DBUNNY_COMPILATION					\

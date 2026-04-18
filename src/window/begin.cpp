@@ -10,7 +10,7 @@ static int		get_style(t_bunny_configuration				*cnf)
   const char		*stl;
   int			style = 0;
   int			i;
-  
+
   for (i = 0; bunny_configuration_getf_string(cnf, &stl, "Style[%d]", i); ++i)
     {
       if (!bunny_strcasecmp(stl, "Simple"))

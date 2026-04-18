@@ -32,7 +32,10 @@ static void	refresh_tiles(struct bunny_tilemap			*tmap,
       int		y = trtile[i].y;
       int		z = trtile[i].z;
 
-      t_bunny_area	clip{x, y, tmap->tile_size.x, tmap->tile_size.y};
+      t_bunny_area	clip{
+	x * tmap->tile_size.x, y * tmap->tile_size.y,
+	tmap->tile_size.x, tmap->tile_size.y
+      };
       t_bunny_position	pos{x, y};
       int		til = tmap->layers[z].tiles[x + y * tmap->map_size.x];
       t_bunny_tileset	*ts = bunny_get_tileset_for_tile((t_bunny_tilemap*)tmap, til);
@@ -71,8 +74,9 @@ bool		__bunny_draw_layer_tilemap(struct bunny_tilemap		*tmap)
 		  continue ;
 		t_bunny_tileset	*ts = bunny_get_tileset_for_tile((t_bunny_tilemap*)tmap, til);
 		t_bunny_picture	*pic = ts->tileset;
+		int local = til - ts->first_tile;
 
-		if (ts->animated_tiles_id != NULL && ts->animated_tiles_id[til] != NULL)
+		if (ts->animated_tiles_id != NULL && ts->animated_tiles_id[local] != NULL)
 		  {
 		    t_bunny_zposition &zpos = tmap->animated_tiles[tmap->nbr_animated_tiles++];
 

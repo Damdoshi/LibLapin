@@ -143,12 +143,11 @@ t_bunny_event_response_function	bunny_subcontext_event_response;
     .close = name ## _close,					\
     .loop = name ## _loop,					\
     .display = name ## _display,				\
-    .netcom = NULL,						\
     .net_message = name ## _message,				\
     .net_connect = name ## _connect,				\
     .entering_context = name ## _entering,			\
     .leaving_context = name ## _leaving,			\
-    .async_computation = name ## _async_computation,	\
+    .async_computation = name ## _async_computation,		\
     .event = name ## _event_response
 
 # include			"context/box.h"
