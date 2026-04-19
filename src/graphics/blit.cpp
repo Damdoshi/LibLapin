@@ -219,6 +219,115 @@ static sf::Sprite		*blit_pixelarray(struct bunny_pixelarray		&pic,
   return (pic.sprite);
 }
 
+static void			configure_normal_sprite(sf::Sprite			&sprite,
+						 const struct bunny_picture		&pic,
+						 const t_bunny_position			&pos)
+{
+  sf::IntRect			rect;
+
+  if (pic.ntex == NULL)
+    return ;
+  rect.position.x = pic.rect.x;
+  rect.position.y = pic.rect.y;
+  rect.size.x = pic.rect.w;
+  rect.size.y = pic.rect.h;
+  sprite.setTexture(*pic.ntex, true);
+  sprite.setTextureRect(rect);
+  sprite.setPosition({pos.x, pos.y});
+  sprite.setOrigin({pic.origin.x, pic.origin.y});
+  sprite.setScale({pic.scale.x, pic.scale.y});
+  sprite.setRotation(sf::degrees(pic.rotation));
+  sprite.setColor
+    (sf::Color(255,
+	       255,
+	       255,
+	       pic.color_mask.argb[ALPHA_CMP]
+	       ));
+}
+
+static void			draw_rendertexture_sprite(sf::RenderTexture		*target,
+							  sf::Sprite			&sprite,
+							  sf::Shader			*shader,
+							  bool				allow_special_blend)
+{
+  if (target == NULL)
+    return ;
+  if (shader)
+    {
+      if (allow_special_blend)
+	{
+	  if (gl_set_alpha_blit)
+	    {
+	      sf::RenderStates stt = sf::BlendMultiply;
+
+	      stt.shader = shader;
+	      target->draw(sprite, stt);
+	    }
+	  if (gl_set_additional_blit)
+	    {
+	      sf::RenderStates stt = sf::BlendAdd;
+
+	      stt.shader = shader;
+	      target->draw(sprite, stt);
+	    }
+	  else if (gl_full_blit == false)
+	    {
+	      sf::RenderStates stt = sf::BlendNone;
+
+	      stt.shader = shader;
+	      target->draw(sprite, stt);
+	    }
+	  else
+	    target->draw(sprite, shader);
+	}
+      else if (gl_full_blit == false)
+	{
+	  sf::RenderStates stt = sf::BlendNone;
+
+	  stt.shader = shader;
+	  target->draw(sprite, stt);
+	}
+      else
+	target->draw(sprite, shader);
+      return ;
+    }
+  if (allow_special_blend)
+    {
+      if (gl_set_alpha_blit)
+	{
+	  sf::RenderStates stt = sf::BlendAlpha;
+
+	  stt.blendMode = sf::BlendMode
+	    (sf::BlendMode::Factor::Zero,
+	     sf::BlendMode::Factor::One,
+	     sf::BlendMode::Equation::Add,
+	     sf::BlendMode::Factor::One,
+	     sf::BlendMode::Factor::One,
+	     sf::BlendMode::Equation::ReverseSubtract
+	     );
+	  target->draw(sprite, stt);
+	}
+      else if (gl_set_additional_blit)
+	{
+	  sf::RenderStates stt = sf::BlendAdd;
+
+	  target->draw(sprite, stt);
+	}
+      else if (gl_set_multiply_blit)
+	{
+	  sf::RenderStates stt = sf::BlendMultiply;
+
+	  target->draw(sprite, stt);
+	}
+      else
+	target->draw(sprite);
+    }
+  else if (gl_full_blit == false)
+    target->draw(sprite, sf::RenderStates(sf::BlendNone));
+  else
+    target->draw(sprite);
+}
+
 void				merge_clothe(t_bunny_map		*nod,
 					     void			*pnw);
 
@@ -250,6 +359,8 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
   size_t			*input_type = (size_t*)picture;
   sf::Shader			*shader = (sf::Shader*)_shader;
   sf::Sprite			*spr;
+  sf::Sprite			nspr;
+  bool				has_normal_sprite = false;
 
   switch (*input_type)
     {
@@ -295,8 +406,12 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	tmap->working->rotation = tmap->tile_rotation;
 	tmap->type = GRAPHIC_RAM;
 	((struct bunny_picture*)tmap->working)->texture->display();
+	if (((struct bunny_picture*)tmap->working)->ntexture)
+	  ((struct bunny_picture*)tmap->working)->ntexture->display();
         bunny_blit((t_bunny_buffer*)tmap, tmap->working, NULL);
 	tmap->texture->display();
+	if (tmap->ntexture)
+	  tmap->ntexture->display();
 	tmap->type = TILEMAP;
 	// NO BREAK -> Graphic ram scope is needed too.
 	[[fallthrough]];
@@ -316,7 +431,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	pic->texture->setSmooth(pic->smooth);
 	pic->texture->setRepeated(pic->mosaic);
 	pic->tex = &pic->texture->getTexture();
-	pic->ntex = pic->ntexture ? &pic->ntexture->getTexture() : NULL;
+	pic->ntex = pic->ntexture ? &pic->ntexture->getTexture() : pic->ntex;
 	if (pic->sprite == NULL)
 	  {
 	    if ((pic->sprite = new (std::nothrow) sf::Sprite(*(pic->tex))) == NULL)
@@ -336,6 +451,11 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 		     pic->color_mask.argb[ALPHA_CMP]
 		     ));
 	spr = pic->sprite;
+	if (pic->ntex)
+	  {
+	    configure_normal_sprite(nspr, *pic, *pos);
+	    has_normal_sprite = true;
+	  }
 	break ;
       }
     case SYSTEM_RAM:
@@ -398,67 +518,24 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	    || *input_type == CINEMATIC
 	    )
 	  {
-	    if (shader)
-	      {
-		if (gl_set_alpha_blit)
-		  {
-		    sf::RenderStates stt = sf::BlendMultiply;
-
-		    stt.shader = shader;
-		    out->texture->draw(*spr, stt);
-		  }
-		if (gl_set_additional_blit)
-		  {
-		    sf::RenderStates stt = sf::BlendAdd;
-
-		    stt.shader = shader;
-		    out->texture->draw(*spr, stt);
-		  }
-		else if (gl_full_blit == false)
-		  {
-		    sf::RenderStates stt = sf::BlendNone;
-
-		    stt.shader = shader;
-		    out->texture->draw(*spr, stt);
-		  }
-		else
-		  out->texture->draw(*spr, shader);
-	      }
-	    else if (gl_set_alpha_blit)
-	      {
-		sf::RenderStates stt = sf::BlendAlpha;
-
-		stt.blendMode = sf::BlendMode
-		  (sf::BlendMode::Factor::Zero, // Tuile
-		   sf::BlendMode::Factor::One,  // Ombre
-		   sf::BlendMode::Equation::Add,   // On garde la couleur de l'ombre
-		   sf::BlendMode::Factor::One,  // Tuile
-		   sf::BlendMode::Factor::One,   // Ombre
-		   sf::BlendMode::Equation::ReverseSubtract // La tuile retire de la transparence
-		   );
-		out->texture->draw(*spr, stt);
-	      }
-	    else if (gl_set_additional_blit)
-	      {
-		sf::RenderStates stt = sf::BlendAdd;
-
-		out->texture->draw(*spr, stt);
-	      }
-	    else if (gl_set_multiply_blit)
-	      {
-		sf::RenderStates stt = sf::BlendMultiply;
-
-		out->texture->draw(*spr, stt);
-	      }
+	    draw_rendertexture_sprite(out->texture, *spr, shader, true);
+	    if (out->ntexture && has_normal_sprite)
+	      draw_rendertexture_sprite(out->ntexture, nspr, NULL, true);
+	  }
+	else
+	  {
+	    if (gl_full_blit == false)
+	      out->texture->draw(*spr, sf::RenderStates(sf::BlendNone));
 	    else
+	      out->texture->draw(*spr);
+	    if (out->ntexture && has_normal_sprite)
 	      {
-		out->texture->draw(*spr);
+		if (gl_full_blit == false)
+		  out->ntexture->draw(nspr, sf::RenderStates(sf::BlendNone));
+		else
+		  out->ntexture->draw(nspr);
 	      }
 	  }
-	else if (gl_full_blit == false)
-	  out->texture->draw(*spr, sf::RenderStates(sf::BlendNone));
-	else
-	  out->texture->draw(*spr);
 
 	if (*type == SPRITE)
 	  {
