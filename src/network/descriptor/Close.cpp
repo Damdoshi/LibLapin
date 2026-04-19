@@ -21,6 +21,12 @@ bool		network::Descriptor::Close(void)
   active = false;
   doomed = false;
 
+  if (inbuffer)
+    bunny_free(inbuffer);
+  inbuffer_size = 0;
+  rcursor = 0;
+  spdbuffer = NULL;
+
   // On réarrange la taille du tableau si :
   //	- Il n'y a plus rien à lire (Sinon on le fera dans GetMessage)
   //    - Que le descriptor n'est plus actif

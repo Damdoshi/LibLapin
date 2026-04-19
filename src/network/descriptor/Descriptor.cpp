@@ -21,6 +21,8 @@ network::Descriptor::Descriptor(Network			&_network)
     ip(0),
     port(0),
     wcursor(0),
+    inbuffer(NULL),
+    inbuffer_size(0),
     rcursor(0),
     spdbuffer(NULL)
 {}

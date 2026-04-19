@@ -44,7 +44,7 @@ network::Info		network::Descriptor::Accept(size_t			&cursize,
 	if (i == cursize)
 	  cursize++;
 	// Préviens la connexion d'un client
-	inqueue.push_back(Communication{inf, true});
+	inqueue.emplace_back(inf, true);
 	return (inf);
       }
   return (Info{});

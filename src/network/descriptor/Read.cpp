@@ -11,7 +11,7 @@
 
 bool			network::Descriptor::Read(void)
 {
-  ProtoSpec		specs = protocol;
+  ProtoSpec		specs{protocol};
   ssize_t		len;
   Info			rinfo;
 
@@ -42,7 +42,7 @@ bool			network::Descriptor::Read(void)
       auto it = network->peers.find(rinfo);
       if (it == network->peers.end())
 	// On indique qu'il y a un nouveau pair
-	inqueue.push_back(Communication{rinfo, true});
+	inqueue.emplace_back(rinfo, true);
 
       // Création eventuelle du nouveau pair - ou récupération de l'existant
       auto &peer = network->peers[rinfo];
@@ -54,7 +54,7 @@ bool			network::Descriptor::Read(void)
       if (len == 0 && istcp(specs.protocol))
 	{
 	  // Préviens la déconnexion d'un client
-	  inqueue.push_back(Communication{rinfo, false});
+	  inqueue.emplace_back(rinfo, false);
 	  return (Close());
 	}
 

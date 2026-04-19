@@ -52,8 +52,8 @@ namespace		network
     char		*data = NULL;
     size_t		size = 0;
     int			errno_code = 0;
-    bool		free_data = true;
 
+    bool		free_data = true;
     t_bunny_written	wt = NULL;
     void		*wtdata = NULL;
 
@@ -62,8 +62,7 @@ namespace		network
       free_data = false;
     }
 
-    // Shallow copy
-    Communication	&operator=(Communication	&com)
+    Communication	&operator=(Communication	&&com)
     {
       type = com.type;
       info = com.info;
@@ -71,7 +70,8 @@ namespace		network
       data = com.data;
       size = com.size;
       errno_code = com.errno_code;
-      free_data = com.free_data;
+      free_data = true;
+      com.free_data = false;
       wt = com.wt;
       wtdata = com.wtdata;
       return (*this);
@@ -122,7 +122,7 @@ namespace		network
     ~Communication(void)
     {
       // Do NOT free data if it is data for user. The user must do it.
-      if (free_data && data != NULL && 0)
+      if (free_data && data != NULL)
 	bunny_free(data);
     }
   };

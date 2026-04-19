@@ -52,10 +52,9 @@ typedef struct			s_bunny_communication
   t_bunny_comtype		comtype;
   t_bunny_network_info		info;
   double			time;
-  char				*data;
+  char				*data;	// This data is now owned by user. free with bunny_free.
   size_t			size;
   int				errno_code;
-  void				*_private[2];
 }				t_bunny_communication;
 
 typedef enum			e_bunny_protocol

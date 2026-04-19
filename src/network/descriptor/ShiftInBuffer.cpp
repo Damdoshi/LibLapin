@@ -18,7 +18,7 @@ bool			network::Descriptor::ShiftInBuffer(const Info		&info,
 
   try
     {
-      inqueue.push_back(Communication{info});
+      inqueue.emplace_back(info);
     }
   catch (...)
     {
