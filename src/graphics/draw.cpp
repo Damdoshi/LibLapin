@@ -20,6 +20,8 @@ void			bunny_draw(const t_bunny_picture	*picture)
   struct bunny_picture	*pic = (struct bunny_picture*)picture;
 
   pic->texture->display();
+  if (pic->ntexture)
+    pic->ntexture->display();
   scream_log_if("%p", "graphics", picture);
 }
 

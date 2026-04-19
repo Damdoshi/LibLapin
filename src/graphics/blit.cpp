@@ -17,6 +17,10 @@
 
 #include			"lapin_private.h"
 
+extern t_bunny_shader		*gl_normal_map_shader;
+extern t_bunny_normal_map	*gl_normal_map_configuration;
+extern bool			gl_display_normal_map;
+
 static inline unsigned int	extract_bitplane(struct bunny_pixelarray		&pic,
 						 uint8_t				*px,
 						 int					x,
@@ -219,32 +223,6 @@ static sf::Sprite		*blit_pixelarray(struct bunny_pixelarray		&pic,
   return (pic.sprite);
 }
 
-static void			configure_normal_sprite(sf::Sprite			&sprite,
-						 const struct bunny_picture		&pic,
-						 const t_bunny_position			&pos)
-{
-  sf::IntRect			rect;
-
-  if (pic.ntex == NULL)
-    return ;
-  rect.position.x = pic.rect.x;
-  rect.position.y = pic.rect.y;
-  rect.size.x = pic.rect.w;
-  rect.size.y = pic.rect.h;
-  sprite.setTexture(*pic.ntex, true);
-  sprite.setTextureRect(rect);
-  sprite.setPosition({pos.x, pos.y});
-  sprite.setOrigin({pic.origin.x, pic.origin.y});
-  sprite.setScale({pic.scale.x, pic.scale.y});
-  sprite.setRotation(sf::degrees(pic.rotation));
-  sprite.setColor
-    (sf::Color(255,
-	       255,
-	       255,
-	       pic.color_mask.argb[ALPHA_CMP]
-	       ));
-}
-
 static void			draw_rendertexture_sprite(sf::RenderTexture		*target,
 							  sf::Sprite			&sprite,
 							  sf::Shader			*shader,
@@ -359,7 +337,6 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
   size_t			*input_type = (size_t*)picture;
   sf::Shader			*shader = (sf::Shader*)_shader;
   sf::Sprite			*spr;
-  sf::Sprite			nspr;
   bool				has_normal_sprite = false;
 
   switch (*input_type)
@@ -439,6 +416,8 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	  }
 	else
 	  pic->sprite->setTexture(*(pic->tex)); // Safe
+	if (gl_display_normal_map && pic->ntex)
+	  pic->sprite->setTexture(*(pic->ntex));
 	pic->sprite->setTextureRect(rect);
 	pic->sprite->setPosition({pos->x, pos->y});
 	pic->sprite->setOrigin({pic->origin.x, pic->origin.y});
@@ -452,10 +431,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 		     ));
 	spr = pic->sprite;
 	if (pic->ntex)
-	  {
-	    configure_normal_sprite(nspr, *pic, *pos);
-	    has_normal_sprite = true;
-	  }
+	  has_normal_sprite = true;
 	break ;
       }
     case SYSTEM_RAM:
@@ -477,12 +453,18 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	if (*input_type == GRAPHIC_RAM
 	    || *input_type == SPRITE
 	    || *input_type == TTF_TEXT
+	    || *input_type == TILEMAP
 	    || *input_type == DRESSED_SPRITE)
 	  {
-	    if (shader)
-	      out->window->draw(*spr, shader);
-	    else
+	    if (!shader)
 	      out->window->draw(*spr);
+	    else if (gl_normal_map_shader == shader)
+	      {
+		gl_normal_map_configuration->normal_map = (t_bunny_picture*)picture;
+		out->window->draw(*spr, (sf::Shader*)bunny_normal_map_shader(gl_normal_map_configuration));
+	      }
+	    else
+	      out->window->draw(*spr, shader);
 	  }
 	else if (gl_full_blit == false)
 	  out->window->draw(*spr, sf::RenderStates(sf::BlendNone));
@@ -518,9 +500,17 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	    || *input_type == CINEMATIC
 	    )
 	  {
-	    draw_rendertexture_sprite(out->texture, *spr, shader, true);
 	    if (out->ntexture && has_normal_sprite)
-	      draw_rendertexture_sprite(out->ntexture, nspr, NULL, true);
+	      {
+		spr->setTexture(*out->ntex);
+		draw_rendertexture_sprite(out->ntexture, *spr, NULL, true);
+		if (gl_normal_map_shader == shader)
+		  gl_normal_map_configuration->normal_map = (t_bunny_picture*)picture;
+		spr->setTexture(*out->tex);
+		draw_rendertexture_sprite(out->texture, *spr, (sf::Shader*)bunny_normal_map_shader(gl_normal_map_configuration), true);
+	      }
+	    else
+	      draw_rendertexture_sprite(out->texture, *spr, shader, true);
 	  }
 	else
 	  {
@@ -530,10 +520,11 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	      out->texture->draw(*spr);
 	    if (out->ntexture && has_normal_sprite)
 	      {
+		spr->setTexture(*out->ntex);
 		if (gl_full_blit == false)
-		  out->ntexture->draw(nspr, sf::RenderStates(sf::BlendNone));
+		  out->ntexture->draw(*spr, sf::RenderStates(sf::BlendNone));
 		else
-		  out->ntexture->draw(nspr);
+		  out->ntexture->draw(*spr);
 	      }
 	  }
 

@@ -5,8 +5,8 @@
 
 #include		"lapin_private.h"
 
-static void		set_color(sf::Color			&c,
-				  t_bunny_color			&bc)
+static void		set_color(sf::Color				&c,
+				  t_bunny_color				&bc)
 {
   c.r = bc.argb[RED_CMP];
   c.g = bc.argb[GREEN_CMP];
@@ -163,10 +163,16 @@ static void		draw_layer(struct bunny_tilemap			*tmap,
   // Render inside the working buffer
   sf::RenderStates state = sf::RenderStates::Default;
   struct bunny_picture *wrk = (struct bunny_picture*)tmap->working;
+  struct bunny_picture *tspic = (struct bunny_picture*)ts.tileset;
 
   vertex.resize(last_vx);
-  state.texture = ((struct bunny_picture*)ts.tileset)->tex;
+  state.texture = tspic->tex;
   wrk->texture->draw(vertex, state);
+  if (wrk->ntexture != NULL && tspic->ntex != NULL)
+    {
+      state.texture = tspic->ntex;
+      wrk->ntexture->draw(vertex, state);
+    }
 }
 
 bool				__bunny_draw_flat_tilemap(struct bunny_tilemap	*tmap)
@@ -184,14 +190,10 @@ bool				__bunny_draw_flat_tilemap(struct bunny_tilemap	*tmap)
     .y = tmap->camera.y * tmap->zoom.y
   };
   // Subpart that will be displayed
-  double			left =
-    (tlcam.x - buffer->width / 1.5) / tilsiz.x;
-  double			right =
-    (tlcam.x + buffer->width / 1.5) / tilsiz.x;
-  double			top =
-    (tlcam.y - buffer->height / 1.5) / tilsiz.y;
-  double			bot =
-    (tlcam.y + buffer->height / 1.5) / tilsiz.y;
+  double			left = (tlcam.x - buffer->width / 2) / tilsiz.x;
+  double			right = (tlcam.x + buffer->width / 2) / tilsiz.x;
+  double			top = (tlcam.y - buffer->height / 2) / tilsiz.y;
+  double			bot = (tlcam.y + buffer->height / 2) / tilsiz.y;
   // Layer clipping
   int				depth =
     bunny_clamp(tmap->layer_clip[0], 0, tmap->nbr_layers - 1);
@@ -199,7 +201,13 @@ bool				__bunny_draw_flat_tilemap(struct bunny_tilemap	*tmap)
     bunny_clamp(tmap->layer_clip[1], 0, tmap->nbr_layers - 1);
   // To avoid showing the outside of the map
   if (tmap->lock_borders)
-    __bunny_tilemap_lock_borders(tilsiz, tlcam, tmap, left, right, top, bot);
+    {
+      __bunny_tilemap_lock_borders(tilsiz, tlcam, tmap, left, right, top, bot);
+      left = (tlcam.x - buffer->width / 2) / tilsiz.x;
+      right = (tlcam.x + buffer->width / 2) / tilsiz.x;
+      top = (tlcam.y - buffer->height / 2) / tilsiz.y;
+      bot = (tlcam.y + buffer->height / 2) / tilsiz.y;
+    }
   // Loop borders
   loop_borders(tmap->loop[0], left, right, tmap->map_size.x - 1);
   loop_borders(tmap->loop[1], top, bot, tmap->map_size.y - 1);
@@ -227,6 +235,8 @@ bool				__bunny_draw_flat_tilemap(struct bunny_tilemap	*tmap)
     }
 
   ((bunny_picture*)tmap->working)->texture->display();
+  if (((bunny_picture*)tmap->working)->ntexture != NULL)
+    ((bunny_picture*)tmap->working)->ntexture->display();
   return (true);
 }
 

@@ -5,7 +5,9 @@
 
 #include		"lapin_private.h"
 
-#define			PATTERN		"%u width, %u height -> %p"
+#define			PATTERN					"%u width, %u height -> %p"
+
+extern bool		gl_normal_map;
 
 t_bunny_picture		*bunny_new_picture(unsigned int		width,
 					   unsigned int		height)
@@ -21,10 +23,20 @@ t_bunny_picture		*bunny_new_picture(unsigned int		width,
   pic->texture->clear(sf::Color(0, 0, 0, 0));
   pic->texture->display();
   pic->texture->setSmooth(false);
+
+  if (gl_normal_map)
+    {
+      if ((pic->ntexture = new (std::nothrow) sf::RenderTexture({width, height})) == NULL)
+	goto FailTexture;
+      pic->ntexture->clear(sf::Color(128, 128, 255, 255));
+      pic->ntexture->display();
+      pic->ntexture->setSmooth(false);
+    }
+
   pic->tex = &pic->texture->getTexture();
   pic->ntex = pic->ntexture ? &pic->ntexture->getTexture() : NULL;
   if ((pic->sprite = new (std::nothrow) sf::Sprite(*pic->tex)) == NULL)
-    goto FailSprite;
+    goto FailNormalTexture;
   pic->type = GRAPHIC_RAM;
   pic->width = width;
   pic->height = height;
@@ -49,7 +61,10 @@ t_bunny_picture		*bunny_new_picture(unsigned int		width,
   scream_log_if(PATTERN, "ressource,graphics", width, height, pic);
   return ((t_bunny_picture*)pic);
 
- FailSprite:
+ FailNormalTexture:
+  if (pic->ntexture)
+    delete pic->ntexture;
+ FailTexture:
   delete pic->texture;
  FailStruct:
   delete pic;

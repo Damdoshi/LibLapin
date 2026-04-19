@@ -32,6 +32,8 @@ float				gl_axis_offset[LAST_BUNNY_AXIS];
 t_bunny_joystick		gl_joystick[sf::Joystick::Count];
 t_bunny_window			*gl_window;
 bool				gl_full_blit = false;
+bool				gl_normal_map = false;
+bool				gl_display_normal_map = false;
 bool				gl_set_alpha_blit = false;
 bool				gl_set_additional_blit = false;
 bool				gl_set_multiply_blit = false;

@@ -40,7 +40,7 @@ static bool			load_normal_map(t_bunny_clipable	*pic,
   else if ((*ntexture)->resize(tsiz) == false)
     return (false);
   sf::Sprite spr(txt);
-  (*ntexture)->clear(sf::Color(0, 0, 0, 0));
+  (*ntexture)->clear(sf::Color(128, 128, 255, 255));
   (*ntexture)->draw(spr);
   (*ntexture)->display();
   *ntex = &(*ntexture)->getTexture();

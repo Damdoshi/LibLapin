@@ -757,6 +757,9 @@ void				bunny_set_alpha_blit(bool			enable);
 void				bunny_set_additional_blit(bool			enable);
 void				bunny_set_multiply_blit(bool			blend);
 
+void				bunny_enable_normal_map(bool			enable);
+void				bunny_display_normal_map(bool			enable);
+
 /*!
 ** All picture loading function in the bunny library use a ressource manager to avoid
 ** loading several times the same file. This means behind every t_bunny_clipable

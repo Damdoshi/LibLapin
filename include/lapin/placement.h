@@ -212,6 +212,11 @@ t_bunny_accurate_area		bunny_accurate_area(double			x,
 						    double			w,
 						    double			h);
 
+
+struct s_bunny_clipable;
+void				bunny_maximize_inside(struct s_bunny_clipable	*to_resize,
+						      const struct s_bunny_clipable *container);
+
 # ifdef				__cplusplus
 #  include			"lapin/cpp_guard_end.hpp"
 # endif

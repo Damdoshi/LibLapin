@@ -6,7 +6,8 @@
 #include		<iostream>
 #include		"lapin_private.h"
 
-static t_bunny_shader	*gl_normal_map_shader = NULL;
+t_bunny_shader		*gl_normal_map_shader = NULL;
+t_bunny_normal_map	*gl_normal_map_configuration = NULL;
 
 // WindowSize
 // ColorMap <- The main picture itself
@@ -144,6 +145,7 @@ t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
   char			buffer[4096];
   unsigned int		i;
 
+  gl_normal_map_configuration = (t_bunny_normal_map*)nm;
   if (nm == NULL)
     {
       if (gl_normal_map_shader)
@@ -193,19 +195,21 @@ t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
      (double)nm->window_size.y
      );
 
-  bunny_shader_set_variable
-    (gl_normal_map_shader,
-     "NormalMap",
-     BVT_PICTURE,
-     nm->normal_map
-     );
+  if (nm->normal_map)
+    bunny_shader_set_variable
+      (gl_normal_map_shader,
+       "NormalMap",
+       BVT_PICTURE,
+       nm->normal_map
+       );
 
-  bunny_shader_set_variable
-    (gl_normal_map_shader,
-     "SpecularMap",
-     BVT_PICTURE,
-     nm->specular_map
-     );
+  if (nm->specular_map)
+    bunny_shader_set_variable
+      (gl_normal_map_shader,
+       "SpecularMap",
+       BVT_PICTURE,
+       nm->specular_map
+       );
 
   for (i = 0; i < sizeof(nm->lights) / sizeof(nm->lights[0]); ++i)
     {

@@ -44,6 +44,36 @@ static bool		load_properties(t_bunny_configuration			*cnf,
   return (false);
 }
 
+
+
+static bool		load_normal_map(t_bunny_picture				*pic,
+					const char				*file)
+{
+  sf::Texture		txt;
+  sf::Vector2u		tsiz;
+  struct bunny_picture	*bpic = (struct bunny_picture*)pic;
+
+  if (file == NULL)
+    return (true);
+  if (txt.loadFromFile(file) == false)
+    return (false);
+  tsiz = txt.getSize();
+  if (bpic->ntexture == NULL)
+    {
+      if ((bpic->ntexture = new (std::nothrow) sf::RenderTexture(tsiz)) == NULL)
+	return (false);
+    }
+  else if (bpic->ntexture->resize(tsiz) == false)
+    return (false);
+  sf::Sprite		spr(txt);
+
+  bpic->ntexture->clear(sf::Color(128, 128, 255, 255));
+  bpic->ntexture->draw(spr);
+  bpic->ntexture->display();
+  bpic->ntex = &bpic->ntexture->getTexture();
+  return (true);
+}
+
 static bool		load_tileset(t_bunny_configuration			*cnf,
 				     struct bunny_tilemap			*tmap,
 				     t_bunny_tileset				*ts)
@@ -64,16 +94,12 @@ static bool		load_tileset(t_bunny_configuration			*cnf,
        	ts->tile_size.y = tmap->tile_size.y;
 
   // Intertile
-  ts->intertile.x = 0;
-  ts->intertile.y = 0;
+  ts->intertile.x = ts->intertile.y = 0;
+  ts->position.x = ts->position.y = 0;
   bunny_configuration_getf_int(cnf, &ts->intertile.x, "Intertile[0]");
   bunny_configuration_getf_int(cnf, &ts->intertile.y, "Intertile[1]");
-
-  // Marge
-  ts->position.x = 0;
-  ts->position.y = 0;
-  bunny_configuration_getf_int(cnf, &ts->position.x, "Position[0]");
-  bunny_configuration_getf_int(cnf, &ts->position.y, "Position[1]");
+  bunny_configuration_getf_int(cnf, &ts->position.x, "Margin[0]");
+  bunny_configuration_getf_int(cnf, &ts->position.y, "Margin[1]");
 
   // Misc
   if (!(ts->name = bunny_strdup(ts->name)))
@@ -81,17 +107,31 @@ static bool		load_tileset(t_bunny_configuration			*cnf,
 
   // Picture
   const char		*tmp = NULL;
+  const char		*ntmp = NULL;
   t_bunny_configuration	*pic;
 
-  if (!bunny_configuration_getf_string(cnf, &tmp, "RessourceFile"))
+  if (bunny_configuration_getf_string(cnf, &tmp, "RessourceFile[0]"))
+    {
+      if (!(ts->tileset = bunny_load_picture(tmp)))
+	goto DeleteName;
+      if (bunny_configuration_getf_string(cnf, &ntmp, "RessourceFile[1]"))
+	if (!load_normal_map(ts->tileset, ntmp))
+	  goto DeletePicture;
+    }
+  else if (bunny_configuration_getf_string(cnf, &tmp, "RessourceFile"))
+    {
+      if (!(ts->tileset = bunny_load_picture(tmp)))
+	goto DeleteName;
+    }
+  else
     {
       if (!bunny_configuration_getf_node(cnf, &pic, "Picture"))
 	goto DeleteName;
-      else if (!bunny_set_clipable_attribute("", &ts->tileset, &pic, BCT_PICTURE))
+      else if (!bunny_set_clipable_attribute("", (t_bunny_clipable**)&ts->tileset, &pic, BCT_PICTURE))
 	goto DeleteName;
+      bunny_configuration_getf_string(pic, &tmp, "RessourceFile[0]");
+      bunny_configuration_getf_string(pic, &ntmp, "RessourceFile[1]");
     }
-  else if (!(ts->tileset = bunny_load_picture(tmp)))
-    goto DeleteName;
 
   // Last values
   // First and last tiles if not set here will be set un the parent function.
@@ -118,10 +158,18 @@ static bool		load_tileset(t_bunny_configuration			*cnf,
 	goto DeleteAnimatedTiles;
       // Set the picture file so bunny_load_sprite works correctly
       if (tmp == NULL)
-	if (!bunny_configuration_getf_string(cnf, &tmp, "Picture.RessourceFile"))
-	  goto DeleteAnimatedTiles;
+	{
+	  if (!bunny_configuration_getf_string(cnf, &tmp, "Picture.RessourceFile[0]"))
+	    if (!bunny_configuration_getf_string(cnf, &tmp, "Picture.RessourceFile"))
+	      goto DeleteAnimatedTiles;
+	}
+      if (ntmp == NULL)
+	bunny_configuration_getf_string(cnf, &ntmp, "Picture.RessourceFile[1]");
       if (!bunny_configuration_getf_string(cnf, NULL, "AnimatedTiles[%d].RessourceFile", i))
-	bunny_configuration_setf_string(cnf, tmp, "AnimatedTiles[%d].RessourceFile", i);
+	bunny_configuration_setf_string(cnf, tmp, "AnimatedTiles[%d].RessourceFile[0]", i);
+      if (ntmp != NULL)
+	if (!bunny_configuration_getf_string(cnf, NULL, "AnimatedTiles[%d].RessourceFile[1]", i))
+	  bunny_configuration_setf_string(cnf, ntmp, "AnimatedTiles[%d].RessourceFile[1]", i);
 
       if (!bunny_configuration_getf_int(cnf, NULL, "AnimatedTiles[%d].Clip.Size[0]", i))
 	bunny_configuration_setf_int(cnf, ts->tile_size.x, "AnimatedTiles[%d].Clip.Size[0]", i);
@@ -270,14 +318,12 @@ t_bunny_tilemap		*__bunny_load_dabsic_tilemap(t_bunny_configuration	*conf,
     return (NULL);
   if (!bunny_configuration_getf_int(map, &tmap->map_size.x, "Width"))
     if (!bunny_configuration_getf_int(map, &tmap->map_size.x, "MapWidth"))
-      // if (!bunny_configuration_getf_int(map, &tmap->map_size.x, "Size[0]"))
-	if (!bunny_configuration_getf_int(map, &tmap->map_size.x, "MapSize[0]"))
-	  return (NULL);
+      if (!bunny_configuration_getf_int(map, &tmap->map_size.x, "MapSize[0]"))
+	return (NULL);
   if (!bunny_configuration_getf_int(map, &tmap->map_size.y, "Height"))
     if (!bunny_configuration_getf_int(map, &tmap->map_size.y, "MapHeight"))
-      // if (!bunny_configuration_getf_int(map, &tmap->map_size.y, "Size[1]"))
-	if (!bunny_configuration_getf_int(map, &tmap->map_size.y, "MapSize[1]"))
-	  return (NULL);
+      if (!bunny_configuration_getf_int(map, &tmap->map_size.y, "MapSize[1]"))
+	return (NULL);
   if (!bunny_configuration_getf_int(map, &tmap->tile_size.x, "TileWidth"))
     if (!bunny_configuration_getf_int(map, &tmap->tile_size.x, "TileSize[0]"))
       return (NULL);
@@ -308,9 +354,6 @@ t_bunny_tilemap		*__bunny_load_dabsic_tilemap(t_bunny_configuration	*conf,
   else
     tmap->method = BTM_FLAT;
 
-  tmap->normal_map = false;
-  bunny_configuration_getf_bool(map, &tmap->normal_map, "NormalMap");
-
   // Count layers and tilesets
   tmap->nbr_tilesets = bunny_configuration_casesf(map, "Tilesets");
   tmap->nbr_layers = bunny_configuration_casesf(map, "Layers");
@@ -329,7 +372,7 @@ t_bunny_tilemap		*__bunny_load_dabsic_tilemap(t_bunny_configuration	*conf,
     {
       tmap->tilesets[i].first_tile = j;
       tmap->tilesets[i].last_tile = tmap->tilesets[i].nbr_tiles + j;
-      j += tmap->tilesets[i].nbr_tiles;
+      j += 1;
     }
 
   // Load layer
@@ -348,7 +391,7 @@ t_bunny_tilemap		*__bunny_load_dabsic_tilemap(t_bunny_configuration	*conf,
 
   if (!bunny_configuration_getf_double(map, &tmap->zoom.x, "Zoom[0]"))
     bunny_configuration_getf_double(map, &tmap->zoom.x, "Zoom.X");
-  if (!bunny_configuration_getf_double(map, &tmap->zoom.y, "Zoom[1]"))
+  if (!bunny_configuration_getf_double(map, &tmap->zoom.y, "Zoom[0]"))
     bunny_configuration_getf_double(map, &tmap->zoom.y, "Zoom.Y");
 
   if (!bunny_configuration_getf_bool(map, &tmap->loop[0], "Loop[0]"))
@@ -359,7 +402,7 @@ t_bunny_tilemap		*__bunny_load_dabsic_tilemap(t_bunny_configuration	*conf,
   bunny_configuration_getf_bool(map, &tmap->lock_borders, "LockBorders");
   bunny_configuration_getf_int(map, &tmap->layer_clip[0], "LayerClip[0]");
   bunny_configuration_getf_int(map, &tmap->layer_clip[1], "LayerClip[1]");
-  bunny_configuration_getf_double(map, &tmap->tile_rotation, "Rotation");
+  bunny_configuration_getf_double(map, &tmap->rotation, "Rotation");
 
   // Custom properties
   if (bunny_configuration_getf_node(map, &nod, "Properties"))
