@@ -78,7 +78,7 @@ typedef struct		s_bunny_animation
 typedef struct		s_bunny_sprite
 {
   t_bunny_clipable	clipable;
-  const size_t		_private[3];
+  const size_t		_private[4];
   t_bunny_animation	*animation;	// [int -> anim]
   size_t		nbr_animation;
   t_bunny_map		*hashname_id;	// [hash("") -> int]

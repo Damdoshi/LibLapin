@@ -16,11 +16,13 @@ t_bunny_picture		*bunny_new_picture(unsigned int		width,
     goto Fail;
   if ((pic->texture = new (std::nothrow) sf::RenderTexture({width, height})) == NULL)
     goto FailStruct;
+  pic->ntexture = NULL;
 
   pic->texture->clear(sf::Color(0, 0, 0, 0));
   pic->texture->display();
   pic->texture->setSmooth(false);
   pic->tex = &pic->texture->getTexture();
+  pic->ntex = pic->ntexture ? &pic->ntexture->getTexture() : NULL;
   if ((pic->sprite = new (std::nothrow) sf::Sprite(*pic->tex)) == NULL)
     goto FailSprite;
   pic->type = GRAPHIC_RAM;

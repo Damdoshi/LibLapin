@@ -21,6 +21,8 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 	  RessourceManager.TryRemove(ResManager::SF_RENDERTEXTURE, pic->res_id, pic);
 	else
 	  delete pic->texture;
+	if (pic->ntexture)
+	  delete pic->ntexture;
 	delete pic->sprite;
 	delete pic;
 	scream_log_if("%p", "graphics", clip);
@@ -42,6 +44,8 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 	    delete pic->image;
 	    bunny_free(pic->rawpixels);
 	  }
+	if (pic->ntexture)
+	  delete pic->ntexture;
 	delete pic->sprite;
 	delete pic;
 	scream_log_if("%p", "graphics", clip);
@@ -59,6 +63,8 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 	  delete ttf->font;
 	delete ttf->text;
 	delete ttf->sprite;
+	if (ttf->ntexture)
+	  delete ttf->ntexture;
 	delete ttf->texture;
 	delete ttf;
 	scream_log_if("%p", "graphics", clip);
@@ -72,6 +78,8 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 	  bunny_free(gfx->conf_string);
 	bunny_delete_clipable(gfx->gfx);
 	delete gfx->sprite;
+	if (gfx->ntexture)
+	  delete gfx->ntexture;
 	delete gfx->texture;
 	delete gfx;
 	scream_log_if("%p", "graphics", clip);
@@ -94,6 +102,8 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 	  RessourceManager.TryRemove(ResManager::SF_RENDERTEXTURE, pic->res_id, pic);
 	else if (pic->texture)
 	  delete pic->texture;
+	if (pic->ntexture)
+	  delete pic->ntexture;
 	if (pic->sprite)
 	  delete pic->sprite;
 	for (i = 0; i < pic->nbr_animation; ++i)

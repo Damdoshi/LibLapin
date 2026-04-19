@@ -15,6 +15,8 @@ struct bunny_sprite	*_bunny_new_sprite(void)
     return (NULL);
   sprite->sprite = NULL;
   sprite->texture = NULL;
+  sprite->ntexture = NULL;
+  sprite->ntex = NULL;
   return (sprite);
 }
 
@@ -57,6 +59,7 @@ t_bunny_sprite		*_bunny_fill_sprite(t_bunny_sprite	*_spr,
   sprite->res_id = hash;
 
   sprite->tex = &sprite->texture->getTexture();
+  sprite->ntex = sprite->ntexture ? &sprite->ntexture->getTexture() : NULL;
   if ((sprite->sprite = new (std::nothrow) sf::Sprite(*sprite->tex)) == NULL)
       return (NULL);
 

@@ -13,9 +13,12 @@ bool			bunny_font_resize(t_bunny_font		*fnt,
 
   if (pic->texture->resize({width, height}) == false)
     return (false);
+  if (pic->ntexture && pic->ntexture->resize({width, height}) == false)
+    return (false);
   pic->texture->clear(sf::Color(0, 0, 0, 0));
   pic->texture->display();
   pic->tex = &pic->texture->getTexture();
+  pic->ntex = pic->ntexture ? &pic->ntexture->getTexture() : NULL;
   if (pic->sprite == NULL)
     {
       if ((pic->sprite = new (std::nothrow) sf::Sprite(*pic->tex)) == NULL)

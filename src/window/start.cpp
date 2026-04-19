@@ -92,6 +92,7 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
       scream_error_if(return (NULL), ENOMEM, PATTERN, "window",
 		      width, height, winstyle, window_name, (void*)NULL);
     }
+  win->nwindow = NULL;
 
   win->window_name = bunny_strdup(window_name);
   if (winstyle & ANTIALIASING)

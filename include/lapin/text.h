@@ -50,7 +50,7 @@ typedef enum			e_bunny_align
 typedef struct			s_bunny_font
 {
   t_bunny_clipable		clipable;
-  const size_t			_private[3];
+  const size_t			_private[4];
   const char			*string;
   size_t			string_offset;
   size_t			string_len;

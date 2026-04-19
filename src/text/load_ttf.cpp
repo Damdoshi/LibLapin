@@ -20,6 +20,8 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
   bunny_errno = ENOMEM;
   if ((ttf = new (std::nothrow) struct bunny_ttf_font) == NULL)
     goto ReturnNull;
+  ttf->ntexture = NULL;
+  ttf->ntex = NULL;
   if ((ttf->texture = new (std::nothrow) sf::RenderTexture({width, height})) == NULL)
     goto DeleteStructure;
 
@@ -43,6 +45,7 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
   ttf->texture->clear(sf::Color(0, 0, 0, 0));
   ttf->texture->display();
   ttf->tex = &ttf->texture->getTexture();
+  ttf->ntex = ttf->ntexture ? &ttf->ntexture->getTexture() : NULL;
   if ((ttf->sprite = new (std::nothrow) sf::Sprite(*ttf->tex)) == NULL)
     goto DeleteFont;
   ttf->type = TTF_TEXT;

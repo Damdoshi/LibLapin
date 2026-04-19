@@ -88,7 +88,7 @@ typedef struct			s_bunny_tilemap
 {
   // The t_bunny_tilemap is a clipable
   t_bunny_clipable		clipable;
-  const size_t			_private[3];
+  const size_t			_private[4];
 
   // Display mode. Default is BTR_FLAT | BTR_2D
   bool				normal_map;
@@ -122,13 +122,13 @@ typedef struct			s_bunny_tilemap
 }				t_bunny_tilemap;
 # pragma			pack()
 
-t_bunny_tilemap			*bunny_load_tilemap_wh(const char			*cnf,
-						       unsigned int			width,
-						       unsigned int			height);
 t_bunny_tilemap			*bunny_load_tilemap_whc(const char			*file,
 							unsigned int			width,
 							unsigned int			height,
 							t_bunny_configuration		*conf);
+t_bunny_tilemap			*bunny_load_tilemap_wh(const char			*cnf,
+						       unsigned int			width,
+						       unsigned int			height);
 
 t_bunny_tilemap			*bunny_load_tilemap(const char				*cnf);
 

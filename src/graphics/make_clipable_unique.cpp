@@ -19,6 +19,7 @@ bool			bunny_make_clipable_unique(t_bunny_clipable	*clip)
       {
 	struct bunny_picture *pic = (struct bunny_picture*)clip;
 	sf::RenderTexture *rtex;
+	sf::RenderTexture *nrtex = NULL;
 
 	if (!pic->res_id)
 	  return (true);
@@ -39,6 +40,17 @@ bool			bunny_make_clipable_unique(t_bunny_clipable	*clip)
 	pic->tex = &rtex->getTexture();
 	rtex->draw(*pic->sprite, state);
 	rtex->display();
+	if (pic->ntexture)
+	  {
+	    if ((nrtex = new (std::nothrow) sf::RenderTexture(pic->ntexture->getSize())) == NULL)
+	      {
+		delete rtex;
+		scream_error_if(return (false), ENOMEM, PATTERN, "graphics", clip, "false");
+	      }
+	    sf::Sprite nspr(pic->ntexture->getTexture());
+	    nrtex->draw(nspr, state);
+	    nrtex->display();
+	  }
 	if (pic->sprite == NULL)
 	  {
 	    if ((pic->sprite = new (std::nothrow) sf::Sprite(*pic->tex)) == NULL)
@@ -47,6 +59,10 @@ bool			bunny_make_clipable_unique(t_bunny_clipable	*clip)
 	else
 	  pic->sprite->setTexture(*pic->tex); // Safe
 	pic->texture = rtex;
+	if (pic->ntexture)
+	  delete pic->ntexture;
+	pic->ntexture = nrtex;
+	pic->ntex = nrtex ? &nrtex->getTexture() : pic->ntex;
 	scream_log_if(PATTERN, "graphics", clip, "true");
 	pic->res_id = 0;
 	return (true);

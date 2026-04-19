@@ -13,6 +13,8 @@ t_bunny_parallax	*bunny_read_parallax_wh(t_bunny_configuration	*cnf,
 
   if ((px = new (std::nothrow) struct bunny_parallax) == NULL)
     return (NULL);
+  px->ntexture = NULL;
+  px->ntex = NULL;
   if (!bunny_configuration_getf_bool(cnf, &px->lock_viewpoint, "LockViewpoint"))
     px->lock_viewpoint = true;
   if ((px->nbr_layers = bunny_configuration_casesf(cnf, "Layers")) == 0)
@@ -29,6 +31,7 @@ t_bunny_parallax	*bunny_read_parallax_wh(t_bunny_configuration	*cnf,
   px->texture->clear(sf::Color(0, 0, 0, 0));
   px->texture->display();
   px->tex = &px->texture->getTexture();
+  px->ntex = px->ntexture ? &px->ntexture->getTexture() : NULL;
   if ((px->sprite = new (std::nothrow) sf::Sprite(*px->tex)) == NULL)
     goto DeleteTexture;
   px->type = PARALLAX;

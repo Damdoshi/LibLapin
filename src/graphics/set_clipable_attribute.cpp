@@ -7,6 +7,46 @@
 
 #define				PATTERN		"%s conf_file, %p clipable, %p target_conf, %d type -> %s (%s)"
 
+static bool			load_normal_map(t_bunny_clipable	*pic,
+						t_bunny_clipable_type	typ,
+						const char		*file)
+{
+  sf::Texture			txt;
+  sf::Vector2u			tsiz;
+  sf::RenderTexture		**ntexture;
+  const sf::Texture		**ntex;
+
+  if (file == NULL)
+    return (true);
+  if (txt.loadFromFile(file) == false)
+    return (false);
+  switch (typ)
+    {
+    case BCT_PIXELARRAY:
+      ntexture = &((struct bunny_pixelarray*)pic)->ntexture;
+      ntex = &((struct bunny_pixelarray*)pic)->ntex;
+      break;
+    default:
+      ntexture = &((struct bunny_picture*)pic)->ntexture;
+      ntex = &((struct bunny_picture*)pic)->ntex;
+      break;
+    }
+  tsiz = txt.getSize();
+  if (*ntexture == NULL)
+    {
+      if (((*ntexture) = new (std::nothrow) sf::RenderTexture(tsiz)) == NULL)
+	return (false);
+    }
+  else if ((*ntexture)->resize(tsiz) == false)
+    return (false);
+  sf::Sprite spr(txt);
+  (*ntexture)->clear(sf::Color(0, 0, 0, 0));
+  (*ntexture)->draw(spr);
+  (*ntexture)->display();
+  *ntex = &(*ntexture)->getTexture();
+  return (true);
+}
+
 bool				bunny_set_clipable_attribute(const char		*conf_file,
 							     t_bunny_clipable	**clipable,
 							     t_bunny_configuration **config,
@@ -49,6 +89,13 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
 	}
     }
   pic = *clipable;
+
+  if (bunny_configuration_go_get_string(cnf, &str, "RessourceFile[1]"))
+    if (load_normal_map(pic, typ, str) == false)
+      {
+	missing_field = "Cannot load file given by RessourceFile[1] field";
+	goto InvalidField;
+      }
 
   if (bunny_configuration_go_get_double(cnf, &pic->position.x, "Position[0]"))
     if (bunny_configuration_go_get_double(cnf, &pic->position.y, "Position[1]") == false)

@@ -303,7 +303,7 @@ bool				bunny_make_effect_unique(t_bunny_effect		*eff);
 typedef struct			s_bunny_recorder
 {
   t_bunny_effect		effect;
-  const char			_private[sizeof(size_t) * 4];
+  size_t			_private[4];
   const char * const		device;
   const bool			recording;
 }				t_bunny_recorder;

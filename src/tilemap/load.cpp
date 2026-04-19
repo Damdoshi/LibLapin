@@ -17,6 +17,8 @@ t_bunny_tilemap		*bunny_load_tilemap_whc(const char	*file,
 
   if ((tmap = new (std::nothrow) bunny_tilemap) == NULL)
     goto DeleteConfiguration;
+  tmap->ntexture = NULL;
+  tmap->ntex = NULL;
   if ((tmap->texture = new (std::nothrow) sf::RenderTexture({width, height})) == NULL)
     goto DeleteTilemap;
 
@@ -25,6 +27,7 @@ t_bunny_tilemap		*bunny_load_tilemap_whc(const char	*file,
     goto DeleteSfTexture;
 
   tmap->tex = &tmap->texture->getTexture();
+  tmap->ntex = tmap->ntexture ? &tmap->ntexture->getTexture() : NULL;
   if ((tmap->sprite = new (std::nothrow) sf::Sprite(*tmap->tex)) == NULL)
     goto DeleteSfTexture;
 

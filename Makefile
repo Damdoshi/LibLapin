@@ -178,12 +178,24 @@ fclean:			clean erase
 re:			fclean all
 erase:
 			@$(RM) -r $(LOGDIR)/*.*
-install:		all
+install_tools:
 			cp bcc b++  $(INSTALL_BIN_DIR)
+
+install_headers:	install_tools
 			cp include/lapin.h $(INSTALL_INC_DIR)
 			mkdir -p $(INSTALL_INC_DIR)lapin/
 			cp -r include/lapin/* $(INSTALL_INC_DIR)lapin/
+			chmod 644 $(INSTALL_INC_DIR)lapin.h
+			find $(INSTALL_INC_DIR)lapin/ -type d -exec chmod 755 {} + -o -type f -exec chmod 644 {} +
+
+install_debug:		install_headers debug
+			cp $(DBGA) $(INSTALL_LIB_DIR)
+
+install_main:		all install_debug
 			cp $(PRODA) $(DBGA) $(INSTALL_LIB_DIR)
+
+install:		install_main install_debug
+
 package:
 			dpkg-buildpackage -us -uc
 .POSIX:

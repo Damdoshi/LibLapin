@@ -45,6 +45,8 @@ t_bunny_pixelarray	*bunny_forge_pixelarray(unsigned int	w,
 
   if ((pa = new (std::nothrow) struct bunny_pixelarray) == NULL)
     goto ReturnNull;
+  pa->ntexture = NULL;
+  pa->ntex = NULL;
   if ((pa->rawpixels =
        (unsigned int*)bunny_malloc(siz)) == NULL)
     goto DeleteStructure;

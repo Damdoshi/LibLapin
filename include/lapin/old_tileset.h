@@ -53,7 +53,7 @@ typedef struct			s_bunny_tilemap
 {
   // The t_bunny_tilemap is a clipable
   t_bunny_clipable		clipable;
-  const size_t			_private[3];
+  const size_t			_private[4];
 
   // Tile size in pixels
   const t_bunny_size		tile_size;

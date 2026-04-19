@@ -10,6 +10,7 @@ struct				bunny_cinematic
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  sf::RenderTexture		*ntexture;
   size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
@@ -30,6 +31,7 @@ struct				bunny_cinematic
   // Private fields of t_bunny_clipable
   size_t			res_id;
   const sf::Texture		*tex;
+  const sf::Texture		*ntex;
   sf::Sprite			*sprite;
   t_bunny_configuration		*configuration;
 

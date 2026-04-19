@@ -41,6 +41,8 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
 
   if ((pic = new (std::nothrow) struct bunny_picture) == NULL)
     goto ReturnNull;
+  pic->ntexture = NULL;
+  pic->ntex = NULL;
 
   if (RessourceManager.disable_manager ||
       (pic->texture = (sf::RenderTexture*)
@@ -64,6 +66,7 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
 
   pic->res_id = hash;
   pic->tex = &pic->texture->getTexture();
+  pic->ntex = pic->ntexture ? &pic->ntexture->getTexture() : NULL;
   if ((pic->sprite = new (std::nothrow) sf::Sprite(*pic->tex)) == NULL)
     goto DeleteRenderTexture;
 

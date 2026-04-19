@@ -34,6 +34,8 @@ void			bunny_delete_cinematic(t_bunny_cinematic	*_cin)
   bunny_delete_map(cin->commands);
 
   delete cin->sprite;
+  if (cin->ntexture)
+    delete cin->ntexture;
   delete cin->texture;
   delete cin;
 }

@@ -19,6 +19,8 @@ t_bunny_tilemap		*bunny_tilemap_new_viewpoint(t_bunny_tilemap	*tm,
   // Annotate that is a shallow copy
   nw->duplicated_tilemap = true;
   nw->res_id = 0;
+  nw->ntexture = NULL;
+  nw->ntex = NULL;
 
   // Create a new clipable inside the tilemap
   if ((nw->texture = new (std::nothrow) sf::RenderTexture({width, height})) == NULL)
@@ -41,6 +43,7 @@ t_bunny_tilemap		*bunny_tilemap_new_viewpoint(t_bunny_tilemap	*tm,
   nw->texture->display();
   nw->texture->setSmooth(false);
   nw->tex = &nw->texture->getTexture();
+  nw->ntex = nw->ntexture ? &nw->ntexture->getTexture() : NULL;
 
   // Sprite n'a pas plus de constructeur par défaut depuis SFML 3.0
   if ((nw->sprite = new (std::nothrow) sf::Sprite(*nw->tex)) == NULL)

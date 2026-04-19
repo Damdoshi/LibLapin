@@ -18,6 +18,8 @@ t_bunny_picture		*bunny_read_picture_id(const void	*_pic,
   hash = bunny_hash(BH_FNV, file, strlen(file));
   if ((pic = new (std::nothrow) struct bunny_picture) == NULL)
     goto ReturnNull;
+  pic->ntexture = NULL;
+  pic->ntex = NULL;
 
   if (RessourceManager.disable_manager ||
       file == NULL ||
@@ -42,6 +44,7 @@ t_bunny_picture		*bunny_read_picture_id(const void	*_pic,
 
   pic->res_id = hash;
   pic->tex = &pic->texture->getTexture();
+  pic->ntex = pic->ntexture ? &pic->ntexture->getTexture() : NULL;
   if ((pic->sprite = new (std::nothrow) sf::Sprite(*pic->tex)) == NULL)
     goto DeleteRenderTexture;
 

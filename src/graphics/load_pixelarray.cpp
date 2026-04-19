@@ -46,6 +46,8 @@ t_bunny_pixelarray	*bunny_load_pixelarray(const char		*file)
 
   if ((pa = new (std::nothrow) struct bunny_pixelarray) == NULL)
     goto ReturnNull;
+  pa->ntexture = NULL;
+  pa->ntex = NULL;
   if (RessourceManager.disable_manager ||
       (pa->tex = (sf::Texture*)RessourceManager.TryGet(ResManager::SF_TEXTURE, hash)) == NULL)
     {

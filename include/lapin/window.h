@@ -106,7 +106,7 @@ t_bunny_window			*bunny_start_style(unsigned int			wid,
 						   t_bunny_window_style		sty,
 						   const char			*nam);
 
-t_bunny_window			**bunny_begin(const char			*cnf);
+t_bunny_window			**bunny_begin(const char				*cnf);
 t_bunny_window			**bunny_begin_configuration(t_bunny_configuration *cnf);
 
 void				bunny_end(t_bunny_window			**w);

@@ -45,7 +45,7 @@ typedef union			s_bunny_extended_data
 */
 typedef struct			s_bunny_buffer
 {
-  const size_t			_private[4];
+  const size_t			_private[5];
   ssize_t			width;
   ssize_t			height;
   t_bunny_extended_data		data[BUNNY_EXTENDED_DATA_LENGTH];

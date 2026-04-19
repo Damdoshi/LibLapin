@@ -75,6 +75,7 @@ struct				bunny_window
 {
   size_t			type;
   sf::RenderWindow		*window;
+  void				*nwindow;
   size_t			glactive;
   size_t			unused;
   ssize_t			width;
@@ -93,6 +94,7 @@ struct				bunny_picture
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  sf::RenderTexture		*ntexture;
   size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
@@ -109,6 +111,7 @@ struct				bunny_picture
 
   size_t			res_id;
   const sf::Texture		*tex;
+  const sf::Texture		*ntex;
   sf::Sprite			*sprite;
 };
 
@@ -116,6 +119,7 @@ struct				bunny_pixelarray
 {
   size_t			type;
   size_t			unused;
+  sf::RenderTexture		*ntexture;
   size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
@@ -140,6 +144,7 @@ struct				bunny_pixelarray
   size_t			res_id;
   sf::Image			*image;
   sf::Texture			*tex;
+  const sf::Texture		*ntex;
   sf::Sprite			*sprite;
 };
 
@@ -147,6 +152,7 @@ struct				bunny_gfx_font
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  sf::RenderTexture		*ntexture;
   size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
@@ -163,6 +169,7 @@ struct				bunny_gfx_font
 
   size_t			res_id;
   const sf::Texture		*tex;
+  const sf::Texture		*ntex;
   sf::Sprite			*sprite;
 
   const char			*string;
@@ -188,6 +195,7 @@ struct				bunny_ttf_font
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  sf::RenderTexture		*ntexture;
   size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
@@ -204,6 +212,7 @@ struct				bunny_ttf_font
 
   size_t			res_id;
   const sf::Texture		*tex;
+  const sf::Texture		*ntex;
   sf::Sprite			*sprite;
 
   const char			*string;
@@ -230,6 +239,7 @@ struct				bunny_sprite
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  sf::RenderTexture		*ntexture;
   size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
@@ -246,6 +256,7 @@ struct				bunny_sprite
 
   size_t			res_id;
   const sf::Texture		*tex;
+  const sf::Texture		*ntex;
   sf::Sprite			*sprite;
 
   t_bunny_animation		*animation;
@@ -269,6 +280,7 @@ struct				bunny_dressed_sprite
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  sf::RenderTexture		*ntexture;
   size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
@@ -285,6 +297,7 @@ struct				bunny_dressed_sprite
 
   size_t			res_id;
   const sf::Texture		*tex;
+  const sf::Texture		*ntex;
   sf::Sprite			*sprite;
 
   t_bunny_animation		*animation;
@@ -311,6 +324,7 @@ struct				bunny_tilemap
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  sf::RenderTexture		*ntexture;
   size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
@@ -328,6 +342,7 @@ struct				bunny_tilemap
   // Private fields of t_bunny_clipable
   size_t			res_id;
   const sf::Texture		*tex; // Displayed shape
+  const sf::Texture		*ntex;
   sf::Sprite			*sprite;
 
   ////////////////////////////////////
@@ -395,6 +410,7 @@ struct				bunny_parallax
 {
   size_t			type;
   sf::RenderTexture		*texture;
+  sf::RenderTexture		*ntexture;
   size_t			glactive;
   t_copy_on_write_gfx		duplicate;
   ssize_t			width;
@@ -412,6 +428,7 @@ struct				bunny_parallax
   // Private fields of t_bunny_clipable
   size_t			res_id;
   const sf::Texture		*tex; // Displayed shape
+  const sf::Texture		*ntex;
   sf::Sprite			*sprite;
 
   t_bunny_parallax_layer	*layers;

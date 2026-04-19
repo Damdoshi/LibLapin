@@ -241,6 +241,8 @@ t_bunny_cinematic	*bunny_read_cinematic_wh(t_bunny_configuration	*cnf,
 
   if ((cin = new (std::nothrow) struct bunny_cinematic) == NULL)
     return (NULL);
+  cin->ntexture = NULL;
+  cin->ntex = NULL;
   cin->configuration = cnf;
   if (!bunny_configuration_getf_node(cnf, &cin->program, "Animation"))
     return (NULL);
@@ -250,6 +252,7 @@ t_bunny_cinematic	*bunny_read_cinematic_wh(t_bunny_configuration	*cnf,
 
   cin->res_id = 0;
   cin->tex = &cin->texture->getTexture();
+  cin->ntex = cin->ntexture ? &cin->ntexture->getTexture() : NULL;
   cin->type = CINEMATIC;
   cin->width = cin->rect.w = w;
   cin->height = cin->rect.h = h;

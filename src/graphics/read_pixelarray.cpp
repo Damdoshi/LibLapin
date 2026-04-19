@@ -17,6 +17,8 @@ t_bunny_pixelarray	*bunny_read_pixelarray_id(const void		*buf,
   hash = bunny_hash(BH_FNV, file, strlen(file));
   if ((pa = new (std::nothrow) struct bunny_pixelarray) == NULL)
     goto ReturnNull;
+  pa->ntexture = NULL;
+  pa->ntex = NULL;
   if (RessourceManager.disable_manager ||
       file == NULL ||
       (pa->tex = (sf::Texture*)RessourceManager.TryGet(ResManager::SF_TEXTURE, hash)) == NULL)
