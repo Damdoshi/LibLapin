@@ -14,7 +14,10 @@ t_bunny_pixelarray	*bunny_read_pixelarray_id(const void		*buf,
   struct bunny_pixelarray	*pa;
   uint64_t			hash;
 
-  hash = bunny_hash(BH_FNV, file, strlen(file));
+  hash = file ? bunny_hash(BH_FNV, file, strlen(file)) : 0;
+  if (_bunny_is_psd_buffer(buf, len))
+    return (_bunny_load_psd_pixelarray_from_memory(buf, len, file));
+
   if ((pa = new (std::nothrow) struct bunny_pixelarray) == NULL)
     goto ReturnNull;
   pa->ntexture = NULL;

@@ -24,6 +24,18 @@ t_bunny_picture		*bunny_load_picture(const char	*file)
     }
   hash = bunny_hash(BH_FNV, file, strlen(file));
 
+  if (_bunny_is_psd_filename(file) && !gl_bunny_ressource_ciphering)
+    {
+      void		*data;
+      size_t		siz;
+
+      if (bunny_load_file(file, &data, &siz) == -1)
+	return (NULL);
+      pic = (struct bunny_picture*)_bunny_load_psd_picture_from_memory(data, siz, file);
+      bunny_delete_file(data, file);
+      return ((t_bunny_picture*)pic);
+    }
+
   if (gl_bunny_ressource_ciphering)
     {
       void		*data;

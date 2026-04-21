@@ -49,6 +49,7 @@ typedef struct			s_bunny_tileset
   int				last_tile;
 
   t_bunny_map			*properties;
+  t_bunny_picture		*working; // TEMPORAIREMENT PUBLIC
 }				t_bunny_tileset;
 
 t_bunny_tileset			*bunny_load_tileset(const char			*s);

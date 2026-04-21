@@ -108,8 +108,8 @@
   TSTFLAGS	=	$(COMMON) $(TESTOPTS)
 
 all:			erase title $(PRODA) $(DBGA) $(TSTA) # $(DBGSO) $(PRODSO)
-prod:			$(PRODSO) $(PRODA)
-debug:			$(DBGSO) $(DBGA)
+prod:			$(PRODA) # $(PRODSO)
+debug:			$(DBGA) # $(DBGSO)
 tests:			$(TSTA)
 			(cd tests/ && $(MAKE))
 $(PRODSO):		$(PRODOBJ)

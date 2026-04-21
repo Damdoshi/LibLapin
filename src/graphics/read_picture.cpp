@@ -15,7 +15,10 @@ t_bunny_picture		*bunny_read_picture_id(const void	*_pic,
   sf::Texture		txt;
   uint64_t		hash;
 
-  hash = bunny_hash(BH_FNV, file, strlen(file));
+  hash = file ? bunny_hash(BH_FNV, file, strlen(file)) : 0;
+  if (_bunny_is_psd_buffer(_pic, len))
+    return (_bunny_load_psd_picture_from_memory(_pic, len, file));
+
   if ((pic = new (std::nothrow) struct bunny_picture) == NULL)
     goto ReturnNull;
   pic->ntexture = NULL;

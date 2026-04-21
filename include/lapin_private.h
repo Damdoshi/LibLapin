@@ -25,6 +25,7 @@
 # include			"private/plugin.h"
 # include			"private/misc.h"
 # include			"private/manager.h"
+# include			"private/psd_loader.hpp"
 # include			"private/monitor.h"
 # include			"private/context.h"
 # include			"private/cinematic.hpp"
