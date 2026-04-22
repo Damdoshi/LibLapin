@@ -71,7 +71,9 @@ static t_bunny_window	*open_single_window(t_bunny_configuration		*cnf,
 
   if (bunny_position_configuration("Size", &size, cnf) != BD_OK)
     if (bunny_position_configuration("Size", &size, root) != BD_OK)
-      return (NULL);
+      if (bunny_configuration_getf_int(cnf, &size.x, "Width") == false ||
+	  bunny_configuration_getf_int(cnf, &size.y, "Height") == false)
+	return (NULL);
   if (!bunny_configuration_getf_string(cnf, &name, "Name"))
     if (!bunny_configuration_getf_string(root, &name, "Name"))
       name = "LibLapin";
@@ -103,7 +105,8 @@ t_bunny_window		**bunny_begin_configuration(t_bunny_configuration	*cnf)
   int			len;
   int			i;
 
-  if (bunny_configuration_getf_int(cnf, NULL, "Size[0]"))
+  if (bunny_configuration_getf_int(cnf, NULL, "Size[0]") ||
+      bunny_configuration_getf_int(cnf, NULL, "Width"))
     {
       if ((wins = (t_bunny_window**)bunny_malloc(sizeof(*wins) * 2)) == NULL)
 	return (NULL);
@@ -135,7 +138,8 @@ t_bunny_window		**bunny_begin_configuration(t_bunny_configuration	*cnf)
   return (NULL);
 }
 
-t_bunny_window		**bunny_begin(const char			*file)
+t_bunny_window		**bunny_beginc(const char			*file,
+				       size_t				*nbr)
 {
   t_bunny_configuration	*cnf;
   const char		*str;
@@ -157,5 +161,12 @@ t_bunny_window		**bunny_begin(const char			*file)
   else
     r = bunny_begin_configuration(cnf);
   bunny_delete_configuration(cnf);
+  if (nbr && r)
+    for (*nbr = 0; r[*nbr] != NULL; ++(*nbr));
   return (r);
+}
+
+t_bunny_window			**bunny_begin(const char			*cnf)
+{
+  return (bunny_beginc(cnf, NULL));
 }
