@@ -85,7 +85,10 @@ static void		get_picture(sf::Shader				*shader,
   struct bunny_picture	*pic = va_arg(*lst, struct bunny_picture*);
 
   (void)n;
-  shader->setUniform(varname, *pic->tex);
+  if (strcmp("NormalMap", varname) == 0 && pic->ntex)
+    shader->setUniform(varname, *pic->ntex);
+  else
+    shader->setUniform(varname, *pic->tex);
 }
 
 static void		get_current(sf::Shader				*shader,

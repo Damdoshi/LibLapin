@@ -759,6 +759,7 @@ void				bunny_set_multiply_blit(bool			blend);
 
 void				bunny_enable_normal_map(bool			enable);
 void				bunny_display_normal_map(bool			enable);
+bool				bunny_swap_color_and_normal_map(t_bunny_clipable *s);
 
 /*!
 ** All picture loading function in the bunny library use a ressource manager to avoid
