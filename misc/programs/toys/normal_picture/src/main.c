@@ -52,7 +52,12 @@ t_bunny_response	key(t_bunny_event_state			state,
   if (sym == BKS_SPACE)
     bunny_swap_color_and_normal_map(pic);
   if (sym == BKS_RETURN)
-    display_final = !display_final;
+    {
+      if ((display_final = !display_final))
+	puts("affichage de la normal map");
+      else
+	puts("affichage normal");
+    }
   return (GO_ON);
 }
 
@@ -80,6 +85,7 @@ t_bunny_response	loop(void				*dat)
 int			main(void)
 {
   display_final = false;
+  bunny_enable_full_blit(true);
   bunny_normal_map_shader(&normal_map);
   assert((pic = bunny_load_picture("./pic.psd")));
   bunny_blit(&pic->buffer, bunny_load_picture("./pic2.psd"), NULL);

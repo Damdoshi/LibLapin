@@ -497,20 +497,25 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	    || *input_type == TTF_TEXT
 	    || *input_type == TILEMAP
 	    || *input_type == DRESSED_SPRITE
-	    || *input_type == CINEMATIC
-	    )
+	    || *input_type == CINEMATIC)
 	  {
+	    const bunny_picture *in = (const bunny_picture*)picture;
+
 	    if (out->ntexture && has_normal_sprite)
 	      {
-		spr->setTexture(*out->ntex);
+		// blit de la normal map source vers la target normal
+		spr->setTexture(*in->ntex);
 		draw_rendertexture_sprite(out->ntexture, *spr, NULL, true);
-		if (gl_normal_map_shader == shader)
-		  gl_normal_map_configuration->normal_map = (t_bunny_picture*)picture;
-		spr->setTexture(*out->tex);
-		draw_rendertexture_sprite(out->texture, *spr, (sf::Shader*)bunny_normal_map_shader(gl_normal_map_configuration), true);
+
+		// blit de la color map source vers la target color
+		spr->setTexture(*in->tex);
+		draw_rendertexture_sprite(out->texture, *spr, shader, true);
 	      }
 	    else
-	      draw_rendertexture_sprite(out->texture, *spr, shader, true);
+	      {
+		spr->setTexture(*in->tex);
+		draw_rendertexture_sprite(out->texture, *spr, shader, true);
+	      }
 	  }
 	else
 	  {

@@ -90,8 +90,8 @@ const std::string	StretchedBody =
   "  if (Active%d > 0.5)\n"
   "  {\n"
   "    LPos = LightPosition%d.xy;\n"
-  "    PositionOnScreen = (LPos.xy - gl_FragCoord.xy) / WindowSize.xy;"
   "    LPos.y = WindowSize.y - LPos.y;"
+  "    PositionOnScreen = (LPos.xy - gl_FragCoord.xy) / WindowSize.xy;"
   "    ReversedPositionOnScreen = (LPos.xy - gl_FragCoord.xy) / WindowSize.xy;"
   "\n"
   // Compute spot light
