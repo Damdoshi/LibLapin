@@ -60,14 +60,11 @@ double			Network::Poll(double			tmout,
   while (!rasap && tmout > 0);
 
   // Manage doomed Peers
-  for (auto it = peers.begin(); it != peers.end(); ++it)
-    {
-      if (it->second.doomed && !it->second.outqueue.size())
-	{
-	  peers.erase(it);
-	  return (tmout);
-	}
-    }
+  for (auto it = peers.begin(); it != peers.end();)
+    if (it->second.doomed && !it->second.outqueue.size())
+      it = peers.erase(it);
+    else
+      ++it;
   return (tmout);
 }
 

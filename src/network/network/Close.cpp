@@ -9,6 +9,10 @@
 
 bool			Network::Close(const Info		&info)
 {
-  return (peers[info].Close());
+  auto			it = peers.find(info);
+
+  if (it == peers.end())
+    return (false);
+  return (it->second.Close());
 }
 

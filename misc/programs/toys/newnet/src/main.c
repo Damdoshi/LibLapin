@@ -136,10 +136,8 @@ static void print_info(const char *prefix, t_bunny_network_info info)
 
 static int find_client(struct s_data *vars, t_bunny_network_info info)
 {
-  int i;
-
-  for (i = 0; i < vars->nbr_clients; ++i)
-    if (memcmp(&vars->clients[i], &info, sizeof(info)) == 0)
+  for (int i = 0; i < vars->nbr_clients; ++i)
+    if (bunny_infocmp(vars->clients[i], info) == 0)
       return i;
   return -1;
 }
@@ -277,9 +275,10 @@ static int build_payload(struct s_data *vars, char *buffer, size_t buffer_size)
   return len;
 }
 
-static void send_to_known_peers(struct s_data *vars, const void *buffer, size_t len)
+static int send_to_known_peers(struct s_data *vars, const void *buffer, size_t len)
 {
   int i;
+  int sent = 0;
 
   if (vars->nbr_clients > 0)
     {
@@ -289,21 +288,24 @@ static void send_to_known_peers(struct s_data *vars, const void *buffer, size_t 
           printf("[SEND] peer %d size=%zu -> %s\n", i, len, r ? "OK" : "FAIL");
           if (vars->verbose)
             print_info("  peer:", vars->clients[i]);
+          if (r)
+            sent += 1;
         }
-      return;
+      return sent;
     }
 
-  if (vars->net.socklen != 0)
+  /* Client only: a remote endpoint exists from the start. */
+  if (vars->has_remote && vars->net.socklen != 0)
     {
       bool r = bunny_network_write(vars->net, buffer, len);
       printf("[SEND] net size=%zu -> %s\n", len, r ? "OK" : "FAIL");
       if (vars->verbose)
         print_info("  net :", vars->net);
+      return r ? 1 : 0;
     }
-  else
-    {
-      printf("[SEND] no network endpoint available\n");
-    }
+
+  printf("[SEND] waiting for peer\n");
+  return 0;
 }
 
 static t_bunny_response loop_cb(void *data)
@@ -312,6 +314,7 @@ static t_bunny_response loop_cb(void *data)
   int64_t now;
   char buffer[4096];
   int len;
+  int sent;
 
   now = now_ms();
 
@@ -322,9 +325,11 @@ static t_bunny_response loop_cb(void *data)
     return GO_ON;
 
   len = build_payload(vars, buffer, sizeof(buffer));
-  send_to_known_peers(vars, buffer, (size_t)len);
+  sent = send_to_known_peers(vars, buffer, (size_t)len);
 
-  vars->sent_count += 1;
+  if (sent > 0)
+    vars->sent_count += 1;
+
   vars->next_send_ms = now + vars->interval_ms;
   return GO_ON;
 }

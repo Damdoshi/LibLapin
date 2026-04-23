@@ -23,9 +23,18 @@ network::Info		Network::Open(network::ProtoSpec const	&spec,
 	  goto Failure;
 	// Si c'est une écoute, ce n'est pas un pair.
 	if (ip != "")
-	  if (peers[inf].AttachDescriptor(descriptors[i], spec, &inf) == false)
-	    goto Close;
-	peers[inf].SetProtocol(spec);
+	  {
+	    auto it = peers.find(inf);
+
+	    if (it == peers.end())
+	      it = peers.emplace(inf, Peer{}).first;
+	    if (it->second.AttachDescriptor(descriptors[i], spec, &inf) == false)
+	      {
+		peers.erase(it);
+		goto Close;
+	      }
+	    it->second.SetProtocol(spec);
+	  }
 	tmp = nbr;
 	if (!descriptors[i].Declare())
 	  goto Detach;

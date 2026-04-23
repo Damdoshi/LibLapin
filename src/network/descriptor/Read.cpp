@@ -127,12 +127,11 @@ bool			network::Descriptor::Read(void)
   /// TCP
   if (specs.protocol == BP_TCP_TERMINATED_DATA)
     {
-      char		*begin = &inbuffer[rcursor];
-      char		*term;
+      char *term;
 
-      rcursor += len; /// On gèrera tous les paquets qu'on a recu.
-      while ((term = (char*)memchr(begin, specs.terminator, rcursor)) != NULL)
-	if (ExtractFromInBuffer(rinfo, specs, term - begin) == false)
+      rcursor += len; // On gèrera tous les paquets qu'on a recu.
+      while ((term = (char*)memchr(inbuffer, specs.terminator, rcursor)) != NULL)
+	if (ExtractFromInBuffer(rinfo, specs, (size_t)(term - inbuffer)) == false)
 	  return (false);
       // Infraction au protocole
       if (rcursor >= specs.size && specs.size != 0)
@@ -142,5 +141,6 @@ bool			network::Descriptor::Read(void)
 	}
       return (true);
     }
+
   return (true);
 }

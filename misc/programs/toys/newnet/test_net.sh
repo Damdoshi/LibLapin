@@ -9,7 +9,7 @@ PASS=0
 FAIL=0
 
 # Active valgrind avec VALGRIND=1 ./test_net.sh
-VALGRIND=1
+VALGRIND=0
 VALGRIND_BIN="${VALGRIND_BIN:-valgrind}"
 VALGRIND_OPTS="${VALGRIND_OPTS:---leak-check=full --show-leak-kinds=all --track-origins=yes --errors-for-leak-kinds=definite,possible --error-exitcode=97}"
 

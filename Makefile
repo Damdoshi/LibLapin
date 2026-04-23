@@ -49,7 +49,7 @@
 			-Wno-narrowing						\
 			-Wno-cast-function-type
 
-  DEBUGOPTS	=	-O0 -g -g3 -ggdb					\
+  DEBUGOPTS	=	-gdwarf-4 -O0 -Og -g -g3 -ggdb				\
 			-fno-omit-frame-pointer					\
 			-fno-align-functions					\
 			-fno-align-loops

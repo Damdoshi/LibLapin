@@ -9,7 +9,11 @@
 
 bool			Network::Doom(const Info	&info)
 {
-  return (peers[info].Doom());
+  auto			it = peers.find(info);
+
+  if (it == peers.end())
+    return (false);
+  return (it->second.Doom());
 }
 
 bool			Network::Doom(int		fd)
