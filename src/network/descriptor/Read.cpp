@@ -7,9 +7,53 @@
 
 #include        <poll.h>
 #include        <arpa/inet.h>
+#include        <stdlib.h>
 #include        "lapin.h"
 #include        "private/network/network.hpp"
 #include        "private/network/reliable_udp.hpp"
+
+static bool     should_drop_once(const char *envname, uint32_t sequence, std::set<uint32_t> &already)
+{
+  const char    *env = getenv(envname);
+  int           mod;
+
+  if (env == NULL || *env == 0)
+    return (false);
+  mod = atoi(env);
+  if (mod <= 0)
+    return (false);
+  if ((sequence % (uint32_t)mod) != 0)
+    return (false);
+  if (already.find(sequence) != already.end())
+    return (false);
+  already.insert(sequence);
+  return (true);
+}
+
+static bool     queue_rudp_ack(std::list<network::Communication> &outqueue,
+                                struct pollfd *pollfd,
+                                const network::Info &rinfo,
+                                uint32_t sequence)
+{
+  network::ReliableUdpHeader ack;
+
+  memset(&ack, 0, sizeof(ack));
+  ack.magic = htonl(network::RUDP_MAGIC);
+  ack.version = network::RUDP_VERSION;
+  ack.type = network::RUDP_ACK;
+  ack.header_size = htons((uint16_t)sizeof(network::ReliableUdpHeader));
+  ack.acknowledge = htonl(sequence);
+  try
+    {
+      outqueue.emplace_back(rinfo, (const char*)&ack, sizeof(ack), nullptr, nullptr);
+    }
+  catch (...)
+    {
+      return (false);
+    }
+  pollfd->events |= POLLOUT;
+  return (true);
+}
 
 bool            network::Descriptor::Read(void)
 {
@@ -24,8 +68,6 @@ bool            network::Descriptor::Read(void)
 
       // BP_UDP_RELIABLE expose specs.size comme taille utile maximale.
       // Sur le fil, le datagramme contient en plus l'en-tête RUDP interne.
-      // Le buffer de réception doit donc accepter payload + header, sinon
-      // recvfrom tronque silencieusement les paquets quand -s est explicite.
       if (specs.protocol == BP_UDP_RELIABLE)
         read_size += sizeof(ReliableUdpHeader);
       if ((inbuffer = (char*)bunny_malloc(read_size)) == NULL)
@@ -94,7 +136,9 @@ bool            network::Descriptor::Read(void)
       uint32_t magic = ntohl(hdr->magic);
       uint16_t header_size = ntohs(hdr->header_size);
       uint32_t sequence = ntohl(hdr->sequence);
+      uint32_t acknowledge = ntohl(hdr->acknowledge);
       uint32_t payload_size = ntohl(hdr->payload_size);
+      Peer &peer = it->second;
 
       if (magic != RUDP_MAGIC || hdr->version != RUDP_VERSION || header_size < sizeof(ReliableUdpHeader))
         return (true);
@@ -102,36 +146,56 @@ bool            network::Descriptor::Read(void)
         return (true);
 
       if (hdr->type == RUDP_ACK)
-        return (true);
+        {
+          if (should_drop_once("LIBLAPIN_RUDP_DROP_ACK_MOD", acknowledge, peer.rudp_test_dropped_ack_sequences))
+            return (true);
+          auto pit = peer.rudp_pending.find(acknowledge);
+          if (pit != peer.rudp_pending.end())
+            {
+              if (pit->second.wt != NULL)
+                pit->second.wt(*(t_bunny_network_info*)&rinfo, pit->second.wtdata);
+              peer.rudp_pending.erase(pit);
+            }
+          return (true);
+        }
 
       if (hdr->type != RUDP_DATA)
         return (true);
 
-      ReliableUdpHeader ack;
-      memset(&ack, 0, sizeof(ack));
-      ack.magic = htonl(RUDP_MAGIC);
-      ack.version = RUDP_VERSION;
-      ack.type = RUDP_ACK;
-      ack.header_size = htons((uint16_t)sizeof(ReliableUdpHeader));
-      ack.acknowledge = htonl(sequence);
-      outqueue.emplace_back(rinfo, (const char*)&ack, sizeof(ack), nullptr, nullptr);
-      pollfd->events |= POLLOUT;
-
-      Peer &peer = it->second;
-      if (peer.rudp_has_received_sequence && sequence <= peer.rudp_last_received_sequence)
+      // Test hook volontairement privé: simule une perte avant ACK et avant livraison.
+      // La retransmission doit donc réparer le trou.
+      if (should_drop_once("LIBLAPIN_RUDP_DROP_DATA_MOD", sequence, peer.rudp_test_dropped_data_sequences))
         return (true);
-      peer.rudp_has_received_sequence = true;
-      peer.rudp_last_received_sequence = sequence;
 
-      try
+      if (queue_rudp_ack(outqueue, pollfd, rinfo, sequence) == false)
+        return (false);
+
+      if (sequence < peer.rudp_next_expected_sequence)
+        return (true);
+
+      if (peer.rudp_received_buffer.find(sequence) == peer.rudp_received_buffer.end())
+        peer.rudp_received_buffer[sequence] = std::vector<char>(&inbuffer[header_size], &inbuffer[header_size] + payload_size);
+
+      while (true)
         {
-          inqueue.emplace_back(rinfo, (size_t)payload_size);
+          auto bit = peer.rudp_received_buffer.find(peer.rudp_next_expected_sequence);
+          if (bit == peer.rudp_received_buffer.end())
+            break;
+          try
+            {
+              inqueue.emplace_back(rinfo, bit->second.size());
+            }
+          catch (...)
+            {
+              return (false);
+            }
+          if (bit->second.size())
+            memcpy(inqueue.back().data, bit->second.data(), bit->second.size());
+          peer.rudp_has_received_sequence = true;
+          peer.rudp_last_received_sequence = peer.rudp_next_expected_sequence;
+          peer.rudp_received_buffer.erase(bit);
+          peer.rudp_next_expected_sequence += 1;
         }
-      catch (...)
-        {
-          return (false);
-        }
-      memcpy(inqueue.back().data, &inbuffer[header_size], payload_size);
       rcursor = 0;
       return (true);
     }

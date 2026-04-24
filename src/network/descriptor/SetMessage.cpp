@@ -30,18 +30,32 @@ bool            network::Descriptor::SetMessage(const char      *data,
         if (len > UINT32_MAX)
           return (false);
 
+        Peer &peer = it->second;
+        const uint32_t sequence = peer.rudp_next_sequence++;
         const size_t total = sizeof(ReliableUdpHeader) + len;
-        outqueue.emplace_back(info, total, wt, wtdata);
+        Peer::ReliableUdpPending pending;
 
-        ReliableUdpHeader *hdr = (ReliableUdpHeader*)outqueue.back().data;
+        pending.sequence = sequence;
+        pending.packet.resize(total);
+        pending.last_send = bunny_get_time() / 1e9;
+        pending.attempts = 1;
+        pending.wt = wt;
+        pending.wtdata = wtdata;
+
+        ReliableUdpHeader *hdr = (ReliableUdpHeader*)pending.packet.data();
+        memset(hdr, 0, sizeof(*hdr));
         hdr->magic = htonl(RUDP_MAGIC);
         hdr->version = RUDP_VERSION;
         hdr->type = RUDP_DATA;
         hdr->header_size = htons((uint16_t)sizeof(ReliableUdpHeader));
-        hdr->sequence = htonl(it->second.rudp_next_sequence++);
+        hdr->sequence = htonl(sequence);
         hdr->acknowledge = 0;
         hdr->payload_size = htonl((uint32_t)len);
-        memcpy(&outqueue.back().data[sizeof(ReliableUdpHeader)], data, len);
+        if (len)
+          memcpy(&pending.packet[sizeof(ReliableUdpHeader)], data, len);
+
+        outqueue.emplace_back(info, pending.packet.data(), pending.packet.size(), nullptr, nullptr);
+        peer.rudp_pending[sequence] = pending;
       }
     else if (specs.protocol == BP_UDP_IMMEDIATE)
       outqueue.emplace_back(info, data, len, wt, wtdata);

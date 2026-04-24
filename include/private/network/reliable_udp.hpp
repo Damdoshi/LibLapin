@@ -6,11 +6,14 @@
 #ifndef                 __LAPIN_NETWORK_RELIABLE_UDP_HPP__
 # define                __LAPIN_NETWORK_RELIABLE_UDP_HPP__
 # include               <stdint.h>
+# include               <stddef.h>
 
 namespace               network
 {
   static const uint32_t RUDP_MAGIC = 0x42525544; // "BRUD" Bunny Reliable UDP
   static const uint8_t  RUDP_VERSION = 1;
+  static const double   RUDP_RESEND_DELAY = 0.15;
+  static const unsigned RUDP_MAX_ATTEMPTS = 64;
 
   enum                  ReliableUdpPacketType : uint8_t
   {

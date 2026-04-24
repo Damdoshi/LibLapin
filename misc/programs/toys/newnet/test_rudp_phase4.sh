@@ -110,7 +110,7 @@ run_listener_many() {
 
   log "=== CASE $name ==="
   log "listener: $PROG -p rudp -L $port --no-send --seq --quiet-payload -D 5200 -F 400 -m listener"
-  "$PROG" -s 512 -p rudp -L "$port" --no-send --seq --quiet-payload -D 5200 -F 400 -m listener >"$listener_log" 2>&1 &
+  "$PROG" -p rudp -L "$port" --no-send --seq --quiet-payload -D 5200 -F 400 -m listener >"$listener_log" 2>&1 &
   local listener_pid=$!
 
   sleep 1
@@ -121,7 +121,7 @@ run_listener_many() {
     local logf="$TMPDIR/${name}_S${i}.log"
     logs+=("$logf")
     log "S$i: $PROG -p rudp -R 127.0.0.1 $port -n 12 -i 40 --seq --quiet-payload -D 2800 -F 400 -m S$i"
-    "$PROG" -s 512 -p rudp -R 127.0.0.1 "$port" -n 12 -i 40 --seq --quiet-payload -D 2800 -F 400 -m "S$i" >"$logf" 2>&1 &
+    "$PROG" -p rudp -R 127.0.0.1 "$port" -n 12 -i 40 --seq --quiet-payload -D 2800 -F 400 -m "S$i" >"$logf" 2>&1 &
     pids+=("$!")
     sleep 0.15
   done
