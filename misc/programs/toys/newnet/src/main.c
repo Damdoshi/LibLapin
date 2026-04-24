@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <signal.h>
 
 #define MAX_CLIENTS 1024
 #define DEFAULT_FREQ 20
@@ -19,15 +20,35 @@
 #define DEFAULT_TERM_MAX 1460
 #define DEFAULT_SIZE_MAX (1024 * 1024)
 
+typedef struct s_peer_stats
+{
+  t_bunny_network_info info;
+  int                  connected;
+  int64_t              first_seen_ms;
+  int64_t              last_seen_ms;
+  int                  sent_ok;
+  int                  sent_fail;
+  int                  received_messages;
+  size_t               sent_bytes;
+  size_t               received_bytes;
+  int                  seq_seen;
+  int                  last_seq;
+  int                  seq_duplicates;
+  int                  seq_gaps;
+  int                  seq_regressions;
+} t_peer_stats;
+
 struct s_data
 {
   t_bunny_network_info net;
-  t_bunny_network_info clients[MAX_CLIENTS];
+  t_peer_stats         clients[MAX_CLIENTS];
   int                  nbr_clients;
 
   t_bunny_protocol     pcol;
   bool                 verbose;
   bool                 hex_dump;
+  bool                 quiet_payload;
+  bool                 sequence_payload;
 
   bool                 has_local;
   int                  local_port;
@@ -38,12 +59,33 @@ struct s_data
 
   int                  payload_size;
   int                  send_count;   /* 0 = infini */
-  int                  sent_count;
+  int                  sent_count;    /* tours où au moins un envoi a réussi */
+  int                  build_seq;
+  int                  send_attempts;
+  int                  send_ok;
+  int                  send_fail;
+  int                  send_skipped;
+  bool                 no_send;
+  int                  duration_ms;
+  int                  first_send_delay_ms;
+  int                  received_messages;
+  size_t               sent_bytes;
+  size_t               received_bytes;
   int                  interval_ms;
+  int                  loop_freq;
   int64_t              next_send_ms;
+  int64_t              start_ms;
 
   char                 message[1024];
 };
+
+static volatile sig_atomic_t g_stop_requested = 0;
+
+static void handle_signal(int sig)
+{
+  (void)sig;
+  g_stop_requested = 1;
+}
 
 static int64_t now_ms(void)
 {
@@ -136,10 +178,63 @@ static void print_info(const char *prefix, t_bunny_network_info info)
 
 static int find_client(struct s_data *vars, t_bunny_network_info info)
 {
-  for (int i = 0; i < vars->nbr_clients; ++i)
-    if (bunny_infocmp(vars->clients[i], info) == 0)
+  int i;
+
+  for (i = 0; i < vars->nbr_clients; ++i)
+    if (bunny_infocmp(vars->clients[i].info, info) == 0)
       return i;
   return -1;
+}
+
+static int register_client(struct s_data *vars,
+                           t_bunny_network_info info,
+                           const char *origin,
+                           bool connected)
+{
+  int idx;
+  int64_t now;
+
+  idx = find_client(vars, info);
+  if (idx >= 0)
+    {
+      vars->clients[idx].last_seen_ms = now_ms();
+      if (connected)
+        vars->clients[idx].connected = 1;
+      return idx;
+    }
+
+  if (vars->nbr_clients >= MAX_CLIENTS)
+    {
+      fprintf(stderr, "[PEER] too many clients while registering from %s\n", origin);
+      return -1;
+    }
+
+  idx = vars->nbr_clients++;
+  now = now_ms();
+  memset(&vars->clients[idx], 0, sizeof(vars->clients[idx]));
+  vars->clients[idx].info = info;
+  vars->clients[idx].connected = connected ? 1 : 0;
+  vars->clients[idx].first_seen_ms = now;
+  vars->clients[idx].last_seen_ms = now;
+
+  printf("[PEER] registered peer %d from=%s connected=%s\n",
+         idx,
+         origin,
+         connected ? "yes" : "no");
+  if (vars->verbose)
+    print_info("  peer:", info);
+
+  return idx;
+}
+
+static void unregister_client(struct s_data *vars, int idx)
+{
+  if (idx < 0 || idx >= vars->nbr_clients)
+    return;
+  printf("[PEER] removed peer %d\n", idx);
+  if (idx + 1 != vars->nbr_clients)
+    vars->clients[idx] = vars->clients[vars->nbr_clients - 1];
+  vars->nbr_clients -= 1;
 }
 
 static t_bunny_response net_connect_cb(t_bunny_network_info info,
@@ -158,8 +253,7 @@ static t_bunny_response net_connect_cb(t_bunny_network_info info,
           printf("[CONNECT] peer %d disconnected\n", idx);
           if (vars->verbose)
             print_info("  peer:", info);
-          vars->clients[idx] = vars->clients[vars->nbr_clients - 1];
-          vars->nbr_clients -= 1;
+          unregister_client(vars, idx);
         }
       else
         {
@@ -172,24 +266,75 @@ static t_bunny_response net_connect_cb(t_bunny_network_info info,
 
   if (idx >= 0)
     {
+      vars->clients[idx].connected = 1;
+      vars->clients[idx].last_seen_ms = now_ms();
       printf("[CONNECT] peer %d already known\n", idx);
       if (vars->verbose)
         print_info("  peer:", info);
       return GO_ON;
     }
 
-  if (vars->nbr_clients >= MAX_CLIENTS)
+  idx = register_client(vars, info, "connect", true);
+  if (idx >= 0)
+    printf("[CONNECT] new peer %d\n", idx);
+  return GO_ON;
+}
+
+
+static void inspect_sequence(struct s_data *vars,
+                             int idx,
+                             const void *buffer,
+                             size_t size)
+{
+  const char *str;
+  char *end;
+  long seq;
+
+  if (!vars->sequence_payload || idx < 0 || size < 5)
+    return;
+  str = (const char*)buffer;
+  if (memcmp(str, "SEQ:", 4) != 0)
+    return;
+
+  seq = strtol(str + 4, &end, 10);
+  if (end == str + 4 || *end != ':')
+    return;
+  if (seq < 0 || seq > 2147483647L)
+    return;
+
+  if (!vars->clients[idx].seq_seen)
     {
-      fprintf(stderr, "[CONNECT] too many clients\n");
-      return GO_ON;
+      vars->clients[idx].seq_seen = 1;
+      vars->clients[idx].last_seq = (int)seq;
+      printf("[SEQ] peer %d first=%ld\n", idx, seq);
+      return;
     }
 
-  vars->clients[vars->nbr_clients] = info;
-  printf("[CONNECT] new peer %d\n", vars->nbr_clients);
-  if (vars->verbose)
-    print_info("  peer:", info);
-  vars->nbr_clients += 1;
-  return GO_ON;
+  if ((int)seq == vars->clients[idx].last_seq)
+    {
+      vars->clients[idx].seq_duplicates += 1;
+      printf("[SEQ] peer %d duplicate=%ld\n", idx, seq);
+    }
+  else if ((int)seq < vars->clients[idx].last_seq)
+    {
+      vars->clients[idx].seq_regressions += 1;
+      printf("[SEQ] peer %d regression previous=%d current=%ld\n",
+             idx, vars->clients[idx].last_seq, seq);
+      vars->clients[idx].last_seq = (int)seq;
+    }
+  else
+    {
+      if ((int)seq != vars->clients[idx].last_seq + 1)
+        {
+          vars->clients[idx].seq_gaps += (int)seq - vars->clients[idx].last_seq - 1;
+          printf("[SEQ] peer %d gap previous=%d current=%ld missing=%d\n",
+                 idx,
+                 vars->clients[idx].last_seq,
+                 seq,
+                 (int)seq - vars->clients[idx].last_seq - 1);
+        }
+      vars->clients[idx].last_seq = (int)seq;
+    }
 }
 
 static t_bunny_response message_cb(t_bunny_network_info info,
@@ -201,15 +346,30 @@ static t_bunny_response message_cb(t_bunny_network_info info,
   int idx;
 
   idx = find_client(vars, info);
+  if (idx < 0)
+    idx = register_client(vars, info, "message", false);
+
+  if (idx >= 0)
+    {
+      vars->clients[idx].last_seen_ms = now_ms();
+      vars->clients[idx].received_messages += 1;
+      vars->clients[idx].received_bytes += size;
+    }
+  vars->received_messages += 1;
+  vars->received_bytes += size;
+
+  inspect_sequence(vars, idx, buffer, size);
 
   printf("[MESSAGE] from peer %d, size=%zu\n", idx, size);
   if (vars->verbose)
     print_info("  peer:", info);
 
-  if (vars->hex_dump)
+  if (vars->quiet_payload)
     {
-      hexdump(buffer, size);
+      /* Payload volontairement masqué pour les stress tests. */
     }
+  else if (vars->hex_dump)
+    hexdump(buffer, size);
   else
     {
       fwrite(buffer, 1, size, stdout);
@@ -225,6 +385,18 @@ static int build_payload(struct s_data *vars, char *buffer, size_t buffer_size)
 {
   int len;
   int i;
+  char prefix[128];
+  int prefix_len;
+
+  prefix_len = 0;
+  if (vars->sequence_payload)
+    {
+      prefix_len = snprintf(prefix, sizeof(prefix), "SEQ:%d:%s:", vars->build_seq, vars->message);
+      if (prefix_len < 0)
+        prefix_len = 0;
+      if ((size_t)prefix_len > sizeof(prefix))
+        prefix_len = (int)sizeof(prefix);
+    }
 
   if (vars->pcol == BP_TCP_FIXED_SIZE)
     {
@@ -234,7 +406,14 @@ static int build_payload(struct s_data *vars, char *buffer, size_t buffer_size)
 
       memset(buffer, 'A', (size_t)len);
 
-      if (vars->message[0] != '\0')
+      if (vars->sequence_payload && prefix_len > 0)
+        {
+          size_t plen = (size_t)prefix_len;
+          if (plen > (size_t)len)
+            plen = (size_t)len;
+          memcpy(buffer, prefix, plen);
+        }
+      else if (vars->message[0] != '\0')
         {
           size_t mlen = strlen(vars->message);
           if (mlen > (size_t)len)
@@ -253,7 +432,14 @@ static int build_payload(struct s_data *vars, char *buffer, size_t buffer_size)
       for (i = 0; i < len; ++i)
         buffer[i] = (char)('A' + (i % 26));
 
-      if (vars->message[0] != '\0')
+      if (vars->sequence_payload && prefix_len > 0)
+        {
+          size_t plen = (size_t)prefix_len;
+          if (plen > (size_t)len)
+            plen = (size_t)len;
+          memcpy(buffer, prefix, plen);
+        }
+      else if (vars->message[0] != '\0')
         {
           size_t mlen = strlen(vars->message);
           if (mlen > (size_t)len)
@@ -263,7 +449,12 @@ static int build_payload(struct s_data *vars, char *buffer, size_t buffer_size)
       return len;
     }
 
-  if (vars->message[0] != '\0')
+  if (vars->sequence_payload)
+    len = snprintf(buffer, buffer_size, "SEQ:%d:%s:sent at %lld\n",
+                   vars->build_seq,
+                   vars->message[0] != '\0' ? vars->message : "msg",
+                   (long long)now_ms());
+  else if (vars->message[0] != '\0')
     len = snprintf(buffer, buffer_size, "%s\n", vars->message);
   else
     len = snprintf(buffer, buffer_size, "sent at %lld\n", (long long)now_ms());
@@ -278,33 +469,60 @@ static int build_payload(struct s_data *vars, char *buffer, size_t buffer_size)
 static int send_to_known_peers(struct s_data *vars, const void *buffer, size_t len)
 {
   int i;
-  int sent = 0;
+  int ok;
 
+  ok = 0;
   if (vars->nbr_clients > 0)
     {
       for (i = 0; i < vars->nbr_clients; ++i)
         {
-          bool r = bunny_network_write(vars->clients[i], buffer, len);
+          bool r;
+
+          vars->send_attempts += 1;
+          r = bunny_network_write(vars->clients[i].info, buffer, len);
           printf("[SEND] peer %d size=%zu -> %s\n", i, len, r ? "OK" : "FAIL");
           if (vars->verbose)
-            print_info("  peer:", vars->clients[i]);
+            print_info("  peer:", vars->clients[i].info);
+
           if (r)
-            sent += 1;
+            {
+              ok += 1;
+              vars->send_ok += 1;
+              vars->sent_bytes += len;
+              vars->clients[i].sent_ok += 1;
+              vars->clients[i].sent_bytes += len;
+            }
+          else
+            {
+              vars->send_fail += 1;
+              vars->clients[i].sent_fail += 1;
+            }
         }
-      return sent;
+      return ok;
     }
 
-  /* Client only: a remote endpoint exists from the start. */
   if (vars->has_remote && vars->net.socklen != 0)
     {
-      bool r = bunny_network_write(vars->net, buffer, len);
+      bool r;
+
+      vars->send_attempts += 1;
+      r = bunny_network_write(vars->net, buffer, len);
       printf("[SEND] net size=%zu -> %s\n", len, r ? "OK" : "FAIL");
       if (vars->verbose)
         print_info("  net :", vars->net);
-      return r ? 1 : 0;
+
+      if (r)
+        {
+          vars->send_ok += 1;
+          vars->sent_bytes += len;
+          return 1;
+        }
+      vars->send_fail += 1;
+      return 0;
     }
 
-  printf("[SEND] waiting for peer\n");
+  vars->send_skipped += 1;
+  printf("[SEND] skipped no-peer\n");
   return 0;
 }
 
@@ -318,6 +536,15 @@ static t_bunny_response loop_cb(void *data)
 
   now = now_ms();
 
+  if (g_stop_requested)
+    return EXIT_ON_SUCCESS;
+
+  if (vars->duration_ms > 0 && now - vars->start_ms >= vars->duration_ms)
+    return EXIT_ON_SUCCESS;
+
+  if (vars->no_send)
+    return GO_ON;
+
   if (vars->send_count > 0 && vars->sent_count >= vars->send_count)
     return GO_ON;
 
@@ -328,17 +555,66 @@ static t_bunny_response loop_cb(void *data)
   sent = send_to_known_peers(vars, buffer, (size_t)len);
 
   if (sent > 0)
-    vars->sent_count += 1;
-
+    {
+      vars->sent_count += 1;
+      vars->build_seq += 1;
+    }
   vars->next_send_ms = now + vars->interval_ms;
   return GO_ON;
+}
+
+static void print_summary(struct s_data *vars)
+{
+  int i;
+  int64_t now;
+
+  now = now_ms();
+  printf("[SUMMARY] proto=%s uptime_ms=%lld peers=%d no_send=%s duration_ms=%d first_send_delay_ms=%d quiet_payload=%s sequence_payload=%s loop_freq=%d sent_rounds=%d send_attempts=%d send_ok=%d send_fail=%d send_skipped=%d received_messages=%d sent_bytes=%zu received_bytes=%zu\n",
+         proto_name(vars->pcol),
+         (long long)(now - vars->start_ms),
+         vars->nbr_clients,
+         vars->no_send ? "yes" : "no",
+         vars->duration_ms,
+         vars->first_send_delay_ms,
+         vars->quiet_payload ? "yes" : "no",
+         vars->sequence_payload ? "yes" : "no",
+         vars->loop_freq,
+         vars->sent_count,
+         vars->send_attempts,
+         vars->send_ok,
+         vars->send_fail,
+         vars->send_skipped,
+         vars->received_messages,
+         vars->sent_bytes,
+         vars->received_bytes);
+
+  for (i = 0; i < vars->nbr_clients; ++i)
+    {
+      printf("[PEER] index=%d connected=%s age_ms=%lld idle_ms=%lld sent_ok=%d sent_fail=%d received_messages=%d sent_bytes=%zu received_bytes=%zu seq_seen=%s last_seq=%d seq_gaps=%d seq_duplicates=%d seq_regressions=%d\n",
+             i,
+             vars->clients[i].connected ? "yes" : "no",
+             (long long)(now - vars->clients[i].first_seen_ms),
+             (long long)(now - vars->clients[i].last_seen_ms),
+             vars->clients[i].sent_ok,
+             vars->clients[i].sent_fail,
+             vars->clients[i].received_messages,
+             vars->clients[i].sent_bytes,
+             vars->clients[i].received_bytes,
+             vars->clients[i].seq_seen ? "yes" : "no",
+             vars->clients[i].last_seq,
+             vars->clients[i].seq_gaps,
+             vars->clients[i].seq_duplicates,
+             vars->clients[i].seq_regressions);
+      if (vars->verbose)
+        print_info("  peer:", vars->clients[i].info);
+    }
 }
 
 static int usage(const char *prog)
 {
   fprintf(stderr,
           "Usage:\n"
-          "  %s [-v] [--hex] -p proto [-L port] [-R ip port] [-s size] [-n count] [-i ms] [-m text]\n"
+          "  %s [-v] [--hex] [--quiet-payload] [--seq] [--no-send] [-D duration_ms] [--first-send-delay ms] [-F loop_freq] -p proto [-L port] [-R ip port] [-s size] [-n count] [-i ms] [-m text]\n"
           "\n"
           "Protocols:\n"
           "  udp   tcp   rudp   fixed   size   term\n"
@@ -364,24 +640,31 @@ int main(int argc, char **argv)
 
   setvbuf(stdout, NULL, _IOLBF, 0);
   setvbuf(stderr, NULL, _IOLBF, 0);
- 
+
   memset(&vars, 0, sizeof(vars));
   vars.pcol = BP_UDP_IMMEDIATE;
   vars.interval_ms = DEFAULT_INTERVAL_MS;
+  vars.loop_freq = DEFAULT_FREQ;
   vars.send_count = DEFAULT_COUNT;
   vars.payload_size = 0;
-  vars.next_send_ms = now_ms() + vars.interval_ms;
+  vars.start_ms = now_ms();
+  vars.next_send_ms = vars.start_ms + vars.interval_ms;
+
+  signal(SIGTERM, handle_signal);
+  signal(SIGINT, handle_signal);
 
   for (i = 1; i < argc; ++i)
     {
       if (strcmp(argv[i], "-v") == 0)
-        {
-          vars.verbose = true;
-        }
+        vars.verbose = true;
       else if (strcmp(argv[i], "--hex") == 0)
-        {
-          vars.hex_dump = true;
-        }
+        vars.hex_dump = true;
+      else if (strcmp(argv[i], "--quiet-payload") == 0)
+        vars.quiet_payload = true;
+      else if (strcmp(argv[i], "--seq") == 0 || strcmp(argv[i], "--sequence") == 0)
+        vars.sequence_payload = true;
+      else if (strcmp(argv[i], "--no-send") == 0)
+        vars.no_send = true;
       else if (strcmp(argv[i], "-L") == 0)
         {
           if (i + 1 >= argc)
@@ -446,6 +729,30 @@ int main(int argc, char **argv)
           if (vars.interval_ms <= 0)
             return usage(argv[0]);
         }
+      else if (strcmp(argv[i], "-F") == 0 || strcmp(argv[i], "--freq") == 0)
+        {
+          if (i + 1 >= argc)
+            return usage(argv[0]);
+          vars.loop_freq = atoi(argv[++i]);
+          if (vars.loop_freq <= 0)
+            return usage(argv[0]);
+        }
+      else if (strcmp(argv[i], "-D") == 0 || strcmp(argv[i], "--duration") == 0)
+        {
+          if (i + 1 >= argc)
+            return usage(argv[0]);
+          vars.duration_ms = atoi(argv[++i]);
+          if (vars.duration_ms <= 0)
+            return usage(argv[0]);
+        }
+      else if (strcmp(argv[i], "--first-send-delay") == 0)
+        {
+          if (i + 1 >= argc)
+            return usage(argv[0]);
+          vars.first_send_delay_ms = atoi(argv[++i]);
+          if (vars.first_send_delay_ms < 0)
+            return usage(argv[0]);
+        }
       else if (strcmp(argv[i], "-m") == 0)
         {
           if (i + 1 >= argc)
@@ -454,10 +761,10 @@ int main(int argc, char **argv)
           vars.message[sizeof(vars.message) - 1] = '\0';
         }
       else
-        {
-          return usage(argv[0]);
-        }
+        return usage(argv[0]);
     }
+
+  vars.next_send_ms = vars.start_ms + vars.interval_ms + vars.first_send_delay_ms;
 
   if (vars.has_remote)
     {
@@ -470,9 +777,7 @@ int main(int argc, char **argv)
       open_port = vars.local_port;
     }
   else
-    {
-      return usage(argv[0]);
-    }
+    return usage(argv[0]);
 
   switch (vars.pcol)
     {
@@ -516,10 +821,9 @@ int main(int argc, char **argv)
   bunny_set_connect_response(net_connect_cb);
   bunny_set_message_response(message_cb);
   bunny_set_loop_main_function(loop_cb);
-  bunny_loop(NULL, DEFAULT_FREQ, &vars);
+  bunny_loop(NULL, vars.loop_freq, &vars);
 
+  print_summary(&vars);
   bunny_network_close(vars.net);
   return 0;
 }
-
-
