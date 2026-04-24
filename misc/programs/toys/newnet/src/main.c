@@ -19,6 +19,8 @@
 #define DEFAULT_TCP_MAX (1024 * 1024)
 #define DEFAULT_TERM_MAX 1460
 #define DEFAULT_SIZE_MAX (1024 * 1024)
+#define DEFAULT_UDP_MAX 1472
+#define DEFAULT_RUDP_MAX 1472
 
 typedef struct s_peer_stats
 {
@@ -794,7 +796,11 @@ int main(int argc, char **argv)
       max = vars.payload_size > 0 ? vars.payload_size : DEFAULT_TERM_MAX;
       break;
     case BP_UDP_IMMEDIATE:
+      max = vars.payload_size > 0 ? vars.payload_size : DEFAULT_UDP_MAX;
+      break;
     case BP_UDP_RELIABLE:
+      max = vars.payload_size > 0 ? vars.payload_size : DEFAULT_RUDP_MAX;
+      break;
     default:
       max = vars.payload_size > 0 ? vars.payload_size : DEFAULT_SIZE_MAX;
       break;

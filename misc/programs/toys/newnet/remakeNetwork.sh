@@ -1,6 +1,6 @@
 cd ../../../../
 find src/network/ -name "*.o" -delete
-make -j4
+make -j8
 sudo make install
 cd -
 make re

@@ -8,6 +8,7 @@
 #ifndef				__LAPIN_NETWORK_PEER_HPP__
 # define			__LAPIN_NETWORK_PEER_HPP__
 # include			<set>
+# include			<stdint.h>
 # include			"protocol.hpp"
 # include			"communication.hpp"
 
@@ -31,6 +32,10 @@ namespace			network
     std::list<network::WriteRequest> outqueue;
     bool			doomed = false;
     double			last_message = 0;
+
+    uint32_t			rudp_next_sequence = 0;
+    uint32_t			rudp_last_received_sequence = 0;
+    bool			rudp_has_received_sequence = false;
 
     ProtoSpec			protocol;
     

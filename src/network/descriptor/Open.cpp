@@ -11,6 +11,7 @@
 #include		<arpa/inet.h>
 #include		"lapin.h"
 #include		"private/network/network.hpp"
+#include		"private/network/reliable_udp.hpp"
 
 network::Info		Network::Descriptor::Open(const ProtoSpec	&specs,
 						  uint16_t		_port,
@@ -66,8 +67,21 @@ network::Info		Network::Descriptor::Open(const ProtoSpec	&specs,
       if (specs.size == 0)
 	protocol.size = BUNNY_NETWORK_MAXIMUM_PACKET_SIZE;
     }
-  else if (specs.size == 0)
-    protocol.size = 65507; // Maximum size of a UDP packet
+  else
+    {
+      size_t udp_payload_max = 65507; // Maximum size of a UDP datagram payload.
+
+      if (specs.protocol == BP_UDP_RELIABLE)
+        {
+          if (udp_payload_max <= sizeof(ReliableUdpHeader))
+            goto CloseAndLeave;
+          udp_payload_max -= sizeof(ReliableUdpHeader);
+        }
+      if (specs.size == 0)
+        protocol.size = udp_payload_max;
+      else if (specs.size > udp_payload_max)
+        goto CloseAndLeave;
+    }
 
   active = true;
   doomed = false;

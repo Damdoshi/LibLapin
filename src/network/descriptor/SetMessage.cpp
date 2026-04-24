@@ -1,53 +1,77 @@
 // Jason Brillante "Damdoshi"
-// Hanged Bunny Studio 2014-2025
-// EFRITS SAS 2022-2025
-// Pentacle Technologie 2008-2025
+// Hanged Bunny Studio 2014-2026
+// EFRITS SAS 2022-2026
+// Pentacle Technologie 2008-2026
 //
 // Bibliothèque Lapin
 
-#include	<limits.h>
-#include	"lapin.h"
-#include	"private/network/network.hpp"
+#include        <limits.h>
+#include        <arpa/inet.h>
+#include        "lapin.h"
+#include        "private/network/network.hpp"
+#include        "private/network/reliable_udp.hpp"
 
-bool		network::Descriptor::SetMessage(const char	*data,
-						size_t		len,
-						const Info	&info,
-						const ProtoSpec	&specs,
-						t_bunny_written	wt,
-						void		*wtdata)
+bool            network::Descriptor::SetMessage(const char      *data,
+                                                size_t          len,
+                                                const Info      &info,
+                                                const ProtoSpec &specs,
+                                                t_bunny_written wt,
+                                                void            *wtdata)
 {
   if (len > specs.size && specs.size != 0)
     return (false);
   try {
-    if (specs.protocol <= BP_UDP_RELIABLE)
+    if (specs.protocol == BP_UDP_RELIABLE)
+      {
+        auto it = network->peers.find(info);
+
+        if (it == network->peers.end())
+          return (false);
+        if (len > UINT32_MAX)
+          return (false);
+
+        const size_t total = sizeof(ReliableUdpHeader) + len;
+        outqueue.emplace_back(info, total, wt, wtdata);
+
+        ReliableUdpHeader *hdr = (ReliableUdpHeader*)outqueue.back().data;
+        hdr->magic = htonl(RUDP_MAGIC);
+        hdr->version = RUDP_VERSION;
+        hdr->type = RUDP_DATA;
+        hdr->header_size = htons((uint16_t)sizeof(ReliableUdpHeader));
+        hdr->sequence = htonl(it->second.rudp_next_sequence++);
+        hdr->acknowledge = 0;
+        hdr->payload_size = htonl((uint32_t)len);
+        memcpy(&outqueue.back().data[sizeof(ReliableUdpHeader)], data, len);
+      }
+    else if (specs.protocol == BP_UDP_IMMEDIATE)
       outqueue.emplace_back(info, data, len, wt, wtdata);
     else if (specs.protocol == BP_TCP_FIXED_SIZE)
       {
-	if (specs.size == len)
-	  outqueue.emplace_back(info, data, len, wt, wtdata);
-	else
-	  {
-	    outqueue.emplace_back(info, specs.size, wt, wtdata);
-	    memcpy(outqueue.back().data, data, len);
-	    memset(&outqueue.back().data[len], 0, specs.size - len);
-	  }
+        if (specs.size == len)
+          outqueue.emplace_back(info, data, len, wt, wtdata);
+        else
+          {
+            outqueue.emplace_back(info, specs.size, wt, wtdata);
+            memcpy(outqueue.back().data, data, len);
+            memset(&outqueue.back().data[len], 0, specs.size - len);
+          }
       }
     else if (specs.protocol == BP_TCP_SIZED_PLUS_DATA)
       {
-	struct size_plus_data *spd = NULL;
+        struct size_plus_data *spd = NULL;
 
-	if (len > UINT32_MAX)
-	  return (false);
-	outqueue.emplace_back(info, len + sizeof(spd->size), wt, wtdata);
-	spd = (struct size_plus_data*)outqueue.back().data;
-	spd->size = len;
-	memcpy(spd->data, data, len);
+        if (len > UINT32_MAX)
+          return (false);
+        outqueue.emplace_back(info, len + sizeof(spd->size), wt, wtdata);
+        spd = (struct size_plus_data*)outqueue.back().data;
+        spd->size = len;
+        memcpy(spd->data, data, len);
       }
     else // BP_TCP_TERMINATED_DATA
       {
-	outqueue.emplace_back(info, len + sizeof(specs.terminator), wt, wtdata);
-	memcpy(outqueue.back().data, data, len);
-	memcpy(&outqueue.back().data[len], &specs.terminator, sizeof(specs.terminator));
+        outqueue.emplace_back(info, len + sizeof(specs.terminator), wt, wtdata);
+        memcpy(outqueue.back().data, data, len);
+        memcpy(&outqueue.back().data[len], &specs.terminator, sizeof(specs.terminator));
       }
     pollfd->events |= POLLOUT;
   } catch (...) {
