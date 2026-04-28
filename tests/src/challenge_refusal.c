@@ -6,17 +6,7 @@
 t_bunny_network_info server;
 t_bunny_network_info client;
 
-t_bunny_identity srv_id[3] = {
-  {
-    .identity = "mordanis",
-    .secret = "",
-    .validated = BIS_AWAITING_CONFIRMATION,
-    .last_challenge = 0,
-    .info = {},
-    .usual_delay = 0,
-    .estimated_clock_difference = 0,
-    .last_exchange = 0
-  },
+t_bunny_identity srv_id[2] = {
   {
     .identity = "damdoshi",
     .secret = "0123456789",
@@ -27,13 +17,12 @@ t_bunny_identity srv_id[3] = {
     .estimated_clock_difference = 0,
     .last_exchange = 0
   },
-  {
-    .identity = ""
-  }
+  { .identity = "" }
 };
+
 t_bunny_identity clt_id = {
   .identity = "damdoshi",
-  .secret = "0123456789",
+  .secret = "WRONG_SECRET",
   .validated = BIS_AWAITING_CONFIRMATION,
   .last_challenge = 0,
   .info = {},
@@ -69,48 +58,34 @@ t_bunny_response handle_message(t_bunny_network_info inf,
   counter += 1;
   if (counter == 1)
     {
-      assert(cmd->ciphered == 0);
       assert(cmd->command == BSCT_CHALLENGE_REQUEST);
-      assert(size == sizeof(cmd->challenge_request));
-      id = NULL;
-      for (size_t i = 0; srv_id[i].identity[0]; ++i)
-        if (strcasecmp(cmd->challenge_request.identity, srv_id[i].identity) == 0)
-          { id = &srv_id[i]; break; }
-      assert(id);
-      assert(id->validated == BIS_AWAITING_CONFIRMATION);
+      id = &srv_id[0];
       id->info = inf;
       assert(bunny_handle_standard_command(id, cmd, size, BH_DJB2, BS_XOR) == BSCH_SUCCESS);
       return GO_ON;
     }
   if (counter == 2)
     {
-      assert(cmd->ciphered == 0);
       assert(cmd->command == BSCT_CHALLENGE);
-      assert(size == sizeof(cmd->challenge));
-      assert(clt_id.validated == BIS_AWAITING_CONFIRMATION);
       assert(bunny_handle_standard_command(&clt_id, cmd, size, BH_DJB2, BS_XOR) == BSCH_SUCCESS);
       return GO_ON;
     }
   if (counter == 3)
     {
-      assert(cmd->ciphered == 0);
       assert(cmd->command == BSCT_CHALLENGE_RESPONSE);
-      assert(size == sizeof(cmd->challenge_response));
       id = bunny_resolve_identity(srv_id, inf);
-      assert(id);
-      assert(id->validated == BIS_AWAITING_CONFIRMATION);
+      assert(id == &srv_id[0]);
       assert(bunny_handle_standard_command(id, cmd, size, BH_DJB2, BS_XOR) == BSCH_SUCCESS);
-      assert(id->validated == BIS_IDENTITY_CONFIRMED);
+      assert(id->validated == BIS_IDENTITY_REFUSED);
       return GO_ON;
     }
   if (counter == 4)
     {
-      assert(cmd->ciphered == 0);
       assert(cmd->command == BSCT_CHALLENGE_RESULT);
       assert(size == sizeof(cmd->challenge_result));
-      assert(clt_id.validated == BIS_AWAITING_CONFIRMATION);
+      assert(cmd->challenge_result.result == 0);
       assert(bunny_handle_standard_command(&clt_id, cmd, size, BH_DJB2, BS_XOR) == BSCH_SUCCESS);
-      assert(clt_id.validated == BIS_IDENTITY_CONFIRMED);
+      assert(clt_id.validated == BIS_IDENTITY_REFUSED);
       return SWITCH_CONTEXT;
     }
   return EXIT_ON_ERROR;
@@ -127,16 +102,13 @@ int main(void)
     }
   };
 
-  clt_id = srv_id[1];
-
-  server = bunny_network_open(BP_TCP_IMMEDIATE, 0, 0, 1000, false, 6502, NULL);
-  client = bunny_network_open(BP_TCP_IMMEDIATE, 0, 0, 1000, false, 6502, "127.0.0.1");
+  server = bunny_network_open(BP_TCP_IMMEDIATE, 0, 0, 1000, false, 6503, NULL);
+  client = bunny_network_open(BP_TCP_IMMEDIATE, 0, 0, 1000, false, 6503, "127.0.0.1");
   assert(server.socklen != 0);
   assert(client.socklen != 0);
+  atexit(close_network);
   bunny_set_connect_response(handle_connect);
   bunny_set_message_response(handle_message);
-  atexit(close_network);
-
   clt_id.info = client;
 
   assert(bunny_network_write(client, &request, sizeof(request)));

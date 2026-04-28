@@ -6,7 +6,7 @@
 #include		"lapin_private.h"
 
 static t_bunny_standard_command	*handle_ciphering
-  (const t_bunny_identity	*id,
+  (const t_bunny_identity	*id, // Coté serveur: qui me parle. Coté client: moi.
    t_bunny_standard_command	*cmd,
    size_t			cmd_size,
    t_bunny_hash_algorithm	hash,
@@ -43,7 +43,7 @@ static t_bunny_standard_command	*handle_ciphering
 }
 
 t_bunny_standard_command_handling bunny_handle_standard_command
-  (t_bunny_identity		*id, // Coté serveur: qui me parle. Coté client: moi.
+  (t_bunny_identity		*id,
    t_bunny_standard_command	*cmd,
    size_t			cmd_size,
    t_bunny_hash_algorithm	hash,
@@ -63,7 +63,7 @@ t_bunny_standard_command_handling bunny_handle_standard_command
 	t_bunny_heartbeat_response_command resp = {
 	  0,
 	  BSCT_HEARTBEAT_RESPONSE,
-	  bunny_get_time() / 1e9,
+	  (float)(bunny_get_time() / 1e9),
 	  cmd->heartbeat.declared_sending_date
 	};
 
@@ -75,8 +75,8 @@ t_bunny_standard_command_handling bunny_handle_standard_command
       {
 	float			start = cmd->heartbeat_response.original_sending_date;
 	float			mid = cmd->heartbeat_response.declared_sending_date;
-	float			end = bunny_get_time() / 1e9;
-	float			half = (end - start) / 2.0;
+	float			end = (float)(bunny_get_time() / 1e9);
+	float			half = (end - start) / 2.0f;
 
 	id->usual_delay = half;
 	id->estimated_clock_difference = (mid - start) - half;
@@ -89,12 +89,11 @@ t_bunny_standard_command_handling bunny_handle_standard_command
 	id->validated = BIS_AWAITING_CONFIRMATION;
 	strncpy(id->identity, (char*)cmd->challenge_request.identity, sizeof(id->identity));
 
-	// On prépare le défi
-	char buffer[sizeof(id->secret) + sizeof(cmd->challenge.challenge)];
+	char			buffer[sizeof(id->secret) + sizeof(cmd->challenge.challenge)];
 	t_bunny_challenge_command resp = {
 	  0,
 	  BSCT_CHALLENGE,
-	  bunny_get_time() / 1e9,
+	  (float)(bunny_get_time() / 1e9),
 	  {}
 	};
 
@@ -117,17 +116,16 @@ t_bunny_standard_command_handling bunny_handle_standard_command
 	t_bunny_challenge_response_command resp = {
 	  0,
 	  BSCT_CHALLENGE_RESPONSE,
-	  bunny_get_time() / 1e9,
+	  (float)(bunny_get_time() / 1e9),
 	  {}
 	};
 	// On prépare le tampon pour relever le défi
-	char buffer[sizeof(id->secret) + sizeof(cmd->challenge.challenge)];
+	char			buffer[sizeof(id->secret) + sizeof(cmd->challenge.challenge)];
 
 	memcpy(buffer, id->secret, sizeof(id->secret));
 	memcpy(&buffer[sizeof(id->secret)], cmd->challenge.challenge, sizeof(cmd->challenge.challenge));
 	resp.response = bunny_hash(hash, buffer, sizeof(buffer));
 
-	// On renvoi la réponse au défi
 	if (bunny_network_write(id->info, &resp, sizeof(resp)) == false)
 	  return (BSCH_FAILURE);
 	return (BSCH_SUCCESS);
@@ -145,8 +143,8 @@ t_bunny_standard_command_handling bunny_handle_standard_command
 	t_bunny_challenge_result_command resp = {
 	  0,
 	  BSCT_CHALLENGE_RESULT,
-	  bunny_get_time() / 1e9,
-	  id->validated ? 1 : 0
+	  (float)(bunny_get_time() / 1e9),
+	  id->validated == BIS_IDENTITY_CONFIRMED ? 1 : 0
 	};
 
 	if (bunny_network_write(id->info, &resp, sizeof(resp)) == false)
@@ -155,16 +153,11 @@ t_bunny_standard_command_handling bunny_handle_standard_command
       }
     case BSCT_CHALLENGE_RESULT:
       {
-	// On a recu le resultat à notre test
-	id->validated =
-	  cmd->challenge_result.result ?
-	  BIS_IDENTITY_CONFIRMED :
-	  BIS_IDENTITY_REFUSED;
+	id->validated = cmd->challenge_result.result ? BIS_IDENTITY_CONFIRMED : BIS_IDENTITY_REFUSED;
 	return (BSCH_SUCCESS);
       }
-    default: // Normalement, n'arrive pas.
+    default:
       return (BSCH_TO_BE_DONE);
     }
-  // Pareil
   return (BSCH_TO_BE_DONE);
 }
