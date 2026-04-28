@@ -8,9 +8,11 @@
 #ifndef                         __LAPIN_NETWORK_PEER_HPP__
 # define                        __LAPIN_NETWORK_PEER_HPP__
 # include                       <stdint.h>
+# include                       <deque>
 # include                       <list>
 # include                       <map>
 # include                       <set>
+# include                       <unordered_set>
 # include                       <vector>
 # include                       "protocol.hpp"
 # include                       "communication.hpp"
@@ -47,11 +49,11 @@ namespace                       network
     double                      last_message = 0;
 
     uint32_t                    rudp_next_sequence = 0;
-    uint32_t                    rudp_next_expected_sequence = 0;
     uint32_t                    rudp_last_received_sequence = 0;
     bool                        rudp_has_received_sequence = false;
     std::map<uint32_t, ReliableUdpPending> rudp_pending;
-    std::map<uint32_t, std::vector<char> > rudp_received_buffer;
+    std::unordered_set<uint32_t> rudp_delivered_sequences;
+    std::deque<uint32_t>        rudp_delivered_order;
     std::set<uint32_t>          rudp_test_dropped_data_sequences;
     std::set<uint32_t>          rudp_test_dropped_ack_sequences;
 

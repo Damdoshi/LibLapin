@@ -14,6 +14,8 @@ namespace               network
   static const uint8_t  RUDP_VERSION = 1;
   static const double   RUDP_RESEND_DELAY = 0.15;
   static const unsigned RUDP_MAX_ATTEMPTS = 64;
+  static const unsigned RUDP_SEND_WINDOW = 32;
+  static const size_t   RUDP_DELIVERED_HISTORY = 4096;
 
   enum                  ReliableUdpPacketType : uint8_t
   {

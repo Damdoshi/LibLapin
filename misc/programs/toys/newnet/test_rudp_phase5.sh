@@ -26,24 +26,33 @@ show_log() {
   [ -f "$file" ] && sed -n '1,220p' "$file" || echo "(missing log)"
 }
 
-bad_log() {
-  local f="$1"
-  grep -q "\[OPEN\] failed" "$f" && return 0
-  grep -q "\[SEND\].*FAIL" "$f" && return 0
-  grep -q "from peer -1" "$f" && return 0
-  grep -q "seq_gaps=[1-9]" "$f" && return 0
-  grep -q "seq_duplicates=[1-9]" "$f" && return 0
-  grep -q "seq_regressions=[1-9]" "$f" && return 0
-  return 1
-}
 summary_value() {
   local key="$1"
   local file="$2"
   grep '^\[SUMMARY\]' "$file" | tail -1 | tr ' ' '\n' | awk -F= -v k="$key" '$1 == k { print $2; exit }'
 }
 
+peer_tail_value() {
+  local key="$1"
+  local file="$2"
+  grep '^\[PEER\]' "$file" | tail -1 | tr ' ' '\n' | awk -F= -v k="$key" '$1 == k { print $2; exit }'
+}
 
-check_pair() {
+basic_bad_log() {
+  local f="$1"
+  grep -q '\[OPEN\] failed' "$f" && return 0
+  grep -q '\[SEND\].*FAIL' "$f" && return 0
+  grep -q 'from peer -1' "$f" && return 0
+  return 1
+}
+
+duplicates_bad_log() {
+  local f="$1"
+  grep -q 'seq_duplicates=[1-9]' "$f" && return 0
+  return 1
+}
+
+check_pair_loss_data() {
   local name="$1"
   local a="$2"
   local b="$3"
@@ -53,16 +62,49 @@ check_pair() {
   show_log "$name A" "$a"
   show_log "$name B" "$b"
 
-  if bad_log "$a" || bad_log "$b"; then
+  if basic_bad_log "$a" || basic_bad_log "$b" || duplicates_bad_log "$a" || duplicates_bad_log "$b"; then
     fail "$name (bad log)"
     return
   fi
-  local ra rb
+
+  local ra rb da db
   ra=$(summary_value received_messages "$a")
   rb=$(summary_value received_messages "$b")
-  : "${ra:=0}"; : "${rb:=0}"
-  if [ "$ra" -lt "$min_a" ] || [ "$rb" -lt "$min_b" ]; then
-    fail "$name (received A=$ra/$min_a B=$rb/$min_b)"
+  da=$(peer_tail_value seq_duplicates "$a")
+  db=$(peer_tail_value seq_duplicates "$b")
+  : "${ra:=0}"; : "${rb:=0}"; : "${da:=0}"; : "${db:=0}"
+  if [ "$ra" -lt "$min_a" ] || [ "$rb" -lt "$min_b" ] || [ "$da" -ne 0 ] || [ "$db" -ne 0 ]; then
+    fail "$name (received A=$ra/$min_a B=$rb/$min_b dupA=$da dupB=$db)"
+    return
+  fi
+  pass "$name"
+}
+
+check_pair_ack_loss() {
+  local name="$1"
+  local a="$2"
+  local b="$3"
+  local min_a="$4"
+  local min_b="$5"
+
+  show_log "$name A" "$a"
+  show_log "$name B" "$b"
+
+  if basic_bad_log "$a" || basic_bad_log "$b" || duplicates_bad_log "$a" || duplicates_bad_log "$b"; then
+    fail "$name (bad log)"
+    return
+  fi
+
+  local ra rb ga gb da db
+  ra=$(summary_value received_messages "$a")
+  rb=$(summary_value received_messages "$b")
+  ga=$(peer_tail_value seq_gaps "$a")
+  gb=$(peer_tail_value seq_gaps "$b")
+  da=$(peer_tail_value seq_duplicates "$a")
+  db=$(peer_tail_value seq_duplicates "$b")
+  : "${ra:=0}"; : "${rb:=0}"; : "${ga:=0}"; : "${gb:=0}"; : "${da:=0}"; : "${db:=0}"
+  if [ "$ra" -lt "$min_a" ] || [ "$rb" -lt "$min_b" ] || [ "$ga" -ne 0 ] || [ "$gb" -ne 0 ] || [ "$da" -ne 0 ] || [ "$db" -ne 0 ]; then
+    fail "$name (received A=$ra/$min_a B=$rb/$min_b gapA=$ga gapB=$gb dupA=$da dupB=$db)"
     return
   fi
   pass "$name"
@@ -84,7 +126,7 @@ run_pair_loss_data() {
   local bpid=$!
   wait "$bpid" || true
   wait "$apid" || true
-  check_pair "$name" "$a" "$b" 24 24
+  check_pair_loss_data "$name" "$a" "$b" 24 24
 }
 
 run_pair_loss_ack() {
@@ -101,7 +143,7 @@ run_pair_loss_ack() {
   local bpid=$!
   wait "$bpid" || true
   wait "$apid" || true
-  check_pair "$name" "$a" "$b" 16 16
+  check_pair_ack_loss "$name" "$a" "$b" 16 16
 }
 
 run_many_senders_loss() {
@@ -125,16 +167,17 @@ run_many_senders_loss() {
 
   show_log "$name listener" "$l"
   for i in 0 1 2; do show_log "$name S$i" "$TMPDIR/${name}_S${i}.log"; done
-  if bad_log "$l"; then
+  if basic_bad_log "$l" || duplicates_bad_log "$l"; then
     fail "$name (bad listener log)"
     return
   fi
-  local peers rec
+  local peers rec dup
   peers=$(summary_value peers "$l")
   rec=$(summary_value received_messages "$l")
-  : "${peers:=0}"; : "${rec:=0}"
-  if [ "$peers" -ne 3 ] || [ "$rec" -lt 36 ]; then
-    fail "$name (peers=$peers rec=$rec)"
+  dup=$(grep '^\[PEER\]' "$l" | tr ' ' '\n' | awk -F= '$1 == "seq_duplicates" { s += $2 } END { print s + 0 }')
+  : "${peers:=0}"; : "${rec:=0}"; : "${dup:=0}"
+  if [ "$peers" -ne 3 ] || [ "$rec" -lt 36 ] || [ "$dup" -ne 0 ]; then
+    fail "$name (peers=$peers rec=$rec dup=$dup)"
     return
   fi
   pass "$name"

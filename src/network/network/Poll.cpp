@@ -1,4 +1,3 @@
-
 // Jason Brillante "Damdoshi"
 // Hanged Bunny Studio 2014-2025
 // EFRITS SAS 2022-2025
@@ -61,7 +60,7 @@ double			Network::Poll(double			tmout,
 
   // Manage doomed Peers
   for (auto it = peers.begin(); it != peers.end();)
-    if (it->second.doomed && !it->second.outqueue.size())
+    if (it->second.doomed && !it->second.outqueue.size() && it->second.rudp_pending.empty())
       it = peers.erase(it);
     else
       ++it;
