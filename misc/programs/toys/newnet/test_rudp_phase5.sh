@@ -32,10 +32,10 @@ summary_value() {
   grep '^\[SUMMARY\]' "$file" | tail -1 | tr ' ' '\n' | awk -F= -v k="$key" '$1 == k { print $2; exit }'
 }
 
-peer_tail_value() {
+peer_sum_value() {
   local key="$1"
   local file="$2"
-  grep '^\[PEER\]' "$file" | tail -1 | tr ' ' '\n' | awk -F= -v k="$key" '$1 == k { print $2; exit }'
+  grep '^\[PEER\]' "$file" | tr ' ' '\n' | awk -F= -v k="$key" '$1 == k { s += $2 } END { print s + 0 }'
 }
 
 basic_bad_log() {
@@ -53,25 +53,18 @@ duplicates_bad_log() {
 }
 
 check_pair_loss_data() {
-  local name="$1"
-  local a="$2"
-  local b="$3"
-  local min_a="$4"
-  local min_b="$5"
-
+  local name="$1" a="$2" b="$3" min_a="$4" min_b="$5"
   show_log "$name A" "$a"
   show_log "$name B" "$b"
-
   if basic_bad_log "$a" || basic_bad_log "$b" || duplicates_bad_log "$a" || duplicates_bad_log "$b"; then
     fail "$name (bad log)"
     return
   fi
-
   local ra rb da db
   ra=$(summary_value received_messages "$a")
   rb=$(summary_value received_messages "$b")
-  da=$(peer_tail_value seq_duplicates "$a")
-  db=$(peer_tail_value seq_duplicates "$b")
+  da=$(peer_sum_value seq_duplicates "$a")
+  db=$(peer_sum_value seq_duplicates "$b")
   : "${ra:=0}"; : "${rb:=0}"; : "${da:=0}"; : "${db:=0}"
   if [ "$ra" -lt "$min_a" ] || [ "$rb" -lt "$min_b" ] || [ "$da" -ne 0 ] || [ "$db" -ne 0 ]; then
     fail "$name (received A=$ra/$min_a B=$rb/$min_b dupA=$da dupB=$db)"
@@ -81,30 +74,21 @@ check_pair_loss_data() {
 }
 
 check_pair_ack_loss() {
-  local name="$1"
-  local a="$2"
-  local b="$3"
-  local min_a="$4"
-  local min_b="$5"
-
+  local name="$1" a="$2" b="$3" min_a="$4" min_b="$5"
   show_log "$name A" "$a"
   show_log "$name B" "$b"
-
   if basic_bad_log "$a" || basic_bad_log "$b" || duplicates_bad_log "$a" || duplicates_bad_log "$b"; then
     fail "$name (bad log)"
     return
   fi
-
-  local ra rb ga gb da db
+  local ra rb da db
   ra=$(summary_value received_messages "$a")
   rb=$(summary_value received_messages "$b")
-  ga=$(peer_tail_value seq_gaps "$a")
-  gb=$(peer_tail_value seq_gaps "$b")
-  da=$(peer_tail_value seq_duplicates "$a")
-  db=$(peer_tail_value seq_duplicates "$b")
-  : "${ra:=0}"; : "${rb:=0}"; : "${ga:=0}"; : "${gb:=0}"; : "${da:=0}"; : "${db:=0}"
-  if [ "$ra" -lt "$min_a" ] || [ "$rb" -lt "$min_b" ] || [ "$ga" -ne 0 ] || [ "$gb" -ne 0 ] || [ "$da" -ne 0 ] || [ "$db" -ne 0 ]; then
-    fail "$name (received A=$ra/$min_a B=$rb/$min_b gapA=$ga gapB=$gb dupA=$da dupB=$db)"
+  da=$(peer_sum_value seq_duplicates "$a")
+  db=$(peer_sum_value seq_duplicates "$b")
+  : "${ra:=0}"; : "${rb:=0}"; : "${da:=0}"; : "${db:=0}"
+  if [ "$ra" -lt "$min_a" ] || [ "$rb" -lt "$min_b" ] || [ "$da" -ne 0 ] || [ "$db" -ne 0 ]; then
+    fail "$name (received A=$ra/$min_a B=$rb/$min_b dupA=$da dupB=$db)"
     return
   fi
   pass "$name"
@@ -115,7 +99,6 @@ run_pair_loss_data() {
   local port=$((BASE_PORT + 0))
   local a="$TMPDIR/${name}_A.log"
   local b="$TMPDIR/${name}_B.log"
-
   log "=== CASE $name ==="
   log "A: LIBLAPIN_RUDP_DROP_DATA_MOD=3 $PROG -p rudp -L $port -n 24 -i 40 -s 128 --seq --quiet-payload -D 6500 -F 500 -m A"
   LIBLAPIN_RUDP_DROP_DATA_MOD=3 "$PROG" -p rudp -L "$port" -n 24 -i 40 -s 128 --seq --quiet-payload -D 6500 -F 500 -m A >"$a" 2>&1 &
@@ -134,7 +117,6 @@ run_pair_loss_ack() {
   local port=$((BASE_PORT + 1))
   local a="$TMPDIR/${name}_A.log"
   local b="$TMPDIR/${name}_B.log"
-
   log "=== CASE $name ==="
   LIBLAPIN_RUDP_DROP_ACK_MOD=2 "$PROG" -p rudp -L "$port" -n 16 -i 50 -s 96 --seq --quiet-payload -D 6500 -F 500 -m A >"$a" 2>&1 &
   local apid=$!
@@ -151,7 +133,6 @@ run_many_senders_loss() {
   local port=$((BASE_PORT + 2))
   local l="$TMPDIR/${name}_listener.log"
   local pids=""
-
   log "=== CASE $name ==="
   LIBLAPIN_RUDP_DROP_DATA_MOD=4 "$PROG" -p rudp -L "$port" -s 256 --no-send --seq --quiet-payload -D 7000 -F 500 -m listener >"$l" 2>&1 &
   local lpid=$!
@@ -164,7 +145,6 @@ run_many_senders_loss() {
   done
   for p in $pids; do wait "$p" || true; done
   wait "$lpid" || true
-
   show_log "$name listener" "$l"
   for i in 0 1 2; do show_log "$name S$i" "$TMPDIR/${name}_S${i}.log"; done
   if basic_bad_log "$l" || duplicates_bad_log "$l"; then
@@ -174,7 +154,7 @@ run_many_senders_loss() {
   local peers rec dup
   peers=$(summary_value peers "$l")
   rec=$(summary_value received_messages "$l")
-  dup=$(grep '^\[PEER\]' "$l" | tr ' ' '\n' | awk -F= '$1 == "seq_duplicates" { s += $2 } END { print s + 0 }')
+  dup=$(peer_sum_value seq_duplicates "$l")
   : "${peers:=0}"; : "${rec:=0}"; : "${dup:=0}"
   if [ "$peers" -ne 3 ] || [ "$rec" -lt 36 ] || [ "$dup" -ne 0 ]; then
     fail "$name (peers=$peers rec=$rec dup=$dup)"

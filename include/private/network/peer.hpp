@@ -54,8 +54,10 @@ namespace                       network
     std::map<uint32_t, ReliableUdpPending> rudp_pending;
     std::unordered_set<uint32_t> rudp_delivered_sequences;
     std::deque<uint32_t>        rudp_delivered_order;
+#ifndef				NDEBUG
     std::set<uint32_t>          rudp_test_dropped_data_sequences;
     std::set<uint32_t>          rudp_test_dropped_ack_sequences;
+#endif
 
     ProtoSpec                   protocol;
 

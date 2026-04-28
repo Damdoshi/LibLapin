@@ -2,6 +2,7 @@
 // Hanged Bunny Studio 2014-2026
 //
 // Internal Reliable UDP framing for LibLapin network layer.
+// Semantics: reliable, unordered, non-blocking delivery for gameplay-oriented use.
 
 #ifndef                 __LAPIN_NETWORK_RELIABLE_UDP_HPP__
 # define                __LAPIN_NETWORK_RELIABLE_UDP_HPP__

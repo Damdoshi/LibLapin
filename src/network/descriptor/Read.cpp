@@ -13,6 +13,7 @@
 #include	"private/network/network.hpp"
 #include	"private/network/reliable_udp.hpp"
 
+#ifndef		NDEBUG
 static bool	should_drop_mod_once(const char			*envname,
 				     uint32_t			sequence,
 				     std::set<uint32_t>		&already)
@@ -53,6 +54,7 @@ static bool	should_drop_seq_once(const char			*envname,
   already.insert(sequence);
   return (true);
 }
+#endif
 
 static bool	queue_rudp_ack(std::list<network::Communication> &outqueue,
 			       struct pollfd			*pollfd,
@@ -157,12 +159,12 @@ bool		network::Descriptor::Read(void)
 	return (true);
 
       ReliableUdpHeader *hdr = (ReliableUdpHeader*)inbuffer;
-      uint32_t magic = ntohl(hdr->magic);
-      uint16_t header_size = ntohs(hdr->header_size);
-      uint32_t sequence = ntohl(hdr->sequence);
-      uint32_t acknowledge = ntohl(hdr->acknowledge);
-      uint32_t payload_size = ntohl(hdr->payload_size);
-      Peer &peer = it->second;
+      uint32_t	magic = ntohl(hdr->magic);
+      uint16_t	header_size = ntohs(hdr->header_size);
+      uint32_t	sequence = ntohl(hdr->sequence);
+      uint32_t	acknowledge = ntohl(hdr->acknowledge);
+      uint32_t	payload_size = ntohl(hdr->payload_size);
+      Peer	&peer = it->second;
 
       if (magic != RUDP_MAGIC || hdr->version != RUDP_VERSION || header_size < sizeof(ReliableUdpHeader))
 	return (true);
@@ -171,9 +173,11 @@ bool		network::Descriptor::Read(void)
 
       if (hdr->type == RUDP_ACK)
 	{
+#ifndef		NDEBUG
 	  if (should_drop_mod_once("LIBLAPIN_RUDP_DROP_ACK_MOD", acknowledge, peer.rudp_test_dropped_ack_sequences)
 	      || should_drop_seq_once("LIBLAPIN_RUDP_DROP_ACK_SEQ", acknowledge, peer.rudp_test_dropped_ack_sequences))
 	    return (true);
+#endif
 	  auto pit = peer.rudp_pending.find(acknowledge);
 	  if (pit != peer.rudp_pending.end())
 	    {
@@ -187,11 +191,13 @@ bool		network::Descriptor::Read(void)
       if (hdr->type != RUDP_DATA)
 	return (true);
 
+#ifndef		NDEBUG
       // Test hook volontairement privé: simule une perte avant ACK et avant livraison.
       // La retransmission doit donc réparer le trou.
       if (should_drop_mod_once("LIBLAPIN_RUDP_DROP_DATA_MOD", sequence, peer.rudp_test_dropped_data_sequences)
 	  || should_drop_seq_once("LIBLAPIN_RUDP_DROP_DATA_SEQ", sequence, peer.rudp_test_dropped_data_sequences))
 	return (true);
+#endif
 
       if (queue_rudp_ack(outqueue, pollfd, rinfo, sequence) == false)
 	return (false);
