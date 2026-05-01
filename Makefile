@@ -63,6 +63,8 @@
 			-lopencv_videoio -lopencv_core				\
 			-lavcall -lusb -ludev -lm -ldl -lpthread
   INSTALL_BIN_DIR =	/usr/bin/
+  INSTALL_ETC_DIR =	/etc/lapin/
+  INSTALL_SHR_DIR =	/usr/share/lapin/
   INSTALL_INC_DIR =	/usr/include/
   INSTALL_LIB_DIR =	/usr/lib/
 
@@ -179,7 +181,12 @@ re:			fclean all
 erase:
 			@$(RM) -r $(LOGDIR)/*.*
 install_tools:
-			cp bcc b++  $(INSTALL_BIN_DIR)
+			cp bcc b++ bcontext $(INSTALL_BIN_DIR)
+			mkdir /etc/lapin/
+			chmod 755 $(INSTALL_BIN_DIR)/bcc 			\
+			 $(INSTALL_BIN_DIR)/b++					\
+			 $(INSTALL_BIN_DIR)/bcontext
+			cp misc/ressources/context/* $(INSTALL_SHR_DIR)context/
 
 install_headers:	install_tools
 			cp include/lapin.h $(INSTALL_INC_DIR)
