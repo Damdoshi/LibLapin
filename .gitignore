@@ -1,9 +1,12 @@
 *.o
 *~
 #*#
-liblapin.a
+*.a
+*.so
+*.gz
 *.gcno
 *.gcda
+TAGS
 tests/report/
 tests/coverage.info
 errors/*.cpp
