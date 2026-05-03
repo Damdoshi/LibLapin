@@ -11,11 +11,14 @@ function get_all_symbols($root, $type, $base = null)
   else
     $sym = [];
   $i = count($sym);
+  if (!is_dir($root))
+    return ($sym);
   foreach (scandir("$root/") as $mod)
   {
     if ($mod[0] != "."
         && strstr($mod, ".php") == false
         && $mod[strlen($mod) - 1] != "~"
+        && is_dir("$root/$mod")
     )
     {
       foreach (scandir("$root/$mod") as $s)

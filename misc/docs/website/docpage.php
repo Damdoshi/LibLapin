@@ -42,6 +42,8 @@ if (file_exists("$language/$doctype/$mod/main.php"))
 
   if (file_exists("$language/$doctype/$mod/meta.php"))
     require_once ("$language/$doctype/$mod/meta.php");
+  if (file_exists("$language/$doctype/$mod/meta.generated.php"))
+    require ("$language/$doctype/$mod/meta.generated.php");
   if (!isset($circle_level))
     $circle_level = [];
   if (!isset($version_that_support))
@@ -54,6 +56,7 @@ if (file_exists("$language/$doctype/$mod/main.php"))
     if ($dir[0] != "."
         && $dir != "main.php"
         && $dir != "meta.php"
+        && $dir != "meta.generated.php"
         && $dir[strlen($dir) - 1] != "~"
         && $dir[0] != "#"
         && strstr($dir, ".php") != false)
@@ -77,7 +80,7 @@ if (file_exists("$language/$doctype/$mod/main.php"))
             'file' => $dir,
             'label' => $label,
             'title' => $label,
-            'version' => $version_that_support[$label]
+            'version' => $version_that_support[$label] ?? [-1, -1]
           ];
         }
       }

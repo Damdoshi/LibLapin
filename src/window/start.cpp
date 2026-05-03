@@ -1,5 +1,5 @@
 // Jason Brillante "Damdoshi"
-// Hanged Bunny Studio 2014-2018
+// Hanged Bunny Studio 2014-2026
 //
 // Lapin library
 
@@ -15,6 +15,48 @@
 # include		<X11/Xatom.h>
 #endif
 
+/**
+ * @doc-symbol bunny_start
+ * @doc-module window
+ * @doc-order 120
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Open a window and return a structure to handle it.
+ * @description If the window is started in fullscreen, then not all sizes are available. Use bunny_get_fullscreen_modes to retrieve the working fullscreen modes for the underlying system.
+ * @description The returned structure must be freed with bunny_stop. It is important to call it before exiting, especially in fullscreen, because it restores the original screen resolution if the window opening changed it.
+ * @description This function performs a joystick scan. When opening a window, all joysticks will be recognized. After opening the window, connection and disconnection must be handled with events.
+ * @description By default, the window is filled with PINK2.
+ * @param width The width in pixels of the window to open.
+ * @param height The height in pixels of the window to open.
+ * @param fullscreen Send true to open the window in fullscreen, false for windowed mode.
+ * @param winname The name of the window. It is displayed in the title bar and stored in the t_bunny_window structure.
+ * @return-success A pointer to a valid t_bunny_window structure.
+ * @return-failure NULL if the window cannot be created.
+ * @error BE_UNKNOWN_DISPLAY_DEVICE The display device could not be found or opened.
+ * @error BE_CANNOT_OPEN_WINDOW The window could not be created.
+ * @log This function writes log entries in the "graphics" and/or "window" log domains when the window creation fails or when the display mode cannot be applied.
+ * @see bunny_start_style, bunny_stop, bunny_get_fullscreen_modes, bunny_get_screen_resolution
+ *
+ * @doc-lang fr
+ * @brief Ouvre une fenêtre et renvoie une structure permettant de la manipuler.
+ * @description Si la fenêtre est ouverte en plein écran, toutes les tailles ne sont pas disponibles. Utilisez bunny_get_fullscreen_modes pour récupérer les modes plein écran utilisables sur le système sous-jacent.
+ * @description La structure renvoyée doit être libérée avec bunny_stop. Il est important de l'appeler avant de quitter, en particulier en plein écran, car cela restaure la résolution d'écran originale si l'ouverture de la fenêtre l'a changée.
+ * @description Cette fonction effectue un scan des joysticks. Lors de l'ouverture d'une fenêtre, tous les joysticks sont reconnus. Après l'ouverture, les connexions et déconnexions doivent être gérées avec les événements.
+ * @description Par défaut, la fenêtre est remplie avec PINK2.
+ * @param width La largeur en pixels de la fenêtre à ouvrir.
+ * @param height La hauteur en pixels de la fenêtre à ouvrir.
+ * @param fullscreen Envoyez true pour ouvrir la fenêtre en plein écran, false pour le mode fenêtré.
+ * @param winname Le nom de la fenêtre. Il est affiché dans la barre de titre et stocké dans la structure t_bunny_window.
+ * @return-success Un pointeur vers une structure t_bunny_window valide.
+ * @return-failure NULL si la fenêtre ne peut pas être créée.
+ * @error BE_UNKNOWN_DISPLAY_DEVICE Le périphérique d'affichage est introuvable ou impossible à ouvrir.
+ * @error BE_CANNOT_OPEN_WINDOW La fenêtre n'a pas pu être créée.
+ * @log Cette fonction écrit des entrées de log dans les domaines "graphics" et/ou "window" lorsque la création de fenêtre échoue ou lorsque le mode d'affichage ne peut pas être appliqué.
+ * @see bunny_start_style, bunny_stop, bunny_get_fullscreen_modes, bunny_get_screen_resolution
+ */
 t_bunny_window		*bunny_start(unsigned int		width,
 				     unsigned int		height,
 				     bool			fullscreen,
