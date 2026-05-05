@@ -5,6 +5,25 @@
 
 #include		"lapin_private.h"
 
+/**
+ * @doc-symbol bunny_stop_record
+ * @doc-module sound
+ * @doc-kind function
+ * @doc-order 630
+ * @doc-since 13
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Stops a recorder and updates its embedded effect with captured samples.
+ * @param recorder Recorder to stop.
+ * @see bunny_start_record, t_bunny_recorder, bunny_compute_effect
+ *
+ * @doc-lang fr
+ * @brief Arrête un enregistreur et met à jour son effet embarqué avec les échantillons capturés.
+ * @param recorder Enregistreur à arrêter.
+ * @see bunny_start_record, t_bunny_recorder, bunny_compute_effect
+ */
 void			bunny_stop_record(t_bunny_recorder	*recorder)
 {
   struct bunny_recorder	*rec = (struct bunny_recorder*)recorder;

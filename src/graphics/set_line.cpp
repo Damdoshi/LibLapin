@@ -8,6 +8,35 @@
 #define			PATTERN \
   "%p picture, %p (%d, %d -> %d, %d) position, %p (%p -> %p) color"
 
+/**
+ * @doc-symbol bunny_set_line
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 280
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Draws a line on a buffer.
+ * @description The two colors are used as endpoint colors and may produce a gradient. Drawing into pixelarrays requires gl_bunny_my_set_line.
+ * @param buf The target buffer.
+ * @param pos An array containing the two endpoints.
+ * @param col An array containing the two endpoint colors.
+ * @error EINVAL The target kind is not supported.
+ * @log Logs are written with the "graphics" label.
+ * @see t_bunny_my_set_line, gl_bunny_my_set_line
+ *
+ * @doc-lang fr
+ * @brief Dessine une ligne dans un buffer.
+ * @description Les deux couleurs sont utilisées comme couleurs d’extrémité et peuvent produire un dégradé. Dessiner dans les pixelarrays nécessite gl_bunny_my_set_line.
+ * @param buf Le buffer cible.
+ * @param pos Un tableau contenant les deux extrémités.
+ * @param col Un tableau contenant les deux couleurs d’extrémité.
+ * @error EINVAL Le type de cible n’est pas pris en charge.
+ * @log Les logs sont écrits avec le label "graphics".
+ * @see t_bunny_my_set_line, gl_bunny_my_set_line
+ */
 void			bunny_set_line(t_bunny_buffer		*buffer,
 				       const t_bunny_position	*position,
 				       const unsigned int	*color)

@@ -8,6 +8,41 @@
 #define			PATTERN \
   "%p picture, (%d, %d) position, (%d, %d) size, %p color"
 
+/**
+ * @doc-symbol bunny_set_disk
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 251
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Draws a disk or a thick circle on a buffer.
+ * @description The inside color fills the disk and the outline color is used for the border. A transparent inside color with a thickness of 1 is used by bunny_set_circle.
+ * @param buf The target buffer.
+ * @param pos The disk center.
+ * @param rad The radius on X and Y.
+ * @param icol The inside color.
+ * @param ocol The outline color.
+ * @param thik The outline thickness.
+ * @error EINVAL The target kind is not supported.
+ * @log Logs are written with the "graphics" label.
+ * @see bunny_set_circle, t_bunny_my_set_disk, gl_bunny_my_set_disk
+ *
+ * @doc-lang fr
+ * @brief Dessine un disque ou un cercle épais dans un buffer.
+ * @description La couleur intérieure remplit le disque et la couleur extérieure sert au contour. Une couleur intérieure transparente avec une épaisseur de 1 est utilisée par bunny_set_circle.
+ * @param buf Le buffer cible.
+ * @param pos Le centre du disque.
+ * @param rad Le rayon en X et en Y.
+ * @param icol La couleur intérieure.
+ * @param ocol La couleur du contour.
+ * @param thik L’épaisseur du contour.
+ * @error EINVAL Le type de cible n’est pas pris en charge.
+ * @log Les logs sont écrits avec le label "graphics".
+ * @see bunny_set_circle, t_bunny_my_set_disk, gl_bunny_my_set_disk
+ */
 void			bunny_set_disk(t_bunny_buffer		*buffer,
 				       t_bunny_position		pos,
 				       t_bunny_position		siz,

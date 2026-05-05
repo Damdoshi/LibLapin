@@ -312,6 +312,37 @@ void				merge_clothe(t_bunny_map		*nod,
 #define				PATTERN				\
   "%p target, %p source, %p position (%d, %d), %p shader"
 
+/**
+ * @doc-symbol bunny_blit
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 180
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Draws a clipable source on a target buffer.
+ * @description The target can be a window, a picture or, when the proper user callback is installed, a pixelarray. If position is NULL, the source position field is used.
+ * @description When the source is a pixelarray, full transformations and alpha require bunny_enable_full_blit.
+ * @param buf The target buffer.
+ * @param clp The source clipable.
+ * @param pos The destination position, or NULL to use clp->position.
+ * @error EINVAL The target or source kind is not supported.
+ * @log Logs are written with the "graphics" label.
+ * @see bunny_blit_shader, bunny_enable_full_blit, t_bunny_my_blit, gl_bunny_my_blit
+ *
+ * @doc-lang fr
+ * @brief Dessine une source clipable sur un buffer cible.
+ * @description La cible peut être une fenêtre, une picture ou, lorsque le callback utilisateur approprié est installé, un pixelarray. Si position vaut NULL, le champ position de la source est utilisé.
+ * @description Lorsque la source est un pixelarray, les transformations complètes et l’alpha nécessitent bunny_enable_full_blit.
+ * @param buf Le buffer cible.
+ * @param clp Le clipable source.
+ * @param pos La position de destination, ou NULL pour utiliser clp->position.
+ * @error EINVAL Le type de cible ou de source n’est pas pris en charge.
+ * @log Les logs sont écrits avec le label "graphics".
+ * @see bunny_blit_shader, bunny_enable_full_blit, t_bunny_my_blit, gl_bunny_my_blit
+ */
 void				bunny_blit(t_bunny_buffer		*output,
 					   const t_bunny_clipable	*picture,
 					   const t_bunny_position	*pos)

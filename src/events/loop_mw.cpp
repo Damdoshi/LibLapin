@@ -17,6 +17,37 @@ extern struct ff_effect	gl_effect[sf::Joystick::Count];
 bool			__bunny_fill_event(sf::RenderWindow	&window,
 					   t_bunny_event	&event);
 
+/**
+ * @doc-symbol bunny_loop_mw
+ * @doc-module events
+ * @doc-kind function
+ * @doc-order 390
+ * @doc-since 6
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Runs the event loop for several windows.
+ * @description This function behaves like bunny_loop but receives an array of windows. Window event handling is per-window, while loop and display callbacks remain shared.
+ * @param win The array of windows that produce events.
+ * @param nwin The number of entries in win.
+ * @param freq The requested number of main-loop callback calls per second.
+ * @param data The data pointer sent to every registered callback.
+ * @return-success The t_bunny_response value that stopped the loop.
+ * @log This function writes log entries in the "event" log domain when entering the loop and dispatching callbacks.
+ * @see bunny_loop, bunny_get_window, bunny_set_close_response
+ *
+ * @doc-lang fr
+ * @brief Lance la boucle d'événements pour plusieurs fenêtres.
+ * @description Cette fonction se comporte comme bunny_loop mais reçoit un tableau de fenêtres. Le traitement des événements de fenêtre se fait fenêtre par fenêtre, tandis que les callbacks loop et display restent partagés.
+ * @param win Le tableau de fenêtres qui produisent des événements.
+ * @param nwin Le nombre d'entrées dans win.
+ * @param freq Le nombre d'appels au callback de boucle principale demandé par seconde.
+ * @param data Le pointeur de données transmis à tous les callbacks enregistrés.
+ * @return-success La valeur t_bunny_response qui a arrêté la boucle.
+ * @log Cette fonction écrit des entrées de log dans le domaine "event" lors de l'entrée dans la boucle et de la distribution des callbacks.
+ * @see bunny_loop, bunny_get_window, bunny_set_close_response
+ */
 t_bunny_response	bunny_loop_mw(t_bunny_window		**window,
 				      size_t			nwin,
 				      unsigned int		freq,

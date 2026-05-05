@@ -7,6 +7,39 @@
 
 #define			PATTERN		"%p memory, %zu length, %s file -> %p"
 
+/**
+ * @doc-symbol bunny_read_pixelarray_id
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 50
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Reads an encoded image from memory into a pixelarray and optionally associates it with a resource identifier.
+ * @description When from_file is not NULL, it is used by the resource manager as the origin identifier for the loaded data.
+ * @param buf The memory buffer containing the encoded image.
+ * @param len The size of buf in bytes.
+ * @param from_file The optional resource identifier.
+ * @return-success A loaded t_bunny_pixelarray.
+ * @return-failure NULL on failure.
+ * @error ENOMEM Out of memory.
+ * @log Logs are written with the "ressource" and "graphics" labels.
+ * @see bunny_read_pixelarray, bunny_load_pixelarray
+ *
+ * @doc-lang fr
+ * @brief Lit une image encodée en mémoire vers un pixelarray et peut l’associer à un identifiant de ressource.
+ * @description Lorsque from_file n’est pas NULL, il est utilisé par le gestionnaire de ressources comme identifiant d’origine des données chargées.
+ * @param buf Le buffer mémoire contenant l’image encodée.
+ * @param len La taille de buf en octets.
+ * @param from_file L’identifiant de ressource optionnel.
+ * @return-success Un t_bunny_pixelarray chargé.
+ * @return-failure NULL en cas d’échec.
+ * @error ENOMEM Mémoire insuffisante.
+ * @log Les logs sont écrits avec les labels "ressource" et "graphics".
+ * @see bunny_read_pixelarray, bunny_load_pixelarray
+ */
 t_bunny_pixelarray	*bunny_read_pixelarray_id(const void		*buf,
 						  size_t		len,
 						  const char		*file)

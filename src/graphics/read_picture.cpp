@@ -7,6 +7,39 @@
 
 #define			PATTERN		"%p memory, %zu length, %s file -> %p"
 
+/**
+ * @doc-symbol bunny_read_picture_id
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 150
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Reads an encoded image from memory into a picture and optionally associates it with a resource identifier.
+ * @description When from_file is not NULL, it is used by the resource manager as the origin identifier for the loaded data.
+ * @param pic The memory buffer containing the encoded image.
+ * @param l The size of pic in bytes.
+ * @param from_file The optional resource identifier.
+ * @return-success A loaded t_bunny_picture.
+ * @return-failure NULL on failure.
+ * @error ENOMEM Out of memory.
+ * @log Logs are written with the "ressource" and "graphics" labels.
+ * @see bunny_read_picture, bunny_load_picture
+ *
+ * @doc-lang fr
+ * @brief Lit une image encodée en mémoire vers une picture et peut l’associer à un identifiant de ressource.
+ * @description Lorsque from_file n’est pas NULL, il est utilisé par le gestionnaire de ressources comme identifiant d’origine des données chargées.
+ * @param pic Le buffer mémoire contenant l’image encodée.
+ * @param l La taille de pic en octets.
+ * @param from_file L’identifiant de ressource optionnel.
+ * @return-success Un t_bunny_picture chargé.
+ * @return-failure NULL en cas d’échec.
+ * @error ENOMEM Mémoire insuffisante.
+ * @log Les logs sont écrits avec les labels "ressource" et "graphics".
+ * @see bunny_read_picture, bunny_load_picture
+ */
 t_bunny_picture		*bunny_read_picture_id(const void	*_pic,
 					       size_t		len,
 					       const char	*file)

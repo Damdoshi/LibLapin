@@ -26,6 +26,25 @@
 # endif
 # include			"compat/ini.h"
 
+/**
+ * @doc-symbol SAMPLE_PER_SECONDS
+ * @doc-module sound
+ * @doc-kind macro
+ * @doc-order 170
+ * @doc-since 7
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Default sample rate used by bunny_new_effect.
+ * @description Its value is 44100 samples per second.
+ * @see bunny_new_effect, t_bunny_effect
+ *
+ * @doc-lang fr
+ * @brief Fréquence d'échantillonnage par défaut utilisée par bunny_new_effect.
+ * @description Sa valeur est 44100 échantillons par seconde.
+ * @see bunny_new_effect, t_bunny_effect
+ */
 # define			SAMPLE_PER_SECONDS		44100
 # define			LAST_BUNNY_JOYSTICK		gl_maximum_joystick
 
@@ -68,6 +87,29 @@ int				bunny_dprintf(int		fd,
 ** \param music The music to know where the cursor is
 ** \return The position in seconds between the beginning and the current cursor.
 */
+/**
+ * @doc-symbol bunny_music_get_cursor
+ * @doc-module sound
+ * @doc-kind macro
+ * @doc-order 529
+ * @doc-since 7
+ * @doc-until 11
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Compatibility macro returning the cursor position of a music.
+ * @description It forwards to bunny_sound_get_cursor on the embedded t_bunny_sound.
+ * @param music Music to query.
+ * @return-success Current cursor position in seconds.
+ * @see bunny_sound_get_cursor, t_bunny_music
+ *
+ * @doc-lang fr
+ * @brief Macro de compatibilité renvoyant la position du curseur d'une musique.
+ * @description Elle redirige vers bunny_sound_get_cursor sur le t_bunny_sound embarqué.
+ * @param music Musique à consulter.
+ * @return-success Position courante du curseur en secondes.
+ * @see bunny_sound_get_cursor, t_bunny_music
+ */
 #define				bunny_music_get_cursor(music)	\
   bunny_sound_get_cursor(&(music)->sound)
 
@@ -164,10 +206,73 @@ extern const void		*last_scope;
 #  define			EWOULDBLOCK			EAGAIN
 # endif
 
+/**
+ * @doc-symbol bunny_GL_reset_states
+ * @doc-module graphics
+ * @doc-kind macro
+ * @doc-order 480
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Compatibility alias for bunny_reset_gl_states.
+ * @description This public macro is kept for source compatibility and forwards to bunny_reset_gl_states.
+ * @param cw The window-like object whose buffer is passed to the new function.
+ * @see bunny_reset_gl_states
+ *
+ * @doc-lang fr
+ * @brief Alias de compatibilité de bunny_reset_gl_states.
+ * @description Cette macro publique est conservée pour compatibilité source et appelle bunny_reset_gl_states.
+ * @param cw L’objet de type fenêtre dont le buffer est transmis à la nouvelle fonction.
+ * @see bunny_reset_gl_states
+ */
 # define			bunny_GL_reset_states(cw)	\
   bunny_reset_gl_states(&(cw)->buffer)
+/**
+ * @doc-symbol bunny_GL_push_states
+ * @doc-module graphics
+ * @doc-kind macro
+ * @doc-order 490
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Compatibility alias for bunny_push_gl_states.
+ * @description This public macro is kept for source compatibility and forwards to bunny_push_gl_states.
+ * @param cw The window-like object whose buffer is passed to the new function.
+ * @see bunny_push_gl_states
+ *
+ * @doc-lang fr
+ * @brief Alias de compatibilité de bunny_push_gl_states.
+ * @description Cette macro publique est conservée pour compatibilité source et appelle bunny_push_gl_states.
+ * @param cw L’objet de type fenêtre dont le buffer est transmis à la nouvelle fonction.
+ * @see bunny_push_gl_states
+ */
 # define			bunny_GL_push_states(cw)	\
   bunny_push_gl_states(&(cw)->buffer)
+/**
+ * @doc-symbol bunny_GL_pop_states
+ * @doc-module graphics
+ * @doc-kind macro
+ * @doc-order 500
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Compatibility alias for bunny_pop_gl_states.
+ * @description This public macro is kept for source compatibility and forwards to bunny_pop_gl_states.
+ * @param cw The window-like object whose buffer is passed to the new function.
+ * @see bunny_pop_gl_states
+ *
+ * @doc-lang fr
+ * @brief Alias de compatibilité de bunny_pop_gl_states.
+ * @description Cette macro publique est conservée pour compatibilité source et appelle bunny_pop_gl_states.
+ * @param cw L’objet de type fenêtre dont le buffer est transmis à la nouvelle fonction.
+ * @see bunny_pop_gl_states
+ */
 # define			bunny_GL_pop_states(cw)		\
   bunny_pop_gl_states(&(cw)->buffer)
 

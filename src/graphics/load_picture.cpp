@@ -8,6 +8,35 @@
 
 #define			PATTERN		"%s file -> %p"
 
+/**
+ * @doc-symbol bunny_load_picture
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 140
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Loads an image file into a picture.
+ * @description Supported image formats depend on the SFML backend and LibLapin loaders. Configuration files can also be used to describe a clipable resource.
+ * @param file The path of the image file or clipable configuration file to load.
+ * @return-success A loaded t_bunny_picture.
+ * @return-failure NULL on failure.
+ * @error ENOMEM Out of memory.
+ * @log Logs are written with the "ressource" and "graphics" labels.
+ * @see bunny_new_picture, bunny_read_picture_id, bunny_save_picture
+ *
+ * @doc-lang fr
+ * @brief Charge un fichier image dans une picture.
+ * @description Les formats d’image pris en charge dépendent du backend SFML et des chargeurs de la LibLapin. Les fichiers de configuration peuvent aussi décrire une ressource clipable.
+ * @param file Le chemin du fichier image ou du fichier de configuration clipable à charger.
+ * @return-success Un t_bunny_picture chargé.
+ * @return-failure NULL en cas d’échec.
+ * @error ENOMEM Mémoire insuffisante.
+ * @log Les logs sont écrits avec les labels "ressource" et "graphics".
+ * @see bunny_new_picture, bunny_read_picture_id, bunny_save_picture
+ */
 t_bunny_picture		*bunny_load_picture(const char	*file)
 {
   struct bunny_picture	*pic;

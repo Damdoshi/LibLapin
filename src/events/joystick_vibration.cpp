@@ -16,6 +16,31 @@
 
 struct ff_effect	gl_effect[sf::Joystick::Count];
 
+/**
+ * @doc-symbol bunny_set_joystick_vibration
+ * @doc-module events
+ * @doc-kind function
+ * @doc-order 255
+ * @doc-since 13
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Sets the vibration strength of a joystick.
+ * @param joy_id The joystick slot identifier.
+ * @param strength The requested vibration strength.
+ * @return-success true if the vibration request could be sent.
+ * @return-failure false if the joystick id is invalid, unsupported or force feedback is unavailable.
+ * @see t_bunny_joystick
+ *
+ * @doc-lang fr
+ * @brief Règle l'intensité de vibration d'un joystick.
+ * @param joy_id L'identifiant de l'emplacement de joystick.
+ * @param strength L'intensité de vibration demandée.
+ * @return-success true si la demande de vibration a pu être envoyée.
+ * @return-failure false si l'identifiant de joystick est invalide, non pris en charge ou si le retour de force est indisponible.
+ * @see t_bunny_joystick
+ */
 bool			bunny_set_joystick_vibration(int				id,
 						     double				strength)
 {

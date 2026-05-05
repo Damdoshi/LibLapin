@@ -5,6 +5,29 @@
 
 #include		"lapin_private.h"
 
+/**
+ * @doc-symbol bunny_delete_sound
+ * @doc-module sound
+ * @doc-kind macro
+ * @doc-order 550
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Deletes a music, sound effect, sound sprite or recorder.
+ * @description The public C11 macro accepts derived sound types and calls _bunny_delete_sound.
+ * @param snd Sound object to destroy. NULL is accepted.
+ * @log May log in the "ressource" and "sound" domains.
+ * @see t_bunny_sound, bunny_load_music, bunny_load_effect, bunny_new_effect
+ *
+ * @doc-lang fr
+ * @brief Détruit une musique, un effet sonore, un sound sprite ou un enregistreur.
+ * @description La macro C11 publique accepte les types sonores dérivés et appelle _bunny_delete_sound.
+ * @param snd Objet sonore à détruire. NULL est accepté.
+ * @log Peut écrire dans les domaines "ressource" et "sound".
+ * @see t_bunny_sound, bunny_load_music, bunny_load_effect, bunny_new_effect
+ */
 void			_bunny_delete_sound(t_bunny_sound		*sound)
 {
   enum _music_or_sound	*type = (enum _music_or_sound*)sound;

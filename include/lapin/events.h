@@ -29,6 +29,41 @@
 ** Returning SWITCH_CONTEXT break the bunny_loop, making it returns SWITCH_CONTEXT
 ** Returning GO_ON does not break the bunny_loop, it simply goes on.
 */
+/**
+ * @doc-symbol t_bunny_response
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 10
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Enumerates the actions a callback can request from the event loop.
+ * @description Every event callback returns a t_bunny_response. GO_ON keeps the loop running; most other values stop the current loop and are returned to the caller.
+ * @param EXIT_ON_ERROR Stop the loop because an error happened.
+ * @param EXIT_ON_CROSS Stop the loop because the window close button was used.
+ * @param EXIT_ON_SUCCESS Stop the loop successfully.
+ * @param SWITCH_CONTEXT Stop the loop so the caller can select another context.
+ * @param SWITCH_WINDOW Stop the loop so the caller can select another window set.
+ * @param GO_ON Continue the current loop.
+ * @param LEAVE_EVENT Leave the current event handling chain without stopping the loop.
+ * @param NOTHING_HAPPENED Report that no callback did useful work.
+ * @see bunny_loop, bunny_loop_mw, t_bunny_context
+ *
+ * @doc-lang fr
+ * @brief Énumère les actions qu'un callback peut demander à la boucle d'événements.
+ * @description Chaque callback d'événement renvoie un t_bunny_response. GO_ON laisse la boucle continuer ; la plupart des autres valeurs arrêtent la boucle courante et sont renvoyées à l'appelant.
+ * @param EXIT_ON_ERROR Arrête la boucle parce qu'une erreur est survenue.
+ * @param EXIT_ON_CROSS Arrête la boucle parce que le bouton de fermeture de la fenêtre a été utilisé.
+ * @param EXIT_ON_SUCCESS Arrête la boucle avec succès.
+ * @param SWITCH_CONTEXT Arrête la boucle pour que l'appelant puisse choisir un autre contexte.
+ * @param SWITCH_WINDOW Arrête la boucle pour que l'appelant puisse choisir un autre ensemble de fenêtres.
+ * @param GO_ON Continue la boucle courante.
+ * @param LEAVE_EVENT Quitte la chaîne de traitement de l'événement courant sans arrêter la boucle.
+ * @param NOTHING_HAPPENED Indique qu'aucun callback n'a effectué de travail utile.
+ * @see bunny_loop, bunny_loop_mw, t_bunny_context
+ */
 typedef enum			e_bunny_response
   {
     EXIT_ON_ERROR,
@@ -47,6 +82,41 @@ typedef enum			e_bunny_response
 ** GO_UP means something was released. CONNECTED and DISCONNECTED are equivalent, but
 ** more clear when you write something like joystick connection/disconnection routine
 */
+/**
+ * @doc-symbol t_bunny_event_state
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 20
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Describes whether an event starts or ends.
+ * @description GO_DOWN and GO_UP are the generic names. The other symbols are aliases used to make focus, joystick connection and context transitions easier to read.
+ * @param GO_DOWN A key or button was pressed.
+ * @param GO_UP A key or button was released.
+ * @param LOST_FOCUS Alias of GO_DOWN for a focus-lost event.
+ * @param GOT_FOCUS Alias of GO_UP for a focus-gained event.
+ * @param CONNECTED Alias of GO_DOWN for a connection event.
+ * @param DISCONNECTED Alias of GO_UP for a disconnection event.
+ * @param ENTERING Alias of GO_DOWN for entering a context.
+ * @param LEAVING Alias of GO_UP for leaving a context.
+ * @see t_bunny_key, t_bunny_click, t_bunny_joy_connect
+ *
+ * @doc-lang fr
+ * @brief Décrit si un événement commence ou se termine.
+ * @description GO_DOWN et GO_UP sont les noms génériques. Les autres symboles sont des alias utilisés pour rendre plus lisibles les événements de focus, de connexion de joystick et de transition de contexte.
+ * @param GO_DOWN Une touche ou un bouton a été enfoncé.
+ * @param GO_UP Une touche ou un bouton a été relâché.
+ * @param LOST_FOCUS Alias de GO_DOWN pour une perte de focus.
+ * @param GOT_FOCUS Alias de GO_UP pour un gain de focus.
+ * @param CONNECTED Alias de GO_DOWN pour une connexion.
+ * @param DISCONNECTED Alias de GO_UP pour une déconnexion.
+ * @param ENTERING Alias de GO_DOWN pour l'entrée dans un contexte.
+ * @param LEAVING Alias de GO_UP pour la sortie d'un contexte.
+ * @see t_bunny_key, t_bunny_click, t_bunny_joy_connect
+ */
 typedef enum			e_bunny_event_state
   {
     GO_DOWN,
@@ -67,6 +137,31 @@ typedef enum			e_bunny_event_state
 ** as last parameter.
 ** Return a t_bunny_response in order to keep the loop or break it.
 */
+/**
+ * @doc-symbol t_bunny_key
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 30
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Callback type for keyboard press and release events.
+ * @param sta Tells whether the key was pressed or released.
+ * @param sym The key symbol concerned by the event.
+ * @param dat The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_set_key_response, bunny_get_keyboard, t_bunny_type
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour les appuis et relâchements de touches.
+ * @param sta Indique si la touche a été enfoncée ou relâchée.
+ * @param sym Le symbole de touche concerné par l'événement.
+ * @param dat Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_set_key_response, bunny_get_keyboard, t_bunny_type
+ */
 typedef t_bunny_response	(*t_bunny_key)(t_bunny_event_state		sta,
 					       t_bunny_keysym			sym,
 					       void				*dat);
@@ -98,6 +193,29 @@ const bool			*bunny_get_keyboard(void);
 ** as last parameter.
 ** Return a t_bunny_response in order to keep the loop or break it.
 */
+/**
+ * @doc-symbol t_bunny_type
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 60
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Callback type for text input events.
+ * @param unicode The typed Unicode code point.
+ * @param data The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_set_text_response, t_bunny_key
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour la saisie de texte.
+ * @param unicode Le point de code Unicode saisi.
+ * @param data Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_set_text_response, t_bunny_key
+ */
 typedef t_bunny_response	(*t_bunny_type)(uint32_t			unicode,
 						void				*data);
 
@@ -118,6 +236,31 @@ void				bunny_set_text_response(t_bunny_type		type);
 ** as last parameter.
 ** Return a t_bunny_response in order to keep the loop or break it.
 */
+/**
+ * @doc-symbol t_bunny_click
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 80
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Callback type for mouse button press and release events.
+ * @param sta Tells whether the button was pressed or released.
+ * @param but The mouse button concerned by the event.
+ * @param dat The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_set_click_response, bunny_get_mouse_button, t_bunny_mouse_button
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour les appuis et relâchements de boutons de souris.
+ * @param sta Indique si le bouton a été enfoncé ou relâché.
+ * @param but Le bouton de souris concerné par l'événement.
+ * @param dat Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_set_click_response, bunny_get_mouse_button, t_bunny_mouse_button
+ */
 typedef t_bunny_response	(*t_bunny_click)(t_bunny_event_state		sta,
 						 t_bunny_mouse_button		but,
 						 void				*dat);
@@ -146,6 +289,29 @@ const bool			*bunny_get_mouse_button(void);
 ** as last parameter.
 ** Return a t_bunny_response in order to keep the loop or break it.
 */
+/**
+ * @doc-symbol t_bunny_move
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 110
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Callback type for mouse movement events.
+ * @param relative The movement of the mouse since the previous mouse move event.
+ * @param dat The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_set_move_response, bunny_get_mouse_position
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour les déplacements de souris.
+ * @param relative Le déplacement de la souris depuis le précédent événement de mouvement.
+ * @param dat Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_set_move_response, bunny_get_mouse_position
+ */
 typedef t_bunny_response	(*t_bunny_move)(const t_bunny_position		*relative,
 						void				*dat);
 
@@ -172,6 +338,31 @@ const t_bunny_position		*bunny_get_mouse_position(void);
 ** as last parameter.
 ** Return a t_bunny_response in order to keep the loop or break it.
 */
+/**
+ * @doc-symbol t_bunny_wheel
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 140
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Callback type for mouse wheel events.
+ * @param wheelid The wheel identifier.
+ * @param delta The movement amount reported by the wheel.
+ * @param data The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_set_wheel_response
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour les événements de molette de souris.
+ * @param wheelid L'identifiant de la molette.
+ * @param delta L'amplitude du mouvement signalé par la molette.
+ * @param data Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_set_wheel_response
+ */
 typedef t_bunny_response	(*t_bunny_wheel)(int				wheelid,
 						 int				delta,
 						 void				*data);
@@ -196,6 +387,41 @@ void				bunny_set_wheel_response(t_bunny_wheel		wheel);
 ** The axis attribute is how many axis there is: horizontal, vertical, etc.
 ** See the enum.h file for more informations.
 */
+/**
+ * @doc-symbol t_bunny_joystick
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 160
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Describes one joystick slot.
+ * @description The array of joystick slots is refreshed by bunny_update_joysticks and when windows are created.
+ * @param connected True if a joystick is currently connected to this slot.
+ * @param name The joystick name, or NULL when no joystick is connected.
+ * @param vendor The vendor identifier reported by the backend.
+ * @param product The product identifier reported by the backend.
+ * @param nb_button The number of buttons reported by the backend.
+ * @param axis Bit field describing available t_bunny_axis values.
+ * @param vibration_gain The current vibration gain requested through bunny_set_joystick_vibration.
+ * @param vibrating True when a vibration request is active.
+ * @see bunny_get_joy_info, bunny_update_joysticks, t_bunny_joy_connect
+ *
+ * @doc-lang fr
+ * @brief Décrit un emplacement de joystick.
+ * @description Le tableau d'emplacements de joysticks est rafraîchi par bunny_update_joysticks et lors de la création des fenêtres.
+ * @param connected Vaut true si un joystick est actuellement connecté à cet emplacement.
+ * @param name Le nom du joystick, ou NULL si aucun joystick n'est connecté.
+ * @param vendor L'identifiant de constructeur fourni par le moteur sous-jacent.
+ * @param product L'identifiant de produit fourni par le moteur sous-jacent.
+ * @param nb_button Le nombre de boutons fourni par le moteur sous-jacent.
+ * @param axis Champ de bits décrivant les valeurs t_bunny_axis disponibles.
+ * @param vibration_gain Le gain de vibration courant demandé via bunny_set_joystick_vibration.
+ * @param vibrating Vaut true lorsqu'une demande de vibration est active.
+ * @see bunny_get_joy_info, bunny_update_joysticks, t_bunny_joy_connect
+ */
 typedef struct			s_bunny_joystick
 {
   bool				connected;
@@ -217,6 +443,33 @@ typedef struct			s_bunny_joystick
 ** as last parameter.
 ** Return a t_bunny_response in order to keep the loop or break it.
 */
+/**
+ * @doc-symbol t_bunny_joy_connect
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 170
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Callback type for joystick connection and disconnection events.
+ * @param state CONNECTED when a joystick appears, DISCONNECTED when it disappears.
+ * @param joyid The joystick slot identifier.
+ * @param joyinfo The information known about the joystick slot.
+ * @param data The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_set_joy_connect_response, bunny_get_joy_info
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour les connexions et déconnexions de joysticks.
+ * @param state CONNECTED lorsqu'un joystick apparaît, DISCONNECTED lorsqu'il disparaît.
+ * @param joyid L'identifiant de l'emplacement de joystick.
+ * @param joyinfo Les informations connues sur l'emplacement de joystick.
+ * @param data Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_set_joy_connect_response, bunny_get_joy_info
+ */
 typedef t_bunny_response	(*t_bunny_joy_connect)(t_bunny_event_state	state,
 						       int			joyid,
 						       const t_bunny_joystick	*joyinfo,
@@ -249,6 +502,33 @@ void				bunny_update_joysticks(void);
 ** as last parameter.
 ** Return a t_bunny_response in order to keep the loop or break it.
 */
+/**
+ * @doc-symbol t_bunny_joy_axis
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 190
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Callback type for joystick axis movement events.
+ * @param joyid The joystick slot identifier.
+ * @param axis The axis that changed.
+ * @param value The new axis value, usually between -100 and 100.
+ * @param data The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_set_joy_axis_response, bunny_set_joy_axis_minimum_offset, bunny_get_joy_axis
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour les déplacements d'axes de joystick.
+ * @param joyid L'identifiant de l'emplacement de joystick.
+ * @param axis L'axe qui a changé.
+ * @param value La nouvelle valeur de l'axe, généralement comprise entre -100 et 100.
+ * @param data Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_set_joy_axis_response, bunny_set_joy_axis_minimum_offset, bunny_get_joy_axis
+ */
 typedef t_bunny_response	(*t_bunny_joy_axis)(int				joyid,
 						    t_bunny_axis		axis,
 						    float			value,
@@ -292,6 +572,33 @@ const float			(*bunny_get_joy_axis(void))[LAST_BUNNY_AXIS];
 ** as last parameter
 ** Return a t_bunny_response in order to keep the loop or break it.
 */
+/**
+ * @doc-symbol t_bunny_joy_button
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 230
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Callback type for joystick button press and release events.
+ * @param state Tells whether the button was pressed or released.
+ * @param joyid The joystick slot identifier.
+ * @param button The joystick button identifier.
+ * @param data The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_set_joy_button_response, bunny_get_joy_button
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour les appuis et relâchements de boutons de joystick.
+ * @param state Indique si le bouton a été enfoncé ou relâché.
+ * @param joyid L'identifiant de l'emplacement de joystick.
+ * @param button L'identifiant du bouton de joystick.
+ * @param data Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_set_joy_button_response, bunny_get_joy_button
+ */
 typedef t_bunny_response	(*t_bunny_joy_button)(t_bunny_event_state	state,
 						      int			joyid,
 						      int			button,
@@ -328,6 +635,29 @@ bool				bunny_set_joystick_vibration(int		joy_id,
 ** as last_parameter
 ** Return a t_bunny_response in order to keep the loop or break it.
 */
+/**
+ * @doc-symbol t_bunny_get_focus
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 260
+ * @doc-since 7
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Callback type for window focus gain events.
+ * @param win The window that gained focus.
+ * @param data The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_set_get_focus_response, t_bunny_lost_focus
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour les gains de focus de fenêtre.
+ * @param win La fenêtre qui a obtenu le focus.
+ * @param data Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_set_get_focus_response, t_bunny_lost_focus
+ */
 typedef t_bunny_response	(*t_bunny_get_focus)(const t_bunny_window	*win,
 						     void			*data);
 
@@ -347,6 +677,29 @@ void				bunny_set_get_focus_response(t_bunny_get_focus	getf);
 ** as last_parameter
 ** Return a t_bunny_response in order to keep the loop or break it.
 */
+/**
+ * @doc-symbol t_bunny_lost_focus
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 280
+ * @doc-since 7
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Callback type for window focus loss events.
+ * @param win The window that lost focus.
+ * @param data The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_set_lost_focus_response, t_bunny_get_focus
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour les pertes de focus de fenêtre.
+ * @param win La fenêtre qui a perdu le focus.
+ * @param data Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_set_lost_focus_response, t_bunny_get_focus
+ */
 typedef t_bunny_response	(*t_bunny_lost_focus)(const t_bunny_window	*win,
 						      void			*data);
 
@@ -367,6 +720,31 @@ void				bunny_set_lost_focus_response(t_bunny_lost_focus lost);
 ** as last_parameter
 ** Return a t_bunny_response in order to keep the loop or break it.
 */
+/**
+ * @doc-symbol t_bunny_resize
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 300
+ * @doc-since 7
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Callback type for window resize events.
+ * @param win The resized window.
+ * @param siz The new window size.
+ * @param data The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_set_resize_response
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour les redimensionnements de fenêtre.
+ * @param win La fenêtre redimensionnée.
+ * @param siz La nouvelle taille de la fenêtre.
+ * @param data Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_set_resize_response
+ */
 typedef t_bunny_response	(*t_bunny_resize)(const t_bunny_window		*win,
 						  const t_bunny_position	*siz,
 						  void				*data);
@@ -390,6 +768,29 @@ void				bunny_set_resize_response(t_bunny_resize	resize);
 ** Return a t_bunny_response in order to keep the loop or break it. EXIT_ON_CROSS
 ** may be a nice choice for this case.
 */
+/**
+ * @doc-symbol t_bunny_close
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 320
+ * @doc-since 7
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Callback type for window close request events.
+ * @param win The window that received the close request.
+ * @param data The data pointer sent to bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_set_close_response, bunny_loop_mw
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour les demandes de fermeture de fenêtre.
+ * @param win La fenêtre qui a reçu la demande de fermeture.
+ * @param data Le pointeur de données transmis à bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_set_close_response, bunny_loop_mw
+ */
 typedef t_bunny_response	(*t_bunny_close)(const t_bunny_window		*win,
 						 void				*data);
 
@@ -416,6 +817,27 @@ const t_bunny_window	       *bunny_get_window(void);
 ** it is what you sent to bunny_loop or bunny_loop_mw as last parameter.
 ** Return a t_bunny_response in order to keep the loop or break it.
 */
+/**
+ * @doc-symbol t_bunny_display
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 340
+ * @doc-since 7
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Callback type for display refresh events.
+ * @param data The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_set_display_function, bunny_loop
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour les rafraîchissements d'affichage.
+ * @param data Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_set_display_function, bunny_loop
+ */
 typedef t_bunny_response	(*t_bunny_display)(void				*data);
 
 typedef t_bunny_response	t_bunny_display_function(void			*data);
@@ -434,6 +856,27 @@ void				bunny_set_display_function(t_bunny_display	display);
 ** as last parameter.
 ** Return a t_bunny_response in order to keep the loop or break it.
 */
+/**
+ * @doc-symbol t_bunny_loop
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 360
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Callback type for fixed-frequency main loop events.
+ * @param dat The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_set_loop_main_function, bunny_loop, bunny_loop_mw
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour la boucle principale à fréquence fixe.
+ * @param dat Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_set_loop_main_function, bunny_loop, bunny_loop_mw
+ */
 typedef t_bunny_response	(*t_bunny_loop)(void				*dat);
 
 typedef t_bunny_response	t_bunny_loop_function(void			*dat);
@@ -505,6 +948,33 @@ double				bunny_get_delay(void);
 ** Network event
 */
 
+/**
+ * @doc-symbol t_bunny_message_response
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 460
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Callback type for incoming network message events.
+ * @param clt The network peer that sent the message.
+ * @param buffer The received message buffer.
+ * @param size The size of the received message in bytes.
+ * @param data The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_set_message_response, t_bunny_connect_response
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour les messages réseau entrants.
+ * @param clt Le pair réseau qui a envoyé le message.
+ * @param buffer Le tampon du message reçu.
+ * @param size La taille du message reçu en octets.
+ * @param data Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_set_message_response, t_bunny_connect_response
+ */
 typedef t_bunny_response	(*t_bunny_message_response)(t_bunny_network_info clt,
 							    void		*buffer,
 							    size_t		size,
@@ -529,6 +999,31 @@ void				bunny_set_message_response(t_bunny_message_response func);
 ** \param data The data parameter of bunny_loop
 ** \return A t_bunny_response in order to keep the loop or break it.
 */
+/**
+ * @doc-symbol t_bunny_connect_response
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 480
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Callback type for network connection and disconnection events.
+ * @param clt The network peer whose state changed.
+ * @param state CONNECTED when the peer opens, DISCONNECTED when it closes.
+ * @param data The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_set_connect_response, t_bunny_message_response
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour les connexions et déconnexions réseau.
+ * @param clt Le pair réseau dont l'état a changé.
+ * @param state CONNECTED lorsque le pair s'ouvre, DISCONNECTED lorsqu'il se ferme.
+ * @param data Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_set_connect_response, t_bunny_message_response
+ */
 typedef t_bunny_response	(*t_bunny_connect_response)(t_bunny_network_info clt,
 							    t_bunny_event_state	state,
 							    void		*data);
@@ -557,6 +1052,27 @@ typedef t_bunny_response	t_bunny_entering_context_function(void		*dat);
 ** \param returned The value that will be sent to the bunny_loop caller
 ** \param data The data parameter of bunny loop
 */
+/**
+ * @doc-symbol t_bunny_leaving_context
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 510
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Callback type called when the event loop leaves its current context.
+ * @param returned The value that will be returned by bunny_loop or bunny_loop_mw.
+ * @param data The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @see bunny_set_leaving_context_response, bunny_set_entering_context_response
+ *
+ * @doc-lang fr
+ * @brief Type de callback appelé lorsque la boucle d'événements quitte son contexte courant.
+ * @param returned La valeur qui sera renvoyée par bunny_loop ou bunny_loop_mw.
+ * @param data Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @see bunny_set_leaving_context_response, bunny_set_entering_context_response
+ */
 typedef void			(*t_bunny_leaving_context)(t_bunny_response	returned,
 							   void			*data);
 
@@ -575,6 +1091,29 @@ void				bunny_set_leaving_context_response(t_bunny_leaving_context func);
 ** \param cmt The computed value
 ** \param data The data parameter of bunny loop
 */
+/**
+ * @doc-symbol t_bunny_async_computation_response
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 522
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Callback type for asynchronous computation completion events.
+ * @param cmt The computed value returned by the asynchronous computation.
+ * @param data The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running, or another t_bunny_response to stop or change it.
+ * @see bunny_async_computation, bunny_set_async_computation_response
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour les fins de calcul asynchrone.
+ * @param cmt La valeur calculée renvoyée par le traitement asynchrone.
+ * @param data Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer, ou une autre valeur t_bunny_response pour l'arrêter ou la changer.
+ * @see bunny_async_computation, bunny_set_async_computation_response
+ */
 typedef t_bunny_response	(*t_bunny_async_computation_response)(void	*cmt,
 								      void	*data);
 
@@ -593,6 +1132,25 @@ void				bunny_set_async_computation_response(t_bunny_async_computation_response 
 ** available throught SFML. It should be added later.
 ** It also miss mouse entered and mouse left
 */
+/**
+ * @doc-symbol t_bunny_event_type
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 440
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Enumerates raw backend event categories stored in t_bunny_event.
+ * @description These values are used by the generic event callback registered with bunny_set_event_response.
+ * @see t_bunny_event, t_bunny_event_response, bunny_set_event_response
+ *
+ * @doc-lang fr
+ * @brief Énumère les catégories d'événements bruts stockées dans t_bunny_event.
+ * @description Ces valeurs sont utilisées par le callback générique enregistré avec bunny_set_event_response.
+ * @see t_bunny_event, t_bunny_event_response, bunny_set_event_response
+ */
 typedef enum			e_bunny_event_type
   {
     BET_CLOSE_WINDOW,
@@ -620,12 +1178,60 @@ typedef enum			e_bunny_event_type
     BET_SENSOR
   }				t_bunny_event_type;
 
+/**
+ * @doc-symbol t_bunny_size_event
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 441
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Payload of a raw window resize event.
+ * @param width The new window width.
+ * @param height The new window height.
+ * @see t_bunny_event
+ *
+ * @doc-lang fr
+ * @brief Charge utile d'un événement brut de redimensionnement de fenêtre.
+ * @param width La nouvelle largeur de la fenêtre.
+ * @param height La nouvelle hauteur de la fenêtre.
+ * @see t_bunny_event
+ */
 typedef struct			s_bunny_size_event
 {
   unsigned int			width;
   unsigned int			height;
 }				t_bunny_size_event;
 
+/**
+ * @doc-symbol t_bunny_key_event
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 442
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Payload of a raw keyboard event.
+ * @param sym The key symbol.
+ * @param alt True when Alt was held.
+ * @param control True when Control was held.
+ * @param shift True when Shift was held.
+ * @param system True when the system modifier was held.
+ * @see t_bunny_event
+ *
+ * @doc-lang fr
+ * @brief Charge utile d'un événement brut de clavier.
+ * @param sym Le symbole de touche.
+ * @param alt Vaut true si Alt était maintenu.
+ * @param control Vaut true si Contrôle était maintenu.
+ * @param shift Vaut true si Shift était maintenu.
+ * @param system Vaut true si le modificateur système était maintenu.
+ * @see t_bunny_event
+ */
 typedef struct			s_bunny_key_event
 {
   t_bunny_keysym		sym;
@@ -635,17 +1241,80 @@ typedef struct			s_bunny_key_event
   bool				system;
 }				t_bunny_key_event;
 
+/**
+ * @doc-symbol t_bunny_text_event
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 443
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Payload of a raw text input event.
+ * @param unicode The typed Unicode code point.
+ * @see t_bunny_event
+ *
+ * @doc-lang fr
+ * @brief Charge utile d'un événement brut de saisie de texte.
+ * @param unicode Le point de code Unicode saisi.
+ * @see t_bunny_event
+ */
 typedef struct			s_bunny_text_event
 {
   uint32_t			unicode;
 }				t_bunny_text_event;
 
+/**
+ * @doc-symbol t_bunny_mouse_move_event
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 444
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Payload of a raw mouse movement event.
+ * @param x The horizontal position or delta, depending on the raw event type.
+ * @param y The vertical position or delta, depending on the raw event type.
+ * @see t_bunny_event
+ *
+ * @doc-lang fr
+ * @brief Charge utile d'un événement brut de déplacement de souris.
+ * @param x La position ou différence horizontale, selon le type d'événement brut.
+ * @param y La position ou différence verticale, selon le type d'événement brut.
+ * @see t_bunny_event
+ */
 typedef struct			s_bunny_mouse_move_event
 {
   int				x;
   int				y;
 }				t_bunny_mouse_move_event;
 
+/**
+ * @doc-symbol t_bunny_mouse_button_event
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 445
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Payload of a raw mouse button event.
+ * @param button The mouse button concerned by the event.
+ * @param x The mouse X position when the event occurred.
+ * @param y The mouse Y position when the event occurred.
+ * @see t_bunny_event
+ *
+ * @doc-lang fr
+ * @brief Charge utile d'un événement brut de bouton de souris.
+ * @param button Le bouton de souris concerné par l'événement.
+ * @param x La position X de la souris au moment de l'événement.
+ * @param y La position Y de la souris au moment de l'événement.
+ * @see t_bunny_event
+ */
 typedef struct			s_bunny_mouse_button_event
 {
   t_bunny_mouse_button		button;
@@ -653,6 +1322,31 @@ typedef struct			s_bunny_mouse_button_event
   int				y;
 }				t_bunny_mouse_button_event;
 
+/**
+ * @doc-symbol t_bunny_mouse_wheel_event
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 446
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Payload of a raw mouse wheel event.
+ * @param wheel The wheel identifier.
+ * @param delta The wheel movement amount.
+ * @param x The mouse X position when the event occurred.
+ * @param y The mouse Y position when the event occurred.
+ * @see t_bunny_event
+ *
+ * @doc-lang fr
+ * @brief Charge utile d'un événement brut de molette de souris.
+ * @param wheel L'identifiant de la molette.
+ * @param delta L'amplitude du mouvement de molette.
+ * @param x La position X de la souris au moment de l'événement.
+ * @param y La position Y de la souris au moment de l'événement.
+ * @see t_bunny_event
+ */
 typedef struct			s_bunny_mouse_wheel_event
 {
   int				wheel;
@@ -661,11 +1355,53 @@ typedef struct			s_bunny_mouse_wheel_event
   int				y;
 }				t_bunny_mouse_wheel_event;
 
+/**
+ * @doc-symbol t_bunny_joystick_connect_event
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 447
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Payload of a raw joystick connection event.
+ * @param joystick_id The joystick slot identifier.
+ * @see t_bunny_event
+ *
+ * @doc-lang fr
+ * @brief Charge utile d'un événement brut de connexion de joystick.
+ * @param joystick_id L'identifiant de l'emplacement de joystick.
+ * @see t_bunny_event
+ */
 typedef struct			s_bunny_joystick_connect_event
 {
   unsigned int			joystick_id;
 }				t_bunny_joystick_connect_event;
 
+/**
+ * @doc-symbol t_bunny_joystick_move_event
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 448
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Payload of a raw joystick axis event.
+ * @param joystick_id The joystick slot identifier.
+ * @param axis The axis that moved.
+ * @param position The new axis value.
+ * @see t_bunny_event
+ *
+ * @doc-lang fr
+ * @brief Charge utile d'un événement brut d'axe de joystick.
+ * @param joystick_id L'identifiant de l'emplacement de joystick.
+ * @param axis L'axe qui a bougé.
+ * @param position La nouvelle valeur de l'axe.
+ * @see t_bunny_event
+ */
 typedef struct			s_bunny_joystick_move_event
 {
   unsigned int			joystick_id;
@@ -673,6 +1409,27 @@ typedef struct			s_bunny_joystick_move_event
   float				position;
 }				t_bunny_joystick_move_event;
 
+/**
+ * @doc-symbol t_bunny_joystick_button_event
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 449
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Payload of a raw joystick button event.
+ * @param joystick_id The joystick slot identifier.
+ * @param button The joystick button identifier.
+ * @see t_bunny_event
+ *
+ * @doc-lang fr
+ * @brief Charge utile d'un événement brut de bouton de joystick.
+ * @param joystick_id L'identifiant de l'emplacement de joystick.
+ * @param button L'identifiant du bouton de joystick.
+ * @see t_bunny_event
+ */
 typedef struct			s_bunny_joystick_button_event
 {
   unsigned int			joystick_id;
@@ -696,6 +1453,31 @@ typedef struct			u_bunny_event
   };
 }				t_bunny_event;
 
+/**
+ * @doc-symbol t_bunny_event_response
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 455
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Callback type for generic raw events.
+ * @description This callback is called before the specialized event callback associated with the event category.
+ * @param event The raw event.
+ * @param data The data pointer sent to bunny_loop or bunny_loop_mw.
+ * @return-success GO_ON to keep the loop running and allow specialized callbacks, or another t_bunny_response to stop the loop.
+ * @see bunny_set_event_response, t_bunny_event
+ *
+ * @doc-lang fr
+ * @brief Type de callback pour les événements bruts génériques.
+ * @description Ce callback est appelé avant le callback spécialisé associé à la catégorie de l'événement.
+ * @param event L'événement brut.
+ * @param data Le pointeur de données transmis à bunny_loop ou bunny_loop_mw.
+ * @return-success GO_ON pour laisser la boucle continuer et permettre les callbacks spécialisés, ou une autre valeur t_bunny_response pour arrêter la boucle.
+ * @see bunny_set_event_response, t_bunny_event
+ */
 typedef t_bunny_response	(*t_bunny_event_response)(const t_bunny_event	*event,
 							  void			*data);
 
@@ -713,6 +1495,65 @@ void				bunny_set_event_response(t_bunny_event_response	resp);
 **
 ** A NULL pointer is a deactivated callback.
 */
+/**
+ * @doc-symbol t_bunny_context
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 530
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Groups all event callbacks into a single context structure.
+ * @description Each NULL function pointer disables the corresponding callback. This structure can be installed with bunny_set_context and copied back with bunny_get_context.
+ * @param key Keyboard key callback.
+ * @param type Text input callback.
+ * @param click Mouse button callback.
+ * @param move Mouse movement callback.
+ * @param wheel Mouse wheel callback.
+ * @param joy_connect Joystick connection callback.
+ * @param joy_button Joystick button callback.
+ * @param joy_axis Joystick axis callback.
+ * @param get_focus Window focus gain callback.
+ * @param lost_focus Window focus loss callback.
+ * @param resize Window resize callback.
+ * @param loop Fixed-frequency main callback.
+ * @param display Display callback.
+ * @param close Window close callback.
+ * @param net_message Network message callback.
+ * @param net_connect Network connection callback.
+ * @param entering_context Callback called when entering the loop.
+ * @param leaving_context Callback called when leaving the loop.
+ * @param async_computation Callback called when an asynchronous computation completes.
+ * @param event Generic raw event callback.
+ * @see bunny_set_context, bunny_get_context, bunny_declare_context
+ *
+ * @doc-lang fr
+ * @brief Regroupe tous les callbacks d'événements dans une même structure de contexte.
+ * @description Chaque pointeur de fonction NULL désactive le callback correspondant. Cette structure peut être installée avec bunny_set_context et recopiée avec bunny_get_context.
+ * @param key Callback des touches clavier.
+ * @param type Callback de saisie de texte.
+ * @param click Callback des boutons de souris.
+ * @param move Callback des mouvements de souris.
+ * @param wheel Callback de molette de souris.
+ * @param joy_connect Callback de connexion de joystick.
+ * @param joy_button Callback de bouton de joystick.
+ * @param joy_axis Callback d'axe de joystick.
+ * @param get_focus Callback de gain de focus de fenêtre.
+ * @param lost_focus Callback de perte de focus de fenêtre.
+ * @param resize Callback de redimensionnement de fenêtre.
+ * @param loop Callback principal à fréquence fixe.
+ * @param display Callback d'affichage.
+ * @param close Callback de fermeture de fenêtre.
+ * @param net_message Callback de message réseau.
+ * @param net_connect Callback de connexion réseau.
+ * @param entering_context Callback appelé à l'entrée dans la boucle.
+ * @param leaving_context Callback appelé à la sortie de la boucle.
+ * @param async_computation Callback appelé lorsqu'un calcul asynchrone se termine.
+ * @param event Callback générique d'événement brut.
+ * @see bunny_set_context, bunny_get_context, bunny_declare_context
+ */
 typedef struct			s_bunny_context
 {
   t_bunny_key			key;
@@ -773,6 +1614,25 @@ typedef struct			s_bunny_context
 ** compiler into thinking your functions are taking a void* instead of the real
 ** type I'm sure it takes. Use bunny_declare_context and t_bunny_context instead.
 */
+/**
+ * @doc-symbol t_bunny_anonymous_context
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 540
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Deprecated untyped variant of t_bunny_context.
+ * @description It stores callbacks as void pointers so user callbacks can use a specific data type without casts, but this breaks type safety. Prefer bunny_declare_context with t_bunny_context.
+ * @see t_bunny_context, bunny_declare_context
+ *
+ * @doc-lang fr
+ * @brief Variante non typée obsolète de t_bunny_context.
+ * @description Elle stocke les callbacks comme des pointeurs void afin que les callbacks utilisateur puissent employer un type de données spécifique sans casts, mais cela casse la sûreté de typage. Préférez bunny_declare_context avec t_bunny_context.
+ * @see t_bunny_context, bunny_declare_context
+ */
 typedef struct			s_bunny_anonymous_context
 {
   void				*key;

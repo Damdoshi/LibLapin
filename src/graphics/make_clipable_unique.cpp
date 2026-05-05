@@ -7,6 +7,35 @@
 
 #define			PATTERN		"%p -> %s"
 
+/**
+ * @doc-symbol bunny_make_clipable_unique
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 470
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Ensures that a shared clipable owns unique graphic data before modification.
+ * @description Resources loaded through the resource manager can share the same underlying data. This function duplicates the data when needed, similarly to copy-on-write. Objects created with bunny_new_* are already unique.
+ * @param clipable The clipable to make unique.
+ * @return-success true if the clipable is unique or was made unique.
+ * @return-failure false if duplication fails.
+ * @error ENOMEM Out of memory while duplicating the resource.
+ * @log Logs are written with the "graphics" label.
+ * @see bunny_load_picture, bunny_load_pixelarray
+ *
+ * @doc-lang fr
+ * @brief Garantit qu’un clipable partagé possède ses propres données graphiques avant modification.
+ * @description Les ressources chargées par le gestionnaire de ressources peuvent partager les mêmes données sous-jacentes. Cette fonction duplique les données si nécessaire, à la manière d’un copy-on-write. Les objets créés avec bunny_new_* sont déjà uniques.
+ * @param clipable Le clipable à rendre unique.
+ * @return-success true si le clipable est unique ou a été rendu unique.
+ * @return-failure false si la duplication échoue.
+ * @error ENOMEM Mémoire insuffisante lors de la duplication de la ressource.
+ * @log Les logs sont écrits avec le label "graphics".
+ * @see bunny_load_picture, bunny_load_pixelarray
+ */
 bool			bunny_make_clipable_unique(t_bunny_clipable	*clip)
 {
   size_t		*type = (size_t*)clip;

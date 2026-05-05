@@ -5,6 +5,31 @@
 
 #include	"lapin_private.h"
 
+/**
+ * @doc-symbol bunny_sound_manager_play_sound
+ * @doc-module sound_manager
+ * @doc-kind function
+ * @doc-order 260
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Plays a registered sound effect through a manager.
+ * @param sm Sound manager containing the effect.
+ * @param snd Effect to play.
+ * @return-success true if the effect was found and played.
+ * @return-failure false if the effect is not registered.
+ * @see bunny_sound_manager_stop_sound, bunny_sound_manager_add
+ *
+ * @doc-lang fr
+ * @brief Joue un effet sonore enregistré via un gestionnaire.
+ * @param sm Gestionnaire de sons contenant l'effet.
+ * @param snd Effet à jouer.
+ * @return-success true si l'effet a été trouvé et joué.
+ * @return-failure false si l'effet n'est pas enregistré.
+ * @see bunny_sound_manager_stop_sound, bunny_sound_manager_add
+ */
 bool		bunny_sound_manager_play_sound(t_bunny_sound_manager	*_sm,
 					       t_bunny_effect		*_snd)
 {

@@ -14,6 +14,35 @@ static const uint8_t		default_shift[4] = {
   [ALPHA_CMP] = ALPHA_CMP
 };
 
+/**
+ * @doc-symbol bunny_load_pixelarray
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 40
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Loads an image file into a pixelarray.
+ * @description Supported image formats depend on the SFML backend and LibLapin loaders. Configuration files can also be used to describe a clipable resource.
+ * @param file The path of the image file or clipable configuration file to load.
+ * @return-success A loaded t_bunny_pixelarray.
+ * @return-failure NULL on failure.
+ * @error ENOMEM Out of memory.
+ * @log Logs are written with the "ressource" and "graphics" labels.
+ * @see bunny_new_pixelarray, bunny_read_pixelarray_id, bunny_save_pixelarray
+ *
+ * @doc-lang fr
+ * @brief Charge un fichier image dans un pixelarray.
+ * @description Les formats d’image pris en charge dépendent du backend SFML et des chargeurs de la LibLapin. Les fichiers de configuration peuvent aussi décrire une ressource clipable.
+ * @param file Le chemin du fichier image ou du fichier de configuration clipable à charger.
+ * @return-success Un t_bunny_pixelarray chargé.
+ * @return-failure NULL en cas d’échec.
+ * @error ENOMEM Mémoire insuffisante.
+ * @log Les logs sont écrits avec les labels "ressource" et "graphics".
+ * @see bunny_new_pixelarray, bunny_read_pixelarray_id, bunny_save_pixelarray
+ */
 t_bunny_pixelarray	*bunny_load_pixelarray(const char		*file)
 {
   struct bunny_pixelarray	*pa;

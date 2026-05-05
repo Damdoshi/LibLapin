@@ -24,6 +24,43 @@
 ** the file from which the sound was loaded or NULL if it was generated.
 ** It also contents private fields.
 */
+/**
+ * @doc-symbol t_bunny_sound
+ * @doc-module sound
+ * @doc-kind type
+ * @doc-order 100
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Base structure for loaded, streamed and generated sounds.
+ * @description It is embedded in t_bunny_music, t_bunny_effect and t_bunny_recorder. Any function expecting t_bunny_sound can receive one of these derived sound objects.
+ * @param _private Private storage used by LibLapin. Do not edit it.
+ * @param file Source file name, or an empty string for generated sounds.
+ * @param volume Volume between 0 and 100.
+ * @param pitch Playback speed multiplier; 1 is the original speed.
+ * @param loop true if the sound loops.
+ * @param position Relative 3D position of the sound.
+ * @param attenuation Distance attenuation factor.
+ * @param playing true while the sound is playing.
+ * @param pause true while the sound is paused.
+ * @see t_bunny_music, t_bunny_effect, t_bunny_recorder, bunny_delete_sound
+ *
+ * @doc-lang fr
+ * @brief Structure de base des sons chargés, lus en streaming et générés.
+ * @description Elle est embarquée dans t_bunny_music, t_bunny_effect et t_bunny_recorder. Toute fonction attendant t_bunny_sound peut recevoir l'un de ces objets sonores dérivés.
+ * @param _private Stockage privé utilisé par la LibLapin. Ne le modifiez pas.
+ * @param file Nom du fichier source, ou chaîne vide pour les sons générés.
+ * @param volume Volume entre 0 et 100.
+ * @param pitch Multiplicateur de vitesse de lecture ; 1 correspond à la vitesse originale.
+ * @param loop true si le son boucle.
+ * @param position Position 3D relative du son.
+ * @param attenuation Facteur d'atténuation avec la distance.
+ * @param playing true pendant que le son est joué.
+ * @param pause true pendant que le son est en pause.
+ * @see t_bunny_music, t_bunny_effect, t_bunny_recorder, bunny_delete_sound
+ */
 typedef struct			s_bunny_sound
 {
   const char			_private[sizeof(size_t)];
@@ -42,6 +79,29 @@ typedef struct			s_bunny_sound
 ** manage music. It contains an attribute named "duration"
 ** which is, in seconds, the duration of the music.
 */
+/**
+ * @doc-symbol t_bunny_music
+ * @doc-module sound
+ * @doc-kind type
+ * @doc-order 120
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Represents streamed music.
+ * @description A music embeds t_bunny_sound and is streamed from disk instead of being fully loaded as editable samples.
+ * @param sound Common sound header.
+ * @param duration Duration of the music in seconds.
+ * @see t_bunny_sound, bunny_load_music, bunny_read_music, bunny_delete_sound
+ *
+ * @doc-lang fr
+ * @brief Représente une musique lue en streaming.
+ * @description Une musique embarque t_bunny_sound et est lue depuis le disque au lieu d'être entièrement chargée sous forme d'échantillons modifiables.
+ * @param sound En-tête sonore commun.
+ * @param duration Durée de la musique en secondes.
+ * @see t_bunny_sound, bunny_load_music, bunny_read_music, bunny_delete_sound
+ */
 typedef struct			s_bunny_music
 {
   t_bunny_sound			sound;
@@ -59,6 +119,33 @@ typedef struct			s_bunny_music
 ** 's pixel field: it is an array of duration * sample_per_second
 ** int16_t.
 */
+/**
+ * @doc-symbol t_bunny_effect
+ * @doc-module sound
+ * @doc-kind type
+ * @doc-order 140
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Represents a sound effect loaded in memory.
+ * @description Its sample buffer can be edited manually, then submitted with bunny_compute_effect before playback.
+ * @param sound Common sound header.
+ * @param sample_per_second Number of samples stored for one second.
+ * @param duration Duration of the effect in seconds.
+ * @param sample Writable signed 16-bit sample buffer.
+ * @see t_bunny_sound, bunny_new_effect, bunny_load_effect, bunny_compute_effect, bunny_delete_sound
+ *
+ * @doc-lang fr
+ * @brief Représente un effet sonore chargé en mémoire.
+ * @description Son tampon d'échantillons peut être modifié manuellement, puis soumis avec bunny_compute_effect avant la lecture.
+ * @param sound En-tête sonore commun.
+ * @param sample_per_second Nombre d'échantillons stockés pour une seconde.
+ * @param duration Durée de l'effet en secondes.
+ * @param sample Tampon modifiable d'échantillons signés sur 16 bits.
+ * @see t_bunny_sound, bunny_new_effect, bunny_load_effect, bunny_compute_effect, bunny_delete_sound
+ */
 typedef struct			s_bunny_effect
 {
   t_bunny_sound			sound;
@@ -84,8 +171,97 @@ t_bunny_music			*bunny_read_music(t_bunny_configuration		*cnf);
 ** \param duration The duration of the sound effect in seconds
 ** \return A valid t_bunny_effect or NULL on error.
 */
+/**
+ * @doc-symbol bunny_new_effect
+ * @doc-module sound
+ * @doc-kind macro
+ * @doc-order 180
+ * @doc-since 7
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Creates an empty mono sound effect with the default sample rate.
+ * @description The sample buffer contains duration multiplied by SAMPLE_PER_SECONDS samples. Fill sample, call bunny_compute_effect, then play the sound.
+ * @param d Duration in seconds.
+ * @return-success A newly allocated t_bunny_effect.
+ * @return-failure NULL if the effect cannot be allocated.
+ * @error ENOMEM Out of memory.
+ * @log Calls _bunny_new_effect, which may log in the "ressource" and "sound" domains.
+ * @see SAMPLE_PER_SECONDS, bunny_create_effect, bunny_new_sound, bunny_compute_effect
+ *
+ * @doc-lang fr
+ * @brief Crée un effet sonore mono vide avec la fréquence d'échantillonnage par défaut.
+ * @description Le tampon sample contient duration multiplié par SAMPLE_PER_SECONDS échantillons. Remplissez sample, appelez bunny_compute_effect, puis jouez le son.
+ * @param d Durée en secondes.
+ * @return-success Un t_bunny_effect nouvellement alloué.
+ * @return-failure NULL si l'effet ne peut pas être alloué.
+ * @error ENOMEM Mémoire insuffisante.
+ * @log Appelle _bunny_new_effect, qui peut écrire dans les domaines "ressource" et "sound".
+ * @see SAMPLE_PER_SECONDS, bunny_create_effect, bunny_new_sound, bunny_compute_effect
+ */
 # define			bunny_new_effect(d)				_bunny_new_effect(d, SAMPLE_PER_SECONDS, 1)
+/**
+ * @doc-symbol bunny_create_effect
+ * @doc-module sound
+ * @doc-kind macro
+ * @doc-order 182
+ * @doc-since 13
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Creates an empty mono sound effect with a custom sample rate.
+ * @param d Duration in seconds.
+ * @param s Samples per second.
+ * @return-success A newly allocated t_bunny_effect.
+ * @return-failure NULL if the effect cannot be allocated.
+ * @error ENOMEM Out of memory.
+ * @log Calls _bunny_new_effect, which may log in the "ressource" and "sound" domains.
+ * @see bunny_new_effect, bunny_new_sound, bunny_compute_effect
+ *
+ * @doc-lang fr
+ * @brief Crée un effet sonore mono vide avec une fréquence d'échantillonnage personnalisée.
+ * @param d Durée en secondes.
+ * @param s Échantillons par seconde.
+ * @return-success Un t_bunny_effect nouvellement alloué.
+ * @return-failure NULL si l'effet ne peut pas être alloué.
+ * @error ENOMEM Mémoire insuffisante.
+ * @log Appelle _bunny_new_effect, qui peut écrire dans les domaines "ressource" et "sound".
+ * @see bunny_new_effect, bunny_new_sound, bunny_compute_effect
+ */
 # define			bunny_create_effect(d, s)			_bunny_new_effect(d, s, 1)
+/**
+ * @doc-symbol bunny_new_sound
+ * @doc-module sound
+ * @doc-kind macro
+ * @doc-order 184
+ * @doc-since 13
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Creates an empty sound effect with custom sample rate and channel count.
+ * @param d Duration in seconds.
+ * @param s Samples per second.
+ * @param c Number of channels.
+ * @return-success A newly allocated t_bunny_effect.
+ * @return-failure NULL if the effect cannot be allocated.
+ * @error ENOMEM Out of memory.
+ * @log Calls _bunny_new_effect, which may log in the "ressource" and "sound" domains.
+ * @see bunny_new_effect, bunny_create_effect, bunny_compute_effect
+ *
+ * @doc-lang fr
+ * @brief Crée un effet sonore vide avec une fréquence d'échantillonnage et un nombre de canaux personnalisés.
+ * @param d Durée en secondes.
+ * @param s Échantillons par seconde.
+ * @param c Nombre de canaux.
+ * @return-success Un t_bunny_effect nouvellement alloué.
+ * @return-failure NULL si l'effet ne peut pas être alloué.
+ * @error ENOMEM Mémoire insuffisante.
+ * @log Appelle _bunny_new_effect, qui peut écrire dans les domaines "ressource" et "sound".
+ * @see bunny_new_effect, bunny_create_effect, bunny_compute_effect
+ */
 # define			bunny_new_sound(d, s, c)			_bunny_new_effect(d, s, c)
 t_bunny_effect			*_bunny_new_effect(double			duration,
 						   int				sample_per_second,
@@ -300,6 +476,31 @@ void				_bunny_delete_sound(t_bunny_sound		*sound);
 bool				bunny_make_effect_unique(t_bunny_effect		*eff);
 
 
+/**
+ * @doc-symbol t_bunny_recorder
+ * @doc-module sound
+ * @doc-kind type
+ * @doc-order 600
+ * @doc-since 13
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Represents an audio recorder and the effect produced by its recording.
+ * @param effect Embedded effect containing recorded samples after bunny_stop_record.
+ * @param _private Private storage used by LibLapin. Do not edit it.
+ * @param device Name of the selected recording device.
+ * @param recording true while capture is running.
+ * @see bunny_new_recorder, bunny_start_record, bunny_stop_record, bunny_record_devices
+ *
+ * @doc-lang fr
+ * @brief Représente un enregistreur audio et l'effet produit par son enregistrement.
+ * @param effect Effet embarqué contenant les échantillons enregistrés après bunny_stop_record.
+ * @param _private Stockage privé utilisé par la LibLapin. Ne le modifiez pas.
+ * @param device Nom du périphérique d'enregistrement sélectionné.
+ * @param recording true pendant que la capture est en cours.
+ * @see bunny_new_recorder, bunny_start_record, bunny_stop_record, bunny_record_devices
+ */
 typedef struct			s_bunny_recorder
 {
   t_bunny_effect		effect;

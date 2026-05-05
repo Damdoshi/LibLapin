@@ -9,6 +9,37 @@
 
 extern bool		gl_normal_map;
 
+/**
+ * @doc-symbol bunny_new_picture
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 130
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Creates a new picture stored by the graphic backend.
+ * @description The returned object must be destroyed with bunny_delete_clipable. If normal-map support is enabled, a matching normal render target is also prepared.
+ * @param wid The width in pixels.
+ * @param hei The height in pixels.
+ * @return-success A valid t_bunny_picture.
+ * @return-failure NULL if allocation or backend creation fails.
+ * @error ENOMEM Out of memory.
+ * @log Logs are written with the "ressource" and "graphics" labels.
+ * @see t_bunny_picture, bunny_load_picture, bunny_delete_clipable
+ *
+ * @doc-lang fr
+ * @brief Crée une nouvelle picture stockée par le moteur graphique.
+ * @description L’objet renvoyé doit être détruit avec bunny_delete_clipable. Si le support des normal maps est activé, une cible de rendu normale correspondante est aussi préparée.
+ * @param wid La largeur en pixels.
+ * @param hei La hauteur en pixels.
+ * @return-success Un t_bunny_picture valide.
+ * @return-failure NULL si l’allocation ou la création côté backend échoue.
+ * @error ENOMEM Mémoire insuffisante.
+ * @log Les logs sont écrits avec les labels "ressource" et "graphics".
+ * @see t_bunny_picture, bunny_load_picture, bunny_delete_clipable
+ */
 t_bunny_picture		*bunny_new_picture(unsigned int		width,
 					   unsigned int		height)
 {
