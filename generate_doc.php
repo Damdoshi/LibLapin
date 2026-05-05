@@ -558,7 +558,11 @@ function format_c_declaration_for_doc(string $decl): string {
         $v = trim($v);
         if ($v === '') continue;
         if (preg_match('/^([A-Za-z_][A-Za-z0-9_]*)(\s*=\s*(.*))?$/s', $v, $vm)) {
-          $line = '  ' . pad_to_col($vm[1], 30) . (isset($vm[2]) && trim($vm[2]) !== '' ? '= ' . trim($vm[3]) : '');
+          if (isset($vm[2]) && trim($vm[2]) !== '')
+            $line = '  ' . pad_to_col($vm[1], 30) . '= ' . trim($vm[3]);
+          else
+            // No explicit value: keep the comma immediately after the symbol.
+            $line = '  ' . $vm[1];
         } else {
           $line = '  ' . $v;
         }
