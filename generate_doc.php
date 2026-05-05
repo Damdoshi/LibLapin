@@ -2,7 +2,7 @@
 <?php
 /*
  * Generate LibLapin manual pages from Doxygen-like bilingual comments.
- * Version 6.1: infers logs/bunny_errno and emits historical resume newlines as explicit double <br /> separators without $A indentation.
+ * Version 6.3: infers logs/bunny_errno and emits historical resume newlines as explicit double <br /> separators without $A indentation.
  * Place this script at the repository root and run:
  *   php generate_doc.php
  *
@@ -47,6 +47,8 @@ final class DocItem {
   public array $lang = [];
   public string $source = '';
   public string $body = '';
+  public string $kind = 'symbol';
+  public string $header = '';
   /** @var array<int,string> */
   public array $autoLogs = [];
   /** @var array<string,string> */
@@ -124,7 +126,7 @@ function strip_comment_stars(string $comment): array {
 
 function parse_doc_block(string $comment): array {
   $lines = strip_comment_stars($comment);
-  $meta = ['symbol' => null, 'module' => null, 'order' => null, 'since' => 0, 'until' => 'latest', 'level' => 0];
+  $meta = ['symbol' => null, 'module' => null, 'kind' => 'symbol', 'order' => null, 'since' => 0, 'until' => 'latest', 'level' => 0, 'header' => ''];
   $langs = [];
   $cur = null;
   $lastTag = null;
@@ -132,7 +134,7 @@ function parse_doc_block(string $comment): array {
 
   $ensure = function(string $lang) use (&$langs): void {
     if (!isset($langs[$lang]))
-      $langs[$lang] = ['brief' => '', 'description' => '', 'params' => [], 'returns' => [], 'return' => '', 'errors' => [], 'logs' => '', 'see' => []];
+      $langs[$lang] = ['brief' => '', 'description' => '', 'params' => [], 'fields' => [], 'values' => [], 'returns' => [], 'return' => '', 'errors' => [], 'logs' => '', 'see' => []];
   };
 
   foreach ($lines as $raw) {
@@ -146,10 +148,12 @@ function parse_doc_block(string $comment): array {
     }
     if (preg_match('/^@doc-symbol\s+([A-Za-z_][A-Za-z0-9_]*)\s*$/', $line, $m)) { $meta['symbol'] = $m[1]; continue; }
     if (preg_match('/^@doc-module\s+([A-Za-z0-9_ -]+)\s*$/', $line, $m)) { $meta['module'] = trim($m[1]); continue; }
+    if (preg_match('/^@doc-kind\s+([A-Za-z0-9_ -]+)\s*$/', $line, $m)) { $meta['kind'] = strtolower(trim($m[1])); continue; }
     if (preg_match('/^@doc-order\s+([0-9]+)\s*$/', $line, $m)) { $meta['order'] = (int)$m[1]; continue; }
     if (preg_match('/^@doc-since\s+([0-9]+|latest|-1)\s*$/i', $line, $m)) { $meta['since'] = parse_doc_version($m[1], 0); continue; }
     if (preg_match('/^@doc-until\s+([0-9]+|latest|-1)\s*$/i', $line, $m)) { $meta['until'] = parse_doc_version($m[1], 'latest'); continue; }
     if (preg_match('/^@doc-level\s+([A-Za-z0-9_-]+)\s*$/i', $line, $m)) { $meta['level'] = parse_doc_level($m[1]); continue; }
+    if (preg_match('/^@header\s+(.+)$/', $line, $m)) { $meta['header'] = trim($m[1]); continue; }
 
     if ($cur === null) continue;
     $ensure($cur);
@@ -157,6 +161,8 @@ function parse_doc_block(string $comment): array {
     if (preg_match('/^@brief\s+(.*)$/', $line, $m)) { $langs[$cur]['brief'] = $m[1]; $lastTag = 'brief'; continue; }
     if (preg_match('/^@description\s*(.*)$/', $line, $m)) { $langs[$cur]['description'] .= ($langs[$cur]['description'] === '' ? '' : "\n") . $m[1]; $lastTag = 'description'; continue; }
     if (preg_match('/^@param\s+([A-Za-z_][A-Za-z0-9_]*)\s+(.*)$/', $line, $m)) { $langs[$cur]['params'][$m[1]] = $m[2]; $lastTag = 'param'; $lastName = $m[1]; continue; }
+    if (preg_match('/^@field\s+([A-Za-z_][A-Za-z0-9_]*)\s+(.*)$/', $line, $m)) { $langs[$cur]['fields'][$m[1]] = $m[2]; $lastTag = 'field'; $lastName = $m[1]; continue; }
+    if (preg_match('/^@value\s+([A-Za-z_][A-Za-z0-9_]*)\s+(.*)$/', $line, $m)) { $langs[$cur]['values'][$m[1]] = $m[2]; $lastTag = 'value'; $lastName = $m[1]; continue; }
     if (preg_match('/^@return(?:-([A-Za-z0-9_-]+))?\s+(.*)$/', $line, $m)) {
       if (($m[1] ?? '') !== '') {
         $label = strtolower(trim($m[1]));
@@ -176,6 +182,8 @@ function parse_doc_block(string $comment): array {
     if ($lastTag === 'brief') $langs[$cur]['brief'] .= ' ' . $line;
     else if ($lastTag === 'description') $langs[$cur]['description'] .= ($langs[$cur]['description'] === '' ? '' : "\n") . $line;
     else if ($lastTag === 'param' && $lastName !== null) $langs[$cur]['params'][$lastName] .= ' ' . $line;
+    else if ($lastTag === 'field' && $lastName !== null) $langs[$cur]['fields'][$lastName] .= ' ' . $line;
+    else if ($lastTag === 'value' && $lastName !== null) $langs[$cur]['values'][$lastName] .= ' ' . $line;
     else if ($lastTag === 'return') $langs[$cur]['return'] .= ' ' . $line;
     else if ($lastTag === 'return-case' && $lastName !== null) $langs[$cur]['returns'][$lastName] .= ' ' . $line;
     else if ($lastTag === 'logs') $langs[$cur]['logs'] .= ($langs[$cur]['logs'] === '' ? '' : "\n") . $line;
@@ -209,19 +217,115 @@ function infer_module(string $path, string $root): string {
   return 'misc';
 }
 
+
+function strip_c_comments_preserve_layout(string $code): string {
+  $out = '';
+  $state = 'code';
+  $len = strlen($code);
+  for ($i = 0; $i < $len; ++$i) {
+    $ch = $code[$i];
+    $nx = $i + 1 < $len ? $code[$i + 1] : '';
+    if ($state === 'code') {
+      if ($ch === '/' && $nx === '/') { $state = 'line'; $out .= '  '; ++$i; continue; }
+      if ($ch === '/' && $nx === '*') { $state = 'block'; $out .= '  '; ++$i; continue; }
+      if ($ch === '"') { $state = 'dquote'; $out .= $ch; continue; }
+      if ($ch === "'") { $state = 'squote'; $out .= $ch; continue; }
+      $out .= $ch;
+    } else if ($state === 'line') {
+      if ($ch === "\n") { $state = 'code'; $out .= "\n"; }
+      else $out .= ' ';
+    } else if ($state === 'block') {
+      if ($ch === '*' && $nx === '/') { $state = 'code'; $out .= '  '; ++$i; }
+      else $out .= ($ch === "\n" ? "\n" : ' ');
+    } else if ($state === 'dquote') {
+      $out .= $ch;
+      if ($ch === '\\') { if ($i + 1 < $len) $out .= $code[++$i]; continue; }
+      if ($ch === '"') $state = 'code';
+    } else if ($state === 'squote') {
+      $out .= $ch;
+      if ($ch === '\\') { if ($i + 1 < $len) $out .= $code[++$i]; continue; }
+      if ($ch === "'") $state = 'code';
+    }
+  }
+  return $out;
+}
+
+function remove_preprocessor_lines(string $code): string {
+  $out = [];
+  foreach (preg_split('/\R/', $code) as $line) {
+    if (preg_match('/^\s*#/', $line)) continue;
+    $out[] = $line;
+  }
+  return implode("\n", $out);
+}
+
+function split_c_declarations(string $code): array {
+  $decls = [];
+  $cur = '';
+  $brace = 0; $paren = 0; $bracket = 0; $state = 'code';
+  $len = strlen($code);
+  for ($i = 0; $i < $len; ++$i) {
+    $ch = $code[$i];
+    $cur .= $ch;
+    if ($state === 'code') {
+      if ($ch === '"') { $state = 'dquote'; continue; }
+      if ($ch === "'") { $state = 'squote'; continue; }
+      if ($ch === '{') ++$brace;
+      else if ($ch === '}') $brace = max(0, $brace - 1);
+      else if ($ch === '(') ++$paren;
+      else if ($ch === ')') $paren = max(0, $paren - 1);
+      else if ($ch === '[') ++$bracket;
+      else if ($ch === ']') $bracket = max(0, $bracket - 1);
+      else if ($ch === ';' && $brace === 0 && $paren === 0 && $bracket === 0) {
+        $d = trim($cur);
+        if ($d !== '') $decls[] = $d;
+        $cur = '';
+      }
+    } else if ($state === 'dquote') {
+      if ($ch === '\\') { if ($i + 1 < $len) $cur .= $code[++$i]; continue; }
+      if ($ch === '"') $state = 'code';
+    } else if ($state === 'squote') {
+      if ($ch === '\\') { if ($i + 1 < $len) $cur .= $code[++$i]; continue; }
+      if ($ch === "'") $state = 'code';
+    }
+  }
+  return $decls;
+}
+
+function declaration_matches_symbol(string $decl, string $symbol): bool {
+  $d = trim($decl);
+  $q = preg_quote($symbol, '/');
+
+  // Typedefs are matched by their final public alias only.  This avoids
+  // accidentally binding a documentation block to an inner identifier found
+  // in the typedef body or in a following declaration recovered too broadly.
+  if (preg_match('/\btypedef\b/s', $d))
+    return (bool)preg_match('/\b' . $q . '\s*(?:\[[^\]]*\])?\s*;\s*$/s', $d);
+
+  // Function declarations must be exactly one declaration whose declarator is
+  // the requested symbol.  Reject recovered text containing another complete
+  // function declarator before/after it: those cases are parse failures and
+  // must not poison the generated prototype.
+  if (preg_match_all('/\b([A-Za-z_][A-Za-z0-9_]*)\s*\(/', $d, $calls)) {
+    $names = array_values(array_filter($calls[1], fn($n) => !in_array($n, ['if','for','while','switch','return','sizeof'], true)));
+    if (count($names) !== 1 || $names[0] !== $symbol) return false;
+    return (bool)preg_match('/^[^;{}]*\b' . $q . '\s*\([^;{}]*\)\s*;\s*$/s', $d);
+  }
+
+  return (bool)preg_match('/\b' . $q . '\s*;\s*$/s', $d);
+}
+
 function find_header_proto(string $root, string $symbol): ?string {
   static $headers = null;
   if ($headers === null) $headers = list_files($root . '/include', ['h', 'hpp']);
   foreach ($headers as $h) {
     $txt = file_get_contents($h);
     if ($txt === false || !str_contains($txt, $symbol)) continue;
-    $q = preg_quote($symbol, '/');
-    if (preg_match('/((?:[A-Za-z_][A-Za-z0-9_]*|const|unsigned|signed|struct|enum|union|\s|\*|&)+\s+' . $q . '\s*\([^;{}]*\))\s*;/s', $txt, $m))
-      return normalize_ws($m[1]) . ';';
-    if (preg_match('/((?:typedef\s+)?(?:struct|enum|union)\s+[^;]*\b' . $q . '\b\s*;)/s', $txt, $m))
-      return normalize_ws($m[1]);
-    if (preg_match('/((?:extern\s+)?(?:const\s+)?[A-Za-z_][A-Za-z0-9_\s\*]+\s+' . $q . '\s*;)/s', $txt, $m))
-      return normalize_ws($m[1]);
+    $clean = remove_preprocessor_lines(strip_c_comments_preserve_layout($txt));
+    foreach (split_c_declarations($clean) as $decl) {
+      if (!str_contains($decl, $symbol)) continue;
+      if (declaration_matches_symbol($decl, $symbol)) return trim($decl);
+    }
   }
   return null;
 }
@@ -355,6 +459,197 @@ function paragraph_html(string $text, array $paramNames = []): string {
   return implode("\n", $out);
 }
 
+
+function expand_tabs_to_spaces(string $s, int $tab = 8): string {
+  $out = '';
+  $col = 0;
+  $len = strlen($s);
+  for ($i = 0; $i < $len; ++$i) {
+    $ch = $s[$i];
+    if ($ch === "\t") {
+      $n = $tab - ($col % $tab);
+      $out .= str_repeat(' ', $n);
+      $col += $n;
+    } else {
+      $out .= $ch;
+      $col = ($ch === "\n") ? 0 : $col + 1;
+    }
+  }
+  return $out;
+}
+
+function pad_to_col(string $left, int $col = 32): string {
+  $left = rtrim($left);
+  $len = strlen(expand_tabs_to_spaces($left));
+  return $left . str_repeat(' ', max(1, $col - $len));
+}
+
+function split_top_level_commas(string $s): array {
+  $out = [];
+  $cur = '';
+  $depth = 0;
+  $state = 'code';
+  $len = strlen($s);
+  for ($i = 0; $i < $len; ++$i) {
+    $ch = $s[$i];
+    if ($state === 'code') {
+      if ($ch === '"') { $state = 'dquote'; $cur .= $ch; continue; }
+      if ($ch === "'") { $state = 'squote'; $cur .= $ch; continue; }
+      if ($ch === '(' || $ch === '[' || $ch === '{') ++$depth;
+      else if ($ch === ')' || $ch === ']' || $ch === '}') --$depth;
+      if ($ch === ',' && $depth === 0) { $out[] = trim($cur); $cur = ''; continue; }
+      $cur .= $ch;
+    } else {
+      $cur .= $ch;
+      if ($ch === '\\') { if ($i + 1 < $len) $cur .= $s[++$i]; continue; }
+      if (($state === 'dquote' && $ch === '"') || ($state === 'squote' && $ch === "'")) $state = 'code';
+    }
+  }
+  if (trim($cur) !== '') $out[] = trim($cur);
+  return $out;
+}
+
+function split_type_and_named_declarator(string $decl): array {
+  $d = trim(preg_replace('/\s+/', ' ', $decl));
+  $suffix = '';
+  if (preg_match('/(\s*\[[^\]]*\])\s*$/', $d, $m)) {
+    $suffix = trim($m[1]);
+    $d = trim(substr($d, 0, -strlen($m[1])));
+  }
+  if (preg_match('/^(.*?)([\*&\s]*)([A-Za-z_][A-Za-z0-9_]*)$/', $d, $m)) {
+    $type = trim($m[1]);
+    $stars = preg_replace('/\s+/', '', $m[2]);
+    $name = $stars . $m[3] . ($suffix !== '' ? $suffix : '');
+    return [$type, $name];
+  }
+  return [$d, ''];
+}
+
+function format_field_or_param(string $decl, bool $semicolon = false, int $col = 32): string {
+  [$type, $name] = split_type_and_named_declarator($decl);
+  if ($name === '') return trim($decl) . ($semicolon ? ';' : '');
+  return pad_to_col($type, $col) . $name . ($semicolon ? ';' : '');
+}
+
+function split_struct_fields(string $body): array {
+  $fields = [];
+  foreach (split_c_declarations($body) as $d) {
+    $d = trim(preg_replace('/;\s*$/', '', $d));
+    if ($d !== '') $fields[] = $d;
+  }
+  return $fields;
+}
+
+function format_c_declaration_for_doc(string $decl): string {
+  $decl = trim($decl);
+  $decl = preg_replace('/\n{3,}/', "\n\n", $decl);
+
+  if (preg_match('/^typedef\s+(struct|union|enum)\s+([A-Za-z_][A-Za-z0-9_]*)\s*\{(.*)\}\s*([A-Za-z_][A-Za-z0-9_]*)\s*;\s*$/s', $decl, $m)) {
+    $kind = $m[1];
+    $tag = $m[2];
+    $body = trim($m[3]);
+    $alias = $m[4];
+    $lines = [];
+    $lines[] = pad_to_col('typedef ' . $kind) . $tag;
+    $lines[] = '{';
+    if ($kind === 'enum') {
+      $values = split_top_level_commas($body);
+      foreach ($values as $i => $v) {
+        $v = trim($v);
+        if ($v === '') continue;
+        if (preg_match('/^([A-Za-z_][A-Za-z0-9_]*)(\s*=\s*(.*))?$/s', $v, $vm)) {
+          $line = '  ' . pad_to_col($vm[1], 30) . (isset($vm[2]) && trim($vm[2]) !== '' ? '= ' . trim($vm[3]) : '');
+        } else {
+          $line = '  ' . $v;
+        }
+        if ($i + 1 < count($values)) $line .= ',';
+        $lines[] = $line;
+      }
+    } else {
+      foreach (split_struct_fields($body) as $f) $lines[] = '  ' . format_field_or_param($f, true, 30);
+    }
+    $lines[] = pad_to_col('}') . $alias . ';';
+    return implode("\n", $lines);
+  }
+
+  if (preg_match('/^(.*?)\s+([\*&\s]*[A-Za-z_][A-Za-z0-9_]*)\s*\((.*)\)\s*;\s*$/s', $decl, $m)) {
+    $ret = trim(preg_replace('/\s+/', ' ', $m[1]));
+    $name = preg_replace('/\s+/', '', $m[2]);
+    $args = trim($m[3]);
+    if ($args === '' || $args === 'void') {
+      // No-column special case: functions without parameters read better as
+      // "return_type function(void);".  Do not push the function name to the
+      // declaration alignment column, otherwise centered prototype boxes look
+      // artificially offset.
+      return $ret . ' ' . $name . '(' . ($args === '' ? 'void' : $args) . ');';
+    }
+    $params = split_top_level_commas($args);
+    $head = pad_to_col($ret) . $name . '(';
+    $indent = str_repeat(' ', strlen(expand_tabs_to_spaces($head)));
+    $lines = [];
+    foreach ($params as $i => $p) {
+      $fp = format_field_or_param($p, false, 32);
+      $suffix = ($i + 1 < count($params)) ? ',' : ');';
+      $lines[] = ($i === 0 ? $head : $indent) . $fp . $suffix;
+    }
+    return implode("\n", $lines);
+  }
+
+  return trim(preg_replace('/\s+/', ' ', $decl));
+}
+
+function colorize_code_preserving_layout(string $code, array $paramNames = []): string {
+  $code = expand_tabs_to_spaces($code);
+  $lines = preg_split('/\R/', $code);
+  $out = [];
+  foreach ($lines as $line) {
+    $colored = colorize_code(rtrim($line), $paramNames);
+    $out[] = str_replace(' ', '&nbsp;', $colored);
+  }
+  return implode("<br />\n", $out);
+}
+
+function declaration_named_identifiers(string $decl): array {
+  $names = [];
+  $d = trim($decl);
+
+  // Function parameters.
+  if (preg_match('/\([^{};]*\)\s*;\s*$/s', $d)) {
+    foreach (split_params($d) as $p) {
+      $n = param_name($p);
+      if ($n !== '') $names[$n] = true;
+    }
+  }
+
+  // Struct/union attributes.
+  if (preg_match('/^typedef\s+(struct|union)\s+[A-Za-z_][A-Za-z0-9_]*\s*\{(.*)\}\s*[A-Za-z_][A-Za-z0-9_]*\s*;\s*$/s', $d, $m)) {
+    foreach (split_struct_fields($m[2]) as $f) {
+      // Multiple declarators on one field line are uncommon in LibLapin but
+      // harmless to support here.
+      $parts = split_top_level_commas(trim(preg_replace('/;\s*$/', '', $f)));
+      $base = '';
+      foreach ($parts as $idx => $part) {
+        if ($idx === 0) {
+          [$type, $name] = split_type_and_named_declarator($part);
+          $base = $type;
+        } else {
+          [$type, $name] = split_type_and_named_declarator(trim($base . ' ' . $part));
+        }
+        $clean = preg_replace('/^\*+/', '', $name);
+        $clean = preg_replace('/\[.*\]$/', '', $clean);
+        if ($clean !== '') $names[$clean] = true;
+      }
+    }
+  }
+
+  return $names;
+}
+
+function colorize_declaration_for_doc(string $decl, array $paramNames = []): string {
+  $names = $paramNames + declaration_named_identifiers($decl);
+  return colorize_code_preserving_layout(format_c_declaration_for_doc($decl), $names);
+}
+
 function label_title(string $label): string {
   $label = strtolower(trim($label));
   if ($label === 'success') return 'success';
@@ -367,7 +662,14 @@ function page_html(DocItem $it, string $lang): string {
   $d = $it->lang[$lang] ?? null;
   if ($d === null) return '';
   $paramNames = prototype_param_names($it->prototype);
-  $proto = colorize_code($it->prototype, $paramNames);
+  if ($it->kind === 'module') {
+    $html = "<div class=\"resume\">\n  <h3>Description</h3>\n";
+    $html .= resume_text_html($d['brief'] ?? '', $d['description'] ?? '', $paramNames);
+    if ($it->header !== '') $html .= "  <br />\n  <br />\n  \$BThe " . htmlspecialchars($it->module, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8') . " module header is " . htmlspecialchars($it->header, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8') . "@<br />\n";
+    $html .= "</div>\n";
+    return $html;
+  }
+  $proto = colorize_declaration_for_doc($it->prototype, $paramNames);
   $html = "<div class=\"prototype\">\n  $proto\n</div>\n<hr />\n\n";
   $html .= "<div class=\"resume\">\n  <h3>Description</h3>\n";
   $html .= resume_text_html($d['brief'] ?? '', $d['description'] ?? '', $paramNames);
@@ -380,6 +682,27 @@ function page_html(DocItem $it, string $lang): string {
       $name = param_name($p);
       $desc = $d['params'][$name] ?? '';
       $html .= "    <li>\n      " . colorize_code($p, $paramNames) . ":<br />\n";
+      $html .= "      \$A " . colorize_text($desc, $paramNames) . "\n";
+      $html .= "    </li>\n";
+    }
+    $html .= "  </ul>\n</div>\n<hr />\n\n";
+  }
+
+
+  if (!empty($d['fields'])) {
+    $html .= "<div class=\"fields\">\n  <h3>Attributes</h3>\n  <ul>\n";
+    foreach ($d['fields'] as $name => $desc) {
+      $html .= "    <li>\n      \$S" . htmlspecialchars($name, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8') . "@:<br />\n";
+      $html .= "      \$A " . colorize_text($desc, $paramNames) . "\n";
+      $html .= "    </li>\n";
+    }
+    $html .= "  </ul>\n</div>\n<hr />\n\n";
+  }
+
+  if (!empty($d['values'])) {
+    $html .= "<div class=\"symbols\">\n  <h3>Symbols</h3>\n  <ul>\n";
+    foreach ($d['values'] as $name => $desc) {
+      $html .= "    <li>\n      \$C" . htmlspecialchars($name, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8') . "@:<br />\n";
       $html .= "      \$A " . colorize_text($desc, $paramNames) . "\n";
       $html .= "    </li>\n";
     }
@@ -624,7 +947,7 @@ function version_php($v): string {
 /** @param array<string,DocItem> $items */
 function write_generated_meta(string $outRoot, array $items, array $langs, bool $dryRun): int {
   $byModule = [];
-  foreach ($items as $it) $byModule[strtolower($it->module)][] = $it;
+  foreach ($items as $it) { if ($it->kind === 'module') continue; $byModule[strtolower($it->module)][] = $it; }
   $written = 0;
   foreach ($byModule as $module => $list) {
     usort($list, function(DocItem $a, DocItem $b): int {
@@ -700,6 +1023,8 @@ foreach ($files as $file) {
     $it->prototype = $proto;
     $it->lang = $langsFound;
     $it->source = substr($file, strlen($root) + 1);
+    $it->kind = strtolower((string)($meta['kind'] ?? 'symbol'));
+    $it->header = (string)($meta['header'] ?? '');
     $it->body = extract_function_body_after_comment($txt, $pos + strlen($comment));
     merge_auto_doc($it);
     $items[$symbol] = $it;
@@ -713,7 +1038,7 @@ foreach ($items as $it) {
   foreach ($langs as $lang) {
     if (!isset($it->lang[$lang])) continue;
     $dir = "$outRoot/$lang/manual/" . strtolower($it->module);
-    $file = "$dir/{$prefix}_{$it->symbol}.php";
+    $file = ($it->kind === 'module') ? "$dir/main.php" : "$dir/{$prefix}_{$it->symbol}.php";
     $content = "<?php /* Generated by generate_doc.php from {$it->source}; do not edit manually. */ ?>\n" . page_html($it, $lang);
     if ($dryRun) echo "$file\n";
     else {

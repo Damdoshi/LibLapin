@@ -97,6 +97,32 @@ static t_bunny_window	*open_single_window(t_bunny_configuration		*cnf,
   return (win);
 }
 
+/**
+ * @doc
+ * @doc-symbol bunny_begin_configuration
+ * @doc-kind function
+ * @doc-module window
+ * @doc-order 420
+ * @doc-since 13
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Opens windows described by a configuration node.
+ * @description The configuration may describe a single window directly or a Windows node containing several window descriptions. Shared properties can be placed at the root and overridden by each window node.
+ * @param cnf The configuration node describing the window or windows to open.
+ * @return-case success A NULL-terminated array of opened t_bunny_window pointers.
+ * @return-case failure NULL if the configuration is invalid or if a window cannot be opened.
+ * @see bunny_begin, bunny_beginc, bunny_end
+ *
+ * @doc-lang fr
+ * @brief Ouvre les fenêtres décrites par un noeud de configuration.
+ * @description La configuration peut décrire directement une fenêtre unique ou un noeud Windows contenant plusieurs descriptions de fenêtres. Les propriétés partagées peuvent être placées à la racine et surchargées par chaque noeud de fenêtre.
+ * @param cnf Le noeud de configuration décrivant la ou les fenêtres à ouvrir.
+ * @return-case success Un tableau terminé par NULL de pointeurs vers les t_bunny_window ouvertes.
+ * @return-case failure NULL si la configuration est invalide ou si une fenêtre ne peut pas être ouverte.
+ * @see bunny_begin, bunny_beginc, bunny_end
+ */
 t_bunny_window		**bunny_begin_configuration(t_bunny_configuration	*cnf)
 {
   t_bunny_window	**wins;
@@ -138,6 +164,34 @@ t_bunny_window		**bunny_begin_configuration(t_bunny_configuration	*cnf)
   return (NULL);
 }
 
+/**
+ * @doc
+ * @doc-symbol bunny_beginc
+ * @doc-kind function
+ * @doc-module window
+ * @doc-order 410
+ * @doc-since 13
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Opens windows from a configuration file and returns their count.
+ * @description This function loads a configuration file, opens windows from it and optionally writes the number of created windows into nbr_win. It supports regular window lists and fullscreen helper modes.
+ * @param file The configuration file to load.
+ * @param nbr_win If not NULL, receives the number of opened windows.
+ * @return-case success A NULL-terminated array of opened t_bunny_window pointers.
+ * @return-case failure NULL if the configuration file cannot be loaded, is invalid, or if a window cannot be opened.
+ * @see bunny_begin, bunny_begin_configuration, bunny_end
+ *
+ * @doc-lang fr
+ * @brief Ouvre des fenêtres depuis un fichier de configuration et renvoie leur nombre.
+ * @description Cette fonction charge un fichier de configuration, ouvre les fenêtres décrites et écrit éventuellement le nombre de fenêtres créées dans nbr_win. Elle supporte les listes de fenêtres classiques et les modes utilitaires plein écran.
+ * @param file Le fichier de configuration à charger.
+ * @param nbr_win Si ce paramètre n'est pas NULL, reçoit le nombre de fenêtres ouvertes.
+ * @return-case success Un tableau terminé par NULL de pointeurs vers les t_bunny_window ouvertes.
+ * @return-case failure NULL si le fichier de configuration ne peut pas être chargé, s'il est invalide ou si une fenêtre ne peut pas être ouverte.
+ * @see bunny_begin, bunny_begin_configuration, bunny_end
+ */
 t_bunny_window		**bunny_beginc(const char			*file,
 				       size_t				*nbr)
 {
@@ -166,6 +220,32 @@ t_bunny_window		**bunny_beginc(const char			*file,
   return (r);
 }
 
+/**
+ * @doc
+ * @doc-symbol bunny_begin
+ * @doc-kind function
+ * @doc-module window
+ * @doc-order 400
+ * @doc-since 13
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Opens windows from a configuration file.
+ * @description This helper calls bunny_beginc without requesting the number of opened windows.
+ * @param file The configuration file to load.
+ * @return-case success A NULL-terminated array of opened t_bunny_window pointers.
+ * @return-case failure NULL if the configuration file cannot be loaded, is invalid, or if a window cannot be opened.
+ * @see bunny_beginc, bunny_begin_configuration, bunny_end
+ *
+ * @doc-lang fr
+ * @brief Ouvre des fenêtres depuis un fichier de configuration.
+ * @description Cet utilitaire appelle bunny_beginc sans demander le nombre de fenêtres ouvertes.
+ * @param file Le fichier de configuration à charger.
+ * @return-case success Un tableau terminé par NULL de pointeurs vers les t_bunny_window ouvertes.
+ * @return-case failure NULL si le fichier de configuration ne peut pas être chargé, s'il est invalide ou si une fenêtre ne peut pas être ouverte.
+ * @see bunny_beginc, bunny_begin_configuration, bunny_end
+ */
 t_bunny_window			**bunny_begin(const char			*cnf)
 {
   return (bunny_beginc(cnf, NULL));

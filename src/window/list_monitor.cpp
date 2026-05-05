@@ -15,6 +15,28 @@
 
 static t_bunny_position		gl_monitor_origin = {0, 0};
 
+/**
+ * @doc
+ * @doc-symbol bunny_get_monitors_origin
+ * @doc-kind function
+ * @doc-module window
+ * @doc-order 460
+ * @doc-since 13
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Returns the desktop origin of the primary monitor.
+ * @description The value is updated while reading monitor information. It is useful on multi-monitor desktops where the primary monitor is not located at coordinates 0,0.
+ * @return-case success A t_bunny_position containing the desktop origin of the primary monitor.
+ * @see bunny_list_monitors, bunny_list_autonomous_monitors
+ *
+ * @doc-lang fr
+ * @brief Renvoie l'origine du moniteur principal sur le bureau.
+ * @description La valeur est mise à jour lors de la lecture des informations sur les moniteurs. Elle est utile sur les bureaux multi-écrans lorsque le moniteur principal n'est pas placé aux coordonnées 0,0.
+ * @return-case success Une t_bunny_position contenant l'origine du moniteur principal sur le bureau.
+ * @see bunny_list_monitors, bunny_list_autonomous_monitors
+ */
 t_bunny_position		bunny_get_monitors_origin(void)
 {
   return (gl_monitor_origin);
@@ -102,6 +124,30 @@ static size_t			read_output(const char		*str,
 
 ///////////////////////// IL FAUT QUE LES ECRANS CLONEES NE SOIENT PAS MONTRES !!!!!
 
+/**
+ * @doc
+ * @doc-symbol bunny_list_monitors
+ * @doc-kind function
+ * @doc-module window
+ * @doc-order 470
+ * @doc-since 13
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Lists the monitors reported by the system.
+ * @description The returned static array is terminated by an area filled with zero. On Linux, the current implementation reads xrandr output. Cloned monitors may appear in this list.
+ * @return-case success A pointer to a zero-terminated array of t_bunny_area.
+ * @return-case failure NULL if the monitor list cannot be retrieved.
+ * @see bunny_list_autonomous_monitors, bunny_get_monitors_origin
+ *
+ * @doc-lang fr
+ * @brief Liste les moniteurs rapportés par le système.
+ * @description Le tableau statique renvoyé se termine par une zone remplie avec zéro. Sous Linux, l'implémentation courante lit la sortie de xrandr. Les moniteurs clonés peuvent apparaître dans cette liste.
+ * @return-case success Un pointeur vers un tableau de t_bunny_area terminé par une entrée nulle.
+ * @return-case failure NULL si la liste des moniteurs ne peut pas être récupérée.
+ * @see bunny_list_autonomous_monitors, bunny_get_monitors_origin
+ */
 const t_bunny_area		*bunny_list_monitors(void)
 {
   static t_bunny_area		siz[16]; // Does not support more than 15 monitors
@@ -115,6 +161,30 @@ const t_bunny_area		*bunny_list_monitors(void)
   return (&siz[0]);
 }
 
+/**
+ * @doc
+ * @doc-symbol bunny_list_autonomous_monitors
+ * @doc-kind function
+ * @doc-module window
+ * @doc-order 480
+ * @doc-since 13
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Lists monitors while removing cloned screen entries.
+ * @description This function starts from bunny_list_monitors and keeps a single entry for monitors sharing the same desktop position. The returned array is terminated by an area filled with zero.
+ * @return-case success A pointer to a zero-terminated array of autonomous monitor areas.
+ * @return-case failure NULL if the monitor list cannot be retrieved.
+ * @see bunny_list_monitors, bunny_single_fullscreen, bunny_all_fullscreen
+ *
+ * @doc-lang fr
+ * @brief Liste les moniteurs en retirant les entrées d'écrans clonés.
+ * @description Cette fonction part de bunny_list_monitors et conserve une seule entrée pour les moniteurs partageant la même position sur le bureau. Le tableau renvoyé est terminé par une zone remplie avec zéro.
+ * @return-case success Un pointeur vers un tableau de zones de moniteurs autonomes terminé par une entrée nulle.
+ * @return-case failure NULL si la liste des moniteurs ne peut pas être récupérée.
+ * @see bunny_list_monitors, bunny_single_fullscreen, bunny_all_fullscreen
+ */
 const t_bunny_area		*bunny_list_autonomous_monitors(void)
 {
   t_bunny_area			*screens = (t_bunny_area*)bunny_list_monitors();

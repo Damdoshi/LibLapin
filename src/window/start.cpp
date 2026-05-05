@@ -16,12 +16,14 @@
 #endif
 
 /**
+ * @doc
  * @doc-symbol bunny_start
+ * @doc-kind function
  * @doc-module window
  * @doc-order 120
  * @doc-since 0
  * @doc-until latest
- * @doc-level beginner
+ * @doc-level 0
  *
  * @doc-lang en
  * @brief Open a window and return a structure to handle it.
@@ -32,12 +34,12 @@
  * @param width The width in pixels of the window to open.
  * @param height The height in pixels of the window to open.
  * @param fullscreen Send true to open the window in fullscreen, false for windowed mode.
- * @param winname The name of the window. It is displayed in the title bar and stored in the t_bunny_window structure.
- * @return-success A pointer to a valid t_bunny_window structure.
- * @return-failure NULL if the window cannot be created.
+ * @param name The name of the window. It is displayed in the title bar and stored in the t_bunny_window structure.
+ * @return-case success A pointer to a valid t_bunny_window structure.
+ * @return-case failure NULL if the window cannot be created.
  * @error BE_UNKNOWN_DISPLAY_DEVICE The display device could not be found or opened.
- * @error BE_CANNOT_OPEN_WINDOW The window could not be created.
- * @log This function writes log entries in the "graphics" and/or "window" log domains when the window creation fails or when the display mode cannot be applied.
+ * @error ENOMEM The window structure or the underlying render window could not be allocated.
+ * @log This function writes log entries in the "window" log domain when the window is opened or when the creation fails.
  * @see bunny_start_style, bunny_stop, bunny_get_fullscreen_modes, bunny_get_screen_resolution
  *
  * @doc-lang fr
@@ -49,20 +51,21 @@
  * @param width La largeur en pixels de la fenêtre à ouvrir.
  * @param height La hauteur en pixels de la fenêtre à ouvrir.
  * @param fullscreen Envoyez true pour ouvrir la fenêtre en plein écran, false pour le mode fenêtré.
- * @param winname Le nom de la fenêtre. Il est affiché dans la barre de titre et stocké dans la structure t_bunny_window.
- * @return-success Un pointeur vers une structure t_bunny_window valide.
- * @return-failure NULL si la fenêtre ne peut pas être créée.
+ * @param name Le nom de la fenêtre. Il est affiché dans la barre de titre et stocké dans la structure t_bunny_window.
+ * @return-case success Un pointeur vers une structure t_bunny_window valide.
+ * @return-case failure NULL si la fenêtre ne peut pas être créée.
  * @error BE_UNKNOWN_DISPLAY_DEVICE Le périphérique d'affichage est introuvable ou impossible à ouvrir.
- * @error BE_CANNOT_OPEN_WINDOW La fenêtre n'a pas pu être créée.
- * @log Cette fonction écrit des entrées de log dans les domaines "graphics" et/ou "window" lorsque la création de fenêtre échoue ou lorsque le mode d'affichage ne peut pas être appliqué.
+ * @error ENOMEM La structure de fenêtre ou la fenêtre de rendu sous-jacente n'a pas pu être allouée.
+ * @log Cette fonction écrit des entrées de log dans le domaine "window" lorsque la fenêtre est ouverte ou lorsque la création échoue.
  * @see bunny_start_style, bunny_stop, bunny_get_fullscreen_modes, bunny_get_screen_resolution
  */
+
 t_bunny_window		*bunny_start(unsigned int		width,
 				     unsigned int		height,
 				     bool			fullscreen,
-				     const char			*winname)
+				     const char			*name)
 {
-  return (bunny_start_style(width, height, fullscreen ? FULLSCREEN : DEFAULT_WIN_STYLE, winname));
+  return (bunny_start_style(width, height, fullscreen ? FULLSCREEN : DEFAULT_WIN_STYLE, name));
 }
 
 void			convert_window(sf::RenderWindow		&window)
@@ -109,10 +112,52 @@ void			convert_window(sf::RenderWindow		&window)
 #define			PATTERN			\
   "%u width, %u height, %d window style, %s window name -> %p"
 
+/**
+ * @doc
+ * @doc-symbol bunny_start_style
+ * @doc-kind function
+ * @doc-module window
+ * @doc-order 200
+ * @doc-since 3
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Opens a window with an explicit window style.
+ * @description This function is the styled version of bunny_start. Use it when you need to choose the window decorations yourself, open a borderless window, request fullscreen, or add ANTIALIASING to the creation flags.
+ * @description If FULLSCREEN is used, the requested size must be supported by the system. Use bunny_get_fullscreen_modes to list valid fullscreen modes.
+ * @description The returned window must be destroyed with bunny_stop. By default, the window is filled with PINK2.
+ * @param width The width in pixels of the window to open.
+ * @param height The height in pixels of the window to open.
+ * @param style The t_bunny_window_style flags used to create the window.
+ * @param name The name of the window. It is displayed in the title bar and stored in the t_bunny_window structure.
+ * @return-case success A pointer to a valid t_bunny_window structure.
+ * @return-case failure NULL if the window cannot be created.
+ * @error BE_UNKNOWN_DISPLAY_DEVICE The display device could not be found or opened.
+ * @error ENOMEM The window structure or the underlying render window could not be allocated.
+ * @log This function writes log entries in the "window" log domain when the window is opened or when the creation fails.
+ * @see bunny_start, bunny_stop, bunny_get_screen_resolution, bunny_get_fullscreen_modes, t_bunny_window_style
+ *
+ * @doc-lang fr
+ * @brief Ouvre une fenêtre avec un style explicite.
+ * @description Cette fonction est la version stylée de bunny_start. Utilisez-la lorsque vous devez choisir vous-même les décorations de la fenêtre, ouvrir une fenêtre sans bordure, demander le plein écran ou ajouter ANTIALIASING aux drapeaux de création.
+ * @description Si FULLSCREEN est utilisé, la taille demandée doit être supportée par le système. Utilisez bunny_get_fullscreen_modes pour lister les modes plein écran valides.
+ * @description La fenêtre renvoyée doit être détruite avec bunny_stop. Par défaut, la fenêtre est remplie avec PINK2.
+ * @param width La largeur en pixels de la fenêtre à ouvrir.
+ * @param height La hauteur en pixels de la fenêtre à ouvrir.
+ * @param style Les drapeaux t_bunny_window_style utilisés pour créer la fenêtre.
+ * @param name Le nom de la fenêtre. Il est affiché dans la barre de titre et stocké dans la structure t_bunny_window.
+ * @return-case success Un pointeur vers une structure t_bunny_window valide.
+ * @return-case failure NULL si la fenêtre ne peut pas être créée.
+ * @error BE_UNKNOWN_DISPLAY_DEVICE Le périphérique d'affichage est introuvable ou impossible à ouvrir.
+ * @error ENOMEM La structure de fenêtre ou la fenêtre de rendu sous-jacente n'a pas pu être allouée.
+ * @log Cette fonction écrit des entrées de log dans le domaine "window" lorsque la fenêtre est ouverte ou lorsque la création échoue.
+ * @see bunny_start, bunny_stop, bunny_get_screen_resolution, bunny_get_fullscreen_modes, t_bunny_window_style
+ */
 t_bunny_window		*bunny_start_style(unsigned int		width,
 					   unsigned int		height,
-					   t_bunny_window_style	winstyle,
-					   const char		*window_name)
+					   t_bunny_window_style	style,
+					   const char		*name)
 {
   hbs::Init		init; (void)init;
   sf::ContextSettings	settings;
@@ -122,39 +167,39 @@ t_bunny_window		*bunny_start_style(unsigned int		width,
 #ifdef			__linux__
   if ((str = getenv("DISPLAY")) == NULL || strchr(str, ':') == NULL)
     scream_error_if(return (NULL), BE_UNKNOWN_DISPLAY_DEVICE, PATTERN, "window",
-		    width, height, winstyle, window_name, (void*)NULL);
+		    width, height, style, name, (void*)NULL);
 #endif
 
   if ((win = new (std::nothrow) bunny_window) == NULL)
     scream_error_if(return (NULL), ENOMEM, PATTERN, "window",
-		    width, height, winstyle, window_name, (void*)NULL);
+		    width, height, style, name, (void*)NULL);
   if ((win->window = new (std::nothrow) sf::RenderWindow) == NULL)
     {
       delete win;
       scream_error_if(return (NULL), ENOMEM, PATTERN, "window",
-		      width, height, winstyle, window_name, (void*)NULL);
+		      width, height, style, name, (void*)NULL);
     }
   win->nwindow = NULL;
 
-  win->window_name = bunny_strdup(window_name);
-  if (winstyle & ANTIALIASING)
+  win->window_name = bunny_strdup(name);
+  if (style & ANTIALIASING)
     {
       settings.antiAliasingLevel = 2;
-      win->window->create(sf::VideoMode({width, height}, 32), {win->window_name}, (uint32_t)(winstyle & ~ANTIALIASING), (winstyle & FULLSCREEN) ? sf::State::Fullscreen : sf::State::Windowed, settings);
+      win->window->create(sf::VideoMode({width, height}, 32), {win->window_name}, (uint32_t)(style & ~ANTIALIASING), (style & FULLSCREEN) ? sf::State::Fullscreen : sf::State::Windowed, settings);
     }
   else
-    win->window->create(sf::VideoMode({width, height}, 32), {win->window_name}, winstyle);
+    win->window->create(sf::VideoMode({width, height}, 32), {win->window_name}, style);
   win->type = WINDOW;
   win->width = width;
   win->height = height;
-  win->style = winstyle;
+  win->style = style;
   win->glactive = false;
 
-  // if (winstyle == NO_BORDER)
+  // if (style == NO_BORDER)
   // convert_window(*win->window);
 
   bunny_update_joysticks();
-  scream_log_if(PATTERN, "window", width, height, winstyle, window_name, win);
+  scream_log_if(PATTERN, "window", width, height, style, name, win);
   bunny_fill(&((t_bunny_window*)win)->buffer, PINK2);
   return ((t_bunny_window*)win);
 }

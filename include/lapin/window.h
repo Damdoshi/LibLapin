@@ -18,11 +18,63 @@
 #  error			You cannot include this file directly.
 # endif
 
-/*!
-** The t_bunny_window_style enumeration is a collection of values that will
-** allow you, throught the bunny_start_style function, to open a window with
-** a specific aspect. You can mix these values thanks to a binary or |.
-*/
+/**
+ * @doc
+ * @doc-symbol window
+ * @doc-kind module
+ * @doc-module window
+ * @doc-order 0
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 0
+ *
+ * @doc-lang en
+ * @brief Opens and manages windows and screen-related services.
+ * @description The Window module is about opening and managing windows and system-related things that go through windows. It also handles some screen-related features.
+ * @header lapin/window.h
+ *
+ * @doc-lang fr
+ * @brief Ouvre et manipule les fenêtres ainsi que les services liés à l'écran.
+ * @description Le module Window sert à ouvrir et manipuler des fenêtres, ainsi que les éléments liés au système qui passent par elles. Il gère également certaines fonctionnalités relatives aux écrans.
+ * @header lapin/window.h
+ */
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_window_style
+ * @doc-kind enum
+ * @doc-module window
+ * @doc-order 105
+ * @doc-since 3
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Describes how a window should be created by bunny_start_style.
+ * @description t_bunny_window_style is a bitmask enumeration. Most values can be combined with the binary OR operator to ask the system for several window decorations at the same time.
+ * @description FULLSCREEN is intended to be used as a fullscreen creation mode. ANTIALIASING is a LibLapin flag that can be added to another style to request antialiasing when the render window is created.
+ * @value NO_BORDER Creates a window without title bar, border, resize button or close button.
+ * @value TITLEBAR Adds a title bar to the window. The title bar usually displays the window name and allows the user to move the window.
+ * @value RESIZE_BUTTON Adds the resize or maximize decoration when the window manager supports it.
+ * @value CLOSE_BUTTON Adds the close button decoration when the window manager supports it. The system may still provide other ways to close a window.
+ * @value FULLSCREEN Creates a fullscreen window.
+ * @value DEFAULT_WIN_STYLE The style used by bunny_start for a regular window.
+ * @value ANTIALIASING Requests antialiasing when creating the window.
+ * @see bunny_start_style, bunny_start
+ *
+ * @doc-lang fr
+ * @brief Décrit la manière dont une fenêtre doit être créée par bunny_start_style.
+ * @description t_bunny_window_style est une énumération utilisable comme masque binaire. La plupart des valeurs peuvent être combinées avec l'opérateur OU binaire afin de demander plusieurs décorations de fenêtre en même temps au système.
+ * @description FULLSCREEN est prévu pour être utilisé comme mode de création plein écran. ANTIALIASING est un drapeau propre à la LibLapin qui peut être ajouté à un autre style pour demander de l'antialiasing lors de la création de la fenêtre de rendu.
+ * @value NO_BORDER Crée une fenêtre sans barre de titre, bordure, bouton de redimensionnement ou bouton de fermeture.
+ * @value TITLEBAR Ajoute une barre de titre à la fenêtre. La barre de titre affiche généralement le nom de la fenêtre et permet à l'utilisateur de la déplacer.
+ * @value RESIZE_BUTTON Ajoute la décoration de redimensionnement ou de maximisation lorsque le gestionnaire de fenêtres le permet.
+ * @value CLOSE_BUTTON Ajoute la décoration de bouton de fermeture lorsque le gestionnaire de fenêtres le permet. Le système peut tout de même proposer d'autres moyens de fermer une fenêtre.
+ * @value FULLSCREEN Crée une fenêtre plein écran.
+ * @value DEFAULT_WIN_STYLE Le style utilisé par bunny_start pour une fenêtre standard.
+ * @value ANTIALIASING Demande de l'antialiasing lors de la création de la fenêtre.
+ * @see bunny_start_style, bunny_start
+ */
 typedef enum			e_bunny_window_style
   {
     NO_BORDER			= 0,
@@ -34,10 +86,36 @@ typedef enum			e_bunny_window_style
     ANTIALIASING		= 16
   }				t_bunny_window_style;
 
-/*!
-** The t_bunny_window represents an opened window. It contains
-** a t_bunny_buffer with size informations and also a name.
-*/
+/**
+ * @doc
+ * @doc-symbol t_bunny_window
+ * @doc-kind struct
+ * @doc-module window
+ * @doc-order 100
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 0
+ *
+ * @doc-lang en
+ * @brief Represents an opened window.
+ * @description t_bunny_window starts with a t_bunny_buffer, so it can be used everywhere a t_bunny_buffer is expected. The buffer contains the width and height of the drawing surface.
+ * @description A window is opened with bunny_start or bunny_start_style and closed with bunny_stop. Windows are write-only from the program point of view: draw into them, then call bunny_display to show the result on screen.
+ * @field buffer The common buffer header. It contains the window size and allows the window to be used as a t_bunny_buffer.
+ * @field name The name sent to bunny_start or bunny_start_style when the window was opened.
+ * @field style The t_bunny_window_style used when the window was created.
+ * @field position The last known desktop position of the window.
+ * @see bunny_start, bunny_start_style, bunny_stop, bunny_display
+ *
+ * @doc-lang fr
+ * @brief Représente une fenêtre ouverte.
+ * @description t_bunny_window commence par un t_bunny_buffer, ce qui permet de l'utiliser partout où un t_bunny_buffer est attendu. Le buffer contient la largeur et la hauteur de la surface de dessin.
+ * @description Une fenêtre est ouverte avec bunny_start ou bunny_start_style et fermée avec bunny_stop. Du point de vue du programme, une fenêtre est en écriture seule : dessinez dedans, puis appelez bunny_display pour afficher le résultat à l'écran.
+ * @field buffer L'en-tête de buffer commun. Il contient la taille de la fenêtre et permet d'utiliser la fenêtre comme un t_bunny_buffer.
+ * @field name Le nom envoyé à bunny_start ou bunny_start_style lors de l'ouverture de la fenêtre.
+ * @field style Le t_bunny_window_style utilisé lors de la création de la fenêtre.
+ * @field position La dernière position connue de la fenêtre sur le bureau.
+ * @see bunny_start, bunny_start_style, bunny_stop, bunny_display
+ */
 typedef struct			s_bunny_window
 {
   t_bunny_buffer		buffer;
@@ -46,41 +124,15 @@ typedef struct			s_bunny_window
   const t_bunny_position	position;
 }				t_bunny_window;
 
-/*!
-** Open a new window. The function need informations about size, if the window must
-** be fullscreen or not and its name. If the window must be opened in a fullscreen
-** fashion, then, its size must match a valid fullscreen resolution. It highly depends
-** of the system your program will run, but a lot of standards resolution work everywhere:
-** - 640x480 - 800x600 - 1024x768 . . . 1920x1080, for example
-** \param wid The width of the new window
-** \param hei The height of the new window
-** \param ful If the window must be opened fullscreen (true) or not (false).
-** \param nam The name of the window
-** \return A pointer on a t_bunny_window. Returns NULL on error.
-*/
-t_bunny_window			*bunny_start(unsigned int			wid,
-					     unsigned int			hei,
-					     bool				ful,
-					     const char				*nam);
+t_bunny_window			*bunny_start(unsigned int			width,
+					     unsigned int			height,
+					     bool				fullscreen,
+					     const char				*name);
 
-/*!
-** Destroy the given window. Restore the previous resolution if the window was
-** fullscreen and if the resolution was changed when it was launched.
-** \param win The window to destroy.
-*/
-void				bunny_stop(t_bunny_window			*win);
+void				bunny_stop(t_bunny_window			*window);
 
-/*!
-** Refresh the content of the window on screen.
-** \param win The window to refresh.
-*/
-void				bunny_display(const t_bunny_window		*win);
+void				bunny_display(const t_bunny_window		*window);
 
-/*!
-** Return the current resolution of the screen/desktop. This size is valid as
-** fullscreen window resolution.
-** \return A t_bunny_size with x and y fields for width and height of the screen.
-*/
 const t_bunny_size		*bunny_get_screen_resolution(void);
 
 const t_bunny_area		*bunny_list_monitors(void);
@@ -89,107 +141,49 @@ const t_bunny_area		*bunny_list_autonomous_monitors(void);
 
 t_bunny_position		bunny_get_monitors_origin(void);
 
-/*!
-** bunny_start_style works the same way as bunny_start but allow you to specify
-** more precisly the aspect of the window you need.
-** See bunny_start for more informations.
-** \param wid The width of the window.
-** \param hei The height of the window.
-** \param sty The style of the window. May be any t_bunny_window_style values
-** or any composition made with these value. Note that FULLSCREEN must be
-** exclusive.
-** \param nam The name of the window.
-** \return A pointer on a t_bunny_window. Returns NULL on error.
-*/
-t_bunny_window			*bunny_start_style(unsigned int			wid,
-						   unsigned int			hei,
-						   t_bunny_window_style		sty,
-						   const char			*nam);
+t_bunny_window			*bunny_start_style(unsigned int			width,
+						   unsigned int			height,
+						   t_bunny_window_style		style,
+						   const char			*name);
 
-t_bunny_window			**bunny_begin(const char			*cnf);
-t_bunny_window			**bunny_beginc(const char			*cnf,
+t_bunny_window			**bunny_begin(const char			*file);
+t_bunny_window			**bunny_beginc(const char			*file,
 					       size_t				*nbr_win);
 t_bunny_window			**bunny_begin_configuration(t_bunny_configuration *cnf);
 
-void				bunny_end(t_bunny_window			**w);
+void				bunny_end(t_bunny_window			**windows);
 
-/*!
-** bunny_get_fullscreen_modes return an array of valid full screen modes.
-** The array is terminated by a pair of 0.
-R** \return An array of t_bunny_position terminated by a 0 structure.
-*/
 const t_bunny_size		*bunny_get_fullscreen_modes(void);
 
-/*!
-** The bunny_set_key_repeat function activate or deactivate the key repetition
-** when someone is holding a key pressed down. The repetition is useful in software
-** where typing text is needed. In video game, it should be disabled.
-** The key repeat is true by default.
-** \param win The window where to activate or deactivate the key repetition.
-** \param active True to active, false to disable.
-*/
-void				bunny_set_key_repeat(t_bunny_window		*win,
-						     bool			active);
+void				bunny_set_key_repeat(t_bunny_window		*window,
+					     bool			repeat);
 
-/*!
-** The bunny_set_mouse_visibility function make the mouse appeir or disappeir when
-** moving on the top of a sent window.
-** \param win The window where to change the mouse visibility
-** \param True to make the mouse appeir when on top of win, false to make hidden it.
-*/
-void				bunny_set_mouse_visibility(const t_bunny_window	*win,
+void				bunny_set_mouse_visibility(const t_bunny_window	*window,
 							   bool			visible);
 
-/*!
-** Place the mouse cursor at the sent position, relatively to the top left corner
-** of the sent window.
-** \param win The window on which you wish to set the mouse position.
-** \param x The horizontal position where the cursor will be moved.
-** \param y The vertical position where the cursor will be moved.
-*/
-void				bunny_set_mouse_position_window(const t_bunny_window *win,
+void				bunny_set_mouse_position_window(const t_bunny_window *window,
 								int		x,
 								int		y);
 
-/*!
-** Place the mouse cursor at the sent position, relatively to the top left corner
-** of the desktop.
-** \param x The horizontal position where the cursor will be moved.
-** \param y The horizontal position where the cursor will be moved.
-*/
 void				bunny_set_mouse_position(int			x,
 							 int			y);
 
-/*!
-** Ask to the system the focus for the current window. The system may refuse.
-** \param win The window that need the focus.
-*/
-void				bunny_request_focus(const t_bunny_window	*win);
+void				bunny_request_focus(const t_bunny_window	*window);
 
-/*!
-** Ask the system to move the window on the desktop.
-** \param win The window to move.
-** \param pos The position on the desktop.
-*/
-void				bunny_move_window(t_bunny_window		*win,
-						  t_bunny_position		pos);
+void				bunny_move_window(t_bunny_window		*window,
+					  t_bunny_position		position);
 
-t_bunny_position		bunny_get_window_position(const t_bunny_window	*win);
+t_bunny_position		bunny_get_window_position(const t_bunny_window	*window);
 
-/*!
-** Resize the sent window.
-** \param win The window to resize.
-** \param siz The new size of the window
-*/
-void				bunny_resize_window(t_bunny_window		*win,
-						    t_bunny_size		siz);
+void				bunny_resize_window(t_bunny_window		*window,
+					    t_bunny_size		size);
 
-void				bunny_vertical_sync(t_bunny_window		*win,
-						    bool			enabled);
+void				bunny_vertical_sync(t_bunny_window		*window,
+					    bool			enabled);
 
 struct s_bunny_pixelarray;
-void				bunny_set_window_icon(t_bunny_window		*win,
-						      struct s_bunny_pixelarray	*px);
+void				bunny_set_window_icon(t_bunny_window		*window,
+					      struct s_bunny_pixelarray	*icon);
 
 t_bunny_window			*bunny_single_fullscreen(const char		*name);
 
