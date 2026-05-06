@@ -153,7 +153,7 @@ void				bunny_set_joy_axis_minimum_offset(t_bunny_axis	axis,
 # define			bunny_pool_occupied_elem(pool)		(pool)->nbr_occupied
 
 extern int			memory_check;
-void				set_max_heap_size(size_t	s);
+void				set_max_heap_size(size_t	megabytes);
 typedef t_bunny_color		t_color;
 typedef t_bunny_rgb		t_rgb;
 typedef t_bunny_mouse_button	t_bunny_mousebutton;
