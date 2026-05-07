@@ -7,6 +7,52 @@
 
 #define			PATTERN		"%s library file -> %p"
 
+/**
+ * @doc
+ * @doc-symbol bunny_new_plugin
+ * @doc-kind function
+ * @doc-module plugin
+ * @doc-order 160
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level 40
+ *
+ * @doc-lang en
+ * @brief Loads a bunny plugin dynamic library.
+ * @description bunny_new_plugin opens the sent dynamic library, retrieves its mandatory __get_function_list function, validates the returned prototype list and stores the callable functions in a t_bunny_plugin object.
+ * @param libfile The path of a dynamic library file respecting the bunny plugin format.
+ * @return-case success On $Bsuccess@, returns a valid t_bunny_plugin pointer.
+ * @return-case failure On $Bfailure@, returns NULL.
+ * @error EINVAL The dynamic library cannot be opened, __get_function_list cannot be found, or __get_function_list returns NULL.
+ * @error ENOMEM Out of memory.
+ * @error BE_CONFIGURED_FUNCTION_NOT_FOUND A function listed by the plugin interface cannot be found in the loaded dynamic library.
+ * @error BE_TOO_MANY_PARAMETERS A listed function describes more parameters than t_bunny_prototype can store.
+ * @log "ressource,plugin"
+ * @see t_bunny_plugin
+ * @see t_bunny_get_function_list
+ * @see bunny_delete_plugin
+ * @see bunny_plugin_get_function
+ * @see bunny_plugin_call
+ * @see bunny_plugin_callv
+ *
+ * @doc-lang fr
+ * @brief Charge une bibliothèque dynamique de plugin bunny.
+ * @description bunny_new_plugin ouvre la bibliothèque dynamique envoyée, récupère sa fonction obligatoire __get_function_list, valide la liste de prototypes renvoyée et stocke les fonctions appelables dans un objet t_bunny_plugin.
+ * @param libfile Le chemin d'un fichier de bibliothèque dynamique respectant le format de plugin bunny.
+ * @return-case success En cas de $Bsuccès@, renvoie un pointeur t_bunny_plugin valide.
+ * @return-case failure En cas d'$Béchec@, renvoie NULL.
+ * @error EINVAL La bibliothèque dynamique ne peut pas être ouverte, __get_function_list est introuvable ou __get_function_list renvoie NULL.
+ * @error ENOMEM Mémoire insuffisante.
+ * @error BE_CONFIGURED_FUNCTION_NOT_FOUND Une fonction listée par l'interface de plugin est introuvable dans la bibliothèque dynamique chargée.
+ * @error BE_TOO_MANY_PARAMETERS Une fonction listée décrit plus de paramètres que t_bunny_prototype ne peut en stocker.
+ * @log "ressource,plugin"
+ * @see t_bunny_plugin
+ * @see t_bunny_get_function_list
+ * @see bunny_delete_plugin
+ * @see bunny_plugin_get_function
+ * @see bunny_plugin_call
+ * @see bunny_plugin_callv
+ */
 t_bunny_plugin		*bunny_new_plugin(const char			*libfile)
 {
   const char		*last_param = "";
@@ -99,6 +145,38 @@ t_bunny_plugin		*bunny_new_plugin(const char			*libfile)
   return (NULL);
 }
 
+/**
+ * @doc
+ * @doc-symbol bunny_delete_plugin
+ * @doc-kind function
+ * @doc-module plugin
+ * @doc-order 180
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level 40
+ *
+ * @doc-lang en
+ * @brief Unloads and deletes a bunny plugin.
+ * @description bunny_delete_plugin closes the dynamic library associated with plugin and releases the t_bunny_plugin object.
+ * @param plugin The plugin to delete.
+ * @log "ressource,plugin"
+ * @see t_bunny_plugin
+ * @see bunny_new_plugin
+ * @see bunny_plugin_call
+ * @see bunny_plugin_callv
+ * @see bunny_plugin_get_function
+ *
+ * @doc-lang fr
+ * @brief Décharge et détruit un plugin bunny.
+ * @description bunny_delete_plugin ferme la bibliothèque dynamique associée à plugin et libère l'objet t_bunny_plugin.
+ * @param plugin Le plugin à détruire.
+ * @log "ressource,plugin"
+ * @see t_bunny_plugin
+ * @see bunny_new_plugin
+ * @see bunny_plugin_call
+ * @see bunny_plugin_callv
+ * @see bunny_plugin_get_function
+ */
 void			bunny_delete_plugin(t_bunny_plugin	*plugin)
 {
   free((void*)plugin->name);
