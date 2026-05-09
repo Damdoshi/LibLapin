@@ -8,6 +8,24 @@
 
 #define				PATTERN		"%u width, %u height, %s file, %p (%d, %d) size -> %p"
 
+/*!
+** Load a font object that can render text into an internal clipable buffer.
+**
+** The file may be a TrueType font, a bitmap font image, or a configuration
+** file. When a configuration file is sent, this function delegates the loading
+** and attribute setup to bunny_set_font_attribute. For direct font loading,
+** size contains the glyph size. Bitmap fonts expect glyphs to be arranged on
+** a regular grid using this glyph size.
+**
+** The returned object is also a t_bunny_clipable and must be released with
+** bunny_delete_clipable.
+**
+** \param width The width, in pixels, of the text rendering surface.
+** \param height The height, in pixels, of the text rendering surface.
+** \param file The font, bitmap font, or text configuration file to load.
+** \param size The glyph size for direct font loading.
+** \return A new t_bunny_font, or NULL on error.
+*/
 t_bunny_font			*bunny_load_font(unsigned int		width,
 						 unsigned int		height,
 						 const char		*file,
@@ -67,6 +85,16 @@ t_bunny_font			*bunny_load_font(unsigned int		width,
   return (final);
 }
 
+/*!
+** Build a text box from an already loaded configuration node.
+**
+** The configuration is interpreted with the same fields as
+** bunny_set_font_attribute. The configuration pointer may be updated by the
+** loader when the underlying helper resolves or keeps the configuration.
+**
+** \param cnf The configuration node describing the text box.
+** \return A new t_bunny_font, or NULL on error.
+*/
 t_bunny_font			*bunny_read_textbox(t_bunny_configuration *cnf)
 {
   t_bunny_font			*f;
@@ -76,6 +104,16 @@ t_bunny_font			*bunny_read_textbox(t_bunny_configuration *cnf)
   return (f);
 }
 
+/*!
+** Load a text box from a configuration file.
+**
+** This is a convenience wrapper around bunny_load_font for configuration based
+** text. The size of the rendering surface and the glyph size are expected to
+** be provided by the configuration file.
+**
+** \param file The text configuration file to load.
+** \return A new t_bunny_font, or NULL on error.
+*/
 t_bunny_font			*bunny_load_text(const char		*file)
 {
   return (bunny_load_font(0, 0, file, NULL));

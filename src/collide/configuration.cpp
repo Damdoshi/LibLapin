@@ -30,6 +30,7 @@ t_bunny_decision	bunny_collision_configuration(const char		*field,
   *len = bunny_configuration_casesf(cnf, "%s", field);
   if ((*ptr = (t_bunny_collision*)bunny_malloc(sizeof(**ptr) * *len)) == NULL)
     return (BD_ERROR);
+  memset(*ptr, 0, sizeof(**ptr) * *len);
   t_bunny_collision	*col = *ptr;
 
   // For each node
@@ -64,6 +65,7 @@ t_bunny_decision	bunny_collision_configuration(const char		*field,
 	  bunny_configuration_getf_double(nod, &col[i].line.coord[0].y, "From[1]");
 	  bunny_configuration_getf_double(nod, &col[i].line.coord[1].x, "To[0]");
 	  bunny_configuration_getf_double(nod, &col[i].line.coord[1].y, "To[1]");
+	  bunny_configuration_getf_double(nod, &col[i].line.intermediate_points, "IntermediatePoints");
 	  break ;
 	case BCT_TRIANGLE:
 	  bunny_configuration_getf_double(nod, &col[i].triangle.coord[0].x, "Coordinates[0][0]");
@@ -94,6 +96,10 @@ t_bunny_decision	bunny_collision_configuration(const char		*field,
 	  bunny_configuration_getf_double(nod, &col[i].equation.coord[0].y, "Position[1]");
 	  bunny_configuration_getf_double(nod, &col[i].equation.coord[1].x, "Size[0]");
 	  bunny_configuration_getf_double(nod, &col[i].equation.coord[1].y, "Size[1]");
+	  if (bunny_configuration_getf_double(nod, &col[i].equation.amplitude.x, "Amplitude[0]") == false)
+	    col[i].equation.amplitude.x = col[i].equation.coord[1].x;
+	  if (bunny_configuration_getf_double(nod, &col[i].equation.amplitude.y, "Amplitude[1]") == false)
+	    col[i].equation.amplitude.y = col[i].equation.coord[1].y;
 	  bunny_configuration_getf_double(nod, &col[i].equation.a, "A");
 	  bunny_configuration_getf_double(nod, &col[i].equation.b, "B");
 	  bunny_configuration_getf_double(nod, &col[i].equation.c, "C");

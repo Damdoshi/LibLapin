@@ -7,9 +7,11 @@
 
 /*!
 ** \file vector.h
+** Contiguous array of fixed-size elements.
 **
-**
-**
+** A vector owns its storage and may optionally call constructors and
+** destructors for each element. Unlike stack/list/queue/map, vector elements are
+** stored by value, not as container nodes containing user pointers.
 */
 
 #ifndef				__LAPIN_VECTOR_H__
@@ -21,6 +23,24 @@
 /*!
 ** The handy structure that represent the vector.
 */
+/**
+ * @doc
+ * @doc-symbol t_bunny_vector
+ * @doc-kind type
+ * @doc-module vector
+ * @doc-order 100
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Represents a contiguous array of fixed-size elements.
+ * @see bunny_new_vector, bunny_build_vector
+ *
+ * @doc-lang fr
+ * @brief Représente un tableau contigu d'éléments de taille fixe.
+ * @see bunny_new_vector, bunny_build_vector
+ */
 typedef struct			s_bunny_vector
 {
   t_bunny_constructor		ctor;
@@ -56,6 +76,38 @@ t_bunny_vector			*_bunny_new_vector(size_t		nmemb,
 ** \param dtor Function to call while destroyed elements
 ** \return A vector or NULL on error
 */
+/**
+ * @doc
+ * @doc-symbol bunny_build_vector
+ * @doc-kind function
+ * @doc-module vector
+ * @doc-order 140
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Creates a vector with constructor and destructor callbacks.
+ * @param nbr The number of elements.
+ * @param t The type of one element.
+ * @param ctor The optional constructor callback.
+ * @param dtor The optional destructor callback.
+ * @param add The user pointer forwarded to $Sctor@.
+ * @return-success Returns the newly allocated vector.
+ * @return-failure Returns $CNULL@ if allocation or construction fails.
+ * @see t_bunny_constructor, t_bunny_destructor
+ *
+ * @doc-lang fr
+ * @brief Crée un vecteur avec callbacks constructeur et destructeur.
+ * @param nbr Le nombre d'éléments.
+ * @param t Le type d'un élément.
+ * @param ctor Le callback constructeur optionnel.
+ * @param dtor Le callback destructeur optionnel.
+ * @param add Le pointeur utilisateur transmis à $Sctor@.
+ * @return-success Renvoie le vecteur nouvellement alloué.
+ * @return-failure Renvoie $CNULL@ si l'allocation ou la construction échoue.
+ * @see t_bunny_constructor, t_bunny_destructor
+ */
 # define			bunny_build_vector(nbr, t, ctor, dtor, add) \
   _bunny_new_vector(nbr, sizeof(t), ctor, dtor, add)
 
@@ -65,6 +117,32 @@ t_bunny_vector			*_bunny_new_vector(size_t		nmemb,
 ** \param t The type of the elements inside your vector
 ** \return A vector or NULL on error
 */
+/**
+ * @doc
+ * @doc-symbol bunny_new_vector
+ * @doc-kind function
+ * @doc-module vector
+ * @doc-order 120
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Creates a vector of elements of the requested type.
+ * @param nbr The number of elements.
+ * @param t The type of one element.
+ * @return-success Returns the newly allocated vector.
+ * @return-failure Returns $CNULL@ if allocation fails.
+ * @see t_bunny_vector, bunny_delete_vector
+ *
+ * @doc-lang fr
+ * @brief Crée un vecteur d'éléments du type demandé.
+ * @param nbr Le nombre d'éléments.
+ * @param t Le type d'un élément.
+ * @return-success Renvoie le vecteur nouvellement alloué.
+ * @return-failure Renvoie $CNULL@ si l'allocation échoue.
+ * @see t_bunny_vector, bunny_delete_vector
+ */
 # define			bunny_new_vector(nbr, t)		\
   _bunny_new_vector(nbr, sizeof(t), NULL, NULL, NULL)
 
@@ -79,6 +157,28 @@ void				bunny_delete_vector(t_bunny_vector	*vec);
 ** \param vector The vector to get the length
 ** \return The vector size as size_t
 */
+/**
+ * @doc
+ * @doc-symbol bunny_vector_size
+ * @doc-kind function
+ * @doc-module vector
+ * @doc-order 180
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Returns the number of elements in a vector.
+ * @param vector The vector to inspect.
+ * @return-success Returns the vector size.
+ * @see t_bunny_vector
+ *
+ * @doc-lang fr
+ * @brief Renvoie le nombre d'éléments d'un vecteur.
+ * @param vector Le vecteur à inspecter.
+ * @return-success Renvoie la taille du vecteur.
+ * @see t_bunny_vector
+ */
 # define			bunny_vector_size(vector)		((vector)->nmemb)
 
 /*!
@@ -86,6 +186,28 @@ void				bunny_delete_vector(t_bunny_vector	*vec);
 ** \param vector The vector to test
 ** \return True if it is empty
 */
+/**
+ * @doc
+ * @doc-symbol bunny_vector_empty
+ * @doc-kind function
+ * @doc-module vector
+ * @doc-order 200
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Tests whether a vector is empty.
+ * @param vector The vector to inspect.
+ * @return-success Returns $Ctrue@ if the vector is empty.
+ * @see t_bunny_vector
+ *
+ * @doc-lang fr
+ * @brief Teste si un vecteur est vide.
+ * @param vector Le vecteur à inspecter.
+ * @return-success Renvoie $Ctrue@ si le vecteur est vide.
+ * @see t_bunny_vector
+ */
 # define			bunny_vector_empty(vector)		(!(vector)->nmemb)
 
 /*!
@@ -93,6 +215,28 @@ void				bunny_delete_vector(t_bunny_vector	*vec);
 ** \param vector The vector to get the size of an element
 ** \return The element size as size_t
 */
+/**
+ * @doc
+ * @doc-symbol bunny_vector_elem_size
+ * @doc-kind function
+ * @doc-module vector
+ * @doc-order 220
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Returns the size of one vector element.
+ * @param vector The vector to inspect.
+ * @return-success Returns the element size in bytes.
+ * @see t_bunny_vector
+ *
+ * @doc-lang fr
+ * @brief Renvoie la taille d'un élément de vecteur.
+ * @param vector Le vecteur à inspecter.
+ * @return-success Renvoie la taille d'un élément en octets.
+ * @see t_bunny_vector
+ */
 # define			bunny_vector_elem_size(vector)		((vector)->elemsize)
 
 /*!
@@ -103,6 +247,32 @@ void				bunny_delete_vector(t_bunny_vector	*vec);
 ** \return The stored data, DIRECTLY (if it is a vector of float, it is a float... and you can use &),
 **         not as pointer like others bunny_*_data.
 */
+/**
+ * @doc
+ * @doc-symbol bunny_vector_data
+ * @doc-kind function
+ * @doc-module vector
+ * @doc-order 240
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Reads a vector element with the requested type.
+ * @param vec The vector to browse.
+ * @param nbr The element index.
+ * @param typ The expected element type.
+ * @return-success Returns the element value directly.
+ * @see t_bunny_vector
+ *
+ * @doc-lang fr
+ * @brief Lit un élément de vecteur avec le type demandé.
+ * @param vec Le vecteur à parcourir.
+ * @param nbr L'indice de l'élément.
+ * @param typ Le type attendu de l'élément.
+ * @return-success Renvoie directement la valeur de l'élément.
+ * @see t_bunny_vector
+ */
 # define			bunny_vector_data(vec, nbr, typ)	((typ*)(vec)->array)[nbr]
 
 /*!
@@ -113,6 +283,30 @@ void				bunny_delete_vector(t_bunny_vector	*vec);
 ** \param nbr The index to fetch
 ** \return A void* to the address of your data
 */
+/**
+ * @doc
+ * @doc-symbol bunny_vector_address
+ * @doc-kind function
+ * @doc-module vector
+ * @doc-order 260
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Returns the address of a vector element.
+ * @param vec The vector to browse.
+ * @param nbr The element index.
+ * @return-success Returns a $Tvoid@ pointer to the element storage.
+ * @see t_bunny_vector
+ *
+ * @doc-lang fr
+ * @brief Renvoie l'adresse d'un élément de vecteur.
+ * @param vec Le vecteur à parcourir.
+ * @param nbr L'indice de l'élément.
+ * @return-success Renvoie un pointeur $Tvoid@ vers le stockage de l'élément.
+ * @see t_bunny_vector
+ */
 # define			bunny_vector_address(vec, nbr)		(void*)&((char*)(vec)->array)[nbr * vec->elemsize]
 
 /*!
@@ -142,6 +336,32 @@ t_bunny_vector			*bunny_vector_crop(t_bunny_vector	*vec);
 ** to compare two elements. Return negative, zero or positive in the same
 ** fashion as strcmp.
 */
+/**
+ * @doc
+ * @doc-symbol t_bunny_comparator
+ * @doc-kind type
+ * @doc-module vector
+ * @doc-order 320
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Defines the comparison callback used by vector and list sorting.
+ * @param a The first element to compare.
+ * @param b The second element to compare.
+ * @param param The user pointer forwarded by the sort function.
+ * @return-success Returns a negative, zero or positive value like $Sstrcmp@.
+ * @see bunny_vector_sort, bunny_list_sort
+ *
+ * @doc-lang fr
+ * @brief Définit le callback de comparaison utilisé par le tri des vecteurs et des listes.
+ * @param a Le premier élément à comparer.
+ * @param b Le second élément à comparer.
+ * @param param Le pointeur utilisateur transmis par la fonction de tri.
+ * @return-success Renvoie une valeur négative, nulle ou positive comme $Sstrcmp@.
+ * @see bunny_vector_sort, bunny_list_sort
+ */
 typedef int			(*t_bunny_comparator)(const void	*a,
 						      const void	*b,
 						      void		*param);
@@ -167,6 +387,28 @@ struct s_bunny_list;
 */
 struct s_bunny_list		*bunny_vector_untie(const t_bunny_vector *vec);
 
+/**
+ * @doc
+ * @doc-symbol t_bunny_vector_foreach
+ * @doc-kind type
+ * @doc-module vector
+ * @doc-order 380
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Defines the callback used to traverse vector elements.
+ * @param node The current element storage.
+ * @param param The user pointer forwarded by traversal.
+ * @see bunny_vector_foreach, bunny_vector_fast_foreach
+ *
+ * @doc-lang fr
+ * @brief Définit le callback utilisé pour parcourir les éléments d'un vecteur.
+ * @param node Le stockage de l'élément courant.
+ * @param param Le pointeur utilisateur transmis par le parcours.
+ * @see bunny_vector_foreach, bunny_vector_fast_foreach
+ */
 typedef void			(*t_bunny_vector_foreach)(void		*node,
 							  void		*param);
 

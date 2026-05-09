@@ -5,6 +5,18 @@
 
 #include		"lapin_private.h"
 
+/*!
+** Resize the internal rendering surface of a font.
+**
+** The font remains the same object, but its backing texture is resized and
+** cleared. If the current clipping rectangle covered the whole previous
+** surface, it is expanded to the new size as well.
+**
+** \param fnt The font to resize.
+** \param width The new surface width in pixels.
+** \param height The new surface height in pixels.
+** \return True on success, false on error.
+*/
 bool			bunny_font_resize(t_bunny_font		*fnt,
 					  unsigned int		width,
 					  unsigned int		height)

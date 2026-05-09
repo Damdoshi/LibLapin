@@ -8,7 +8,7 @@
 
 #define			PATTERN		"%f -> %p"
 
-_bunny_effect		*_bunny_new_effect(double		duration,
+t_bunny_effect		*_bunny_new_effect(double		duration,
 					   int			sample_per_second,
 					   int			channel)
 {

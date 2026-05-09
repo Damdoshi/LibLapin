@@ -242,7 +242,7 @@ t_bunny_collide_point			bunny_collision_equation_dot(const t_bunny_equation_coll
 								     const t_bunny_dot_collision	*b);
 
 
-typedef union				u_bunny_collision_identity
+typedef struct			s_bunny_collision_identity
 {
   t_bunny_collision_type		type;
   const char				*name;

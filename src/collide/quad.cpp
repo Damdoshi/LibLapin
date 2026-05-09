@@ -10,11 +10,11 @@
 bool			bunny_quad_collision_dot(const t_bunny_vertex_array		*v4,
 						 const t_bunny_accurate_position	*dot)
 {
-  t_bunny_vertex_array	*t1 = (t_bunny_vertex_array*)bunny_alloca(sizeof(*t1) + 3 * sizeof(t1->vertex[0]));
-  t_bunny_vertex_array	*t2 = (t_bunny_vertex_array*)bunny_alloca(sizeof(*t1) + 3 * sizeof(t1->vertex[0]));
-
   if (v4->length != 4)
     scream_error_if(return (false), EINVAL, PATTERN, "collision", v4, dot, "false");
+
+  t_bunny_vertex_array	*t1 = (t_bunny_vertex_array*)bunny_alloca(sizeof(*t1) + 3 * sizeof(t1->vertex[0]));
+  t_bunny_vertex_array	*t2 = (t_bunny_vertex_array*)bunny_alloca(sizeof(*t1) + 3 * sizeof(t1->vertex[0]));
 
   t1->length = 3;
   t1->vertex[0].pos.x = v4->vertex[0].pos.x;

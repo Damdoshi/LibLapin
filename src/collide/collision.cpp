@@ -52,7 +52,7 @@ int		bunny_collision_nbr(const t_bunny_collision	*a,
 	  if (len == 0)
 	    return (1);
 	  couple[k].first = a[i].identity.name;
-	  couple[k].second = b[i].identity.name;
+	  couple[k].second = b[j].identity.name;
 	  if ((k += 1) >= len)
 	    return (k);
 	}

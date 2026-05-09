@@ -140,6 +140,32 @@ void				bunny_set_joy_axis_minimum_offset(t_bunny_axis	axis,
 ** \param pol The pool to browse.
 ** \param id The element to release
 */
+/**
+ * @doc
+ * @doc-symbol bunny_pool_release
+ * @doc-kind function
+ * @doc-module pool
+ * @doc-order 390
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Releases a pool element by its current internal index.
+ * @description This symbol is kept for compatibility with older code.
+ * @param pol The pool to edit.
+ * @param id The current internal index to release.
+ * @return-success This compatibility macro does not return a value.
+ * @see t_bunny_pool, bunny_pool_free, bunny_pool_size
+ *
+ * @doc-lang fr
+ * @brief Libère un élément de pool depuis son indice interne courant.
+ * @description Ce symbole est conservé pour compatibilité avec les anciens codes.
+ * @param pol Le pool à modifier.
+ * @param id L'indice interne courant à libérer.
+ * @return-success Cette macro de compatibilité ne renvoie pas de valeur.
+ * @see t_bunny_pool, bunny_pool_free, bunny_pool_size
+ */
 # define			bunny_pool_release(pol, id)		\
   bunny_pool_free(pol, (pol)->data[id])
 
@@ -148,8 +174,61 @@ void				bunny_set_joy_axis_minimum_offset(t_bunny_axis	axis,
 ** \param pool The pool to get the number of free element
 ** \return The pool amount of free elements as size_t
 */
+/**
+ * @doc
+ * @doc-symbol bunny_pool_free_elem
+ * @doc-kind function
+ * @doc-module pool
+ * @doc-order 400
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Returns how many element slots are still free in a pool.
+ * @description This symbol is kept for compatibility with older code.
+ * @param pool The pool to inspect.
+ * @return-success Returns the number of free element slots.
+ * @see t_bunny_pool, bunny_pool_free, bunny_pool_size
+ *
+ * @doc-lang fr
+ * @brief Renvoie le nombre de cases encore libres dans un pool.
+ * @description Ce symbole est conservé pour compatibilité avec les anciens codes.
+ * @param pool Le pool à inspecter.
+ * @return-success Renvoie le nombre de cases libres.
+ * @see t_bunny_pool, bunny_pool_free, bunny_pool_size
+ */
 # define			bunny_pool_free_elem(pool)		((pool)->nmemb - (pool)->nbr_occupied)
 
+/*!
+** Get how many elements are currently reserved in the pool.
+** \param pool The pool to inspect
+** \return The pool amount of occupied elements as size_t
+*/
+/**
+ * @doc
+ * @doc-symbol bunny_pool_occupied_elem
+ * @doc-kind function
+ * @doc-module pool
+ * @doc-order 410
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Compatibility alias returning the number of occupied pool elements.
+ * @description This symbol is kept for compatibility with older code.
+ * @param pool The pool to inspect.
+ * @return-success Returns the occupied element count.
+ * @see t_bunny_pool, bunny_pool_free, bunny_pool_size
+ *
+ * @doc-lang fr
+ * @brief Alias de compatibilité renvoyant le nombre d'éléments occupés dans un pool.
+ * @description Ce symbole est conservé pour compatibilité avec les anciens codes.
+ * @param pool Le pool à inspecter.
+ * @return-success Renvoie le nombre d'éléments occupés.
+ * @see t_bunny_pool, bunny_pool_free, bunny_pool_size
+ */
 # define			bunny_pool_occupied_elem(pool)		(pool)->nbr_occupied
 
 extern int			memory_check;

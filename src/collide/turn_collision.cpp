@@ -40,7 +40,7 @@ void		bunny_turn_collision(t_bunny_collision		*a,
     case BCT_RECTANGLE:
       {
 	t_bunny_accurate_position siz = {
-	  a->rectangular.coord[1].y,
+	  a->rectangular.coord[1].x,
 	  a->rectangular.coord[1].y
 	};
 

@@ -39,11 +39,24 @@ bool			bunny_triangle_collision_dot(const t_bunny_vertex_array		*v3,
   scalar[3] = _scalar(&vec[1], &vec[1]);
   scalar[4] = _scalar(&vec[1], &vec[2]);
 
-  inv = 1.0 / (scalar[0] * scalar[3] - scalar[1] * scalar[1]);
+  inv = scalar[0] * scalar[3] - scalar[1] * scalar[1];
+  if (fabs(inv) < 0.000001)
+    {
+      if (_bunny_collision_point_on_segment(v3->vertex[0].pos, v3->vertex[1].pos, *dot) ||
+	  _bunny_collision_point_on_segment(v3->vertex[1].pos, v3->vertex[2].pos, *dot) ||
+	  _bunny_collision_point_on_segment(v3->vertex[2].pos, v3->vertex[0].pos, *dot))
+	{
+	  scream_log_if(PATTERN, "collision", v3, dot, "true");
+	  return (true);
+	}
+      scream_log_if(PATTERN, "collision", v3, dot, "false");
+      return (false);
+    }
+  inv = 1.0 / inv;
   u = (scalar[3] * scalar[2] - scalar[1] * scalar[4]) * inv;
   v = (scalar[0] * scalar[4] - scalar[1] * scalar[2]) * inv;
 
-  if ((u >= 0) && (v >= 0) && (u + v < 1))
+  if ((u >= -0.000001) && (v >= -0.000001) && (u + v <= 1.000001))
     {
       scream_log_if(PATTERN, "collision", v3, dot, "true");
       return (true);

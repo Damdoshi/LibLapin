@@ -9,6 +9,26 @@
 #define			PATTERN		\
   "%s conf_file, %p clipable, %p target_conf -> %s (%s)"
 
+/*!
+** Load a font and apply text related attributes from a configuration.
+**
+** The configuration must contain RessourceFile, a text box size through
+** BoxSize or Size, and GlyphSize. It may also contain Text or String arrays,
+** TextOffset or StringOffset, TextLength or StringLength, HorizontalAlign,
+** VerticalAlign, Color, OutlineColor, OutlineSize, Interglyph and Scrolling.
+** Clipable attributes are handled by bunny_set_clipable_attribute.
+**
+** Accepted horizontal alignments are Left, Right, Middle, Center and Justify.
+** Accepted vertical alignments are Top, Bottom, Middle, Center and Justify.
+**
+** If config is NULL, conf_file is loaded and deleted before returning. If
+** config is not NULL, the resulting configuration is stored back into it.
+**
+** \param conf_file The configuration file to read, or NULL when config is used.
+** \param font Where to store the loaded font.
+** \param config Optional configuration pointer to read from or update.
+** \return True on success, false on error.
+*/
 bool			bunny_set_font_attribute(const char		*conf_file,
 						 t_bunny_font		**font,
 						 t_bunny_configuration	**config)
