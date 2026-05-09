@@ -44,6 +44,27 @@ static void		_set_frame(struct bunny_sprite			&spr,
   spr.rect.y = anim.position.y + anim.intertile.y;
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_sprite_animate
+ * @doc-kind function
+ * @doc-module sprite
+ * @doc-order 180
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Advances a sprite animation by an elapsed duration.
+ * @param sprite Sprite to update.
+ * @see bunny_sprite_animate_elapsed, bunny_sprite_animate_now
+ *
+ * @doc-lang fr
+ * @brief Fait avancer l'animation d'un sprite selon une durée écoulée.
+ * @param sprite Sprite à mettre à jour.
+ * @see bunny_sprite_animate_elapsed, bunny_sprite_animate_now
+ */
 void			bunny_sprite_animate(t_bunny_sprite		*spr,
 					     double			elapsed)
 {
@@ -117,6 +138,27 @@ void			bunny_sprite_animate(t_bunny_sprite		*spr,
 }
 
 // ca marche pas ca en fait...
+
+/**
+ * @doc
+ * @doc-symbol bunny_sprite_animate_date
+ * @doc-kind function
+ * @doc-module sprite
+ * @doc-order 182
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Advances a sprite animation from an absolute current date.
+ * @param sprite Sprite to update.
+ * @see bunny_sprite_animate
+ *
+ * @doc-lang fr
+ * @brief Fait avancer l'animation d'un sprite depuis une date courante absolue.
+ * @param sprite Sprite à mettre à jour.
+ * @see bunny_sprite_animate
+ */
 void			bunny_sprite_animate_date(t_bunny_sprite	*spr,
 						  double		now)
 {
@@ -125,12 +167,54 @@ void			bunny_sprite_animate_date(t_bunny_sprite	*spr,
   bunny_sprite_animate(spr, now - sprite.current_time);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_sprite_animate_elapsed
+ * @doc-kind function
+ * @doc-module sprite
+ * @doc-order 184
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Advances a sprite animation by an elapsed duration.
+ * @param spr Sprite to update.
+ * @see bunny_sprite_animate
+ *
+ * @doc-lang fr
+ * @brief Fait avancer l'animation d'un sprite selon une durée écoulée.
+ * @param spr Sprite à mettre à jour.
+ * @see bunny_sprite_animate
+ */
 void			bunny_sprite_animate_elapsed(t_bunny_sprite	*spr,
 						     double		elapsed)
 {
   bunny_sprite_animate(spr, elapsed);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_sprite_animate_now
+ * @doc-kind function
+ * @doc-module sprite
+ * @doc-order 186
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Advances a sprite animation using the current LibLapin delay.
+ * @param sprite Sprite to update.
+ * @see bunny_sprite_animate
+ *
+ * @doc-lang fr
+ * @brief Fait avancer l'animation d'un sprite avec le délai courant de la LibLapin.
+ * @param sprite Sprite à mettre à jour.
+ * @see bunny_sprite_animate
+ */
 void			bunny_sprite_animate_now(t_bunny_sprite		*spr)
 {
   bunny_sprite_animate(spr, bunny_get_delay());

@@ -42,6 +42,37 @@ static t_bunny_standard_command	*handle_ciphering
   return (cmd);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_handle_standard_command
+ * @doc-kind function
+ * @doc-module network
+ * @doc-order 720
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Handles a LibLapin standard network command when possible.
+ * @param id Identity context. Server side, this is the speaking peer; client side, this is the local identity.
+ * @param cmd Command buffer to inspect and possibly handle.
+ * @param cmd_size Command size in bytes.
+ * @param hash Hash algorithm used for challenge responses.
+ * @param ciphering Ciphering mode used by command handling.
+ * @return-success Returns BSCH_SUCCESS if the command was handled, BSCH_TO_BE_DONE if user code must handle it, or BSCH_FAILURE on failure.
+ * @see t_bunny_standard_command, t_bunny_standard_command_handling, bunny_cipher_standard_command
+ *
+ * @doc-lang fr
+ * @brief Traite une commande réseau standard LibLapin lorsque c'est possible.
+ * @param id Contexte d'identité. Côté serveur, c'est le pair qui parle ; côté client, c'est l'identité locale.
+ * @param cmd Tampon de commande à inspecter et éventuellement traiter.
+ * @param cmd_size Taille de la commande en octets.
+ * @param hash Algorithme de hachage utilisé pour les réponses aux défis.
+ * @param ciphering Mode de chiffrement utilisé par le traitement de commande.
+ * @return-success Renvoie BSCH_SUCCESS si la commande a été traitée, BSCH_TO_BE_DONE si le code utilisateur doit la traiter, ou BSCH_FAILURE en cas d'échec.
+ * @see t_bunny_standard_command, t_bunny_standard_command_handling, bunny_cipher_standard_command
+ */
 t_bunny_standard_command_handling bunny_handle_standard_command
   (t_bunny_identity		*id,
    t_bunny_standard_command	*cmd,

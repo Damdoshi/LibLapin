@@ -29,6 +29,58 @@
 ** BAL_JUSTIFY stretches the text by widening spaces between words or lines,
 ** depending on whether it is used horizontally or vertically.
 */
+
+/**
+ * @doc
+ * @doc-symbol text
+ * @doc-kind module
+ * @doc-module text
+ * @doc-order 0
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Renders text through t_bunny_font clipable objects.
+ * @description The text module can use TrueType fonts, bitmap fonts and configuration-described text boxes. A t_bunny_font is also a clipable object and can be drawn like other graphics resources.
+ * @header lapin/text.h
+ *
+ * @doc-lang fr
+ * @brief Rend du texte avec des objets clipables t_bunny_font.
+ * @description Le module text peut utiliser des polices TrueType, des polices bitmap et des textboxes décrites par configuration. Un t_bunny_font est aussi un objet clipable et peut être dessiné comme les autres ressources graphiques.
+ * @header lapin/text.h
+ */
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_align
+ * @doc-kind enum
+ * @doc-module text
+ * @doc-order 100
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Selects horizontal or vertical text alignment.
+ * @value BAL_LEFT Left horizontal alignment. It is also BAL_TOP for vertical alignment.
+ * @value BAL_TOP Alias of BAL_LEFT for vertical alignment.
+ * @value BAL_MIDDLE Centered horizontal or vertical alignment.
+ * @value BAL_RIGHT Right horizontal alignment. It is also BAL_BOTTOM for vertical alignment.
+ * @value BAL_BOTTOM Alias of BAL_RIGHT for vertical alignment.
+ * @value BAL_JUSTIFY Justified horizontal or vertical alignment.
+ * @see t_bunny_font
+ *
+ * @doc-lang fr
+ * @brief Sélectionne l'alignement horizontal ou vertical du texte.
+ * @value BAL_LEFT Alignement horizontal à gauche. C'est aussi BAL_TOP pour l'alignement vertical.
+ * @value BAL_TOP Alias de BAL_LEFT pour l'alignement vertical.
+ * @value BAL_MIDDLE Alignement horizontal ou vertical centré.
+ * @value BAL_RIGHT Alignement horizontal à droite. C'est aussi BAL_BOTTOM pour l'alignement vertical.
+ * @value BAL_BOTTOM Alias de BAL_RIGHT pour l'alignement vertical.
+ * @value BAL_JUSTIFY Alignement horizontal ou vertical justifié.
+ * @see t_bunny_font
+ */
 typedef enum			e_bunny_align
   {
     BAL_LEFT			= 0,
@@ -61,6 +113,51 @@ typedef enum			e_bunny_align
 # ifdef				__MINGW32__
 #  pragma			pack(4)
 # endif
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_font
+ * @doc-kind struct
+ * @doc-module text
+ * @doc-order 120
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Represents a rendered text box backed by a font resource.
+ * @description The first field is a t_bunny_clipable, so a font can be drawn with normal clipable drawing functions. Despite its name, this structure represents the text box and its render target more than the font resource alone.
+ * @field clipable Base clipable used as the text rendering target.
+ * @field string Text to display.
+ * @field string_offset First character index displayed from string.
+ * @field string_len Maximum number of characters displayed from string.
+ * @field halign Horizontal alignment.
+ * @field valign Vertical alignment.
+ * @field color Text color.
+ * @field outline Outline color for TrueType fonts.
+ * @field outline_size Outline width for TrueType fonts.
+ * @field offset Drawing offset.
+ * @field glyph_size Glyph size.
+ * @field interglyph_space Additional space between glyphs.
+ * @see bunny_load_text, bunny_load_font, bunny_delete_clipable
+ *
+ * @doc-lang fr
+ * @brief Représente une boîte de texte rendue à partir d'une ressource de police.
+ * @description Le premier champ est un t_bunny_clipable, donc une police peut être dessinée avec les fonctions de dessin clipable habituelles. Malgré son nom, cette structure représente davantage la boîte de texte et sa cible de rendu que la seule ressource de police.
+ * @field clipable Clipable de base utilisé comme cible de rendu du texte.
+ * @field string Texte à afficher.
+ * @field string_offset Premier index de caractère affiché depuis string.
+ * @field string_len Nombre maximal de caractères affichés depuis string.
+ * @field halign Alignement horizontal.
+ * @field valign Alignement vertical.
+ * @field color Couleur du texte.
+ * @field outline Couleur de contour pour les polices TrueType.
+ * @field outline_size Épaisseur du contour pour les polices TrueType.
+ * @field offset Décalage de dessin.
+ * @field glyph_size Taille des glyphes.
+ * @field interglyph_space Espace additionnel entre glyphes.
+ * @see bunny_load_text, bunny_load_font, bunny_delete_clipable
+ */
 typedef struct			s_bunny_font
 {
   t_bunny_clipable		clipable;
@@ -176,6 +273,33 @@ bool				bunny_set_font_attribute(const char		*conf_file,
 ** The segment goes from (x0, y0) to (x1, y1) in the 2D coordinate space used by
 ** gl_vector_font.
 */
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_vector_font_line_coord
+ * @doc-kind struct
+ * @doc-module text
+ * @doc-order 160
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Stores one line segment of the built-in vector font.
+ * @field x0 Start point x coordinate.
+ * @field y0 Start point y coordinate.
+ * @field x1 End point x coordinate.
+ * @field y1 End point y coordinate.
+ * @see t_bunny_letter, gl_vector_font
+ *
+ * @doc-lang fr
+ * @brief Stocke un segment de ligne de la police vectorielle intégrée.
+ * @field x0 Coordonnée x du point de départ.
+ * @field y0 Coordonnée y du point de départ.
+ * @field x1 Coordonnée x du point d'arrivée.
+ * @field y1 Coordonnée y du point d'arrivée.
+ * @see t_bunny_letter, gl_vector_font
+ */
 typedef struct			s_bunny_vector_font_line_coord
 {
   int				x0;
@@ -190,6 +314,29 @@ typedef struct			s_bunny_vector_font_line_coord
 ** Characters use a 0..20 coordinate range on both axes. Only the first nb_edge
 ** entries of edge are defined.
 */
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_letter
+ * @doc-kind struct
+ * @doc-module text
+ * @doc-order 180
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Describes one glyph of the built-in vector font.
+ * @field nb_edge Number of line segments used by the glyph.
+ * @field edge Segment array. Only the first nb_edge entries are valid.
+ * @see t_bunny_vector_font_line_coord, gl_vector_font
+ *
+ * @doc-lang fr
+ * @brief Décrit un glyphe de la police vectorielle intégrée.
+ * @field nb_edge Nombre de segments utilisés par le glyphe.
+ * @field edge Tableau de segments. Seules les nb_edge premières entrées sont valides.
+ * @see t_bunny_vector_font_line_coord, gl_vector_font
+ */
 typedef struct			s_bunny_letter
 {
   int				nb_edge;
@@ -201,6 +348,29 @@ typedef struct			s_bunny_letter
 **
 ** LAST_BUNNY_FONT is the number of available glyphs and is not itself a glyph.
 */
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_letter_tab
+ * @doc-kind enum
+ * @doc-module text
+ * @doc-order 200
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Indexes glyphs inside gl_vector_font.
+ * @description Values BFT_A to BFT_Z cover uppercase letters, BFT_0 to BFT_9 cover digits, and the remaining entries cover punctuation provided by the built-in vector font.
+ * @value LAST_BUNNY_FONT Number of glyphs stored in gl_vector_font.
+ * @see gl_vector_font, t_bunny_letter
+ *
+ * @doc-lang fr
+ * @brief Indexe les glyphes dans gl_vector_font.
+ * @description Les valeurs BFT_A à BFT_Z couvrent les lettres majuscules, BFT_0 à BFT_9 couvrent les chiffres, et les entrées restantes couvrent la ponctuation fournie par la police vectorielle intégrée.
+ * @value LAST_BUNNY_FONT Nombre de glyphes stockés dans gl_vector_font.
+ * @see gl_vector_font, t_bunny_letter
+ */
 typedef enum			e_bunny_letter_tab
   {
     BFT_A,
@@ -253,6 +423,27 @@ typedef enum			e_bunny_letter_tab
 ** The storage order is described by t_bunny_letter_tab. This font is useful for
 ** effects such as rotating or demoscene-like text.
 */
+
+/**
+ * @doc
+ * @doc-symbol gl_vector_font
+ * @doc-kind variable
+ * @doc-module text
+ * @doc-order 220
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Built-in vector font glyph table.
+ * @description Each glyph is represented by a small set of line segments in a 0..20 coordinate system.
+ * @see t_bunny_letter, t_bunny_letter_tab
+ *
+ * @doc-lang fr
+ * @brief Table des glyphes de la police vectorielle intégrée.
+ * @description Chaque glyphe est représenté par un petit ensemble de segments dans un repère 0..20.
+ * @see t_bunny_letter, t_bunny_letter_tab
+ */
 extern const t_bunny_letter	gl_vector_font[LAST_BUNNY_FONT];
 
 #endif	/*			__LAPIN_TEXT_H__	*/

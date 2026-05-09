@@ -22,6 +22,28 @@ static const char	*gl_extension[BC_CUSTOM][64] =
     //
   };
 
+/**
+ * @doc
+ * @doc-symbol bunny_which_format
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 590
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Guesses a configuration format from a file extension.
+ * @param file File path to inspect.
+ * @return-success Returns a $Tt_bunny_configuration_type@ value.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Devine un format de configuration depuis l’extension d’un fichier.
+ * @param file File path to inspect.
+ * @return-success Renvoie une valeur $Tt_bunny_configuration_type@.
+ * @log "configuration"
+ */
 t_bunny_configuration_type bunny_which_format(const char		*file)
 {
   size_t		flen, elen;

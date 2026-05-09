@@ -140,6 +140,31 @@ static void		_clean_shader(void)
     }
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_normal_map_shader
+ * @doc-kind function
+ * @doc-module shader
+ * @doc-order 90
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 50
+ *
+ * @doc-lang en
+ * @brief Returns the built-in shader configured for normal-map lighting.
+ * @param nm Normal-map configuration, or NULL to release the cached shader.
+ * @return-success Returns the configured shader.
+ * @return-failure Returns NULL on allocation or compilation failure, or when nm is NULL.
+ * @see t_bunny_normal_map
+ *
+ * @doc-lang fr
+ * @brief Renvoie le shader intégré configuré pour l’éclairage par normal map.
+ * @param nm Configuration de normal map, ou NULL pour libérer le shader en cache.
+ * @return-success Renvoie le shader configuré.
+ * @return-failure Renvoie NULL en cas d’échec d’allocation ou de compilation, ou lorsque nm vaut NULL.
+ * @see t_bunny_normal_map
+ */
 t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
 {
   char			buffer[4096];

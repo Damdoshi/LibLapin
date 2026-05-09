@@ -350,6 +350,33 @@ void				bunny_blit(t_bunny_buffer		*output,
   bunny_blit_shader(output, picture, pos, NULL);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_blit_shader
+ * @doc-kind function
+ * @doc-module shader
+ * @doc-order 45
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Blits a picture while applying a shader.
+ * @param buffer Destination buffer. It must not be a pixelarray.
+ * @param picture Picture to draw. It must not be a pixelarray.
+ * @param position Optional destination position.
+ * @param shader Shader to apply. May be NULL to behave like bunny_blit.
+ * @see bunny_blit, t_bunny_shader
+ *
+ * @doc-lang fr
+ * @brief Blit une picture en appliquant un shader.
+ * @param buffer Buffer de destination. Il ne doit pas être un pixelarray.
+ * @param picture Picture à dessiner. Elle ne doit pas être un pixelarray.
+ * @param position Position de destination optionnelle.
+ * @param shader Shader à appliquer. Peut être NULL pour se comporter comme bunny_blit.
+ * @see bunny_blit, t_bunny_shader
+ */
 void				bunny_blit_shader(t_bunny_buffer	*output,
 						  const t_bunny_picture	*picture,
 						  const t_bunny_position *pos,

@@ -27,6 +27,54 @@
 ** It can be from right to left, and then loop.
 ** It can be from left to right to left, and then loop.
 */
+
+/**
+ * @doc
+ * @doc-symbol sprite
+ * @doc-kind module
+ * @doc-module sprite
+ * @doc-order 0
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Handles animated clipable sprite sheets.
+ * @description Sprites are clipable pictures with named animations, frame timing, collision shapes and optional dressed-sprite helpers for layered equipment/clothes.
+ * @header lapin/sprite.h
+ *
+ * @doc-lang fr
+ * @brief Gère des sprites animés basés sur des spritesheets clipables.
+ * @description Les sprites sont des images clipables avec animations nommées, timings de frames, formes de collision et aides optionnelles de sprites habillés pour des couches d'équipement/vêtements.
+ * @header lapin/sprite.h
+ */
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_frame_browsing
+ * @doc-kind enum
+ * @doc-module sprite
+ * @doc-order 100
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Describes how animation frames are traversed.
+ * @value BFB_LEFT_TO_RIGHT Frames are played from first to last.
+ * @value BFB_RIGHT_TO_LEFT Frames are played from last to first.
+ * @value BFB_BACK_AND_FORTH Frames go forward then backward.
+ * @value BFB_RANDOM Frames are selected randomly.
+ * @see t_bunny_animation
+ *
+ * @doc-lang fr
+ * @brief Décrit comment les frames d'une animation sont parcourues.
+ * @value BFB_LEFT_TO_RIGHT Les frames sont jouées de la première à la dernière.
+ * @value BFB_RIGHT_TO_LEFT Les frames sont jouées de la dernière à la première.
+ * @value BFB_BACK_AND_FORTH Les frames avancent puis reculent.
+ * @value BFB_RANDOM Les frames sont choisies aléatoirement.
+ * @see t_bunny_animation
+ */
 typedef enum		e_bunny_frame_browsing
   {
     BFB_LEFT_TO_RIGHT,
@@ -52,6 +100,45 @@ typedef enum		e_bunny_frame_browsing
 ** be followed after the current one. -1 indicates
 ** it is not followed by another animation.
 */
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_animation
+ * @doc-kind struct
+ * @doc-module sprite
+ * @doc-order 120
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Describes one animation inside a sprite sheet.
+ * @field hash Hashed animation name.
+ * @field delay Duration of one frame step in seconds.
+ * @field nbr_frame Number of frames in the animation.
+ * @field position Position of the first frame in the sprite sheet.
+ * @field intertile Spacing between frames in the sprite sheet.
+ * @field frame_repetition Optional repetition count per frame.
+ * @field collision_shapes Optional collision shape index per frame.
+ * @field browsing Frame traversal mode.
+ * @field animation_repeat Number of whole animation repetitions, or -1 for infinite looping.
+ * @field next_animation Next animation index to play, or -1 when none is chained.
+ * @see t_bunny_frame_browsing, t_bunny_sprite
+ *
+ * @doc-lang fr
+ * @brief Décrit une animation dans une spritesheet.
+ * @field hash Nom d'animation haché.
+ * @field delay Durée d'une étape de frame en secondes.
+ * @field nbr_frame Nombre de frames de l'animation.
+ * @field position Position de la première frame dans la spritesheet.
+ * @field intertile Espacement entre frames dans la spritesheet.
+ * @field frame_repetition Nombre de répétitions optionnel par frame.
+ * @field collision_shapes Index optionnel de forme de collision par frame.
+ * @field browsing Mode de parcours des frames.
+ * @field animation_repeat Nombre de répétitions de l'animation entière, ou -1 pour une boucle infinie.
+ * @field next_animation Index de la prochaine animation à jouer, ou -1 si aucune n'est chaînée.
+ * @see t_bunny_frame_browsing, t_bunny_sprite
+ */
 typedef struct		s_bunny_animation
 {
   uint64_t		hash;
@@ -75,6 +162,55 @@ typedef struct		s_bunny_animation
 # ifdef			__MINGW32__
 #  pragma		pack(4)
 # endif
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_sprite
+ * @doc-kind struct
+ * @doc-module sprite
+ * @doc-order 140
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Represents an animated clipable sprite.
+ * @description The first field is a t_bunny_clipable, so a sprite can be passed to drawing functions that accept clipables, pictures or buffers. Internal animation state is updated by bunny_sprite_animate.
+ * @field clipable Base clipable object used for drawing.
+ * @field animation Animation array.
+ * @field nbr_animation Number of animations.
+ * @field hashname_id Map from animation name hash to animation index.
+ * @field collision_shapes Collision shape array.
+ * @field nbr_collision Number of collision shapes.
+ * @field current_animation_hash Hash of the current animation name.
+ * @field current_animation Current animation index.
+ * @field current_frame_repeat Number of repetitions already spent on the current frame.
+ * @field current_repeat Number of repetitions already spent on the current animation.
+ * @field current_frame Current frame index.
+ * @field current_time Accumulated animation time.
+ * @field stop_repeat Whether the current animation should stop instead of repeating.
+ * @field draw_collision_shapes Whether collision shapes should be drawn for debugging.
+ * @see bunny_load_sprite, bunny_sprite_animate, bunny_delete_clipable
+ *
+ * @doc-lang fr
+ * @brief Représente un sprite animé clipable.
+ * @description Le premier champ est un t_bunny_clipable, donc un sprite peut être passé aux fonctions de dessin qui acceptent des clipables, pictures ou buffers. L'état interne d'animation est mis à jour par bunny_sprite_animate.
+ * @field clipable Objet clipable de base utilisé pour le dessin.
+ * @field animation Tableau des animations.
+ * @field nbr_animation Nombre d'animations.
+ * @field hashname_id Map du hash de nom d'animation vers l'index d'animation.
+ * @field collision_shapes Tableau de formes de collision.
+ * @field nbr_collision Nombre de formes de collision.
+ * @field current_animation_hash Hash du nom de l'animation courante.
+ * @field current_animation Index de l'animation courante.
+ * @field current_frame_repeat Nombre de répétitions déjà passées sur la frame courante.
+ * @field current_repeat Nombre de répétitions déjà passées sur l'animation courante.
+ * @field current_frame Index de la frame courante.
+ * @field current_time Temps d'animation accumulé.
+ * @field stop_repeat Indique si l'animation courante doit s'arrêter au lieu de se répéter.
+ * @field draw_collision_shapes Indique si les formes de collision doivent être dessinées pour le debug.
+ * @see bunny_load_sprite, bunny_sprite_animate, bunny_delete_clipable
+ */
 typedef struct		s_bunny_sprite
 {
   t_bunny_clipable	clipable;
@@ -110,8 +246,60 @@ t_bunny_sprite		*_bunny_fill_sprite(t_bunny_sprite		*spr,
 					    t_bunny_configuration	*cnf,
 					    const char			*file);
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_read_sprite
+ * @doc-kind macro
+ * @doc-module sprite
+ * @doc-order 170
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Builds a sprite from an already loaded configuration node.
+ * @param cnf Sprite configuration node.
+ * @return-success Returns a newly allocated sprite.
+ * @return-failure Returns NULL on error.
+ * @see bunny_load_sprite, bunny_fill_sprite
+ *
+ * @doc-lang fr
+ * @brief Construit un sprite depuis un nœud de configuration déjà chargé.
+ * @param cnf Nœud de configuration du sprite.
+ * @return-success Renvoie un sprite nouvellement alloué.
+ * @return-failure Renvoie NULL en cas d'erreur.
+ * @see bunny_load_sprite, bunny_fill_sprite
+ */
 # define		bunny_read_sprite(cnf)				\
   _bunny_read_sprite(cnf, NULL)
+
+/**
+ * @doc
+ * @doc-symbol bunny_fill_sprite
+ * @doc-kind macro
+ * @doc-module sprite
+ * @doc-order 175
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Fills an already allocated sprite from a configuration node.
+ * @param spr Sprite to fill.
+ * @param cnf Sprite configuration node.
+ * @return-success Returns spr on success.
+ * @return-failure Returns NULL on error.
+ * @see bunny_read_sprite, bunny_load_sprite
+ *
+ * @doc-lang fr
+ * @brief Remplit un sprite déjà alloué depuis un nœud de configuration.
+ * @param spr Sprite à remplir.
+ * @param cnf Nœud de configuration du sprite.
+ * @return-success Renvoie spr en cas de succès.
+ * @return-failure Renvoie NULL en cas d'erreur.
+ * @see bunny_read_sprite, bunny_load_sprite
+ */
 # define		bunny_fill_sprite(spr, cnf)			\
   _bunny_fill_sprite(spr, cnf, NULL)
 
@@ -151,6 +339,33 @@ bool			bunny_sprite_is_still(t_bunny_sprite		*sprite);
 ** \param anim The animation to set to the sprite.
 ** \return True if the animation was set. False if the animation does not exists.
 */
+
+/**
+ * @doc
+ * @doc-symbol bunny_sprite_set_animation
+ * @doc-kind macro
+ * @doc-module sprite
+ * @doc-order 220
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Selects a sprite animation by name or hash with C11 generic dispatch.
+ * @param spr Sprite to update.
+ * @param anim Animation name as char pointer or animation hash as integer.
+ * @return-success Returns true if the animation exists and was selected.
+ * @return-failure Returns false if the animation does not exist.
+ * @see bunny_sprite_set_animation_name, bunny_sprite_set_animation_id
+ *
+ * @doc-lang fr
+ * @brief Sélectionne une animation de sprite par nom ou hash via dispatch générique C11.
+ * @param spr Sprite à mettre à jour.
+ * @param anim Nom d'animation sous forme de char pointer ou hash d'animation sous forme d'entier.
+ * @return-success Renvoie true si l'animation existe et a été sélectionnée.
+ * @return-failure Renvoie false si l'animation n'existe pas.
+ * @see bunny_sprite_set_animation_name, bunny_sprite_set_animation_id
+ */
 #  define		bunny_sprite_set_animation(spr, anim)		\
   _Generic((anim),							\
 	   const char*: bunny_sprite_set_animation_name,		\
@@ -158,6 +373,33 @@ bool			bunny_sprite_is_still(t_bunny_sprite		*sprite);
 	   uint64_t: bunny_sprite_set_animation_id,			\
 	   int: bunny_sprite_set_animation_id				\
 	   )(spr, anim)
+
+/**
+ * @doc
+ * @doc-symbol bunny_sprite_shift_animation
+ * @doc-kind macro
+ * @doc-module sprite
+ * @doc-order 230
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Schedules or shifts to another animation by name or hash with C11 generic dispatch.
+ * @param spr Sprite to update.
+ * @param anim Animation name as char pointer or animation hash as integer.
+ * @return-success Returns true if the animation exists and the shift was accepted.
+ * @return-failure Returns false if the animation does not exist.
+ * @see bunny_sprite_shift_animation_name, bunny_sprite_shift_animation_id
+ *
+ * @doc-lang fr
+ * @brief Programme ou décale vers une autre animation par nom ou hash via dispatch générique C11.
+ * @param spr Sprite à mettre à jour.
+ * @param anim Nom d'animation sous forme de char pointer ou hash d'animation sous forme d'entier.
+ * @return-success Renvoie true si l'animation existe et que le changement est accepté.
+ * @return-failure Renvoie false si l'animation n'existe pas.
+ * @see bunny_sprite_shift_animation_name, bunny_sprite_shift_animation_id
+ */
 #  define		bunny_sprite_shift_animation(spr, anim)		\
   _Generic((anim),							\
 	   const char*: bunny_sprite_shift_animation_name,		\
@@ -226,12 +468,58 @@ int			bunny_sprite_collide(const t_bunny_sprite	*a,
 ** \param name The name under string format.
 ** \return The name under hash format.
 */
+
+/**
+ * @doc
+ * @doc-symbol bunny_sprite_animation_name
+ * @doc-kind macro
+ * @doc-module sprite
+ * @doc-order 210
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Converts an animation name to its sprite hash.
+ * @param name Animation name string.
+ * @return-success Returns the DJB2 hash used by sprite animation lookup.
+ * @see bunny_sprite_set_animation_id, bunny_sprite_get_animation
+ *
+ * @doc-lang fr
+ * @brief Convertit un nom d'animation en hash de sprite.
+ * @param name Chaîne de nom d'animation.
+ * @return-success Renvoie le hash DJB2 utilisé par la recherche d'animation de sprite.
+ * @see bunny_sprite_set_animation_id, bunny_sprite_get_animation
+ */
 # define		bunny_sprite_animation_name(name)		\
   bunny_hash(BH_DJB2, name, strlen(name))
 
 /*
 ** Simply a named sprite.
 */
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_clothe
+ * @doc-kind struct
+ * @doc-module sprite
+ * @doc-order 400
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Associates a name with a sprite used as a wearable layer.
+ * @field name Clothe name.
+ * @field sprite Sprite displayed when this clothe is worn.
+ * @see t_bunny_closet, t_bunny_dressed_sprite
+ *
+ * @doc-lang fr
+ * @brief Associe un nom à un sprite utilisé comme couche habillable.
+ * @field name Nom du vêtement.
+ * @field sprite Sprite affiché lorsque ce vêtement est porté.
+ * @see t_bunny_closet, t_bunny_dressed_sprite
+ */
 typedef struct		s_bunny_clothe
 {
   const char		*name;
@@ -246,6 +534,33 @@ typedef struct		s_bunny_clothe
 **
 ** Some easy to understand name for closet: panties, stockings, bra, top, etc.
 */
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_closet
+ * @doc-kind struct
+ * @doc-module sprite
+ * @doc-order 410
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Groups several clothes that share the same dressed-sprite slot.
+ * @field name Closet name.
+ * @field clothes Map from clothe-name hash to t_bunny_clothe pointer.
+ * @field position Position offset used by clothes in this closet.
+ * @field depth Rendering depth of this closet.
+ * @see t_bunny_clothe, bunny_load_closet, t_bunny_dressed_sprite
+ *
+ * @doc-lang fr
+ * @brief Regroupe plusieurs vêtements partageant le même emplacement de sprite habillé.
+ * @field name Nom du placard.
+ * @field clothes Map du hash de nom de vêtement vers un pointeur t_bunny_clothe.
+ * @field position Décalage de position utilisé par les vêtements de ce placard.
+ * @field depth Profondeur de rendu de ce placard.
+ * @see t_bunny_clothe, bunny_load_closet, t_bunny_dressed_sprite
+ */
 typedef struct		s_bunny_closet
 {
   const char		*name;
@@ -261,6 +576,29 @@ t_bunny_closet		*bunny_load_closet(const char			*file,
 t_bunny_closet		*bunny_read_closet(t_bunny_configuration	*cnf,
 					   t_bunny_map			*wardrobe);
 void			bunny_delete_closet(t_bunny_closet		*closet);
+
+/**
+ * @doc
+ * @doc-symbol bunny_new_wardrobe
+ * @doc-kind macro
+ * @doc-module sprite
+ * @doc-order 450
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Creates an empty wardrobe map for dressed sprites.
+ * @return-success Returns a newly allocated map using string keys.
+ * @return-failure Returns NULL on allocation failure.
+ * @see bunny_delete_wardrobe, bunny_load_closet
+ *
+ * @doc-lang fr
+ * @brief Crée une map de garde-robe vide pour les sprites habillés.
+ * @return-success Renvoie une map nouvellement allouée utilisant des clés chaînes.
+ * @return-failure Renvoie NULL en cas d'échec d'allocation.
+ * @see bunny_delete_wardrobe, bunny_load_closet
+ */
 # define		bunny_new_wardrobe()				\
   bunny_new_map((t_bunny_map_cmp)strcmp,				\
 		(t_bunny_map_dup)bunny_strdup,				\
@@ -276,6 +614,31 @@ void			bunny_delete_wardrobe(t_bunny_map		*wardrobe);
 # ifdef			__MINGW32__
 #  pragma		pack(4)
 # endif
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_dressed_sprite
+ * @doc-kind struct
+ * @doc-module sprite
+ * @doc-order 500
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Represents a sprite composed of a base sprite and wearable layers.
+ * @field sprite Base sprite.
+ * @field closets Available closets indexed by name hash.
+ * @field clothes Currently worn clothes indexed by closet name hash.
+ * @see bunny_load_dressed_sprite, bunny_dressed_sprite_wear, bunny_render_dressed_sprite
+ *
+ * @doc-lang fr
+ * @brief Représente un sprite composé d'un sprite de base et de couches habillables.
+ * @field sprite Sprite de base.
+ * @field closets Placards disponibles indexés par hash de nom.
+ * @field clothes Vêtements actuellement portés indexés par hash de nom de placard.
+ * @see bunny_load_dressed_sprite, bunny_dressed_sprite_wear, bunny_render_dressed_sprite
+ */
 typedef struct		s_bunny_dressed_sprite
 {
   t_bunny_sprite	sprite;
@@ -290,6 +653,33 @@ t_bunny_dressed_sprite	*bunny_load_dressed_sprite(const char		*file,
 t_bunny_dressed_sprite	*_bunny_read_dressed_sprite(t_bunny_configuration *cnf,
 						    t_bunny_map		*wardrobe,
 						    const char		*file);
+
+/**
+ * @doc
+ * @doc-symbol bunny_read_dressed_sprite
+ * @doc-kind macro
+ * @doc-module sprite
+ * @doc-order 520
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Builds a dressed sprite from a configuration node.
+ * @param cnf Dressed-sprite configuration node.
+ * @param wardrobe Optional wardrobe where loaded closets can be shared.
+ * @return-success Returns a newly allocated dressed sprite.
+ * @return-failure Returns NULL on error.
+ * @see bunny_load_dressed_sprite
+ *
+ * @doc-lang fr
+ * @brief Construit un sprite habillé depuis un nœud de configuration.
+ * @param cnf Nœud de configuration du sprite habillé.
+ * @param wardrobe Garde-robe optionnelle où les placards chargés peuvent être partagés.
+ * @return-success Renvoie un sprite habillé nouvellement alloué.
+ * @return-failure Renvoie NULL en cas d'erreur.
+ * @see bunny_load_dressed_sprite
+ */
 # define		bunny_read_dressed_sprite(cnf, wardrobe)	\
   _bunny_read_dressed_sprite(cnf, wardrobe, NULL)
 

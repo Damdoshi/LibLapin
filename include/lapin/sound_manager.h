@@ -5,24 +5,12 @@
 ** Bibliotheque Lapin
 */
 
-/*!
-** \file sound_manager.h
-** The sound manager helps you to manage your general sound configuration.
-** You can add and remove sounds from it, set them in three categories.
-** You can edit volume and pitch for categories.
-** You can set a general volume or pitch.
-** You can set a volume or pitch proper to sounds.
-*/
-
 #ifndef			__LAPIN_SOUND_MANAGER_H__
 # define		__LAPIN_SOUND_MANAGER_H__
 # if			!defined(__LAPIN_H__)
 #  error		You cannot include this file directly.
 # endif
 
-/*!
-** Indicates a music track.
-*/
 /**
  * @doc-symbol t_bunny_music_track
  * @doc-module sound_manager
@@ -62,10 +50,6 @@ typedef enum		e_bunny_music_track
     BST_LAST_TRACK
   }			t_bunny_music_track;
 
-/*!
-** Indicates a sound type: music, effect or voice.
-** Each sound type have a matching volume and pitch.
-*/
 /**
  * @doc-symbol t_bunny_sound_type
  * @doc-module sound_manager
@@ -102,12 +86,6 @@ typedef enum		e_bunny_sound_type
     BST_LAST_SOUND_TYPE
   }			t_bunny_sound_type;
 
-/*!
-** The sound manager structure is a centralized sound controler
-** that allow to restrict the amount of music played
-** simultaneously. It allows to control volumes and pitches by category,
-** like we often expect in video games.
-*/
 /**
  * @doc-symbol t_bunny_sound_manager
  * @doc-module sound_manager
@@ -146,16 +124,8 @@ typedef struct		s_bunny_sound_manager
   const double		pitches[BST_LAST_SOUND_TYPE];
 }			t_bunny_sound_manager;
 
-/*
-** This define here is only present for inside needs.
-** The symbol inside will always be available.
-*/
 # ifndef		__SRC_SOUND_MANAGER_GLOBAL_CPP__
-/*!
-** The global sound manager. It is pretty useful to allow
-** to generate and store sounds everywhere without having
-** to have the sound manager to follow.
-*/
+
 /**
  * @doc-symbol gl_bunny_sound_manager
  * @doc-module sound_manager
@@ -178,16 +148,6 @@ typedef struct		s_bunny_sound_manager
 extern t_bunny_sound_manager gl_bunny_sound_manager;
 # endif
 
-/*!
-** Add a sound inside the sound manager associated to a category.
-** Its volume and pitch will be modified accordingly to general and category
-** volume and pitch, associated to its proper one.
-** \param sm The sound manager.
-** \param snd The sound to insert
-** \param typ The category in which the sound will be added, it cannot be general.
-** \return True if the sound was inserted or was already inserted in the
-** matching category. False on error.
-*/
 bool			_bunny_sound_manager_add(t_bunny_sound_manager		*sm,
 						 t_bunny_sound			*snd,
 						 t_bunny_sound_type		typ);
@@ -245,11 +205,6 @@ bool			_bunny_sound_manager_add(t_bunny_sound_manager		*sm,
   _bunny_sound_manager_add(sm, snd, typ)
 # endif
 
-/*!
-** Remove a sound from the sound manager.
-** \param sm The sound manager
-** \param snd The sound to remove
-*/
 void			_bunny_sound_manager_remove(t_bunny_sound_manager	*sm,
 						    t_bunny_sound		*snd);
 
@@ -275,11 +230,6 @@ void			_bunny_sound_manager_remove(t_bunny_sound_manager	*sm,
  * @see bunny_sound_manager_add, bunny_delete_sound
  */
 # if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
-/*!
-** Remove a sound from the sound manager.
-** \param sm The sound manager
-** \param snd The sound to remove
-*/
 #  define		bunny_sound_manager_remove(sm, snd)			\
   _bunny_sound_manager_remove							\
   (sm, _Generic((snd),								\
@@ -394,13 +344,6 @@ bool			_bunny_managed_sound_volume(t_bunny_sound_manager	*sm,
  * @see bunny_managed_sound_pitch, bunny_sound_manager_volume
  */
 # if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
-/*!
-** Set the proper volume of the sent sound.
-** \param sm The sound manager
-** \param snd The sound
-** \param vol The proper volume of the sent sound
-** \return True if the sound was found and set, else false.
-*/
 #  define		bunny_managed_sound_volume(sm, snd, vol)		\
   _bunny_managed_sound_volume							\
   (sm, _Generic((snd),								\
@@ -414,13 +357,6 @@ bool			_bunny_managed_sound_volume(t_bunny_sound_manager	*sm,
   _bunny_managed_sound_volume(sm, snd, vol)
 # endif
 
-/*!
-** Set the proper pitch of the sent sound.
-** \param sm The sound manager
-** \param snd The sound
-** \param pit The proper pitch of the sent sound
-** \return True if the sound was found and set, else false.
-*/
 bool			_bunny_managed_sound_pitch(t_bunny_sound_manager	*sm,
 						   t_bunny_sound		*snd,
 						   double			pit);
@@ -455,13 +391,6 @@ bool			_bunny_managed_sound_pitch(t_bunny_sound_manager	*sm,
  * @see bunny_managed_sound_volume, bunny_sound_manager_pitch
  */
 # if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
-/*!
-** Set the proper pitch of the sent sound.
-** \param sm The sound manager
-** \param snd The sound
-** \param pit The proper pitch of the sent sound
-** \return True if the sound was found and set, else false.
-*/
 #  define		bunny_managed_sound_pitch(sm, snd, pit)			\
   _bunny_managed_sound_pitch							\
   (sm, _Generic((snd),								\

@@ -19,6 +19,32 @@
 ** This context is a customizable loading screen.
 */
 
+/**
+ * @doc
+ * @doc-symbol t_bunny_ressource_to_load
+ * @doc-kind struct
+ * @doc-module context
+ * @doc-order 600
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Describes one resource scheduled for the loading context.
+ * @field file Resource file path.
+ * @field target Pointer to the slot that will receive the loaded resource.
+ * @field subtarget Optional output receiving resource-specific count information.
+ * @see bunny_add_to_ressource_list
+ * @see gl_bunny_loading_context
+ *
+ * @doc-lang fr
+ * @brief Décrit une ressource prévue pour le contexte de chargement.
+ * @field file Resource file path.
+ * @field target Pointer to the slot that will receive the loaded resource.
+ * @field subtarget Optional output receiving resource-specific count information.
+ * @see bunny_add_to_ressource_list
+ * @see gl_bunny_loading_context
+ */
 typedef struct			s_bunny_ressource_to_load
 {
   const char			*file;
@@ -32,6 +58,50 @@ bool				bunny_add_to_ressource_list(t_bunny_list *lst,
 							    t_bunny_ressource_to_load *ld,
 							    size_t	len);
 
+/**
+ * @doc
+ * @doc-symbol t_bunny_loading_screen
+ * @doc-kind struct
+ * @doc-module context
+ * @doc-order 610
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Runtime structure of the built-in asynchronous loading context.
+ * @field head Common context runtime header.
+ * @field pictures Pictures to load.
+ * @field pixelarrays Pixelarrays to load.
+ * @field sprites Sprites to load.
+ * @field musics Musics to load.
+ * @field effects Sound effects to load.
+ * @field sound_sprites Sound sprites to load.
+ * @field texts Text resources to load.
+ * @field files Raw files to load.
+ * @field configurations Configurations to load.
+ * @field percent_completion Current completion ratio.
+ * @field terminated True when loading is complete.
+ * @see bunny_init_loading_context
+ * @see bunny_clear_all_loaded_ressources
+ *
+ * @doc-lang fr
+ * @brief Structure d’exécution du contexte de chargement asynchrone intégré.
+ * @field head Common context runtime header.
+ * @field pictures Pictures to load.
+ * @field pixelarrays Pixelarrays to load.
+ * @field sprites Sprites to load.
+ * @field musics Musics to load.
+ * @field effects Sound effects to load.
+ * @field sound_sprites Sound sprites to load.
+ * @field texts Text resources to load.
+ * @field files Raw files to load.
+ * @field configurations Configurations to load.
+ * @field percent_completion Current completion ratio.
+ * @field terminated True when loading is complete.
+ * @see bunny_init_loading_context
+ * @see bunny_clear_all_loaded_ressources
+ */
 typedef struct			s_bunny_loading_screen
 {
   t_bunny_context_runtime_info	head;

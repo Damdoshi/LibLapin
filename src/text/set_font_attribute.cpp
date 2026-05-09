@@ -29,6 +29,37 @@
 ** \param config Optional configuration pointer to read from or update.
 ** \return True on success, false on error.
 */
+
+/**
+ * @doc
+ * @doc-symbol bunny_set_font_attribute
+ * @doc-kind function
+ * @doc-module text
+ * @doc-order 155
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Loads a font and applies text attributes from a configuration.
+ * @param conf_file Configuration file to read, or NULL when config is used.
+ * @param font Where to store the loaded font.
+ * @param config Optional configuration pointer to read from or update.
+ * @return-success Returns true on success.
+ * @return-failure Returns false on invalid configuration or allocation/load failure.
+ * @log "ressource,text"
+ * @see bunny_load_text, bunny_read_textbox, bunny_set_clipable_attribute
+ *
+ * @doc-lang fr
+ * @brief Charge une police et applique des attributs de texte depuis une configuration.
+ * @param conf_file Fichier de configuration à lire, ou NULL lorsque config est utilisé.
+ * @param font Adresse où stocker la police chargée.
+ * @param config Pointeur de configuration optionnel à lire ou mettre à jour.
+ * @return-success Renvoie true en cas de succès.
+ * @return-failure Renvoie false en cas de configuration invalide ou d'échec d'allocation/chargement.
+ * @log "ressource,text"
+ * @see bunny_load_text, bunny_read_textbox, bunny_set_clipable_attribute
+ */
 bool			bunny_set_font_attribute(const char		*conf_file,
 						 t_bunny_font		**font,
 						 t_bunny_configuration	**config)

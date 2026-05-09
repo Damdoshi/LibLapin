@@ -5,6 +5,34 @@
 
 #include	"lapin_private.h"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_declarativef
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 813
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Tests declarative boolean presence through a formatted path.
+ * @param c Configuration tree to inspect.
+ * @param fmt Printf-like address pattern.
+ * @param ... Values consumed by $Sfmt@.
+ * @return-success Returns $Ctrue@ when the declaration is considered active.
+ * @return-failure Returns $Cfalse@ otherwise.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Teste une présence booléenne déclarative via un chemin formaté.
+ * @param c Configuration tree to inspect.
+ * @param fmt Printf-like address pattern.
+ * @param ... Values consumed by $Sfmt@.
+ * @return-success Renvoie $Ctrue@ quand la déclaration est considérée active.
+ * @return-failure Renvoie $Cfalse@ sinon.
+ * @log "configuration"
+ */
 bool			bunny_configuration_declarativef(t_bunny_configuration		*cnf,
 							 const char			*fmt,
 							 ...)

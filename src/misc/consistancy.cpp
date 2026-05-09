@@ -14,6 +14,25 @@
   assert(__a == __b); \
 } while (0)
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_consistancy
+ * @doc-kind function
+ * @doc-module misc
+ * @doc-order 370
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Runs internal public/private layout consistency assertions.
+ * @description This debugging helper checks that public structures still match the private structures expected by the library implementation.
+ *
+ * @doc-lang fr
+ * @brief Lance des assertions internes de cohérence entre layouts publics et privés.
+ * @description Cet utilitaire de debug vérifie que les structures publiques correspondent toujours aux structures privées attendues par l'implémentation de la bibliothèque.
+ */
 void bunny_consistancy(void)
 {
   t_bunny_window *usr_win = NULL;

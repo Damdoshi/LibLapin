@@ -57,6 +57,40 @@ const std::string	FileDumper::haar =
 
 #define			PATTERN		"%p capture, %p head -> %s"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_camera_headtrack
+ * @doc-kind function
+ * @doc-module camera
+ * @doc-order 320
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level 40
+ *
+ * @doc-lang en
+ * @brief Detects a face in a camera capture.
+ * @description The detected area is an approximation around the first face found by the embedded OpenCV cascade.
+ * @param capture The capture to analyze.
+ * @param head The area filled with the detected head rectangle.
+ * @return-case success true if a face was found.
+ * @return-case failure false if no face was found or if the classifier resource cannot be generated.
+ * @error BE_CANT_GENERATE_RESSOURCE The temporary classifier file could not be generated.
+ * @log This function writes logs in the "camera" domain.
+ * @see bunny_stabilize_headtrack
+ *
+ * @doc-lang fr
+ * @brief Détecte un visage dans une capture de caméra.
+ * @description La zone détectée est une approximation autour du premier visage trouvé par la cascade OpenCV embarquée.
+ * @param capture La capture à analyser.
+ * @param head La zone remplie avec le rectangle de tête détecté.
+ * @return-case success true si un visage est trouvé.
+ * @return-case failure false si aucun visage n'est trouvé ou si la ressource du classifieur ne peut pas être générée.
+ * @error BE_CANT_GENERATE_RESSOURCE Le fichier temporaire du classifieur n'a pas pu être généré.
+ * @log Cette fonction écrit des logs dans le domaine "camera".
+ * @see bunny_stabilize_headtrack
+ */
+
 bool			bunny_camera_headtrack(const t_bunny_capture	*capture,
 					       t_bunny_area		*head)
 {

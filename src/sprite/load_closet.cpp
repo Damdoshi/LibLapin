@@ -65,6 +65,33 @@ static t_bunny_clothe	*bunny_read_clothe(const char	*name,
   return (NULL);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_read_closet
+ * @doc-kind function
+ * @doc-module sprite
+ * @doc-order 420
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Builds a closet from a configuration node.
+ * @param config Closet configuration node.
+ * @param wardrobe Optional wardrobe map where the closet is added or shared.
+ * @return-success Returns a newly allocated closet.
+ * @return-failure Returns NULL on error.
+ * @see bunny_load_closet, bunny_delete_closet
+ *
+ * @doc-lang fr
+ * @brief Construit un placard depuis un nœud de configuration.
+ * @param config Nœud de configuration du placard.
+ * @param wardrobe Map de garde-robe optionnelle où le placard est ajouté ou partagé.
+ * @return-success Renvoie un placard nouvellement alloué.
+ * @return-failure Renvoie NULL en cas d'erreur.
+ * @see bunny_load_closet, bunny_delete_closet
+ */
 t_bunny_closet		*bunny_read_closet(t_bunny_configuration *config,
 					   t_bunny_map	*wardrobe)
 {
@@ -187,6 +214,33 @@ t_bunny_closet		*bunny_read_closet(t_bunny_configuration *config,
   return (NULL);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_load_closet
+ * @doc-kind function
+ * @doc-module sprite
+ * @doc-order 430
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Loads a closet from a configuration file.
+ * @param file Closet configuration file.
+ * @param wardrobe Optional wardrobe map where the closet is added or shared.
+ * @return-success Returns a newly allocated closet.
+ * @return-failure Returns NULL on error.
+ * @see bunny_read_closet, bunny_delete_closet
+ *
+ * @doc-lang fr
+ * @brief Charge un placard depuis un fichier de configuration.
+ * @param file Fichier de configuration du placard.
+ * @param wardrobe Map de garde-robe optionnelle où le placard est ajouté ou partagé.
+ * @return-success Renvoie un placard nouvellement alloué.
+ * @return-failure Renvoie NULL en cas d'erreur.
+ * @see bunny_read_closet, bunny_delete_closet
+ */
 t_bunny_closet		*bunny_load_closet(const char	*file,
 					   t_bunny_map	*wardrobe)
 {

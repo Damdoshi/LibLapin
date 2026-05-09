@@ -20,6 +20,27 @@ bool			bunny_filter_label(const char	*labels)
   return (false);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_set_log_filter
+ * @doc-kind function
+ * @doc-module error
+ * @doc-order 260
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Restricts logs to selected labels.
+ * @param label Comma-separated list of accepted labels, without spaces.
+ * @see bunny_set_log_mode
+ *
+ * @doc-lang fr
+ * @brief Restreint les logs aux labels sélectionnés.
+ * @param label Liste de labels acceptés séparés par des virgules, sans espaces.
+ * @see bunny_set_log_mode
+ */
 void			bunny_set_log_filter(const char	*label)
 {
   std::string		str;

@@ -5,6 +5,35 @@
 
 #include		"lapin_private.h"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_collision_configuration
+ * @doc-kind function
+ * @doc-module collide
+ * @doc-order 630
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Loads collision shapes from a configuration node.
+ * @param field Configuration field containing the shapes.
+ * @param shapes Output structure receiving the allocated shapes.
+ * @param cnf Configuration to read.
+ * @return-success Returns BD_OK when the shapes are loaded.
+ * @return-failure Returns BD_NOT_FOUND or BD_ERROR when loading fails.
+ * @see t_bunny_collision_shapes
+ *
+ * @doc-lang fr
+ * @brief Charge des formes de collision depuis un nœud de configuration.
+ * @param field Champ de configuration contenant les formes.
+ * @param shapes Structure de sortie recevant les formes allouées.
+ * @param cnf Configuration à lire.
+ * @return-success Renvoie BD_OK lorsque les formes sont chargées.
+ * @return-failure Renvoie BD_NOT_FOUND ou BD_ERROR si le chargement échoue.
+ * @see t_bunny_collision_shapes
+ */
 t_bunny_decision	bunny_collision_configuration(const char		*field,
 						      t_bunny_collision_shapes	*shapes,
 						      t_bunny_configuration	*cnf)

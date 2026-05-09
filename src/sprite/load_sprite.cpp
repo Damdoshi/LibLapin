@@ -117,6 +117,31 @@ t_bunny_sprite		*_bunny_read_sprite(t_bunny_configuration *conf,
   return ((t_bunny_sprite*)sprite);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_load_sprite
+ * @doc-kind function
+ * @doc-module sprite
+ * @doc-order 160
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Loads a sprite from a sprite configuration file.
+ * @param file Sprite configuration file.
+ * @return-success Returns a newly allocated sprite.
+ * @return-failure Returns NULL on error.
+ * @see bunny_read_sprite, bunny_delete_clipable
+ *
+ * @doc-lang fr
+ * @brief Charge un sprite depuis un fichier de configuration de sprite.
+ * @param file Fichier de configuration de sprite.
+ * @return-success Renvoie un sprite nouvellement alloué.
+ * @return-failure Renvoie NULL en cas d'erreur.
+ * @see bunny_read_sprite, bunny_delete_clipable
+ */
 t_bunny_sprite		*bunny_load_sprite(const char		*file)
 {
   char			buffer[1024];

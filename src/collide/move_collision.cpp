@@ -5,6 +5,29 @@
 
 #include	"lapin_private.h"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_move_collision
+ * @doc-kind function
+ * @doc-module collide
+ * @doc-order 600
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Translates a collision shape in place.
+ * @param a Collision shape to move.
+ * @param move Translation to apply.
+ * @see bunny_turn_collision
+ *
+ * @doc-lang fr
+ * @brief Translate une forme de collision sur place.
+ * @param a Forme de collision à déplacer.
+ * @param move Translation à appliquer.
+ * @see bunny_turn_collision
+ */
 void		bunny_move_collision(t_bunny_collision		*a,
 				     t_bunny_accurate_position	move)
 {

@@ -11,6 +11,37 @@ static const char	*gl_dictionnary =
   ;
 static unsigned char	gl_id[256];
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_base64_encode
+ * @doc-kind function
+ * @doc-module misc
+ * @doc-order 190
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Encodes binary data as base64 text.
+ * @param data Data to encode.
+ * @param len Input size in bytes.
+ * @param out Pointer to the output buffer pointer. If *out is NULL or too small, the function allocates a new buffer.
+ * @param outlen Input capacity of *out and output size of the encoded text. It may be NULL.
+ * @return-success Returns true and writes a zero-terminated base64 string.
+ * @return-failure Returns false on allocation failure.
+ * @see bunny_base64_decode, bunny_base64_check
+ *
+ * @doc-lang fr
+ * @brief Encode des données binaires en texte base64.
+ * @param data Données à encoder.
+ * @param len Taille d'entrée en octets.
+ * @param out Pointeur vers le pointeur de tampon de sortie. Si *out vaut NULL ou est trop petit, la fonction alloue un nouveau tampon.
+ * @param outlen Capacité d'entrée de *out et taille de sortie du texte encodé. Peut valoir NULL.
+ * @return-success Renvoie true et écrit une chaîne base64 terminée par zéro.
+ * @return-failure Renvoie false en cas d'échec d'allocation.
+ * @see bunny_base64_decode, bunny_base64_check
+ */
 bool			bunny_base64_encode(const void		*_data,
 					    size_t		len,
 					    char		**out,
@@ -60,6 +91,37 @@ bool			bunny_base64_encode(const void		*_data,
   return (true);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_base64_decode
+ * @doc-kind function
+ * @doc-module misc
+ * @doc-order 200
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Decodes base64 text into binary data.
+ * @param data Base64 text to decode.
+ * @param len Input length in bytes.
+ * @param out Pointer to the output buffer pointer. If *out is NULL or too small, the function allocates a new buffer.
+ * @param outlen Input capacity of *out and output size of decoded data. It may be NULL.
+ * @return-success Returns true if the decoding completed.
+ * @return-failure Returns false if the input is invalid or allocation fails.
+ * @see bunny_base64_encode, bunny_base64_check
+ *
+ * @doc-lang fr
+ * @brief Décode un texte base64 en données binaires.
+ * @param data Texte base64 à décoder.
+ * @param len Longueur d'entrée en octets.
+ * @param out Pointeur vers le pointeur de tampon de sortie. Si *out vaut NULL ou est trop petit, la fonction alloue un nouveau tampon.
+ * @param outlen Capacité d'entrée de *out et taille de sortie des données décodées. Peut valoir NULL.
+ * @return-success Renvoie true si le décodage s'est terminé.
+ * @return-failure Renvoie false si l'entrée est invalide ou si l'allocation échoue.
+ * @see bunny_base64_encode, bunny_base64_check
+ */
 bool			bunny_base64_decode(const char		*data,
 					    size_t		len,
 					    void		**_out,
@@ -128,6 +190,33 @@ bool			bunny_base64_decode(const char		*data,
   return (true);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_base64_check
+ * @doc-kind function
+ * @doc-module misc
+ * @doc-order 210
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Checks whether a buffer is valid base64 text.
+ * @param data Text to check.
+ * @param len Text length in bytes.
+ * @return-success Returns true if the text has a valid base64 shape.
+ * @return-failure Returns false otherwise.
+ * @see bunny_base64_encode, bunny_base64_decode
+ *
+ * @doc-lang fr
+ * @brief Vérifie si un tampon contient un texte base64 valide.
+ * @param data Texte à vérifier.
+ * @param len Longueur du texte en octets.
+ * @return-success Renvoie true si le texte a une forme base64 valide.
+ * @return-failure Renvoie false sinon.
+ * @see bunny_base64_encode, bunny_base64_decode
+ */
 bool			bunny_base64_check(const char		*data,
 					   size_t		len)
 {
@@ -156,6 +245,37 @@ bool			bunny_base64_check(const char		*data,
   return (true);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_read_base64
+ * @doc-kind function
+ * @doc-module misc
+ * @doc-order 215
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Reads and decodes a base64 sequence from a larger string.
+ * @param data Source string.
+ * @param i Current read index. It is advanced past the decoded sequence on success.
+ * @param out Output buffer pointer, following bunny_base64_decode allocation rules.
+ * @param outlen Output length pointer, following bunny_base64_decode rules.
+ * @return-success Returns true if a base64 block was decoded.
+ * @return-failure Returns false on invalid input or allocation failure.
+ * @see bunny_base64_decode
+ *
+ * @doc-lang fr
+ * @brief Lit et décode une séquence base64 depuis une chaîne plus grande.
+ * @param data Chaîne source.
+ * @param i Index courant de lecture. Il est avancé après la séquence décodée en cas de succès.
+ * @param out Pointeur de tampon de sortie, selon les règles d'allocation de bunny_base64_decode.
+ * @param outlen Pointeur de taille de sortie, selon les règles de bunny_base64_decode.
+ * @return-success Renvoie true si un bloc base64 a été décodé.
+ * @return-failure Renvoie false en cas d'entrée invalide ou d'échec d'allocation.
+ * @see bunny_base64_decode
+ */
 bool				bunny_read_base64(const char		*data,
 						  ssize_t		*i,
 						  void			**out,

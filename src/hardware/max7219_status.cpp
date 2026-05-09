@@ -56,6 +56,29 @@ bool			_bunny_max7219_send_word(t_bunny_max7219	*m,
   return (true);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_max7219_status
+ * @doc-kind function
+ * @doc-module hardware
+ * @doc-order 460
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 50
+ *
+ * @doc-lang en
+ * @brief Generates the MAX7219 initialization/status bitstream.
+ * @param m MAX7219 descriptor.
+ * @return-success Returns true when the stream was generated.
+ * @see t_bunny_max7219
+ *
+ * @doc-lang fr
+ * @brief Génère le bitstream d’initialisation/statut MAX7219.
+ * @param m Descripteur MAX7219.
+ * @return-success Renvoie true lorsque le flux a été généré.
+ * @see t_bunny_max7219
+ */
 bool			bunny_max7219_status(t_bunny_max7219		*m)
 {
   _bunny_max7219_send_word(m, BMC_SET_DECODE_MODE, 0);

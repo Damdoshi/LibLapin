@@ -17,6 +17,31 @@ static void		broadcast_set_animation(t_bunny_map		*nod,
     bunny_sprite_set_animation_id(clothe->sprite, *(uint64_t*)p);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_sprite_set_animation_id
+ * @doc-kind function
+ * @doc-module sprite
+ * @doc-order 260
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Selects the current sprite animation by hash.
+ * @param sprite Sprite to update.
+ * @return-success Returns true if the animation exists and was selected.
+ * @return-failure Returns false if the animation does not exist.
+ * @see bunny_sprite_set_animation_name, bunny_sprite_animation_name
+ *
+ * @doc-lang fr
+ * @brief Sélectionne l'animation courante du sprite par hash.
+ * @param sprite Sprite à mettre à jour.
+ * @return-success Renvoie true si l'animation existe et a été sélectionnée.
+ * @return-failure Renvoie false si l'animation n'existe pas.
+ * @see bunny_sprite_set_animation_name, bunny_sprite_animation_name
+ */
 bool			bunny_sprite_set_animation_id(t_bunny_sprite	*spr,
 						      uint64_t		hash)
 {
@@ -51,6 +76,31 @@ bool			bunny_sprite_set_animation_id(t_bunny_sprite	*spr,
   return (true);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_sprite_set_animation_name
+ * @doc-kind function
+ * @doc-module sprite
+ * @doc-order 240
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Selects the current sprite animation by name.
+ * @param sprite Sprite to update.
+ * @return-success Returns true if the animation exists and was selected.
+ * @return-failure Returns false if the animation does not exist.
+ * @see bunny_sprite_set_animation_id
+ *
+ * @doc-lang fr
+ * @brief Sélectionne l'animation courante du sprite par nom.
+ * @param sprite Sprite à mettre à jour.
+ * @return-success Renvoie true si l'animation existe et a été sélectionnée.
+ * @return-failure Renvoie false si l'animation n'existe pas.
+ * @see bunny_sprite_set_animation_id
+ */
 bool			bunny_sprite_set_animation_name(t_bunny_sprite	*spr,
 							const char	*anim)
 {

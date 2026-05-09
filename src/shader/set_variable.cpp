@@ -101,6 +101,35 @@ static void		get_current(sf::Shader				*shader,
   shader->setUniform(varname, sf::Shader::CurrentTexture);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_shader_set_variable
+ * @doc-kind function
+ * @doc-module shader
+ * @doc-order 40
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Sets a uniform variable inside a shader.
+ * @param sha Shader to update.
+ * @param varname Name of the uniform variable.
+ * @param type Type of value provided in the variadic arguments.
+ * @param ... Value matching type.
+ * @log "graphics"
+ * @see t_bunny_variable_type
+ *
+ * @doc-lang fr
+ * @brief Définit une variable uniforme dans un shader.
+ * @param sha Shader à modifier.
+ * @param varname Nom de la variable uniforme.
+ * @param type Type de valeur fourni dans les arguments variadiques.
+ * @param ... Valeur correspondant à type.
+ * @log "graphics"
+ * @see t_bunny_variable_type
+ */
 void			bunny_shader_set_variable(t_bunny_shader	*_shader,
 						  const char		*varname,
 						  t_bunny_variable_type	type,

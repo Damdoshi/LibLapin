@@ -12,6 +12,28 @@ static void		_bunny_delete_box_rec(t_bunny_map		*map,
 
   (void)d;
   if (box)
+/**
+ * @doc
+ * @doc-symbol bunny_delete_box
+ * @doc-kind function
+ * @doc-module context
+ * @doc-order 530
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Deletes a GUI box and its children.
+ * @param box Box to destroy.
+ * @return-success The box tree is released.
+ * @see t_bunny_box_system
+ *
+ * @doc-lang fr
+ * @brief Détruit une boîte GUI et ses enfants.
+ * @param box Box to destroy.
+ * @return-success L’arbre de boîtes est libéré.
+ * @see t_bunny_box_system
+ */
     bunny_delete_box(box);
 }
 

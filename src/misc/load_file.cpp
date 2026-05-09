@@ -9,6 +9,39 @@
 
 #define			PATTERN		"%s file, %p target for data, %p target for data size -> %zd"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_load_file
+ * @doc-kind function
+ * @doc-module misc
+ * @doc-order 100
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Loads a complete file into memory.
+ * @description The loaded data is managed by LibLapin's resource manager unless resource management is disabled. If size is NULL, the allocated buffer receives an additional final zero byte.
+ * @param file File path to load.
+ * @param data Where to store the loaded data pointer.
+ * @param size Where to store the loaded size, or NULL to request a zero-terminated buffer.
+ * @return-success Returns the loaded byte count.
+ * @return-failure Returns -1 on error and leaves data and size unchanged.
+ * @log "ressource,file"
+ * @see bunny_save_file, bunny_make_file_unique, bunny_delete_file
+ *
+ * @doc-lang fr
+ * @brief Charge un fichier complet en mémoire.
+ * @description Les données chargées sont gérées par le gestionnaire de ressources de la LibLapin sauf si celui-ci est désactivé. Si size vaut NULL, le tampon alloué reçoit un octet zéro final supplémentaire.
+ * @param file Chemin du fichier à charger.
+ * @param data Adresse où stocker le pointeur vers les données chargées.
+ * @param size Adresse où stocker la taille chargée, ou NULL pour demander un tampon terminé par zéro.
+ * @return-success Renvoie le nombre d'octets chargés.
+ * @return-failure Renvoie -1 en cas d'erreur et ne modifie pas data ni size.
+ * @log "ressource,file"
+ * @see bunny_save_file, bunny_make_file_unique, bunny_delete_file
+ */
 ssize_t			bunny_load_file(const char		*file,
 					void			**data,
 					size_t			*size)

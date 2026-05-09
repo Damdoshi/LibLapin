@@ -99,6 +99,30 @@
 */
 # define			LAPIN_MINOR_VERSION	12
 
+/**
+ * @doc
+ * @doc-symbol t_bunny_configuration
+ * @doc-kind type
+ * @doc-module configuration
+ * @doc-order 20
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Opaque node used by the LibLapin configuration tree.
+ * @description A $Tt_bunny_configuration@ can contain a scalar value, named children and indexed cases. Create one with $Sbunny_new_configuration@ or by loading/reading a configuration file.
+ * @see t_bunny_configuration_type
+ * @see bunny_new_configuration
+ * @see bunny_delete_configuration
+ *
+ * @doc-lang fr
+ * @brief Nœud opaque utilisé par l’arbre de configuration de la LibLapin.
+ * @description Un $Tt_bunny_configuration@ peut contenir une valeur scalaire, des enfants nommés et des cases indexées. Créez-le avec $Sbunny_new_configuration@ ou en chargeant/lisant une configuration.
+ * @see t_bunny_configuration_type
+ * @see bunny_new_configuration
+ * @see bunny_delete_configuration
+ */
 typedef void			t_bunny_configuration;
 typedef enum			s_bunny_decision
   {

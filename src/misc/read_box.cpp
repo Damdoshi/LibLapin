@@ -5,6 +5,34 @@
 
 #include		"lapin_private.h"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_read_binary_box
+ * @doc-kind function
+ * @doc-module parsing
+ * @doc-order 540
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level 40
+ *
+ * @doc-lang en
+ * @brief Reads and copies one binary box from memory.
+ * @param data The binary data to inspect.
+ * @param offset Input/output offset. On success, it is advanced after the copied box.
+ * @param maxlen Total length of data.
+ * @return-case success A newly allocated binary box, or NULL on failure.
+ * @see t_bunny_binary_box
+ *
+ * @doc-lang fr
+ * @brief Lit et copie une boîte binaire depuis la mémoire.
+ * @param data Les données binaires à inspecter.
+ * @param offset Offset d'entrée/sortie. En cas de succès, il est avancé après la boîte copiée.
+ * @param maxlen Longueur totale de data.
+ * @return-case success Une boîte binaire nouvellement allouée, ou NULL en cas d'échec.
+ * @see t_bunny_binary_box
+ */
+
 t_bunny_binary_box	*bunny_read_binary_box(const void	*_data,
 					       off_t		*offset,
 					       off_t		maxlen)

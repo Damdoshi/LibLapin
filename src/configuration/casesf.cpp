@@ -5,6 +5,32 @@
 
 #include	"lapin_private.h"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_casesf
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 650
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Counts indexed cases below a node selected by a formatted address.
+ * @param c Configuration tree to inspect.
+ * @param pat Printf-like address pattern.
+ * @param ... Values consumed by $Spat@.
+ * @return-success Returns the number of cases, or $C-1@ on error.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Compte les cases indexées sous un nœud sélectionné par adresse formatée.
+ * @param c Configuration tree to inspect.
+ * @param pat Printf-like address pattern.
+ * @param ... Values consumed by $Spat@.
+ * @return-success Renvoie le nombre de cases, ou $C-1@ en cas d’erreur.
+ * @log "configuration"
+ */
 ssize_t		bunny_configuration_casesf(const t_bunny_configuration	*cnf,
 					   const char			*pat,
 					   ...)

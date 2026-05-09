@@ -39,6 +39,40 @@ static bool		load_node_or_file(t_bunny_configuration				*c,
   return (!!(*tar = load(c)));
 }
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_flexible_load
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 860
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Loads one or more resources from a field, array or map-shaped configuration value.
+ * @param cnf Configuration tree to inspect.
+ * @param mode Accepted loading shapes.
+ * @param load Callback that loads one node.
+ * @param ptr Output array of loaded resources.
+ * @param pattern Printf-like address pattern.
+ * @param ... Values consumed by $Spattern@.
+ * @return-success Returns the number of loaded resources.
+ * @return-failure Returns a negative value on error.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Charge une ou plusieurs ressources depuis une valeur de configuration en champ, tableau ou map.
+ * @param cnf Configuration tree to inspect.
+ * @param mode Accepted loading shapes.
+ * @param load Callback that loads one node.
+ * @param ptr Output array of loaded resources.
+ * @param pattern Printf-like address pattern.
+ * @param ... Values consumed by $Spattern@.
+ * @return-success Renvoie le nombre de ressources chargées.
+ * @return-failure Renvoie une valeur négative en cas d’erreur.
+ * @log "configuration"
+ */
 int			bunny_configuration_flexible_load(t_bunny_configuration		*cnf,
 							  t_flexible_load_mode		mode,
 							  t_flexible_load		load,

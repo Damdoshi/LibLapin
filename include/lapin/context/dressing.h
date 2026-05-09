@@ -34,6 +34,26 @@
 **
 **
 */
+/**
+ * @doc
+ * @doc-symbol t_bunny_dressing_configuration
+ * @doc-kind struct
+ * @doc-module context
+ * @doc-order 740
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Stores fonts used by the dressing context UI.
+ * @field character_font Font used for character labels.
+ * @field drawer_font Font used for drawers.
+ *
+ * @doc-lang fr
+ * @brief Stocke les polices utilisées par l’interface du contexte dressing.
+ * @field character_font Font used for character labels.
+ * @field drawer_font Font used for drawers.
+ */
 typedef struct		s_bunny_dressing_configuration
 {
   t_bunny_font		*character_font;
@@ -47,6 +67,34 @@ typedef struct		s_bunny_dressing_configuration
 **
 */
 
+/**
+ * @doc
+ * @doc-symbol t_bunny_dressing_screen
+ * @doc-kind struct
+ * @doc-module context
+ * @doc-order 750
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Runtime structure of the dressing-game context.
+ * @field head Common context runtime header.
+ * @field wardrobe Loaded wardrobe.
+ * @field nbr_drawers Number of drawers.
+ * @field characters Loaded dressed sprites.
+ * @field nbr_characters Number of characters.
+ * @see gl_bunny_dressing_context
+ *
+ * @doc-lang fr
+ * @brief Structure d’exécution du contexte de jeu d’habillage.
+ * @field head Common context runtime header.
+ * @field wardrobe Loaded wardrobe.
+ * @field nbr_drawers Number of drawers.
+ * @field characters Loaded dressed sprites.
+ * @field nbr_characters Number of characters.
+ * @see gl_bunny_dressing_context
+ */
 typedef struct		s_bunny_dressing_screen
 {
   t_bunny_context_runtime_info head;

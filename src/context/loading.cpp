@@ -228,11 +228,51 @@ static void		loading_leaving(t_bunny_response		res,
   if (ld->local_threadpool)
     bunny_set_async_computation(0);
   if (ld->failure)
+/**
+ * @doc
+ * @doc-symbol bunny_clear_all_loaded_ressources
+ * @doc-kind function
+ * @doc-module context
+ * @doc-order 650
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Deletes every resource already loaded by a loading context.
+ * @param screen Loading screen whose resources must be cleared.
+ * @return-success All tracked loaded resources are deleted.
+ * @see t_bunny_loading_screen
+ *
+ * @doc-lang fr
+ * @brief Détruit toutes les ressources déjà chargées par un contexte de chargement.
+ * @param screen Loading screen whose resources must be cleared.
+ * @return-success Toutes les ressources chargées suivies sont détruites.
+ * @see t_bunny_loading_screen
+ */
     bunny_clear_all_loaded_ressources((t_bunny_loading_screen*)ld);
   if (ld->head.subcontext.leaving_context)
     ld->head.subcontext.leaving_context(res, ld->head.main_structure);
 }
 
+/**
+ * @doc
+ * @doc-symbol gl_bunny_loading_context
+ * @doc-kind variable
+ * @doc-module context
+ * @doc-order 620
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Built-in context that loads resources asynchronously.
+ * @see t_bunny_loading_screen
+ *
+ * @doc-lang fr
+ * @brief Contexte intégré chargeant des ressources de manière asynchrone.
+ * @see t_bunny_loading_screen
+ */
 const t_bunny_context	gl_bunny_loading_context =
   {
     bunny_context_key,
@@ -257,6 +297,30 @@ const t_bunny_context	gl_bunny_loading_context =
     bunny_context_event_response
   };
 
+/**
+ * @doc
+ * @doc-symbol bunny_init_loading_context
+ * @doc-kind function
+ * @doc-module context
+ * @doc-order 630
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Initializes a loading-screen runtime structure.
+ * @param screen Loading screen to initialize.
+ * @return-success Returns $Ctrue@ on success.
+ * @return-failure Returns $Cfalse@ on allocation error.
+ * @see t_bunny_loading_screen
+ *
+ * @doc-lang fr
+ * @brief Initialise une structure d’exécution de loading screen.
+ * @param screen Loading screen to initialize.
+ * @return-success Renvoie $Ctrue@ en cas de succès.
+ * @return-failure Renvoie $Cfalse@ en cas d’erreur d’allocation.
+ * @see t_bunny_loading_screen
+ */
 bool			bunny_init_loading_context(t_bunny_loading_screen *_ld)
 {
   struct bunny_loading_screen *ld = (struct bunny_loading_screen*)_ld;
@@ -274,6 +338,28 @@ bool			bunny_init_loading_context(t_bunny_loading_screen *_ld)
   return (true);
 }
 
+/**
+ * @doc
+ * @doc-symbol bunny_terminate_loading_context
+ * @doc-kind function
+ * @doc-module context
+ * @doc-order 640
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Releases the lists owned by a loading-screen runtime structure.
+ * @param screen Loading screen to terminate.
+ * @return-success The loading lists and hooks are released.
+ * @see t_bunny_loading_screen
+ *
+ * @doc-lang fr
+ * @brief Libère les listes possédées par une structure de loading screen.
+ * @param screen Loading screen to terminate.
+ * @return-success Les listes de chargement et hooks sont libérés.
+ * @see t_bunny_loading_screen
+ */
 void			bunny_terminate_loading_context(t_bunny_loading_screen *_ld)
 {
   struct bunny_loading_screen *ld = (struct bunny_loading_screen*)_ld;
@@ -285,6 +371,28 @@ void			bunny_terminate_loading_context(t_bunny_loading_screen *_ld)
   for (i = 0; &ptr[i] != end; ++i)
     {
       for (bunny_list_all(ptr[i], nod))
+/**
+ * @doc
+ * @doc-symbol bunny_delete_ressource_hook
+ * @doc-kind function
+ * @doc-module context
+ * @doc-order 670
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Deletes a loading-resource hook.
+ * @param hook Hook to delete.
+ * @return-success The hook is released.
+ * @see t_bunny_loading_screen
+ *
+ * @doc-lang fr
+ * @brief Détruit un hook de ressource à charger.
+ * @param hook Hook to delete.
+ * @return-success Le hook est libéré.
+ * @see t_bunny_loading_screen
+ */
 	bunny_delete_ressource_hook((t_bunny_ressource_to_load*)nod->data);
       bunny_delete_list(ptr[i]);
     }
@@ -327,6 +435,28 @@ void			bunny_clear_all_loaded_ressources(t_bunny_loading_screen *_ld)
 	}
 }
 
+/**
+ * @doc
+ * @doc-symbol bunny_new_ressource_hook
+ * @doc-kind function
+ * @doc-module context
+ * @doc-order 660
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Allocates an empty loading-resource hook.
+ * @return-success Returns a newly allocated hook.
+ * @return-failure Returns $CNULL@ on allocation error.
+ * @see t_bunny_loading_screen
+ *
+ * @doc-lang fr
+ * @brief Alloue un hook de ressource à charger vide.
+ * @return-success Renvoie un hook nouvellement alloué.
+ * @return-failure Renvoie $CNULL@ en cas d’erreur d’allocation.
+ * @see t_bunny_loading_screen
+ */
 t_bunny_ressource_to_load *bunny_new_ressource_hook(void)
 {
   return ((t_bunny_ressource_to_load*)bunny_malloc(sizeof(t_bunny_ressource_to_load)));
@@ -337,6 +467,34 @@ void			bunny_delete_ressource_hook(t_bunny_ressource_to_load *ld)
   bunny_free(ld);
 }
 
+/**
+ * @doc
+ * @doc-symbol bunny_add_to_ressource_list
+ * @doc-kind function
+ * @doc-module context
+ * @doc-order 680
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Appends several loading hooks to a loading list.
+ * @param lst Destination list.
+ * @param ld Array of hooks to append.
+ * @param len Number of hooks in $Sld@.
+ * @return-success Returns $Ctrue@ on success.
+ * @return-failure Returns $Cfalse@ on insertion error.
+ * @see t_bunny_loading_screen
+ *
+ * @doc-lang fr
+ * @brief Ajoute plusieurs hooks de chargement à une liste.
+ * @param lst Destination list.
+ * @param ld Array of hooks to append.
+ * @param len Number of hooks in $Sld@.
+ * @return-success Renvoie $Ctrue@ en cas de succès.
+ * @return-failure Renvoie $Cfalse@ en cas d’erreur d’insertion.
+ * @see t_bunny_loading_screen
+ */
 bool			bunny_add_to_ressource_list(t_bunny_list		*lst,
 						    t_bunny_ressource_to_load	*ld,
 						    size_t			len)

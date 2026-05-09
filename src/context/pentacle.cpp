@@ -460,6 +460,22 @@ static void			pentacle_leaving(t_bunny_response		resp,
     bunny_delete_clipable(bss->picture);
 }
 
+/**
+ * @doc
+ * @doc-symbol gl_bunny_pentacle_context
+ * @doc-kind variable
+ * @doc-module context
+ * @doc-order 730
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Built-in pentacle splash context.
+ *
+ * @doc-lang fr
+ * @brief Contexte intégré de splash pentacle.
+ */
 const t_bunny_context		gl_bunny_pentacle_context =
   {
    (t_bunny_key)pentacle_key,

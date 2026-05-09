@@ -13,6 +13,35 @@ static double		_scalar(const t_bunny_accurate_position			*a,
   return (a->x * b->x + a->y * b->y);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_triangle_collision_dot
+ * @doc-kind function
+ * @doc-module collide
+ * @doc-order 520
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Tests whether a point is inside a triangle.
+ * @param v3 Vertex array containing three triangle vertices.
+ * @param dot Point to test.
+ * @return-success Returns true if dot is inside the triangle.
+ * @return-failure Returns false otherwise.
+ * @log "collision"
+ * @see bunny_quad_collision_dot
+ *
+ * @doc-lang fr
+ * @brief Teste si un point est dans un triangle.
+ * @param v3 Tableau de sommets contenant les trois sommets du triangle.
+ * @param dot Point à tester.
+ * @return-success Renvoie true si dot est dans le triangle.
+ * @return-failure Renvoie false sinon.
+ * @log "collision"
+ * @see bunny_quad_collision_dot
+ */
 bool			bunny_triangle_collision_dot(const t_bunny_vertex_array		*v3,
 						     const t_bunny_accurate_position	*dot)
 {

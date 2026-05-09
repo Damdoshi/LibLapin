@@ -164,6 +164,35 @@ static bool		_bunny_collide(const t_bunny_collision		*a,
   return (false);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_collide
+ * @doc-kind function
+ * @doc-module collide
+ * @doc-order 260
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Tests whether two generic collision shapes overlap.
+ * @param a First collision shape.
+ * @param b Second collision shape.
+ * @return-success Returns true if the shapes collide.
+ * @return-failure Returns false otherwise.
+ * @log "collision"
+ * @see t_bunny_collision
+ *
+ * @doc-lang fr
+ * @brief Teste si deux formes de collision génériques se recouvrent.
+ * @param a Première forme de collision.
+ * @param b Seconde forme de collision.
+ * @return-success Renvoie true si les formes entrent en collision.
+ * @return-failure Renvoie false sinon.
+ * @log "collision"
+ * @see t_bunny_collision
+ */
 bool		bunny_collide(const t_bunny_collision		*a,
 			      const t_bunny_collision		*b)
 {

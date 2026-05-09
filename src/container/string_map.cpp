@@ -93,6 +93,9 @@ const char		*bunny_string_map_set(t_bunny_map	*map,
 					      const char	*key,
 					      const char	*val)
 {
+  const char		*dup;
+  const char		*old;
+
   if (val == NULL)
     {
       if ((map = bunny_map_get_subtree(map, (char*)key, false)))
@@ -103,10 +106,15 @@ const char		*bunny_string_map_set(t_bunny_map	*map,
 	}
       return (NULL);
     }
-  if ((val = bunny_strdup(val)) == NULL)
+  if ((dup = bunny_strdup(val)) == NULL)
     return (NULL);
-  if ((key = (char*)bunny_map_set_data(map, key, val, const char*)) == NULL)
-    bunny_free((char*)val);
-  return (key);
+  if ((old = (const char*)bunny_map_set_data(map, key, dup, const char*)) == NULL)
+    {
+      bunny_free((char*)dup);
+      return (NULL);
+    }
+  if (old != dup)
+    bunny_free((char*)old);
+  return (dup);
 }
 

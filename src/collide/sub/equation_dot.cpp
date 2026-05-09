@@ -5,6 +5,31 @@
 
 #include	"lapin_private.h"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_collision_equation_dot
+ * @doc-kind function
+ * @doc-module collide
+ * @doc-order 300
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Tests a dot against an equation collision and returns contact information.
+ * @param equ Equation collision shape.
+ * @param dot Dot collision shape.
+ * @return-success Returns a t_bunny_collide_point. A negative radian means no collision.
+ * @see t_bunny_equation_collision, t_bunny_collide_point
+ *
+ * @doc-lang fr
+ * @brief Teste un point contre une collision par équation et renvoie les informations de contact.
+ * @param equ Forme de collision par équation.
+ * @param dot Forme de collision ponctuelle.
+ * @return-success Renvoie un t_bunny_collide_point. Un radian négatif signifie aucune collision.
+ * @see t_bunny_equation_collision, t_bunny_collide_point
+ */
 t_bunny_collide_point
 bunny_collision_equation_dot(const t_bunny_equation_collision	*equ,
 			     const t_bunny_dot_collision	*dot)

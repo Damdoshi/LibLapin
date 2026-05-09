@@ -5,6 +5,30 @@
 
 #include		"lapin_private.h"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_set_string
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 440
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Stores a string scalar value in a configuration node.
+ * @param config Node to modify.
+ * @param str Value to store.
+ * @return-success The node value is replaced.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Stocke une valeur scalaire string dans un nœud de configuration.
+ * @param config Node to modify.
+ * @param str Value to store.
+ * @return-success La valeur du nœud est remplacée.
+ * @log "configuration"
+ */
 void			bunny_configuration_set_string(t_bunny_configuration	*config,
 						       const char		*val)
 {
@@ -22,6 +46,30 @@ void			bunny_configuration_set_string(t_bunny_configuration	*config,
   scream_log_if("%p config, %s value", "configuration", config, val);
 }
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_set_int
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 460
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Stores a integer scalar value in a configuration node.
+ * @param config Node to modify.
+ * @param val Value to store.
+ * @return-success The node value is replaced.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Stocke une valeur scalaire integer dans un nœud de configuration.
+ * @param config Node to modify.
+ * @param val Value to store.
+ * @return-success La valeur du nœud est remplacée.
+ * @log "configuration"
+ */
 void			bunny_configuration_set_int(t_bunny_configuration	*config,
 						    int				val)
 {
@@ -36,6 +84,30 @@ void			bunny_configuration_set_int(t_bunny_configuration	*config,
   scream_log_if("%p config, %d value", "configuration", config, val);
 }
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_set_double
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 450
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Stores a double scalar value in a configuration node.
+ * @param config Node to modify.
+ * @param val Value to store.
+ * @return-success The node value is replaced.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Stocke une valeur scalaire double dans un nœud de configuration.
+ * @param config Node to modify.
+ * @param val Value to store.
+ * @return-success La valeur du nœud est remplacée.
+ * @log "configuration"
+ */
 void			bunny_configuration_set_double(t_bunny_configuration	*config,
 						       double			val)
 {

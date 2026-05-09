@@ -5,6 +5,33 @@
 
 #include	"lapin_private.h"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_pixel_collision
+ * @doc-kind function
+ * @doc-module collide
+ * @doc-order 625
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Tests whether a point collides with the visible pixels of a clipable.
+ * @param pic Clipable picture to test.
+ * @param pos Point to test.
+ * @param amgn Alpha margin.
+ * @return-success Returns true if the selected pixel is considered colliding.
+ * @return-failure Returns false otherwise.
+ *
+ * @doc-lang fr
+ * @brief Teste si un point entre en collision avec les pixels visibles d’un clipable.
+ * @param pic Picture clipable à tester.
+ * @param pos Point à tester.
+ * @param amgn Marge alpha.
+ * @return-success Renvoie true si le pixel sélectionné est considéré en collision.
+ * @return-failure Renvoie false sinon.
+ */
 bool		bunny_pixel_collision(t_bunny_clipable		*_pic,
 				      const t_bunny_position	*_pos,
 				      double			alpha_margin)

@@ -9,6 +9,33 @@
 // EXCEPT for the underlying picture.
 // It is used by dressed sprite to avoid having to repeat big chunks of configuration
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_fix_single_picture_clothe
+ * @doc-kind function
+ * @doc-module sprite
+ * @doc-order 570
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Optimizes a single-picture clothe for a dressed sprite.
+ * @param sprite Dressed sprite used as reference.
+ * @param closet Closet to inspect and possibly fix.
+ * @return-success Returns true if the fix was applied or was unnecessary.
+ * @return-failure Returns false on allocation or duplication failure.
+ * @see bunny_dressed_sprite_wear
+ *
+ * @doc-lang fr
+ * @brief Optimise un vêtement à image unique pour un sprite habillé.
+ * @param sprite Sprite habillé utilisé comme référence.
+ * @param closet Placard à inspecter et éventuellement corriger.
+ * @return-success Renvoie true si le correctif a été appliqué ou était inutile.
+ * @return-failure Renvoie false en cas d'échec d'allocation ou de duplication.
+ * @see bunny_dressed_sprite_wear
+ */
 bool			bunny_fix_single_picture_clothe(t_bunny_dressed_sprite	*sprite,
 							t_bunny_closet		*closet)
 {

@@ -19,6 +19,27 @@ static void		delete_clothe(t_bunny_map		*nod,
     }
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_delete_closet
+ * @doc-kind function
+ * @doc-module sprite
+ * @doc-order 440
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Deletes a closet and the clothes it owns.
+ * @param closet Closet to delete.
+ * @see bunny_load_closet
+ *
+ * @doc-lang fr
+ * @brief Supprime un placard et les vêtements qu'il possède.
+ * @param closet Placard à supprimer.
+ * @see bunny_load_closet
+ */
 void			bunny_delete_closet(t_bunny_closet	*closet)
 {
   bunny_map_foreach(closet->clothes, delete_clothe, NULL);

@@ -5,6 +5,32 @@
 
 #include		"lapin_private.h"
 
+/**
+ * @doc
+ * @doc-symbol bunny_new_gui_box
+ * @doc-kind function
+ * @doc-module context
+ * @doc-order 490
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Allocates and initializes the common base of a GUI box.
+ * @param siz Size of the concrete box structure.
+ * @param cnf Configuration node describing the box.
+ * @return-success Returns a newly allocated box base.
+ * @return-failure Returns $CNULL@ on error.
+ * @see t_bunny_box_system
+ *
+ * @doc-lang fr
+ * @brief Alloue et initialise la base commune d’une boîte GUI.
+ * @param siz Size of the concrete box structure.
+ * @param cnf Configuration node describing the box.
+ * @return-success Renvoie une base de boîte nouvellement allouée.
+ * @return-failure Renvoie $CNULL@ en cas d’erreur.
+ * @see t_bunny_box_system
+ */
 void			*bunny_new_gui_box(size_t			siz,
 					   t_bunny_configuration	*cnf)
 {
