@@ -146,7 +146,7 @@ function parse_doc_block(string $comment): array {
     if (preg_match('/^@doc-lang\s+([a-z][a-z0-9_-]*)\s*$/i', $line, $m)) {
       $cur = strtolower($m[1]); $ensure($cur); $lastTag = null; $lastName = null; continue;
     }
-    if (preg_match('/^@doc-symbol\s+([A-Za-z_][A-Za-z0-9_]*)\s*$/', $line, $m)) { $meta['symbol'] = $m[1]; continue; }
+    if (preg_match('/^@doc-symbol\s+(.+?)\s*$/', $line, $m)) { $meta['symbol'] = trim($m[1]); continue; }
     if (preg_match('/^@doc-module\s+([A-Za-z0-9_ -]+)\s*$/', $line, $m)) { $meta['module'] = trim($m[1]); continue; }
     if (preg_match('/^@doc-kind\s+([A-Za-z0-9_ -]+)\s*$/', $line, $m)) { $meta['kind'] = strtolower(trim($m[1])); continue; }
     if (preg_match('/^@doc-order\s+([0-9]+)\s*$/', $line, $m)) { $meta['order'] = (int)$m[1]; continue; }
@@ -163,6 +163,12 @@ function parse_doc_block(string $comment): array {
     if (preg_match('/^@param\s+([A-Za-z_][A-Za-z0-9_]*)\s+(.*)$/', $line, $m)) { $langs[$cur]['params'][$m[1]] = $m[2]; $lastTag = 'param'; $lastName = $m[1]; continue; }
     if (preg_match('/^@field\s+([A-Za-z_][A-Za-z0-9_]*)\s+(.*)$/', $line, $m)) { $langs[$cur]['fields'][$m[1]] = $m[2]; $lastTag = 'field'; $lastName = $m[1]; continue; }
     if (preg_match('/^@value\s+([A-Za-z_][A-Za-z0-9_]*)\s+(.*)$/', $line, $m)) { $langs[$cur]['values'][$m[1]] = $m[2]; $lastTag = 'value'; $lastName = $m[1]; continue; }
+    if (preg_match('/^@return-case\s+([A-Za-z0-9_-]+)\s+(.*)$/', $line, $m)) {
+      $label = strtolower(trim($m[1]));
+      $langs[$cur]['returns'][$label] = $m[2];
+      $lastTag = 'return-case'; $lastName = $label;
+      continue;
+    }
     if (preg_match('/^@return(?:-([A-Za-z0-9_-]+))?\s+(.*)$/', $line, $m)) {
       if (($m[1] ?? '') !== '') {
         $label = strtolower(trim($m[1]));
@@ -176,6 +182,18 @@ function parse_doc_block(string $comment): array {
     }
     if (preg_match('/^@error\s+([A-Za-z_][A-Za-z0-9_]*)\s+(.*)$/', $line, $m)) { $langs[$cur]['errors'][$m[1]] = $m[2]; $lastTag = 'error'; $lastName = $m[1]; continue; }
     if (preg_match('/^@log\s+(.*)$/', $line, $m)) { $langs[$cur]['logs'] .= ($langs[$cur]['logs'] === '' ? '' : "\n") . $m[1]; $lastTag = 'logs'; continue; }
+    if (preg_match('/^@section\s+(.+)$/', $line, $m)) {
+      // @section is a convenience accepted by older migration patches.  It is
+      // descriptive text, not an error/log entry, even when it appears after
+      // @log in the block.  Some old blocks used "@section Title Body...";
+      // make that readable in the flat historical resume block.
+      $section = trim($m[1]);
+      $section = preg_replace('/^(Additional informations?|Error values and logs|Error and logs)\s+(.+)$/i', '$1: $2', $section) ?? $section;
+      $section = preg_replace('/^(Informations suppl(?:é|&eacute;)mentaires|Valeurs d\'erreur et logs|Erreurs et logs)\s+(.+)$/iu', '$1 : $2', $section) ?? $section;
+      $langs[$cur]['description'] .= ($langs[$cur]['description'] === '' ? '' : "\n") . $section;
+      $lastTag = 'description';
+      continue;
+    }
     if (preg_match('/^@see\s+(.+)$/', $line, $m)) { foreach (preg_split('/\s*,\s*|\s+/', trim($m[1])) as $s) if ($s !== '') $langs[$cur]['see'][] = $s; $lastTag = 'see'; continue; }
 
     // Continuation lines.
@@ -250,13 +268,162 @@ function strip_c_comments_preserve_layout(string $code): string {
   return $out;
 }
 
+function preprocessor_line_continues(string $line): bool {
+  return (bool)preg_match('/\\\s*$/', $line);
+}
+
 function remove_preprocessor_lines(string $code): string {
   $out = [];
+  $skipContinuation = false;
   foreach (preg_split('/\R/', $code) as $line) {
-    if (preg_match('/^\s*#/', $line)) continue;
+    if ($skipContinuation) {
+      $skipContinuation = preprocessor_line_continues($line);
+      continue;
+    }
+    if (preg_match('/^\s*#/', $line)) {
+      $skipContinuation = preprocessor_line_continues($line);
+      continue;
+    }
     $out[] = $line;
   }
   return implode("\n", $out);
+}
+
+/** @return array<string,string> */
+function extract_macro_definitions(string $code): array {
+  $macros = [];
+  $lines = preg_split('/\R/', $code);
+  $n = count($lines);
+  for ($i = 0; $i < $n; ++$i) {
+    $line = $lines[$i];
+    if (!preg_match('/^\s*#\s*define\s+([A-Za-z_][A-Za-z0-9_]*)\b/', $line, $m))
+      continue;
+
+    $stmt = rtrim($line);
+    while (preprocessor_line_continues($line) && $i + 1 < $n) {
+      $line = $lines[++$i];
+      $stmt .= "\n" . rtrim($line);
+    }
+
+    // Remove old in-header documentation accidentally caught inside macro
+    // continuations, then keep only the public macro signature.  The body is
+    // deliberately not documentation: wrapper macros often contain casts,
+    // private backend calls or safety scaffolding that would be hostile to
+    // users if shown as the API prototype.
+    $stmt = preg_replace('#/\*.*?\*/#s', ' ', $stmt) ?? $stmt;
+    $stmt = preg_replace('/[ \t]+$/m', '', $stmt) ?? $stmt;
+    $macros[$m[1]] = trim($stmt);
+  }
+  return $macros;
+}
+
+function public_macro_signature(string $macro): string {
+  $macro = trim($macro);
+  // The manual should expose the user-facing macro call form, not the macro
+  // replacement list.  A full replacement list is usually noisy, sometimes
+  // implementation-specific, and in wrapper macros it hides the actual API
+  // intent.  Keep only '#define NAME(args)' or '#define NAME'.
+  if (preg_match('/^\s*#\s*define\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(([^)]*)\)/s', $macro, $m)) {
+    $args = trim(preg_replace('/\s+/', ' ', $m[2]) ?? $m[2]);
+    return '#define ' . $m[1] . '(' . $args . ')';
+  }
+  if (preg_match('/^\s*#\s*define\s+([A-Za-z_][A-Za-z0-9_]*)\b/s', $macro, $m))
+    return '#define ' . $m[1];
+  return $macro;
+}
+
+function macro_matches_symbol(string $macro, string $symbol): bool {
+  $q = preg_quote($symbol, '/');
+  return (bool)preg_match('/^\s*#\s*define\s+' . $q . '\b/s', $macro);
+}
+
+/** @return array{0:string,1:array<int,string>,2:string}|null */
+function macro_parts(string $macro): ?array {
+  $m = trim($macro);
+  $m = preg_replace('/\\\s*\R\s*/', ' ', $m) ?? $m;
+  $m = preg_replace('#/\*.*?\*/#s', ' ', $m) ?? $m;
+  $m = preg_replace('/\s+/', ' ', $m) ?? $m;
+  if (!preg_match('/^\s*#\s*define\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(([^)]*)\)\s*(.*)$/s', $m, $mm))
+    return null;
+  $args = [];
+  foreach (split_top_level_commas($mm[2]) as $a) {
+    $a = trim($a);
+    if ($a !== '') $args[] = $a;
+  }
+  return [$mm[1], $args, trim($mm[3])];
+}
+
+function normalize_macro_call_arg(string $expr): string {
+  $e = trim($expr);
+  $old = null;
+  while ($old !== $e) {
+    $old = $e;
+    $e = trim($e);
+    // Remove purely protective parenthesis: (x) -> x, ((x)) -> x.
+    if (preg_match('/^\(([^()]+)\)$/', $e, $m)) $e = trim($m[1]);
+  }
+  return $e;
+}
+
+function macro_arg_is_plain_parameter(string $expr, string $param): bool {
+  return normalize_macro_call_arg($expr) === $param;
+}
+
+/** @return array{0:string,1:string,2:array<int,string>}|null */
+function parse_function_prototype(string $decl, string $name): ?array {
+  $decl = strip_trailing_decl_attributes($decl);
+  $q = preg_quote($name, '/');
+  if (!preg_match('/^(.*?)\s+([\*&\s]*' . $q . ')\s*\((.*)\)\s*;\s*$/s', trim($decl), $m))
+    return null;
+  return [trim(preg_replace('/\s+/', ' ', $m[1]) ?? $m[1]), preg_replace('/\s+/', '', $m[2]) ?? $m[2], split_params($decl)];
+}
+
+function replace_parameter_name(string $decl, string $newName): string {
+  $d = trim($decl);
+  if (preg_match('/^(.*?)([A-Za-z_][A-Za-z0-9_]*)(\s*(?:\[[^\]]*\])?)\s*$/s', $d, $m))
+    return rtrim($m[1]) . (str_ends_with(rtrim($m[1]), '*') || str_ends_with(rtrim($m[1]), '&') ? '' : ' ') . $newName . $m[3];
+  return $decl;
+}
+
+function synthesize_macro_wrapper_prototype(string $root, string $macro): ?string {
+  $parts = macro_parts($macro);
+  if ($parts === null) return null;
+  [$macroName, $macroParams, $body] = $parts;
+  if (empty($macroParams) || $body === '') return null;
+
+  // Only synthesize a function-like signature for the simple and common case:
+  // a public macro forwarding directly to one real public/private function,
+  // possibly adding hidden fixed arguments such as NULL.  Generic macros using
+  // sizeof(type), casts, address-taking, statement blocks, etc. remain shown as
+  // '# define NAME(args)' because their C type cannot be stated honestly.
+  if (!preg_match('/^\(?\s*([A-Za-z_][A-Za-z0-9_]*)\s*\((.*)\)\s*\)?$/s', trim($body), $call))
+    return null;
+  $target = $call[1];
+  if ($target === $macroName) return null;
+  $callArgs = split_call_args($call[2]);
+  if (empty($callArgs)) return null;
+
+  $targetProto = find_header_proto($root, $target, false);
+  if ($targetProto === null || preg_match('/^\s*#\s*define\b/', $targetProto)) return null;
+  $parsed = parse_function_prototype($targetProto, $target);
+  if ($parsed === null) return null;
+  [$ret, $targetDeclarator, $targetParams] = $parsed;
+  $macroDeclarator = preg_replace('/' . preg_quote($target, '/') . '$/', $macroName, $targetDeclarator) ?? $macroName;
+
+  $resultParams = [];
+  foreach ($macroParams as $macroParam) {
+    $found = false;
+    foreach ($callArgs as $i => $callArg) {
+      if (!isset($targetParams[$i])) continue;
+      if (!macro_arg_is_plain_parameter($callArg, $macroParam)) continue;
+      $resultParams[] = replace_parameter_name($targetParams[$i], $macroParam);
+      $found = true;
+      break;
+    }
+    if (!$found) return null;
+  }
+
+  return $ret . ' ' . $macroDeclarator . '(' . implode(', ', $resultParams) . ');';
 }
 
 function split_c_declarations(string $code): array {
@@ -292,8 +459,22 @@ function split_c_declarations(string $code): array {
   return $decls;
 }
 
-function declaration_matches_symbol(string $decl, string $symbol): bool {
+
+function strip_trailing_decl_attributes(string $decl): string {
+  // LibLapin headers use attribute-like macros after prototypes, for example:
+  //   void *bunny_malloc(size_t size) _BMALLOC();
+  // They are important for compilation but noisy in the manual and they also
+  // look like a second function declarator to the lightweight parser.
   $d = trim($decl);
+  do {
+    $old = $d;
+    $d = preg_replace('/\s+_?[A-Z][A-Z0-9_]*\s*\([^;{}]*\)\s*;\s*$/s', ';', $d) ?? $d;
+  } while ($d !== $old);
+  return $d;
+}
+
+function declaration_matches_symbol(string $decl, string $symbol): bool {
+  $d = strip_trailing_decl_attributes($decl);
   $q = preg_quote($symbol, '/');
 
   // Typedefs are matched by their final public alias only.  This avoids
@@ -315,24 +496,257 @@ function declaration_matches_symbol(string $decl, string $symbol): bool {
   return (bool)preg_match('/\b' . $q . '\s*;\s*$/s', $d);
 }
 
-function find_header_proto(string $root, string $symbol): ?string {
+
+function cpp_symbol_without_overload_suffix(string $member): string {
+  $member = trim($member);
+  if (str_ends_with($member, ' const'))
+    $member = trim(substr($member, 0, -6));
+  // Documentation symbols use parenthesized labels to distinguish overloads,
+  // for example hbs::Frame::Frame(copy) or hbs::RangedValue::operator+(T).
+  // Those labels are not part of the C++ qualified name.
+  if (preg_match('/^(operator\s+.+)$/', $member))
+    return $member;
+  $member = preg_replace('/\([^()]*\)$/', '', $member) ?? $member;
+  return trim($member);
+}
+
+function cpp_split_owner_member(string $symbol): ?array {
+  // Conversion operators may themselves mention qualified types, for example
+  // hbs::WorldClock::operator hbs::Tick or
+  // hbs::RangedValue::operator std::string.  In that case the last :: belongs
+  // to the converted type, not to the member owner; split specifically before
+  // the operator token.
+  if (preg_match('/^(.*)::(operator.*)$/', $symbol, $m)) {
+    $owner = $m[1];
+    $member = $m[2];
+  } else {
+    $pos = strrpos($symbol, '::');
+    if ($pos === false) return null;
+    $owner = substr($symbol, 0, $pos);
+    $member = substr($symbol, $pos + 2);
+  }
+  if ($owner === '' || $member === '') return null;
+  return [$owner, $member, cpp_symbol_without_overload_suffix($member)];
+}
+
+function cpp_owner_template_argument_list(string $owner): string {
+  if ($owner === 'hbs::RangedValue') return '<T, Min, Max, ES>';
+  if ($owner === 'hbs::Frame') return '<Storage, Capacity>';
+  return '';
+}
+
+function cpp_owner_template_prefix(string $owner): string {
+  if ($owner === 'hbs::RangedValue') return "template <typename T, T Min, T Max, ExcessStrategy ES>\n";
+  if ($owner === 'hbs::Frame') return "template <typename Storage, size_t Capacity>\n";
+  return '';
+}
+
+function cpp_qualified_owner(string $owner): string {
+  return $owner . cpp_owner_template_argument_list($owner);
+}
+
+function cpp_base_class_name(string $owner): string {
+  $parts = explode('::', $owner);
+  return end($parts) ?: $owner;
+}
+
+function strip_cpp_constructor_initializer(string $decl): string {
+  $d = trim($decl);
+  $d = preg_replace('/\s+/', ' ', $d) ?? $d;
+  $pos = strpos($d, '(');
+  if ($pos === false) return $d;
+  $depth = 0;
+  $state = 'code';
+  $len = strlen($d);
+  for ($i = $pos; $i < $len; ++$i) {
+    $ch = $d[$i];
+    if ($state === 'code') {
+      if ($ch === '"') { $state = 'dquote'; continue; }
+      if ($ch === "'") { $state = 'squote'; continue; }
+      if ($ch === '(') ++$depth;
+      else if ($ch === ')') {
+        --$depth;
+        if ($depth === 0) {
+          $before = substr($d, 0, $i + 1);
+          $after = trim(substr($d, $i + 1));
+          if (($colon = strpos($after, ':')) !== false)
+            $after = trim(substr($after, 0, $colon));
+          return trim($before . ($after !== '' ? ' ' . $after : ''));
+        }
+      }
+    } else if ($state === 'dquote') {
+      if ($ch === '\\') { ++$i; continue; }
+      if ($ch === '"') $state = 'code';
+    } else if ($state === 'squote') {
+      if ($ch === '\\') { ++$i; continue; }
+      if ($ch === "'") $state = 'code';
+    }
+  }
+  return $d;
+}
+
+function split_leading_cpp_templates(string $decl): array {
+  $templates = [];
+  $d = trim($decl);
+  while (preg_match('/^template\s*<[^;{}]*>\s*/s', $d, $m)) {
+    $templates[] = trim($m[0]);
+    $d = trim(substr($d, strlen($m[0])));
+  }
+  return [$templates, $d];
+}
+
+function cpp_is_conversion_operator_member(string $member): bool {
+  return (bool)preg_match('/^operator\s+/', trim($member));
+}
+
+function qualify_cpp_type_declaration(string $symbol, string $decl): string {
+  $d = trim($decl);
+  if (!str_contains($symbol, '::')) return $d;
+
+  if (preg_match('/^(template\s*<.*>\s*)class\s+([A-Za-z_][A-Za-z0-9_]*)\s*;?$/s', $d, $m))
+    return trim($m[1]) . ' class ' . $symbol . ';';
+  if (preg_match('/^class\s+([A-Za-z_][A-Za-z0-9_]*)\s*;?$/s', $d))
+    return 'class ' . $symbol . ';';
+  if (preg_match('/^enum\s+class\s+([A-Za-z_][A-Za-z0-9_]*)\s*;?$/s', $d))
+    return 'enum class ' . $symbol . ';';
+  if (preg_match('/^enum\s+class\s+([A-Za-z_][A-Za-z0-9_]*)\s*\{(.*)\}\s*;?$/s', $d, $m))
+    return 'enum class ' . $symbol . "\n{" . $m[2] . "\n};";
+  if (preg_match('/^typedef\s+(.+?)\s+([A-Za-z_][A-Za-z0-9_]*)\s*;?$/s', $d, $m))
+    return 'typedef ' . trim($m[1]) . ' ' . $symbol . ';';
+  return $d;
+}
+
+function qualify_cpp_member_declaration(string $symbol, string $decl): string {
+  $parts = cpp_split_owner_member($symbol);
+  if ($parts === null) return $decl;
+  [$owner, $memberTag, $member] = $parts;
+
+  $d = trim($decl);
+  $d = strip_trailing_decl_attributes($d);
+  $d = strip_cpp_constructor_initializer($d);
+  $d = preg_replace('/;\s*$/', '', $d) ?? $d;
+  [$methodTemplates, $body] = split_leading_cpp_templates($d);
+
+  $ownerQualified = cpp_qualified_owner($owner);
+  $classBase = cpp_base_class_name($owner);
+  $prefix = cpp_owner_template_prefix($owner);
+  foreach ($methodTemplates as $tpl) $prefix .= $tpl . "\n";
+
+  if (cpp_is_conversion_operator_member($member)) {
+    if (preg_match('/^(.*?)\boperator\s+(.+?)\s*\((.*)$/s', $body, $m)) {
+      // Prefer the converted type written in @doc-symbol: it may be fully
+      // qualified even when the in-class declaration uses a using/typedef.
+      $convertedType = trim(substr($member, strlen('operator')));
+      return $prefix . trim($m[1]) . ' ' . $ownerQualified . '::operator ' . $convertedType . '(' . $m[3] . ';';
+    }
+  }
+
+  if ($member === $classBase || $member === '~' . $classBase) {
+    $q = preg_quote($member, '/');
+    if (preg_match('/^(.*?\b)?' . $q . '\s*\((.*)$/s', $body, $m)) {
+      $qual = trim($m[1] ?? '');
+      return $prefix . ($qual !== '' ? $qual . ' ' : '') . $ownerQualified . '::' . $member . '(' . $m[2] . ';';
+    }
+  }
+
+  $q = preg_quote($member, '/');
+  if (preg_match('/^(.*?)\b' . $q . '\s*\((.*)$/s', $body, $m))
+    return $prefix . rtrim($m[1]) . ' ' . $ownerQualified . '::' . $member . '(' . $m[2] . ';';
+
+  return $decl;
+}
+
+function qualify_cpp_declaration_for_symbol(string $symbol, string $kind, string $decl): string {
+  if (!str_contains($symbol, '::')) return $decl;
+  $kind = strtolower(trim($kind));
+  if (in_array($kind, ['type', 'class', 'struct', 'enum', 'typedef'], true))
+    return qualify_cpp_type_declaration($symbol, $decl);
+  return qualify_cpp_member_declaration($symbol, $decl);
+}
+
+function find_header_proto(string $root, string $symbol, bool $preferMacro = false): ?string {
   static $headers = null;
+  static $macroIndex = null;
   if ($headers === null) $headers = list_files($root . '/include', ['h', 'hpp']);
+
+  // Function-like public macros are real user-facing API in LibLapin.  They
+  // must be resolved before stripping preprocessor lines, otherwise a doc
+  // block for bunny_stack_push placed in a .cpp would fall back to the private
+  // _bunny_stack_push implementation signature.
+  if ($macroIndex === null) {
+    $macroIndex = [];
+    foreach ($headers as $h) {
+      $txt = file_get_contents($h);
+      if ($txt === false) continue;
+      foreach (extract_macro_definitions($txt) as $name => $macro)
+        $macroIndex[$name] = $macro;
+    }
+  }
+  if ($preferMacro && isset($macroIndex[$symbol])) {
+    $synth = synthesize_macro_wrapper_prototype($root, $macroIndex[$symbol]);
+    return $synth ?: public_macro_signature($macroIndex[$symbol]);
+  }
+
   foreach ($headers as $h) {
     $txt = file_get_contents($h);
-    if ($txt === false || !str_contains($txt, $symbol)) continue;
+    if ($txt === false) continue;
+    $needle = $symbol;
+    if (str_contains($symbol, '::')) {
+      $parts = explode('::', $symbol);
+      $needle = end($parts) ?: $symbol;
+      $needle = preg_replace('/\(.*$/', '', $needle) ?? $needle;
+      $needle = trim(str_replace('operator ', 'operator', $needle));
+    }
+    if ($needle !== '' && !str_contains($txt, $needle)) continue;
     $clean = remove_preprocessor_lines(strip_c_comments_preserve_layout($txt));
     foreach (split_c_declarations($clean) as $decl) {
-      if (!str_contains($decl, $symbol)) continue;
-      if (declaration_matches_symbol($decl, $symbol)) return trim($decl);
+      if ($needle !== '' && !str_contains($decl, $needle)) continue;
+      if (declaration_matches_symbol($decl, $symbol) || declaration_matches_symbol($decl, $needle)) return strip_trailing_decl_attributes($decl);
     }
+  }
+
+  // Only fall back to a macro after trying regular declarations.  This keeps
+  // functions such as bunny_malloc documented with their real prototype even
+  // when allocator compile-time options expose a replacement macro of the same
+  // name.
+  if (isset($macroIndex[$symbol])) {
+    $synth = synthesize_macro_wrapper_prototype($root, $macroIndex[$symbol]);
+    return $synth ?: public_macro_signature($macroIndex[$symbol]);
   }
   return null;
 }
 
+function fallback_proto_for_doc(string $symbol, string $kind, string $after): string {
+  $kind = strtolower(trim($kind));
+  $after = trim($after);
+  if ($kind === 'macro' || $kind === 'compile-option' || $kind === 'compile_option') {
+    // Compile-time feature switches are often used only through #ifdef and may
+    // have no real #define in the public header.  Show the user-facing switch
+    // form instead of a nearby preprocessor branch or a bare semicolon.
+    return '#define ' . $symbol;
+  }
+  return normalize_ws($after) . (str_ends_with($after, ';') ? '' : ';');
+}
+
 function split_params(string $prototype): array {
-  if (!preg_match('/\((.*)\)/s', $prototype, $m)) return [];
-  $inside = trim($m[1]);
+  if (preg_match('/^\s*#\s*define\s+[A-Za-z_][A-Za-z0-9_]*\s*\(([^)]*)\)/s', $prototype, $mm)) {
+    $inside = trim($mm[1]);
+    if ($inside === '') return [];
+    return split_top_level_commas($inside);
+  }
+  // Function pointer typedef: typedef bool (*t_bunny_destructor)(void *data);
+  // The generic parenthesis regexp would otherwise capture
+  // "*t_bunny_destructor)(void *data" as one bogus parameter.
+  if (preg_match('/^\s*typedef\b.*?\(\s*\*\s*[A-Za-z_][A-Za-z0-9_]*\s*\)\s*\((.*)\)\s*;?\s*$/s', $prototype, $fm))
+    $inside = trim($fm[1]);
+  else if (preg_match('/^[^()]*\boperator\s*[^()]+\s*\((.*)\)\s*;?\s*$/s', $prototype, $om))
+    $inside = trim($om[1]);
+  else if (preg_match('/^[^()]*\boperator[^\s()]*\s*\((.*)\)\s*;?\s*$/s', $prototype, $som))
+    $inside = trim($som[1]);
+  else if (preg_match('/^[^()]*\b[A-Za-z_][A-Za-z0-9_:~]*\s*\((.*)\)\s*;?\s*$/s', $prototype, $m))
+    $inside = trim($m[1]);
+  else
+    return [];
   if ($inside === '' || $inside === 'void') return [];
   $parts = [];
   $cur = ''; $depth = 0;
@@ -351,8 +765,22 @@ function param_name(string $param): string {
   $p = trim($param);
   $p = preg_replace('/=.*$/', '', $p);
   if (preg_match('/\(\s*\*\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)/', $p, $m)) return $m[1];
+  if ($p === '...') return '...';
   if (preg_match('/([A-Za-z_][A-Za-z0-9_]*)\s*(?:\[[^\]]*\])?\s*$/', $p, $m)) return $m[1];
   return '';
+}
+
+function is_safe_constant_token(string $tok): bool {
+  // Do not blindly wrap every ALL_CAPS token in $C...@.  The historical
+  // website later replaces every documented symbol by a link, independently
+  // from the $S/$T/$C color spans.  Wrapping documented compile-time options
+  // such as BUNNY_ALLOCATOR_DEACTIVATED in $C produced fragile nested markup
+  // on some pages.  Keep $C for literal values and errno-like constants only;
+  // other public constants/macros are still linkified by the website because
+  // their plain symbol name appears in the generated page.
+  if (in_array($tok, ['NULL', 'true', 'false'], true)) return true;
+  if (preg_match('/^(?:BE_[A-Z0-9_]+|E[A-Z0-9_]+)$/', $tok)) return true;
+  return false;
 }
 
 function mark_token(string $tok, array $paramNames = []): string {
@@ -360,7 +788,7 @@ function mark_token(string $tok, array $paramNames = []): string {
   static $types = ['void'=>1,'char'=>1,'short'=>1,'int'=>1,'long'=>1,'float'=>1,'double'=>1,'bool'=>1,'signed'=>1,'unsigned'=>1,'size_t'=>1,'ssize_t'=>1,'uint8_t'=>1,'uint16_t'=>1,'uint32_t'=>1,'uint64_t'=>1,'int8_t'=>1,'int16_t'=>1,'int32_t'=>1,'int64_t'=>1];
   if (isset($keywords[$tok])) return '$K' . $tok . '@';
   if (isset($types[$tok]) || preg_match('/^(t_|s_|u_|e_)[A-Za-z0-9_]+$/', $tok)) return '$T' . $tok . '@';
-  if (preg_match('/^[A-Z][A-Z0-9_]+$/', $tok)) return '$C' . $tok . '@';
+  if (is_safe_constant_token($tok)) return '$C' . $tok . '@';
   if (isset($paramNames[$tok]) || preg_match('/^(bunny_|gl_bunny_|t_bunny_|e_bunny_|s_bunny_|u_bunny_)[A-Za-z0-9_]+$/', $tok)) return '$S' . $tok . '@';
   return htmlspecialchars($tok, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
@@ -377,9 +805,14 @@ function prototype_param_names(string $prototype): array {
 function protect_literals(string $text, bool $code): array {
   $lits = [];
   // Nowdoc avoids PHP string escaping corrupting the PCRE character classes.
-  // Matches C/PHP-like single and double quoted literals, including escaped chars.
-  $pattern = <<<'REGEX'
+  // In code, protect both single and double quoted C literals.  In prose, do
+  // not treat apostrophes in French/English text as character literals: only
+  // double quoted snippets are literal strings there.
+  $pattern = $code ? <<<'REGEX'
 ~("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')~s
+REGEX
+  : <<<'REGEX'
+~("(?:\\.|[^"\\])*")~s
 REGEX;
   $text = preg_replace_callback($pattern, function($m) use (&$lits) {
     $key = "\x1A" . count($lits) . "\x1A";
@@ -399,6 +832,14 @@ function restore_literals(string $text, array $lits): string {
 }
 
 function colorize_code(string $code, array $paramNames = []): string {
+  // Preprocessor signatures are already the public-facing shape of a macro or
+  // a compile-time option.  Do not colorize the macro name with $C here: the
+  // website linkifier will still turn the plain symbol into a link when a page
+  // exists for it, and avoiding the extra span keeps the rendered prototype
+  // readable.
+  if (preg_match('/^\s*#\s*define\b/s', $code))
+    return htmlspecialchars($code, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8');
+
   [$work, $lits] = protect_literals($code, true);
   $work = htmlspecialchars($work, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8');
   $work = preg_replace_callback('/\b[A-Za-z_][A-Za-z0-9_]*\b/', fn($m) => mark_token($m[0], $paramNames), $work);
@@ -411,9 +852,8 @@ function colorize_text(string $text, array $paramNames = []): string {
   $work = preg_replace_callback('/\b[A-Za-z_][A-Za-z0-9_]*\b/', function($m) use ($paramNames) {
     $tok = $m[0];
     if (isset($paramNames[$tok])) return '$S' . $tok . '@';
-    if ($tok === 'true' || $tok === 'false' || $tok === 'NULL') return '$C' . $tok . '@';
+    if (is_safe_constant_token($tok)) return '$C' . $tok . '@';
     if (preg_match('/^(bunny_|gl_bunny_|t_bunny_|e_bunny_|s_bunny_|u_bunny_)[A-Za-z0-9_]+$/', $tok)) return '$S' . $tok . '@';
-    if (preg_match('/^[A-Z][A-Z0-9_]+$/', $tok)) return '$C' . $tok . '@';
     return $tok;
   }, $work);
   return restore_literals($work, $lits);
@@ -541,8 +981,15 @@ function split_struct_fields(string $body): array {
 }
 
 function format_c_declaration_for_doc(string $decl): string {
+  $decl = strip_trailing_decl_attributes($decl);
   $decl = trim($decl);
   $decl = preg_replace('/\n{3,}/', "\n\n", $decl);
+
+  if (preg_match('/^\s*#\s*define\s+/s', $decl)) {
+    $decl = public_macro_signature($decl);
+    $decl = preg_replace('/^\s*#\s*define/', '# define', $decl) ?? $decl;
+    return trim($decl);
+  }
 
   if (preg_match('/^typedef\s+(struct|union|enum)\s+([A-Za-z_][A-Za-z0-9_]*)\s*\{(.*)\}\s*([A-Za-z_][A-Za-z0-9_]*)\s*;\s*$/s', $decl, $m)) {
     $kind = $m[1];
@@ -575,6 +1022,12 @@ function format_c_declaration_for_doc(string $decl): string {
     $lines[] = pad_to_col('}') . $alias . ';';
     return implode("\n", $lines);
   }
+
+  // C++ methods are stored in the documentation with their fully qualified
+  // owner.  Keep them readable but do not try to apply the C-only column
+  // formatter, which cannot understand operators, templates or :: scopes.
+  if (str_contains($decl, '::') && preg_match('/\([^;{}]*\)\s*(?:const\s*)?;\s*$/s', $decl))
+    return trim(preg_replace('/\s+/', ' ', $decl));
 
   if (preg_match('/^(.*?)\s+([\*&\s]*[A-Za-z_][A-Za-z0-9_]*)\s*\((.*)\)\s*;\s*$/s', $decl, $m)) {
     $ret = trim(preg_replace('/\s+/', ' ', $m[1]));
@@ -617,6 +1070,13 @@ function declaration_named_identifiers(string $decl): array {
   $names = [];
   $d = trim($decl);
 
+  if (preg_match('/^\s*#\s*define\s+[A-Za-z_][A-Za-z0-9_]*\s*\(([^)]*)\)/s', $d, $m)) {
+    foreach (split_top_level_commas($m[1]) as $p) {
+      $n = trim($p);
+      if ($n !== '') $names[$n] = true;
+    }
+  }
+
   // Function parameters.
   if (preg_match('/\([^{};]*\)\s*;\s*$/s', $d)) {
     foreach (split_params($d) as $p) {
@@ -654,12 +1114,34 @@ function colorize_declaration_for_doc(string $decl, array $paramNames = []): str
   return colorize_code_preserving_layout(format_c_declaration_for_doc($decl), $names);
 }
 
+function doc_symbol_markup(string $symbol): string {
+  $symbol = htmlspecialchars($symbol, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8');
+  if (preg_match('/^[A-Z][A-Z0-9_]*$/', $symbol)) return '$C' . $symbol . '@';
+  if (preg_match('/^(t_|s_|u_|e_)[A-Za-z0-9_]+$/', $symbol)) return '$T' . $symbol . '@';
+  return '$S' . $symbol . '@';
+}
+
 function label_title(string $label): string {
   $label = strtolower(trim($label));
   if ($label === 'success') return 'success';
   if ($label === 'failure' || $label === 'fail') return 'failure';
   if ($label === 'error') return 'error';
   return str_replace(['_', '-'], ' ', $label);
+}
+
+
+function normalize_doc_log_lines(string $logs, string $lang): string {
+  $out = [];
+  foreach (preg_split('/\R+/', trim($logs)) as $line) {
+    $line = trim($line);
+    if ($line === '') continue;
+    if (preg_match('/^"([^"]+)"$/', $line, $m)) {
+      if ($lang === 'fr') $line = 'Les logs sont écrits avec le label "' . $m[1] . '".';
+      else $line = 'Logs are written with the "' . $m[1] . '" label.';
+    }
+    $out[] = $line;
+  }
+  return implode("\n", $out);
 }
 
 function page_html(DocItem $it, string $lang): string {
@@ -737,7 +1219,8 @@ function page_html(DocItem $it, string $lang): string {
       $html .= "  </ul>\n";
     }
     if (($d['logs'] ?? '') !== '') {
-      $html .= "  <br />\n" . paragraph_html($d['logs'], $paramNames) . "\n";
+      $logs = normalize_doc_log_lines($d['logs'], $lang);
+      $html .= "  <br />\n" . paragraph_html($logs, $paramNames) . "\n";
     }
     $html .= "</div>\n<hr />\n\n";
   }
@@ -745,7 +1228,7 @@ function page_html(DocItem $it, string $lang): string {
   if (!empty($d['see'])) {
     $html .= "<div class=\"related_functions\">\n  <h3>Related functions</h3>\n  <ul>\n";
     foreach (array_unique($d['see']) as $see)
-      $html .= "    <li>\$S" . htmlspecialchars($see, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8') . "@</li>\n";
+      $html .= "    <li>" . htmlspecialchars($see, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8') . "</li>\n";
     $html .= "  </ul>\n</div>\n";
   }
   return $html;
@@ -948,6 +1431,53 @@ function version_php($v): string {
   return (string)((int)$v);
 }
 
+
+function doc_file_label(string $symbol): string {
+  // Website labels are derived from filenames and are also used as anchors in
+  // the old manual renderer.  Keep plain C identifiers unchanged.  For C++,
+  // preserve namespace separators in labels: a page for hbs::Frame::Now should
+  // be indexed as hbs::Frame::Now, not as Frame, Now or hbs__Frame__Now.
+  // Characters that cannot safely appear in filenames or old anchors are still
+  // translated, while the original display symbol is stored in meta.generated.php.
+  if (preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $symbol))
+    return $symbol;
+
+  $label = $symbol;
+  $repl = [
+    '<=>' => '_spaceship_',
+    '<<' => '_lshift_',
+    '>>' => '_rshift_',
+    '++' => '_inc_',
+    '--' => '_dec_',
+    '+=' => '_plus_eq_',
+    '-=' => '_minus_eq_',
+    '*=' => '_mul_eq_',
+    '/=' => '_div_eq_',
+    '%=' => '_mod_eq_',
+    '==' => '_eq_',
+    '!=' => '_neq_',
+    '<=' => '_le_',
+    '>=' => '_ge_',
+    '+' => '_plus_',
+    '-' => '_minus_',
+    '*' => '_mul_',
+    '/' => '_div_',
+    '%' => '_mod_',
+    '&' => '_ref_',
+    '<' => '_lt_',
+    '>' => '_gt_',
+    '~' => '_dtor_',
+    ' ' => '_',
+    ',' => '_',
+    '(' => '_',
+    ')' => '_',
+  ];
+  $label = strtr($label, $repl);
+  $label = preg_replace('/[^A-Za-z0-9_:.-]+/', '_', $label) ?? $label;
+  $label = preg_replace('/_+/', '_', $label) ?? $label;
+  return trim($label, '_');
+}
+
 /** @param array<string,DocItem> $items */
 function write_generated_meta(string $outRoot, array $items, array $langs, bool $dryRun): int {
   $byModule = [];
@@ -965,19 +1495,26 @@ function write_generated_meta(string $outRoot, array $items, array $langs, bool 
       $content .= "// Generated by generate_doc.php; do not edit manually.\n";
       $content .= "if (!isset(\$functions)) \$functions = [];\n";
       $content .= "if (!isset(\$circle_level)) \$circle_level = [];\n";
-      $content .= "if (!isset(\$version_that_support)) \$version_that_support = [];\n\n";
+      $content .= "if (!isset(\$version_that_support)) \$version_that_support = [];\n";
+      $content .= "if (!isset(\$doc_symbol_display)) \$doc_symbol_display = [];\n\n";
+      $content .= "foreach ([\n";
+      foreach ($list as $it) {
+        $label = doc_file_label($it->symbol);
+        $content .= "  " . var_export($label, true) . " => " . var_export($it->symbol, true) . ",\n";
+      }
+      $content .= "] as \$k => \$v) \$doc_symbol_display[\$k] = \$v;\n\n";
       $groups = [];
-      foreach ($list as $it) $groups[$it->order ?? 9999][] = $it->symbol;
+      foreach ($list as $it) $groups[$it->order ?? 9999][] = doc_file_label($it->symbol);
       foreach ($groups as $ord => $symbols) {
         $content .= "\$functions[$ord] = array_values(array_unique(array_merge(\$functions[$ord] ?? [], [";
         foreach ($symbols as $sym) $content .= "\n  " . var_export($sym, true) . ",";
         $content .= "\n])));\n";
       }
       $content .= "\nforeach ([\n";
-      foreach ($list as $it) $content .= "  " . var_export($it->symbol, true) . " => {$it->level},\n";
+      foreach ($list as $it) $content .= "  " . var_export(doc_file_label($it->symbol), true) . " => {$it->level},\n";
       $content .= "] as \$k => \$v) \$circle_level[\$k] = \$v;\n\n";
       $content .= "foreach ([\n";
-      foreach ($list as $it) $content .= "  " . var_export($it->symbol, true) . " => [" . version_php($it->since) . ", " . version_php($it->until) . "],\n";
+      foreach ($list as $it) $content .= "  " . var_export(doc_file_label($it->symbol), true) . " => [" . version_php($it->since) . ", " . version_php($it->until) . "],\n";
       $content .= "] as \$k => \$v) \$version_that_support[\$k] = \$v;\n";
       if ($dryRun) echo "$file\n";
       else {
@@ -1016,7 +1553,9 @@ foreach ($files as $file) {
     $after = next_code_statement($txt, $pos + strlen($comment));
     $symbol = $meta['symbol'] ?: infer_symbol_from_proto($after);
     if ($symbol === '') { warnx("cannot infer symbol after doc block in $file"); continue; }
-    $proto = find_header_proto($root, $symbol) ?: (normalize_ws($after) . (str_ends_with(trim($after), ';') ? '' : ';'));
+    $kind = strtolower((string)($meta['kind'] ?? 'symbol'));
+    $proto = find_header_proto($root, $symbol, $kind === 'macro') ?: fallback_proto_for_doc($symbol, $kind, $after);
+    $proto = qualify_cpp_declaration_for_symbol($symbol, $kind, $proto);
     $it = new DocItem();
     $it->symbol = $symbol;
     $it->module = $meta['module'] ?: infer_module($file, $root);
@@ -1027,7 +1566,7 @@ foreach ($files as $file) {
     $it->prototype = $proto;
     $it->lang = $langsFound;
     $it->source = substr($file, strlen($root) + 1);
-    $it->kind = strtolower((string)($meta['kind'] ?? 'symbol'));
+    $it->kind = $kind;
     $it->header = (string)($meta['header'] ?? '');
     $it->body = extract_function_body_after_comment($txt, $pos + strlen($comment));
     merge_auto_doc($it);
@@ -1042,7 +1581,8 @@ foreach ($items as $it) {
   foreach ($langs as $lang) {
     if (!isset($it->lang[$lang])) continue;
     $dir = "$outRoot/$lang/manual/" . strtolower($it->module);
-    $file = ($it->kind === 'module') ? "$dir/main.php" : "$dir/{$prefix}_{$it->symbol}.php";
+    $label = doc_file_label($it->symbol);
+    $file = ($it->kind === 'module') ? "$dir/main.php" : "$dir/{$prefix}_{$label}.php";
     $content = "<?php /* Generated by generate_doc.php from {$it->source}; do not edit manually. */ ?>\n" . page_html($it, $lang);
     if ($dryRun) echo "$file\n";
     else {

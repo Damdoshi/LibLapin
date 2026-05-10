@@ -48,6 +48,8 @@ if (file_exists("$language/$doctype/$mod/main.php"))
     $circle_level = [];
   if (!isset($version_that_support))
     $version_that_support = [];
+  if (!isset($doc_symbol_display))
+    $doc_symbol_display = [];
   if (!isset($meta))
     $meta = "";
 
@@ -79,7 +81,7 @@ if (file_exists("$language/$doctype/$mod/main.php"))
           $entries[] = [
             'file' => $dir,
             'label' => $label,
-            'title' => $label,
+            'title' => $doc_symbol_display[$label] ?? $label,
             'version' => $version_that_support[$label] ?? [-1, -1]
           ];
         }

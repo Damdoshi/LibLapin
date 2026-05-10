@@ -93,12 +93,14 @@ void		bunny_malloc_failure(bool	fail);
  * @doc-lang en
  * @brief Redirects standard allocation calls to the Bunny allocator.
  * @description Define BUNNY_ALLOCATOR_OVERLOAD in your build, usually with the -D compiler option, to transform calls to malloc, calloc, realloc and free into calls to their bunny equivalents without changing your code.
+ * @description This is a compile-time option, not a function-like macro to call from your source code.
  * @description This macro is the modern public name. It enables LAPIN_ALLOCATOR_OVERLOAD internally.
  * @see BUNNY_ALLOCATOR_DEACTIVATED, LAPIN_ALLOCATOR_OVERLOAD
  *
  * @doc-lang fr
  * @brief Redirige les appels d'allocation standard vers l'allocateur Bunny.
  * @description Définissez BUNNY_ALLOCATOR_OVERLOAD dans votre compilation, généralement avec l'option -D du compilateur, pour transformer les appels à malloc, calloc, realloc et free en appels vers leurs équivalents bunny sans modifier votre code.
+ * @description C'est une option de compilation, pas une macro-fonction à appeler depuis votre code source.
  * @description Cette macro est le nom public moderne. Elle active LAPIN_ALLOCATOR_OVERLOAD en interne.
  * @see BUNNY_ALLOCATOR_DEACTIVATED, LAPIN_ALLOCATOR_OVERLOAD
  */
@@ -119,12 +121,14 @@ void		bunny_malloc_failure(bool	fail);
  * @doc-lang en
  * @brief Historical name used to redirect standard allocation calls to the Bunny allocator.
  * @description Define LAPIN_ALLOCATOR_OVERLOAD in your build, usually with the -D compiler option, to transform calls to malloc, calloc, realloc and free into calls to their bunny equivalents without changing your code.
+ * @description This is a compile-time option, not a function-like macro to call from your source code.
  * @description This is the historical name of BUNNY_ALLOCATOR_OVERLOAD. New code should use BUNNY_ALLOCATOR_OVERLOAD.
  * @see LAPIN_ALLOCATOR_DEACTIVATED, BUNNY_ALLOCATOR_OVERLOAD
  *
  * @doc-lang fr
  * @brief Nom historique utilisé pour rediriger les appels d'allocation standard vers l'allocateur Bunny.
  * @description Définissez LAPIN_ALLOCATOR_OVERLOAD dans votre compilation, généralement avec l'option -D du compilateur, pour transformer les appels à malloc, calloc, realloc et free en appels vers leurs équivalents bunny sans modifier votre code.
+ * @description C'est une option de compilation, pas une macro-fonction à appeler depuis votre code source.
  * @description Il s'agit du nom historique de BUNNY_ALLOCATOR_OVERLOAD. Le nouveau code devrait utiliser BUNNY_ALLOCATOR_OVERLOAD.
  * @see LAPIN_ALLOCATOR_DEACTIVATED, BUNNY_ALLOCATOR_OVERLOAD
  */
@@ -148,6 +152,7 @@ void		bunny_malloc_failure(bool	fail);
  * @doc-lang en
  * @brief Disables or bypasses the Bunny allocator.
  * @description This macro can be used in two different ways. At library compile time, it disables internal use of the Bunny allocator and binds the allocator functions to the system allocator. At application compile time, it transforms calls to bunny_malloc, bunny_calloc, bunny_realloc and bunny_free into calls to the regular allocator functions.
+ * @description This is a compile-time option, not a function-like macro to call from your source code.
  * @description This is useful while debugging with tools such as valgrind, which cannot inspect the Bunny allocator internal heap like it inspects the system allocator.
  * @description This macro is the modern public name. It enables LAPIN_ALLOCATOR_DEACTIVATED internally.
  * @see BUNNY_ALLOCATOR_OVERLOAD, LAPIN_ALLOCATOR_DEACTIVATED
@@ -155,6 +160,7 @@ void		bunny_malloc_failure(bool	fail);
  * @doc-lang fr
  * @brief Désactive ou contourne l'allocateur Bunny.
  * @description Cette macro peut être utilisée de deux manières. À la compilation de la bibliothèque, elle désactive l'utilisation interne de l'allocateur Bunny et relie les fonctions d'allocation à l'allocateur système. À la compilation de l'application, elle transforme les appels à bunny_malloc, bunny_calloc, bunny_realloc et bunny_free en appels aux fonctions d'allocation classiques.
+ * @description C'est une option de compilation, pas une macro-fonction à appeler depuis votre code source.
  * @description C'est utile pendant le débogage avec des outils comme valgrind, qui ne peuvent pas inspecter le tas interne de l'allocateur Bunny comme ils inspectent l'allocateur système.
  * @description Cette macro est le nom public moderne. Elle active LAPIN_ALLOCATOR_DEACTIVATED en interne.
  * @see BUNNY_ALLOCATOR_OVERLOAD, LAPIN_ALLOCATOR_DEACTIVATED
@@ -176,12 +182,14 @@ void		bunny_malloc_failure(bool	fail);
  * @doc-lang en
  * @brief Historical name used to disable or bypass the Bunny allocator.
  * @description This macro can be used in two different ways. At library compile time, it disables internal use of the Bunny allocator and binds the allocator functions to the system allocator. At application compile time, it transforms calls to bunny_malloc, bunny_calloc, bunny_realloc and bunny_free into calls to the regular allocator functions.
+ * @description This is a compile-time option, not a function-like macro to call from your source code.
  * @description This is the historical name of BUNNY_ALLOCATOR_DEACTIVATED. New code should use BUNNY_ALLOCATOR_DEACTIVATED.
  * @see LAPIN_ALLOCATOR_OVERLOAD, BUNNY_ALLOCATOR_DEACTIVATED
  *
  * @doc-lang fr
  * @brief Nom historique utilisé pour désactiver ou contourner l'allocateur Bunny.
  * @description Cette macro peut être utilisée de deux manières. À la compilation de la bibliothèque, elle désactive l'utilisation interne de l'allocateur Bunny et relie les fonctions d'allocation à l'allocateur système. À la compilation de l'application, elle transforme les appels à bunny_malloc, bunny_calloc, bunny_realloc et bunny_free en appels aux fonctions d'allocation classiques.
+ * @description C'est une option de compilation, pas une macro-fonction à appeler depuis votre code source.
  * @description Il s'agit du nom historique de BUNNY_ALLOCATOR_DEACTIVATED. Le nouveau code devrait utiliser BUNNY_ALLOCATOR_DEACTIVATED.
  * @see LAPIN_ALLOCATOR_OVERLOAD, BUNNY_ALLOCATOR_DEACTIVATED
  */
