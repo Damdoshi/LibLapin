@@ -6,9 +6,10 @@
 #include		<iostream>
 #include		"lapin_private.h"
 
-t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
-					t_bunny_cinematic_event		event,
-					double				elapsed)
+static t_bunny_response	_bunny_cinematic(t_bunny_cinematic		*_cin,
+					 t_bunny_cinematic_event	event,
+					 double				elapsed,
+					 bool				animate_pictures)
 {
   struct bunny_cinematic *cin = (struct bunny_cinematic*)_cin;
   SmallConf		&scnf = *(SmallConf*)cin->program;
@@ -48,16 +49,22 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
 		    bunny_configuration_get_address(cin->program)
 		    );
 
-  // Animate pictures based on cinematic animaton
-  t_bunny_map		**node;
-  t_bunny_sprite	*pic;
-
-  for (bunny_map_all(cin->pictures, node))
+  // Animate pictures based on cinematic animaton.
+  // Do it only once per external bunny_cinematic call: instructions returning
+  // NULL are consumed recursively during the same tick and must not multiply
+  // sprite animation speed.
+  if (animate_pictures)
     {
-      pic = bunny_map_data(*node, t_bunny_sprite*);
-      if (!pic->clipable.color_mask.argb[ALPHA_CMP])
-	continue ;
-      bunny_sprite_animate_elapsed(pic, elapsed);
+      t_bunny_map	**node;
+      t_bunny_sprite	*pic;
+
+      for (bunny_map_all(cin->pictures, node))
+	{
+	  pic = bunny_map_data(*node, t_bunny_sprite*);
+	  if (!pic->clipable.color_mask.argb[ALPHA_CMP])
+	    continue ;
+	  bunny_sprite_animate_elapsed(pic, elapsed);
+	}
     }
 
   res = cmd(_cin, argc, argv, event, elapsed);
@@ -97,7 +104,7 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
 	  memset(cin->return_position, 0, sizeof(cin->return_position));
 	}
       if (res == NULL)
-	return (bunny_cinematic(_cin, event, elapsed));
+	return (_bunny_cinematic(_cin, event, elapsed, false));
       return (GO_ON);
     }
   else if (strcmp(res, ".skip") == 0)
@@ -139,4 +146,11 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
     }
 
   return (GO_ON);
+}
+
+t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
+					 t_bunny_cinematic_event	event,
+					 double				elapsed)
+{
+  return (_bunny_cinematic(_cin, event, elapsed, true));
 }
