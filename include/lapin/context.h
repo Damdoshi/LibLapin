@@ -38,6 +38,7 @@
  * @description Le module context contient des callbacks de transfert qui facilitent la composition de structures $Tt_bunny_context@, ainsi que les structures publiques utilisées par les contextes box, loading, depth, pentacle et autres contextes intégrés.
  * @header lapin/context.h
  */
+
 /*!
 ** This structure is the corner stone of every context.
 ** All context defined in the bunny library will lay on it
@@ -68,6 +69,7 @@
 ** for screen and an additionnal display function in subcontext would
 ** be to resize the graphic output.
 */
+
 /**
  * @doc
  * @doc-symbol t_bunny_context_runtime_info
@@ -249,7 +251,7 @@ t_bunny_event_response_function	bunny_subcontext_event_response;
     .event = name ## _event_response
 
 # include			"context/box.h"
-// # include			"context/cinematic.h"
+# include			"context/cinematic.h"
 # include			"context/splash.h"
 # include			"context/pentacle.h"
 # include			"context/loading.h"

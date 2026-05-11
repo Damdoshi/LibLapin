@@ -3,8 +3,9 @@
 //
 // Bibliotheque Lapin
 
-bool		gl_bunny_sound_sprite_trap = true;
+#include	"lapin_private.h"
 
+bool		gl_bunny_sound_sprite_trap = true;
 
 /**
  * @doc

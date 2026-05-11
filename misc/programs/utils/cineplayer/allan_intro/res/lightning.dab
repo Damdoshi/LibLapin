@@ -1,0 +1,3 @@
+RessourceFile=@"./gfx/intro/13_eclair.png"
+@insert @"./cinematic_sprite.dab"
+Frequency = 10
