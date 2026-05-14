@@ -18,8 +18,7 @@ t_bunny_cinematic	*bunny_load_cinematic_wh(const char	*file,
   bunny_configuration_resolve(cnf);
   if (!(cin = (struct bunny_cinematic*)bunny_read_cinematic_wh(cnf, w, h, language)))
     bunny_delete_configuration(cnf);
-  // Pas de suppression de la configuration, celle-ci
-  // reste stockée dans cinematic si succès
+  cin->configuration_owned = true;
   return ((t_bunny_cinematic*)cin);
 }
 
@@ -35,7 +34,7 @@ t_bunny_cinematic	*bunny_load_cinematic(const char	*file,
   bunny_configuration_resolve(cnf);
   if (!(cin = (struct bunny_cinematic*)bunny_read_cinematic(cnf, language)))
     bunny_delete_configuration(cnf);
-  // Pas de suppression de la configuration, celle-ci
-  // reste stockée dans cinematic si succès
+  else
+    cin->configuration_owned = true;
   return ((t_bunny_cinematic*)cin);
 }

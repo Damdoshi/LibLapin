@@ -36,6 +36,8 @@ const std::string	InitialDeclaration =
   "uniform sampler2D ColorMap;\n"
   "uniform sampler2D NormalMap;\n"
   "uniform sampler2D SpecularMap;\n"
+  "uniform float HasNormalMap;\n"
+  "uniform float HasSpecularMap;\n"
   "\n"
   ;
 
@@ -64,10 +66,42 @@ const std::string	BodyStart =
   "  vec2 LPos;\n"
   "  vec2 SpecularPosition;\n"
   "  vec4 DiffuseColor = texture2D(ColorMap, Coord);\n"
-  "  vec4 NormalColor = texture2D(NormalMap, Coord);\n"
-  "  vec4 SpecularColor = texture2D(SpecularMap, Coord);\n"
-  "  vec3 Normal = normalize(NormalColor * 2.0 - 1.0).rgb;\n"
-  "  vec4 Specular = normalize(SpecularColor * 2.0 - 1.0);\n"
+  "  vec4 NormalColor;\n"
+  "  vec4 Specular;\n"
+  "  vec3 Normal;\n"
+  "  float SpecularPower;\n"
+  "\n"
+  "  if (DiffuseColor.a <= 0.001)\n"
+  "    discard;\n"
+  "\n"
+  "  if (HasNormalMap > 0.5)\n"
+  "    NormalColor = texture2D(NormalMap, Coord);\n"
+  "  else\n"
+  "    NormalColor = vec4(0.5, 0.5, 1.0, 1.0);\n"
+  "\n"
+  "  if (HasSpecularMap > 0.5)\n"
+  "    Specular = texture2D(SpecularMap, Coord);\n"
+  "  else\n"
+  "    Specular = vec4(0.0, 0.0, 0.0, 1.0);\n"
+  "\n"
+  "  vec3 TmpNormal;\n"
+  "  float TmpNormalLength;\n"
+  "\n"
+  "  if (NormalColor.a <= 0.001)\n"
+  "  {\n"
+  "    TmpNormal = vec3(0.0, 0.0, 1.0);\n"
+  "  }\n"
+  "  else\n"
+  "  {\n"
+  "    TmpNormal = NormalColor.rgb * 2.0 - 1.0;\n"
+  "    TmpNormalLength = dot(TmpNormal, TmpNormal);\n"
+  "\n"
+  "    if (TmpNormalLength < 0.0001)\n"
+  "      TmpNormal = vec3(0.0, 0.0, 1.0);\n"
+  "  }\n"
+  "\n"
+  "  Normal = normalize(TmpNormal);\n"
+  "  SpecularPower = max(1.0, Specular.a * 255.0);\n"
   "\n"
   "  vec2 PositionOnScreen;\n"
   "  vec2 ReversedPositionOnScreen;\n"
@@ -77,7 +111,7 @@ const std::string	BodyStart =
   "  float ColorStrength;\n"
   "  float D;\n"
   "  float Attenuation;\n"
-  "  vec3 UserCamera = vec3(0.0, 0.0, 2.0);\n"
+  "  vec3 UserCamera = normalize(vec3(0.0, 0.0, 1.0));\n"
   "\n"
   "  vec3 AmbientResult;\n"
   "  vec3 LightResult;\n"
@@ -117,10 +151,10 @@ const std::string	StretchedBody =
   "    D = SpecularAttenuation%d * length(DistanceOnScreen);\n"
   "    Attenuation = 1.0 / (0.5 + 0.5 * D + 0.5 * D * D);\n"
 
-  "    if (DotNormalDirection < 0.0)\n"
+  "    if (DotNormalDirection < 0.0 || HasSpecularMap <= 0.5)\n"
   "      SpecularResult = vec3(0.0, 0.0, 0.0);\n"
   "    else\n"
-  "      SpecularResult = Attenuation * SpecularColor%d.rgb * Specular.rgb * pow(max(0.0, dot(reflect(-Direction, Normal), UserCamera)), Specular.a);\n"
+  "      SpecularResult = Attenuation * SpecularColor%d.rgb * SpecularColor%d.a * Specular.rgb * pow(clamp(dot(normalize(reflect(-Direction, Normal)), UserCamera), 0.0, 1.0), SpecularPower);\n"
   "\n"
   "    AllResult += (LightResult + SpecularResult + AmbientResult) * DiffuseColor.rgb;\n"
   "  }\n"
@@ -196,7 +230,7 @@ t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
       for (i = 0; i < sizeof(nm->lights) / sizeof(nm->lights[0]); ++i)
 	{
 	  snprintf(&buffer[0], sizeof(buffer), StretchedBody.c_str(),
-		   i, i, i, i, i, i, i, i, i, i, i, i, i); // 1$?
+		   i, i, i, i, i, i, i, i, i, i, i, i, i, i); // 1$?
 	  ss << &buffer[0];
 	}
       ss << BodyEnd;
@@ -218,6 +252,20 @@ t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
      BVT_2_FLOAT,
      (double)nm->window_size.x,
      (double)nm->window_size.y
+     );
+
+  bunny_shader_set_variable
+    (gl_normal_map_shader,
+     "HasNormalMap",
+     BVT_1_FLOAT,
+     (double)(nm->normal_map ? 1.0 : 0.0)
+     );
+
+  bunny_shader_set_variable
+    (gl_normal_map_shader,
+     "HasSpecularMap",
+     BVT_1_FLOAT,
+     (double)(nm->specular_map ? 1.0 : 0.0)
      );
 
   if (nm->normal_map)

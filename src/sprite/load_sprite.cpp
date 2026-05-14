@@ -186,6 +186,7 @@ t_bunny_sprite		*bunny_load_sprite(const char		*file)
 	  return (NULL);
 	}
     }
+  bunny_delete_configuration(conf);
   return (spr);
 }
 

@@ -15,7 +15,9 @@ t_bunny_font			*__bunny_load_gfx(unsigned int		width,
 {
   struct bunny_gfx_font		*gfx;
   uint64_t			hash;
+  bool				in_pool;
 
+  in_pool = false;
   bunny_errno = ENOMEM;
   if ((gfx = new (std::nothrow) struct bunny_gfx_font) == NULL)
     goto ReturnNull;
@@ -38,7 +40,10 @@ t_bunny_font			*__bunny_load_gfx(unsigned int		width,
     }
 
   if (RessourceManager.disable_manager == false)
-    RessourceManager.AddToPool(ResManager::BUNNY_PICTURE, file, hash, gfx, gfx->gfx);
+    {
+      RessourceManager.AddToPool(ResManager::BUNNY_PICTURE, file, hash, gfx, gfx->gfx);
+      in_pool = true;
+    }
 
   gfx->res_id = hash;
   gfx->texture->clear(sf::Color(0, 0, 0, 0));
@@ -71,7 +76,13 @@ t_bunny_font			*__bunny_load_gfx(unsigned int		width,
   return ((t_bunny_font*)gfx);
 
  DeletePicture:
-  bunny_delete_clipable(gfx->gfx);
+  if (gfx->gfx)
+    {
+      if (in_pool)
+	RessourceManager.TryRemove(ResManager::BUNNY_PICTURE, hash, gfx);
+      else
+	bunny_delete_clipable(gfx->gfx);
+    }
  DeleteTexture:
   delete gfx->texture;
  DeleteStructure:

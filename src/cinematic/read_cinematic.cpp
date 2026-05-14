@@ -130,11 +130,9 @@ static bool		cinematic_load_assets(struct bunny_cinematic	*cin,
       {
 	t_bunny_effect	*eff;
 
-	if (bunny_configuration_getf_string(node, (const char **)&str, "."))
-	  eff = bunny_load_effect(str);
-	else
-	  return ("");
-	if (!eff)
+	if (!bunny_configuration_getf_string(node, (const char **)&str, "."))
+	  return (false);
+	if ((eff = bunny_load_effect(str)) == NULL)
 	  return (false);
 	bunny_sound_volume(&eff->sound, cin->volumes.effect * 100);
 	str = (char*)bunny_configuration_get_name(node);
@@ -219,8 +217,10 @@ static bool		cinematic_load_assets(struct bunny_cinematic	*cin,
   bunny_map_set_data(cin->commands, "trace", cinematic_trace, tcc);
   bunny_map_set_data(cin->commands, "refresh", cinematic_refresh, tcc);
 
+  cin->repeat = false;
   cin->current_command = 0;
   memset(cin->command_data, 0, sizeof(cin->command_data));
+  memset(cin->return_position, 0, sizeof(cin->return_position));
   cin->stack_top = 0;
   cin->stack_frame = cin->command_data[cin->stack_top];
   memset(cin->stack_frame, 0, sizeof(cin->command_data[0]));
@@ -244,6 +244,7 @@ t_bunny_cinematic	*bunny_read_cinematic_wh(t_bunny_configuration	*cnf,
   cin->ntexture = NULL;
   cin->ntex = NULL;
   cin->configuration = cnf;
+  cin->configuration_owned = false;
   if (!bunny_configuration_getf_node(cnf, &cin->program, "Animation"))
     return (NULL);
   cin->sprite = NULL;

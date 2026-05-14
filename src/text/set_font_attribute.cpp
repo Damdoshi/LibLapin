@@ -112,7 +112,7 @@ bool			bunny_set_font_attribute(const char		*conf_file,
       missing_field = "Cannot load font";
       goto InvalidField;
     }
-  if (bunny_set_clipable_attribute(conf_file, (t_bunny_clipable**)&ofnt, &cnf, BCT_FONT) == false)
+  if (bunny_set_clipable_attribute(NULL, (t_bunny_clipable**)&ofnt, &cnf, BCT_FONT) == false)
     {
       bunny_delete_configuration(cnf);
       return (false);

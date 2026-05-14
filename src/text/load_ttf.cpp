@@ -16,7 +16,9 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
 {
   struct bunny_ttf_font		*ttf;
   uint64_t			hash;
+  bool				in_pool;
 
+  in_pool = false;
   bunny_errno = ENOMEM;
   if ((ttf = new (std::nothrow) struct bunny_ttf_font) == NULL)
     goto ReturnNull;
@@ -39,7 +41,10 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
     }
 
   if (RessourceManager.disable_manager == false)
-    RessourceManager.AddToPool(ResManager::SF_FONT, file, hash, ttf, ttf->font);
+    {
+      RessourceManager.AddToPool(ResManager::SF_FONT, file, hash, ttf, ttf->font);
+      in_pool = true;
+    }
 
   ttf->res_id = hash;
   ttf->texture->clear(sf::Color(0, 0, 0, 0));
@@ -72,7 +77,10 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
  DeleteSprite:
   delete ttf->sprite;
  DeleteFont:
-  delete ttf->font;
+  if (in_pool)
+    RessourceManager.TryRemove(ResManager::SF_FONT, hash, ttf);
+  else
+    delete ttf->font;
  DeleteTexture:
   delete ttf->texture;
  DeleteStructure:

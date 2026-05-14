@@ -101,7 +101,13 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 
 	if (gfx->conf_string)
 	  bunny_free(gfx->conf_string);
-	bunny_delete_clipable(gfx->gfx);
+	if (gfx->gfx)
+	  {
+	    if (gfx->res_id && !RessourceManager.disable_manager)
+	      RessourceManager.TryRemove(ResManager::BUNNY_PICTURE, gfx->res_id, gfx);
+	    else
+	      bunny_delete_clipable(gfx->gfx);
+	  }
 	delete gfx->sprite;
 	if (gfx->ntexture)
 	  delete gfx->ntexture;

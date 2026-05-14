@@ -52,7 +52,7 @@ static size_t		count_word(const char		*str,
   size_t		cnt, i;
 
   cnt = 0;
-  for (i = 1; str[i + 1] && i < len; )
+  for (i = 1; i + 1 < len && str[i + 1]; )
     {
       if (str[i - 1] == ' ' && str[i] != ' ')
 	cnt += 1;
@@ -68,7 +68,7 @@ static size_t		total_len(t_bunny_font		*font,
   size_t		cnt, i;
 
   cnt = 0;
-  for (i = 0; str[i] && i < len; )
+  for (i = 0; i < len && str[i]; )
     {
       cnt += get_char_width(font, str, i);
       i += get_unicode_len(&str[i]);
@@ -85,7 +85,7 @@ static size_t		sum_letter_space(t_bunny_font	*font,
 
   cnt = 0;
   space = false;
-  for (i = 0; str[i] && i < len; )
+  for (i = 0; i < len && str[i]; )
     {
       if (str[i] != ' ')
 	{
@@ -102,20 +102,20 @@ static size_t		sum_letter_space(t_bunny_font	*font,
   return (cnt);
 }
 
+static bool		is_trimmable(char		c)
+{
+  return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
+}
+
 static void		remove_trailing(struct cstring	*line)
 {
-  size_t		i;
-
-  while (line->str[0] == ' ' || line->str[0] == '\n' || line->str[0] == '\r')
+  while (line->len > 0 && is_trimmable(line->str[0]))
     {
       line->str = &line->str[1];
       line->len -= 1;
     }
-  for (i = line->len; i > 0 &&
-	 (line->str[i] == ' ' || line->str[i] == '\n' || line->str[i] == '\r');
-       --i);
-  if (line->str[i])
-    line->len = i + (int)(i != 0);
+  while (line->len > 0 && is_trimmable(line->str[line->len - 1]))
+    line->len -= 1;
 }
 
 static size_t		count_lines(t_bunny_font	*font,
@@ -160,10 +160,7 @@ static size_t		count_lines(t_bunny_font	*font,
 	  }
 	hcnt = 0;
       }
-  if (line > 0)
-    linemem[line].len = &font->string[i] - linemem[line - 1].str;
-  else
-    linemem[line].len = i;
+  linemem[line].len = &font->string[i] - linemem[line].str;
   linemem[line + 1].str = NULL;
   for (i = 0; linemem[i].str; ++i)
     remove_trailing(&linemem[i]);
@@ -263,7 +260,7 @@ void			put_text(t_bunny_font		*font,
 	}
 
       iterat.x = startpos.x;
-      for (i = 0; linemem[j].str[i] && i < linemem[j].len; )
+      for (i = 0; i < linemem[j].len && linemem[j].str[i]; )
 	if (linemem[j].str[i] != '\n')
 	  {
 	    int		adv = 0;

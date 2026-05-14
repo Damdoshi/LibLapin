@@ -70,8 +70,8 @@ bool			bunny_sprite_shift_animation_id(t_bunny_sprite	*spr,
 
   t_bunny_animation	&ani = sprite.animation[anim];
 
-  sprite.position.x = ani.position.x;
-  sprite.position.y = ani.position.y;
+  sprite.rect.x = ani.position.x;
+  sprite.rect.y = ani.position.y;
   return (true);
 }
 

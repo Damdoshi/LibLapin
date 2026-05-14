@@ -1175,7 +1175,8 @@ typedef enum			e_bunny_event_type
     BET_TOUCH_BEGAN,
     BET_TOUCH_MOVED,
     BET_TOUCH_ENDED,
-    BET_SENSOR
+    BET_SENSOR,
+    BET_UNKNOWN
   }				t_bunny_event_type;
 
 /**

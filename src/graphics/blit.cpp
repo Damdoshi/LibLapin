@@ -306,6 +306,59 @@ static void			draw_rendertexture_sprite(sf::RenderTexture		*target,
     target->draw(sprite);
 }
 
+static bool			prepare_texture_rect(const struct bunny_picture	&pic,
+						     const t_bunny_position	&pos,
+						     sf::IntRect		&rect,
+						     sf::Vector2f		&draw_pos)
+{
+  int				left;
+  int				top;
+  int				right;
+  int				bottom;
+  int				clipped_left;
+  int				clipped_top;
+  int				clipped_right;
+  int				clipped_bottom;
+  sf::Vector2u			size;
+
+  rect.position.x = pic.rect.x;
+  rect.position.y = pic.rect.y;
+  rect.size.x = pic.rect.w;
+  rect.size.y = pic.rect.h;
+  draw_pos.x = pos.x;
+  draw_pos.y = pos.y;
+
+  if (pic.tex == NULL || pic.mosaic)
+    return (rect.size.x != 0 && rect.size.y != 0);
+
+  if (rect.size.x <= 0 || rect.size.y <= 0)
+    return (false);
+
+  size = pic.tex->getSize();
+  left = rect.position.x;
+  top = rect.position.y;
+  right = left + rect.size.x;
+  bottom = top + rect.size.y;
+
+  clipped_left = left < 0 ? 0 : left;
+  clipped_top = top < 0 ? 0 : top;
+  clipped_right = right > (int)size.x ? (int)size.x : right;
+  clipped_bottom = bottom > (int)size.y ? (int)size.y : bottom;
+
+  if (clipped_left >= clipped_right || clipped_top >= clipped_bottom)
+    return (false);
+
+  draw_pos.x += clipped_left - left;
+  draw_pos.y += clipped_top - top;
+
+  rect.position.x = clipped_left;
+  rect.position.y = clipped_top;
+  rect.size.x = clipped_right - clipped_left;
+  rect.size.y = clipped_bottom - clipped_top;
+
+  return (true);
+}
+
 void				merge_clothe(t_bunny_map		*nod,
 					     void			*pnw);
 
@@ -458,6 +511,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)picture;
 	sf::IntRect		rect;
+	sf::Vector2f		draw_pos;
 
 	rect.position.x = pic->rect.x;
 	rect.position.y = pic->rect.y;
@@ -476,8 +530,10 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	  pic->sprite->setTexture(*(pic->tex)); // Safe
 	if (gl_display_normal_map && pic->ntex)
 	  pic->sprite->setTexture(*(pic->ntex));
+	if (prepare_texture_rect(*pic, *pos, rect, draw_pos) == false)
+	  return ;
 	pic->sprite->setTextureRect(rect);
-	pic->sprite->setPosition({pos->x, pos->y});
+	pic->sprite->setPosition(draw_pos);
 	pic->sprite->setOrigin({pic->origin.x, pic->origin.y});
 	pic->sprite->setScale({pic->scale.x, pic->scale.y});
 	pic->sprite->setRotation(sf::degrees(pic->rotation));

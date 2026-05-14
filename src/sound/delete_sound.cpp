@@ -68,6 +68,8 @@ void			_bunny_delete_sound(t_bunny_sound		*sound)
 
       if (snd->sound_manager)
 	_bunny_sound_manager_remove((t_bunny_sound_manager*)snd->sound_manager, sound);
+      if (snd->sound)
+	delete snd->sound;
       if (RessourceManager.disable_manager)
 	{
 	  delete (sf::SoundBuffer*)snd->effect;

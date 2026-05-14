@@ -34,6 +34,7 @@ struct				bunny_cinematic
   const sf::Texture		*ntex;
   sf::Sprite			*sprite;
   t_bunny_configuration		*configuration;
+  bool				configuration_owned;
 
   ////////////////////////////////////
   // Public fields of t_bunny_cinematic

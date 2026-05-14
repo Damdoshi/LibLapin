@@ -1,4 +1,5 @@
 RessourceFile=@"intro_final.ogg"
+Attenuation = 0
 
 [Slices
   [S00
