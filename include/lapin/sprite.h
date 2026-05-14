@@ -150,7 +150,7 @@ typedef struct		s_bunny_animation
   int			*collision_shapes; // nbr_frame long
   t_bunny_frame_browsing browsing;
   int32_t		animation_repeat;
-  int32_t		next_animation;
+  uint64_t		next_animation;
 }			t_bunny_animation;
 
 /*!

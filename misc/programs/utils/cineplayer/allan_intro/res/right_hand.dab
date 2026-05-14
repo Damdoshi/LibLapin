@@ -4,40 +4,34 @@ RessourceFile=@"./gfx/intro/00_right_hand.png"
   [RightPos0a
     Position=0,0
     Frame=1
-    AnimationPlay=1
     NextAnimation="RightPos0b"
   ]
   [RightPos0b
     Position=0,0
     Frame=1
-    AnimationPlay=1
     NextAnimation="RightPos1"
   ]
 
   [RightPos1
     Position=1,0
     Frame=1
-    AnimationPlay=1
     NextAnimation="RightPos2a"
   ]
 
   [RightPos2a
     Position=2,0
     Frame=1
-    AnimationPlay=1
     NextAnimation="RightPos2b"
   ]
   [RightPos2b
     Position=2,0
     Frame=1
-    AnimationPlay=1
     NextAnimation="RightPos3"
   ]
 
   [RightPos3
     Position=1,0
     Frame=1
-    AnimationPlay=1
     NextAnimation="RightPos0a"
   ]
 ]

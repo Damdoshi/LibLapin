@@ -3,15 +3,13 @@ Position=1,0
 
 [Animations
   [LeftPos0
-    Position=30,0
+    Position=0,0
     Frame=1
-    AnimationPlay=1
     NextAnimation="LeftPos1"
   ]
   [LeftPos1
-    Position=50,0
+    Position=1,0
     Frame=1
-    AnimationPlay=1
     NextAnimation="LeftPos0"
   ]
 ]
