@@ -29,7 +29,7 @@ t_bunny_response	soundrope_display(t_sound_rope		*rope)
 	((int)rope->output_effect->sample[i + rope->index] / SHRT_MAX)
 	* rope->win->buffer.height / 2
 	+ rope->win->buffer.height / 2;
-      dist = abs(bva.vertex[i].pos.y - rope->win->buffer.height / 2);
+      dist = fabs(bva.vertex[i].pos.y - rope->win->buffer.height / 2);
       bva.vertex[i].color = GRAY(dist);
     }
   bunny_set_geometry(&rope->win->buffer, BGY_LINE_STRIP, (t_bunny_vertex_array*)&bva, NULL);

@@ -648,7 +648,7 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
 							     t_bunny_configuration **config,
 							     t_bunny_clipable_type typ);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /*!
 ** Destroy a clipable element. If the element is a t_bunny_pixelarray, you have
 ** to cast its address to the t_bunny_clipable* type or give the address of the
