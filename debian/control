@@ -21,6 +21,8 @@ Architecture: any
 Depends:
   ${misc:Depends}
 Recommends:
+  liblapin-build-tools (= ${binary:Version})
+Suggests:
   liblapin-utils (= ${binary:Version})
 Description: Multimedia/game development library with C bindings (static)
  LibLapin is a multimedia/game development library built on top of SFML,
@@ -28,6 +30,19 @@ Description: Multimedia/game development library with C bindings (static)
  module that handles most formats and includes an original Turing-complete
  language, Dabsic. It is used by independent game studios and by several
  computing schools to teach C development and multimedia programming.
+
+Package: liblapin-build-tools
+Section: devel
+Priority: optional
+Architecture: any
+Depends:
+  ${misc:Depends},
+  g++,
+  liblapin-dev (= ${binary:Version})
+Description: compiler helper programs for LibLapin development
+ This package contains the bcc and b++ helper programs used to compile and
+ link programs against LibLapin. These tools depend on liblapin-dev because
+ they require the LibLapin development files to be useful.
 
 Package: liblapin-utils
 Section: utils
@@ -38,12 +53,6 @@ Depends:
   ${misc:Depends}
 Suggests:
   liblapin-dev
-Provides:
-  cineplayer,
-  fetchconf,
-  joypanel,
-  mergeconf,
-  soundrope
 Description: utility programs shipped with LibLapin
- This package contains the command-line utility programs shipped with LibLapin,
- including bcc, b++, and tools based on bunny configuration module of LibLapin.
+ This package contains the standalone command-line utility programs shipped
+ with LibLapin and built from misc/programs/utils like mergeconf.

@@ -325,7 +325,7 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
   if (bss->head.subcontext.display)
     if ((ret = bss->head.subcontext.display(bss)) != GO_ON)
       return (ret == LEAVE_EVENT ? GO_ON : ret);
-  for (size_t i = 0; bss->head.nbr_screen; ++i)
+  for (size_t i = 0; i < bss->head.nbr_screen; ++i)
     {
       bunny_blit(bss->head.screens[i], bss->picture, NULL);
       bunny_display((t_bunny_window*)bss->head.screens[i]);

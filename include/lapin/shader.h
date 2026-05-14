@@ -486,6 +486,7 @@ typedef struct		s_bunny_normal_map
   t_bunny_picture	*normal_map;
   t_bunny_picture	*specular_map;
   t_bunny_normal_light	lights[8];
+  double		rotation;
 }			t_bunny_normal_map;
 
 t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm);

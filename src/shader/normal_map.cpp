@@ -38,6 +38,7 @@ const std::string	InitialDeclaration =
   "uniform sampler2D SpecularMap;\n"
   "uniform float HasNormalMap;\n"
   "uniform float HasSpecularMap;\n"
+  "uniform float NormalRotation;\n"
   "\n"
   ;
 
@@ -99,6 +100,13 @@ const std::string	BodyStart =
   "    if (TmpNormalLength < 0.0001)\n"
   "      TmpNormal = vec3(0.0, 0.0, 1.0);\n"
   "  }\n"
+  "\n"
+  "  float NormalCs = cos(NormalRotation);\n"
+  "  float NormalSn = sin(NormalRotation);\n"
+  "  TmpNormal.xy = vec2(\n"
+  "    TmpNormal.x * NormalCs - TmpNormal.y * NormalSn,\n"
+  "    TmpNormal.x * NormalSn + TmpNormal.y * NormalCs\n"
+  "  );\n"
   "\n"
   "  Normal = normalize(TmpNormal);\n"
   "  SpecularPower = max(1.0, Specular.a * 255.0);\n"
@@ -266,6 +274,13 @@ t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
      "HasSpecularMap",
      BVT_1_FLOAT,
      (double)(nm->specular_map ? 1.0 : 0.0)
+     );
+
+  bunny_shader_set_variable
+    (gl_normal_map_shader,
+     "NormalRotation",
+     BVT_1_FLOAT,
+     nm->rotation
      );
 
   if (nm->normal_map)
