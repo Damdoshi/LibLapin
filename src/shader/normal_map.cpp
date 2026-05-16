@@ -33,6 +33,7 @@ const std::string	InitialDeclaration =
   "varying vec4 vColor;\n"
   ""
   "uniform vec2 WindowSize;\n"
+  "uniform vec2 AttenuationSize;\n"
   "uniform sampler2D ColorMap;\n"
   "uniform sampler2D NormalMap;\n"
   "uniform sampler2D SpecularMap;\n"
@@ -133,8 +134,8 @@ const std::string	StretchedBody =
   "  {\n"
   "    LPos = LightPosition%d.xy;\n"
   "    LPos.y = WindowSize.y - LPos.y;"
-  "    PositionOnScreen = (LPos.xy - gl_FragCoord.xy) / WindowSize.xy;"
-  "    ReversedPositionOnScreen = (LPos.xy - gl_FragCoord.xy) / WindowSize.xy;"
+  "    PositionOnScreen = (LPos.xy - gl_FragCoord.xy) / AttenuationSize.xy;"
+  "    ReversedPositionOnScreen = (LPos.xy - gl_FragCoord.xy) / AttenuationSize.xy;"
   "\n"
   // Compute spot light
   "    DistanceOnScreen = vec3(PositionOnScreen, LightPosition%d.z);\n"
@@ -211,6 +212,7 @@ t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
 {
   char			buffer[4096];
   unsigned int		i;
+  t_bunny_size		attenuation_size;
 
   gl_normal_map_configuration = (t_bunny_normal_map*)nm;
   if (nm == NULL)
@@ -260,6 +262,19 @@ t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
      BVT_2_FLOAT,
      (double)nm->window_size.x,
      (double)nm->window_size.y
+     );
+
+  attenuation_size = nm->attenuation_size;
+  if (attenuation_size.x <= 0)
+    attenuation_size.x = nm->window_size.x;
+  if (attenuation_size.y <= 0)
+    attenuation_size.y = nm->window_size.y;
+  bunny_shader_set_variable
+    (gl_normal_map_shader,
+     "AttenuationSize",
+     BVT_2_FLOAT,
+     (double)attenuation_size.x,
+     (double)attenuation_size.y
      );
 
   bunny_shader_set_variable

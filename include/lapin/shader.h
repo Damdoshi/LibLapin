@@ -467,6 +467,7 @@ typedef struct		s_bunny_normal_light
  * @doc-lang en
  * @brief Configures the built-in normal-map shader.
  * @field window_size Size of the rendered target.
+ * @field attenuation_size Logical size used for light attenuation.
  * @field normal_map Picture containing normals.
  * @field specular_map Picture containing specular information.
  * @field lights Array of up to 8 lights.
@@ -475,6 +476,7 @@ typedef struct		s_bunny_normal_light
  * @doc-lang fr
  * @brief Configure le shader intégré de normal map.
  * @field window_size Taille de la cible rendue.
+ * @field attenuation_size Taille logique utilisée pour l'atténuation des lumières.
  * @field normal_map Picture contenant les normales.
  * @field specular_map Picture contenant les informations spéculaires.
  * @field lights Tableau de 8 lumières au maximum.
@@ -483,6 +485,7 @@ typedef struct		s_bunny_normal_light
 typedef struct		s_bunny_normal_map
 {
   t_bunny_size		window_size;
+  t_bunny_size		attenuation_size;
   t_bunny_picture	*normal_map;
   t_bunny_picture	*specular_map;
   t_bunny_normal_light	lights[8];
