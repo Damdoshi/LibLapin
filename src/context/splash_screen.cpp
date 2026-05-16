@@ -243,14 +243,19 @@ static t_bunny_response		splash_display(struct bunny_splash_screen *bss)
     }
   t_bunny_response	ret;
 
-  if (bss->head.subcontext.display)
-    if ((ret = bss->head.subcontext.display(bss)) != GO_ON)
-      return (ret == LEAVE_EVENT ? GO_ON : ret);
   for (size_t i = 0; bss->head.screens[i]; ++i)
+    bunny_blit(bss->head.screens[i], bss->picture, NULL);
+  if (bss->head.subcontext.display)
     {
-      bunny_blit(bss->head.screens[i], screen, NULL);
-      bunny_display((t_bunny_window*)bss->head.screens[i]);
+      if ((ret = bss->head.subcontext.display(bss)) != GO_ON)
+	return (ret == LEAVE_EVENT ? GO_ON : ret);
     }
+  else
+    for (size_t i = 0; bss->head.screens[i]; ++i)
+      {
+	bunny_blit(bss->head.screens[i], screen, NULL);
+	bunny_display((t_bunny_window*)bss->head.screens[i]);
+      }
   return (GO_ON);
 }
 
