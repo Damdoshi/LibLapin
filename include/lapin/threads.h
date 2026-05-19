@@ -97,28 +97,28 @@ void				bunny_delete_threadpool(t_bunny_threadpool	*pool);
  * @see bunny_thread_foreach
  */
 typedef void			(*t_bunny_function)(void			*data,
-					    void			*add_ptr);
+						    void			*add_ptr);
 
 bool				bunny_thread_foreach(t_bunny_threadpool		*pool,
-					     t_bunny_function		function,
-					     void			**data,
-					     size_t			data_array_len,
-					     void			*add_ptr);
+						     t_bunny_function		function,
+						     void			**data,
+						     size_t			data_array_len,
+						     void			*add_ptr);
 
 bool				bunny_thread_push(t_bunny_threadpool		*pool,
-					  t_bunny_function		function,
-					  void				*data,
-					  void				*add_ptr);
+						  t_bunny_function		function,
+						  void				*data,
+						  void				*add_ptr);
 
 void				bunny_thread_wait_completion(t_bunny_threadpool	*pool);
 
 bool				bunny_set_async_computation(size_t		nbr_threads);
 
 bool				bunny_async_computation_push(t_bunny_function	function,
-						     void		*data);
+							     void		*data);
 
 bool				bunny_async_computation_foreach(t_bunny_function function,
-							void		**data,
-							size_t		data_array_len);
+								void		**data,
+								size_t		data_array_len);
 
 #endif	/*			__LAPIN_THREADS_H__	*/
