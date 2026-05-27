@@ -33,7 +33,7 @@ static t_bunny_response	loading_async_response(void				*item,
   if (ld->head.subcontext.async_computation)
     {
       if ((ret = ld->head.subcontext.async_computation
-	   ((void*)_res, (void*)ld->head.main_structure)) != GO_ON)
+	   ((void*)item, (void*)ld->head.main_structure)) != GO_ON)
 	return (ret);
     }
   return (GO_ON);
