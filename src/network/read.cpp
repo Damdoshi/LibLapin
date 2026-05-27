@@ -7,10 +7,17 @@
 
 t_bunny_communication		bunny_network_read(void)
 {
-  t_bunny_communication		packet;
   network::Communication	com;
 
   gl_network.GetMessage(com);
-  memcpy(&packet, &com, sizeof(packet));
-  return (packet);
+  com.DoNotFreeData();
+  return (t_bunny_communication
+	  {
+	   com.type,
+	   com.info,
+	   com.time,
+	   com.data,
+	   com.size,
+	   com.errno_code
+	  });
 }

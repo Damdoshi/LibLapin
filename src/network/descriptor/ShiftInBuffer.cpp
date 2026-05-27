@@ -9,32 +9,34 @@
 #include		"private/network/network.hpp"
 
 bool			network::Descriptor::ShiftInBuffer(const Info		&info,
+							   const ProtoSpec	&specs,
 							   size_t		len)
 {
-  // On est en UDP.
+  // On est potentiellement en UDP.
   // On est susceptible de rencontrer de nouveaux pairs par cette socket
   // Donc on doit créer des peer en fonction de la dispo de certains info.
 
+  if (len == (size_t)-1)
+    len = inbuffer_size;
   try
     {
-      inqueue.push_back(Communication{info});
+      inqueue.emplace_back(info);
     }
   catch (...)
     {
       return (false);
     }
   inqueue.back().data = inbuffer;
-  if (len == 0)
-    inqueue.back().size = inbuffer_size;
-  else
-    inqueue.back().size = len;
+  inqueue.back().size = len;
 
   inbuffer = NULL;
   inbuffer_size = 0;
   rcursor = 0;
-  if ((inbuffer = (char*)bunny_malloc(size)) == NULL)
+  spdbuffer = NULL;
+  if ((inbuffer = (char*)bunny_malloc(specs.size)) == NULL)
     return (false);
-  inbuffer_size = size;
+  spdbuffer = (struct size_plus_data*)inbuffer;
+  inbuffer_size = specs.size;
   return (true);
 }
 

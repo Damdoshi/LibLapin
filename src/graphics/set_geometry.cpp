@@ -60,6 +60,37 @@ static void			_manage_vertex_quads(t_bunny_clipable		*picture,
 }
 						     
 
+/**
+ * @doc-symbol bunny_set_geometry
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 430
+ * @doc-since 7
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Draws vertex geometry on a buffer, optionally using a clipable texture.
+ * @description Pictures and pixelarrays cannot be mixed. If the texture is a pixelarray, the target must be a pixelarray. If the texture is a picture, the target must be a picture or a window.
+ * @param buffer The target buffer.
+ * @param geometry The primitive interpretation mode.
+ * @param array The vertex array to draw.
+ * @param clipable The optional texture source, or NULL to use vertex colors.
+ * @error EINVAL The target kind is not supported.
+ * @log Logs are written with the "graphics" label.
+ * @see t_bunny_geometry, t_bunny_vertex_array, t_bunny_my_geometry, gl_bunny_my_geometry
+ *
+ * @doc-lang fr
+ * @brief Dessine de la géométrie à sommets dans un buffer, avec une texture clipable optionnelle.
+ * @description Les pictures et les pixelarrays ne peuvent pas être mélangés. Si la texture est un pixelarray, la cible doit être un pixelarray. Si la texture est une picture, la cible doit être une picture ou une fenêtre.
+ * @param buffer Le buffer cible.
+ * @param geometry Le mode d’interprétation des primitives.
+ * @param array Le tableau de sommets à dessiner.
+ * @param clipable La texture source optionnelle, ou NULL pour utiliser les couleurs des sommets.
+ * @error EINVAL Le type de cible n’est pas pris en charge.
+ * @log Les logs sont écrits avec le label "graphics".
+ * @see t_bunny_geometry, t_bunny_vertex_array, t_bunny_my_geometry, gl_bunny_my_geometry
+ */
 void				bunny_set_geometry(t_bunny_buffer		*buffer,
 						   t_bunny_geometry		geometry,
 						   t_bunny_vertex_array		*array,

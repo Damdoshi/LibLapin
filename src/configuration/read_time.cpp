@@ -7,6 +7,34 @@
 
 #define		PATTERN		"%p, %s, %p -> %s"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_read_time
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 615
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Reads a duration field from a configuration node.
+ * @param cnf Configuration node to inspect.
+ * @param fld Field name.
+ * @param secs Output duration in seconds.
+ * @return-success Returns $Ctrue@ and stores the duration.
+ * @return-failure Returns $Cfalse@ on missing or invalid field.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Lit un champ de durée depuis un nœud de configuration.
+ * @param cnf Configuration node to inspect.
+ * @param fld Field name.
+ * @param secs Output duration in seconds.
+ * @return-success Renvoie $Ctrue@ et stocke la durée.
+ * @return-failure Renvoie $Cfalse@ si le champ est absent ou invalide.
+ * @log "configuration"
+ */
 bool		bunny_configuration_read_time(const t_bunny_configuration	*_cnf,
 					      const char			*field,
 					      double				*out)

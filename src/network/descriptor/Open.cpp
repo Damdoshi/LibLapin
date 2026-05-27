@@ -11,12 +11,11 @@
 #include		<arpa/inet.h>
 #include		"lapin.h"
 #include		"private/network/network.hpp"
+#include		"private/network/reliable_udp.hpp"
 
-const network::Info	*Network::Descriptor::Open(Protocol		_protocol,
-						   size_t		_size,
-						   char			_terminator,
-						   uint16_t		_port,
-						   const std::string	&_ip)
+network::Info		Network::Descriptor::Open(const ProtoSpec	&specs,
+						  uint16_t		_port,
+						  const std::string	&_ip)
 {
   unsigned int		tmp;
 
@@ -25,21 +24,22 @@ const network::Info	*Network::Descriptor::Open(Protocol		_protocol,
   if (_ip == "")
     ip = htonl(INADDR_ANY);
   else if ((ip = inet_addr(_ip.c_str())) == 0)
-    return (NULL);
+    return (Info{});
   port = htons(_port);
 
+  info = Info{};
   info.sockaddr.sin_family = AF_INET;
   info.sockaddr.sin_addr.s_addr = ip;
   info.sockaddr.sin_port = port;
   info.socklen = sizeof(info.sockaddr);
 
-  if ((fd = socket(info.sockaddr.sin_family, _protocol == IMMEDIATE_RETRIEVE ? SOCK_DGRAM : SOCK_STREAM, 0)) == -1)
-    return (NULL);
+  if ((fd = socket(info.sockaddr.sin_family, !istcp(specs.protocol) ? SOCK_DGRAM : SOCK_STREAM, 0)) == -1)
+    return (Info{});
 
   tmp = 1;
   setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &tmp, sizeof(tmp));
 
-  if (_protocol == IMMEDIATE_RETRIEVE)
+  if (!istcp(specs.protocol))
     {
       tmp = 65536;
       setsockopt(fd, SOL_SOCKET, SO_RCVBUF, &tmp, sizeof(tmp));
@@ -50,8 +50,10 @@ const network::Info	*Network::Descriptor::Open(Protocol		_protocol,
     if (bind(fd, (struct sockaddr*)&info.sockaddr, info.socklen) == -1)
       goto CloseAndLeave;
 
+  protocol = specs;
+
   // TCP
-  if (_protocol != IMMEDIATE_RETRIEVE)
+  if (istcp(specs.protocol))
     {
       if (_ip == "")
 	{
@@ -63,39 +65,48 @@ const network::Info	*Network::Descriptor::Open(Protocol		_protocol,
 	  if (connect(fd, (struct sockaddr*)&info.sockaddr, info.socklen) == -1)
 	    goto CloseAndLeave;
 	}
-      if (_size == 0)
-	size = BUNNY_NETWORK_MAXIMUM_PACKET_SIZE;
+      if (specs.size == 0)
+	protocol.size = BUNNY_NETWORK_MAXIMUM_PACKET_SIZE;
     }
-  else if (_size == 0)
-    _size = 65507; // Maximum size of a UDP packet
+  else
+    {
+      size_t udp_payload_max = 65507; // Maximum size of a UDP datagram payload.
 
-  size = _size;
-  terminator = _terminator;
-  protocol = _protocol;
+      if (specs.protocol == BP_UDP_RELIABLE)
+        {
+          if (udp_payload_max <= sizeof(ReliableUdpHeader))
+            goto CloseAndLeave;
+          udp_payload_max -= sizeof(ReliableUdpHeader);
+        }
+      if (specs.size == 0)
+        protocol.size = udp_payload_max;
+      else if (specs.size > udp_payload_max)
+        goto CloseAndLeave;
+    }
+
   active = true;
   doomed = false;
-  return (&info);
+  return (info);
  CloseAndLeave:
   close(fd);
-  return (NULL);
+  fd = -1;
+  active = false;
+  doomed = false;
+  return (Info{});
 }
 
-const network::Info	*network::Descriptor::Open(Protocol		_protocol,
-						   size_t		_size,
-						   char			_term,
-						   int			_fd,
-						   network::Info	_info)
+network::Info		network::Descriptor::Open(const ProtoSpec	&specs,
+						  int			_fd,
+						  network::Info		_info)
 {
   if (active)
     Close();
   ip = _info.sockaddr.sin_addr.s_addr;
-  port = ntohs(_info.sockaddr.sin_port);
+  port = _info.sockaddr.sin_port;
   info = _info;
   fd = _fd;
-  protocol = _protocol;
-  size = _size;
-  terminator = _term;
+  protocol = specs;
   active = true;
   doomed = false;
-  return (&info);
+  return (info);
 }

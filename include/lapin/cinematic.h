@@ -23,7 +23,7 @@ typedef enum		e_bunny_cinematic_event
 typedef struct		s_bunny_cinematic
 {
   t_bunny_clipable	clipable;
-  const size_t		_private[4];
+  const size_t		_private[5];
 
   struct {
     double		music;

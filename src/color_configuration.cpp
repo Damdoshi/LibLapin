@@ -5,6 +5,36 @@
 
 #include		"lapin_private.h"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_color_configuration
+ * @doc-kind function
+ * @doc-module color
+ * @doc-order 500
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Reads a color from a configuration field.
+ * @description Supported forms are a single gray value, a string in HTML #RRGGBB style, gray plus alpha, RGB or RGBA arrays.
+ * @param fieldname The field containing the color.
+ * @param col The color structure to fill.
+ * @param cnf The configuration node to read from.
+ * @return-case success BD_OK on success, BD_NOT_FOUND if the field does not exist, BD_ERROR if the value is malformed.
+ * @see t_bunny_color
+ *
+ * @doc-lang fr
+ * @brief Lit une couleur depuis un champ de configuration.
+ * @description Les formes prises en charge sont une valeur de gris seule, une chaîne de style HTML #RRGGBB, gris plus alpha, ou des tableaux RGB/RGBA.
+ * @param fieldname Le champ contenant la couleur.
+ * @param col La structure de couleur à remplir.
+ * @param cnf Le noeud de configuration à lire.
+ * @return-case success BD_OK en cas de succès, BD_NOT_FOUND si le champ n'existe pas, BD_ERROR si la valeur est mal formée.
+ * @see t_bunny_color
+ */
+
 t_bunny_decision	bunny_color_configuration(const char			*field,
 						  t_bunny_color			*col,
 						  t_bunny_configuration		*cnf)
@@ -83,6 +113,36 @@ t_bunny_decision	bunny_color_configuration(const char			*field,
     }
   return (BD_OK);
 }
+
+
+/**
+ * @doc
+ * @doc-symbol bunny_color_bind_configuration
+ * @doc-kind function
+ * @doc-module color
+ * @doc-order 520
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Reads a color from a configuration field and binds its components back to the configuration.
+ * @description Supported forms are a single gray value, a string in HTML #RRGGBB style, gray plus alpha, RGB or RGBA arrays.
+ * @param fieldname The field containing the color.
+ * @param col The color structure to fill and bind.
+ * @param cnf The configuration node to read from and bind to.
+ * @return-case success BD_OK on success, BD_NOT_FOUND if the field does not exist, BD_ERROR if the value is malformed.
+ * @see t_bunny_color
+ *
+ * @doc-lang fr
+ * @brief Lit une couleur depuis un champ de configuration et relie ses composants à la configuration.
+ * @description Les formes prises en charge sont une valeur de gris seule, une chaîne de style HTML #RRGGBB, gris plus alpha, ou des tableaux RGB/RGBA.
+ * @param fieldname Le champ contenant la couleur.
+ * @param col La structure de couleur à remplir et lier.
+ * @param cnf Le noeud de configuration à lire et auquel lier.
+ * @return-case success BD_OK en cas de succès, BD_NOT_FOUND si le champ n'existe pas, BD_ERROR si la valeur est mal formée.
+ * @see t_bunny_color
+ */
 
 t_bunny_decision	bunny_color_bind_configuration(const char		*field,
 						       t_bunny_color		*col,

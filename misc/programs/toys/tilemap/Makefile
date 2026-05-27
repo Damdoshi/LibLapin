@@ -1,5 +1,5 @@
 ## Hanged Bunny Studio Library ------    ---  -- --- -    ---  --    - -- -   -
-## Hanged Bunny Studio 2014-2017 ----- -- - -- -  -  -- -- - -- --  -- -- -- --
+## Hanged Bunny Studio 2014-2025 ----- -- - -- -  -  -- -- - -- --  -- -- -- --
 ## ----------------------------------- -- -    - - - -- -- - -- ---- -    -- --
 ## ----------------------------------    -- -- - --- -    ---  --   -- -- -   -
 ## ----------------------------------------------------------------------------
@@ -7,27 +7,21 @@
 ## ----------------------------------------------------------------------------
 ## Configuration --------------------------------------------------------------
 
-  MOD		=	`pwd | rev | cut -d "/" -f3 | rev`
-
   BIN		=	`pwd | rev | cut -d "/" -f1 | rev`
   FLAG		=	-W -Wall -Werror -g -g3 -ggdb
 
-  INCLUDE	=	-I./include/ -I../../include/
-  SRC		=	$(wildcard src/*.c)
-  OBJ		=	$(SRC:.c=.o)
-  LIBPATH	=	-L../../
-  LIB		=	-llapin -lsfml-graphics -lsfml-audio -lsfml-window	\
-			-lsfml-system -lstdc++ -lm -ldl -lpthread -lavcall
+  SRC		=	$(wildcard src/*.cpp)
+  OBJ		=	$(SRC:.cpp=.o)
 
   ## Rules ------------------------------------------------------------------
   all:		bin
   bin:		$(OBJ)
-		@gcc $(OBJ) -o $(BIN) $(LIBPATH) $(LIB)
+		@b++ $(OBJ) -o $(BIN) $(LIBPATH) $(LIB) $(FLAG)
 		@echo "[OUT] " $(BIN)
 		@echo $(BIN) | tr '[:lower:]' '[:upper:]'
-  .c.o:
-		@gcc $(INCLUDE) $(FLAG) -c $< -o $@
-		@echo "[GCC]" $<
+  .cpp.o:
+		@b++ $(INCLUDE) $(FLAG) -c $< -o $@
+		@echo "[B++]" $<
   clean:
 		@rm -f $(OBJ)
   fclean:	clean

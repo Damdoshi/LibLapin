@@ -47,6 +47,31 @@ void			merge_clothe(t_bunny_map		*nod,
     }
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_render_dressed_sprite
+ * @doc-kind function
+ * @doc-module sprite
+ * @doc-order 540
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Renders a dressed sprite into a flat sprite sheet.
+ * @param sprite Dressed sprite to render.
+ * @return-success Returns a newly allocated sprite containing the merged clothes.
+ * @return-failure Returns NULL on allocation failure.
+ * @see bunny_dressed_sprite_wear
+ *
+ * @doc-lang fr
+ * @brief Rend un sprite habillé sous forme de sprite aplati.
+ * @param sprite Sprite habillé à rendre.
+ * @return-success Renvoie un sprite nouvellement alloué contenant les vêtements fusionnés.
+ * @return-failure Renvoie NULL en cas d'échec d'allocation.
+ * @see bunny_dressed_sprite_wear
+ */
 t_bunny_sprite		*bunny_render_dressed_sprite(t_bunny_dressed_sprite	*sprite)
 {
   t_bunny_sprite	*nw;

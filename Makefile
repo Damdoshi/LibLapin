@@ -24,10 +24,10 @@
 
   NAME		=	lapin
   PRODSO	=	lib$(NAME).so
-  PRODA		=	lib$(NAME).a
+  PRODA		=	/tmp/lib$(NAME).a
   DBGSO		=	lib$(NAME)-dbg.so
-  DBGA		=	lib$(NAME)-dbg.a
-  TSTA		=	lib$(NAME)-test.a
+  DBGA		=	/tmp/lib$(NAME)-dbg.a
+  TSTA		=	/tmp/lib$(NAME)-test.a
 
   TITLE		=	"LIBLAPIN - BUNNY LIBRARY"
   LAPINOPTS	=	-DBUNNY_COMPILATION					\
@@ -49,7 +49,7 @@
 			-Wno-narrowing						\
 			-Wno-cast-function-type
 
-  DEBUGOPTS	=	-O0 -g -g3 -ggdb					\
+  DEBUGOPTS	=	-gdwarf-4 -O0 -Og -g -g3 -ggdb				\
 			-fno-omit-frame-pointer					\
 			-fno-align-functions					\
 			-fno-align-loops
@@ -63,6 +63,8 @@
 			-lopencv_videoio -lopencv_core				\
 			-lavcall -lusb -ludev -lm -ldl -lpthread
   INSTALL_BIN_DIR =	/usr/bin/
+  INSTALL_ETC_DIR =	/etc/lapin/
+  INSTALL_SHR_DIR =	/usr/share/lapin/
   INSTALL_INC_DIR =	/usr/include/
   INSTALL_LIB_DIR =	/usr/lib/
 
@@ -108,8 +110,8 @@
   TSTFLAGS	=	$(COMMON) $(TESTOPTS)
 
 all:			erase title $(PRODA) $(DBGA) $(TSTA) # $(DBGSO) $(PRODSO)
-prod:			$(PRODSO) $(PRODA)
-debug:			$(DBGSO) $(DBGA)
+prod:			$(PRODA) # $(PRODSO)
+debug:			$(DBGA) # $(DBGSO)
 tests:			$(TSTA)
 			(cd tests/ && $(MAKE))
 $(PRODSO):		$(PRODOBJ)
@@ -178,12 +180,30 @@ fclean:			clean erase
 re:			fclean all
 erase:
 			@$(RM) -r $(LOGDIR)/*.*
-local_install:		all
-			cp bcc b++  $(INSTALL_BIN_DIR)
+install_tools:
+			cp bcc b++ bcontext $(INSTALL_BIN_DIR)
+			mkdir -p /etc/lapin/
+			chmod 755 $(INSTALL_BIN_DIR)/bcc 			\
+			 $(INSTALL_BIN_DIR)/b++					\
+			 $(INSTALL_BIN_DIR)/bcontext
+			mkdir -p $(INSTALL_SHR_DIR)context/
+			cp -r misc/ressources/context/* $(INSTALL_SHR_DIR)context/
+
+install_headers:	install_tools
 			cp include/lapin.h $(INSTALL_INC_DIR)
 			mkdir -p $(INSTALL_INC_DIR)lapin/
 			cp -r include/lapin/* $(INSTALL_INC_DIR)lapin/
+			chmod 644 $(INSTALL_INC_DIR)lapin.h
+			find $(INSTALL_INC_DIR)lapin/ -type d -exec chmod 755 {} + -o -type f -exec chmod 644 {} +
+
+install_debug:		install_headers debug
+			cp $(DBGA) $(INSTALL_LIB_DIR)
+
+install_main:		all install_debug
 			cp $(PRODA) $(DBGA) $(INSTALL_LIB_DIR)
+
+install:		install_main install_debug
+
 package:
 			dpkg-buildpackage -us -uc
 .POSIX:

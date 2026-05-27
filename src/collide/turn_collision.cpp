@@ -17,6 +17,29 @@ static void	turn(t_bunny_accurate_position			*p,
   p->y = n.y;
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_turn_collision
+ * @doc-kind function
+ * @doc-module collide
+ * @doc-order 610
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Rotates a collision shape in place around the origin.
+ * @param a Collision shape to rotate.
+ * @param moment Rotation angle in degrees.
+ * @see bunny_move_collision
+ *
+ * @doc-lang fr
+ * @brief Fait tourner une forme de collision sur place autour de l’origine.
+ * @param a Forme de collision à tourner.
+ * @param moment Angle de rotation en degrés.
+ * @see bunny_move_collision
+ */
 void		bunny_turn_collision(t_bunny_collision		*a,
 				     double			moment)
 {
@@ -40,7 +63,7 @@ void		bunny_turn_collision(t_bunny_collision		*a,
     case BCT_RECTANGLE:
       {
 	t_bunny_accurate_position siz = {
-	  a->rectangular.coord[1].y,
+	  a->rectangular.coord[1].x,
 	  a->rectangular.coord[1].y
 	};
 

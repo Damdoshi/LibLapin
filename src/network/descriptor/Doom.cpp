@@ -5,11 +5,18 @@
 //
 // Bibliothèque Lapin
 
+#include		<poll.h>
 #include		"lapin.h"
 #include		"private/network/network.hpp"
 
 void			Network::Descriptor::Doom(void)
 {
   doomed = true;
+  if (pollfd != NULL)
+    {
+      pollfd->events &= ~POLLIN;
+      if (outqueue.empty())
+	pollfd->events &= ~POLLOUT;
+    }
 }
 

@@ -1,0 +1,276 @@
+RessourceFile=@"intro_final.ogg"
+Attenuation = 0
+
+[Slices
+  [S00
+    Index = 0
+    ActiveEnd=6.75
+    EndIndex=0+ActiveEnd
+    Volume=100
+    Position=10,0,0
+  ]
+
+  [S01
+    Index = 7
+    ActiveEnd=15
+    EndIndex=0+ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S02
+    Index = 15.3
+    ActiveEnd=22
+    EndIndex=0+ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S03
+    Index = 22
+    ActiveEnd=29
+    EndIndex=0+ActiveEnd
+    Volume=100
+    Position=10,0,0
+  ]
+
+  [S04
+    Index = 29
+    ActiveEnd=36
+    EndIndex=0+ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S05
+    Index = 36
+    ActiveEnd=45
+    EndIndex=0+ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S06
+    Index = 45
+    ActiveEnd=51
+    EndIndex=0+ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S07
+    Index = 51
+    ActiveEnd=58.5
+    EndIndex=0+ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S08
+    Index = 58.5
+    ActiveEnd=1,6
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=10,0,0
+  ]
+
+  [S09
+    Index = 1,7
+    ActiveEnd=1,12.5
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=10,0,0
+  ]
+
+  [S10
+    Index = 1,12.75
+    ActiveEnd=1,20.5
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S11
+    Index = 1, 20.75
+    ActiveEnd=1,29
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S12
+    Index = 1, 29.75
+    ActiveEnd=1, 37
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S13
+    Index = 1,38
+    ActiveEnd=1, 43.5
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S14
+    Index = 1,44
+    ActiveEnd=1,52
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=10,0,0
+  ]
+
+  [S15
+    Index = 1,52
+    ActiveEnd=1,58
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S16
+    Index = 1,58
+    ActiveEnd=2,9
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S17
+    Index = 2,9
+    ActiveEnd=2,18
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S18
+    Index = 2,18.5
+    ActiveEnd=2,26
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S19
+    Index = 2,26.5
+    ActiveEnd=2,33.5
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=10,0,0
+  ]
+
+  [S20
+    Index = 2,33.5
+    ActiveEnd=2,37
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=10,0,0
+  ]
+
+  [S21
+    Index = 2,37
+    ActiveEnd=2,41
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S22
+    Index = 2,41
+    ActiveEnd=2,50
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S23
+    Index = 2,50
+    ActiveEnd=2,58
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S24
+    Index = 2,58
+    ActiveEnd=3,7
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S25
+    Index = 3,7
+    ActiveEnd=3,13.5
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S26
+    Index = 3,13.5
+    ActiveEnd=3,20
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=10,0,0
+  ]
+
+  [S27
+    Index = 3,20
+    ActiveEnd=3,27
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=10,0,0
+  ]
+
+  [S28
+    Index = 3,27
+    ActiveEnd=3,35
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S29
+    Index = 3,35
+    ActiveEnd=3,43
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S30
+    Index = 3,43
+    ActiveEnd=3,50
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S31
+    Index = 3,50
+    ActiveEnd=3,59
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=-10,0,0
+  ]
+
+  [S32
+    Index = 4,0
+    ActiveEnd=4,6.5
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=10,0,0
+  ]
+
+  [S33
+    Index = 4,7
+    ActiveEnd=4,15
+    EndIndex=ActiveEnd
+    Volume=100
+    Position=10,0,0
+  ]
+]

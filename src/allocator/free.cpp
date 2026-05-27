@@ -19,6 +19,36 @@ void			check_memory_state(void);
 extern size_t		border0;
 extern size_t		border1;
 
+/**
+ * @doc
+ * @doc-symbol bunny_free
+ * @doc-kind function
+ * @doc-module allocator
+ * @doc-order 120
+ * @doc-since 2
+ * @doc-until latest
+ * @doc-level 0
+ *
+ * @doc-lang en
+ * @brief Releases a memory block allocated by the Bunny allocator.
+ * @description Releases the sent memory block so it can be made available for a later allocation.
+ * @description The pointer must come from bunny_malloc, bunny_calloc or bunny_realloc. Sending NULL is accepted and does nothing.
+ * @param data A memory block allocated with bunny_malloc, bunny_calloc or bunny_realloc.
+ * @log "allocator"
+ * @section Error and logs If the sent address is invalid and the Bunny allocator is active, the program reports the altered memory state and deliberately raises a SIGSEGV-like failure.
+ * @section Additional informations When BUNNY_ALLOCATOR_DEACTIVATED is set at library compile time, bunny_free becomes a wrapper around free with additional log output.
+ * @see bunny_set_maximum_ram, bunny_malloc
+ *
+ * @doc-lang fr
+ * @brief Libère un bloc mémoire alloué par l'allocateur Bunny.
+ * @description Libère le bloc mémoire envoyé afin qu'il puisse être réutilisé par une allocation ultérieure.
+ * @description Le pointeur doit provenir de bunny_malloc, bunny_calloc ou bunny_realloc. Envoyer NULL est accepté et ne fait rien.
+ * @param data Un bloc mémoire alloué avec bunny_malloc, bunny_calloc ou bunny_realloc.
+ * @log "allocator"
+ * @section Erreurs et logs Si l'adresse envoyée est invalide et que l'allocateur Bunny est actif, le programme signale l'altération de l'état mémoire et provoque volontairement un échec de type SIGSEGV.
+ * @section Informations supplémentaires Lorsque BUNNY_ALLOCATOR_DEACTIVATED est défini à la compilation de la bibliothèque, bunny_free devient un emballage autour de free avec une sortie de log supplémentaire.
+ * @see bunny_set_maximum_ram, bunny_malloc
+ */
 void			bunny_free(void		*data)
 {
   // To ensure a precise behaviour everywhere

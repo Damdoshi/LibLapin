@@ -39,7 +39,7 @@ bool			bunny_collision_triangle_triangle(const t_bunny_collision *a,
 
   tmp.coord[0] = btri->coord[2];
   tmp.coord[1] = btri->coord[0];
-  if (bunny_collision_triangle_line(b, (t_bunny_collision*)&tmp))
+  if (bunny_collision_triangle_line(a, (t_bunny_collision*)&tmp))
     goto collide;
 
   // B triangle, A set of lines

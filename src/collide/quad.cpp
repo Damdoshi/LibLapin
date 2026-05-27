@@ -7,14 +7,43 @@
 
 #define			PATTERN			"%p quad, %p dot -> %s"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_quad_collision_dot
+ * @doc-kind function
+ * @doc-module collide
+ * @doc-order 540
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Tests whether a point is inside a quadrilateral.
+ * @param v4 Vertex array containing four quad vertices.
+ * @param dot Point to test.
+ * @return-success Returns true if dot is inside the quadrilateral.
+ * @return-failure Returns false otherwise.
+ * @log "collision"
+ * @see bunny_triangle_collision_dot
+ *
+ * @doc-lang fr
+ * @brief Teste si un point est dans un quadrilatère.
+ * @param v4 Tableau de sommets contenant les quatre sommets du quadrilatère.
+ * @param dot Point à tester.
+ * @return-success Renvoie true si dot est dans le quadrilatère.
+ * @return-failure Renvoie false sinon.
+ * @log "collision"
+ * @see bunny_triangle_collision_dot
+ */
 bool			bunny_quad_collision_dot(const t_bunny_vertex_array		*v4,
 						 const t_bunny_accurate_position	*dot)
 {
-  t_bunny_vertex_array	*t1 = (t_bunny_vertex_array*)bunny_alloca(sizeof(*t1) + 3 * sizeof(t1->vertex[0]));
-  t_bunny_vertex_array	*t2 = (t_bunny_vertex_array*)bunny_alloca(sizeof(*t1) + 3 * sizeof(t1->vertex[0]));
-
   if (v4->length != 4)
     scream_error_if(return (false), EINVAL, PATTERN, "collision", v4, dot, "false");
+
+  t_bunny_vertex_array	*t1 = (t_bunny_vertex_array*)bunny_alloca(sizeof(*t1) + 3 * sizeof(t1->vertex[0]));
+  t_bunny_vertex_array	*t2 = (t_bunny_vertex_array*)bunny_alloca(sizeof(*t1) + 3 * sizeof(t1->vertex[0]));
 
   t1->length = 3;
   t1->vertex[0].pos.x = v4->vertex[0].pos.x;

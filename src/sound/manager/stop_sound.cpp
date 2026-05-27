@@ -5,6 +5,27 @@
 
 #include	"lapin_private.h"
 
+/**
+ * @doc-symbol bunny_sound_manager_stop_sound
+ * @doc-module sound_manager
+ * @doc-kind function
+ * @doc-order 280
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Stops a registered sound effect through a manager.
+ * @param sm Sound manager containing the effect.
+ * @param snd Effect to stop.
+ * @see bunny_sound_manager_play_sound
+ *
+ * @doc-lang fr
+ * @brief Arrête un effet sonore enregistré via un gestionnaire.
+ * @param sm Gestionnaire de sons contenant l'effet.
+ * @param snd Effet à arrêter.
+ * @see bunny_sound_manager_play_sound
+ */
 void		bunny_sound_manager_stop_sound(t_bunny_sound_manager	*_sm,
 					       t_bunny_effect		*_snd)
 {

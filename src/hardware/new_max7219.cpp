@@ -5,6 +5,39 @@
 
 #include		"lapin_private.h"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_new_max7219
+ * @doc-kind function
+ * @doc-module hardware
+ * @doc-order 440
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 50
+ *
+ * @doc-lang en
+ * @brief Allocates a MAX7219 matrix chain descriptor.
+ * @param w Width in 8x8 matrices.
+ * @param h Height in 8x8 matrices.
+ * @param clockpin Clock pin number.
+ * @param loadpin Load pin number.
+ * @param datapin Data pin number.
+ * @return-success Returns a new MAX7219 descriptor.
+ * @return-failure Returns NULL on allocation failure.
+ * @see bunny_delete_max7219
+ *
+ * @doc-lang fr
+ * @brief Alloue un descripteur de chaîne de matrices MAX7219.
+ * @param w Largeur en matrices 8x8.
+ * @param h Hauteur en matrices 8x8.
+ * @param clockpin Numéro de broche clock.
+ * @param loadpin Numéro de broche load.
+ * @param datapin Numéro de broche data.
+ * @return-success Renvoie un nouveau descripteur MAX7219.
+ * @return-failure Renvoie NULL en cas d’échec d’allocation.
+ * @see bunny_delete_max7219
+ */
 t_bunny_max7219		*bunny_new_max7219(size_t			w,
 					   size_t			h,
 					   int				clockpin,

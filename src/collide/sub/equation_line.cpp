@@ -15,7 +15,7 @@ bool		bunny_collision_equation_line(const t_bunny_collision	*a,
 
   dot.type = BCT_DOT;
   pos.x = (line->coord[1].x - line->coord[0].x) / (line->intermediate_points + 1);
-  pos.y = (line->coord[1].x - line->coord[0].y) / (line->intermediate_points + 1);
+  pos.y = (line->coord[1].y - line->coord[0].y) / (line->intermediate_points + 1);
   dot.coord = line->coord[0];
   for (i = 0; i < line->intermediate_points + 2; ++i)
     if (bunny_collision_equation_dot(&a->equation, &dot).radian >= 0)

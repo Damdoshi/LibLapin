@@ -32,5 +32,9 @@ void				__bunny_bitshake(char			*cnt,
 						 size_t			len,
 						 const t_bunny_cipher_key *key,
 						 bool			cipher);
+void				__bunny_bitrotate(char			*cnt,
+						  size_t			len,
+						  const t_bunny_cipher_key *key,
+						  bool			cipher);
 
 #endif	/*			__LAPIN_PRIVATE_SECURITY_H__	*/

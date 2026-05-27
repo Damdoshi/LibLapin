@@ -114,6 +114,29 @@ const char		*gl_bunny_keysym[BKS_LAST_KEY] =
     "Pause"
   };
 
+/**
+ * @doc-symbol bunny_get_keyname
+ * @doc-module events
+ * @doc-kind function
+ * @doc-order 26
+ * @doc-since 2
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Returns a printable name for a keyboard symbol.
+ * @param sym The keyboard symbol to name.
+ * @return-success A constant string describing the key.
+ * @return-failure The string "Unknown" if sym is outside the known range.
+ * @see t_bunny_keysym, gl_bunny_keysym
+ *
+ * @doc-lang fr
+ * @brief Renvoie un nom affichable pour un symbole clavier.
+ * @param sym Le symbole clavier à nommer.
+ * @return-success Une chaîne constante décrivant la touche.
+ * @return-failure La chaîne "Unknown" si sym est hors de l'intervalle connu.
+ * @see t_bunny_keysym, gl_bunny_keysym
+ */
 const char			*bunny_get_keyname(t_bunny_keysym	sym)
 {
   static const char		*unknown = "Unknown";

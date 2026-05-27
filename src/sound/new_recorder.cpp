@@ -7,6 +7,35 @@
 
 #define			PATTERN		"%s, %u -> %p"
 
+/**
+ * @doc-symbol bunny_new_recorder
+ * @doc-module sound
+ * @doc-kind function
+ * @doc-order 610
+ * @doc-since 13
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Creates an audio recorder.
+ * @param device Recording device to use, or NULL for the backend default device.
+ * @param sample_rate Sample rate used for recording.
+ * @return-success A newly allocated t_bunny_recorder.
+ * @return-failure NULL if allocation or initialization fails.
+ * @error ENOMEM Out of memory.
+ * @log May log in the "ressource" and "sound" domains.
+ * @see bunny_start_record, bunny_stop_record, bunny_record_devices, bunny_default_record_device
+ *
+ * @doc-lang fr
+ * @brief Crée un enregistreur audio.
+ * @param device Périphérique d'enregistrement à utiliser, ou NULL pour le périphérique par défaut du backend.
+ * @param sample_rate Fréquence d'échantillonnage utilisée pour l'enregistrement.
+ * @return-success Un t_bunny_recorder nouvellement alloué.
+ * @return-failure NULL si l'allocation ou l'initialisation échoue.
+ * @error ENOMEM Mémoire insuffisante.
+ * @log Peut écrire dans les domaines "ressource" et "sound".
+ * @see bunny_start_record, bunny_stop_record, bunny_record_devices, bunny_default_record_device
+ */
 t_bunny_recorder	*bunny_new_recorder(const char			*dev,
 					    unsigned int		sample_rate)
 {

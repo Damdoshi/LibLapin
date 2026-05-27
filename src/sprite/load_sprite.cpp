@@ -15,6 +15,8 @@ struct bunny_sprite	*_bunny_new_sprite(void)
     return (NULL);
   sprite->sprite = NULL;
   sprite->texture = NULL;
+  sprite->ntexture = NULL;
+  sprite->ntex = NULL;
   return (sprite);
 }
 
@@ -57,6 +59,7 @@ t_bunny_sprite		*_bunny_fill_sprite(t_bunny_sprite	*_spr,
   sprite->res_id = hash;
 
   sprite->tex = &sprite->texture->getTexture();
+  sprite->ntex = sprite->ntexture ? &sprite->ntexture->getTexture() : NULL;
   if ((sprite->sprite = new (std::nothrow) sf::Sprite(*sprite->tex)) == NULL)
       return (NULL);
 
@@ -114,6 +117,31 @@ t_bunny_sprite		*_bunny_read_sprite(t_bunny_configuration *conf,
   return ((t_bunny_sprite*)sprite);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_load_sprite
+ * @doc-kind function
+ * @doc-module sprite
+ * @doc-order 160
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Loads a sprite from a sprite configuration file.
+ * @param file Sprite configuration file.
+ * @return-success Returns a newly allocated sprite.
+ * @return-failure Returns NULL on error.
+ * @see bunny_read_sprite, bunny_delete_clipable
+ *
+ * @doc-lang fr
+ * @brief Charge un sprite depuis un fichier de configuration de sprite.
+ * @param file Fichier de configuration de sprite.
+ * @return-success Renvoie un sprite nouvellement alloué.
+ * @return-failure Renvoie NULL en cas d'erreur.
+ * @see bunny_read_sprite, bunny_delete_clipable
+ */
 t_bunny_sprite		*bunny_load_sprite(const char		*file)
 {
   char			buffer[1024];
@@ -158,6 +186,7 @@ t_bunny_sprite		*bunny_load_sprite(const char		*file)
 	  return (NULL);
 	}
     }
+  bunny_delete_configuration(conf);
   return (spr);
 }
 

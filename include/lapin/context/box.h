@@ -18,6 +18,32 @@
 
 struct s_bunny_box_system;
 
+/**
+ * @doc
+ * @doc-symbol t_bunny_box_type
+ * @doc-kind enum
+ * @doc-module context
+ * @doc-order 400
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Identifies the kind of GUI box to build.
+ * @field BBT_SIMPLE_BOX Simple container box.
+ * @field BBT_LABEL_BOX Box displaying text.
+ * @field BBT_CUSTOM_BOX Sentinel and first custom box type.
+ * @see gl_bunny_box_type
+ * @see gl_bunny_new_box
+ *
+ * @doc-lang fr
+ * @brief Identifie le type de boîte GUI à construire.
+ * @field BBT_SIMPLE_BOX Simple container box.
+ * @field BBT_LABEL_BOX Box displaying text.
+ * @field BBT_CUSTOM_BOX Sentinel and first custom box type.
+ * @see gl_bunny_box_type
+ * @see gl_bunny_new_box
+ */
 typedef enum			e_bunny_box_type
   {
     BBT_SIMPLE_BOX,
@@ -25,8 +51,48 @@ typedef enum			e_bunny_box_type
     BBT_CUSTOM_BOX
   }				t_bunny_box_type;
 
+/**
+ * @doc
+ * @doc-symbol gl_bunny_box_type
+ * @doc-kind variable
+ * @doc-module context
+ * @doc-order 410
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Maps built-in box type identifiers to their configuration names.
+ * @see t_bunny_box_type
+ *
+ * @doc-lang fr
+ * @brief Associe les identifiants de boîtes intégrées à leurs noms de configuration.
+ * @see t_bunny_box_type
+ */
 extern const char		*gl_bunny_box_type[BBT_CUSTOM_BOX];
 
+/**
+ * @doc
+ * @doc-symbol t_bunny_picture_display_mode
+ * @doc-kind enum
+ * @doc-module context
+ * @doc-order 420
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Describes how a picture is fitted inside a GUI box.
+ * @field BPDM_STRETCH Stretch to the box size.
+ * @field BPDM_MAXIMIZE Maximize while preserving useful coverage.
+ * @field BPDM_FIT Fit while preserving proportions.
+ *
+ * @doc-lang fr
+ * @brief Décrit comment une image est ajustée dans une boîte GUI.
+ * @field BPDM_STRETCH Stretch to the box size.
+ * @field BPDM_MAXIMIZE Maximize while preserving useful coverage.
+ * @field BPDM_FIT Fit while preserving proportions.
+ */
 typedef enum			e_bunny_picture_display_mode
   {
     BPDM_STRETCH,
@@ -35,6 +101,60 @@ typedef enum			e_bunny_picture_display_mode
   }				t_bunny_picture_display_mode;
 
 // Common base
+/**
+ * @doc
+ * @doc-symbol t_bunny_gui_box
+ * @doc-kind struct
+ * @doc-module context
+ * @doc-order 430
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Base structure shared by GUI boxes in the box context.
+ * @field type Box type.
+ * @field id Box identifier.
+ * @field parent Parent box.
+ * @field configuration Configuration node used to build the box.
+ * @field inactive When true, the box and children do not answer events.
+ * @field hidden When true, the box and children are not displayed.
+ * @field children Map of child boxes.
+ * @field position Box position.
+ * @field size Box size.
+ * @field color Default color.
+ * @field background Default background picture.
+ * @field display_mode Picture display mode.
+ * @field mouse_button Mouse button callback.
+ * @field mouse_move Mouse move callback.
+ * @field display Display callback.
+ * @field destructor Box-specific destructor.
+ * @see t_bunny_box_system
+ * @see bunny_read_simple_box
+ * @see bunny_delete_box
+ *
+ * @doc-lang fr
+ * @brief Structure de base partagée par les boîtes GUI du contexte box.
+ * @field type Box type.
+ * @field id Box identifier.
+ * @field parent Parent box.
+ * @field configuration Configuration node used to build the box.
+ * @field inactive When true, the box and children do not answer events.
+ * @field hidden When true, the box and children are not displayed.
+ * @field children Map of child boxes.
+ * @field position Box position.
+ * @field size Box size.
+ * @field color Default color.
+ * @field background Default background picture.
+ * @field display_mode Picture display mode.
+ * @field mouse_button Mouse button callback.
+ * @field mouse_move Mouse move callback.
+ * @field display Display callback.
+ * @field destructor Box-specific destructor.
+ * @see t_bunny_box_system
+ * @see bunny_read_simple_box
+ * @see bunny_delete_box
+ */
 typedef struct			s_bunny_gui_box
 {
   t_bunny_box_type		type;
@@ -95,12 +215,60 @@ typedef struct			s_bunny_gui_box
   void				(*destructor)(struct s_bunny_gui_box		*box);
 }				t_bunny_gui_box;
 
+/**
+ * @doc
+ * @doc-symbol t_bunny_gui_label
+ * @doc-kind struct
+ * @doc-module context
+ * @doc-order 440
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief GUI box specialization that displays a font/text object.
+ * @field box Base GUI box.
+ * @field text Font/text object displayed by the label.
+ *
+ * @doc-lang fr
+ * @brief Spécialisation de boîte GUI affichant un objet texte/police.
+ * @field box Base GUI box.
+ * @field text Font/text object displayed by the label.
+ */
 typedef struct			s_bunny_gui_label
 {
   t_bunny_gui_box		box;
   t_bunny_font			*text;
 }				t_bunny_gui_label;
 
+/**
+ * @doc
+ * @doc-symbol t_bunny_new_box
+ * @doc-kind typedef
+ * @doc-module context
+ * @doc-order 450
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Constructor callback type for GUI boxes.
+ * @param parent Parent box.
+ * @param cnf Configuration node describing the box.
+ * @return-success Returns a newly allocated box.
+ * @return-failure Returns $CNULL@ on error.
+ * @see gl_bunny_new_box
+ * @see gl_bunny_custom_new_box
+ *
+ * @doc-lang fr
+ * @brief Type de callback constructeur pour les boîtes GUI.
+ * @param parent Parent box.
+ * @param cnf Configuration node describing the box.
+ * @return-success Renvoie une boîte nouvellement allouée.
+ * @return-failure Renvoie $CNULL@ en cas d’erreur.
+ * @see gl_bunny_new_box
+ * @see gl_bunny_custom_new_box
+ */
 typedef t_bunny_gui_box		*(*t_bunny_new_box)(t_bunny_gui_box		*parent,
 						    t_bunny_configuration	*cnf);
 
@@ -132,6 +300,40 @@ typedef t_bunny_gui_box		*(*t_bunny_new_box)(t_bunny_gui_box		*parent,
 ** of subcontext. Something that will be printed *over* it and
 ** that will transmist events.
 */
+/**
+ * @doc
+ * @doc-symbol t_bunny_box_system
+ * @doc-kind struct
+ * @doc-module context
+ * @doc-order 460
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Runtime structure of the built-in GUI box context.
+ * @field head Common context runtime header.
+ * @field subhead Runtime header of the context used below the GUI overlay.
+ * @field screen Root screen box.
+ * @field focus Currently focused box.
+ * @field hovered Currently hovered box.
+ * @field down_clicked Box that received the mouse press.
+ * @see gl_bunny_box_context
+ * @see bunny_load_box
+ * @see bunny_read_box
+ *
+ * @doc-lang fr
+ * @brief Structure d’exécution du contexte GUI box intégré.
+ * @field head Common context runtime header.
+ * @field subhead Runtime header of the context used below the GUI overlay.
+ * @field screen Root screen box.
+ * @field focus Currently focused box.
+ * @field hovered Currently hovered box.
+ * @field down_clicked Box that received the mouse press.
+ * @see gl_bunny_box_context
+ * @see bunny_load_box
+ * @see bunny_read_box
+ */
 typedef struct			s_bunny_box_system
 {
   t_bunny_context_runtime_info	head;

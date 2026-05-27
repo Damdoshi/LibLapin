@@ -12,21 +12,29 @@
 #include		"lapin.h"
 #include		"private/network/network.hpp"
 
-network::Descriptor::Descriptor(Network			&_network)
-  : network(&_network),
+network::Descriptor::Descriptor(void)
+  : network(NULL),
     pollfd(NULL),
-    protocol(IMMEDIATE_RETRIEVE),
-    size(-1),
-    terminator(0),
+    position(0),
+    info(),
+    protocol(),
     active(false),
     doomed(false),
     fd(-1),
     ip(0),
     port(0),
     wcursor(0),
+    inbuffer(NULL),
+    inbuffer_size(0),
     rcursor(0),
     spdbuffer(NULL)
 {}
+
+network::Descriptor::Descriptor(Network			&_network)
+  : Descriptor()
+{
+  network = &_network;
+}
 
 /*
 
@@ -71,4 +79,3 @@ network::Descriptor::~Descriptor(void)
 {
   Close();
 }
-

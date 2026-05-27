@@ -276,11 +276,11 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
 	  anim->next_animation = bunny_hash(BH_DJB2, str, strlen(str));
 	}
       else
-	anim->next_animation = -1;
+	anim->next_animation = (uint64_t)-1;
 
       if ((*aconf).Access("Loop"))
 	{
-	  if (anim->next_animation != -1)
+	  if (anim->next_animation != (uint64_t)-1)
 	    scream_error_if
 	      (goto DeleteMap, BE_SYNTAX_ERROR,
 	       PATTERN ": Loop and NextAnimation are mutually exclusive.",
@@ -291,7 +291,7 @@ bool		_bunny_set_sprite_attribute(struct bunny_sprite	&sprite,
   for (i = 0; i < sprite.nbr_animation; ++i)
     {
       anim = &sprite.animation[i];
-      if (anim->next_animation != -1)
+      if (anim->next_animation != (uint64_t)-1)
 	anim->next_animation = bunny_map_get_data
 	  (sprite.hashname_id, anim->next_animation, int);
     }

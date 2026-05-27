@@ -7,7 +7,7 @@
 
 #include	"lapin_private.h"
 
-bool		Network::SetMessage(const Info		&info,
+bool		Network::SetMessage(Info		info,
 				    const char		*data,
 				    size_t		len,
 				    t_bunny_written	wt,
@@ -21,7 +21,7 @@ bool		Network::SetMessage(const Info		&info,
 }
 
 template <>
-bool		Network::SetMessage<std::string>(const Info		&info,
+bool		Network::SetMessage<std::string>(Info			info,
 						 std::string const	&r,
 						 t_bunny_written	wt,
 						 void			*wtdata)

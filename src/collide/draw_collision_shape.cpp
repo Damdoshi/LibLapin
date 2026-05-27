@@ -360,6 +360,31 @@ static void		draw_equation(t_bunny_buffer				*tar,
     }
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_draw_collision_shape
+ * @doc-kind function
+ * @doc-module collide
+ * @doc-order 280
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Draws a collision shape on a graphic buffer.
+ * @param tar Target buffer.
+ * @param x Collision shape to draw.
+ * @param col Drawing color.
+ * @see bunny_set_collision_shape
+ *
+ * @doc-lang fr
+ * @brief Dessine une forme de collision sur un buffer graphique.
+ * @param tar Buffer cible.
+ * @param x Forme de collision à dessiner.
+ * @param col Couleur de dessin.
+ * @see bunny_set_collision_shape
+ */
 void			bunny_draw_collision_shape(t_bunny_buffer		*tar,
 						   const t_bunny_collision	*x,
 						   unsigned int			col)
@@ -392,6 +417,33 @@ void			bunny_draw_collision_shape(t_bunny_buffer		*tar,
     }
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_set_collision_shape
+ * @doc-kind function
+ * @doc-module collide
+ * @doc-order 615
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Fills pixels covered by a collision shape on a graphic buffer.
+ * @param tar Target buffer.
+ * @param x Collision shape to fill.
+ * @param pos Position offset.
+ * @param col Fill color.
+ * @see bunny_draw_collision_shape
+ *
+ * @doc-lang fr
+ * @brief Remplit les pixels couverts par une forme de collision sur un buffer graphique.
+ * @param tar Buffer cible.
+ * @param x Forme de collision à remplir.
+ * @param pos Décalage de position.
+ * @param col Couleur de remplissage.
+ * @see bunny_draw_collision_shape
+ */
 void			bunny_set_collision_shape(t_bunny_buffer		*tar,
 						  const t_bunny_collision	*x,
 						  t_bunny_position		pos,

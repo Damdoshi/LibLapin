@@ -1,0 +1,17 @@
+[Clip
+  Split = 3
+  Selected = 0
+]
+
+[Animations
+  [Move
+    Position = 0, 0
+    Browsing = "LeftToRight"
+    Frame = 3
+    Loop
+  ]
+]
+
+InitialAnimation = "Move"
+Frequency = 0.5
+

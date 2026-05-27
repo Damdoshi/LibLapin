@@ -7,6 +7,41 @@
 
 #define				PATTERN		"%s conf_file, %p sound, %p target_conf, %s is_music -> %s (%s)"
 
+/**
+ * @doc-symbol bunny_set_sound_attribute
+ * @doc-module sound
+ * @doc-kind function
+ * @doc-order 580
+ * @doc-since 13
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Loads or updates a sound from a configuration file or node.
+ * @description If *sound is NULL, RessourceFile creates a music or effect. Otherwise, the existing sound receives the attributes found in the configuration.
+ * @param conf_file Configuration file to load, or NULL when config already points to a node.
+ * @param sound Address of the sound pointer to create or update.
+ * @param config Optional configuration pointer to use, fill or destroy depending on its value.
+ * @param is_music true to create a music, false to create an effect.
+ * @return-success true if loading, reading and attribute application succeeded.
+ * @return-failure false if inputs are invalid, a required field is missing or the resource cannot be loaded.
+ * @error EINVAL Invalid argument or incomplete configuration.
+ * @log May log in the "ressource", "sound" and "syntax" domains.
+ * @see bunny_load_music, bunny_load_effect, bunny_read_music
+ *
+ * @doc-lang fr
+ * @brief Charge ou met à jour un son depuis un fichier ou un nœud de configuration.
+ * @description Si *sound vaut NULL, RessourceFile crée une musique ou un effet. Sinon, le son existant reçoit les attributs trouvés dans la configuration.
+ * @param conf_file Fichier de configuration à charger, ou NULL lorsque config pointe déjà vers un nœud.
+ * @param sound Adresse du pointeur de son à créer ou à modifier.
+ * @param config Pointeur de configuration optionnel à utiliser, remplir ou détruire selon sa valeur.
+ * @param is_music true pour créer une musique, false pour créer un effet.
+ * @return-success true si le chargement, la lecture et l'application des attributs ont réussi.
+ * @return-failure false si les entrées sont invalides, si un champ requis manque ou si la ressource ne peut pas être chargée.
+ * @error EINVAL Argument invalide ou configuration incomplète.
+ * @log Peut écrire dans les domaines "ressource", "sound" et "syntax".
+ * @see bunny_load_music, bunny_load_effect, bunny_read_music
+ */
 bool				bunny_set_sound_attribute(const char		*conf_file,
 							  t_bunny_sound		**sound,
 							  t_bunny_configuration **config,

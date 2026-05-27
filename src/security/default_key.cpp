@@ -108,6 +108,30 @@ static const t_bunny_default_key	*twist_key(t_bunny_default_key	*inkey,
   return (outkey);
 }
 
+/**
+ * @doc
+ * @doc-symbol bunny_default_key
+ * @doc-kind function
+ * @doc-module security
+ * @doc-order 180
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Returns the binary-embedded default ciphering key.
+ * @description The default key is stored inside the program binary and can be replaced by bunny_fill_default_key. It is intended for resource obfuscation, not for real security.
+ * @return-success A pointer to the embedded key. The returned pointer must not be freed.
+ * @log This function may write a log entry in the "security" log domain when the key is transformed.
+ * @see bunny_fill_default_key, t_bunny_cipher_key, gl_bunny_my_key_twist
+ *
+ * @doc-lang fr
+ * @brief Renvoie la clé de chiffrement par défaut embarquée dans le binaire.
+ * @description La clé par défaut est stockée dans le binaire du programme et peut être remplacée par bunny_fill_default_key. Elle est destinée à l'obfuscation des ressources, pas à une vraie sécurité.
+ * @return-success Un pointeur vers la clé embarquée. Le pointeur renvoyé ne doit pas être libéré.
+ * @log Cette fonction peut écrire une entrée de log dans le domaine "security" lorsque la clé est transformée.
+ * @see bunny_fill_default_key, t_bunny_cipher_key, gl_bunny_my_key_twist
+ */
 const t_bunny_cipher_key		*bunny_default_key(void)
 {
   t_bunny_cipher_key			*key;

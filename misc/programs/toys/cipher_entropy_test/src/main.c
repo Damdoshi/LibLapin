@@ -73,17 +73,17 @@ int			main(int	argc,
   int			i;
 
   srand(time(NULL));
-  assert(argc == 2);
+  assert((argc == 2));
 
   cipher_key = bunny_alloca(sizeof(*cipher_key) + 32);
   cipher_key->length = 32;
   for (i = 0; i < cipher_key->length; ++i)
     cipher_key->key[i] = rand() % 256;
 
-  assert(pix = bunny_load_pixelarray(argv[1]));
-  assert(win = bunny_start
+  assert((pix = bunny_load_pixelarray(argv[1])));
+  assert((win = bunny_start
 	 (pix->clipable.clip_width, pix->clipable.clip_height, false, "Entropy test")
-	 );
+	  ));
 
   ((unsigned char*)pix->pixels)[0] = 0;
   ((unsigned char*)pix->pixels)[1] = (unsigned char)-1;
@@ -112,7 +112,7 @@ int			main(int	argc,
   bunny_set_loop_main_function(loop);
   bunny_loop(win, 20, NULL);
 
-  bunny_delete_clipable(pix);
+  // bunny_delete_clipable(pix);
   bunny_stop(win);
   return (EXIT_SUCCESS);
 }

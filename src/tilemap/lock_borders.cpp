@@ -13,15 +13,15 @@ void				__bunny_tilemap_lock_borders(t_bunny_accurate_position	&tilsiz,
 							     double			top,
 							     double			bot)
 {
-  t_bunny_accurate_position	fpos = {
+  t_bunny_accurate_position	realsize = {
     .x = tmap->map_size.x * tilsiz.x,
     .y = tmap->map_size.y * tilsiz.y
   };
 
-  if (fpos.x <= tmap->width)
+  if (realsize.x <= tmap->width)
     {
-      tlcam.x = fpos.x / 2.0;
-      tmap->camera.x = fpos.x / tmap->zoom.x / 2.0;
+      tlcam.x = realsize.x / 2.0;
+      tmap->camera.x = realsize.x / tmap->zoom.x / 2.0;
     }
   else if (left < 0)
     {
@@ -34,10 +34,10 @@ void				__bunny_tilemap_lock_borders(t_bunny_accurate_position	&tilsiz,
       tmap->camera.x -= (right - tmap->map_size.x) * tilsiz.x / tmap->zoom.x;
     }
 
-  if (fpos.y <= tmap->height)
+  if (realsize.y <= tmap->height)
     {
-      tlcam.y = fpos.y / 2.0;
-      tmap->camera.y = fpos.y / tmap->zoom.y / 2.0;
+      tlcam.y = realsize.y / 2.0;
+      tmap->camera.y = realsize.y / tmap->zoom.y / 2.0;
     }
   else if (top < 0)
     {
@@ -46,7 +46,7 @@ void				__bunny_tilemap_lock_borders(t_bunny_accurate_position	&tilsiz,
     }
   else if (bot >= tmap->map_size.y)
     {
-      tlcam.y -= (bot - tmap->map_size.y) * tilsiz.y - 1;
+      tlcam.y -= (bot - tmap->map_size.y) * tilsiz.y;
       tmap->camera.y -= (bot - tmap->map_size.y) * tilsiz.y / tmap->zoom.y;
     }
 }

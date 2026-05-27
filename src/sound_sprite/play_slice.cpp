@@ -46,6 +46,37 @@ static void	bunny_end_sound_trap(double				elapsed,
   bunny_end_sound((t_bunny_sound_sprite*)data);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_sound_sprite_play_slice_id
+ * @doc-kind function
+ * @doc-module sound_sprite
+ * @doc-order 150
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Plays a sound sprite slice selected by numeric id.
+ * @param sprite Sound sprite.
+ * @param track Music track to use.
+ * @param id Slice identifier.
+ * @return-success Returns true if the slice was found and playback starts.
+ * @return-failure Returns false on invalid parameters, missing slice or playback error.
+ * @log "sound_sprite"
+ * @see bunny_sound_sprite_play_slice_name, bunny_sound_sprite_slice_name
+ *
+ * @doc-lang fr
+ * @brief Joue une tranche de sound sprite sélectionnée par id numérique.
+ * @param sprite Sound sprite.
+ * @param track Piste musicale à utiliser.
+ * @param id Identifiant de tranche.
+ * @return-success Renvoie true si la tranche a été trouvée et que la lecture démarre.
+ * @return-failure Renvoie false en cas de paramètres invalides, de tranche absente ou d’erreur de lecture.
+ * @log "sound_sprite"
+ * @see bunny_sound_sprite_play_slice_name, bunny_sound_sprite_slice_name
+ */
 bool		bunny_sound_sprite_play_slice_id(t_bunny_sound_sprite	*sprite,
 						 t_bunny_music_track	track,
 						 uint64_t		id)
@@ -123,6 +154,37 @@ bool		bunny_sound_sprite_play_slice_id(t_bunny_sound_sprite	*sprite,
 #undef		PATTERN
 #define		PATTERN		"%p sprite, %d track, %s name -> %s"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_sound_sprite_play_slice_name
+ * @doc-kind function
+ * @doc-module sound_sprite
+ * @doc-order 140
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Plays a sound sprite slice selected by name.
+ * @param sprite Sound sprite.
+ * @param track Music track to use.
+ * @param name Slice name.
+ * @return-success Returns true if the slice was found and playback starts.
+ * @return-failure Returns false on invalid parameters, missing slice or playback error.
+ * @log "sound_sprite"
+ * @see bunny_sound_sprite_play_slice_id, bunny_sound_sprite_slice_name
+ *
+ * @doc-lang fr
+ * @brief Joue une tranche de sound sprite sélectionnée par nom.
+ * @param sprite Sound sprite.
+ * @param track Piste musicale à utiliser.
+ * @param name Nom de tranche.
+ * @return-success Renvoie true si la tranche a été trouvée et que la lecture démarre.
+ * @return-failure Renvoie false en cas de paramètres invalides, de tranche absente ou d’erreur de lecture.
+ * @log "sound_sprite"
+ * @see bunny_sound_sprite_play_slice_id, bunny_sound_sprite_slice_name
+ */
 bool		bunny_sound_sprite_play_slice_name(t_bunny_sound_sprite	*sprite,
 						   t_bunny_music_track	track,
 						   const char		*name)

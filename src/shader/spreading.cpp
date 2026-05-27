@@ -21,6 +21,31 @@ static void		_clean_shader(void)
     bunny_delete_shader(gl_spreading_shader);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_spreading_shader
+ * @doc-kind function
+ * @doc-module shader
+ * @doc-order 100
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 50
+ *
+ * @doc-lang en
+ * @brief Returns the built-in shader configured for color spreading.
+ * @param spread Spreading configuration and working buffers, or NULL to release the cached shader.
+ * @return-success Returns the configured shader.
+ * @return-failure Returns NULL on allocation or compilation failure, or when spread is NULL.
+ * @see t_bunny_spreading, bunny_delete_spreading
+ *
+ * @doc-lang fr
+ * @brief Renvoie le shader intégré configuré pour la propagation de couleur.
+ * @param spread Configuration de propagation et buffers de travail, ou NULL pour libérer le shader en cache.
+ * @return-success Renvoie le shader configuré.
+ * @return-failure Renvoie NULL en cas d’échec d’allocation ou de compilation, ou lorsque spread vaut NULL.
+ * @see t_bunny_spreading, bunny_delete_spreading
+ */
 t_bunny_shader		*bunny_spreading_shader(t_bunny_spreading	*bst)
 {
   if (bst == NULL)
@@ -85,6 +110,31 @@ t_bunny_shader		*bunny_spreading_shader(t_bunny_spreading	*bst)
 }
 
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_blit_spreading
+ * @doc-kind function
+ * @doc-module shader
+ * @doc-order 105
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 50
+ *
+ * @doc-lang en
+ * @brief Blits the current spreading result on a buffer.
+ * @param buffer Destination buffer.
+ * @param pos Destination position.
+ * @param spread Spreading state to draw.
+ * @see bunny_spreading_shader
+ *
+ * @doc-lang fr
+ * @brief Blit le résultat courant de propagation sur un buffer.
+ * @param buffer Buffer de destination.
+ * @param pos Position de destination.
+ * @param spread État de propagation à dessiner.
+ * @see bunny_spreading_shader
+ */
 void			bunny_blit_spreading(t_bunny_buffer		*buffer,
 					     const t_bunny_position	*pos,
 					     t_bunny_spreading		*spread)
@@ -118,6 +168,27 @@ void			bunny_blit_spreading(t_bunny_buffer		*buffer,
   bunny_blit(buffer, spread->alpha_buffer, pos);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_fill_spreading
+ * @doc-kind function
+ * @doc-module shader
+ * @doc-order 110
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 50
+ *
+ * @doc-lang en
+ * @brief Runs spreading iterations according to the configured speed.
+ * @param spread Spreading state to update.
+ * @see bunny_draw_spreading_source, bunny_clear_spreading
+ *
+ * @doc-lang fr
+ * @brief Exécute les itérations de propagation selon la vitesse configurée.
+ * @param spread État de propagation à mettre à jour.
+ * @see bunny_draw_spreading_source, bunny_clear_spreading
+ */
 void			bunny_fill_spreading(t_bunny_spreading		*spread)
 {
   bunny_blit(&spread->spread_buffer[spread->current_buffer]->buffer,
@@ -125,6 +196,27 @@ void			bunny_fill_spreading(t_bunny_spreading		*spread)
 	     NULL);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_flip_spreading
+ * @doc-kind function
+ * @doc-module shader
+ * @doc-order 115
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 50
+ *
+ * @doc-lang en
+ * @brief Switches the active spreading work buffer.
+ * @param spread Spreading state to update.
+ * @see t_bunny_spreading
+ *
+ * @doc-lang fr
+ * @brief Change le buffer de travail actif de la propagation.
+ * @param spread État de propagation à mettre à jour.
+ * @see t_bunny_spreading
+ */
 void			bunny_flip_spreading(t_bunny_spreading		*spread)
 {
   spread->current_buffer = (spread->current_buffer + 1) % 2;
@@ -132,6 +224,27 @@ void			bunny_flip_spreading(t_bunny_spreading		*spread)
   bunny_draw_spreading_source(spread);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_draw_spreading_source
+ * @doc-kind function
+ * @doc-module shader
+ * @doc-order 120
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 50
+ *
+ * @doc-lang en
+ * @brief Draws spreading source pixels into the internal buffer.
+ * @param spread Spreading state containing source positions.
+ * @see bunny_clear_spreading
+ *
+ * @doc-lang fr
+ * @brief Dessine les pixels sources de propagation dans le buffer interne.
+ * @param spread État de propagation contenant les positions sources.
+ * @see bunny_clear_spreading
+ */
 void			bunny_draw_spreading_source(t_bunny_spreading	*spread)
 {
   const static t_bunny_position rad = {2, 2};
@@ -146,6 +259,27 @@ void			bunny_draw_spreading_source(t_bunny_spreading	*spread)
        );
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_clear_spreading
+ * @doc-kind function
+ * @doc-module shader
+ * @doc-order 125
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 50
+ *
+ * @doc-lang en
+ * @brief Clears the internal spreading buffers.
+ * @param spread Spreading state to clear.
+ * @see bunny_draw_spreading_source
+ *
+ * @doc-lang fr
+ * @brief Efface les buffers internes de propagation.
+ * @param spread État de propagation à effacer.
+ * @see bunny_draw_spreading_source
+ */
 void			bunny_clear_spreading(t_bunny_spreading		*spread)
 {
   bunny_clear(&spread->alpha_buffer->buffer, 0);
@@ -153,6 +287,27 @@ void			bunny_clear_spreading(t_bunny_spreading		*spread)
   bunny_clear(&spread->spread_buffer[1]->buffer, 0);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_delete_spreading
+ * @doc-kind function
+ * @doc-module shader
+ * @doc-order 130
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 50
+ *
+ * @doc-lang en
+ * @brief Deletes the internal buffers allocated for a spreading shader.
+ * @param spread Spreading state to clean.
+ * @see bunny_spreading_shader
+ *
+ * @doc-lang fr
+ * @brief Détruit les buffers internes alloués pour un shader de propagation.
+ * @param spread État de propagation à nettoyer.
+ * @see bunny_spreading_shader
+ */
 void			bunny_delete_spreading(t_bunny_spreading	*spread)
 {
   bunny_delete_clipable(spread->alpha_buffer);

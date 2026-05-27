@@ -30,7 +30,8 @@ Decision		dabsic_read_litterals(const char		*code,
       SmallConf::just_pushed -= 1;
     }
   else
-    conf.array.clear();
+    while (conf.array.size())
+      conf.Remove(conf.array.size() - 1);
 
   do
     {

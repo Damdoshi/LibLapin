@@ -18,6 +18,27 @@
 #  error			You cannot include this file directly.
 # endif
 
+/**
+ * @doc
+ * @doc-symbol context
+ * @doc-kind module
+ * @doc-module context
+ * @doc-order 0
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Provides reusable event-context adapters and higher-level built-in contexts.
+ * @description The context module contains forwarding callbacks that make it easier to compose $Tt_bunny_context@ structures, plus public data structures used by box, loading, depth, pentacle and other built-in contexts.
+ * @header lapin/context.h
+ *
+ * @doc-lang fr
+ * @brief Fournit des adaptateurs de contexte événementiel réutilisables et des contextes intégrés de plus haut niveau.
+ * @description Le module context contient des callbacks de transfert qui facilitent la composition de structures $Tt_bunny_context@, ainsi que les structures publiques utilisées par les contextes box, loading, depth, pentacle et autres contextes intégrés.
+ * @header lapin/context.h
+ */
+
 /*!
 ** This structure is the corner stone of every context.
 ** All context defined in the bunny library will lay on it
@@ -48,6 +69,41 @@
 ** for screen and an additionnal display function in subcontext would
 ** be to resize the graphic output.
 */
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_context_runtime_info
+ * @doc-kind struct
+ * @doc-module context
+ * @doc-order 100
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Common runtime header embedded by built-in context structures.
+ * @field main_structure User pointer passed by subcontext forwarding callbacks.
+ * @field subcontext Callbacks called by the current context when it forwards events.
+ * @field screens Array of rendering targets used by the context.
+ * @field nbr_screen Number of entries in $Sscreens@.
+ * @field next_context Identifier of the context to use after this one.
+ * @see bunny_context_key
+ * @see bunny_subcontext_key
+ * @see bunny_declare_context
+ * @see bunny_fill_context
+ *
+ * @doc-lang fr
+ * @brief En-tête d’exécution commun embarqué par les structures de contextes intégrées.
+ * @field main_structure User pointer passed by subcontext forwarding callbacks.
+ * @field subcontext Callbacks called by the current context when it forwards events.
+ * @field screens Array of rendering targets used by the context.
+ * @field nbr_screen Number of entries in $Sscreens@.
+ * @field next_context Identifier of the context to use after this one.
+ * @see bunny_context_key
+ * @see bunny_subcontext_key
+ * @see bunny_declare_context
+ * @see bunny_fill_context
+ */
 typedef struct			s_bunny_context_runtime_info
 {
   void				*main_structure;
@@ -106,6 +162,28 @@ t_bunny_leaving_context_function bunny_subcontext_leaving;
 t_bunny_async_computation_response_function bunny_subcontext_async_computation;
 t_bunny_event_response_function	bunny_subcontext_event_response;
 
+/**
+ * @doc
+ * @doc-symbol bunny_declare_context
+ * @doc-kind macro
+ * @doc-module context
+ * @doc-order 300
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Declares the full set of functions required by a named context.
+ * @param name Prefix used to build callback function names.
+ * @return-success Expands to callback declarations.
+ * @see bunny_fill_context
+ *
+ * @doc-lang fr
+ * @brief Déclare l’ensemble complet de fonctions requis par un contexte nommé.
+ * @param name Prefix used to build callback function names.
+ * @return-success Produit des déclarations de callbacks.
+ * @see bunny_fill_context
+ */
 # define			bunny_declare_context(name)	\
   t_bunny_key_function		name ## _key;			\
   t_bunny_type_function		name ## _type;			\
@@ -128,6 +206,28 @@ t_bunny_event_response_function	bunny_subcontext_event_response;
   t_bunny_async_computation_response_function name ## _async_computation; \
   t_bunny_event_response_function name ## _event_response
 
+/**
+ * @doc
+ * @doc-symbol bunny_fill_context
+ * @doc-kind macro
+ * @doc-module context
+ * @doc-order 310
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Fills a $Tt_bunny_context@ initializer with callbacks using a common prefix.
+ * @param name Prefix used to build callback function names.
+ * @return-success Expands to designated initializer fields.
+ * @see bunny_declare_context
+ *
+ * @doc-lang fr
+ * @brief Remplit un initialiseur de $Tt_bunny_context@ avec des callbacks utilisant un préfixe commun.
+ * @param name Prefix used to build callback function names.
+ * @return-success Produit des champs d’initialiseur désignés.
+ * @see bunny_declare_context
+ */
 # define			bunny_fill_context(name)	\
   .key = name ## _key,						\
     .type = name ## _type,					\
@@ -147,11 +247,11 @@ t_bunny_event_response_function	bunny_subcontext_event_response;
     .net_connect = name ## _connect,				\
     .entering_context = name ## _entering,			\
     .leaving_context = name ## _leaving,			\
-    .async_computation_response = name ## _async_computation,	\
+    .async_computation = name ## _async_computation,		\
     .event = name ## _event_response
 
 # include			"context/box.h"
-// # include			"context/cinematic.h"
+# include			"context/cinematic.h"
 # include			"context/splash.h"
 # include			"context/pentacle.h"
 # include			"context/loading.h"

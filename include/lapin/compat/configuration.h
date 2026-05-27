@@ -19,6 +19,34 @@
 ** \param id A string or an integer to browse the configuration
 ** \return A t_bunny_configuration
 */
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_access
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 200
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief C11 generic macro selecting child-name or case-index access.
+ * @param cnf Configuration node to inspect.
+ * @param id Child name or case index.
+ * @return-success Expands to the selected helper result.
+ * @return-failure Expands to the selected helper failure value.
+ * @see bunny_configuration_get_child
+ * @see bunny_configuration_get_case
+ *
+ * @doc-lang fr
+ * @brief Macro générique C11 sélectionnant un accès par nom d’enfant ou index de case.
+ * @param cnf Configuration node to inspect.
+ * @param id Child name or case index.
+ * @return-success Produit le résultat de l’aide sélectionnée.
+ * @return-failure Produit la valeur d’échec de l’aide sélectionnée.
+ * @see bunny_configuration_get_child
+ * @see bunny_configuration_get_case
+ */
 #  define		bunny_configuration_access(cnf, id)				\
   _Generic((id),									\
 	   const char*: bunny_configuration_go_get_node,				\
@@ -60,6 +88,36 @@ t_bunny_configuration	*bunny_configuration_get_case(t_bunny_configuration		*conf
 ** \param val A pointer to the space that will be written to get the value.
 ** \return True if the value was get
 */
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_get
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 250
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief C11 generic macro reading the scalar value stored in a node.
+ * @param cnf Configuration node to read.
+ * @param val Typed output pointer.
+ * @return-success Expands to the selected helper result.
+ * @return-failure Expands to the selected helper failure value.
+ * @see bunny_configuration_get_string
+ * @see bunny_configuration_get_double
+ * @see bunny_configuration_get_int
+ *
+ * @doc-lang fr
+ * @brief Macro générique C11 lisant la valeur scalaire stockée dans un nœud.
+ * @param cnf Configuration node to read.
+ * @param val Typed output pointer.
+ * @return-success Produit le résultat de l’aide sélectionnée.
+ * @return-failure Produit la valeur d’échec de l’aide sélectionnée.
+ * @see bunny_configuration_get_string
+ * @see bunny_configuration_get_double
+ * @see bunny_configuration_get_int
+ */
 #  define		bunny_configuration_get(cnf, val)				\
   _Generic((val),									\
 	   const char**: bunny_configuration_get_string,				\
@@ -119,6 +177,36 @@ t_bunny_configuration	*bunny_configuration_go_get_node_va(t_bunny_configuration	
 ** or 0 or they will be considered as pointers.
 ** \return True if the value was get
 */
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_get_va
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 400
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief C11 generic macro that walks several address components and reads a typed scalar value.
+ * @param cnf Configuration node to inspect.
+ * @param val Typed output pointer.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Expands to the selected helper result.
+ * @return-failure Expands to the selected helper failure value.
+ * @see bunny_configuration_go_get_node_va
+ *
+ * @doc-lang fr
+ * @brief Macro générique C11 qui parcourt plusieurs composants d’adresse et lit une valeur scalaire typée.
+ * @param cnf Configuration node to inspect.
+ * @param val Typed output pointer.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Produit le résultat de l’aide sélectionnée.
+ * @return-failure Produit la valeur d’échec de l’aide sélectionnée.
+ * @see bunny_configuration_go_get_node_va
+ */
 #  define		bunny_configuration_go_get_va(cnf, val, nbr, ...)		\
   _Generic((val),									\
 	   const char**: bunny_configuration_go_get_string_va,				\
@@ -187,6 +275,34 @@ t_bunny_configuration	*bunny_configuration_go_get_node(t_bunny_configuration		*c
 ** The '*' operator is not supported yet. Parenthesis are not supported yet.
 ** \return True if the value was get
 */
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_get
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 350
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief C11 generic macro that follows a C-like address string and reads a typed scalar value.
+ * @param cnf Configuration node to inspect.
+ * @param val Typed output pointer.
+ * @param addr C-like configuration address.
+ * @return-success Expands to the selected helper result.
+ * @return-failure Expands to the selected helper failure value.
+ * @see bunny_configuration_go_get_node
+ *
+ * @doc-lang fr
+ * @brief Macro générique C11 qui suit une adresse de style C et lit une valeur scalaire typée.
+ * @param cnf Configuration node to inspect.
+ * @param val Typed output pointer.
+ * @param addr C-like configuration address.
+ * @return-success Produit le résultat de l’aide sélectionnée.
+ * @return-failure Produit la valeur d’échec de l’aide sélectionnée.
+ * @see bunny_configuration_go_get_node
+ */
 #  define		bunny_configuration_go_get(cnf, val, addr)			\
   _Generic((val),									\
 	   const char**: bunny_configuration_go_get_string,				\
@@ -237,6 +353,36 @@ bool			bunny_configuration_go_get_int(t_bunny_configuration		*config,
 ** \param val The value to write
 ** \return True if the value was set
 */
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_set
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 430
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief C11 generic macro writing a scalar value into a configuration node.
+ * @param cnf Configuration node to modify.
+ * @param val Value to store.
+ * @return-success Expands to the selected helper result.
+ * @return-failure Expands to the selected helper failure value.
+ * @see bunny_configuration_set_string
+ * @see bunny_configuration_set_double
+ * @see bunny_configuration_set_int
+ *
+ * @doc-lang fr
+ * @brief Macro générique C11 écrivant une valeur scalaire dans un nœud de configuration.
+ * @param cnf Configuration node to modify.
+ * @param val Value to store.
+ * @return-success Produit le résultat de l’aide sélectionnée.
+ * @return-failure Produit la valeur d’échec de l’aide sélectionnée.
+ * @see bunny_configuration_set_string
+ * @see bunny_configuration_set_double
+ * @see bunny_configuration_set_int
+ */
 #  define		bunny_configuration_set(cnf, val)				\
   _Generic((val),									\
 	   const char*: bunny_configuration_set_string,					\
@@ -279,6 +425,40 @@ void			bunny_configuration_set_int(t_bunny_configuration		*config,
 ** or 0 or they will be considered as pointers.
 ** \return True if the value was set.
 */
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_set_va
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 510
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief C11 generic macro that walks several address components and writes a scalar value.
+ * @param cnf Configuration node to modify.
+ * @param val Value to store.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Expands to the selected helper result.
+ * @return-failure Expands to the selected helper failure value.
+ * @see bunny_configuration_go_set_string_va
+ * @see bunny_configuration_go_set_double_va
+ * @see bunny_configuration_go_set_int_va
+ *
+ * @doc-lang fr
+ * @brief Macro générique C11 qui parcourt plusieurs composants d’adresse et écrit une valeur scalaire.
+ * @param cnf Configuration node to modify.
+ * @param val Value to store.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Produit le résultat de l’aide sélectionnée.
+ * @return-failure Produit la valeur d’échec de l’aide sélectionnée.
+ * @see bunny_configuration_go_set_string_va
+ * @see bunny_configuration_go_set_double_va
+ * @see bunny_configuration_go_set_int_va
+ */
 #  define		bunny_configuration_go_set_va(cnf, val, nbr, ...)		\
   _Generic((val),									\
 	   const char*: bunny_configuration_go_set_string_va,				\
@@ -338,6 +518,38 @@ bool			bunny_configuration_go_set_int_va(const t_bunny_configuration	*config,
 ** The '*' operator is not supported yet. Parenthesis are not supported yet.
 ** \return True if the value was set.
 */
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_set
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 470
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief C11 generic macro that follows a C-like address string and writes a scalar value.
+ * @param cnf Configuration node to modify.
+ * @param val Value to store.
+ * @param addr C-like configuration address.
+ * @return-success Expands to the selected helper result.
+ * @return-failure Expands to the selected helper failure value.
+ * @see bunny_configuration_go_set_string
+ * @see bunny_configuration_go_set_double
+ * @see bunny_configuration_go_set_int
+ *
+ * @doc-lang fr
+ * @brief Macro générique C11 qui suit une adresse de style C et écrit une valeur scalaire.
+ * @param cnf Configuration node to modify.
+ * @param val Value to store.
+ * @param addr C-like configuration address.
+ * @return-success Produit le résultat de l’aide sélectionnée.
+ * @return-failure Produit la valeur d’échec de l’aide sélectionnée.
+ * @see bunny_configuration_go_set_string
+ * @see bunny_configuration_go_set_double
+ * @see bunny_configuration_go_set_int
+ */
 #  define		bunny_configuration_go_set(cnf, val, addr)			\
   _Generic((val),									\
 	   const char*: bunny_configuration_go_set_string,				\

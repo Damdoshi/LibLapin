@@ -5,6 +5,31 @@
 
 #include		"lapin_private.h"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_delete_file
+ * @doc-kind function
+ * @doc-module misc
+ * @doc-order 160
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Releases data returned by bunny_load_file.
+ * @param data Loaded data to release.
+ * @param file File name used during loading, or NULL for unmanaged data.
+ * @description Managed data is released through the resource manager. Unmanaged data is released with bunny_free.
+ * @see bunny_load_file, bunny_make_file_unique
+ *
+ * @doc-lang fr
+ * @brief Libère des données renvoyées par bunny_load_file.
+ * @param data Données chargées à libérer.
+ * @param file Nom du fichier utilisé lors du chargement, ou NULL pour des données non gérées.
+ * @description Les données gérées passent par le gestionnaire de ressources. Les données non gérées sont libérées avec bunny_free.
+ * @see bunny_load_file, bunny_make_file_unique
+ */
 void			bunny_delete_file(void		*data,
 					  const char	*file)
 {

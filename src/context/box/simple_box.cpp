@@ -34,6 +34,34 @@ bool			bunny_box_set_click_callback(t_bunny_gui_box		*nw);
 bool			bunny_box_set_focus_callback(t_bunny_gui_box		*nw);
 bool			bunny_box_set_loop_callback(t_bunny_gui_box		*nw);
 
+/**
+ * @doc
+ * @doc-symbol bunny_read_simple_box
+ * @doc-kind function
+ * @doc-module context
+ * @doc-order 520
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Initializes a simple GUI box from a configuration node.
+ * @param nw Box storage to initialize.
+ * @param parent Parent box.
+ * @param cnf Configuration node describing the box.
+ * @return-success Returns $Snw@ on success.
+ * @return-failure Returns $CNULL@ on error.
+ * @see t_bunny_box_system
+ *
+ * @doc-lang fr
+ * @brief Initialise une boîte GUI simple depuis un nœud de configuration.
+ * @param nw Box storage to initialize.
+ * @param parent Parent box.
+ * @param cnf Configuration node describing the box.
+ * @return-success Renvoie $Snw@ en cas de succès.
+ * @return-failure Renvoie $CNULL@ en cas d’erreur.
+ * @see t_bunny_box_system
+ */
 t_bunny_gui_box		*bunny_read_simple_box(t_bunny_gui_box			*nw,
 					       t_bunny_gui_box			*parent,
 					       t_bunny_configuration		*cnf)

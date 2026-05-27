@@ -9,23 +9,23 @@
 #include		<arpa/inet.h>
 
 
-const network::Info	*network::Descriptor::Accept(size_t			&cursize,
-						     size_t			maxsize)
+network::Info		network::Descriptor::Accept(size_t			&cursize,
+						    size_t			maxsize)
 {
-  struct sockaddr_in	_sockaddr;
+  struct sockaddr_in	_sockaddr = {0};
   socklen_t		_socklen;
   int			nfd;
 
   _socklen = sizeof(_sockaddr);
   if ((nfd = accept(fd, (struct sockaddr*)&_sockaddr, &_socklen)) == -1)
-    return (NULL);
+    return (Info{});
   if (cursize >= maxsize)
     {
       close(nfd);
-      return (NULL);
+      return (Info{});
     }
 
-  const network::Info	*inf;
+  network::Info		inf;
   size_t		tmp;
   size_t		i;
 
@@ -34,9 +34,9 @@ const network::Info	*network::Descriptor::Accept(size_t			&cursize,
       {
 	network::Info	tmpInfo(_sockaddr, _socklen);
 
-	if (!(inf = network->descriptors[i].Open(protocol, size, terminator, nfd, tmpInfo)))
+	if (!(inf = network->descriptors[i].Open(protocol, nfd, tmpInfo)))
 	  goto Failure;
-	if (network->peers[*inf].AttachDescriptor(network->descriptors[i], inf) == false)
+	if (network->peers[inf].AttachDescriptor(network->descriptors[i], protocol, &inf) == false)
 	  goto Close;
 	tmp = cursize;
 	if (!network->descriptors[i].Declare())
@@ -44,16 +44,16 @@ const network::Info	*network::Descriptor::Accept(size_t			&cursize,
 	if (i == cursize)
 	  cursize++;
 	// Préviens la connexion d'un client
-	inqueue.push_back(Communication{*inf, true});
+	inqueue.emplace_back(inf, true);
 	return (inf);
       }
-  return (NULL);
+  return (Info{});
  Detach:
   cursize = tmp;
-  network->peers[*inf].DetachDescriptor(network->descriptors[i]);
+  network->peers[inf].DetachDescriptor(network->descriptors[i]);
  Close:
   network->descriptors[i].Close();
  Failure:
-  return (NULL);
+  return (Info{});
 }
 

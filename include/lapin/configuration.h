@@ -16,6 +16,77 @@
 # endif
 # include		<stdarg.h>
 
+/**
+ * @doc
+ * @doc-symbol configuration
+ * @doc-kind module
+ * @doc-module configuration
+ * @doc-order 0
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Loads, builds, edits and saves structured configuration trees.
+ * @description The configuration module is the central tree API used by Dabsic, INI, XML, Lua, JSON, CSV, Lisp, raw data and text-based resource loaders. It provides direct children/case access, formatted path access, execution of Dabsic nodes and helpers for resource loading.
+ * @header lapin/configuration.h
+ *
+ * @doc-lang fr
+ * @brief Charge, construit, modifie et sauvegarde des arbres de configuration structurés.
+ * @description Le module configuration est l’API centrale d’arbre utilisée par Dabsic, INI, XML, Lua, JSON, CSV, Lisp, les données brutes et les chargeurs de ressources textuels. Il fournit les accès enfants/cases, les chemins formatés, l’exécution de nœuds Dabsic et des aides de chargement de ressources.
+ * @header lapin/configuration.h
+ */
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_configuration_type
+ * @doc-kind enum
+ * @doc-module configuration
+ * @doc-order 10
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Lists the configuration grammars supported by LibLapin.
+ * @field BC_INI INI-like format.
+ * @field BC_DABSIC Dabsic block structured format.
+ * @field BC_DABSIC_SEQUENCE Dabsic sequence.
+ * @field BC_DABSIC_FUNCTION Dabsic function.
+ * @field BC_DABSIC_EXPRESSION Dabsic expression.
+ * @field BC_XML XML format.
+ * @field BC_LUA Lua table-like format.
+ * @field BC_CSV CSV format.
+ * @field BC_JSON JSON format.
+ * @field BC_LISP Lisp-like format.
+ * @field BC_TEXT Text container format.
+ * @field BC_DATA Raw binary data format.
+ * @field BC_CUSTOM First value reserved for user-provided formats.
+ * @see bunny_load_configuration
+ * @see bunny_read_configuration
+ * @see bunny_write_configuration
+ * @see bunny_which_format
+ *
+ * @doc-lang fr
+ * @brief Liste les grammaires de configuration supportées par la LibLapin.
+ * @field BC_INI INI-like format.
+ * @field BC_DABSIC Dabsic block structured format.
+ * @field BC_DABSIC_SEQUENCE Dabsic sequence.
+ * @field BC_DABSIC_FUNCTION Dabsic function.
+ * @field BC_DABSIC_EXPRESSION Dabsic expression.
+ * @field BC_XML XML format.
+ * @field BC_LUA Lua table-like format.
+ * @field BC_CSV CSV format.
+ * @field BC_JSON JSON format.
+ * @field BC_LISP Lisp-like format.
+ * @field BC_TEXT Text container format.
+ * @field BC_DATA Raw binary data format.
+ * @field BC_CUSTOM First value reserved for user-provided formats.
+ * @see bunny_load_configuration
+ * @see bunny_read_configuration
+ * @see bunny_write_configuration
+ * @see bunny_which_format
+ */
 typedef enum		e_bunny_configuration_type
   {
     BC_INI,
@@ -48,6 +119,38 @@ t_bunny_configuration	*bunny_new_configuration(void);
 ** \param file The file to load
 ** \param config An existing config to fill, or NULL to create a new one
 */
+/**
+ * @doc
+ * @doc-symbol bunny_open_configuration
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 40
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Loads a configuration file after guessing its format from its extension.
+ * @param file Path of the file to load.
+ * @param config Existing node to fill, or $CNULL@ to allocate a new tree.
+ * @param ... Optional arguments used by text configuration loading.
+ * @return-success Returns $Sconfig@ when it is not $CNULL@, otherwise returns a newly allocated $Tt_bunny_configuration@.
+ * @return-failure Returns $CNULL@ on error.
+ * @log "ressource,configuration"
+ * @see bunny_which_format
+ * @see bunny_load_configuration
+ *
+ * @doc-lang fr
+ * @brief Charge un fichier de configuration après avoir deviné son format depuis son extension.
+ * @param file Path of the file to load.
+ * @param config Existing node to fill, or $CNULL@ to allocate a new tree.
+ * @param ... Optional arguments used by text configuration loading.
+ * @return-success Renvoie $Sconfig@ s’il n’est pas $CNULL@, sinon renvoie un $Tt_bunny_configuration@ nouvellement alloué.
+ * @return-failure Renvoie $CNULL@ en cas d’erreur.
+ * @log "ressource,configuration"
+ * @see bunny_which_format
+ * @see bunny_load_configuration
+ */
 # define		bunny_open_configuration(file, config, ...)	\
   bunny_load_configuration(bunny_which_format(file), file, config, #__VA_ARGS__)
 
@@ -96,6 +199,36 @@ t_bunny_configuration	*bunny_read_configuration(t_bunny_configuration_type		type
 ** greater or equal to BC_CUSTOM. Note that config will be allocated by bunny_read_configuration
 ** if it was NULL. Also note that it will be freed by bunny_read_configuration if you return NULL.
 */
+/**
+ * @doc
+ * @doc-symbol t_bunny_my_read_configuration
+ * @doc-kind typedef
+ * @doc-module configuration
+ * @doc-order 80
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Callback type used to read custom configuration formats.
+ * @param t Custom configuration type, usually greater or equal to $CBC_CUSTOM@.
+ * @param code String to parse.
+ * @param config Configuration node to fill.
+ * @return-success Returns the filled configuration node.
+ * @return-failure Returns $CNULL@ on error.
+ * @see gl_bunny_my_read_configuration
+ * @see bunny_read_configuration
+ *
+ * @doc-lang fr
+ * @brief Type de callback utilisé pour lire des formats de configuration personnalisés.
+ * @param t Custom configuration type, usually greater or equal to $CBC_CUSTOM@.
+ * @param code String to parse.
+ * @param config Configuration node to fill.
+ * @return-success Renvoie le nœud de configuration rempli.
+ * @return-failure Renvoie $CNULL@ en cas d’erreur.
+ * @see gl_bunny_my_read_configuration
+ * @see bunny_read_configuration
+ */
 typedef
 t_bunny_configuration	*(*t_bunny_my_read_configuration)(t_bunny_configuration_type	t,
 							  const char			*code,
@@ -121,6 +254,34 @@ char			*bunny_write_configuration(t_bunny_configuration_type		type,
 ** The type of the function that will be called by bunny_write_configuration if type is
 ** greater or equal to BC_CUSTOM.
 */
+/**
+ * @doc
+ * @doc-symbol t_bunny_my_write_configuration
+ * @doc-kind typedef
+ * @doc-module configuration
+ * @doc-order 110
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Callback type used to write custom configuration formats.
+ * @param t Custom configuration type.
+ * @param config Configuration tree to serialize.
+ * @return-success Returns a newly allocated serialized string.
+ * @return-failure Returns $CNULL@ on error.
+ * @see gl_bunny_my_write_configuration
+ * @see bunny_write_configuration
+ *
+ * @doc-lang fr
+ * @brief Type de callback utilisé pour écrire des formats de configuration personnalisés.
+ * @param t Custom configuration type.
+ * @param config Configuration tree to serialize.
+ * @return-success Renvoie une chaîne sérialisée nouvellement allouée.
+ * @return-failure Renvoie $CNULL@ en cas d’erreur.
+ * @see gl_bunny_my_write_configuration
+ * @see bunny_write_configuration
+ */
 typedef char		*(*t_bunny_my_write_configuration)(t_bunny_configuration_type	t,
 							   const t_bunny_configuration	*config);
 
@@ -251,6 +412,44 @@ bool			bunny_configuration_vgetf_bool(t_bunny_configuration		*config,
 ** \param val A pointer to the space that will be written to get the value.
 ** \return True if the value was get
 */
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_getf
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 620
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief C11 generic macro that reads a node or scalar value at a formatted address.
+ * @param cnf Configuration tree to inspect.
+ * @param data Typed output pointer.
+ * @param fmt Printf-like address pattern.
+ * @param ... Values consumed by $Sfmt@.
+ * @return-success Expands to a value depending on the wrapped helper.
+ * @return-failure Expands to $Cfalse@ or an equivalent failure value when the wrapped helper fails.
+ * @see bunny_configuration_getf_node
+ * @see bunny_configuration_getf_string
+ * @see bunny_configuration_getf_double
+ * @see bunny_configuration_getf_int
+ * @see bunny_configuration_getf_bool
+ *
+ * @doc-lang fr
+ * @brief Macro générique C11 qui lit un nœud ou une valeur scalaire à une adresse formatée.
+ * @param cnf Configuration tree to inspect.
+ * @param data Typed output pointer.
+ * @param fmt Printf-like address pattern.
+ * @param ... Values consumed by $Sfmt@.
+ * @return-success Produit une valeur dépendant de l’aide enveloppée.
+ * @return-failure Produit $Cfalse@ ou une valeur d’échec équivalente quand l’aide enveloppée échoue.
+ * @see bunny_configuration_getf_node
+ * @see bunny_configuration_getf_string
+ * @see bunny_configuration_getf_double
+ * @see bunny_configuration_getf_int
+ * @see bunny_configuration_getf_bool
+ */
 #  define		bunny_configuration_getf(cnf, data, fmt, ...)			\
   _Generic((data),									\
 	   void*: bunny_configuration_getf_node,					\
@@ -260,6 +459,36 @@ bool			bunny_configuration_vgetf_bool(t_bunny_configuration		*config,
 	   double*: bunny_configuration_getf_double,					\
 	   bool*: bunny_configuration_getf_bool,					\
 	   int*: bunny_configuration_getf_int)(cnf, data, fmt, ##__VA_ARGS__)
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_vgetf
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 625
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Reads a node or scalar value at a formatted address using a $Tva_list@.
+ * @param cnf Configuration tree to inspect.
+ * @param data Typed output pointer.
+ * @param fmt Printf-like address pattern.
+ * @param va Argument list consumed by $Sfmt@.
+ * @return-success Expands to a value depending on the wrapped helper.
+ * @return-failure Expands to $Cfalse@ or an equivalent failure value when the wrapped helper fails.
+ * @see bunny_configuration_getf
+ *
+ * @doc-lang fr
+ * @brief Lit un nœud ou une valeur scalaire à une adresse formatée avec une $Tva_list@.
+ * @param cnf Configuration tree to inspect.
+ * @param data Typed output pointer.
+ * @param fmt Printf-like address pattern.
+ * @param va Argument list consumed by $Sfmt@.
+ * @return-success Produit une valeur dépendant de l’aide enveloppée.
+ * @return-failure Produit $Cfalse@ ou une valeur d’échec équivalente quand l’aide enveloppée échoue.
+ * @see bunny_configuration_getf
+ */
 #  define		bunny_configuration_vgetf(cnf, data, fmt, va)			\
   _Generic((data),									\
 	   void*: bunny_configuration_vgetf_node,					\
@@ -271,6 +500,34 @@ bool			bunny_configuration_vgetf_bool(t_bunny_configuration		*config,
 	   int*: bunny_configuration_vgetf_int)(cnf, data, fmt, va)
 # endif
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_existsf
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 626
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Tests whether a formatted configuration address exists.
+ * @param cnf Configuration tree to inspect.
+ * @param fmt Printf-like address pattern.
+ * @param ... Values consumed by $Sfmt@.
+ * @return-success Expands to a value depending on the wrapped helper.
+ * @return-failure Expands to $Cfalse@ or an equivalent failure value when the wrapped helper fails.
+ * @see bunny_configuration_getf_node
+ *
+ * @doc-lang fr
+ * @brief Teste si une adresse de configuration formatée existe.
+ * @param cnf Configuration tree to inspect.
+ * @param fmt Printf-like address pattern.
+ * @param ... Values consumed by $Sfmt@.
+ * @return-success Produit une valeur dépendant de l’aide enveloppée.
+ * @return-failure Produit $Cfalse@ ou une valeur d’échec équivalente quand l’aide enveloppée échoue.
+ * @see bunny_configuration_getf_node
+ */
 #  define		bunny_configuration_existsf(cnf, fmt, ...)			\
   bunny_configuration_getf_node(cnf, NULL, fmt, ##__VA_ARGS__)
 
@@ -321,6 +578,42 @@ bool			bunny_configuration_vsetf_int(t_bunny_configuration		*config,
 ** \param val A pointer to the space that will be written to get the value.
 ** \return True if the value was get
 */
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_setf
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 630
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief C11 generic macro that writes a node or scalar value at a formatted address.
+ * @param cnf Configuration tree to modify.
+ * @param data Value or node to store.
+ * @param fmt Printf-like address pattern.
+ * @param ... Values consumed by $Sfmt@.
+ * @return-success Expands to a value depending on the wrapped helper.
+ * @return-failure Expands to $Cfalse@ or an equivalent failure value when the wrapped helper fails.
+ * @see bunny_configuration_setf_node
+ * @see bunny_configuration_setf_string
+ * @see bunny_configuration_setf_double
+ * @see bunny_configuration_setf_int
+ *
+ * @doc-lang fr
+ * @brief Macro générique C11 qui écrit un nœud ou une valeur scalaire à une adresse formatée.
+ * @param cnf Configuration tree to modify.
+ * @param data Value or node to store.
+ * @param fmt Printf-like address pattern.
+ * @param ... Values consumed by $Sfmt@.
+ * @return-success Produit une valeur dépendant de l’aide enveloppée.
+ * @return-failure Produit $Cfalse@ ou une valeur d’échec équivalente quand l’aide enveloppée échoue.
+ * @see bunny_configuration_setf_node
+ * @see bunny_configuration_setf_string
+ * @see bunny_configuration_setf_double
+ * @see bunny_configuration_setf_int
+ */
 #  define		bunny_configuration_setf(cnf, data, fmt, ...)			\
   _Generic((data),									\
 	   const t_bunny_configuration*: bunny_configuration_setf_node,			\
@@ -368,7 +661,41 @@ bool			bunny_configuration_executef_bool(t_bunny_configuration		*config,
 							  const char			*pattern,
 							  ...) _BFMT(4, 5);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_executef
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 660
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief C11 generic macro that executes a Dabsic node selected by a formatted address and retrieves its typed result.
+ * @param cnf Configuration tree to inspect.
+ * @param data Typed output pointer.
+ * @param rec Execution context.
+ * @param params Parameters passed to the execution.
+ * @param fmt Printf-like address pattern.
+ * @param ... Values consumed by $Sfmt@.
+ * @return-success Expands to a value depending on the wrapped helper.
+ * @return-failure Expands to $Cfalse@ or an equivalent failure value when the wrapped helper fails.
+ * @see bunny_configuration_execute
+ *
+ * @doc-lang fr
+ * @brief Macro générique C11 qui exécute un nœud Dabsic sélectionné par adresse formatée et récupère son résultat typé.
+ * @param cnf Configuration tree to inspect.
+ * @param data Typed output pointer.
+ * @param rec Execution context.
+ * @param params Parameters passed to the execution.
+ * @param fmt Printf-like address pattern.
+ * @param ... Values consumed by $Sfmt@.
+ * @return-success Produit une valeur dépendant de l’aide enveloppée.
+ * @return-failure Produit $Cfalse@ ou une valeur d’échec équivalente quand l’aide enveloppée échoue.
+ * @see bunny_configuration_execute
+ */
 #  define		bunny_configuration_executef(cnf, data, rec, params, fmt, ...)	\
   _Generic((data),									\
 	   void*: bunny_configuration_executef_node,					\
@@ -406,6 +733,36 @@ bool			bunny_configuration_bindf_string(t_bunny_configuration		*c,
 							 char				**i,
 							 const char			*pat,
 							 ...) _BFMT(3, 4);
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_bindf
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 690
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Binds a C variable to a configuration field selected by a formatted address.
+ * @param cnf Configuration tree to modify.
+ * @param data Address of the C variable to bind.
+ * @param fmt Printf-like address pattern.
+ * @param ... Values consumed by $Sfmt@.
+ * @return-success Expands to a value depending on the wrapped helper.
+ * @return-failure Expands to $Cfalse@ or an equivalent failure value when the wrapped helper fails.
+ * @see bunny_configuration_unbindf
+ *
+ * @doc-lang fr
+ * @brief Lie une variable C à un champ de configuration sélectionné par adresse formatée.
+ * @param cnf Configuration tree to modify.
+ * @param data Address of the C variable to bind.
+ * @param fmt Printf-like address pattern.
+ * @param ... Values consumed by $Sfmt@.
+ * @return-success Produit une valeur dépendant de l’aide enveloppée.
+ * @return-failure Produit $Cfalse@ ou une valeur d’échec équivalente quand l’aide enveloppée échoue.
+ * @see bunny_configuration_unbindf
+ */
 #  define		bunny_configuration_bindf(cnf, data, fmt, ...)			\
   _Generic((data),									\
 	   char**: bunny_configuration_bindf_string,					\
@@ -463,20 +820,162 @@ t_bunny_configuration	*bunny_configuration_next(t_bunny_configuration			*config)
 */
 t_bunny_configuration	*bunny_configuration_end(t_bunny_configuration			*config);
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_all_children
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 760
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Initializes a $Kfor@ loop over every child of a configuration node.
+ * @param conf Configuration node to iterate.
+ * @param node Loop variable receiving each child.
+ * @return-success Expands to a value depending on the wrapped helper.
+ * @return-failure Expands to $Cfalse@ or an equivalent failure value when the wrapped helper fails.
+ * @see bunny_configuration_first
+ * @see bunny_configuration_next
+ *
+ * @doc-lang fr
+ * @brief Initialise une boucle $Kfor@ sur tous les enfants d’un nœud de configuration.
+ * @param conf Configuration node to iterate.
+ * @param node Loop variable receiving each child.
+ * @return-success Produit une valeur dépendant de l’aide enveloppée.
+ * @return-failure Produit $Cfalse@ ou une valeur d’échec équivalente quand l’aide enveloppée échoue.
+ * @see bunny_configuration_first
+ * @see bunny_configuration_next
+ */
 # define		bunny_configuration_all_children(conf, node)			\
   node = bunny_configuration_firstf(conf, ".");						\
   node != bunny_configuration_end(conf);						\
   node = bunny_configuration_next(node)
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_all_childrenf
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 761
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Initializes a $Kfor@ loop over every child of a node selected by a formatted address.
+ * @param conf Configuration tree to inspect.
+ * @param node Loop variable receiving each child.
+ * @param addr Printf-like address pattern.
+ * @param ... Values consumed by $Saddr@.
+ * @return-success Expands to a value depending on the wrapped helper.
+ * @return-failure Expands to $Cfalse@ or an equivalent failure value when the wrapped helper fails.
+ * @see bunny_configuration_firstf
+ *
+ * @doc-lang fr
+ * @brief Initialise une boucle $Kfor@ sur tous les enfants d’un nœud sélectionné par adresse formatée.
+ * @param conf Configuration tree to inspect.
+ * @param node Loop variable receiving each child.
+ * @param addr Printf-like address pattern.
+ * @param ... Values consumed by $Saddr@.
+ * @return-success Produit une valeur dépendant de l’aide enveloppée.
+ * @return-failure Produit $Cfalse@ ou une valeur d’échec équivalente quand l’aide enveloppée échoue.
+ * @see bunny_configuration_firstf
+ */
 # define		bunny_configuration_all_childrenf(conf, node, addr, ...)	\
   node = bunny_configuration_firstf(conf, addr, ##__VA_ARGS__)		;		\
   node != bunny_configuration_end(conf);						\
   node = bunny_configuration_next(node)
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_all_casesf
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 763
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Initializes a $Kfor@ loop over every indexed case of a node selected by a formatted address.
+ * @param conf Configuration tree to inspect.
+ * @param i Loop index variable.
+ * @param addr Printf-like address pattern.
+ * @param ... Values consumed by $Saddr@.
+ * @return-success Expands to a value depending on the wrapped helper.
+ * @return-failure Expands to $Cfalse@ or an equivalent failure value when the wrapped helper fails.
+ * @see bunny_configuration_casesf
+ *
+ * @doc-lang fr
+ * @brief Initialise une boucle $Kfor@ sur toutes les cases indexées d’un nœud sélectionné par adresse formatée.
+ * @param conf Configuration tree to inspect.
+ * @param i Loop index variable.
+ * @param addr Printf-like address pattern.
+ * @param ... Values consumed by $Saddr@.
+ * @return-success Produit une valeur dépendant de l’aide enveloppée.
+ * @return-failure Produit $Cfalse@ ou une valeur d’échec équivalente quand l’aide enveloppée échoue.
+ * @see bunny_configuration_casesf
+ */
 # define		bunny_configuration_all_casesf(conf, i, addr, ...)		\
   i = 0; i < bunny_configuration_casesf(conf, addr, ##__VA_ARGS__); ++i
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_all_cases
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 762
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Initializes a $Kfor@ loop over every indexed case of a configuration node.
+ * @param conf Configuration node to inspect.
+ * @param i Loop index variable.
+ * @return-success Expands to a value depending on the wrapped helper.
+ * @return-failure Expands to $Cfalse@ or an equivalent failure value when the wrapped helper fails.
+ * @see bunny_configuration_casesf
+ *
+ * @doc-lang fr
+ * @brief Initialise une boucle $Kfor@ sur toutes les cases indexées d’un nœud de configuration.
+ * @param conf Configuration node to inspect.
+ * @param i Loop index variable.
+ * @return-success Produit une valeur dépendant de l’aide enveloppée.
+ * @return-failure Produit $Cfalse@ ou une valeur d’échec équivalente quand l’aide enveloppée échoue.
+ * @see bunny_configuration_casesf
+ */
 # define		bunny_configuration_all_cases(conf, i)				\
   i = 0; i < bunny_configuration_casesf(conf, "."); ++i
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_all
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 764
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief C11 helper selecting child or case iteration according to the loop variable type.
+ * @param conf Configuration node to inspect.
+ * @param node Either a $Tt_bunny_configuration@* child variable or an integer index variable.
+ * @return-success Expands to a value depending on the wrapped helper.
+ * @return-failure Expands to $Cfalse@ or an equivalent failure value when the wrapped helper fails.
+ * @see bunny_configuration_all_children
+ * @see bunny_configuration_all_cases
+ *
+ * @doc-lang fr
+ * @brief Aide C11 sélectionnant l’itération enfant ou case selon le type de la variable de boucle.
+ * @param conf Configuration node to inspect.
+ * @param node Either a $Tt_bunny_configuration@* child variable or an integer index variable.
+ * @return-success Produit une valeur dépendant de l’aide enveloppée.
+ * @return-failure Produit $Cfalse@ ou une valeur d’échec équivalente quand l’aide enveloppée échoue.
+ * @see bunny_configuration_all_children
+ * @see bunny_configuration_all_cases
+ */
 # define		bunny_configuration_all(conf, node)				\
   _Generic((node),									\
 	   t_bunny_configuration*: bunny_configuration_all_children(conf, node),	\
@@ -518,6 +1017,38 @@ bool			bunny_configuration_read_time(const t_bunny_configuration	*cnf,
 // I think this is broken. Having to specifiy a type + increase a pointer... ?
 // So it is full void* or char* and specified explicitly
 // Let's think again.
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_get_and_go
+ * @doc-kind macro
+ * @doc-module configuration
+ * @doc-order 820
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Reads a value and advances a byte pointer when the read succeeds.
+ * @param cnf Configuration tree to inspect.
+ * @param ptr Pointer advanced by the size of $Styp@ on success.
+ * @param typ C type to read.
+ * @param fmt Printf-like address pattern.
+ * @param ... Values consumed by $Sfmt@.
+ * @return-success Expands to a value depending on the wrapped helper.
+ * @return-failure Expands to $Cfalse@ or an equivalent failure value when the wrapped helper fails.
+ * @see bunny_configuration_getf
+ *
+ * @doc-lang fr
+ * @brief Lit une valeur et avance un pointeur d’octets quand la lecture réussit.
+ * @param cnf Configuration tree to inspect.
+ * @param ptr Pointer advanced by the size of $Styp@ on success.
+ * @param typ C type to read.
+ * @param fmt Printf-like address pattern.
+ * @param ... Values consumed by $Sfmt@.
+ * @return-success Produit une valeur dépendant de l’aide enveloppée.
+ * @return-failure Produit $Cfalse@ ou une valeur d’échec équivalente quand l’aide enveloppée échoue.
+ * @see bunny_configuration_getf
+ */
 # define		bunny_configuration_get_and_go(cnf, ptr, typ, fmt, ...) \
   bunny_configuration_getf(cnf, (typ*)ptr, fmt, ##__VA_ARGS__) ? (bool)(ptr += sizeof(typ)) : 0
 
@@ -525,6 +1056,30 @@ bool			bunny_configuration_read_time(const t_bunny_configuration	*cnf,
 ** To avoid having plenty of tmp variable of differentes types when fetching inside
 ** a configuration sequentially
 */
+/**
+ * @doc
+ * @doc-symbol t_bunny_temporary_data
+ * @doc-kind union
+ * @doc-module configuration
+ * @doc-order 830
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Temporary typed storage convenient when reading sequential configuration values.
+ * @field configuration Configuration node storage.
+ * @field integer Integer storage.
+ * @field real Floating point storage.
+ * @field string String pointer storage.
+ *
+ * @doc-lang fr
+ * @brief Stockage typé temporaire pratique lors de lectures séquentielles de configuration.
+ * @field configuration Configuration node storage.
+ * @field integer Integer storage.
+ * @field real Floating point storage.
+ * @field string String pointer storage.
+ */
 typedef union		u_bunny_temporary_data
 {
   t_bunny_configuration	*configuration;
@@ -534,6 +1089,32 @@ typedef union		u_bunny_temporary_data
 }			t_bunny_temporary_data;
 
 // Ces champs peuvent se combiner.
+/**
+ * @doc
+ * @doc-symbol t_flexible_load_mode
+ * @doc-kind enum
+ * @doc-module configuration
+ * @doc-order 840
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Selects which shapes $Sbunny_configuration_flexible_load@ accepts.
+ * @field FLM_LOAD_FIELD Accept a single field.
+ * @field FLM_LOAD_ARRAY Accept an array.
+ * @field FLM_LOAD_HASHMAP Accept a named set/hash map.
+ * @field FLM_KEEP_CONFIGURATION Keep loaded configuration nodes registered in the original tree.
+ * @see bunny_configuration_flexible_load
+ *
+ * @doc-lang fr
+ * @brief Sélectionne les formes acceptées par $Sbunny_configuration_flexible_load@.
+ * @field FLM_LOAD_FIELD Accept a single field.
+ * @field FLM_LOAD_ARRAY Accept an array.
+ * @field FLM_LOAD_HASHMAP Accept a named set/hash map.
+ * @field FLM_KEEP_CONFIGURATION Keep loaded configuration nodes registered in the original tree.
+ * @see bunny_configuration_flexible_load
+ */
 typedef enum		e_flexible_load_mode
   {
    FLM_LOAD_FIELD	= 1, // 0 or 1.
@@ -546,6 +1127,30 @@ typedef enum		e_flexible_load_mode
 ** Recoit la configuration dont il faut extraire les informations directement.
 ** Si la configuration est un seul champ, alors le noeud est ce champ.
 */
+/**
+ * @doc
+ * @doc-symbol t_flexible_load
+ * @doc-kind typedef
+ * @doc-module configuration
+ * @doc-order 850
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Callback type used to transform one configuration node into a loaded resource.
+ * @param cnf Configuration node to convert.
+ * @return-success Returns the loaded object.
+ * @return-failure Returns $CNULL@ on error.
+ * @see bunny_configuration_flexible_load
+ *
+ * @doc-lang fr
+ * @brief Type de callback utilisé pour transformer un nœud de configuration en ressource chargée.
+ * @param cnf Configuration node to convert.
+ * @return-success Renvoie l’objet chargé.
+ * @return-failure Renvoie $CNULL@ en cas d’erreur.
+ * @see bunny_configuration_flexible_load
+ */
 typedef void		*(*t_flexible_load)(t_bunny_configuration			*cnf);
 
 /*

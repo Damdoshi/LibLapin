@@ -8,6 +8,33 @@
 
 #define			PATTERN		"%p -> %p"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_read_sound_sprite
+ * @doc-kind function
+ * @doc-module sound_sprite
+ * @doc-order 115
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 40
+ *
+ * @doc-lang en
+ * @brief Builds a sound sprite from an already loaded configuration node.
+ * @param cnf Configuration node describing the sound sprite.
+ * @return-success Returns a newly allocated sound sprite.
+ * @return-failure Returns NULL if the configuration is invalid or a resource cannot be loaded.
+ * @log "ressource,sound_sprite"
+ * @see bunny_load_sound_sprite
+ *
+ * @doc-lang fr
+ * @brief Construit un sound sprite depuis un nœud de configuration déjà chargé.
+ * @param cnf Nœud de configuration décrivant le sound sprite.
+ * @return-success Renvoie un sound sprite nouvellement alloué.
+ * @return-failure Renvoie NULL si la configuration est invalide ou si une ressource ne peut pas être chargée.
+ * @log "ressource,sound_sprite"
+ * @see bunny_load_sound_sprite
+ */
 t_bunny_sound_sprite	*bunny_read_sound_sprite(t_bunny_configuration	*_cnf)
 {
   t_bunny_sound_sprite	*ss;
@@ -149,6 +176,33 @@ t_bunny_sound_sprite	*bunny_read_sound_sprite(t_bunny_configuration	*_cnf)
   return (NULL);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_load_sound_sprite
+ * @doc-kind function
+ * @doc-module sound_sprite
+ * @doc-order 120
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Loads a sound sprite from a configuration file.
+ * @param file Path to the configuration file.
+ * @return-success Returns a newly allocated sound sprite.
+ * @return-failure Returns NULL if the file cannot be loaded or parsed.
+ * @log "ressource,sound_sprite"
+ * @see bunny_read_sound_sprite, bunny_delete_sound
+ *
+ * @doc-lang fr
+ * @brief Charge un sound sprite depuis un fichier de configuration.
+ * @param file Chemin du fichier de configuration.
+ * @return-success Renvoie un sound sprite nouvellement alloué.
+ * @return-failure Renvoie NULL si le fichier ne peut pas être chargé ou analysé.
+ * @log "ressource,sound_sprite"
+ * @see bunny_read_sound_sprite, bunny_delete_sound
+ */
 t_bunny_sound_sprite	*bunny_load_sound_sprite(const char	*file)
 {
   t_bunny_sound_sprite	*spr;

@@ -5,6 +5,29 @@
 ** Bibliotheque Lapin
 */
 
+
+/**
+ * @doc
+ * @doc-symbol parsing
+ * @doc-kind module
+ * @doc-module parsing
+ * @doc-order 0
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Provides small parsing helpers for strings and binary boxes.
+ * @description The parsing module contains cursor-based helpers that check or read characters, identifiers, numbers and escaped strings. The index parameter used by most functions is both an input and an output cursor.
+ * @description If gl_bunny_read_whitespace is set, most check/read helpers call it before trying to parse their own token.
+ * @header lapin/parsing.h
+ *
+ * @doc-lang fr
+ * @brief Fournit de petits assistants de parsing pour les chaînes et les boîtes binaires.
+ * @description Le module parsing contient des assistants à curseur qui vérifient ou lisent des caractères, identifiants, nombres et chaînes échappées. Le paramètre index utilisé par la plupart des fonctions sert à la fois d'entrée et de curseur de sortie.
+ * @description Si gl_bunny_read_whitespace est renseigné, la plupart des assistants check/read l'appellent avant d'essayer de parser leur propre jeton.
+ * @header lapin/parsing.h
+ */
 /*!
 ** \file parsing.h
 ** Parsing tools.
@@ -203,12 +226,62 @@ size_t			bunny_read_until_it_is_full(int		fd,
 # ifdef				__MINGW32__
 #  pragma			pack(4)
 # endif
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_binary_box
+ * @doc-kind struct
+ * @doc-module parsing
+ * @doc-order 500
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level 40
+ *
+ * @doc-lang en
+ * @brief Describes a small binary block with a four-byte key and a payload.
+ * @description t_bunny_binary_box is used by the binary box helpers. The structure contains a four-character key, the payload size, then a flexible payload area.
+ * @field key Four-byte box identifier. It is not automatically NUL-terminated.
+ * @field box_size Payload size in bytes.
+ * @field data Beginning of the payload.
+ * @see bunny_binary_box_size, bunny_read_binary_box, bunny_load_binary_box, bunny_create_binary_box
+ *
+ * @doc-lang fr
+ * @brief Décrit un petit bloc binaire avec une clé de quatre octets et une charge utile.
+ * @description t_bunny_binary_box est utilisé par les assistants de boîtes binaires. La structure contient une clé de quatre caractères, la taille de la charge utile, puis une zone flexible de données.
+ * @field key Identifiant de boîte sur quatre octets. Il n'est pas automatiquement terminé par NUL.
+ * @field box_size Taille de la charge utile en octets.
+ * @field data Début de la charge utile.
+ * @see bunny_binary_box_size, bunny_read_binary_box, bunny_load_binary_box, bunny_create_binary_box
+ */
 typedef struct		s_bunny_binary_box
 {
   char			key[4];
   uint32_t		box_size;
   char			data[__ZERO_LENGTH__];
 }			t_bunny_binary_box;
+
+/**
+ * @doc
+ * @doc-symbol bunny_binary_box_size
+ * @doc-kind macro
+ * @doc-module parsing
+ * @doc-order 510
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level 40
+ *
+ * @doc-lang en
+ * @brief Computes the allocation size of a binary box payload.
+ * @param x Payload size in bytes.
+ * @return-success The total number of bytes needed for the t_bunny_binary_box header and x bytes of payload.
+ * @see t_bunny_binary_box, bunny_create_binary_box
+ *
+ * @doc-lang fr
+ * @brief Calcule la taille d'allocation d'une charge utile de boîte binaire.
+ * @param x Taille de la charge utile en octets.
+ * @return-success Le nombre total d'octets nécessaires pour l'en-tête t_bunny_binary_box et x octets de charge utile.
+ * @see t_bunny_binary_box, bunny_create_binary_box
+ */
 # define		bunny_binary_box_size(x)		\
   ((size_t)(sizeof(char[4]) + sizeof(uint32_t) + x))
 # pragma		pack()
@@ -229,8 +302,56 @@ t_bunny_binary_box	*bunny_load_binary_box(int		fd);
 
 t_bunny_binary_box	*bunny_create_binary_box(size_t		len);
 
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_read_whitespace
+ * @doc-kind callback
+ * @doc-module parsing
+ * @doc-order 620
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level 40
+ *
+ * @doc-lang en
+ * @brief Defines the callback used to skip custom whitespace before parsing.
+ * @param code The parsed string.
+ * @param i The cursor to update.
+ * @return-case true Parsing may continue.
+ * @return-case false Parsing must fail immediately.
+ * @see gl_bunny_read_whitespace
+ *
+ * @doc-lang fr
+ * @brief Définit le callback utilisé pour sauter des blancs personnalisés avant le parsing.
+ * @param code La chaîne parsée.
+ * @param i Le curseur à mettre à jour.
+ * @return-case true Le parsing peut continuer.
+ * @return-case false Le parsing doit échouer immédiatement.
+ * @see gl_bunny_read_whitespace
+ */
 typedef bool		(*t_bunny_read_whitespace)(const char	*code,
 						   ssize_t	*i);
+
+/**
+ * @doc
+ * @doc-symbol gl_bunny_read_whitespace
+ * @doc-kind variable
+ * @doc-module parsing
+ * @doc-order 630
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level 40
+ *
+ * @doc-lang en
+ * @brief Stores the optional whitespace reader used by parsing helpers.
+ * @description When this callback is not NULL, the public check/read helpers call it before reading their own token. This lets a parser centralize comments or custom whitespace handling.
+ * @see t_bunny_read_whitespace, bunny_read_text, bunny_read_integer
+ *
+ * @doc-lang fr
+ * @brief Stocke le lecteur optionnel de blancs utilisé par les assistants de parsing.
+ * @description Lorsque ce callback n'est pas NULL, les assistants publics de check/read l'appellent avant de lire leur propre jeton. Cela permet à un parseur de centraliser la gestion des commentaires ou des blancs personnalisés.
+ * @see t_bunny_read_whitespace, bunny_read_text, bunny_read_integer
+ */
 extern
 t_bunny_read_whitespace	gl_bunny_read_whitespace;
 

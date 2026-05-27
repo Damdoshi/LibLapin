@@ -10,7 +10,7 @@
   MOD		=	`pwd | rev | cut -d "/" -f3 | rev`
 
   BIN		=	`pwd | rev | cut -d "/" -f1 | rev`
-  FLAG		=	-W -Wall -g -g3 -ggdb
+  FLAG		=	-W -Wall -g -g3 -ggdb -std=gnu++23
 
   INCLUDE	=	-I./include/ -I../../include/
   SRC		=	$(wildcard src/*.cpp)
@@ -22,11 +22,11 @@
   ## Rules ------------------------------------------------------------------
   all:		bin
   bin:		$(OBJ)
-		@gcc $(OBJ) -o $(BIN) $(LIBPATH) $(LIB)
+		@bcc $(OBJ) -o $(BIN) $(LIBPATH) $(LIB)
 		@echo "[OUT] " $(BIN)
 		@echo $(BIN) | tr '[:lower:]' '[:upper:]'
   .cpp.o:
-		@gcc $(INCLUDE) $(FLAG) -c $< -o $@
+		@bcc $(INCLUDE) $(FLAG) -c $< -o $@
 		@echo "[GCC]" $<
   clean:
 		@rm -f $(OBJ)

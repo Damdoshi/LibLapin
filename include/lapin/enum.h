@@ -19,11 +19,67 @@
 /*!
 ** The maximum buttons the library can manage on a single joystick
 */
+/**
+ * @doc-symbol LAST_BUNNY_BUTTON
+ * @doc-module events
+ * @doc-kind macro
+ * @doc-order 5
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Maximum number of buttons stored for each joystick.
+ * @description This constant defines the second dimension of the array returned by bunny_get_joy_button.
+ * @see bunny_get_joy_button, t_bunny_joy_button
+ *
+ * @doc-lang fr
+ * @brief Nombre maximal de boutons mémorisés pour chaque joystick.
+ * @description Cette constante définit la seconde dimension du tableau renvoyé par bunny_get_joy_button.
+ * @see bunny_get_joy_button, t_bunny_joy_button
+ */
 # define			LAST_BUNNY_BUTTON		32
 
 /*!
 ** The axis a library can manage on a single joystick
 */
+/**
+ * @doc-symbol t_bunny_axis
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 188
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Enumerates joystick axes handled by LibLapin.
+ * @description Axis values are bit flags so they can also describe the set of axes available on a joystick.
+ * @param BA_X The X axis.
+ * @param BA_Y The Y axis.
+ * @param BA_Z The Z axis.
+ * @param BA_R The R axis.
+ * @param BA_U The U axis.
+ * @param BA_V The V axis.
+ * @param BA_POVX The horizontal POV axis.
+ * @param BA_POVY The vertical POV axis.
+ * @param LAST_BUNNY_AXIS The number of joystick axes stored by LibLapin.
+ * @see t_bunny_joy_axis, bunny_get_joy_axis
+ *
+ * @doc-lang fr
+ * @brief Énumère les axes de joystick gérés par LibLapin.
+ * @description Les valeurs d'axe sont des drapeaux binaires et peuvent donc aussi décrire l'ensemble des axes disponibles sur un joystick.
+ * @param BA_X L'axe X.
+ * @param BA_Y L'axe Y.
+ * @param BA_Z L'axe Z.
+ * @param BA_R L'axe R.
+ * @param BA_U L'axe U.
+ * @param BA_V L'axe V.
+ * @param BA_POVX L'axe POV horizontal.
+ * @param BA_POVY L'axe POV vertical.
+ * @param LAST_BUNNY_AXIS Le nombre d'axes de joystick mémorisés par LibLapin.
+ * @see t_bunny_joy_axis, bunny_get_joy_axis
+ */
 typedef enum			e_bunny_axis
   {
     BA_X			= 1,
@@ -40,6 +96,35 @@ typedef enum			e_bunny_axis
 /*!
 ** The mouse buttons the library can manage
 */
+/**
+ * @doc-symbol t_bunny_mouse_button
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 75
+ * @doc-since 2
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Enumerates mouse buttons handled by LibLapin.
+ * @param BMB_LEFT The left mouse button.
+ * @param BMB_RIGHT The right mouse button.
+ * @param BMB_MIDDLE The middle mouse button.
+ * @param BMB_EXTRABUTTON0 The first extra mouse button.
+ * @param BMB_EXTRABUTTON1 The second extra mouse button.
+ * @param LAST_BUNNY_MOUSEBUTTON The number of mouse buttons stored by LibLapin.
+ * @see t_bunny_click, bunny_get_mouse_button
+ *
+ * @doc-lang fr
+ * @brief Énumère les boutons de souris gérés par LibLapin.
+ * @param BMB_LEFT Le bouton gauche de la souris.
+ * @param BMB_RIGHT Le bouton droit de la souris.
+ * @param BMB_MIDDLE Le bouton central de la souris.
+ * @param BMB_EXTRABUTTON0 Le premier bouton supplémentaire de la souris.
+ * @param BMB_EXTRABUTTON1 Le second bouton supplémentaire de la souris.
+ * @param LAST_BUNNY_MOUSEBUTTON Le nombre de boutons de souris mémorisés par LibLapin.
+ * @see t_bunny_click, bunny_get_mouse_button
+ */
 typedef enum			e_bunny_mouse_button
   {
     BMB_LEFT,
@@ -53,6 +138,29 @@ typedef enum			e_bunny_mouse_button
 /*!
 ** The keys the library can manage on keypressed and keyreleased events.
 */
+/**
+ * @doc-symbol t_bunny_keysym
+ * @doc-module events
+ * @doc-kind type
+ * @doc-order 25
+ * @doc-since 2
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Enumerates keyboard keys handled by LibLapin.
+ * @description These symbols are used by key press and key release callbacks. Use bunny_get_keyname to turn a symbol into a printable name.
+ * @param BKS_UNKNOWN Unknown or unsupported key.
+ * @param BKS_LAST_KEY The number of key symbols stored by LibLapin.
+ * @see t_bunny_key, bunny_set_key_response, bunny_get_keyname, gl_bunny_keysym
+ *
+ * @doc-lang fr
+ * @brief Énumère les touches de clavier gérées par LibLapin.
+ * @description Ces symboles sont utilisés par les callbacks d'appui et de relâchement de touches. Utilisez bunny_get_keyname pour transformer un symbole en nom affichable.
+ * @param BKS_UNKNOWN Touche inconnue ou non prise en charge.
+ * @param BKS_LAST_KEY Le nombre de symboles de touches mémorisés par LibLapin.
+ * @see t_bunny_key, bunny_set_key_response, bunny_get_keyname, gl_bunny_keysym
+ */
 typedef enum			e_bunny_keysym
   {
     BKS_UNKNOWN			= -1,
@@ -160,10 +268,48 @@ typedef enum			e_bunny_keysym
     BKS_LAST_KEY
   }				t_bunny_keysym;
 
+/**
+ * @doc-symbol gl_bunny_keysym
+ * @doc-module events
+ * @doc-kind global
+ * @doc-order 27
+ * @doc-since 2
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Array of printable key names indexed by t_bunny_keysym.
+ * @description Prefer bunny_get_keyname when the symbol may be out of range, because it safely returns a fallback name.
+ * @see t_bunny_keysym, bunny_get_keyname
+ *
+ * @doc-lang fr
+ * @brief Tableau de noms de touches affichables indexé par t_bunny_keysym.
+ * @description Préférez bunny_get_keyname lorsque le symbole peut être hors limites, car cette fonction renvoie un nom de secours sans danger.
+ * @see t_bunny_keysym, bunny_get_keyname
+ */
 extern const char		*gl_bunny_keysym[BKS_LAST_KEY];
 
 const char			*bunny_get_keyname(t_bunny_keysym	sym);
 
+/**
+ * @doc-symbol gl_maximum_joystick
+ * @doc-module events
+ * @doc-kind global
+ * @doc-order 187
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Maximum number of joystick slots supported by the backend.
+ * @description This value is provided by the underlying window system backend and is also exposed through the compatibility macro LAST_BUNNY_JOYSTICK.
+ * @see t_bunny_joystick, bunny_get_joy_info
+ *
+ * @doc-lang fr
+ * @brief Nombre maximal d'emplacements de joystick pris en charge par le moteur sous-jacent.
+ * @description Cette valeur est fournie par le moteur de fenêtre sous-jacent et est aussi exposée par la macro de compatibilité LAST_BUNNY_JOYSTICK.
+ * @see t_bunny_joystick, bunny_get_joy_info
+ */
 extern const size_t		gl_maximum_joystick;
 
 #endif	/*			__LAPIN_ENUM_H__	*/

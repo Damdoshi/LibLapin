@@ -12,4 +12,7 @@ void		bunny_reset_cinematic(t_bunny_cinematic		*cin)
   bunny_cinematic_stop(cin);
   cn->current_command = 0;
   cn->stack_top = 0;
+  cn->stack_frame = cn->command_data[0];
+  memset(cn->command_data, 0, sizeof(cn->command_data));
+  memset(cn->return_position, 0, sizeof(cn->return_position));
 }

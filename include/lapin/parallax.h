@@ -48,7 +48,7 @@ typedef struct			s_bunny_parallax_layer
 typedef struct			s_bunny_parallax
 {
   t_bunny_clipable		clipable;
-  size_t			_private[3];
+  size_t			_private[4];
   t_bunny_parallax_layer	*layers;
   size_t			nbr_layers;
   t_bunny_size			inside_size;

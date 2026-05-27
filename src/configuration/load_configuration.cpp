@@ -18,6 +18,40 @@ Decision		dabsic_read_text_cont(const char				*code,
 					      std::string				eoftok,
 					      std::string				comtok);
 
+/**
+ * @doc
+ * @doc-symbol bunny_load_configuration
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 50
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Loads a configuration file with an explicit format.
+ * @param type Format used to parse the file.
+ * @param file Path of the file to load.
+ * @param config Existing configuration to fill, or $CNULL@ to allocate one.
+ * @param ... Optional format-specific arguments.
+ * @return-success Returns the filled or newly allocated configuration.
+ * @return-failure Returns $CNULL@ on loading or parsing error.
+ * @log "ressource,configuration"
+ * @see bunny_open_configuration
+ * @see bunny_read_configuration
+ *
+ * @doc-lang fr
+ * @brief Charge un fichier de configuration avec un format explicite.
+ * @param type Format used to parse the file.
+ * @param file Path of the file to load.
+ * @param config Existing configuration to fill, or $CNULL@ to allocate one.
+ * @param ... Optional format-specific arguments.
+ * @return-success Renvoie la configuration remplie ou nouvellement allouée.
+ * @return-failure Renvoie $CNULL@ en cas d’erreur de chargement ou d’analyse.
+ * @log "ressource,configuration"
+ * @see bunny_open_configuration
+ * @see bunny_read_configuration
+ */
 t_bunny_configuration	*bunny_load_configuration(t_bunny_configuration_type		type,
 						  const char				*file,
 						  t_bunny_configuration			*config,

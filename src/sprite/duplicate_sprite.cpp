@@ -11,6 +11,31 @@ static void		copy_all(t_bunny_map		*node,
   bunny_map_set_data((t_bunny_map*)param, node->key, node->data, void*);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_duplicate_sprite
+ * @doc-kind function
+ * @doc-module sprite
+ * @doc-order 185
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Duplicates a sprite object.
+ * @param duplicate Sprite to duplicate.
+ * @return-success Returns a newly allocated duplicate sprite.
+ * @return-failure Returns NULL on allocation failure.
+ * @see bunny_load_sprite, bunny_delete_clipable
+ *
+ * @doc-lang fr
+ * @brief Duplique un objet sprite.
+ * @param duplicate Sprite à dupliquer.
+ * @return-success Renvoie un sprite dupliqué nouvellement alloué.
+ * @return-failure Renvoie NULL en cas d'échec d'allocation.
+ * @see bunny_load_sprite, bunny_delete_clipable
+ */
 t_bunny_sprite		*bunny_duplicate_sprite(t_bunny_sprite	*s)
 {
   struct bunny_sprite	*spr = (struct bunny_sprite*)s;

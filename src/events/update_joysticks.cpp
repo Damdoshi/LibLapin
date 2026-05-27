@@ -5,6 +5,23 @@
 
 #include			"lapin_private.h"
 
+/**
+ * @doc-symbol bunny_update_joysticks
+ * @doc-module events
+ * @doc-kind function
+ * @doc-order 186
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Refreshes the internal joystick information table.
+ * @see t_bunny_joystick, bunny_get_joy_info
+ *
+ * @doc-lang fr
+ * @brief Rafraîchit la table interne d'informations sur les joysticks.
+ * @see t_bunny_joystick, bunny_get_joy_info
+ */
 void				bunny_update_joysticks(void)
 {
   sf::Joystick::Identification	id;

@@ -20,6 +20,31 @@ static void		_clean_shader(void)
     }
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_screen_tweak_shader
+ * @doc-kind function
+ * @doc-module shader
+ * @doc-order 75
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 40
+ *
+ * @doc-lang en
+ * @brief Returns the built-in shader configured from a screen tweak structure.
+ * @param bst Screen tweak configuration, or NULL to release the cached shader.
+ * @return-success Returns the configured shader.
+ * @return-failure Returns NULL on allocation or compilation failure, or when bst is NULL.
+ * @see t_bunny_screen_tweak, bunny_default_screen_tweak
+ *
+ * @doc-lang fr
+ * @brief Renvoie le shader intégré configuré depuis une structure de retouche écran.
+ * @param bst Configuration de retouche écran, ou NULL pour libérer le shader en cache.
+ * @return-success Renvoie le shader configuré.
+ * @return-failure Renvoie NULL en cas d’échec d’allocation ou de compilation, ou lorsque bst vaut NULL.
+ * @see t_bunny_screen_tweak, bunny_default_screen_tweak
+ */
 t_bunny_shader		*bunny_screen_tweak_shader(const t_bunny_screen_tweak *bst)
 
 {
@@ -134,6 +159,27 @@ t_bunny_shader		*bunny_screen_tweak_shader(const t_bunny_screen_tweak *bst)
   return (gl_screen_tweak_shader);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_default_screen_tweak
+ * @doc-kind function
+ * @doc-module shader
+ * @doc-order 76
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 40
+ *
+ * @doc-lang en
+ * @brief Fills a screen tweak configuration with default values.
+ * @param bst Screen tweak structure to initialize.
+ * @see t_bunny_screen_tweak, bunny_screen_tweak_shader
+ *
+ * @doc-lang fr
+ * @brief Remplit une configuration de retouche écran avec les valeurs par défaut.
+ * @param bst Structure de retouche écran à initialiser.
+ * @see t_bunny_screen_tweak, bunny_screen_tweak_shader
+ */
 void			bunny_default_screen_tweak(t_bunny_screen_tweak	*x)
 {
   x->blur_level = 1.0;

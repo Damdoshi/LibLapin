@@ -8,6 +8,41 @@
 
 #define			PATTERN		"%s -> %p"
 
+/**
+ * @doc-symbol bunny_load_effect
+ * @doc-module sound
+ * @doc-kind function
+ * @doc-order 200
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Opens a sound effect file or a sound effect configuration file.
+ * @description A sound effect is loaded in memory. Several loads of the same file may share low-level resources.
+ * @param file Sound file or configuration file to open. Supported sound formats are wav and ogg.
+ * @return-success A valid t_bunny_effect pointer.
+ * @return-failure NULL if the effect cannot be loaded.
+ * @error ENOMEM Out of memory.
+ * @error EINVAL Invalid file format.
+ * @error ENOENT The file was not found.
+ * @error BE_SYNTAX_ERROR The configuration file contains a syntax error.
+ * @log May log in the "ressource", "configuration", "syntax" and "sound" domains.
+ * @see bunny_new_effect, bunny_compute_effect, bunny_make_effect_unique, bunny_delete_sound
+ *
+ * @doc-lang fr
+ * @brief Ouvre un fichier d'effet sonore ou un fichier de configuration d'effet sonore.
+ * @description Un effet sonore est chargé en mémoire. Plusieurs chargements du même fichier peuvent partager des ressources bas niveau.
+ * @param file Fichier sonore ou fichier de configuration à ouvrir. Les formats sonores supportés sont wav et ogg.
+ * @return-success Un pointeur t_bunny_effect valide.
+ * @return-failure NULL si l'effet ne peut pas être chargé.
+ * @error ENOMEM Mémoire insuffisante.
+ * @error EINVAL Format de fichier invalide.
+ * @error ENOENT Le fichier est introuvable.
+ * @error BE_SYNTAX_ERROR Le fichier de configuration contient une erreur de syntaxe.
+ * @log Peut écrire dans les domaines "ressource", "configuration", "syntax" et "sound".
+ * @see bunny_new_effect, bunny_compute_effect, bunny_make_effect_unique, bunny_delete_sound
+ */
 t_bunny_effect		*bunny_load_effect(const char		*file)
 {
   struct bunny_effect	*eff;

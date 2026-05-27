@@ -68,6 +68,42 @@
 ** are mainly display functions that will allow you to draw inside
 ** the Depth environment.
 */
+/**
+ * @doc
+ * @doc-symbol t_bunny_depth_engine
+ * @doc-kind struct
+ * @doc-module context
+ * @doc-order 700
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level expert
+ *
+ * @doc-lang en
+ * @brief Runtime structure of the experimental depth engine context.
+ * @field head Common context runtime header.
+ * @field configuration_file Depth configuration file loaded at launch.
+ * @field shader_file Shader file loaded at launch.
+ * @field enable_shadows Enables shadow rendering.
+ * @field back_color Background color.
+ * @field light_color Light color.
+ * @field camera 2D camera position.
+ * @field camera_height Camera height.
+ * @field camera_angle Camera angle.
+ * @see gl_bunny_depth_context
+ *
+ * @doc-lang fr
+ * @brief Structure d’exécution du contexte expérimental depth engine.
+ * @field head Common context runtime header.
+ * @field configuration_file Depth configuration file loaded at launch.
+ * @field shader_file Shader file loaded at launch.
+ * @field enable_shadows Enables shadow rendering.
+ * @field back_color Background color.
+ * @field light_color Light color.
+ * @field camera 2D camera position.
+ * @field camera_height Camera height.
+ * @field camera_angle Camera angle.
+ * @see gl_bunny_depth_context
+ */
 typedef struct			s_bunny_depth_engine
 {
   t_bunny_context_runtime_info	head;

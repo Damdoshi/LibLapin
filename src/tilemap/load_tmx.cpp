@@ -182,12 +182,10 @@ static bool		load_tileset(t_bunny_configuration			*cnf,
     ts->tile_size.y = tmap->tile_size.y;
 
   // Intertile
-  // bunny_configuration_getf_int(cnf, &ts->margin.x, "margin");
-  // bunny_configuration_getf_int(cnf, &ts->margin.y, "margin");
+  bunny_configuration_getf_int(cnf, &ts->position.x, "margin");
+  bunny_configuration_getf_int(cnf, &ts->position.y, "margin");
   bunny_configuration_getf_int(cnf, &ts->intertile.x, "spacing");
   bunny_configuration_getf_int(cnf, &ts->intertile.y, "spacing");
-  ts->margin.x = ts->intertile.x;
-  ts->margin.y = ts->intertile.y;
 
   // First and last tile
   if (!bunny_configuration_getf_int(cnf, &ts->nbr_tiles, "tilecount"))

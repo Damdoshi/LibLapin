@@ -9,6 +9,40 @@
 
 #define			PATTERN		"%p capture, %p pix -> %s"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_capture_to_pixelarray
+ * @doc-kind function
+ * @doc-module camera
+ * @doc-order 280
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Copies a capture into an existing pixelarray.
+ * @description The captured image is stretched to fit the destination pixelarray.
+ * @param cap The capture to convert.
+ * @param pix The destination pixelarray.
+ * @return-case success true if the conversion succeeded.
+ * @return-case failure false if cap is NULL or the conversion cannot be performed.
+ * @error EINVAL The capture is NULL.
+ * @log This function writes logs in the "camera" domain.
+ * @see bunny_capture_new_pixelarray, bunny_capture_to_picture
+ *
+ * @doc-lang fr
+ * @brief Copie une capture dans un pixelarray existant.
+ * @description L'image capturée est étirée pour correspondre au pixelarray de destination.
+ * @param cap La capture à convertir.
+ * @param pix Le pixelarray de destination.
+ * @return-case success true si la conversion réussit.
+ * @return-case failure false si cap vaut NULL ou si la conversion ne peut pas être effectuée.
+ * @error EINVAL La capture vaut NULL.
+ * @log Cette fonction écrit des logs dans le domaine "camera".
+ * @see bunny_capture_new_pixelarray, bunny_capture_to_picture
+ */
+
 bool			bunny_capture_to_pixelarray(t_bunny_capture		*cap,
 						    t_bunny_pixelarray		*pix)
 {

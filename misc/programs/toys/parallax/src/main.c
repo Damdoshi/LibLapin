@@ -10,7 +10,8 @@
 #include		<stdio.h>
 #include		<lapin.h>
 
-t_bunny_window		*win;
+t_bunny_window		**win;
+size_t			wincnt;
 t_bunny_parallax	*pax;
 
 t_bunny_response	move(const t_bunny_position	*ret,
@@ -22,8 +23,8 @@ t_bunny_response	move(const t_bunny_position	*ret,
 
   (void)ret;
   (void)unused;
-  x = (double)mouse->x / win->buffer.width;
-  y = (double)mouse->y / win->buffer.height;
+  x = (double)mouse->x / win[0]->buffer.width;
+  y = (double)mouse->y / win[0]->buffer.height;
   pax->viewpoint.x = x * pax->inside_size.x;
   pax->viewpoint.y = y * pax->inside_size.y;
   return (GO_ON);
@@ -61,15 +62,15 @@ t_bunny_response	display(void			*unused)
   (void)unused;
   bunny_clear(&pax->clipable.buffer, BLACK);
   bunny_draw(&pax->clipable);
-  bunny_blit(&win->buffer, &pax->clipable, NULL);
-  bunny_display(win);
+  bunny_blit(&win[0]->buffer, &pax->clipable, NULL);
+  bunny_display(win[0]);
   return (GO_ON);
 }
 
 int			main(void)
-{
-  assert((win = bunny_begin("./window.dab")));
-  if (!(pax = bunny_load_parallax_wh("./parallax.dab", win->buffer.width, win->buffer.height)))
+{ 
+  assert((win = bunny_beginc("./window.dab", &wincnt)));
+  if (!(pax = bunny_load_parallax_wh("./parallax.dab", win[0]->buffer.width, win[0]->buffer.height)))
     {
       bunny_perror("bunny_load_tilemap");
       return (EXIT_FAILURE);
@@ -81,7 +82,7 @@ int			main(void)
   bunny_set_loop_main_function(loop);
   bunny_set_display_function(display);
 
-  bunny_loop(win, 25, NULL);
+  bunny_loop(*win, 25, NULL);
 
   bunny_delete_clipable(&pax->clipable);
   bunny_end(win);

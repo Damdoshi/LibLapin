@@ -84,7 +84,11 @@ static t_bunny_response		pentacle_key(t_bunny_event_state		state,
 					     struct bunny_pentacle_screen	*bss)
 {
   double			pitch;
+  t_bunny_response		ret;
 
+  if (bss->head.subcontext.key)
+    if ((ret = bss->head.subcontext.key(state, sym, bss)) != GO_ON)
+      return (ret == LEAVE_EVENT ? GO_ON : ret);
   if (sym == BKS_SPACE)
     {
       if (state == GO_DOWN)
@@ -104,10 +108,11 @@ static t_bunny_response		pentacle_joy_button(t_bunny_event_state		state,
 						    int				button,
 						    struct bunny_pentacle_screen *bss)
 {
-  (void)state;
-  (void)id;
-  (void)button;
-  (void)bss;
+  t_bunny_response		ret;
+
+  if (bss->head.subcontext.joy_button)
+    if ((ret = bss->head.subcontext.joy_button(state, id, button, bss)) != GO_ON)
+      return (ret == LEAVE_EVENT ? GO_ON : ret);
   return (pentacle_key(state, BKS_ESCAPE, bss));
 }
 
@@ -116,10 +121,11 @@ static t_bunny_response		pentacle_joy_axis(int				id,
 						  float				val,
 						  struct bunny_pentacle_screen *bss)
 {
-  (void)id;
-  (void)axis;
-  (void)val;
-  (void)bss;
+  t_bunny_response		ret;
+
+  if (bss->head.subcontext.joy_axis)
+    if ((ret = bss->head.subcontext.joy_axis(id, axis, val, bss)) != GO_ON)
+      return (ret == LEAVE_EVENT ? GO_ON : ret);
   return (pentacle_key(GO_DOWN, BKS_SPACE, bss));
 }
 
@@ -127,8 +133,11 @@ static t_bunny_response		pentacle_click(t_bunny_event_state		state,
 					       t_bunny_mouse_button		button,
 					       struct bunny_pentacle_screen	*bss)
 {
-  (void)state;
-  (void)button;
+  t_bunny_response		ret;
+
+  if (bss->head.subcontext.click)
+    if ((ret = bss->head.subcontext.click(state, button, bss)) != GO_ON)
+      return (ret == LEAVE_EVENT ? GO_ON : ret);
   if (state == GO_UP)
     return (GO_ON);
   bss->animation_step = LAST_AS;
@@ -145,6 +154,7 @@ static t_bunny_response		pentacle_loop(struct bunny_pentacle_screen	*bss)
 {
   double			mulspeed = bunny_get_keyboard()[BKS_SPACE] ? 3 : 1;
   double			speed = mulspeed * (1.0 / bunny_get_frequency());
+  t_bunny_response		ret;
 
   bss->time_counter += speed;
   switch (bss->animation_step)
@@ -156,39 +166,48 @@ static t_bunny_response		pentacle_loop(struct bunny_pentacle_screen	*bss)
 	    bunny_sound_play(&bss->jingle->sound);
 	  step(bss);
 	}
-      return (GO_ON);
+      break ;
 
     case FALLING:
       if (bss->time_counter >= 0.75)
 	step(bss);
-      return (GO_ON);
+      break ;
+
     case PAUSE:
       if (bss->time_counter >= 0.5)
 	step(bss);
-      return (GO_ON);
+      break ;
+
     case TRANSFORMATION:
       if (bss->time_counter >= 0.2)
 	step(bss);
-      return (GO_ON);
+      break ;
+
     case NEW_PAUSE:
       if (bss->time_counter >= 0.5)
 	step(bss);
-      return (GO_ON);
+      break ;
+
     case SHIFT_LEFT:
     case TEXT_DISPLAY:
       if (bss->time_counter >= 0.2)
 	step(bss);
-      return (GO_ON);
+      break ;
+
     case NEW_NEW_PAUSE:
     case FINAL_BLACK:
       if (bss->time_counter >= 1.0)
 	step(bss);
-      return (GO_ON);
+      break ;
+
     default:
       if (bss->jingle)
 	bunny_sound_stop(&bss->jingle->sound);
       return (SWITCH_CONTEXT);
     }
+  if (bss->head.subcontext.loop)
+    if ((ret = bss->head.subcontext.loop(bss)) != GO_ON)
+      return (ret == LEAVE_EVENT ? GO_ON : ret);
   return (GO_ON);
 }
 
@@ -202,7 +221,6 @@ static void			center_vertices(struct vertex_array		*v,
   else
     siz.x = siz.y;
   auto pos = &v->vertex[0];
-  
 
   for (size_t i = 0; i < v->length; ++i)
     {
@@ -246,7 +264,7 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
       [[fallthrough]];
     case PAUSE:
       {
-	double coef;
+	double			coef;
 
 	if (bss->animation_step == FALLING)
 	  coef = (1.0 - bss->time_counter / 0.75) * 2.0 + 0.33;
@@ -281,10 +299,10 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
     case TEXT_DISPLAY:
     case NEW_NEW_PAUSE:
       {
-	t_bunny_size pos;
-	double dest;
-	double step;
-	double ori;
+	t_bunny_size		pos;
+	double			dest;
+	double			step;
+	double			ori;
 
 	if (bss->animation_step == SHIFT_LEFT)
 	  step = bss->time_counter / 0.2;
@@ -320,8 +338,16 @@ static t_bunny_response		pentacle_display(struct bunny_pentacle_screen *bss)
     default:
       break ;
     }
+  t_bunny_response		ret;
+
+  for (size_t i = 0; bss->head.screens[i]; ++i)
+    bunny_blit(bss->head.screens[i], bss->picture, NULL);
   if (bss->head.subcontext.display)
-    return (bss->head.subcontext.display(bss));
+    {
+      if ((ret = bss->head.subcontext.display(bss)) != GO_ON)
+	return (ret == LEAVE_EVENT ? GO_ON : ret);
+      return (GO_ON);
+    }
   for (size_t i = 0; bss->head.screens[i]; ++i)
     {
       bunny_blit(bss->head.screens[i], bss->picture, NULL);
@@ -380,9 +406,20 @@ static t_bunny_response		pentacle_entering(struct bunny_pentacle_screen *bss)
 {
   t_bunny_picture		*screen;
   t_bunny_size			font_size;
+  ssize_t			width;
+  ssize_t			height;
   int				i;
-  
-  if ((bss->picture = bunny_new_picture(1920, 1080)) == NULL)
+
+  width = 1920;
+  height = 1080;
+  if (bss->head.screens && bss->head.screens[0])
+    {
+      width = bss->head.screens[0]->width;
+      height = bss->head.screens[0]->height;
+    }
+  if (width <= 0 || height <= 0)
+    return (EXIT_ON_ERROR);
+  if ((bss->picture = bunny_new_picture(width, height)) == NULL)
     return (EXIT_ON_ERROR);
   screen = bss->picture;
 
@@ -460,6 +497,22 @@ static void			pentacle_leaving(t_bunny_response		resp,
     bunny_delete_clipable(bss->picture);
 }
 
+/**
+ * @doc
+ * @doc-symbol gl_bunny_pentacle_context
+ * @doc-kind variable
+ * @doc-module context
+ * @doc-order 730
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Built-in pentacle splash context.
+ *
+ * @doc-lang fr
+ * @brief Contexte intégré de splash pentacle.
+ */
 const t_bunny_context		gl_bunny_pentacle_context =
   {
    (t_bunny_key)pentacle_key,

@@ -7,6 +7,33 @@
 
 #define			PATTERN		"%p picture, %p color"
 
+/**
+ * @doc-symbol bunny_clear
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 370
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Sets the clipped area of a buffer to a color without alpha blending.
+ * @description Unlike bunny_fill, this operation writes the color directly. Drawing into pixelarrays requires gl_bunny_my_clear.
+ * @param buffer The target buffer.
+ * @param color The color to write.
+ * @error EINVAL The target kind is not supported.
+ * @log Logs are written with the "graphics" label.
+ * @see bunny_fill, t_bunny_my_clear, gl_bunny_my_clear
+ *
+ * @doc-lang fr
+ * @brief Fixe la zone découpée d’un buffer à une couleur sans mélange alpha.
+ * @description Contrairement à bunny_fill, cette opération écrit directement la couleur. Dessiner dans les pixelarrays nécessite gl_bunny_my_clear.
+ * @param buffer Le buffer cible.
+ * @param color La couleur à écrire.
+ * @error EINVAL Le type de cible n’est pas pris en charge.
+ * @log Les logs sont écrits avec le label "graphics".
+ * @see bunny_fill, t_bunny_my_clear, gl_bunny_my_clear
+ */
 void			bunny_clear(t_bunny_buffer		*picture,
 				    unsigned int		_color)
 {

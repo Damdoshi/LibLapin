@@ -5,6 +5,18 @@
 
 #include	"lapin_private.h"
 
+static void	get_tileset_clip(t_bunny_tileset			*ts,
+			       int				local,
+			       t_bunny_area			&clip)
+{
+  clip.x =
+    (local % ts->tileset_size.x) * (ts->tile_size.x + ts->intertile.x) + ts->position.x;
+  clip.y =
+    (local / ts->tileset_size.x) * (ts->tile_size.y + ts->intertile.y) + ts->position.y;
+  clip.w = ts->tile_size.x;
+  clip.h = ts->tile_size.y;
+}
+
 // On dessine sur pic a la position pos le dessin venant de tset
 static void	draw_tile(t_bunny_picture				*tset,
 			  t_bunny_picture				*pic,
@@ -31,20 +43,32 @@ static void	refresh_tiles(struct bunny_tilemap			*tmap,
       int		x = trtile[i].x;
       int		y = trtile[i].y;
       int		z = trtile[i].z;
-
-      t_bunny_area	clip{x, y, tmap->tile_size.x, tmap->tile_size.y};
+      t_bunny_area	clip;
       t_bunny_position	pos{x, y};
       int		til = tmap->layers[z].tiles[x + y * tmap->map_size.x];
       t_bunny_tileset	*ts = bunny_get_tileset_for_tile((t_bunny_tilemap*)tmap, til);
       t_bunny_picture	*strata;
+      int		local = til - ts->first_tile;
+      t_bunny_picture	*pic = ts->tileset;
+
+      if (ts->animated_tiles_id != NULL && local >= 0 && local < ts->nbr_tiles && ts->animated_tiles_id[local] != NULL)
+	{
+	  pic = &ts->animated_tiles_id[local]->clipable;
+	  clip.x = pic->clip_x_position;
+	  clip.y = pic->clip_y_position;
+	  clip.w = pic->clip_width;
+	  clip.h = pic->clip_height;
+	}
+      else
+	get_tileset_clip(ts, local, clip);
 
       strata = tmap->layers[z].picture;
-      strata->clip_x_position = clip.x;
-      strata->clip_y_position = clip.y;
-      strata->clip_width = clip.w;
-      strata->clip_height = clip.h;
+      strata->clip_x_position = x * tmap->tile_size.x;
+      strata->clip_y_position = y * tmap->tile_size.y;
+      strata->clip_width = tmap->tile_size.x;
+      strata->clip_height = tmap->tile_size.y;
       bunny_clear(&strata->buffer, 0); // Fully transparent
-      draw_tile(ts->tileset, strata, pos, clip); // Redraw the tile
+      draw_tile(pic, strata, pos, clip); // Redraw the tile
     }
 }
 
@@ -63,7 +87,7 @@ bool		__bunny_draw_layer_tilemap(struct bunny_tilemap		*tmap)
 	  for (int y = 0; y < tmap->map_size.y; ++y)
 	    for (int x = 0; x < tmap->map_size.x; ++x)
 	      {
-		t_bunny_area	clip{x, y, tmap->tile_size.x, tmap->tile_size.y};
+		t_bunny_area	clip;
 		t_bunny_position pos{x, y};
 		int		til = tmap->layers[i].tiles[x + y * tmap->map_size.x];
 
@@ -71,18 +95,23 @@ bool		__bunny_draw_layer_tilemap(struct bunny_tilemap		*tmap)
 		  continue ;
 		t_bunny_tileset	*ts = bunny_get_tileset_for_tile((t_bunny_tilemap*)tmap, til);
 		t_bunny_picture	*pic = ts->tileset;
+		int local = til - ts->first_tile;
 
-		if (ts->animated_tiles_id != NULL && ts->animated_tiles_id[til] != NULL)
+		if (ts->animated_tiles_id != NULL && local >= 0 && local < ts->nbr_tiles && ts->animated_tiles_id[local] != NULL)
 		  {
 		    t_bunny_zposition &zpos = tmap->animated_tiles[tmap->nbr_animated_tiles++];
 
-		    pic = &ts->animated_tiles_id[til]->clipable;
+		    pic = &ts->animated_tiles_id[local]->clipable;
 		    clip.x = pic->clip_x_position;
 		    clip.y = pic->clip_y_position;
+		    clip.w = pic->clip_width;
+		    clip.h = pic->clip_height;
 		    zpos.x = x;
 		    zpos.y = y;
 		    zpos.z = i;
 		  }
+		else
+		  get_tileset_clip(ts, local, clip);
 		draw_tile(pic, tmap->layers[i].picture, pos, clip);
 	      }
 	}
@@ -112,4 +141,3 @@ bool		__bunny_draw_layer_tilemap(struct bunny_tilemap		*tmap)
   ((bunny_picture*)tmap->working)->texture->display();
   return (true);
 }
-

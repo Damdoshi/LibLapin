@@ -79,11 +79,38 @@ static int		asynclock(double			elapsed,
   return (remove_dead_trap(trap, order));
 }
 
-int			bunny_asynclock(double			elapsed,
+/**
+ * @doc
+ * @doc-symbol bunny_asynclock
+ * @doc-kind function
+ * @doc-module asynclock
+ * @doc-order 240
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level 50
+ *
+ * @doc-lang en
+ * @brief Evaluates registered traps for one call order.
+ * @description bunny_asynclock browses the traps registered for the selected call order, calls the matching functions when their timing conditions are fulfilled, and deletes traps that were marked for removal.
+ * @description You usually should not call this function directly when using bunny_loop or bunny_loop_mw, because these loop functions already call it.
+ * @param elapsed_time The elapsed time since the previous asynclock step, in seconds. It is transmitted to trap callbacks.
+ * @param order Selects whether traps registered before or after the main loop function are evaluated.
+ * @return-case success On $Bsuccess@, returns the number of traps still registered for the selected call order.
+ * @see bunny_new_trap, bunny_delete_trap, bunny_loop
+ *
+ * @doc-lang fr
+ * @brief Évalue les traps enregistrées pour un ordre d'appel.
+ * @description bunny_asynclock parcourt les traps enregistrées pour l'ordre d'appel sélectionné, appelle les fonctions correspondantes lorsque leurs conditions de temps sont remplies et détruit les traps marquées pour suppression.
+ * @description Vous ne devriez généralement pas appeler cette fonction directement lorsque vous utilisez bunny_loop ou bunny_loop_mw, car ces fonctions de boucle l'appellent déjà.
+ * @param elapsed_time Le temps écoulé depuis l'étape asynclock précédente, en secondes. Il est transmis aux callbacks des traps.
+ * @param order Sélectionne si les traps enregistrées avant ou après la fonction principale de boucle sont évaluées.
+ * @return-case success En cas de $Bsuccès@, renvoie le nombre de traps encore enregistrées pour l'ordre d'appel sélectionné.
+ * @see bunny_new_trap, bunny_delete_trap, bunny_loop
+ */
+int			bunny_asynclock(double			elapsed_time,
 					t_bunny_call_order	order)
 {
   if (order == BCO_BEFORE_LOOP_MAIN_FUNCTION)
-    return (asynclock(elapsed, &gl_bunny_trap_head[0], order));
-  return (asynclock(elapsed, &gl_bunny_trap_head[2], order));
+    return (asynclock(elapsed_time, &gl_bunny_trap_head[0], order));
+  return (asynclock(elapsed_time, &gl_bunny_trap_head[2], order));
 }
-

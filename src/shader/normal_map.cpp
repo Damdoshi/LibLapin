@@ -6,7 +6,8 @@
 #include		<iostream>
 #include		"lapin_private.h"
 
-static t_bunny_shader	*gl_normal_map_shader = NULL;
+t_bunny_shader		*gl_normal_map_shader = NULL;
+t_bunny_normal_map	*gl_normal_map_configuration = NULL;
 
 // WindowSize
 // ColorMap <- The main picture itself
@@ -32,9 +33,13 @@ const std::string	InitialDeclaration =
   "varying vec4 vColor;\n"
   ""
   "uniform vec2 WindowSize;\n"
+  "uniform vec2 AttenuationSize;\n"
   "uniform sampler2D ColorMap;\n"
   "uniform sampler2D NormalMap;\n"
   "uniform sampler2D SpecularMap;\n"
+  "uniform float HasNormalMap;\n"
+  "uniform float HasSpecularMap;\n"
+  "uniform float NormalRotation;\n"
   "\n"
   ;
 
@@ -63,10 +68,49 @@ const std::string	BodyStart =
   "  vec2 LPos;\n"
   "  vec2 SpecularPosition;\n"
   "  vec4 DiffuseColor = texture2D(ColorMap, Coord);\n"
-  "  vec4 NormalColor = texture2D(NormalMap, Coord);\n"
-  "  vec4 SpecularColor = texture2D(SpecularMap, Coord);\n"
-  "  vec3 Normal = normalize(NormalColor * 2.0 - 1.0).rgb;\n"
-  "  vec4 Specular = normalize(SpecularColor * 2.0 - 1.0);\n"
+  "  vec4 NormalColor;\n"
+  "  vec4 Specular;\n"
+  "  vec3 Normal;\n"
+  "  float SpecularPower;\n"
+  "\n"
+  "  if (DiffuseColor.a <= 0.001)\n"
+  "    discard;\n"
+  "\n"
+  "  if (HasNormalMap > 0.5)\n"
+  "    NormalColor = texture2D(NormalMap, Coord);\n"
+  "  else\n"
+  "    NormalColor = vec4(0.5, 0.5, 1.0, 1.0);\n"
+  "\n"
+  "  if (HasSpecularMap > 0.5)\n"
+  "    Specular = texture2D(SpecularMap, Coord);\n"
+  "  else\n"
+  "    Specular = vec4(0.0, 0.0, 0.0, 1.0);\n"
+  "\n"
+  "  vec3 TmpNormal;\n"
+  "  float TmpNormalLength;\n"
+  "\n"
+  "  if (NormalColor.a <= 0.001)\n"
+  "  {\n"
+  "    TmpNormal = vec3(0.0, 0.0, 1.0);\n"
+  "  }\n"
+  "  else\n"
+  "  {\n"
+  "    TmpNormal = NormalColor.rgb * 2.0 - 1.0;\n"
+  "    TmpNormalLength = dot(TmpNormal, TmpNormal);\n"
+  "\n"
+  "    if (TmpNormalLength < 0.0001)\n"
+  "      TmpNormal = vec3(0.0, 0.0, 1.0);\n"
+  "  }\n"
+  "\n"
+  "  float NormalCs = cos(NormalRotation);\n"
+  "  float NormalSn = sin(NormalRotation);\n"
+  "  TmpNormal.xy = vec2(\n"
+  "    TmpNormal.x * NormalCs - TmpNormal.y * NormalSn,\n"
+  "    TmpNormal.x * NormalSn + TmpNormal.y * NormalCs\n"
+  "  );\n"
+  "\n"
+  "  Normal = normalize(TmpNormal);\n"
+  "  SpecularPower = max(1.0, Specular.a * 255.0);\n"
   "\n"
   "  vec2 PositionOnScreen;\n"
   "  vec2 ReversedPositionOnScreen;\n"
@@ -76,7 +120,7 @@ const std::string	BodyStart =
   "  float ColorStrength;\n"
   "  float D;\n"
   "  float Attenuation;\n"
-  "  vec3 UserCamera = vec3(0.0, 0.0, 2.0);\n"
+  "  vec3 UserCamera = normalize(vec3(0.0, 0.0, 1.0));\n"
   "\n"
   "  vec3 AmbientResult;\n"
   "  vec3 LightResult;\n"
@@ -89,9 +133,9 @@ const std::string	StretchedBody =
   "  if (Active%d > 0.5)\n"
   "  {\n"
   "    LPos = LightPosition%d.xy;\n"
-  "    PositionOnScreen = (LPos.xy - gl_FragCoord.xy) / WindowSize.xy;"
   "    LPos.y = WindowSize.y - LPos.y;"
-  "    ReversedPositionOnScreen = (LPos.xy - gl_FragCoord.xy) / WindowSize.xy;"
+  "    PositionOnScreen = (LPos.xy - gl_FragCoord.xy) / AttenuationSize.xy;"
+  "    ReversedPositionOnScreen = (LPos.xy - gl_FragCoord.xy) / AttenuationSize.xy;"
   "\n"
   // Compute spot light
   "    DistanceOnScreen = vec3(PositionOnScreen, LightPosition%d.z);\n"
@@ -116,10 +160,10 @@ const std::string	StretchedBody =
   "    D = SpecularAttenuation%d * length(DistanceOnScreen);\n"
   "    Attenuation = 1.0 / (0.5 + 0.5 * D + 0.5 * D * D);\n"
 
-  "    if (DotNormalDirection < 0.0)\n"
+  "    if (DotNormalDirection < 0.0 || HasSpecularMap <= 0.5)\n"
   "      SpecularResult = vec3(0.0, 0.0, 0.0);\n"
   "    else\n"
-  "      SpecularResult = Attenuation * SpecularColor%d.rgb * Specular.rgb * pow(max(0.0, dot(reflect(-Direction, Normal), UserCamera)), Specular.a);\n"
+  "      SpecularResult = Attenuation * SpecularColor%d.rgb * SpecularColor%d.a * Specular.rgb * pow(clamp(dot(normalize(reflect(-Direction, Normal)), UserCamera), 0.0, 1.0), SpecularPower);\n"
   "\n"
   "    AllResult += (LightResult + SpecularResult + AmbientResult) * DiffuseColor.rgb;\n"
   "  }\n"
@@ -139,11 +183,38 @@ static void		_clean_shader(void)
     }
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_normal_map_shader
+ * @doc-kind function
+ * @doc-module shader
+ * @doc-order 90
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 50
+ *
+ * @doc-lang en
+ * @brief Returns the built-in shader configured for normal-map lighting.
+ * @param nm Normal-map configuration, or NULL to release the cached shader.
+ * @return-success Returns the configured shader.
+ * @return-failure Returns NULL on allocation or compilation failure, or when nm is NULL.
+ * @see t_bunny_normal_map
+ *
+ * @doc-lang fr
+ * @brief Renvoie le shader intégré configuré pour l’éclairage par normal map.
+ * @param nm Configuration de normal map, ou NULL pour libérer le shader en cache.
+ * @return-success Renvoie le shader configuré.
+ * @return-failure Renvoie NULL en cas d’échec d’allocation ou de compilation, ou lorsque nm vaut NULL.
+ * @see t_bunny_normal_map
+ */
 t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
 {
   char			buffer[4096];
   unsigned int		i;
+  t_bunny_size		attenuation_size;
 
+  gl_normal_map_configuration = (t_bunny_normal_map*)nm;
   if (nm == NULL)
     {
       if (gl_normal_map_shader)
@@ -169,7 +240,7 @@ t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
       for (i = 0; i < sizeof(nm->lights) / sizeof(nm->lights[0]); ++i)
 	{
 	  snprintf(&buffer[0], sizeof(buffer), StretchedBody.c_str(),
-		   i, i, i, i, i, i, i, i, i, i, i, i, i); // 1$?
+		   i, i, i, i, i, i, i, i, i, i, i, i, i, i); // 1$?
 	  ss << &buffer[0];
 	}
       ss << BodyEnd;
@@ -193,19 +264,55 @@ t_bunny_shader		*bunny_normal_map_shader(const t_bunny_normal_map	*nm)
      (double)nm->window_size.y
      );
 
+  attenuation_size = nm->attenuation_size;
+  if (attenuation_size.x <= 0)
+    attenuation_size.x = nm->window_size.x;
+  if (attenuation_size.y <= 0)
+    attenuation_size.y = nm->window_size.y;
   bunny_shader_set_variable
     (gl_normal_map_shader,
-     "NormalMap",
-     BVT_PICTURE,
-     nm->normal_map
+     "AttenuationSize",
+     BVT_2_FLOAT,
+     (double)attenuation_size.x,
+     (double)attenuation_size.y
      );
 
   bunny_shader_set_variable
     (gl_normal_map_shader,
-     "SpecularMap",
-     BVT_PICTURE,
-     nm->specular_map
+     "HasNormalMap",
+     BVT_1_FLOAT,
+     (double)(nm->normal_map ? 1.0 : 0.0)
      );
+
+  bunny_shader_set_variable
+    (gl_normal_map_shader,
+     "HasSpecularMap",
+     BVT_1_FLOAT,
+     (double)(nm->specular_map ? 1.0 : 0.0)
+     );
+
+  bunny_shader_set_variable
+    (gl_normal_map_shader,
+     "NormalRotation",
+     BVT_1_FLOAT,
+     nm->rotation
+     );
+
+  if (nm->normal_map)
+    bunny_shader_set_variable
+      (gl_normal_map_shader,
+       "NormalMap",
+       BVT_PICTURE,
+       nm->normal_map
+       );
+
+  if (nm->specular_map)
+    bunny_shader_set_variable
+      (gl_normal_map_shader,
+       "SpecularMap",
+       BVT_PICTURE,
+       nm->specular_map
+       );
 
   for (i = 0; i < sizeof(nm->lights) / sizeof(nm->lights[0]); ++i)
     {

@@ -5,6 +5,35 @@
 
 #include		"lapin_private.h"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_stick
+ * @doc-kind function
+ * @doc-module misc
+ * @doc-order 245
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Joins a NULL-terminated array of strings with a separator.
+ * @param tab Strings to join.
+ * @param glue Separator inserted between strings.
+ * @param no_last If true, the last array entry is ignored.
+ * @return-success Returns a newly allocated joined string.
+ * @return-failure Returns NULL on allocation failure.
+ * @see bunny_split
+ *
+ * @doc-lang fr
+ * @brief Joint un tableau de chaînes terminé par NULL avec un séparateur.
+ * @param tab Chaînes à joindre.
+ * @param glue Séparateur inséré entre les chaînes.
+ * @param no_last Si true, la dernière entrée du tableau est ignorée.
+ * @return-success Renvoie une chaîne jointe nouvellement allouée.
+ * @return-failure Renvoie NULL en cas d'échec d'allocation.
+ * @see bunny_split
+ */
 char			*bunny_stick(const char * const		*tab,
 				     const char			*glue,
 				     bool			no_last)

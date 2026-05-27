@@ -1,9 +1,9 @@
 
-Size=300,300
+Size=500,500
 Position=400,400
-Scale=2,2
-Origin=150,150
-'Rotation=20
+Scale=1,1
+Origin=250,250
+Rotation=0
 ColorMask=255
 
 [Tilemap
@@ -81,11 +81,14 @@ ColorMask=255
       ColorMask=255,255,255
 
       TileSize = 50, 50
+      Margin = 10, 10
       Intertile = 10, 10
 
       FirstTileId = 1
       TileCount = 4
       Name = "GraphicTileset"
+
+      Position = 10, 10
 
       [Properties
         Value = "[].Tilemap.Tilesets[0]"

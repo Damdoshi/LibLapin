@@ -11,17 +11,32 @@ bool		bunny_collision_quad_circle(const t_bunny_collision	*a,
   t_bunny_vertex_array *arr = (t_bunny_vertex_array*)bunny_alloca(sizeof(arr->length) + 4 * sizeof(arr->vertex[0]));
   const t_bunny_quad_collision *quad = &a->quad;
   const t_bunny_circle_collision *circle = &b->circle;
-  t_bunny_accurate_position tmp;
+  double 	rad = circle->radius;
   size_t 	i;
 
+  if (rad < 0)
+    rad = -rad;
   for (i = 0, arr->length = 4; i < arr->length; ++i)
     {
       arr->vertex[i].pos.x = quad->coord[i].x;
       arr->vertex[i].pos.y = quad->coord[i].y;
     }
-  for (i = 0; _get_point_on_circle(&circle->coord, circle->radius, i, &tmp); ++i)
-    if (bunny_quad_collision_dot(arr, &tmp))
-      return (true);
+
+  if (bunny_quad_collision_dot(arr, &circle->coord))
+    goto collide;
+  for (i = 0; i < 4; ++i)
+    if (_bunny_collision_distance_square(quad->coord[i], circle->coord) <= rad * rad)
+      goto collide;
+  for (i = 0; i < 4; ++i)
+    if (_bunny_collision_point_segment_distance_square
+	(quad->coord[i], quad->coord[(i + 1) % 4], circle->coord) <= rad * rad)
+      goto collide;
+
+  bunny_freea(arr);
   return (false);
+
+ collide:
+  bunny_freea(arr);
+  return (true);
 }
 

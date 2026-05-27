@@ -20,6 +20,33 @@ struct				bunny_vm110n
 
 #define				PATTERN		"%zu id -> %p"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_new_vm110n
+ * @doc-kind function
+ * @doc-module hardware
+ * @doc-order 120
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 40
+ *
+ * @doc-lang en
+ * @brief Creates a handler for a Velleman VM110N board.
+ * @param id Board identifier configured by jumper.
+ * @return-success Returns a newly allocated VM110N handler.
+ * @return-failure Returns NULL on invalid id, allocation failure or hardware access failure.
+ * @log "vm110n"
+ * @see t_bunny_vm110n, bunny_delete_vm110n
+ *
+ * @doc-lang fr
+ * @brief Crée un gestionnaire pour une carte Velleman VM110N.
+ * @param id Identifiant de carte configuré par cavalier.
+ * @return-success Renvoie un gestionnaire VM110N nouvellement alloué.
+ * @return-failure Renvoie NULL en cas d’id invalide, d’échec d’allocation ou d’accès matériel.
+ * @log "vm110n"
+ * @see t_bunny_vm110n, bunny_delete_vm110n
+ */
 t_bunny_vm110n		*bunny_new_vm110n(size_t		id)
 {
   struct bunny_vm110n		*ptr;

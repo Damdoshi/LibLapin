@@ -9,10 +9,17 @@
 
 bool			network::Peer::Close(void)
 {
-  std::set<Descriptor*>::iterator it;
+  std::set<Descriptor*> copy = descriptors;
 
-  for (it = descriptors.begin(); it != descriptors.end(); ++it)
-    (*it)->DetachPeer(*this);
+  descriptors.clear();
+  for (auto it = copy.begin(); it != copy.end(); ++it)
+    {
+      (*it)->associated_peers.erase(this);
+      if (istcp((*it)->protocol))
+	(*it)->Close();
+    }
+  outqueue.clear();
+  rudp_pending.clear();
   doomed = true;
   return (true);
 }

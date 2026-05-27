@@ -5,6 +5,28 @@
 
 #include	"lapin_private.h"
 
+/**
+ * @doc
+ * @doc-symbol bunny_clear_configuration
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 135
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Removes every child and scalar value from a configuration node.
+ * @param config Configuration node to clear.
+ * @return-success The node remains valid and empty.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Retire tous les enfants et la valeur scalaire d’un nœud de configuration.
+ * @param config Configuration node to clear.
+ * @return-success Le nœud reste valide et vide.
+ * @log "configuration"
+ */
 void		bunny_clear_configuration(t_bunny_configuration	*cnf)
 {
   SmallConf	*c = (SmallConf*)cnf;

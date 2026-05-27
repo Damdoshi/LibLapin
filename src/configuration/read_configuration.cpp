@@ -8,6 +8,26 @@
 // TODO:
 // Create a function pointer table and remove all this mess...
 
+/**
+ * @doc
+ * @doc-symbol gl_bunny_my_read_configuration
+ * @doc-kind variable
+ * @doc-module configuration
+ * @doc-order 90
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Custom parser callback used by $Sbunny_read_configuration@ for $CBC_CUSTOM@ and later formats.
+ * @see t_bunny_my_read_configuration
+ * @see bunny_read_configuration
+ *
+ * @doc-lang fr
+ * @brief Callback de lecture personnalisée utilisée par $Sbunny_read_configuration@ pour $CBC_CUSTOM@ et les formats suivants.
+ * @see t_bunny_my_read_configuration
+ * @see bunny_read_configuration
+ */
 t_bunny_my_read_configuration gl_bunny_my_read_configuration = NULL;
 
 typedef t_bunny_configuration
@@ -32,6 +52,36 @@ t_bunny_read_file	parser[BC_CUSTOM] =
 
 #define			PATTERN		"%d type, '%.5s...' code, %p config -> %p"
 
+/**
+ * @doc
+ * @doc-symbol bunny_read_configuration
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 70
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Parses a string into a configuration tree.
+ * @param type Format used to parse $Scode@.
+ * @param code String to parse.
+ * @param config Existing configuration to fill, or $CNULL@ to allocate one.
+ * @return-success Returns the filled or newly allocated configuration.
+ * @return-failure Returns $CNULL@ on parsing or allocation error.
+ * @log "ressource,configuration"
+ * @see gl_bunny_my_read_configuration
+ *
+ * @doc-lang fr
+ * @brief Analyse une chaîne pour produire un arbre de configuration.
+ * @param type Format used to parse $Scode@.
+ * @param code String to parse.
+ * @param config Existing configuration to fill, or $CNULL@ to allocate one.
+ * @return-success Renvoie la configuration remplie ou nouvellement allouée.
+ * @return-failure Renvoie $CNULL@ en cas d’erreur d’analyse ou d’allocation.
+ * @log "ressource,configuration"
+ * @see gl_bunny_my_read_configuration
+ */
 t_bunny_configuration	*bunny_read_configuration(t_bunny_configuration_type type,
 						  const char		*code,
 						  t_bunny_configuration	*config)

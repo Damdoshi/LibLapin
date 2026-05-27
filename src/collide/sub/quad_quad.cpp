@@ -12,13 +12,10 @@ bool		bunny_collision_quad_quad(const t_bunny_collision	*a,
   t_bunny_vertex_array *arrb = (t_bunny_vertex_array*)bunny_alloca(sizeof(arrb->length) + 4 * sizeof(arrb->vertex[0]));
   const t_bunny_quad_collision *aquad = &a->quad;
   const t_bunny_quad_collision *bquad = &b->quad;
-  t_bunny_line_collision qline;
-  t_bunny_line_collision tline;
-  t_bunny_accurate_position tmp;
   size_t	i;
   size_t	j;
 
-  for (i = 0, arra->length = 4; i < arra->length; ++i)
+  for (i = 0, arra->length = arrb->length = 4; i < 4; ++i)
     {
       arra->vertex[i].pos.x = aquad->coord[i].x;
       arra->vertex[i].pos.y = aquad->coord[i].y;
@@ -26,40 +23,21 @@ bool		bunny_collision_quad_quad(const t_bunny_collision	*a,
       arrb->vertex[i].pos.y = bquad->coord[i].y;
     }
 
-  /// CHECK IF INSIDE
   for (i = 0; i < 4; ++i)
     {
-      tmp = aquad->coord[i];
-      if (bunny_quad_collision_dot(arra, &tmp))
+      if (bunny_quad_collision_dot(arrb, &aquad->coord[i]))
 	goto collide;
-      tmp = bquad->coord[i];
-      if (bunny_quad_collision_dot(arrb, &tmp))
+      if (bunny_quad_collision_dot(arra, &bquad->coord[i]))
 	goto collide;
     }
 
-  /// CHECK IF CROSSED
-  qline.intermediate_points = 0;
-  tline.intermediate_points = 0;
-
   for (i = 0; i < 4; ++i)
-    {
-      qline.coord[0] = aquad->coord[i];
-      if (i == 3)
-	qline.coord[1] = aquad->coord[0];
-      else
-	qline.coord[1] = aquad->coord[i + 1];
-      for (j = 0; j < 4; ++j)
-	{
-	  tline.coord[0] = bquad->coord[j];
-	  if (i == 3)
-	    tline.coord[1] = bquad->coord[0];
-	  else
-	    tline.coord[1] = bquad->coord[j + 1];
-	  if (bunny_collision_line_line((t_bunny_collision*)&qline, (t_bunny_collision*)&tline))
-	    goto collide;
-	}
-    }
-  
+    for (j = 0; j < 4; ++j)
+      if (_bunny_collision_segment_intersection
+	  (aquad->coord[i], aquad->coord[(i + 1) % 4],
+	   bquad->coord[j], bquad->coord[(j + 1) % 4]))
+	goto collide;
+
   bunny_freea(arra);
   bunny_freea(arrb);
   return (false);

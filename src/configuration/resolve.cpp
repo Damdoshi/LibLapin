@@ -5,6 +5,30 @@
 
 #include	"lapin_private.h"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_resolve
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 812
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Resolves expressions in a configuration tree into concrete values.
+ * @param cnf Configuration tree to resolve.
+ * @return-success Returns $Ctrue@ on success.
+ * @return-failure Returns $Cfalse@ on error.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Résout les expressions d’un arbre de configuration en valeurs concrètes.
+ * @param cnf Configuration tree to resolve.
+ * @return-success Renvoie $Ctrue@ en cas de succès.
+ * @return-failure Renvoie $Cfalse@ en cas d’erreur.
+ * @log "configuration"
+ */
 bool		bunny_configuration_resolve(t_bunny_configuration	*par)
 {
   SmallConf	&cnf = *(SmallConf*)par;
