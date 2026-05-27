@@ -27,6 +27,7 @@ network::Info		Network::Descriptor::Open(const ProtoSpec	&specs,
     return (Info{});
   port = htons(_port);
 
+  info = Info{};
   info.sockaddr.sin_family = AF_INET;
   info.sockaddr.sin_addr.s_addr = ip;
   info.sockaddr.sin_port = port;
@@ -88,6 +89,9 @@ network::Info		Network::Descriptor::Open(const ProtoSpec	&specs,
   return (info);
  CloseAndLeave:
   close(fd);
+  fd = -1;
+  active = false;
+  doomed = false;
   return (Info{});
 }
 
@@ -98,7 +102,7 @@ network::Info		network::Descriptor::Open(const ProtoSpec	&specs,
   if (active)
     Close();
   ip = _info.sockaddr.sin_addr.s_addr;
-  port = ntohs(_info.sockaddr.sin_port);
+  port = _info.sockaddr.sin_port;
   info = _info;
   fd = _fd;
   protocol = specs;

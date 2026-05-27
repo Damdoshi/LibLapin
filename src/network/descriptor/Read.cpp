@@ -7,6 +7,7 @@
 
 #include	<poll.h>
 #include	<arpa/inet.h>
+#include	<errno.h>
 #include	<stdlib.h>
 #include	<string.h>
 #include	"lapin.h"
@@ -81,6 +82,22 @@ static bool	queue_rudp_ack(std::list<network::Communication> &outqueue,
   return (true);
 }
 
+static bool     queue_read_error(std::list<network::Communication> &inqueue,
+                                 const network::Info              &info,
+                                 int                              err)
+{
+  try
+    {
+      inqueue.emplace_back(BCT_RECVFROM_ERROR, err);
+      inqueue.back().info = info;
+    }
+  catch (...)
+    {
+      return (false);
+    }
+  return (true);
+}
+
 bool		network::Descriptor::Read(void)
 {
   ProtoSpec	specs{protocol};
@@ -105,16 +122,31 @@ bool		network::Descriptor::Read(void)
   // Si il reste de la place dans le buffer, on lit, sinon on indique qu'on a rien lu
   if (inbuffer_size - rcursor > 0)
     {
-      rinfo.socklen = sizeof(rinfo.sockaddr);
-      if ((len = recvfrom
-	   (fd,
-	    &inbuffer[rcursor],
-	    inbuffer_size - rcursor,
-	    0,
-	    (struct sockaddr*)&rinfo.sockaddr,
-	    &rinfo.socklen
-	    )) == -1)
-	return (false);
+      if (istcp(specs.protocol))
+	{
+	  rinfo = info;
+	  len = recv(fd, &inbuffer[rcursor], inbuffer_size - rcursor, 0);
+	}
+      else
+	{
+	  rinfo.socklen = sizeof(rinfo.sockaddr);
+	  len = recvfrom
+	    (fd,
+	     &inbuffer[rcursor],
+	     inbuffer_size - rcursor,
+	     0,
+	     (struct sockaddr*)&rinfo.sockaddr,
+	     &rinfo.socklen
+	     );
+	}
+      if (len == -1)
+	{
+	  if (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK)
+	    return (true);
+	  queue_read_error(inqueue, info, errno);
+	  Doom();
+	  return (false);
+	}
 
       // On regarde si le pair dont on a recu un message est deja present
       auto it = network->peers.find(rinfo);
@@ -236,7 +268,7 @@ bool		network::Descriptor::Read(void)
       // Aucun traitement n'est à faire ici: on a ce qu'on veut
       // On fait l'ajout, même si len est vide, car on
       // peut recevoir un datagramme de longueur 0.
-      return (ShiftInBuffer(rinfo, specs, len));
+      return (ShiftInBuffer(rinfo, specs, (size_t)len));
     }
 
   /// TCP
@@ -244,7 +276,7 @@ bool		network::Descriptor::Read(void)
     {
       // Normalement, on ne peut pas dépasser inbufer.size()
       // Car la lecture dans le buffer est conditionné à cette taille
-      if (len + rcursor == inbuffer_size)
+      if ((size_t)len + rcursor == inbuffer_size)
 	return (ShiftInBuffer(rinfo, specs));
       rcursor += len;
     }
@@ -255,33 +287,36 @@ bool		network::Descriptor::Read(void)
       size_t total;
 
       rcursor += len;
-      // Si on a pas encore recu toute la taille, on ne fait rien, on l'attend
-      if (rcursor < sizeof(spdbuffer->size))
-	return (true);
-      // Infraction au protocole
-      if (spdbuffer->size > specs.size)
+      while (rcursor >= sizeof(spdbuffer->size))
 	{
-	  Close();
-	  return (false);
-	}
-      total = spdbuffer->size + sizeof(spdbuffer->size);
-      // Si le buffer ne permet pas d'enregistrer le paquet entier, on augmente sa taille
-      if (total > inbuffer_size)
-	{
-	  char *tmp;
+	  size_t payload_size = (size_t)ntohl(spdbuffer->size);
 
-	  if ((tmp = (char*)bunny_realloc(inbuffer, total)) == NULL)
+	  // Infraction au protocole
+	  if (payload_size > specs.size)
+	    {
+	      Close();
+	      return (false);
+	    }
+	  total = payload_size + sizeof(spdbuffer->size);
+	  // Si le buffer ne permet pas d'enregistrer le paquet entier, on augmente sa taille
+	  if (total > inbuffer_size)
+	    {
+	      char *tmp;
+
+	      if ((tmp = (char*)bunny_realloc(inbuffer, total)) == NULL)
+		return (false);
+	      while (inbuffer_size < total)
+		tmp[inbuffer_size++] = 0;
+	      inbuffer = tmp;
+	      spdbuffer = (struct size_plus_data*)inbuffer;
+	    }
+	  if (rcursor < total)
+	    return (true);
+	  // Au cas où l'on ai recu plusieurs paquets d'un coup
+	  // ce que la LibLapin ne fait *pas* - donc en face,
+	  if (ExtractFromInBuffer(rinfo, specs, total) == false)
 	    return (false);
-	  while (inbuffer_size < total)
-	    tmp[inbuffer_size++] = 0;
-	  inbuffer = tmp;
-	  spdbuffer = (struct size_plus_data*)inbuffer;
 	}
-      // Au cas où l'on ai recu plusieurs paquets d'un coup
-      // ce que la LibLapin ne fait *pas* - donc en face,
-      while (rcursor >= (total = spdbuffer->size + sizeof(spdbuffer->size)))
-	if (ExtractFromInBuffer(rinfo, specs, total) == false)
-	  return (false);
       return (true);
     }
 

@@ -39,7 +39,8 @@ bool		network::Descriptor::SetMessage(const char	*data,
 
 	pending.sequence = sequence;
 	pending.packet.resize(total);
-	pending.last_send = bunny_get_time() / 1e9;
+	pending.first_send = bunny_get_time() / 1e9;
+	pending.last_send = pending.first_send;
 	pending.attempts = 1;
 	pending.wt = wt;
 	pending.wtdata = wtdata;
@@ -68,7 +69,8 @@ bool		network::Descriptor::SetMessage(const char	*data,
 	else
 	  {
 	    outqueue.emplace_back(info, specs.size, wt, wtdata);
-	    memcpy(outqueue.back().data, data, len);
+	    if (len)
+	      memcpy(outqueue.back().data, data, len);
 	    memset(&outqueue.back().data[len], 0, specs.size - len);
 	  }
       }
@@ -80,13 +82,15 @@ bool		network::Descriptor::SetMessage(const char	*data,
 	  return (false);
 	outqueue.emplace_back(info, len + sizeof(spd->size), wt, wtdata);
 	spd = (struct size_plus_data*)outqueue.back().data;
-	spd->size = len;
-	memcpy(spd->data, data, len);
+	spd->size = htonl((uint32_t)len);
+	if (len)
+	  memcpy(spd->data, data, len);
       }
     else // BP_TCP_TERMINATED_DATA
       {
 	outqueue.emplace_back(info, len + sizeof(specs.terminator), wt, wtdata);
-	memcpy(outqueue.back().data, data, len);
+	if (len)
+	  memcpy(outqueue.back().data, data, len);
 	memcpy(&outqueue.back().data[len], &specs.terminator, sizeof(specs.terminator));
       }
     pollfd->events |= POLLOUT;

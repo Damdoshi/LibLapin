@@ -35,6 +35,7 @@ namespace                       network
     {
       uint32_t                  sequence = 0;
       std::vector<char>         packet;
+      double                    first_send = 0;
       double                    last_send = 0;
       unsigned                  attempts = 0;
       t_bunny_written           wt = NULL;

@@ -25,19 +25,34 @@ bool				network::Peer::ReliableUdpTick(double now)
 {
   if (protocol.protocol != BP_UDP_RELIABLE)
     return (false);
+
+  double			max_lifetime = protocol.timeout > 0 ? protocol.timeout / 1000.0 : 0;
+  bool				queued = false;
+
+  for (auto it = rudp_pending.begin(); it != rudp_pending.end();)
+    {
+      ReliableUdpPending	&pending = it->second;
+
+      if ((max_lifetime > 0 && now - pending.first_send >= max_lifetime) ||
+	  pending.attempts >= RUDP_MAX_ATTEMPTS)
+	{
+	  it = rudp_pending.erase(it);
+	  doomed = true;
+	  continue;
+	}
+      ++it;
+    }
+
   if (!protocol.resend)
-    return (false);
+    return (queued);
   Descriptor			*desc = pick_descriptor(descriptors);
   if (desc == NULL)
-    return (false);
+    return (queued);
 
-  bool				queued = false;
   for (auto it = rudp_pending.begin(); it != rudp_pending.end(); ++it)
     {
       ReliableUdpPending	&pending = it->second;
 
-      if (pending.attempts >= RUDP_MAX_ATTEMPTS)
-	continue;
       if (pending.last_send != 0 && now - pending.last_send < RUDP_RESEND_DELAY)
 	continue;
       try

@@ -175,7 +175,7 @@ t_bunny_standard_command_handling bunny_handle_standard_command
 	  0,
 	  BSCT_CHALLENGE_RESULT,
 	  (float)(bunny_get_time() / 1e9),
-	  id->validated == BIS_IDENTITY_CONFIRMED ? 1 : 0
+	  (uint8_t)(id->validated == BIS_IDENTITY_CONFIRMED ? 1 : 0)
 	};
 
 	if (bunny_network_write(id->info, &resp, sizeof(resp)) == false)

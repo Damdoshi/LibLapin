@@ -64,14 +64,19 @@ namespace		network
 
     Communication	&operator=(Communication	&&com)
     {
+      if (this == &com)
+	return (*this);
+      if (free_data && data != NULL)
+	bunny_free(data);
       type = com.type;
       info = com.info;
       time = com.time;
       data = com.data;
       size = com.size;
       errno_code = com.errno_code;
-      free_data = true;
+      free_data = com.free_data;
       com.free_data = false;
+      com.data = NULL;
       wt = com.wt;
       wtdata = com.wtdata;
       return (*this);
@@ -114,9 +119,12 @@ namespace		network
 	wt(w),
 	wtdata(wtd)
     {
-      if (!(data = (char*)bunny_malloc(len)))
-	throw std::bad_alloc();
-      memcpy(data, dat, len);
+      if (len)
+	{
+	  if (!(data = (char*)bunny_malloc(len)))
+	    throw std::bad_alloc();
+	  memcpy(data, dat, len);
+	}
       size = len;
     }
     ~Communication(void)

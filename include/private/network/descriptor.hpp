@@ -69,7 +69,7 @@ namespace			network
     bool			Read(void);
     bool			ShiftInBuffer(const Info	&info,
 					      const ProtoSpec	&spec,
-					      size_t		len = 0);
+					      size_t		len = (size_t)-1);
     bool			ExtractFromInBuffer(const Info	&info,
 						    const ProtoSpec &spec,
 						    size_t	len);
@@ -81,7 +81,7 @@ namespace			network
       return (doomed);
     }
 
-    Descriptor(void) : network(NULL) {}
+    Descriptor(void);
     friend class		::Network;
     friend class		Peer;
 

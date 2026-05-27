@@ -5,6 +5,7 @@
 //
 // Bibliothèque Lapin
 
+#include		<arpa/inet.h>
 #include		"lapin.h"
 #include		"private/network/network.hpp"
 
@@ -18,7 +19,10 @@ bool			network::Descriptor::ExtractFromInBuffer(const Info	&rinfo,
   try
     {
       if (spec.protocol == BP_TCP_SIZED_PLUS_DATA)
-	inqueue.emplace_back(rinfo, len - sizeof(((struct size_plus_data*)inbuffer)->size));
+	{
+	  struct size_plus_data *spd = (struct size_plus_data*)inbuffer;
+	  inqueue.emplace_back(rinfo, (size_t)ntohl(spd->size));
+	}
       else
 	inqueue.emplace_back(rinfo, len);
     }
@@ -29,13 +33,14 @@ bool			network::Descriptor::ExtractFromInBuffer(const Info	&rinfo,
 
   if (spec.protocol == BP_TCP_SIZED_PLUS_DATA)
     {
-      struct size_plus_data	*spdbuffer = (struct size_plus_data*)inbuffer;
+      struct size_plus_data	*spd = (struct size_plus_data*)inbuffer;
+      size_t			payload_size = (size_t)ntohl(spd->size);
 
-      for (i = 0; i < spdbuffer->size; ++i)
-	inqueue.back().data[i] = spdbuffer->data[i];
-      for (i = spdbuffer->size + sizeof(spdbuffer->size), j = 0; i < rcursor; ++i, ++j)
+      for (i = 0; i < payload_size; ++i)
+	inqueue.back().data[i] = spd->data[i];
+      for (i = payload_size + sizeof(spd->size), j = 0; i < rcursor; ++i, ++j)
 	inbuffer[j] = inbuffer[i];
-      rcursor -= spdbuffer->size + sizeof(spdbuffer->size);
+      rcursor -= payload_size + sizeof(spd->size);
       return (true);
     }
 

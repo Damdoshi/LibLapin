@@ -13,7 +13,7 @@ bool		network::Peer::DetachDescriptor(const Descriptor &desc)
   bool		result = descriptors.erase((Descriptor*)&desc);
 
   if (descriptors.size() == 0)
-    Close();
+    doomed = true;
   return (result);
 }
 

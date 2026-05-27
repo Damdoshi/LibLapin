@@ -3,6 +3,7 @@
 //
 // Bibliotheque Lapin
 
+#include		<arpa/inet.h>
 #include		"lapin.h"
 
 
@@ -33,7 +34,7 @@
 t_bunny_network_info	bunny_new_network_info(const char	*ip,
 					       uint16_t		port)
 {
-  t_bunny_network_info	inf;
+  t_bunny_network_info	inf = {0};
 
   inf.sockaddr.sin_family = AF_INET;
   if (ip != NULL && *ip != 0)

@@ -28,12 +28,12 @@ network::Info		Network::Open(network::ProtoSpec const	&spec,
 
 	    if (it == peers.end())
 	      it = peers.emplace(inf, Peer{}).first;
-	    if (it->second.AttachDescriptor(descriptors[i], spec, &inf) == false)
+	    if (it->second.AttachDescriptor(descriptors[i], descriptors[i].protocol, &inf) == false)
 	      {
 		peers.erase(it);
 		goto Close;
 	      }
-	    it->second.SetProtocol(spec);
+	    it->second.SetProtocol(descriptors[i].protocol);
 	  }
 	tmp = nbr;
 	if (!descriptors[i].Declare())
@@ -45,7 +45,12 @@ network::Info		Network::Open(network::ProtoSpec const	&spec,
   return (Info{});
  Detach:
   nbr = tmp;
-  peers[inf].DetachDescriptor(descriptors[i]);
+  {
+    auto it = peers.find(inf);
+
+    if (it != peers.end())
+      it->second.DetachDescriptor(descriptors[i]);
+  }
  Close:
   descriptors[i].Close();
  Failure:

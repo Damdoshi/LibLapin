@@ -5,6 +5,7 @@
 //
 // Bibliothèque Lapin
 
+#include		<errno.h>
 #include		"lapin_private.h"
 
 double			Network::Poll(double			tmout,
@@ -14,6 +15,16 @@ double			Network::Poll(double			tmout,
   struct timespec	now;
   int			rd;
   size_t		i;
+  auto			queue_poll_error = [](Descriptor &desc, int err)
+    {
+      try
+	{
+	  desc.inqueue.emplace_back(BCT_POLL_ERROR, err);
+	  desc.inqueue.back().info = desc.info;
+	}
+      catch (...)
+	{}
+    };
 
   tmout /= 1000.0;
   do
@@ -37,16 +48,43 @@ double			Network::Poll(double			tmout,
 	if (pollfd[i].revents)
 	  {
 	    Descriptor &desc = descriptors[i];
+	    short revents = pollfd[i].revents;
 
-	    if (pollfd[i].revents & POLLIN)
+	    if (revents & POLLNVAL)
+	      {
+		queue_poll_error(desc, EBADF);
+		desc.Close();
+		rd -= 1;
+		continue;
+	      }
+	    if (revents & POLLIN)
 	      {
 		if (istcp(desc.protocol) && desc.ip == 0)
 		  desc.Accept(nbr, NBRCELL(pollfd));
-		else
-		  desc.Read();
+		else if (!desc.Read())
+		  desc.Doom();
 	      }
-	    if (pollfd[i].revents & POLLOUT)
-	      desc.Write();
+	    if (revents & POLLOUT)
+	      if (!desc.Write())
+		desc.Doom();
+	    if (revents & POLLERR)
+	      {
+		queue_poll_error(desc, 0);
+		desc.Doom();
+	      }
+	    if (revents & POLLHUP)
+	      {
+		if (!(revents & POLLIN))
+		  {
+		    try
+		      {
+			desc.inqueue.emplace_back(desc.info, false);
+		      }
+		    catch (...)
+		      {}
+		  }
+		desc.Doom();
+	      }
 	    if (desc.IsDoomed() && !desc.GetReceivedPacketCount() && !desc.GetSendingPacketCount())
 	      Close(desc.info);
 	    rd -= 1;

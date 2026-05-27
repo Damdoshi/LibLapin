@@ -11,6 +11,7 @@
 int			network::Descriptor::DetachPeer(const Peer	&peer)
 {
   associated_peers.erase((network::Peer*)&peer);
+  ((network::Peer*)&peer)->descriptors.erase(this);
   // Si on fait du TCP
   if (istcp(protocol))
     Close();

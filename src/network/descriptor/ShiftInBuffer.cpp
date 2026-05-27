@@ -16,6 +16,8 @@ bool			network::Descriptor::ShiftInBuffer(const Info		&info,
   // On est susceptible de rencontrer de nouveaux pairs par cette socket
   // Donc on doit créer des peer en fonction de la dispo de certains info.
 
+  if (len == (size_t)-1)
+    len = inbuffer_size;
   try
     {
       inqueue.emplace_back(info);
@@ -25,16 +27,15 @@ bool			network::Descriptor::ShiftInBuffer(const Info		&info,
       return (false);
     }
   inqueue.back().data = inbuffer;
-  if (len == 0)
-    inqueue.back().size = inbuffer_size;
-  else
-    inqueue.back().size = len;
+  inqueue.back().size = len;
 
   inbuffer = NULL;
   inbuffer_size = 0;
   rcursor = 0;
+  spdbuffer = NULL;
   if ((inbuffer = (char*)bunny_malloc(specs.size)) == NULL)
     return (false);
+  spdbuffer = (struct size_plus_data*)inbuffer;
   inbuffer_size = specs.size;
   return (true);
 }
