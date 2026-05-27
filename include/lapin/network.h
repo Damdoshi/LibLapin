@@ -224,7 +224,7 @@ typedef struct			s_bunny_communication
  * @brief Selects the transport and packet framing mode.
  * @value BP_UDP_IMMEDIATE UDP transport delivering received datagrams immediately.
  * @value BP_TCP_IMMEDIATE TCP transport delivering received bytes immediately.
- * @value BP_UDP_RELIABLE Reliable UDP mode with message tracking, heartbeat and resend logic.
+ * @value BP_UDP_RELIABLE Reliable UDP mode with message tracking, internal heartbeat, resend logic and ping estimation.
  * @value BP_TCP_FIXED_SIZE TCP mode where all packets have the same fixed size.
  * @value BP_TCP_SIZED_PLUS_DATA TCP mode where each packet is prefixed by a uint32_t size.
  * @value BP_TCP_TERMINATED_DATA TCP mode where packets are terminated by a byte marker.
@@ -234,7 +234,7 @@ typedef struct			s_bunny_communication
  * @brief Sélectionne le transport et le mode de tramage des paquets.
  * @value BP_UDP_IMMEDIATE Transport UDP livrant immédiatement les datagrammes reçus.
  * @value BP_TCP_IMMEDIATE Transport TCP livrant immédiatement les octets reçus.
- * @value BP_UDP_RELIABLE Mode UDP fiable avec suivi de messages, heartbeat et renvoi automatique.
+ * @value BP_UDP_RELIABLE Mode UDP fiable avec suivi de messages, heartbeat interne, renvoi automatique et estimation de ping.
  * @value BP_TCP_FIXED_SIZE Mode TCP où tous les paquets ont une taille fixe.
  * @value BP_TCP_SIZED_PLUS_DATA Mode TCP où chaque paquet est préfixé par une taille uint32_t.
  * @value BP_TCP_TERMINATED_DATA Mode TCP où les paquets sont terminés par un marqueur d'un octet.
@@ -244,7 +244,7 @@ typedef enum			e_bunny_protocol
   {
     BP_UDP_IMMEDIATE,		// UDP - Return immediatly read data
     BP_TCP_IMMEDIATE,		// TCP - Return immediatly read data
-    BP_UDP_RELIABLE,		// UDP - In/out messages, heartbeat, reception confirmation, automatic resend and ping estimation
+    BP_UDP_RELIABLE,		// UDP - In/out messages, internal heartbeat, reception confirmation, automatic resend and ping estimation
     BP_TCP_FIXED_SIZE,		// TCP - All packets have the same size
     BP_TCP_SIZED_PLUS_DATA,	// TCP - uint32_t + data
     BP_TCP_TERMINATED_DATA	// TCP - data + uint8_t
@@ -487,9 +487,9 @@ t_bunny_identity		*bunny_resolve_identity
  * @doc-level expert
  *
  * @doc-lang en
- * @brief Lists standard protocol commands handled by LibLapin.
- * @value BSCT_HEARTBEAT Heartbeat command.
- * @value BSCT_HEARTBEAT_RESPONSE Response to a heartbeat.
+ * @brief Lists application-level standard commands handled by LibLapin.
+ * @value BSCT_HEARTBEAT Legacy/application heartbeat command, independent from the internal RUDP heartbeat.
+ * @value BSCT_HEARTBEAT_RESPONSE Response to a legacy/application heartbeat.
  * @value BSCT_CHALLENGE_REQUEST Request for an identity challenge.
  * @value BSCT_CHALLENGE Challenge payload.
  * @value BSCT_CHALLENGE_RESPONSE Response to a challenge.
@@ -498,9 +498,9 @@ t_bunny_identity		*bunny_resolve_identity
  * @see t_bunny_standard_command, bunny_handle_standard_command
  *
  * @doc-lang fr
- * @brief Liste les commandes de protocole standard traitées par la LibLapin.
- * @value BSCT_HEARTBEAT Commande heartbeat.
- * @value BSCT_HEARTBEAT_RESPONSE Réponse à un heartbeat.
+ * @brief Liste les commandes applicatives standard traitées par la LibLapin.
+ * @value BSCT_HEARTBEAT Commande heartbeat historique/applicative, indépendante du heartbeat interne RUDP.
+ * @value BSCT_HEARTBEAT_RESPONSE Réponse à un heartbeat historique/applicatif.
  * @value BSCT_CHALLENGE_REQUEST Demande de défi d'identité.
  * @value BSCT_CHALLENGE Charge utile de défi.
  * @value BSCT_CHALLENGE_RESPONSE Réponse à un défi.
@@ -532,13 +532,13 @@ typedef enum			s_bunny_standard_command_type
  * @doc-level expert
  *
  * @doc-lang en
- * @brief Represents a LibLapin standard heartbeat command packet layout.
- * @description This low-level structure is part of the standard-command protocol machinery and is normally manipulated through t_bunny_standard_command, bunny_handle_standard_command and bunny_cipher_standard_command.
+ * @brief Represents a LibLapin legacy/application heartbeat command packet layout.
+ * @description This low-level structure is part of the standard-command machinery and is independent from the internal RUDP heartbeat. It is normally manipulated through t_bunny_standard_command, bunny_handle_standard_command and bunny_cipher_standard_command.
  * @see t_bunny_standard_command, t_bunny_standard_command_type
  *
  * @doc-lang fr
- * @brief Représente le layout de paquet d'une commande heartbeat LibLapin.
- * @description Cette structure bas niveau fait partie de la mécanique du protocole de commandes standard et se manipule normalement via t_bunny_standard_command, bunny_handle_standard_command et bunny_cipher_standard_command.
+ * @brief Représente le layout de paquet d'une commande heartbeat historique/applicative LibLapin.
+ * @description Cette structure bas niveau fait partie de la mécanique des commandes standard et reste indépendante du heartbeat interne RUDP. Elle se manipule normalement via t_bunny_standard_command, bunny_handle_standard_command et bunny_cipher_standard_command.
  * @see t_bunny_standard_command, t_bunny_standard_command_type
  */
 typedef struct			s_bunny_heartbeat_command
@@ -560,13 +560,13 @@ typedef struct			s_bunny_heartbeat_command
  * @doc-level expert
  *
  * @doc-lang en
- * @brief Represents a LibLapin standard heartbeat response command packet layout.
- * @description This low-level structure is part of the standard-command protocol machinery and is normally manipulated through t_bunny_standard_command, bunny_handle_standard_command and bunny_cipher_standard_command.
+ * @brief Represents a LibLapin legacy/application heartbeat response command packet layout.
+ * @description This low-level structure is part of the standard-command machinery and is independent from the internal RUDP heartbeat. It is normally manipulated through t_bunny_standard_command, bunny_handle_standard_command and bunny_cipher_standard_command.
  * @see t_bunny_standard_command, t_bunny_standard_command_type
  *
  * @doc-lang fr
- * @brief Représente le layout de paquet d'une commande de réponse heartbeat LibLapin.
- * @description Cette structure bas niveau fait partie de la mécanique du protocole de commandes standard et se manipule normalement via t_bunny_standard_command, bunny_handle_standard_command et bunny_cipher_standard_command.
+ * @brief Représente le layout de paquet d'une réponse heartbeat historique/applicative LibLapin.
+ * @description Cette structure bas niveau fait partie de la mécanique des commandes standard et reste indépendante du heartbeat interne RUDP. Elle se manipule normalement via t_bunny_standard_command, bunny_handle_standard_command et bunny_cipher_standard_command.
  * @see t_bunny_standard_command, t_bunny_standard_command_type
  */
 typedef struct			s_bunny_heartbeat_response_command

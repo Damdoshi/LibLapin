@@ -50,9 +50,14 @@ namespace                       network
     double                      last_message = 0;
 
     uint32_t                    rudp_next_sequence = 0;
+    uint32_t                    rudp_next_heartbeat_sequence = 0;
     uint32_t                    rudp_last_received_sequence = 0;
     bool                        rudp_has_received_sequence = false;
     std::map<uint32_t, ReliableUdpPending> rudp_pending;
+    std::map<uint32_t, double>   rudp_pending_heartbeats;
+    double                      rudp_last_heartbeat = 0;
+    double                      rudp_last_heartbeat_response = 0;
+    double                      rudp_usual_delay = 0;
     std::unordered_set<uint32_t> rudp_delivered_sequences;
     std::deque<uint32_t>        rudp_delivered_order;
 #ifndef				NDEBUG

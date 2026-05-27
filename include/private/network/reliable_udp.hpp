@@ -14,6 +14,7 @@ namespace               network
   static const uint32_t RUDP_MAGIC = 0x42525544; // "BRUD" Bunny Reliable UDP
   static const uint8_t  RUDP_VERSION = 1;
   static const double   RUDP_RESEND_DELAY = 0.15;
+  static const double   RUDP_HEARTBEAT_DELAY = 1.0;
   static const unsigned RUDP_MAX_ATTEMPTS = 64;
   static const unsigned RUDP_SEND_WINDOW = 32;
   static const size_t   RUDP_DELIVERED_HISTORY = 4096;
@@ -21,7 +22,9 @@ namespace               network
   enum                  ReliableUdpPacketType : uint8_t
   {
     RUDP_DATA = 1,
-    RUDP_ACK = 2
+    RUDP_ACK = 2,
+    RUDP_HEARTBEAT = 3,
+    RUDP_HEARTBEAT_RESPONSE = 4
   };
 
 #pragma pack(push, 1)

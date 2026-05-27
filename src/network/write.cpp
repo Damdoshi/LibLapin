@@ -44,7 +44,7 @@ bool		bunny_network_writec(t_bunny_network_info	info,
 				     t_bunny_written		wt,
 				     void			*wtdata)
 {
-  if (!data)
+  if (!data && len != 0)
     return (false); 
   return (gl_network.SetMessage
 	  (*(network::Info*)&info,

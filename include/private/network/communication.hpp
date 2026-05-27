@@ -8,6 +8,7 @@
 #ifndef			__LAPIN_NETWORK_COMMUNICATION_HPP__
 # define		__LAPIN_NETWORK_COMMUNICATION_HPP__
 # include		<vector>
+# include		<stdexcept>
 # include		"info.hpp"
 
 # define		istcp(a)					\
@@ -26,8 +27,19 @@ namespace		network
     t_bunny_written	wt = NULL;
     void		*wtdata = NULL;
 
+    WriteRequest(const char *start, size_t len, t_bunny_written w, void *wtd)
+      : wt(w), wtdata(wtd)
+    {
+      if (len)
+	{
+	  if (start == NULL)
+	    throw std::invalid_argument("WriteRequest with NULL data and non-zero length");
+	  data.assign(start, start + len);
+	}
+    }
+
     WriteRequest(const char *start, const char *end, t_bunny_written w, void *wtd)
-      : data(start, end), wt(w), wtdata(wtd)
+      : WriteRequest(start, start != NULL && end != NULL ? (size_t)(end - start) : 0, w, wtd)
     {}
   };
   class			IOException : public std::runtime_error

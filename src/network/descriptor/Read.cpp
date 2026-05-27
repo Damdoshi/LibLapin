@@ -57,22 +57,25 @@ static bool	should_drop_seq_once(const char			*envname,
 }
 #endif
 
-static bool	queue_rudp_ack(std::list<network::Communication> &outqueue,
+static bool	queue_rudp_control(std::list<network::Communication> &outqueue,
 			       struct pollfd			*pollfd,
 			       const network::Info		&rinfo,
-			       uint32_t				sequence)
+			       network::ReliableUdpPacketType type,
+			       uint32_t				sequence,
+			       uint32_t				acknowledge)
 {
-  network::ReliableUdpHeader ack;
+  network::ReliableUdpHeader hdr;
 
-  memset(&ack, 0, sizeof(ack));
-  ack.magic = htonl(network::RUDP_MAGIC);
-  ack.version = network::RUDP_VERSION;
-  ack.type = network::RUDP_ACK;
-  ack.header_size = htons((uint16_t)sizeof(network::ReliableUdpHeader));
-  ack.acknowledge = htonl(sequence);
+  memset(&hdr, 0, sizeof(hdr));
+  hdr.magic = htonl(network::RUDP_MAGIC);
+  hdr.version = network::RUDP_VERSION;
+  hdr.type = type;
+  hdr.header_size = htons((uint16_t)sizeof(network::ReliableUdpHeader));
+  hdr.sequence = htonl(sequence);
+  hdr.acknowledge = htonl(acknowledge);
   try
     {
-      outqueue.emplace_back(rinfo, (const char*)&ack, sizeof(ack), nullptr, nullptr);
+      outqueue.emplace_back(rinfo, (const char*)&hdr, sizeof(hdr), nullptr, nullptr);
     }
   catch (...)
     {
@@ -203,6 +206,8 @@ bool		network::Descriptor::Read(void)
       if ((size_t)len < (size_t)header_size || payload_size > (size_t)len - header_size)
 	return (true);
 
+      double now = bunny_get_time() / 1e9;
+
       if (hdr->type == RUDP_ACK)
 	{
 #ifndef		NDEBUG
@@ -213,9 +218,30 @@ bool		network::Descriptor::Read(void)
 	  auto pit = peer.rudp_pending.find(acknowledge);
 	  if (pit != peer.rudp_pending.end())
 	    {
+	      peer.rudp_usual_delay = (now - pit->second.first_send) / 2.0;
 	      if (pit->second.wt != NULL)
 		pit->second.wt(*(t_bunny_network_info*)&rinfo, pit->second.wtdata);
 	      peer.rudp_pending.erase(pit);
+	    }
+	  return (true);
+	}
+
+      if (hdr->type == RUDP_HEARTBEAT)
+	{
+	  if (queue_rudp_control(outqueue, pollfd, rinfo, RUDP_HEARTBEAT_RESPONSE, 0, sequence) == false)
+	    return (false);
+	  return (true);
+	}
+
+      if (hdr->type == RUDP_HEARTBEAT_RESPONSE)
+	{
+	  auto hit = peer.rudp_pending_heartbeats.find(acknowledge);
+
+	  if (hit != peer.rudp_pending_heartbeats.end())
+	    {
+	      peer.rudp_usual_delay = (now - hit->second) / 2.0;
+	      peer.rudp_last_heartbeat_response = now;
+	      peer.rudp_pending_heartbeats.erase(hit);
 	    }
 	  return (true);
 	}
@@ -231,7 +257,7 @@ bool		network::Descriptor::Read(void)
 	return (true);
 #endif
 
-      if (queue_rudp_ack(outqueue, pollfd, rinfo, sequence) == false)
+      if (queue_rudp_control(outqueue, pollfd, rinfo, RUDP_ACK, 0, sequence) == false)
 	return (false);
 
       if (peer.rudp_delivered_sequences.find(sequence) != peer.rudp_delivered_sequences.end())
