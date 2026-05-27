@@ -234,9 +234,9 @@ t_bunny_event_response_function	bunny_subcontext_event_response;
     .click = name ## _click,					\
     .move = name ## _move,					\
     .wheel = name ## _wheel,					\
-    .connect = name ## _joy_connect,				\
-    .axis = name ## _joy_axis,					\
-    .button = name ## _joy_button,				\
+    .joy_connect = name ## _joy_connect,			\
+    .joy_axis = name ## _joy_axis,				\
+    .joy_button = name ## _joy_button,				\
     .get_focus = name ## _get_focus,				\
     .lost_focus = name ## _lost_focus,				\
     .resize = name ## _resize,					\

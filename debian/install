@@ -1,5 +1,5 @@
 include/lapin.h usr/include/
-include/lapin/ usr/include/lapin/
+include/lapin/ usr/include/
 liblapin.a usr/lib/
 liblapin-dbg.a usr/lib/
 bcc usr/bin/
