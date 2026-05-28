@@ -40,8 +40,9 @@ Depends:
   g++,
   liblapin-dev (= ${binary:Version})
 Description: compiler helper programs for LibLapin development
- This package contains the bcc and b++ helper programs used to compile and
- link programs against LibLapin. These tools depend on liblapin-dev because
+ This package contains the bcc, b++ and bcontext helper programs used to
+ compile, link and inspect/configure programs against LibLapin. These tools
+ depend on liblapin-dev because
  they require the LibLapin development files to be useful.
 
 Package: liblapin-utils

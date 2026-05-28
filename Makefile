@@ -49,7 +49,7 @@
 			-Wno-narrowing						\
 			-Wno-cast-function-type
 
-  DEBUGOPTS	=	-gdwarf-4 -O0 -Og -g -g3 -ggdb				\
+  DEBUGOPTS	=	-O0 -Og -g -g3 -ggdb					\
 			-fno-omit-frame-pointer					\
 			-fno-align-functions					\
 			-fno-align-loops
@@ -67,6 +67,8 @@
   INSTALL_SHR_DIR =	/usr/share/lapin/
   INSTALL_INC_DIR =	/usr/include/
   INSTALL_LIB_DIR =	/usr/lib/
+
+  UTILS_DIR 	=	misc/program/utils
 
 #################################################################################
 ## Source                                                                      ##
@@ -180,8 +182,35 @@ fclean:			clean erase
 re:			fclean all
 erase:
 			@$(RM) -r $(LOGDIR)/*.*
-install_tools:
+utils:			build_utils
+build_utils:		$(PRODA)
+			@if [ -d "$(UTILS_DIR)" ]; then				\
+			  for makefile in "$(UTILS_DIR)"*/Makefile; do		\
+				    [ -f "$$makefile" ] || continue;		\
+			    directory="$${makefile%/Makefile}";			\
+			    echo "[UTL] $$directory";				\
+			    PATH="$$(pwd):$$PATH"				\
+			    LD_LIBRARY_PATH="/tmp:$$LD_LIBRARY_PATH"		\
+			    $(MAKE) -C "$$directory" LIBPATH="-L/tmp" ||	\
+			    exit $$?;						\
+			  done;							\
+			fi
+install_tools:		build_utils
+			mkdir -p "$(INSTALL_BIN_DIR)"
 			cp bcc b++ bcontext $(INSTALL_BIN_DIR)
+			@if [ -d "$(UTILS_DIR)" ]; then				\
+			  for makefile in "$(INSTALL_UTILS_DIR)"*/Makefile; do	\
+			    [ -f "$$makefile" ] || continue;			\
+			    directory="$${makefile%/Makefile}";			\
+			    utility="$${directory##*/}";			\
+			    if [ ! -x "$$directory/$$utility" ]; then		\
+			      echo "[UTL-KO] missing built utility: $$directory/$$utility"; \
+			      exit 1;						\
+			    fi;							\
+			    cp "$$directory/$$utility" "$(INSTALL_BIN_DIR)";	\
+			    chmod 755 "$(INSTALL_BIN_DIR)/$$utility";		\
+			  done;							\
+			fi
 			mkdir -p /etc/lapin/
 			chmod 755 $(INSTALL_BIN_DIR)/bcc 			\
 			 $(INSTALL_BIN_DIR)/b++					\
@@ -207,5 +236,5 @@ install:		install_main install_debug
 package:
 			dpkg-buildpackage -us -uc
 .POSIX:
-.PHONY:			tests title erase
+.PHONY:			tests title erase install_tools install_headers install_debug install_main install_package build_utils utils
 

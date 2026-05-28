@@ -2,11 +2,15 @@
 
 export DH_VERBOSE=1
 export DEB_BUILD_MAINT_OPTIONS=hardening=+all
-MAKEFLAGS=-j16 prod debug
+MAKEFLAGS=-j16
 
 %:
 	dh $@
 
 override_dh_auto_build:
-	$(MAKE) prod debug
+	$(MAKE) prod debug build_utils
+	cp /tmp/liblapin.a liblapin.a
+	cp /tmp/liblapin-dbg.a liblapin-dbg.a
 
+override_dh_auto_install:
+	:
