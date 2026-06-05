@@ -13,4 +13,6 @@ override_dh_auto_build:
 	cp /tmp/liblapin-dbg.a liblapin-dbg.a
 
 override_dh_auto_install:
-	:
+	$(MAKE) install_headers DESTDIR=$(CURDIR)/debian/liblapin-dev
+	install -d $(CURDIR)/debian/liblapin-dev/usr/lib
+	install -m 644 /tmp/liblapin.a /tmp/liblapin-dbg.a $(CURDIR)/debian/liblapin-dev/usr/lib/
