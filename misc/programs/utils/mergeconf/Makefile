@@ -1,39 +1,36 @@
 ## Hanged Bunny Studio Library ------    ---  -- --- -    ---  --    - -- -   -
-## Hanged Bunny Studio 2014-2016 ----- -- - -- -  -  -- -- - -- --  -- -- -- --
+## Hanged Bunny Studio 2014-2026 ----- -- - -- -  -  -- -- - -- --  -- -- -- --
 ## ----------------------------------- -- -    - - - -- -- - -- ---- -    -- --
 ## ----------------------------------    -- -- - --- -    ---  --   -- -- -   -
 ## ----------------------------------------------------------------------------
-
 ## ----------------------------------------------------------------------------
 ## Configuration --------------------------------------------------------------
 
-  MOD		=	`pwd | rev | cut -d "/" -f3 | rev`
+BIN     = cineplayer
+FLAG    = -W -Wall -g -g3 -ggdb
+INCLUDE ?= -I./include/
+SRC     = $(wildcard src/*.c)
+OBJ     = $(SRC:.c=.o)
+LIBPATH ?= -L$(HOME)/.froot/lib/
 
-  BIN		=	`pwd | rev | cut -d "/" -f1 | rev`
-  FLAG		=	-W -Wall -std=gnu11 -g -g3 -ggdb
+all: bin
 
-  INCLUDE	=	-I./include/
-  SRC		=	$(wildcard src/*.c)
-  OBJ		=	$(SRC:.c=.o)
+bin: $(OBJ)
+	@bcc $(LIBPATH) $(OBJ) -o $(BIN) $(LIB)
+	@echo "[OUT] " $(BIN)
+	@echo $(BIN) | tr '[:lower:]' '[:upper:]'
 
-  ## Rules ------------------------------------------------------------------
-  all:		bin
-  bin:		$(OBJ)
-		@bcc $(OBJ) -g -ggdb -o $(BIN)
-		@echo "[OUT] " $(BIN)
-		@echo $(BIN) | tr '[:lower:]' '[:upper:]'
-  .c.o:
-		@bcc $(INCLUDE) $(FLAG) -c $< -o $@
-		@echo "[GCC]" $<
-  clean:
-		@rm -f $(OBJ)
-  fclean:	clean
-		@rm -f $(BIN)
-  re:		fclean all
+.c.o:
+	@bcc $(INCLUDE) $(FLAG) -c $< -o $@
+	@echo "[GCC]" $<
 
-## ----------------------------------------------------------------------------
-## MISC -----------------------------------------------------------------------
+clean:
+	@rm -f $(OBJ)
 
-  .PHONY: all clean fclean re
+fclean: clean
+	@rm -f $(BIN)
 
-  .SUFFIXES: .cpp .o
+re: fclean all
+
+.PHONY: all clean fclean re
+.SUFFIXES: .c .o

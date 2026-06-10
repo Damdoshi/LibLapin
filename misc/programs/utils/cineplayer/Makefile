@@ -8,15 +8,15 @@
 
 BIN     = cineplayer
 FLAG    = -W -Wall -g -g3 -ggdb
-INCLUDE = -I./include/
+INCLUDE ?= -I./include/
 SRC     = $(wildcard src/*.c)
 OBJ     = $(SRC:.c=.o)
-LIBPATH = -L$(HOME)/.froot/lib/
+LIBPATH ?= -L$(HOME)/.froot/lib/
 
 all: bin
 
 bin: $(OBJ)
-	@bcc -g $(LIBPATH) $(OBJ) -o $(BIN) $(LIB)
+	@bcc $(LIBPATH) $(OBJ) -o $(BIN) $(LIB)
 	@echo "[OUT] " $(BIN)
 	@echo $(BIN) | tr '[:lower:]' '[:upper:]'
 

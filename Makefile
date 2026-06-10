@@ -70,6 +70,12 @@
   INSTALL_LIB_DIR =	$(DESTDIR)/usr/lib/
 
   UTILS_DIR 	=	misc/programs/utils/
+  UTILS_INCLUDE =	-I$(CURDIR)/include					\
+			-I$(CURDIR)/include/lapin/				\
+			-I$(CURDIR)/include/lapin/deps/				\
+			-I$(CURDIR)/external/include/				\
+			-I/opt/local/include/					\
+			-I/usr/include/opencv4/
 
 #################################################################################
 ## Source                                                                      ##
@@ -194,7 +200,8 @@ build_utils:		$(PRODA)
 			    echo "[UTL] $$directory";				\
 			    PATH="$$(pwd):$$PATH"				\
 			    LD_LIBRARY_PATH="/tmp:$$LD_LIBRARY_PATH"		\
-			    $(MAKE) -C "$$directory" LIBPATH="-L/tmp" ||	\
+			    $(MAKE) -C "$$directory" LIBPATH="-L/tmp" 		\
+			    INCLUDE="$(UTILS_INCLUDE)" ||			\
 			    exit $$?;						\
 			  done;							\
 			fi
