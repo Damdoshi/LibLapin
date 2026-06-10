@@ -8,7 +8,7 @@
 
 BIN     = cineplayer
 FLAG    = -W -Wall -g -g3 -ggdb
-INCLUDE ?= -I./include/
+INCLUDE += -I./include/
 SRC     = $(wildcard src/*.c)
 OBJ     = $(SRC:.c=.o)
 LIBPATH ?= -L$(HOME)/.froot/lib/
