@@ -7,8 +7,10 @@
 ## Configuration --------------------------------------------------------------
 
 BIN     = cineplayer
-FLAG    = -W -Wall -g -g3 -ggdb
-INCLUDE += -I./include/
+FLAG    = -W -Wall -g -g3 -ggdb -std=gnu23
+INCLUDE ?=
+override INCLUDE += ./include/
+INC	= $(addprefix -I,$(INCLUDE))
 SRC     = $(wildcard src/*.c)
 OBJ     = $(SRC:.c=.o)
 LIBPATH ?= -L$(HOME)/.froot/lib/
@@ -21,8 +23,8 @@ bin: $(OBJ)
 	@echo $(BIN) | tr '[:lower:]' '[:upper:]'
 
 .c.o:
-	@bcc $(INCLUDE) $(FLAG) -c $< -o $@
-	@echo "[GCC]" $<
+	bcc $(INC) $(FLAG) -c $< -o $@
+	echo "[GCC]" $<
 
 clean:
 	@rm -f $(OBJ)
