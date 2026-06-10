@@ -42,7 +42,7 @@ bool			_bunny_add_monitored_value(const char		*name,
 						   t_bunny_monitored_type type,
 						   const void		*ptr);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /*!
 ** Add a value into the debug monitor. No copies are done, neither for the name
 ** nor the pointer!

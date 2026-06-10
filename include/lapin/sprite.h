@@ -140,7 +140,7 @@ void			bunny_sprite_animate_now(t_bunny_sprite		*sprite);
 */
 bool			bunny_sprite_is_still(t_bunny_sprite		*sprite);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /*!
 ** Set the current sprite animation to the sent sprite.
 ** The animation can be sent as string (the animation name) or as

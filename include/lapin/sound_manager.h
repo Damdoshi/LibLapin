@@ -88,7 +88,7 @@ bool			_bunny_sound_manager_add(t_bunny_sound_manager		*sm,
 						 t_bunny_sound			*snd,
 						 t_bunny_sound_type		typ);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /*!
 ** Add a sound inside the sound manager associated to a category.
 ** Its volume and pitch will be modified accordingly to general and category
@@ -120,7 +120,7 @@ bool			_bunny_sound_manager_add(t_bunny_sound_manager		*sm,
 void			_bunny_sound_manager_remove(t_bunny_sound_manager	*sm,
 						    t_bunny_sound		*snd);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /*!
 ** Remove a sound from the sound manager.
 ** \param sm The sound manager
@@ -210,7 +210,7 @@ bool			_bunny_managed_sound_volume(t_bunny_sound_manager	*sm,
 						    t_bunny_sound		*snd,
 						    double			vol);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /*!
 ** Set the proper volume of the sent sound.
 ** \param sm The sound manager
@@ -242,7 +242,7 @@ bool			_bunny_managed_sound_pitch(t_bunny_sound_manager	*sm,
 						   t_bunny_sound		*snd,
 						   double			pit);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /*!
 ** Set the proper pitch of the sent sound.
 ** \param sm The sound manager

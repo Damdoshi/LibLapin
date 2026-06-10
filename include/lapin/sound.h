@@ -262,7 +262,7 @@ bool				bunny_set_sound_attribute(const char		*conf_file,
 */
 void				_bunny_delete_sound(t_bunny_sound		*sound);
 
-# if				defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if				defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /*!
 ** Delete the sent sound.
 ** \param The sound to destroy

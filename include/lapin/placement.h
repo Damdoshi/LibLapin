@@ -118,7 +118,7 @@ typedef struct			s_bunny_accurate_zarea
   double			d;
 }				t_bunny_accurate_zarea;
 
-# if				defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if				defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 
 typedef struct s_bunny_clipable	t_bunny_clipable;
 typedef struct s_bunny_pixelarray t_bunny_pixelarray;
