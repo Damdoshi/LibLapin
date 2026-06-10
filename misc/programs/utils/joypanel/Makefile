@@ -6,14 +6,17 @@
 ## ----------------------------------------------------------------------------
 ## Configuration --------------------------------------------------------------
 
-BIN     = cineplayer
+BIN     = $(shell basename $(shell pwd))
 FLAG    = -W -Wall -g -g3 -ggdb -std=gnu23
 override INCLUDE += -I./include/
 SRC     = $(wildcard src/*.c)
 OBJ     = $(SRC:.c=.o)
 LIBPATH ?= -L$(HOME)/.froot/lib/
 
-all: bin
+all: title bin
+
+title:
+	@echo $(BIN)
 
 bin: $(OBJ)
 	@bcc $(LIBPATH) $(OBJ) -o $(BIN) $(LIB)
@@ -32,5 +35,5 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re title
 .SUFFIXES: .c .o
