@@ -10,17 +10,89 @@ typedef t_bunny_gui_box	*t_bunny_new_boxf(t_bunny_gui_box	*parent,
 t_bunny_new_boxf	bunny_new_simple_box;
 t_bunny_new_boxf	bunny_new_label_box;
 
+/**
+ * @doc
+ * @doc-symbol gl_bunny_box_type
+ * @doc-kind variable
+ * @doc-module context
+ * @doc-order 410
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Names of built-in GUI box types.
+ * @see t_bunny_box_system
+ *
+ * @doc-lang fr
+ * @brief Noms des types de boîtes GUI intégrées.
+ * @see t_bunny_box_system
+ */
 const char		*gl_bunny_box_type[BBT_CUSTOM_BOX] = {
   "box",
   "label"
 };
+/**
+ * @doc
+ * @doc-symbol gl_bunny_new_box
+ * @doc-kind variable
+ * @doc-module context
+ * @doc-order 451
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Constructor table for built-in GUI box types.
+ * @see t_bunny_box_system
+ *
+ * @doc-lang fr
+ * @brief Table de constructeurs des types de boîtes GUI intégrées.
+ * @see t_bunny_box_system
+ */
 const t_bunny_new_box	gl_bunny_new_box[BBT_CUSTOM_BOX] = {
   bunny_new_simple_box,
   bunny_new_label_box
 };
+/**
+ * @doc
+ * @doc-symbol gl_bunny_custom_new_box
+ * @doc-kind variable
+ * @doc-module context
+ * @doc-order 452
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Optional constructor used for custom GUI boxes.
+ * @see t_bunny_box_system
+ *
+ * @doc-lang fr
+ * @brief Constructeur optionnel utilisé pour les boîtes GUI personnalisées.
+ * @see t_bunny_box_system
+ */
 t_bunny_new_box		gl_bunny_custom_new_box = NULL;
 
 bunny_declare_context(bunny_box);
+/**
+ * @doc
+ * @doc-symbol gl_bunny_box_context
+ * @doc-kind variable
+ * @doc-module context
+ * @doc-order 470
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Built-in context implementing the GUI box system.
+ * @see t_bunny_box_system
+ *
+ * @doc-lang fr
+ * @brief Contexte intégré implémentant le système GUI box.
+ * @see t_bunny_box_system
+ */
 const t_bunny_context	gl_bunny_box_context =
   {
     bunny_context_key,

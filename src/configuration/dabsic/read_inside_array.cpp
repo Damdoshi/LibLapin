@@ -36,7 +36,8 @@ Decision		dabsic_read_inside_array(const char		*code,
     }
   else
     {
-      conf.array.clear();
+      while (conf.array.size())
+	conf.Remove(conf.array.size() - 1);
       iteration = 0;
     }
 

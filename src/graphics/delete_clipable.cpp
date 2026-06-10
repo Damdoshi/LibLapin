@@ -5,6 +5,31 @@
 
 #include			"lapin_private.h"
 
+/**
+ * @doc-symbol bunny_delete_clipable
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 170
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Destroys a clipable graphic object.
+ * @description Use the public bunny_delete_clipable macro rather than calling _bunny_delete_clipable directly. It accepts pictures, pixelarrays, sprites, fonts, tilemaps, parallax and cinematic objects.
+ * @param clp The clipable-compatible object to destroy.
+ * @error EINVAL The object kind is not recognized.
+ * @log Logs are written with the "graphics" label.
+ * @see t_bunny_clipable, bunny_new_picture, bunny_new_pixelarray
+ *
+ * @doc-lang fr
+ * @brief Détruit un objet graphique clipable.
+ * @description Utilisez la macro publique bunny_delete_clipable plutôt que d’appeler directement _bunny_delete_clipable. Elle accepte les pictures, pixelarrays, sprites, polices, tilemaps, parallax et cinématiques.
+ * @param clp L’objet compatible clipable à détruire.
+ * @error EINVAL Le type de l’objet n’est pas reconnu.
+ * @log Les logs sont écrits avec le label "graphics".
+ * @see t_bunny_clipable, bunny_new_picture, bunny_new_pixelarray
+ */
 void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 {
   size_t			*type = (size_t*)clip;
@@ -21,6 +46,8 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 	  RessourceManager.TryRemove(ResManager::SF_RENDERTEXTURE, pic->res_id, pic);
 	else
 	  delete pic->texture;
+	if (pic->ntexture)
+	  delete pic->ntexture;
 	delete pic->sprite;
 	delete pic;
 	scream_log_if("%p", "graphics", clip);
@@ -42,6 +69,8 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 	    delete pic->image;
 	    bunny_free(pic->rawpixels);
 	  }
+	if (pic->ntexture)
+	  delete pic->ntexture;
 	delete pic->sprite;
 	delete pic;
 	scream_log_if("%p", "graphics", clip);
@@ -59,6 +88,8 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 	  delete ttf->font;
 	delete ttf->text;
 	delete ttf->sprite;
+	if (ttf->ntexture)
+	  delete ttf->ntexture;
 	delete ttf->texture;
 	delete ttf;
 	scream_log_if("%p", "graphics", clip);
@@ -70,8 +101,16 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 
 	if (gfx->conf_string)
 	  bunny_free(gfx->conf_string);
-	bunny_delete_clipable(gfx->gfx);
+	if (gfx->gfx)
+	  {
+	    if (gfx->res_id && !RessourceManager.disable_manager)
+	      RessourceManager.TryRemove(ResManager::BUNNY_PICTURE, gfx->res_id, gfx);
+	    else
+	      bunny_delete_clipable(gfx->gfx);
+	  }
 	delete gfx->sprite;
+	if (gfx->ntexture)
+	  delete gfx->ntexture;
 	delete gfx->texture;
 	delete gfx;
 	scream_log_if("%p", "graphics", clip);
@@ -94,6 +133,8 @@ void				_bunny_delete_clipable(t_bunny_clipable	*clip)
 	  RessourceManager.TryRemove(ResManager::SF_RENDERTEXTURE, pic->res_id, pic);
 	else if (pic->texture)
 	  delete pic->texture;
+	if (pic->ntexture)
+	  delete pic->ntexture;
 	if (pic->sprite)
 	  delete pic->sprite;
 	for (i = 0; i < pic->nbr_animation; ++i)

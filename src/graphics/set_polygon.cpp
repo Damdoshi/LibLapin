@@ -8,6 +8,35 @@
 #define			PATTERN			\
   "%p picture, %p (%d, %d -> %d, %d -> %d, %d) position, %p (%p -> %p -> %p) color"
 
+/**
+ * @doc-symbol bunny_set_polygon
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 310
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Draws a filled triangle on a buffer.
+ * @description The three colors are attached to the three points and may produce a gradient. Drawing into pixelarrays requires gl_bunny_my_set_polygon.
+ * @param buf The target buffer.
+ * @param pos An array containing the three triangle points.
+ * @param col An array containing the three point colors.
+ * @error EINVAL The target kind is not supported.
+ * @log Logs are written with the "graphics" label.
+ * @see t_bunny_my_set_polygon, gl_bunny_my_set_polygon
+ *
+ * @doc-lang fr
+ * @brief Dessine un triangle plein dans un buffer.
+ * @description Les trois couleurs sont attachées aux trois points et peuvent produire un dégradé. Dessiner dans les pixelarrays nécessite gl_bunny_my_set_polygon.
+ * @param buf Le buffer cible.
+ * @param pos Un tableau contenant les trois points du triangle.
+ * @param col Un tableau contenant les trois couleurs des points.
+ * @error EINVAL Le type de cible n’est pas pris en charge.
+ * @log Les logs sont écrits avec le label "graphics".
+ * @see t_bunny_my_set_polygon, gl_bunny_my_set_polygon
+ */
 void			bunny_set_polygon(t_bunny_buffer		*buffer,
 					  const t_bunny_position	*position,
 					  const unsigned int		*color)

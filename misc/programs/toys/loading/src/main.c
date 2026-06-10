@@ -23,7 +23,7 @@ t_bunny_response		async(void			*computed,
   t_bunny_ressource_to_load	*res = (t_bunny_ressource_to_load*)computed;
 
   (void)ld;
-  printf("Loaded: %s -> %p.\n", res->file, res->target);
+  printf("Loaded: %s -> %p.\n", res->file, *res->target);
   return (GO_ON);
 }
 

@@ -28,6 +28,10 @@ Decision		dabsic_read_text_cont(const char	*code,
   int			index = 0;
   int			l;
 
+  // Retrait des élémnets qui ont été résolu
+  while (conf.array.size())
+    conf.Remove(conf.array.size() - 1);
+
   readchar(code, i, "\n\v");
   l = i;
   while (code[i] && (eoftok == "" || !readtext(code, i, eoftok.c_str())))

@@ -5,6 +5,22 @@
 
 #include			"lapin_private.h"
 
+/**
+ * @doc
+ * @doc-symbol gl_bunny_depth_context
+ * @doc-kind variable
+ * @doc-module context
+ * @doc-order 710
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Built-in experimental depth-engine context.
+ *
+ * @doc-lang fr
+ * @brief Contexte expérimental intégré de depth engine.
+ */
 const t_bunny_context		gl_bunny_depth_context =
   {
     bunny_context_key,

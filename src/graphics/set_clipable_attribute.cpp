@@ -7,6 +7,81 @@
 
 #define				PATTERN		"%s conf_file, %p clipable, %p target_conf, %d type -> %s (%s)"
 
+static bool			load_normal_map(t_bunny_clipable	*pic,
+						t_bunny_clipable_type	typ,
+						const char		*file)
+{
+  sf::Texture			txt;
+  sf::Vector2u			tsiz;
+  sf::RenderTexture		**ntexture;
+  const sf::Texture		**ntex;
+
+  if (file == NULL)
+    return (true);
+  if (txt.loadFromFile(file) == false)
+    return (false);
+  switch (typ)
+    {
+    case BCT_PIXELARRAY:
+      ntexture = &((struct bunny_pixelarray*)pic)->ntexture;
+      ntex = &((struct bunny_pixelarray*)pic)->ntex;
+      break;
+    default:
+      ntexture = &((struct bunny_picture*)pic)->ntexture;
+      ntex = &((struct bunny_picture*)pic)->ntex;
+      break;
+    }
+  tsiz = txt.getSize();
+  if (*ntexture == NULL)
+    {
+      if (((*ntexture) = new (std::nothrow) sf::RenderTexture(tsiz)) == NULL)
+	return (false);
+    }
+  else if ((*ntexture)->resize(tsiz) == false)
+    return (false);
+  sf::Sprite spr(txt);
+  (*ntexture)->clear(sf::Color(128, 128, 255, 255));
+  (*ntexture)->draw(spr);
+  (*ntexture)->display();
+  *ntex = &(*ntexture)->getTexture();
+  return (true);
+}
+
+/**
+ * @doc-symbol bunny_set_clipable_attribute
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 510
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Loads a clipable configuration file and applies it to a clipable object.
+ * @description If *clipable is NULL, the function creates the resource described by the configuration. If *config is NULL, the loaded configuration can be returned to the caller.
+ * @param conf_file The configuration file path.
+ * @param clipable The clipable to configure, or the storage receiving a newly created one.
+ * @param config The optional configuration object to use or receive.
+ * @param typ The kind of clipable to configure or create.
+ * @return-success true if the configuration was loaded and applied.
+ * @return-failure false on invalid parameters, missing fields or loading errors.
+ * @error EINVAL Invalid parameter or malformed configuration.
+ * @log Logs are written with the "ressource", "graphics" and "syntax" labels.
+ * @see t_bunny_clipable_type, t_bunny_clipable
+ *
+ * @doc-lang fr
+ * @brief Charge un fichier de configuration clipable et l’applique à un objet clipable.
+ * @description Si *clipable vaut NULL, la fonction crée la ressource décrite par la configuration. Si *config vaut NULL, la configuration chargée peut être renvoyée à l’appelant.
+ * @param conf_file Le chemin du fichier de configuration.
+ * @param clipable Le clipable à configurer, ou l’emplacement recevant un nouveau clipable.
+ * @param config L’objet de configuration optionnel à utiliser ou recevoir.
+ * @param typ Le type de clipable à configurer ou créer.
+ * @return-success true si la configuration a été chargée et appliquée.
+ * @return-failure false en cas de paramètres invalides, de champs manquants ou d’erreur de chargement.
+ * @error EINVAL Paramètre invalide ou configuration mal formée.
+ * @log Les logs sont écrits avec les labels "ressource", "graphics" et "syntax".
+ * @see t_bunny_clipable_type, t_bunny_clipable
+ */
 bool				bunny_set_clipable_attribute(const char		*conf_file,
 							     t_bunny_clipable	**clipable,
 							     t_bunny_configuration **config,
@@ -49,6 +124,13 @@ bool				bunny_set_clipable_attribute(const char		*conf_file,
 	}
     }
   pic = *clipable;
+
+  if (bunny_configuration_go_get_string(cnf, &str, "RessourceFile[1]"))
+    if (load_normal_map(pic, typ, str) == false)
+      {
+	missing_field = "Cannot load file given by RessourceFile[1] field";
+	goto InvalidField;
+      }
 
   if (bunny_configuration_go_get_double(cnf, &pic->position.x, "Position[0]"))
     if (bunny_configuration_go_get_double(cnf, &pic->position.y, "Position[1]") == false)

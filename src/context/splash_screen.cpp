@@ -24,7 +24,7 @@ static t_bunny_response		splash_key(t_bunny_event_state		state,
 {
   double			pitch;
   t_bunny_response		ret;
-  
+
   if (bss->head.subcontext.key)
     if ((ret = bss->head.subcontext.key(state, sym, bss)) != GO_ON)
       return (ret == LEAVE_EVENT ? GO_ON : ret);
@@ -49,7 +49,7 @@ static t_bunny_response		splash_click(t_bunny_event_state	state,
 					     struct bunny_splash_screen	*bss)
 {
   t_bunny_response		ret;
-  
+
   if (bss->head.subcontext.click)
     if ((ret = bss->head.subcontext.click(state, button, bss)) != GO_ON)
       return (ret == LEAVE_EVENT ? GO_ON : ret);
@@ -242,15 +242,20 @@ static t_bunny_response		splash_display(struct bunny_splash_screen *bss)
       break ;
     }
   t_bunny_response	ret;
-  
-  if (bss->head.subcontext.display)
-    if ((ret = bss->head.subcontext.display(bss)) != GO_ON)
-      return (ret == LEAVE_EVENT ? GO_ON : ret);
+
   for (size_t i = 0; bss->head.screens[i]; ++i)
+    bunny_blit(bss->head.screens[i], bss->picture, NULL);
+  if (bss->head.subcontext.display)
     {
-      bunny_blit(bss->head.screens[i], screen, NULL);
-      bunny_display((t_bunny_window*)bss->head.screens[i]);
+      if ((ret = bss->head.subcontext.display(bss)) != GO_ON)
+	return (ret == LEAVE_EVENT ? GO_ON : ret);
     }
+  else
+    for (size_t i = 0; bss->head.screens[i]; ++i)
+      {
+	bunny_blit(bss->head.screens[i], screen, NULL);
+	bunny_display((t_bunny_window*)bss->head.screens[i]);
+      }
   return (GO_ON);
 }
 
@@ -271,7 +276,7 @@ static t_bunny_response		splash_entering(struct bunny_splash_screen *bss)
   if ((bss->falling = bunny_load_effect(bss->falling_sound_file)) == NULL)
     goto DeleteFalling;
   t_bunny_picture		*screen;
-  
+
   if ((bss->picture = bunny_new_picture(1920, 1080)) == NULL)
     goto DeleteNewPicture;
 

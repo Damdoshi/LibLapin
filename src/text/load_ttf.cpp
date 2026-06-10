@@ -16,10 +16,14 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
 {
   struct bunny_ttf_font		*ttf;
   uint64_t			hash;
+  bool				in_pool;
 
+  in_pool = false;
   bunny_errno = ENOMEM;
   if ((ttf = new (std::nothrow) struct bunny_ttf_font) == NULL)
     goto ReturnNull;
+  ttf->ntexture = NULL;
+  ttf->ntex = NULL;
   if ((ttf->texture = new (std::nothrow) sf::RenderTexture({width, height})) == NULL)
     goto DeleteStructure;
 
@@ -37,12 +41,16 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
     }
 
   if (RessourceManager.disable_manager == false)
-    RessourceManager.AddToPool(ResManager::SF_FONT, file, hash, ttf, ttf->font);
+    {
+      RessourceManager.AddToPool(ResManager::SF_FONT, file, hash, ttf, ttf->font);
+      in_pool = true;
+    }
 
   ttf->res_id = hash;
   ttf->texture->clear(sf::Color(0, 0, 0, 0));
   ttf->texture->display();
   ttf->tex = &ttf->texture->getTexture();
+  ttf->ntex = ttf->ntexture ? &ttf->ntexture->getTexture() : NULL;
   if ((ttf->sprite = new (std::nothrow) sf::Sprite(*ttf->tex)) == NULL)
     goto DeleteFont;
   ttf->type = TTF_TEXT;
@@ -69,7 +77,10 @@ t_bunny_font			*__bunny_load_ttf(unsigned int		width,
  DeleteSprite:
   delete ttf->sprite;
  DeleteFont:
-  delete ttf->font;
+  if (in_pool)
+    RessourceManager.TryRemove(ResManager::SF_FONT, hash, ttf);
+  else
+    delete ttf->font;
  DeleteTexture:
   delete ttf->texture;
  DeleteStructure:

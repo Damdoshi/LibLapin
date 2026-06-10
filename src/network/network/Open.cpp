@@ -6,26 +6,35 @@
 // Bibliothèque Lapin
 
 #include		"lapin_private.h"
+#include		"private/network/network.hpp"
 
-const network::Info	*Network::Open(Protocol			protocol,
-				       size_t			size,
-				       char			terminator,
-				       uint16_t			port,
-				       const std::string	&ip)
+network::Info		Network::Open(network::ProtoSpec const	&spec,
+				      uint16_t			port,
+				      const std::string		&ip)
 {
-  const network::Info	*inf;
+  network::Info		inf;
   size_t		tmp;
   size_t		i;
 
   for (i = 0; i < descriptors.size(); ++i)
     if (!descriptors[i])
       {
-	if (!(inf = descriptors[i].Open(protocol, size, terminator, port, ip)))
+	if (!(inf = descriptors[i].Open(spec, port, ip)))
 	  goto Failure;
 	// Si c'est une écoute, ce n'est pas un pair.
 	if (ip != "")
-	  if (peers[*inf].AttachDescriptor(descriptors[i], inf) == false)
-	    goto Close;
+	  {
+	    auto it = peers.find(inf);
+
+	    if (it == peers.end())
+	      it = peers.emplace(inf, Peer{}).first;
+	    if (it->second.AttachDescriptor(descriptors[i], descriptors[i].protocol, &inf) == false)
+	      {
+		peers.erase(it);
+		goto Close;
+	      }
+	    it->second.SetProtocol(descriptors[i].protocol);
+	  }
 	tmp = nbr;
 	if (!descriptors[i].Declare())
 	  goto Detach;
@@ -33,13 +42,18 @@ const network::Info	*Network::Open(Protocol			protocol,
 	  nbr++;
 	return (inf);
       }
-  return (NULL);
+  return (Info{});
  Detach:
   nbr = tmp;
-  peers[*inf].DetachDescriptor(descriptors[i]);
+  {
+    auto it = peers.find(inf);
+
+    if (it != peers.end())
+      it->second.DetachDescriptor(descriptors[i]);
+  }
  Close:
   descriptors[i].Close();
  Failure:
-  return (NULL);
+  return (Info{});
 }
 

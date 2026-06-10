@@ -7,7 +7,9 @@
 
 #define			PATTERN	"%s file, %ud width, %ud height -> %p"
 
-static t_bunny_tilemap	*bunny_load_tilemap_whc(const char	*file,
+extern bool			gl_normal_map;
+
+t_bunny_tilemap		*bunny_load_tilemap_whc(const char	*file,
 						unsigned int	width,
 						unsigned int	height,
 						t_bunny_configuration *conf)
@@ -17,14 +19,29 @@ static t_bunny_tilemap	*bunny_load_tilemap_whc(const char	*file,
 
   if ((tmap = new (std::nothrow) bunny_tilemap) == NULL)
     goto DeleteConfiguration;
+  tmap->ntexture = NULL;
+  tmap->ntex = NULL;
   if ((tmap->texture = new (std::nothrow) sf::RenderTexture({width, height})) == NULL)
     goto DeleteTilemap;
+  tmap->texture->clear(sf::Color(0, 0, 0, 0));
+  tmap->texture->display();
+  tmap->texture->setSmooth(false);
+
+  if (gl_normal_map)
+    {
+      if ((tmap->ntexture = new (std::nothrow) sf::RenderTexture({width, height})) == NULL)
+	goto DeleteSfTexture;
+      tmap->ntexture->clear(sf::Color(128, 128, 255, 255));
+      tmap->ntexture->display();
+      tmap->ntexture->setSmooth(false);
+    }
 
   length = sqrt(width * width + height * height) * 1.05;
   if ((tmap->working = bunny_new_picture(length, length)) == NULL)
     goto DeleteSfTexture;
 
   tmap->tex = &tmap->texture->getTexture();
+  tmap->ntex = tmap->ntexture ? &tmap->ntexture->getTexture() : NULL;
   if ((tmap->sprite = new (std::nothrow) sf::Sprite(*tmap->tex)) == NULL)
     goto DeleteSfTexture;
 
@@ -102,6 +119,8 @@ static t_bunny_tilemap	*bunny_load_tilemap_whc(const char	*file,
   bunny_delete_clipable(tmap->working);
   delete tmap->sprite;
  DeleteSfTexture:
+  if (tmap->ntexture)
+    delete tmap->ntexture;
   delete tmap->texture;
  DeleteTilemap:
   delete tmap;

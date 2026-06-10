@@ -1,0 +1,10 @@
+WSize = 192, 128
+RessourceFile="./res/gfx/little_font.png"
+BoxSize = WSize[0] - 4, (7+2)*4
+Position = (WSize[0] - BoxSize[0]) / 2 + 7, (WSize[1] - BoxSize[1] - WSize[1] * 0.05)
+GlyphSize = 5,7
+Interglyph = 1, 1
+HorizontalAlign="Left"
+VerticalAlign="Bottom"
+OutlineSize=1
+OutlineColor=0,0,0,128

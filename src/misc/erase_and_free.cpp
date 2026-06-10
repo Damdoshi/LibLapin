@@ -17,6 +17,31 @@
 # define		HAVE_MEMSET_S
 #endif
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_erase_and_free
+ * @doc-kind function
+ * @doc-module misc
+ * @doc-order 460
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Erases a memory block before freeing it.
+ * @param ptr Memory block to erase and release.
+ * @param len Number of bytes to clear before free.
+ * @description The implementation uses an explicit clearing strategy to avoid the compiler removing the wipe before free.
+ * @see bunny_zero, bunny_erase
+ *
+ * @doc-lang fr
+ * @brief Efface un bloc mémoire avant de le libérer.
+ * @param ptr Bloc mémoire à effacer puis libérer.
+ * @param len Nombre d'octets à remettre à zéro avant free.
+ * @description L'implémentation utilise une stratégie d'effacement explicite pour éviter que le compilateur retire la remise à zéro avant free.
+ * @see bunny_zero, bunny_erase
+ */
 void			bunny_erase_and_free(void		*ptr,
 					     size_t		len)
 {

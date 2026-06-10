@@ -1,0 +1,29 @@
+/*!
+** The t_bunny_color union represents a pixel color.
+** This union allow you to manipulate the color in different
+** convenient ways.
+**
+** The first way is throught the "full" attribute:
+** The full attribute allow you to copy, erase or
+** assign the complete color in one single operation like this:
+** - clr.full = BLACK;
+** - clr2.full = clr.full;
+**
+** The second way is throught the argb array.
+** The arbg array allow you to access to every color components
+** separately. Combined with the t_bunny_rgb, it allows
+** you to write clear code about what you are managing.
+** - clr.full = clrx.full;
+** - clr.argb[RED_CMP] = 0;
+**
+** The third way is throught the mod array.
+** The mod array look likes the argb array but is
+** different in its usage. The argb array is useful
+** to set or read color components. The mod array
+** is useful to modify other colors, as a "color speed"
+** or offset.
+** The mod array being an array of signed integers allows
+** these offets to be negative.
+** - back_color.argb[GREEN_CMP] += color_modifier.mod[GREEN_CMP]
+*/
+

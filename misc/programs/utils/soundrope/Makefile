@@ -10,7 +10,7 @@
   MOD		=	`pwd | rev | cut -d "/" -f3 | rev`
 
   BIN		=	`pwd | rev | cut -d "/" -f1 | rev`
-  FLAG		=	-W -Wall -Werror -g -g3 -ggdb -Og
+  FLAG		=	-W -Wall -Werror -g -g3 -ggdb -Og -std=gnu17
 
   INCLUDE	=	-I./include/
   SRC		=	$(wildcard src/*.c)

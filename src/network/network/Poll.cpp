@@ -1,4 +1,3 @@
-
 // Jason Brillante "Damdoshi"
 // Hanged Bunny Studio 2014-2025
 // EFRITS SAS 2022-2025
@@ -6,6 +5,7 @@
 //
 // Bibliothèque Lapin
 
+#include		<errno.h>
 #include		"lapin_private.h"
 
 double			Network::Poll(double			tmout,
@@ -15,6 +15,16 @@ double			Network::Poll(double			tmout,
   struct timespec	now;
   int			rd;
   size_t		i;
+  auto			queue_poll_error = [](Descriptor &desc, int err)
+    {
+      try
+	{
+	  desc.inqueue.emplace_back(BCT_POLL_ERROR, err);
+	  desc.inqueue.back().info = desc.info;
+	}
+      catch (...)
+	{}
+    };
 
   tmout /= 1000.0;
   do
@@ -38,16 +48,43 @@ double			Network::Poll(double			tmout,
 	if (pollfd[i].revents)
 	  {
 	    Descriptor &desc = descriptors[i];
+	    short revents = pollfd[i].revents;
 
-	    if (pollfd[i].revents & POLLIN)
+	    if (revents & POLLNVAL)
 	      {
-		if (desc.protocol != network::Descriptor::IMMEDIATE_RETRIEVE && desc.ip == 0)
-		  desc.Accept(nbr, NBRCELL(pollfd));
-		else
-		  desc.Read();
+		queue_poll_error(desc, EBADF);
+		desc.Close();
+		rd -= 1;
+		continue;
 	      }
-	    if (pollfd[i].revents & POLLOUT)
-	      desc.Write();
+	    if (revents & POLLIN)
+	      {
+		if (istcp(desc.protocol) && desc.ip == 0)
+		  desc.Accept(nbr, NBRCELL(pollfd));
+		else if (!desc.Read())
+		  desc.Doom();
+	      }
+	    if (revents & POLLOUT)
+	      if (!desc.Write())
+		desc.Doom();
+	    if (revents & POLLERR)
+	      {
+		queue_poll_error(desc, 0);
+		desc.Doom();
+	      }
+	    if (revents & POLLHUP)
+	      {
+		if (!(revents & POLLIN))
+		  {
+		    try
+		      {
+			desc.inqueue.emplace_back(desc.info, false);
+		      }
+		    catch (...)
+		      {}
+		  }
+		desc.Doom();
+	      }
 	    if (desc.IsDoomed() && !desc.GetReceivedPacketCount() && !desc.GetSendingPacketCount())
 	      Close(desc.info);
 	    rd -= 1;
@@ -60,14 +97,11 @@ double			Network::Poll(double			tmout,
   while (!rasap && tmout > 0);
 
   // Manage doomed Peers
-  for (auto it = peers.begin(); it != peers.end(); ++it)
-    {
-      if (it->second.doomed && !it->second.outqueue.size())
-	{
-	  peers.erase(it);
-	  return (tmout);
-	}
-    }
+  for (auto it = peers.begin(); it != peers.end();)
+    if (it->second.doomed && !it->second.outqueue.size() && it->second.rudp_pending.empty())
+      it = peers.erase(it);
+    else
+      ++it;
   return (tmout);
 }
 

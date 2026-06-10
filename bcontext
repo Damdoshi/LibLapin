@@ -1,0 +1,339 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  printf '%s\n' \
+    'Usage: generate_context.sh [-f|--force] [-r|--resource-dir DIR] [--no-scaffold] CONTEXT...' \
+    '' \
+    'Generate one or more LibLapin-style contexts in the current project.' \
+    '' \
+    'Options:' \
+    '  -f, --force             overwrite generated context files without asking' \
+    '  -r, --resource-dir DIR  directory containing .context/*.c templates' \
+    '  --no-scaffold           do not create missing host files such as include/program.h' \
+    '  -h, --help              show this help' >&2
+}
+
+force=0
+scaffold=1
+resource_dir=""
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -f|--force)
+      force=1
+      shift
+      ;;
+    -r|--resource-dir)
+      [ "$#" -ge 2 ] || { echo "Missing argument after $1" >&2; exit 2; }
+      resource_dir=$2
+      shift 2
+      ;;
+    --no-scaffold)
+      scaffold=0
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -*)
+      echo "Unknown option: $1" >&2
+      usage
+      exit 2
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+[ "$#" -ge 1 ] || { usage; exit 1; }
+
+script_dir=$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
+
+find_resource_dir() {
+  if [ -n "$resource_dir" ]; then
+    printf '%s\n' "$resource_dir"
+    return 0
+  fi
+  if [ -n "${BUNNY_CONTEXT_RESOURCE_DIR:-}" ]; then
+    printf '%s\n' "$BUNNY_CONTEXT_RESOURCE_DIR"
+    return 0
+  fi
+
+  for dir in \
+    "$script_dir" \
+    "/usr/local/share/lapin/context" \
+    "/usr/share/lapin/context"
+  do
+    if [ -d "$dir/.context" ]; then
+      printf '%s\n' "$dir"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+resource_dir=$(find_resource_dir) || {
+  echo "Cannot find context resources. Use -r DIR or set BUNNY_CONTEXT_RESOURCE_DIR." >&2
+  exit 1
+}
+
+if [ ! -d "$resource_dir/.context" ]; then
+  echo "Invalid resource directory: $resource_dir/.context does not exist." >&2
+  exit 1
+fi
+
+append_once() {
+  local file=$1
+  local line=$2
+
+  touch "$file"
+  if ! grep -Fxq -- "$line" "$file"; then
+    printf '%s\n' "$line" >> "$file"
+  fi
+}
+
+ask_overwrite() {
+  local name=$1
+  local answer
+
+  if [ "$force" -eq 1 ]; then
+    return 0
+  fi
+
+  if [ ! -t 0 ]; then
+    echo "Context '$name' already exists; not overwriting without an interactive terminal. Use --force to overwrite." >&2
+    return 1
+  fi
+
+  printf "Context '%s' already exists. Overwrite generated files? [y/N] " "$name" >&2
+  read -r answer
+  case "$answer" in
+    y|Y|yes|YES|Yes|o|O|oui|OUI|Oui)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+ensure_template_files() {
+  touch \
+    context_headers.template \
+    context_declaration.template \
+    context_enumeration.template \
+    context_attribute.template \
+    context_pointers.template \
+    context_initializer.template
+}
+
+ensure_program_header() {
+  [ ! -e include/program.h ] || return 0
+  mkdir -p include
+  printf '%s\n' \
+    '#ifndef                         __PROGRAM_H__' \
+    '# define                        __PROGRAM_H__' \
+    '' \
+    '# include                       <lapin.h>' \
+    '# include                       <stdbool.h>' \
+    '# include                       "context_headers.template"' \
+    '' \
+    'typedef enum                    e_context' \
+    '  {' \
+    '    FIRST_CONTEXT,' \
+    '# include                       "context_enumeration.template"' \
+    '    LAST_CONTEXT' \
+    '  }                             t_context;' \
+    '' \
+    'extern t_bunny_context          gl_context[LAST_CONTEXT];' \
+    '' \
+    'typedef struct                  s_program' \
+    '{' \
+    '  t_bunny_window                **windows;' \
+    '  t_bunny_picture               **screens;' \
+    '  t_context                     context;' \
+    '  t_context                     next_context;' \
+    '# include                       "context_attribute.template"' \
+    '}                               t_program;' \
+    '' \
+    '#endif  /*                      __PROGRAM_H__            */' \
+    > include/program.h
+  echo "Created include/program.h." >&2
+}
+
+ensure_context_source() {
+  [ ! -e src/context.c ] || return 0
+  mkdir -p src
+  printf '%s\n' \
+    '#include                        <lapin.h>' \
+    '#include                        "program.h"' \
+    '#include                        "context_declaration.template"' \
+    '' \
+    't_bunny_context                 gl_context[LAST_CONTEXT] =' \
+    '  {' \
+    '# include                       "context_initializer.template"' \
+    '  };' \
+    > src/context.c
+  echo "Created src/context.c." >&2
+}
+
+ensure_main_source() {
+  [ ! -e src/main.c ] || return 0
+  mkdir -p src
+  printf '%s\n' \
+    '#include                        <stdlib.h>' \
+    '#include                        <string.h>' \
+    '#include                        <lapin.h>' \
+    '#include                        "program.h"' \
+    '' \
+    'int                             main(void)' \
+    '{' \
+    '  static t_program              program;' \
+    '  void                          *data[LAST_CONTEXT];' \
+    '  t_bunny_response              ret;' \
+    '' \
+    '  memset(&program, 0, sizeof(program));' \
+    '  memset(data, 0, sizeof(data));' \
+    '  program.context = FIRST_CONTEXT;' \
+    '  program.next_context = FIRST_CONTEXT;' \
+    '' \
+    '# include                       "context_pointers.template"' \
+    '' \
+    '  do' \
+    '    {' \
+    '      bunny_set_context(&gl_context[program.context]);' \
+    '      ret = bunny_loop_mw(program.window, program.nbr_window, 50, data[program.context]);' \
+    '    }' \
+    '  while (ret == SWITCH_CONTEXT && program.context < LAST_CONTEXT);' \
+    '  return (EXIT_SUCCESS);' \
+    '}' \
+    > src/main.c
+  echo "Created src/main.c." >&2
+}
+
+ensure_scaffold_files() {
+  ensure_template_files
+
+  if [ "$scaffold" -eq 0 ]; then
+    return 0
+  fi
+
+  ensure_program_header
+  ensure_context_source
+  ensure_main_source
+}
+
+generate_include_without_template() {
+  local name=$1
+  local uname=$2
+  local destination=$3
+
+  printf '%s\n' \
+    "#ifndef                         __${uname}_H__" \
+    "# define                        __${uname}_H__" \
+    '' \
+    'struct                          s_program;' \
+    '' \
+    "typedef struct                  s_${name}" \
+    '{' \
+    '  struct s_program              *program;' \
+    "}                               t_${name};" \
+    '' \
+    "#endif  /*                      __${uname}_H__            */" \
+    > "$destination"
+}
+
+generate_context() {
+  local name=$1
+  local uname target_dir include_file res_dir existing
+  local line
+
+  existing=0
+
+  if ! printf '%s' "$name" | grep -Eq '^[A-Za-z_][A-Za-z0-9_]*$'; then
+    echo "Invalid context name '$name': expected a C identifier." >&2
+    return 1
+  fi
+
+  uname=${name^^}
+  target_dir=$name
+  include_file="include/$name.h"
+  res_dir="res/$name"
+
+  [ -e "$target_dir" ] && existing=1
+  [ -e "$include_file" ] && existing=1
+  [ -e "$res_dir" ] && existing=1
+
+  if [ "$existing" -eq 1 ]; then
+    ask_overwrite "$name" || {
+      echo "Skipped '$name'." >&2
+      return 0
+    }
+  fi
+
+  mkdir -p "$target_dir" "$res_dir" include
+
+  local old_nullglob
+  old_nullglob=$(shopt -p nullglob || true)
+  shopt -s nullglob
+  for template_file in "$resource_dir"/.context/*.c; do
+    local filename
+    filename=${template_file##*/}
+    : > "$target_dir/$filename"
+    if [ -f "$resource_dir/HEADER" ]; then
+      sed "s/CONTEXT/$name/g" "$resource_dir/HEADER" >> "$target_dir/$filename"
+    fi
+    sed "s/CONTEXT/$name/g" "$template_file" >> "$target_dir/$filename"
+  done
+  eval "$old_nullglob"
+
+  if [ -f "$resource_dir/INCLUDE" ]; then
+    : > "$include_file"
+    if [ -f "$resource_dir/HEADER" ]; then
+      sed "s/CONTEXT/$name/g" "$resource_dir/HEADER" | sed "s/_${name}_/_${uname}_/g" >> "$include_file"
+    fi
+    sed "s/CONTEXT/$name/g" "$resource_dir/INCLUDE" | sed "s/_${name}_/_${uname}_/g" >> "$include_file"
+  else
+    generate_include_without_template "$name" "$uname" "$include_file"
+  fi
+
+  printf -v line '#include\t\t\t"%s.h"' "$name"
+  append_once context_headers.template "$line"
+
+  printf -v line 'bunny_declare_context(%s);' "$name"
+  append_once context_declaration.template "$line"
+
+  printf -v line '    %s,' "$uname"
+  append_once context_enumeration.template "$line"
+
+  printf -v line '  t_%s\t\t\t%s;' "$name" "$name"
+  append_once context_attribute.template "$line"
+
+  printf -v line '  program.%s.program = &program;' "$name"
+  append_once context_pointers.template "$line"
+
+  printf -v line '  data[%s] = &program.%s;' "$uname" "$name"
+  append_once context_pointers.template "$line"
+
+  printf -v line '    [%s] = { bunny_fill_context(%s) },' "$uname" "$name"
+  append_once context_initializer.template "$line"
+
+  echo "Generated context '$name'." >&2
+}
+
+ensure_scaffold_files
+
+status=0
+for context_name in "$@"; do
+  generate_context "$context_name" || status=1
+done
+
+exit "$status"

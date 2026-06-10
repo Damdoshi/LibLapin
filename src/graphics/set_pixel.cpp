@@ -9,6 +9,35 @@
 #define			PATTERN		\
   "%p picture, (%d, %d) position, %p color"
 
+/**
+ * @doc-symbol bunny_set_pixel
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 220
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Draws one pixel on a buffer.
+ * @description Drawing individual pixels on pictures is possible but slow because it uses the graphic backend for each call. Drawing into pixelarrays requires gl_bunny_my_set_pixel.
+ * @param buf The target buffer.
+ * @param pos The pixel position.
+ * @param col The color to draw.
+ * @error EINVAL The target kind is not supported.
+ * @log Logs are written with the "graphics" label.
+ * @see t_bunny_my_set_pixel, gl_bunny_my_set_pixel
+ *
+ * @doc-lang fr
+ * @brief Dessine un pixel dans un buffer.
+ * @description Dessiner des pixels individuellement dans des pictures est possible mais lent, car chaque appel utilise le backend graphique. Dessiner dans les pixelarrays nécessite gl_bunny_my_set_pixel.
+ * @param buf Le buffer cible.
+ * @param pos La position du pixel.
+ * @param col La couleur à dessiner.
+ * @error EINVAL Le type de cible n’est pas pris en charge.
+ * @log Les logs sont écrits avec le label "graphics".
+ * @see t_bunny_my_set_pixel, gl_bunny_my_set_pixel
+ */
 void			bunny_set_pixel(t_bunny_buffer		*buffer,
 					t_bunny_position	position,
 					unsigned int		color)

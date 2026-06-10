@@ -8,17 +8,14 @@
 bool		network::Descriptor::Dump(t_bunny_configuration	*cnf,
 					  size_t		index) const
 {
-  const char	*proto[] = {"UDP", "FixedTCP", "SizedTCP", "TerminatedTCP"};
   bool		ok = true;
-  
-  ok = ok && bunny_configuration_setf_string(cnf, proto[protocol], "Descriptors[%zu].Protocol", index);
-  if (protocol == FIXED_SIZE || protocol == SIZE_PLUS_DATA)
-    ok = ok && bunny_configuration_setf_int(cnf, (int)size, "Descriptors[%zu].Size", index);
-  if (protocol == TERMINATED)
-    {
-      char	term[2] = {terminator, 0};
 
-      ok = ok && bunny_configuration_setf_string(cnf, &term[0], "Descriptors[%zu].Terminator", index);
+  if (protocol)
+    {
+      t_bunny_configuration *p;
+
+      ok = ok && bunny_configuration_getf_node(cnf, &p, "Descriptors[%zu]", index);
+      ok = ok && protocol.Dump(p);
     }
   ok = ok && bunny_configuration_setf_int(cnf, position, "Descriptors[%zu].PollPosition", index);
   ok = ok && bunny_configuration_setf_int(cnf, active, "Descriptors[%zu].Active", index);

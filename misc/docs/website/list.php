@@ -45,6 +45,8 @@ foreach (scandir("$language/$doctype/") as $dir)
   $mod = $dir;
   if (file_exists("$language/$doctype/$dir/meta.php"))
     require_once ("$language/$doctype/$dir/meta.php");
+  if (file_exists("$language/$doctype/$dir/meta.generated.php"))
+    require ("$language/$doctype/$dir/meta.generated.php");
   if (!isset($circle_level))
     $circle_level = [];
   if (!isset($version_that_support))
@@ -73,6 +75,7 @@ foreach (scandir("$language/$doctype/") as $dir)
           && $sym[0] != "#"
           && $sym != "main.php"
           && $sym != "meta.php"
+          && $sym != "meta.generated.php"
           && strstr($sym, ".php") != false
           && $sym[strlen($sym) - 1] != "~"
       )
@@ -109,8 +112,9 @@ foreach (scandir("$language/$doctype/") as $dir)
             <?=$sym; ?>
             <?php
             if ($version == -1)
-              echo "<br />[1.".$version_that_support[$sym][0].
-                   "-1.".$version_that_support[$sym][1]."]";
+              if (isset($version_that_support[$sym]))
+                echo "<br />[1.".$version_that_support[$sym][0].
+                     "-1.".$version_that_support[$sym][1]."]";
             ?>
           </h3>
         </a>

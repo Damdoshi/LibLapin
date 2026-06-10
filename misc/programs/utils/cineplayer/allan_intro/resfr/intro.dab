@@ -1,0 +1,373 @@
+
+''#############################
+'' looran... looran elbnae taakash?
+'' looran dotadek?
+Text00 = [Text($,EOF)
+  Qui... qui est la?
+  Qui vient?
+EOF]
+
+''#############################
+'' Elbnae Alelbel.
+'' Loka chial elbnae nernae, Nerdnael.
+'' Nerhelel Elbhack donack neryeflahack
+Text01 = [Text($,EOF)
+  C'est Alelbel.
+  Ta peine est purge, Nerdnael.
+  Maitre ElbHack l'a decide.
+EOF]
+
+''#############################
+'' Ak elbnae takaash dordo loka lodohackso
+'' ... an lok ludzedodze loka tahel
+Text02 = [Text($,EOF)
+  Je suis ici pour te liberer.
+  ...et te rendre ta dignite.
+EOF]
+
+''#############################
+'' Dolosh... dolosh... shalal...
+'' Shalal dnayeel vendna loran... Emdam!
+'' Emdam! uk...
+Text03 = [Text($,EOF)
+  Mais... mais.. ca...
+  Ca veut dire que.. Emdam!
+  Emdam! Il...
+EOF]
+
+''#############################
+'' Loka dekhelnallon elbnae srahelel dosh
+'' emvorhack loran uk doak
+'' neryeflahack heleldohelel
+Text04 = [Text($,EOF)
+  Ton  disciple  est  mort avec
+  les  mavericks   qu'il  avait
+  choisi d'accompagner.
+EOF]
+
+''#############################
+'' Lok nae sranae doak do niraren dordo uka
+'' dekdil. nerhelel lok nallon and lok dnayeel
+'' hackdze dosh uka.
+Text05 = [Text($,EOF)
+  Tu n'as plus a  payer pour sa
+  traitrise.   Le   maitre   te
+  pardonne et te veut a nouveau
+  a ses cotes.
+EOF]
+
+''#############################
+'' Uk loka ludzedodze Deaktil, latislo
+'' da loka flatakrahelel
+Text06 = [Text($,EOF)
+  Il te rend Deaktil, l'embleme
+  de ta maison.
+EOF]
+
+''#############################
+'' dotadek aka.
+'' Ak flatanirel yemta dran dnatanir
+'' dordo loran lok loka alel, loka
+'' dekta an loka dafladam
+Text07 = [Text($,EOF)
+  Suis moi.
+  J'ai fait  amenager une salle
+  pour  que  tu te baignes,  te
+  rase et te vetisse.
+EOF] 
+
+''#############################
+'' Ak nallon nerhelel, ak elbnae
+'' ner soflahelel...
+'' Ak donak ner sramuflaem dordo
+'' aka tildna
+Text08 = [Text($,EOF)
+  Je  remercie  le  maitre,  je
+  suis  tellement  heureux...
+  J'avais  si  peur  pour   mon
+  ame...
+EOF]
+
+''#############################
+'' Ak helesodek hackner aka nallon aka
+'' dran so, dolosh ak sra dna chior
+'' ak helnir...
+Text09 = [Text($,EOF)
+  J'espere pouvoir me pardonner
+  moi-meme  un  jour,  mais  je
+  ne    sais   pas   si     j'y
+  parviendrai...
+EOF]
+
+''#############################
+'' Lok elbnae ner nerdnatil.
+'' Lok doak ludzedodze dna nerdze
+'' nerdnatil loran nerdnata sraak
+'' donir Tildnael.
+Text10 = [Text($,EOF)
+  Tu  es  le  grand  Artmaitre.
+  Tu as forme plus  d'artiseurs
+  que  n'importe  qui  dans  le
+  Tildnael.
+EOF]
+
+''#############################
+'' Nerhelel Elbhack loka donak chial dordo
+'' loka alnallon. Lok donak dosranirhack
+'' dran akash helelnallon dovosra
+'' nerdrzedahelel emvorhack.
+Text11 = [Text($,EOF)
+  Maitre Elbhack t'as puni pour
+  ta negligeance.  Tu as laisse
+  l'un de nos enfants rejoindre
+  les hordes mavericks.
+EOF]
+
+''#############################
+'' Uk donak naesrahack elbnae dnanalon
+'' da dran chial naener.
+'' Dodran sraelbsraal loran Emdam
+'' elblusonae.
+Text12 = [Text($,EOF)
+  Il n'a  jamais  ete  question
+  d'une punition eternelle.
+  Seulement   pendant  qu'Emdam
+  vivrait.
+EOF]
+
+''#############################
+''Uk elbnaen loran dran dnanallon
+'' da nae r loran uk elbrnae hacksra.
+Text13 = [Text($,EOF)
+  Ce n'etait qu'une question de
+  temps  avant  qu'il  ne  soit
+  abattu.
+EOF]
+
+''#############################
+'' Ak sra hackner aka sraalhack da elbnae
+'' luflahelel loran uka elbnae hacksra.
+'' Dna akash shalal loran uk elbnaen tadekdo?
+Text14 = [Text($,EOF)
+  Je ne peux m'empecher  d'etre
+  triste qu'il soit mort.
+  Sait-on ce qu'il s'est passe?
+EOF]
+
+''#############################
+'' Uk elbnae srahack shaldo aktado
+'' do nirnerta flatakrahelel dekhelel
+'' da Essel Doluso.
+Text15 = [Text($,EOF)
+  Il est  mort en  cherchant  a
+  infiltrer  les  installations
+  militaires de l'Union Blanche
+EOF]
+
+''#############################
+'' Essel loran ludoyeel nerhelel da essel
+'' da shalal nerdnatanir doak dosh
+'' essel doluso akash doak hackdoner
+'' da doak heleltafla.
+Text16 = [Text($,EOF)
+  Les accords  que  l'heretique
+  gouvernement  de  ce  pays  a
+  accepte avec l'Union  nous  a
+  permit de recuperer le corps.
+EOF]
+
+''#############################
+'' Uka tavonak hackdze dekdnatil
+'' nirarean shalelb nerdnata shalal
+'' naelad, dolosh dnahack da uka
+'' srahelel elbnae sraak
+Text17 = [Text($,EOF)
+  Il  exhalait  encore  l'odeur
+  de  l'artise  consomme durant
+  toutes  ces  annees,  mais la
+  raison de sa mort est autre.
+EOF]
+
+''#############################
+'' Emvorack donak naehack uka
+'' heleltafla, dilarean dordo loran uk
+'' srahack n shalal looran hackner
+'' elbnae uka hackner
+Text18 = [Text($,EOF)
+  Les mavericks ont modifie son
+  corps, visiblement pour qu'il
+  meure  apres  ce  qui  devait
+  etre sa mission.
+EOF]
+
+''#############################
+'' Emvorack donak nirarean nerdnata...
+'' dordo arean? 
+'' nerdzedahelel sra elbnae
+'' sranae sradnata...
+Text19 = [Text($,EOF)
+  Les mavericks  l'ont  utilise
+  jusqu'au  bout...  pour quoi?
+  Les  hordes  ne  representent
+  plus rien...
+EOF]
+
+''#############################
+'' Uksh krasraelb dosh ukash
+'' shaldo naener
+Text20 = [Text($,EOF)
+  Ils se battent  entre  eux en
+  permanence.
+EOF]
+
+''#############################
+'' Lok loka dekdil, Nerdnael...
+'' Yevosh doaksh ner naehack deknae
+Text21 = [Text($,EOF)
+  Detrompe toi, Nerdnael...
+  Les  choses    ont   beaucoup
+  change recemment.
+EOF]
+
+''#############################
+''Uksh elbnaesh helnir do ukash essel.
+''nerdzedahelel dosralu elbnaen dodnasosranae
+'' dosh dran nelb nerhelel, Damdoshi.
+Text22 = [Text($,EOF)
+  Ils sont parvenu a s'unifier.
+  La    Horde    Noire    s'est
+  reconstitue    autour    d'un
+  nouveau chef, Damdoshi.
+EOF]
+
+''#############################
+'' Uksh elbnaesh helnir do loelbta
+'' ukash londsh... shaldo emlor dash
+'' nertahelel sraso helelhacknallon
+'' flaal nerdnata.
+Text23 = [Text($,EOF)
+  Ils sont parvenus a  agrandir
+  leurs rangs en  infectant des
+  androides    repliques    mal
+  proteges presents partout.
+EOF]
+
+''#############################
+'' nertahelel flael looran elbnaen
+'' nirarean dash nerdze dekflaelsh
+'' helelsh... aksh akash krasraelb
+'' naelondakash shem aksh.
+''
+Text24 = [Text($,EOF)
+  Des repliques  sexuelles  qui
+  etaient au service  des  plus
+  decadants citoyens se battent
+  aujourd'hui contre nous!
+EOF]
+
+''#############################
+''tildam da emlor elbnaen chior
+''ner doan uksh elbnae helnir
+''do emlor dash nertahelel dekhel
+''daan liner
+Text25 = [Text($,EOF)
+  Le foyer d'infection etait si
+  etendu  qu'ils sont  parvenus
+  a  detourner  des   repliques
+  militaires par millier.
+EOF]
+
+''#############################
+''Aksh shaldo elbnae naedotadek do
+''dranae da akash naehelelsh...
+'' Nerhelel ElbHack, aka naer,
+'' donak dnar
+Text26 = [Text($,EOF)
+  Nous  en sommes revenus a  la
+  situation de nos anciens...
+  Maitre ElbHack, sa prophetie,
+  l'avait predit.
+EOF]
+
+''#############################
+'' sradnata doak dnayeel dnaelb
+'' nirchi loran nertahelel elbnae.
+'' Loran dotadoal flatanirel Tildnael?
+Text27 = [Text($,EOF)
+  Personne n'a voulu croire  au
+  danger  que   les   repliques
+  representaient  encore!   Que
+  va faire le Tildnael?
+EOF]
+
+''#############################
+'' Nerhelel Elbhack doak dran dnata dordo
+'' naem alnaeel. Uk londsh sodonir lok
+'' dordo hackdodna shalal nallon
+'' loran uk ludzedodze
+Text28 = [Text($,EOF)
+  Maitre ElbHack a un plan pour
+  regler le probleme. Il compte
+  sur   toi   pour  meriter  ce
+  pardon qu'il a accorde.
+EOF]
+
+''#############################
+'' Aksh doaksh aktado shalal looran
+'' tilye elbnae dnakradzetahelel da
+'' Allan KraEmVoDoOr, lad helelnallon
+'' da til.
+Text29 = [Text($,EOF)
+  Nous  avons decouvert ce  qui
+  semble  etre  le  laboratoire
+  d'Allan  Commodore,  le  3eme
+  fils du ciel.
+EOF]
+
+''#############################
+''Aksh dnaakelb loran lok
+''nirnerta do aktado da tildam
+''krataven dotash flasodnash
+''akash heleldna
+Text30 = [Text($,EOF)
+  Nous  souhaitons   que  tu  y
+  penetres  a  la recherche  de
+  la Sainte Arme  dont  parlent
+  nos ecritures.
+EOF]
+
+''#############################
+'' Nerhelel lok dosranirhack dranlad sosh
+'' dordo lok tildnalu r da dotadoalta
+'' shaldo hackner, donae da aksh
+'' nerhackdna nerdnata.
+Text31 = [Text($,EOF)
+  Le maitre  te laisse  7 jours
+  pour  te  reposer  avant   de
+  partir en quete, afin de nous
+  sauver tous.
+EOF]
+
+''#############################
+'' Ak akash dilareanel nerfla da
+'' uka nallon!
+'' Ak flatanirelr shalal loran
+'' ner tildam helel dnayeel
+Text32 = [Text($,EOF)
+  Je me montrerai digne  de son
+  pardon!  Je  ferais ce que le
+  tres saint homme desire!
+EOF]
+
+''#############################
+'' Nerdnata hackdodna loran aksj
+'' uka nerhackdna! Aka nerhack
+'' elbnae taakash an ak dotaderk
+'' aka lilehack!
+Text33 = [Text($,EOF)
+  Le monde merite  que nous  le
+  sauvions!   Mes   forces   ne
+  m'ont pas quitte,  et je  les
+  mets a son service!
+EOF]
+

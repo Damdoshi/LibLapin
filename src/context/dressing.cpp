@@ -7,6 +7,22 @@
 
 bunny_declare_context(dressing);
 
+/**
+ * @doc
+ * @doc-symbol gl_bunny_dressing_context
+ * @doc-kind variable
+ * @doc-module context
+ * @doc-order 760
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Built-in dressing-game context.
+ *
+ * @doc-lang fr
+ * @brief Contexte intégré de jeu d’habillage.
+ */
 const t_bunny_context	gl_bunny_dressing_context =
   {
     (t_bunny_key)dressing_key,

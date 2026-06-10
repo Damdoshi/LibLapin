@@ -20,7 +20,9 @@ bool		network::Peer::SetMessage(const char		*data,
     //// => LES SERVEURS TCPS NE DEVRAIENT PAS AVOIR DE PEER CREE, TOUT SIMPLEMENT.
     // if (info.sockaddr.sin_addr.s_addr == htonl(INADDR_ANY))
     //  scream_error_if(return (false), BE_PEER_IS_A_SERVER, PAT, "network", data, len, wt, wtdata, "false");
-    outqueue.emplace_back(data, data + len, wt, wtdata);
+    if (data == NULL && len != 0)
+      return (false);
+    outqueue.emplace_back(data, len, wt, wtdata);
   } catch (...) {
     return (false);
   }

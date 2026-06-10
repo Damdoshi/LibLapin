@@ -17,6 +17,10 @@
 
 #include			"lapin_private.h"
 
+extern t_bunny_shader		*gl_normal_map_shader;
+extern t_bunny_normal_map	*gl_normal_map_configuration;
+extern bool			gl_display_normal_map;
+
 static inline unsigned int	extract_bitplane(struct bunny_pixelarray		&pic,
 						 uint8_t				*px,
 						 int					x,
@@ -219,12 +223,179 @@ static sf::Sprite		*blit_pixelarray(struct bunny_pixelarray		&pic,
   return (pic.sprite);
 }
 
+static void			draw_rendertexture_sprite(sf::RenderTexture		*target,
+							  sf::Sprite			&sprite,
+							  sf::Shader			*shader,
+							  bool				allow_special_blend)
+{
+  if (target == NULL)
+    return ;
+  if (shader)
+    {
+      if (allow_special_blend)
+	{
+	  if (gl_set_alpha_blit)
+	    {
+	      sf::RenderStates stt = sf::BlendMultiply;
+
+	      stt.shader = shader;
+	      target->draw(sprite, stt);
+	    }
+	  if (gl_set_additional_blit)
+	    {
+	      sf::RenderStates stt = sf::BlendAdd;
+
+	      stt.shader = shader;
+	      target->draw(sprite, stt);
+	    }
+	  else if (gl_full_blit == false)
+	    {
+	      sf::RenderStates stt = sf::BlendNone;
+
+	      stt.shader = shader;
+	      target->draw(sprite, stt);
+	    }
+	  else
+	    target->draw(sprite, shader);
+	}
+      else if (gl_full_blit == false)
+	{
+	  sf::RenderStates stt = sf::BlendNone;
+
+	  stt.shader = shader;
+	  target->draw(sprite, stt);
+	}
+      else
+	target->draw(sprite, shader);
+      return ;
+    }
+  if (allow_special_blend)
+    {
+      if (gl_set_alpha_blit)
+	{
+	  sf::RenderStates stt = sf::BlendAlpha;
+
+	  stt.blendMode = sf::BlendMode
+	    (sf::BlendMode::Factor::Zero,
+	     sf::BlendMode::Factor::One,
+	     sf::BlendMode::Equation::Add,
+	     sf::BlendMode::Factor::One,
+	     sf::BlendMode::Factor::One,
+	     sf::BlendMode::Equation::ReverseSubtract
+	     );
+	  target->draw(sprite, stt);
+	}
+      else if (gl_set_additional_blit)
+	{
+	  sf::RenderStates stt = sf::BlendAdd;
+
+	  target->draw(sprite, stt);
+	}
+      else if (gl_set_multiply_blit)
+	{
+	  sf::RenderStates stt = sf::BlendMultiply;
+
+	  target->draw(sprite, stt);
+	}
+      else
+	target->draw(sprite);
+    }
+  else if (gl_full_blit == false)
+    target->draw(sprite, sf::RenderStates(sf::BlendNone));
+  else
+    target->draw(sprite);
+}
+
+static bool			prepare_texture_rect(const struct bunny_picture	&pic,
+						     const t_bunny_position	&pos,
+						     sf::IntRect		&rect,
+						     sf::Vector2f		&draw_pos)
+{
+  int				left;
+  int				top;
+  int				right;
+  int				bottom;
+  int				clipped_left;
+  int				clipped_top;
+  int				clipped_right;
+  int				clipped_bottom;
+  sf::Vector2u			size;
+
+  rect.position.x = pic.rect.x;
+  rect.position.y = pic.rect.y;
+  rect.size.x = pic.rect.w;
+  rect.size.y = pic.rect.h;
+  draw_pos.x = pos.x;
+  draw_pos.y = pos.y;
+
+  if (pic.tex == NULL || pic.mosaic)
+    return (rect.size.x != 0 && rect.size.y != 0);
+
+  if (rect.size.x <= 0 || rect.size.y <= 0)
+    return (false);
+
+  size = pic.tex->getSize();
+  left = rect.position.x;
+  top = rect.position.y;
+  right = left + rect.size.x;
+  bottom = top + rect.size.y;
+
+  clipped_left = left < 0 ? 0 : left;
+  clipped_top = top < 0 ? 0 : top;
+  clipped_right = right > (int)size.x ? (int)size.x : right;
+  clipped_bottom = bottom > (int)size.y ? (int)size.y : bottom;
+
+  if (clipped_left >= clipped_right || clipped_top >= clipped_bottom)
+    return (false);
+
+  draw_pos.x += clipped_left - left;
+  draw_pos.y += clipped_top - top;
+
+  rect.position.x = clipped_left;
+  rect.position.y = clipped_top;
+  rect.size.x = clipped_right - clipped_left;
+  rect.size.y = clipped_bottom - clipped_top;
+
+  return (true);
+}
+
 void				merge_clothe(t_bunny_map		*nod,
 					     void			*pnw);
 
 #define				PATTERN				\
   "%p target, %p source, %p position (%d, %d), %p shader"
 
+/**
+ * @doc-symbol bunny_blit
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 180
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Draws a clipable source on a target buffer.
+ * @description The target can be a window, a picture or, when the proper user callback is installed, a pixelarray. If position is NULL, the source position field is used.
+ * @description When the source is a pixelarray, full transformations and alpha require bunny_enable_full_blit.
+ * @param buf The target buffer.
+ * @param clp The source clipable.
+ * @param pos The destination position, or NULL to use clp->position.
+ * @error EINVAL The target or source kind is not supported.
+ * @log Logs are written with the "graphics" label.
+ * @see bunny_blit_shader, bunny_enable_full_blit, t_bunny_my_blit, gl_bunny_my_blit
+ *
+ * @doc-lang fr
+ * @brief Dessine une source clipable sur un buffer cible.
+ * @description La cible peut être une fenêtre, une picture ou, lorsque le callback utilisateur approprié est installé, un pixelarray. Si position vaut NULL, le champ position de la source est utilisé.
+ * @description Lorsque la source est un pixelarray, les transformations complètes et l’alpha nécessitent bunny_enable_full_blit.
+ * @param buf Le buffer cible.
+ * @param clp Le clipable source.
+ * @param pos La position de destination, ou NULL pour utiliser clp->position.
+ * @error EINVAL Le type de cible ou de source n’est pas pris en charge.
+ * @log Les logs sont écrits avec le label "graphics".
+ * @see bunny_blit_shader, bunny_enable_full_blit, t_bunny_my_blit, gl_bunny_my_blit
+ */
 void				bunny_blit(t_bunny_buffer		*output,
 					   const t_bunny_clipable	*picture,
 					   const t_bunny_position	*pos)
@@ -232,6 +403,33 @@ void				bunny_blit(t_bunny_buffer		*output,
   bunny_blit_shader(output, picture, pos, NULL);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_blit_shader
+ * @doc-kind function
+ * @doc-module shader
+ * @doc-order 45
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Blits a picture while applying a shader.
+ * @param buffer Destination buffer. It must not be a pixelarray.
+ * @param picture Picture to draw. It must not be a pixelarray.
+ * @param position Optional destination position.
+ * @param shader Shader to apply. May be NULL to behave like bunny_blit.
+ * @see bunny_blit, t_bunny_shader
+ *
+ * @doc-lang fr
+ * @brief Blit une picture en appliquant un shader.
+ * @param buffer Buffer de destination. Il ne doit pas être un pixelarray.
+ * @param picture Picture à dessiner. Elle ne doit pas être un pixelarray.
+ * @param position Position de destination optionnelle.
+ * @param shader Shader à appliquer. Peut être NULL pour se comporter comme bunny_blit.
+ * @see bunny_blit, t_bunny_shader
+ */
 void				bunny_blit_shader(t_bunny_buffer	*output,
 						  const t_bunny_picture	*picture,
 						  const t_bunny_position *pos,
@@ -250,6 +448,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
   size_t			*input_type = (size_t*)picture;
   sf::Shader			*shader = (sf::Shader*)_shader;
   sf::Sprite			*spr;
+  bool				has_normal_sprite = false;
 
   switch (*input_type)
     {
@@ -294,7 +493,13 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 
 	tmap->working->rotation = tmap->tile_rotation;
 	tmap->type = GRAPHIC_RAM;
-	bunny_blit((t_bunny_buffer*)tmap, tmap->working, NULL);
+	((struct bunny_picture*)tmap->working)->texture->display();
+	if (((struct bunny_picture*)tmap->working)->ntexture)
+	  ((struct bunny_picture*)tmap->working)->ntexture->display();
+        bunny_blit((t_bunny_buffer*)tmap, tmap->working, NULL);
+	tmap->texture->display();
+	if (tmap->ntexture)
+	  tmap->ntexture->display();
 	tmap->type = TILEMAP;
 	// NO BREAK -> Graphic ram scope is needed too.
 	[[fallthrough]];
@@ -306,6 +511,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
       {
 	struct bunny_picture	*pic = (struct bunny_picture*)picture;
 	sf::IntRect		rect;
+	sf::Vector2f		draw_pos;
 
 	rect.position.x = pic->rect.x;
 	rect.position.y = pic->rect.y;
@@ -314,6 +520,7 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	pic->texture->setSmooth(pic->smooth);
 	pic->texture->setRepeated(pic->mosaic);
 	pic->tex = &pic->texture->getTexture();
+	pic->ntex = pic->ntexture ? &pic->ntexture->getTexture() : pic->ntex;
 	if (pic->sprite == NULL)
 	  {
 	    if ((pic->sprite = new (std::nothrow) sf::Sprite(*(pic->tex))) == NULL)
@@ -321,8 +528,12 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	  }
 	else
 	  pic->sprite->setTexture(*(pic->tex)); // Safe
+	if (gl_display_normal_map && pic->ntex)
+	  pic->sprite->setTexture(*(pic->ntex));
+	if (prepare_texture_rect(*pic, *pos, rect, draw_pos) == false)
+	  return ;
 	pic->sprite->setTextureRect(rect);
-	pic->sprite->setPosition({pos->x, pos->y});
+	pic->sprite->setPosition(draw_pos);
 	pic->sprite->setOrigin({pic->origin.x, pic->origin.y});
 	pic->sprite->setScale({pic->scale.x, pic->scale.y});
 	pic->sprite->setRotation(sf::degrees(pic->rotation));
@@ -333,6 +544,8 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 		     pic->color_mask.argb[ALPHA_CMP]
 		     ));
 	spr = pic->sprite;
+	if (pic->ntex)
+	  has_normal_sprite = true;
 	break ;
       }
     case SYSTEM_RAM:
@@ -354,12 +567,18 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	if (*input_type == GRAPHIC_RAM
 	    || *input_type == SPRITE
 	    || *input_type == TTF_TEXT
+	    || *input_type == TILEMAP
 	    || *input_type == DRESSED_SPRITE)
 	  {
-	    if (shader)
-	      out->window->draw(*spr, shader);
-	    else
+	    if (!shader)
 	      out->window->draw(*spr);
+	    else if (gl_normal_map_shader == shader)
+	      {
+		gl_normal_map_configuration->normal_map = (t_bunny_picture*)picture;
+		out->window->draw(*spr, (sf::Shader*)bunny_normal_map_shader(gl_normal_map_configuration));
+	      }
+	    else
+	      out->window->draw(*spr, shader);
 	  }
 	else if (gl_full_blit == false)
 	  out->window->draw(*spr, sf::RenderStates(sf::BlendNone));
@@ -390,71 +609,43 @@ void				bunny_blit_shader(t_bunny_buffer	*output,
 	if (*input_type == GRAPHIC_RAM
 	    || *input_type == SPRITE
 	    || *input_type == TTF_TEXT
+	    || *input_type == TILEMAP
 	    || *input_type == DRESSED_SPRITE
-	    || *input_type == CINEMATIC
-	    )
+	    || *input_type == CINEMATIC)
 	  {
-	    if (shader)
+	    const bunny_picture *in = (const bunny_picture*)picture;
+
+	    if (out->ntexture && has_normal_sprite)
 	      {
-		if (gl_set_alpha_blit)
-		  {
-		    sf::RenderStates stt = sf::BlendMultiply;
+		// blit de la normal map source vers la target normal
+		spr->setTexture(*in->ntex);
+		draw_rendertexture_sprite(out->ntexture, *spr, NULL, true);
 
-		    stt.shader = shader;
-		    out->texture->draw(*spr, stt);
-		  }
-		if (gl_set_additional_blit)
-		  {
-		    sf::RenderStates stt = sf::BlendAdd;
-
-		    stt.shader = shader;
-		    out->texture->draw(*spr, stt);
-		  }
-		else if (gl_full_blit == false)
-		  {
-		    sf::RenderStates stt = sf::BlendNone;
-
-		    stt.shader = shader;
-		    out->texture->draw(*spr, stt);
-		  }
-		else
-		  out->texture->draw(*spr, shader);
-	      }
-	    else if (gl_set_alpha_blit)
-	      {
-		sf::RenderStates stt = sf::BlendAlpha;
-
-		stt.blendMode = sf::BlendMode
-		  (sf::BlendMode::Factor::Zero, // Tuile
-		   sf::BlendMode::Factor::One,  // Ombre
-		   sf::BlendMode::Equation::Add,   // On garde la couleur de l'ombre
-		   sf::BlendMode::Factor::One,  // Tuile
-		   sf::BlendMode::Factor::One,   // Ombre
-		   sf::BlendMode::Equation::ReverseSubtract // La tuile retire de la transparence
-		   );
-		out->texture->draw(*spr, stt);
-	      }
-	    else if (gl_set_additional_blit)
-	      {
-		sf::RenderStates stt = sf::BlendAdd;
-
-		out->texture->draw(*spr, stt);
-	      }
-	    else if (gl_set_multiply_blit)
-	      {
-		sf::RenderStates stt = sf::BlendMultiply;
-
-		out->texture->draw(*spr, stt);
+		// blit de la color map source vers la target color
+		spr->setTexture(*in->tex);
+		draw_rendertexture_sprite(out->texture, *spr, shader, true);
 	      }
 	    else
 	      {
-		out->texture->draw(*spr);
+		spr->setTexture(*in->tex);
+		draw_rendertexture_sprite(out->texture, *spr, shader, true);
 	      }
 	  }
-	else if (gl_full_blit == false)
-	  out->texture->draw(*spr, sf::RenderStates(sf::BlendNone));
 	else
-	  out->texture->draw(*spr);
+	  {
+	    if (gl_full_blit == false)
+	      out->texture->draw(*spr, sf::RenderStates(sf::BlendNone));
+	    else
+	      out->texture->draw(*spr);
+	    if (out->ntexture && has_normal_sprite)
+	      {
+		spr->setTexture(*out->ntex);
+		if (gl_full_blit == false)
+		  out->ntexture->draw(*spr, sf::RenderStates(sf::BlendNone));
+		else
+		  out->ntexture->draw(*spr);
+	      }
+	  }
 
 	if (*type == SPRITE)
 	  {

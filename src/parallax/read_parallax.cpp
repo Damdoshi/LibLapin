@@ -1,9 +1,42 @@
 // Jason Brillante "Damdoshi"
-// Hanged Bunny Studio 2014-2018
+// Hanged Bunny Studio 2014-2026
 //
 // Lapin library
 
+#include		<algorithm>
 #include		"lapin_private.h"
+
+static void		compute_rendered_size(const t_bunny_parallax_layer	&layer,
+					      const t_bunny_size		&reference_space,
+					      t_bunny_accurate_position		&rendered)
+{
+  double		base_w = layer.picture->clip_width * layer.picture->scale.x;
+  double		base_h = layer.picture->clip_height * layer.picture->scale.y;
+
+  rendered.x = base_w;
+  rendered.y = base_h;
+  switch (layer.mode)
+    {
+    case BPM_FILL:
+    case BPM_MAXIMIZED:
+      {
+	double		sx = base_w != 0.0 ? (double)reference_space.x / base_w : 1.0;
+	double		sy = base_h != 0.0 ? (double)reference_space.y / base_h : 1.0;
+	double		factor = layer.mode == BPM_FILL ? std::max(sx, sy) : std::min(sx, sy);
+
+	rendered.x = base_w * factor;
+	rendered.y = base_h * factor;
+	break ;
+      }
+    case BPM_STRETCHED:
+      rendered.x = reference_space.x;
+      rendered.y = reference_space.y;
+      break ;
+    case BPM_CENTERED:
+    default:
+      break ;
+    }
+}
 
 t_bunny_parallax	*bunny_read_parallax_wh(t_bunny_configuration	*cnf,
 						unsigned int		width,
@@ -25,12 +58,19 @@ t_bunny_parallax	*bunny_read_parallax_wh(t_bunny_configuration	*cnf,
     goto DeleteParallax;
   if ((px->texture = new (std::nothrow) sf::RenderTexture({width, height})) == NULL)
     goto DeleteParallax;
+  if ((px->ntexture = new (std::nothrow) sf::RenderTexture({width, height})) == NULL)
+    goto DeleteTexture;
+
   px->res_id = 0;
   px->texture->clear(sf::Color(0, 0, 0, 0));
   px->texture->display();
   px->tex = &px->texture->getTexture();
+  px->ntexture->clear(sf::Color(128 , 128, 255, 255));
+  px->ntexture->display();
+  px->ntex = &px->ntexture->getTexture();
+  
   if ((px->sprite = new (std::nothrow) sf::Sprite(*px->tex)) == NULL)
-    goto DeleteTexture;
+    goto DeleteNTexture;
   px->type = PARALLAX;
   px->width = width;
   px->height = height;
@@ -59,12 +99,10 @@ t_bunny_parallax	*bunny_read_parallax_wh(t_bunny_configuration	*cnf,
       t_bunny_parallax_layer &layer = px->layers[i];
       const char	*file;
 
-      // Try to load picture from file
       if (bunny_configuration_getf_string(cnf, &file, "Layers[%zu].Picture", i) == false)
 	{
 	  t_bunny_configuration	*nod;
 
-	  // Try to load picture from the actual node
 	  if (bunny_configuration_getf_node(cnf, &nod, "Layers[%zu].Picture", i) == false)
 	    goto DeleteLayers;
 	  if (!bunny_set_clipable_attribute(NULL, &layer.picture, &nod, BCT_PICTURE))
@@ -104,30 +142,41 @@ t_bunny_parallax	*bunny_read_parallax_wh(t_bunny_configuration	*cnf,
 
       bunny_configuration_getf_bool(cnf, &layer.speed_lock, "Layers[%zu].SpeedLock", i);
 
-      t_bunny_position	real_size = {
-	.x = layer.picture->clip_width * layer.picture->scale.x,
-	.y = layer.picture->clip_height * layer.picture->scale.y,
-      };
-
       if (layer.loop_x)
 	{
-	  bunny_configuration_getf_double
-	    (cnf, &layer.speed_ratio.x, "Layers[%zu].Speed[0]", i);
-	  bunny_configuration_getf_double
-	    (cnf, &layer.speed_ratio.x, "Layers[%zu].SpeedX", i);
+	  bunny_configuration_getf_double(cnf, &layer.speed_ratio.x, "Layers[%zu].Speed[0]", i);
+	  bunny_configuration_getf_double(cnf, &layer.speed_ratio.x, "Layers[%zu].SpeedX", i);
 	}
-      else if (layer.speed_lock == false)
-	layer.speed_ratio.x = (double)px->inside_size.x / real_size.x;
-
       if (layer.loop_y)
 	{
-	  bunny_configuration_getf_double
-	    (cnf, &layer.speed_ratio.y, "Layers[%zu].Speed[1]", i);
-	  bunny_configuration_getf_double
-	    (cnf, &layer.speed_ratio.y, "Layers[%zu].SpeedY", i);
+	  bunny_configuration_getf_double(cnf, &layer.speed_ratio.y, "Layers[%zu].Speed[1]", i);
+	  bunny_configuration_getf_double(cnf, &layer.speed_ratio.y, "Layers[%zu].SpeedY", i);
 	}
-      else if (layer.speed_lock == false)
-	layer.speed_ratio.y = (double)real_size.y / px->inside_size.y;
+      if (layer.speed_lock == false)
+	{
+	  t_bunny_accurate_position	rendered;
+	  double			world_span_x;
+	  double			world_span_y;
+
+	  compute_rendered_size(layer, px->inside_size, rendered);
+	  world_span_x = std::max(0.0, (double)px->inside_size.x - width);
+	  world_span_y = std::max(0.0, (double)px->inside_size.y - height);
+
+	  if (layer.loop_x == false)
+	    {
+	      if (world_span_x <= 0.0 || rendered.x <= width)
+		layer.speed_ratio.x = 0.0;
+	      else
+		layer.speed_ratio.x = (rendered.x - width) / world_span_x;
+	    }
+	  if (layer.loop_y == false)
+	    {
+	      if (world_span_y <= 0.0 || rendered.y <= height)
+		layer.speed_ratio.y = 0.0;
+	      else
+		layer.speed_ratio.y = (rendered.y - height) / world_span_y;
+	    }
+	}
     }
 
   return ((t_bunny_parallax*)px);
@@ -138,6 +187,8 @@ t_bunny_parallax	*bunny_read_parallax_wh(t_bunny_configuration	*cnf,
   bunny_free(px->layers);
  DeleteSprite:
   delete px->sprite;
+ DeleteNTexture:
+  delete px->ntexture;
  DeleteTexture:
   delete px->texture;
  DeleteParallax:
@@ -155,4 +206,3 @@ t_bunny_parallax	*bunny_read_parallax(t_bunny_configuration	*cnf)
     return (NULL);
   return (bunny_read_parallax_wh(cnf, w, h));
 }
-

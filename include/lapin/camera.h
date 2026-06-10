@@ -6,15 +6,78 @@
 **
 */
 
+
+/**
+ * @doc
+ * @doc-symbol camera
+ * @doc-kind module
+ * @doc-module camera
+ * @doc-order 0
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Opens a camera, captures frames and performs simple face tracking.
+ * @description The camera module is an OpenCV-backed helper around video capture devices. It exposes abstract camera and capture handles, conversion helpers to LibLapin graphic objects, and a basic head tracking function.
+ * @header lapin/camera.h
+ *
+ * @doc-lang fr
+ * @brief Ouvre une caméra, capture des images et effectue un suivi de visage simple.
+ * @description Le module camera est un assistant basé sur OpenCV autour des périphériques de capture vidéo. Il expose des handles abstraits de caméra et de capture, des conversions vers les objets graphiques de la LibLapin et une fonction basique de suivi de tête.
+ * @header lapin/camera.h
+ */
 #ifndef			__LAPIN_EYE_H__
 # define		__LAPIN_EYE_H__
 # include		<lapin.h>
 
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_camera
+ * @doc-kind type
+ * @doc-module camera
+ * @doc-order 100
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Abstract handle representing an opened camera.
+ * @description t_bunny_camera is fully opaque. Create it with bunny_new_camera and destroy it with bunny_delete_camera.
+ * @see bunny_new_camera, bunny_delete_camera, t_bunny_capture
+ *
+ * @doc-lang fr
+ * @brief Handle abstrait représentant une caméra ouverte.
+ * @description t_bunny_camera est totalement opaque. Créez-le avec bunny_new_camera et détruisez-le avec bunny_delete_camera.
+ * @see bunny_new_camera, bunny_delete_camera, t_bunny_capture
+ */
 /*!
 ** t_bunny_camera represent a video device linked with your computer.
 */
 typedef void		t_bunny_camera;
 
+
+/**
+ * @doc
+ * @doc-symbol t_bunny_capture
+ * @doc-kind type
+ * @doc-module camera
+ * @doc-order 110
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Abstract handle representing one captured camera frame.
+ * @description t_bunny_capture is fully opaque. It is created by bunny_new_capture, refreshed by bunny_capture and destroyed by bunny_delete_capture.
+ * @see bunny_new_capture, bunny_capture, bunny_delete_capture
+ *
+ * @doc-lang fr
+ * @brief Handle abstrait représentant une image capturée depuis une caméra.
+ * @description t_bunny_capture est totalement opaque. Il est créé par bunny_new_capture, rafraîchi par bunny_capture et détruit par bunny_delete_capture.
+ * @see bunny_new_capture, bunny_capture, bunny_delete_capture
+ */
 /*!
 ** A t_bunny_capture is a frame retrieved from a t_bunny_camera.
 */

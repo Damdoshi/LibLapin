@@ -41,6 +41,38 @@
 ** If not set, the context will consider the screen to be a window
 ** and display it.
 */
+/**
+ * @doc
+ * @doc-symbol t_bunny_pentacle_screen
+ * @doc-kind struct
+ * @doc-module context
+ * @doc-order 720
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Runtime structure of the pentacle splash context.
+ * @field head Common context runtime header.
+ * @field background_color Background color.
+ * @field pentacle_color Pentacle color.
+ * @field falling_rotation Falling rotation parameter.
+ * @field thickness Line thickness.
+ * @field jingle_sound_file Jingle sound file.
+ * @field font_file Font file.
+ * @see gl_bunny_pentacle_context
+ *
+ * @doc-lang fr
+ * @brief Structure d’exécution du contexte splash pentacle.
+ * @field head Common context runtime header.
+ * @field background_color Background color.
+ * @field pentacle_color Pentacle color.
+ * @field falling_rotation Falling rotation parameter.
+ * @field thickness Line thickness.
+ * @field jingle_sound_file Jingle sound file.
+ * @field font_file Font file.
+ * @see gl_bunny_pentacle_context
+ */
 typedef struct			s_bunny_pentacle_screen
 {
   // Public fields - set them

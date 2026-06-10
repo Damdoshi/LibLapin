@@ -5,6 +5,35 @@
 
 #include		"lapin_private.h"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_collision_configuration
+ * @doc-kind function
+ * @doc-module collide
+ * @doc-order 630
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 30
+ *
+ * @doc-lang en
+ * @brief Loads collision shapes from a configuration node.
+ * @param field Configuration field containing the shapes.
+ * @param shapes Output structure receiving the allocated shapes.
+ * @param cnf Configuration to read.
+ * @return-success Returns BD_OK when the shapes are loaded.
+ * @return-failure Returns BD_NOT_FOUND or BD_ERROR when loading fails.
+ * @see t_bunny_collision_shapes
+ *
+ * @doc-lang fr
+ * @brief Charge des formes de collision depuis un nœud de configuration.
+ * @param field Champ de configuration contenant les formes.
+ * @param shapes Structure de sortie recevant les formes allouées.
+ * @param cnf Configuration à lire.
+ * @return-success Renvoie BD_OK lorsque les formes sont chargées.
+ * @return-failure Renvoie BD_NOT_FOUND ou BD_ERROR si le chargement échoue.
+ * @see t_bunny_collision_shapes
+ */
 t_bunny_decision	bunny_collision_configuration(const char		*field,
 						      t_bunny_collision_shapes	*shapes,
 						      t_bunny_configuration	*cnf)
@@ -30,6 +59,7 @@ t_bunny_decision	bunny_collision_configuration(const char		*field,
   *len = bunny_configuration_casesf(cnf, "%s", field);
   if ((*ptr = (t_bunny_collision*)bunny_malloc(sizeof(**ptr) * *len)) == NULL)
     return (BD_ERROR);
+  memset(*ptr, 0, sizeof(**ptr) * *len);
   t_bunny_collision	*col = *ptr;
 
   // For each node
@@ -64,6 +94,7 @@ t_bunny_decision	bunny_collision_configuration(const char		*field,
 	  bunny_configuration_getf_double(nod, &col[i].line.coord[0].y, "From[1]");
 	  bunny_configuration_getf_double(nod, &col[i].line.coord[1].x, "To[0]");
 	  bunny_configuration_getf_double(nod, &col[i].line.coord[1].y, "To[1]");
+	  bunny_configuration_getf_double(nod, &col[i].line.intermediate_points, "IntermediatePoints");
 	  break ;
 	case BCT_TRIANGLE:
 	  bunny_configuration_getf_double(nod, &col[i].triangle.coord[0].x, "Coordinates[0][0]");
@@ -94,6 +125,10 @@ t_bunny_decision	bunny_collision_configuration(const char		*field,
 	  bunny_configuration_getf_double(nod, &col[i].equation.coord[0].y, "Position[1]");
 	  bunny_configuration_getf_double(nod, &col[i].equation.coord[1].x, "Size[0]");
 	  bunny_configuration_getf_double(nod, &col[i].equation.coord[1].y, "Size[1]");
+	  if (bunny_configuration_getf_double(nod, &col[i].equation.amplitude.x, "Amplitude[0]") == false)
+	    col[i].equation.amplitude.x = col[i].equation.coord[1].x;
+	  if (bunny_configuration_getf_double(nod, &col[i].equation.amplitude.y, "Amplitude[1]") == false)
+	    col[i].equation.amplitude.y = col[i].equation.coord[1].y;
 	  bunny_configuration_getf_double(nod, &col[i].equation.a, "A");
 	  bunny_configuration_getf_double(nod, &col[i].equation.b, "B");
 	  bunny_configuration_getf_double(nod, &col[i].equation.c, "C");

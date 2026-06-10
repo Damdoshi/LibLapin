@@ -55,6 +55,17 @@ t_bunny_configuration		*_get_good_conf(const char		*file,
 						t_bunny_configuration	**conf);
 bool				bunny_filter_label(const char		*labels);
 
+# if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 12
+#  define			BUNNY_DIAG_PUSH_UAF_OFF()		\
+  _Pragma("GCC diagnostic push")					\
+  _Pragma("GCC diagnostic ignored \"-Wuse-after-free\"")
+#  define BUNNY_DIAG_POP_UAF()						\
+  _Pragma("GCC diagnostic pop")
+# else
+#  define BUNNY_DIAG_PUSH_UAF_OFF()
+#  define BUNNY_DIAG_POP_UAF()
+# endif
+
 # ifdef				NO_BUNNY_ERROR_LOG
 #  define			scream_error_if(out, err, patt, lab, ...) \
   do									\
@@ -70,6 +81,7 @@ bool				bunny_filter_label(const char		*labels);
       if (bunny_get_error_descriptor() >= 0 &&				\
 	  bunny_filter_label(lab))					\
 	{								\
+	  BUNNY_DIAG_PUSH_UAF_OFF();					\
 	  if (gl_complete_log)						\
 	    bunny_dprintf(bunny_get_error_descriptor(),			\
 		    "FAILURE [%s][%016lu][%16s:%d][%s][" patt "]\n",	\
@@ -83,6 +95,7 @@ bool				bunny_filter_label(const char		*labels);
 		    "%s - " patt ".\n",					\
 		    bunny_strerror(err),				\
 		    ##__VA_ARGS__);					\
+	  BUNNY_DIAG_PUSH_UAF_OFF();                                    \
 	}								\
       bunny_errno = err;						\
       out;								\
@@ -100,6 +113,7 @@ bool				bunny_filter_label(const char		*labels);
       if (bunny_get_log_descriptor() >= 0 &&				\
 	  bunny_filter_label(lab))					\
 	{								\
+	  BUNNY_DIAG_PUSH_UAF_OFF();					\
 	  if (gl_complete_log)						\
 	    bunny_dprintf(bunny_get_log_descriptor(),			\
 		    "LOG     [%s][%016lu][%16s:%d][" pattern "].\n",	\
@@ -111,6 +125,7 @@ bool				bunny_filter_label(const char		*labels);
 	    bunny_dprintf(bunny_get_log_descriptor(),			\
 		    pattern ".\n",					\
 		    ##__VA_ARGS__);					\
+	  BUNNY_DIAG_PUSH_UAF_OFF();                                    \
 	}								\
       /* bunny_errno = 0; */						\
     }									\

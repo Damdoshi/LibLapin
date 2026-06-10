@@ -11,10 +11,17 @@ Decision		expr_read_expression(const char		*code,
 					     SmallConf		&conf,
 					     int		ope)
 {
+  delete conf.expression;
+  conf.expression = NULL;
+
   if ((conf.expression = expr_read_operator(code, i, ope)) == NULL)
     return (BD_ERROR);
   if (expr_precompute(conf) == false)
-    return (BD_ERROR);
+    {
+      delete conf.expression;
+      conf.expression = NULL;
+      return (BD_ERROR);
+    }
   if (conf.expression->is_const)
     conf = conf.expression->val;
   return (BD_OK);

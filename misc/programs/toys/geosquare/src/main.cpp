@@ -46,12 +46,14 @@ t_bunny_response	loop(void			*data)
   for (i = 0; i < 4; ++i)
     {
       array->vertex[(int)i].color = rand() | BLACK;
+      array->vertex[(int)i].color = ALPHA(64, array->vertex[(int)i].color);
       array->vertex[(int)i].pos.x = (win->buffer.width + cos(2 * j) * 700 * cos((i + j) * M_PI / 2)) / 2;
       array->vertex[(int)i].pos.y = (win->buffer.height + sin(1.5 * j) * 700 * sin((i + j) * M_PI / 2)) / 2;
     }
 
   j += 0.03;
-  bunny_fill(&win->buffer, ALPHA(16, BLACK));
+  bunny_clear(&win->buffer, RED);
+  // bunny_fill(&win->buffer, ALPHA(16, RED));
   bunny_set_geometry(&win->buffer, BGY_QUADS, array, pic);
   bunny_display(win);
   return (GO_ON);

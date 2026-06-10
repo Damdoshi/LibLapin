@@ -18,6 +18,8 @@ Network::Network(void)
       descriptors[i].position = i;
     }
   memset(pollfd, 0, sizeof(pollfd));
+  for (size_t i = 0; i < NBRCELL(pollfd); ++i)
+    pollfd[i].fd = -1;
 }
 
 Network::~Network(void)

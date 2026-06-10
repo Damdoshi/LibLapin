@@ -6,9 +6,10 @@
 #include		<iostream>
 #include		"lapin_private.h"
 
-t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
-					t_bunny_cinematic_event		event,
-					double				elapsed)
+static t_bunny_response	_bunny_cinematic(t_bunny_cinematic		*_cin,
+					 t_bunny_cinematic_event	event,
+					 double				elapsed,
+					 bool				animate_pictures)
 {
   struct bunny_cinematic *cin = (struct bunny_cinematic*)_cin;
   SmallConf		&scnf = *(SmallConf*)cin->program;
@@ -18,6 +19,8 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
 
   if (seq.lines.size() <= cin->current_command)
     return (EXIT_ON_SUCCESS);
+
+  cin->stack_frame = cin->command_data[cin->stack_top];
 
   for (argc = 0;
        argc < seq.lines[cin->current_command].nbr_parameters
@@ -46,16 +49,22 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
 		    bunny_configuration_get_address(cin->program)
 		    );
 
-  // Animate pictures based on cinematic animaton
-  t_bunny_map		**node;
-  t_bunny_sprite	*pic;
-
-  for (bunny_map_all(cin->pictures, node))
+  // Animate pictures based on cinematic animaton.
+  // Do it only once per external bunny_cinematic call: instructions returning
+  // NULL are consumed recursively during the same tick and must not multiply
+  // sprite animation speed.
+  if (animate_pictures)
     {
-      pic = bunny_map_data(*node, t_bunny_sprite*);
-      if (!pic->clipable.color_mask.argb[ALPHA_CMP])
-	continue ;
-      bunny_sprite_animate_elapsed(pic, elapsed);
+      t_bunny_map	**node;
+      t_bunny_sprite	*pic;
+
+      for (bunny_map_all(cin->pictures, node))
+	{
+	  pic = bunny_map_data(*node, t_bunny_sprite*);
+	  if (!pic->clipable.color_mask.argb[ALPHA_CMP])
+	    continue ;
+	  bunny_sprite_animate_elapsed(pic, elapsed);
+	}
     }
 
   res = cmd(_cin, argc, argv, event, elapsed);
@@ -89,11 +98,13 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
 	    }
 	  cin->current_command = 0;
 	  cin->stack_top = 0;
+	  cin->stack_frame = cin->command_data[cin->stack_top];
+	  memset(cin->stack_frame, 0, sizeof(cin->command_data[0]));
 	  memset(cin->command_data, 0, sizeof(cin->command_data));
 	  memset(cin->return_position, 0, sizeof(cin->return_position));
 	}
       if (res == NULL)
-	return (bunny_cinematic(_cin, event, elapsed));
+	return (_bunny_cinematic(_cin, event, elapsed, false));
       return (GO_ON);
     }
   else if (strcmp(res, ".skip") == 0)
@@ -107,6 +118,7 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
       if (cin->stack_top == 0)
 	return (EXIT_ON_ERROR);
       cin->stack_top -= 1;
+      cin->stack_frame = cin->command_data[cin->stack_top];
       cin->current_command = cin->return_position[cin->stack_top];
     }
   else
@@ -118,6 +130,7 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
 	{
 	  if (cin->stack_top + 1 >= NBRCELL(cin->command_data))
 	    return (EXIT_ON_ERROR);
+	  cin->stack_frame = cin->command_data[cin->stack_top];
 	  memcpy(buf, res, res2 - res);
 	  buf[res2 - res] = 0;
 	  cin->return_position[cin->stack_top] = cin->current_command + 1;
@@ -133,4 +146,11 @@ t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
     }
 
   return (GO_ON);
+}
+
+t_bunny_response	bunny_cinematic(t_bunny_cinematic		*_cin,
+					 t_bunny_cinematic_event	event,
+					 double				elapsed)
+{
+  return (_bunny_cinematic(_cin, event, elapsed, true));
 }

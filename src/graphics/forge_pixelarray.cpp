@@ -15,6 +15,47 @@ const uint8_t		default_shift[4] = {
   [ALPHA_CMP] = ALPHA_CMP
 };
 
+/**
+ * @doc-symbol bunny_forge_pixelarray
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 35
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Creates a pixelarray with an explicit pixel layout.
+ * @description This function is the configurable variant of bunny_new_pixelarray. It lets the caller choose component shifts, indexed color depth, bitplane mode and palette.
+ * @param wid The width in pixels.
+ * @param hei The height in pixels.
+ * @param shifts The component shifts used by direct color formats.
+ * @param bitw The requested color depth.
+ * @param bitplane True to use bitplanes.
+ * @param palette The optional palette to copy.
+ * @param palette_size The number of colors in palette.
+ * @return-success A valid t_bunny_pixelarray.
+ * @return-failure NULL if allocation fails or if the layout cannot be created.
+ * @error ENOMEM Out of memory.
+ * @log Logs are written with the "ressource" and "graphics" labels.
+ * @see bunny_new_pixelarray, t_bunny_bitwidth, t_bunny_pixelarray
+ *
+ * @doc-lang fr
+ * @brief Crée un pixelarray avec une organisation de pixels explicite.
+ * @description Cette fonction est la variante configurable de bunny_new_pixelarray. Elle permet de choisir les décalages de composantes, la profondeur indexée, le mode bitplane et la palette.
+ * @param wid La largeur en pixels.
+ * @param hei La hauteur en pixels.
+ * @param shifts Les décalages de composantes utilisés par les formats couleur directs.
+ * @param bitw La profondeur de couleur demandée.
+ * @param bitplane Vaut true pour utiliser des bitplanes.
+ * @param palette La palette optionnelle à copier.
+ * @param palette_size Le nombre de couleurs dans palette.
+ * @return-success Un t_bunny_pixelarray valide.
+ * @return-failure NULL si l’allocation échoue ou si l’organisation ne peut pas être créée.
+ * @error ENOMEM Mémoire insuffisante.
+ * @log Les logs sont écrits avec les labels "ressource" et "graphics".
+ * @see bunny_new_pixelarray, t_bunny_bitwidth, t_bunny_pixelarray
+ */
 t_bunny_pixelarray	*bunny_forge_pixelarray(unsigned int	w,
 						unsigned int	h,
 						const uint8_t	*shifts,
@@ -45,6 +86,8 @@ t_bunny_pixelarray	*bunny_forge_pixelarray(unsigned int	w,
 
   if ((pa = new (std::nothrow) struct bunny_pixelarray) == NULL)
     goto ReturnNull;
+  pa->ntexture = NULL;
+  pa->ntex = NULL;
   if ((pa->rawpixels =
        (unsigned int*)bunny_malloc(siz)) == NULL)
     goto DeleteStructure;

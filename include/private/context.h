@@ -78,6 +78,7 @@ struct				bunny_loading_screen
   t_bunny_list			*texts;
   t_bunny_list			*files;
   t_bunny_list			*configurations;
+  t_bunny_list			*tasks;
   double			smooth_cursor; // fake percentage with smooth
   bool				terminated;
   int				count;
@@ -86,6 +87,7 @@ struct				bunny_loading_screen
   int				list_cnt;
   t_bunny_node			*node;
   bool				failure;
+  bool				busy;
 
   t_bunny_picture		*picture;
 };

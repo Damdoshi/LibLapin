@@ -124,8 +124,8 @@ struct				bunny_recorder
   sf::Sound			*sound;
   void				*sound_manager;
 
-  bool				recording;
   char				*device;
+  bool				recording;
   sf::SoundBufferRecorder	*recorder;
 };
 

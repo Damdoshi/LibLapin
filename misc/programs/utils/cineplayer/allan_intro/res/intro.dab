@@ -1,0 +1,166 @@
+
+Size = 192, 128
+
+[Volumes
+  Music = 0.1
+  Voice = 0.7
+  Effect = 0.5
+]
+
+[Pictures
+  LeftHand = @"./left_hand.dab"
+  RightHand = @"./right_hand.dab"
+  Zealot2 = @"./zealot.dab"
+  Zealot1 = @"./gfx/intro/02_zealot_black_background.png"
+  NerdnaelCrying = @"./nerdnael_crying.dab"
+  ZealotHand = @"./hand.dab"
+  Iron = @"./gfx/intro/05_iron.png"
+  Clothes = @"./clothes.dab"
+  Maverick = @"./maverick.dab"
+  Felina = @"./felina.dab"
+  Felinin = @"./felinin.dab"
+  Damdoshi = @"./damdoshi.dab"
+  Nerdnael = @"./nerdnael.dab"
+  Lightning = @"./lightning.dab"
+]
+
+[Musics
+  Intro = @"./mus/administrative.ogg"
+]
+
+[Effects
+  Chain = @"./eff/chain.ogg"
+  Stp = @"./eff/pas.ogg"
+  Elec = @"./eff/elec.ogg"
+]
+
+[Voices
+  V = @"./eff/voice/intro_voice.dab"
+]
+
+[Fonts
+  ZealotFont = @"./zealot_font.dab"
+  NerdnaelFont = @"./nerdnael_font.dab"
+]
+
+[Texts
+  [FR
+    @insert "../resfr/intro.dab"
+  ]
+  [EN
+    @insert "../resen/intro.dab"
+  ]
+]
+
+Animation = [Sequence
+  backcolor     0, 0, 0
+  playeffect    Chain
+  sleep         1.0
+  backcolor     64, 0, 0, 0
+  fadein        4.0, picture, LeftHand, picture, RightHand
+  playeffect    Stp
+  sleep         1.0
+  text          NerdnaelFont, 5.0, Text00, V:S00
+  text          ZealotFont, 20.0, Text01, V:S01
+  playmusic     Intro
+
+  tweak         picture, Zealot2, position, -192, 0
+  tweak         picture, Zealot1, position, -192, 0
+  display       Zealot2
+  display       Zealot1
+
+  movelabel:
+  move          Zealot1, 0, 0, 96, async
+  move          Zealot2, 0, 0, 96, async
+  skipif        picture, Zealot1, x, 0
+  go            movelabel
+
+  text          ZealotFont, 20.0, Text02, V:S02
+  text          NerdnaelFont, 10.0, Text03, V:S03
+
+  fadeout       1, picture, LeftHand, picture, RightHand
+  hide          LeftHand, RightHand
+  tweak         picture, NerdnaelCrying, position, 0, 128
+  display       NerdnaelCrying
+
+  facein:
+  move          Zealot1, -192, 0, 48, async
+  move          Zealot2, -192, 0, 48, async
+  move          NerdnaelCrying, 0, 0, 40, async
+  skipif        picture, NerdnaelCrying, y, 0
+  go            facein
+
+  text          ZealotFont, 15.0, Text04, V:S04
+
+  tweak         picture, ZealotHand, position, 0, -128
+  display       ZealotHand
+
+  handin:
+  move          ZealotHand, 0, 0, 30, async
+  skipif        picture, ZealotHand, y, 0
+  go            handin
+
+  text          ZealotFont, 20.0, Text05, V:S05
+  fadein        1.0, picture, Iron
+  text          ZealotFont, 20.0, Text06, V:S06
+  text          ZealotFont, 20.0, Text07, V:S07
+
+  fadeout       1.0, picture, Iron, picture, NerdnaelCrying, picture, ZealotHand
+  fadein        1.0, picture, Clothes
+
+  text          NerdnaelFont, 40.0, Text08, V:S08
+  text          NerdnaelFont, 15.0, Text09, V:S09
+  text          ZealotFont, 30.0, Text10, V:S10
+  text          ZealotFont, 20.0, Text11, V:S11
+  text          ZealotFont, 20.0, Text12, V:S12
+  text          ZealotFont, 40.0, Text13, V:S13
+
+  text          NerdnaelFont, 20.0, Text14, V:S14
+  text          ZealotFont, 40.0, Text15, V:S15
+  text          ZealotFont, 40.0, Text16, V:S16
+  text          ZealotFont, 40.0, Text17, V:S17
+
+  fadein        0.5, picture, Maverick
+  fadeout       0.5, picture, Clothes
+
+  text          ZealotFont, 40.0, Text18, V:S18
+  text          NerdnaelFont, 20.0, Text19, V:S19
+  text          NerdnaelFont, 20.0, Text20, V:S20
+
+  text          ZealotFont, 10.0, Text21, V:S21
+
+  fadein        0.5, picture, Damdoshi
+  fadeout       0.5, picture, Maverick
+
+  text          ZealotFont, 30.0, Text22, V:S22
+
+  fadeout       0.5, picture, Damdoshi
+  tweak         picture, Felina, position, +192, 0
+  tweak         picture, Felinin, position, -192, 0
+  display       Felina, Felinin
+
+  movefelina:
+  move          Felina, 0, 0, 192, async
+  move          Felinin, 0, 0, 192, async
+  skipif        picture, Felina, x, 0
+  go            movefelina
+
+  text          ZealotFont, 30.0, Text23, V:S23
+  text          ZealotFont, 30.0, Text24, V:S24
+  text          ZealotFont, 30.0, Text25, V:S25
+
+  fadein        0.5, picture, Nerdnael
+  fadeout       0.5, picture, Felina, picture, Felinin
+
+  text          NerdnaelFont, 30.0, Text26, V:S26
+  text          NerdnaelFont, 30.0, Text27, V:S27
+  text          ZealotFont, 40.0, Text28, V:S28
+  text          ZealotFont, 40.0, Text29, V:S29
+  text          ZealotFont, 40.0, Text30, V:S30
+  text          ZealotFont, 40.0, Text31, V:S31
+
+  display       Lightning
+  playeffect    Elec
+  text          NerdnaelFont, 30.0, Text32, V:S32
+  text          NerdnaelFont, 30.0, Text33, V:S33
+]

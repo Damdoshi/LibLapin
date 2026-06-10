@@ -24,17 +24,25 @@ namespace		network
     {
       if (this == &info)
 	return (false);
-      return (memcmp((void*)this, (void*)&info, socklen) < 0);
+      if (!socklen || !info.socklen)
+	return (socklen < info.socklen);
+      if (sockaddr.sin_family != info.sockaddr.sin_family)
+	return (sockaddr.sin_family < info.sockaddr.sin_family);
+      if (sockaddr.sin_addr.s_addr != info.sockaddr.sin_addr.s_addr)
+	return (sockaddr.sin_addr.s_addr < info.sockaddr.sin_addr.s_addr);
+      if (sockaddr.sin_port != info.sockaddr.sin_port)
+	return (sockaddr.sin_port < info.sockaddr.sin_port);
+      return (false);
     }
     bool		operator==(const Info		&info) const
     {
       if (this == &info)
 	return (true);
-      if (socklen != info.socklen)
-	return (false);
-      if (memcmp((void*)&sockaddr, (void*)&info.sockaddr, socklen))
-	return (false);
-      return (true);
+      if (!socklen || !info.socklen)
+	return (socklen == info.socklen);
+      return (sockaddr.sin_family == info.sockaddr.sin_family &&
+	      sockaddr.sin_addr.s_addr == info.sockaddr.sin_addr.s_addr &&
+	      sockaddr.sin_port == info.sockaddr.sin_port);
     }
     bool		operator!=(const Info		&info) const
     {
@@ -72,6 +80,7 @@ namespace		network
     Info(const struct sockaddr_in	&in,
 	 const socklen_t		&le)
     {
+      memset((void*)this, 0, sizeof(*this));
       memcpy(&sockaddr, &in, sizeof(sockaddr));
       socklen = le;
     }

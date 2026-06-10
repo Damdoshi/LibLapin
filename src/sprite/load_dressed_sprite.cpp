@@ -155,6 +155,33 @@ t_bunny_dressed_sprite	*_bunny_read_dressed_sprite(t_bunny_configuration	*config
   return (NULL);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_load_dressed_sprite
+ * @doc-kind function
+ * @doc-module sprite
+ * @doc-order 510
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Loads a dressed sprite from a configuration file.
+ * @param file Dressed-sprite configuration file.
+ * @param wardrobe Optional wardrobe used to share closets.
+ * @return-success Returns a newly allocated dressed sprite.
+ * @return-failure Returns NULL on error.
+ * @see bunny_read_dressed_sprite, bunny_delete_clipable
+ *
+ * @doc-lang fr
+ * @brief Charge un sprite habillé depuis un fichier de configuration.
+ * @param file Fichier de configuration du sprite habillé.
+ * @param wardrobe Garde-robe optionnelle utilisée pour partager les placards.
+ * @return-success Renvoie un sprite habillé nouvellement alloué.
+ * @return-failure Renvoie NULL en cas d'erreur.
+ * @see bunny_read_dressed_sprite, bunny_delete_clipable
+ */
 t_bunny_dressed_sprite	*bunny_load_dressed_sprite(const char	*file,
 						   t_bunny_map	*wardrobe)
 {

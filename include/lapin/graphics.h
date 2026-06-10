@@ -50,6 +50,51 @@
 #  pragma			pack(4)
 # endif
 
+/**
+ * @doc-symbol t_bunny_clipable
+ * @doc-module graphics
+ * @doc-kind type
+ * @doc-order 10
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Describes a graphic element that can be clipped, positioned, scaled, rotated and color-masked.
+ * @description This structure inherits from t_bunny_buffer by having it as first field. It can therefore be passed to functions expecting a t_bunny_buffer when appropriate.
+ * @description The clipping fields select the subpart used as a source. The position, origin, scale and rotation fields describe how the clipable is transformed when it is drawn.
+ * @param buffer The inherited t_bunny_buffer header describing the size and kind of the graphic element.
+ * @param clip_x_position The X position of the clipped source rectangle. The default value is 0.
+ * @param clip_y_position The Y position of the clipped source rectangle. The default value is 0.
+ * @param clip_width The width of the clipped source rectangle. The default value is buffer.width.
+ * @param clip_height The height of the clipped source rectangle. The default value is buffer.height.
+ * @param position The default drawing position used when a blit position parameter is NULL.
+ * @param origin The hot spot of the clipable and its rotation center. The default value is 0, 0.
+ * @param scale The scale applied to the clipable. The default value is 1, 1.
+ * @param rotation The rotation angle in degrees. The default value is 0.
+ * @param color_mask The color mask applied when the clipable is used as a source. The default value is WHITE.
+ * @param smooth Enables texture smoothing when the backend supports it.
+ * @param mosaic Enables repeated texture addressing when the backend supports it.
+ * @see bunny_clipable_copy, bunny_set_clipable_attribute, bunny_blit, bunny_picture, t_bunny_pixelarray
+ *
+ * @doc-lang fr
+ * @brief Décrit un élément graphique pouvant être découpé, placé, redimensionné, pivoté et masqué par couleur.
+ * @description Cette structure hérite de t_bunny_buffer en le plaçant comme premier champ. Elle peut donc être transmise aux fonctions attendant un t_bunny_buffer lorsque c’est pertinent.
+ * @description Les champs de découpe sélectionnent la sous-partie utilisée comme source. Les champs position, origin, scale et rotation décrivent la transformation appliquée au moment du dessin.
+ * @param buffer L’en-tête t_bunny_buffer hérité, décrivant la taille et la nature de l’élément graphique.
+ * @param clip_x_position La position X du rectangle source découpé. La valeur par défaut est 0.
+ * @param clip_y_position La position Y du rectangle source découpé. La valeur par défaut est 0.
+ * @param clip_width La largeur du rectangle source découpé. La valeur par défaut est buffer.width.
+ * @param clip_height La hauteur du rectangle source découpé. La valeur par défaut est buffer.height.
+ * @param position La position de dessin par défaut utilisée lorsque le paramètre de position d’un blit vaut NULL.
+ * @param origin Le point d’accroche du clipable et son centre de rotation. La valeur par défaut est 0, 0.
+ * @param scale Le facteur d’échelle appliqué au clipable. La valeur par défaut est 1, 1.
+ * @param rotation L’angle de rotation en degrés. La valeur par défaut est 0.
+ * @param color_mask Le masque de couleur appliqué lorsque le clipable est utilisé comme source. La valeur par défaut est WHITE.
+ * @param smooth Active le lissage de texture lorsque le moteur sous-jacent le permet.
+ * @param mosaic Active la répétition de texture lorsque le moteur sous-jacent le permet.
+ * @see bunny_clipable_copy, bunny_set_clipable_attribute, bunny_blit, bunny_picture, t_bunny_pixelarray
+ */
 typedef struct			s_bunny_clipable
 {
   t_bunny_buffer		buffer;
@@ -66,6 +111,29 @@ typedef struct			s_bunny_clipable
   bool				mosaic;
 }				t_bunny_clipable;
 
+/**
+ * @doc-symbol bunny_clipable_copy
+ * @doc-module graphics
+ * @doc-kind macro
+ * @doc-order 15
+ * @doc-since 13
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Copies the public transformation attributes of a clipable into another one.
+ * @description The buffer itself and the underlying graphic resource are not copied. Only clipping, position, origin, scale, rotation, color mask and display flags are copied.
+ * @param dest The clipable that receives the copied attributes.
+ * @param ori The clipable used as source.
+ * @see t_bunny_clipable
+ *
+ * @doc-lang fr
+ * @brief Copie les attributs publics de transformation d’un clipable vers un autre.
+ * @description Le buffer lui-même et la ressource graphique sous-jacente ne sont pas copiés. Seuls la découpe, la position, l’origine, l’échelle, la rotation, le masque de couleur et les drapeaux d’affichage sont copiés.
+ * @param dest Le clipable qui reçoit les attributs copiés.
+ * @param ori Le clipable utilisé comme source.
+ * @see t_bunny_clipable
+ */
 # define			bunny_clipable_copy(dest, ori) do {	\
     (dest)->clip_x_position = (ori)->clip_x_position;			\
     (dest)->clip_y_position = (ori)->clip_y_position;			\
@@ -83,6 +151,25 @@ typedef struct			s_bunny_clipable
     (dest)->mosaic = (ori)->mosaic;					\
   } while (0)
 
+/**
+ * @doc-symbol t_bunny_bitwidth
+ * @doc-module graphics
+ * @doc-kind type
+ * @doc-order 18
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Enumerates the color depths supported by forged pixelarrays.
+ * @description Values describe indexed, direct ARGB and floating color layouts. For bitplane pixelarrays, the bit count is provided separately.
+ * @see bunny_forge_pixelarray, t_bunny_pixelarray
+ *
+ * @doc-lang fr
+ * @brief Énumère les profondeurs de couleur prises en charge par les pixelarrays forgés.
+ * @description Les valeurs décrivent les formats indexés, ARGB direct et flottant. Pour les pixelarrays en bitplane, le nombre de bits est fourni séparément.
+ * @see bunny_forge_pixelarray, t_bunny_pixelarray
+ */
 typedef enum			e_bunny_bitwidth
   {
     BBW_BLACK_AND_WHITE,
@@ -121,6 +208,41 @@ typedef enum			e_bunny_bitwidth
 ** The bunny_self_test function will help you by testing you functions after
 ** you set them to these function pointers.
 */
+/**
+ * @doc-symbol t_bunny_pixelarray
+ * @doc-module graphics
+ * @doc-kind type
+ * @doc-order 20
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Represents a graphic buffer stored in system memory with direct pixel access.
+ * @description A pixelarray is convenient when pixels must be read or written manually. By default, LibLapin does not draw into pixelarrays unless the matching gl_bunny_my_* callbacks are provided.
+ * @description The pixels field starts at the top-left pixel and is stored line after line.
+ * @param clipable The inherited clipable header. Its clipping fields are meaningful when the pixelarray is used as a source.
+ * @param pixels The raw pixel storage. Its layout is described by the following fields.
+ * @param bits_per_pixels The color depth or bit count depending on bitplane.
+ * @param bitplane True when the pixelarray uses bitplanes instead of direct color depth.
+ * @param color_palette_size The amount of entries used in color_palette.
+ * @param color_palette The palette used by indexed formats.
+ * @param color_shifts The component shifts used to interpret direct color pixels.
+ * @see bunny_new_pixelarray, bunny_forge_pixelarray, bunny_load_pixelarray, bunny_delete_clipable
+ *
+ * @doc-lang fr
+ * @brief Représente un buffer graphique stocké en mémoire système avec accès direct aux pixels.
+ * @description Un pixelarray est pratique lorsque les pixels doivent être lus ou écrits manuellement. Par défaut, la LibLapin ne dessine pas dans les pixelarrays sans les callbacks gl_bunny_my_* correspondants.
+ * @description Le champ pixels commence au pixel en haut à gauche et se poursuit ligne après ligne.
+ * @param clipable L’en-tête clipable hérité. Ses champs de découpe sont significatifs lorsque le pixelarray est utilisé comme source.
+ * @param pixels Le stockage brut des pixels. Son organisation est décrite par les champs suivants.
+ * @param bits_per_pixels La profondeur de couleur ou le nombre de bits selon bitplane.
+ * @param bitplane Vaut true lorsque le pixelarray utilise des bitplanes plutôt qu’une profondeur de couleur directe.
+ * @param color_palette_size Le nombre d’entrées utilisées dans color_palette.
+ * @param color_palette La palette utilisée par les formats indexés.
+ * @param color_shifts Les décalages de composantes utilisés pour interpréter les pixels en couleur directe.
+ * @see bunny_new_pixelarray, bunny_forge_pixelarray, bunny_load_pixelarray, bunny_delete_clipable
+ */
 typedef struct			s_bunny_pixelarray
 {
   t_bunny_clipable		clipable;
@@ -185,6 +307,33 @@ t_bunny_pixelarray		*bunny_read_pixelarray_id(const void		*buffer,
 ** \param buffer The buffer that contains the loaded in memory picture file
 ** \return Return a t_bunny_pixelarray filled with the picture or NULL on error.
 */
+/**
+ * @doc-symbol bunny_read_pixelarray
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 60
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Reads an image file already loaded in memory and returns it as a pixelarray.
+ * @description This is a convenience macro calling bunny_read_pixelarray_id with a NULL resource identifier.
+ * @param buffer The memory buffer containing the complete encoded picture file.
+ * @param len The size of buffer in bytes.
+ * @return-success A newly allocated t_bunny_pixelarray.
+ * @return-failure NULL on failure.
+ * @see bunny_read_pixelarray_id, bunny_load_pixelarray, bunny_new_pixelarray
+ *
+ * @doc-lang fr
+ * @brief Lit un fichier image déjà chargé en mémoire et le renvoie sous forme de pixelarray.
+ * @description C’est une macro de confort appelant bunny_read_pixelarray_id avec un identifiant de ressource NULL.
+ * @param buffer Le buffer mémoire contenant le fichier image encodé complet.
+ * @param len La taille de buffer en octets.
+ * @return-success Un t_bunny_pixelarray nouvellement alloué.
+ * @return-failure NULL en cas d’échec.
+ * @see bunny_read_pixelarray_id, bunny_load_pixelarray, bunny_new_pixelarray
+ */
 #define				bunny_read_pixelarray(buffer, len)		\
   bunny_read_pixelarray_id(buffer, len, NULL)
 
@@ -195,6 +344,31 @@ t_bunny_pixelarray		*bunny_read_pixelarray_id(const void		*buffer,
 ** The self test function does not currently evaluate the function you would assign to
 ** gl_bunny_my_load_pixelarray.
 */
+/**
+ * @doc-symbol t_bunny_my_load_pixelarray
+ * @doc-module graphics
+ * @doc-kind callback
+ * @doc-order 70
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Type of a custom image-file loader returning a pixelarray.
+ * @description This extension point is intended for image formats not handled by the library loader.
+ * @param file The path of the file to load.
+ * @return-success A loaded t_bunny_pixelarray.
+ * @return-failure NULL when the custom loader cannot load the file.
+ * @see gl_bunny_my_load_pixelarray, bunny_load_pixelarray
+ *
+ * @doc-lang fr
+ * @brief Type d’un chargeur personnalisé de fichier image renvoyant un pixelarray.
+ * @description Ce point d’extension est destiné aux formats d’image qui ne sont pas pris en charge par le chargeur de la bibliothèque.
+ * @param file Le chemin du fichier à charger.
+ * @return-success Un t_bunny_pixelarray chargé.
+ * @return-failure NULL lorsque le chargeur personnalisé ne peut pas charger le fichier.
+ * @see gl_bunny_my_load_pixelarray, bunny_load_pixelarray
+ */
 typedef t_bunny_pixelarray	*(*t_bunny_my_load_pixelarray)(const char	*file);
 
 /*!
@@ -204,6 +378,33 @@ typedef t_bunny_pixelarray	*(*t_bunny_my_load_pixelarray)(const char	*file);
 ** The self test function does not currently evaluate the function you would assign to
 ** gl_bunny_my_read_pixelarray.
 */
+/**
+ * @doc-symbol t_bunny_my_read_pixelarray
+ * @doc-module graphics
+ * @doc-kind callback
+ * @doc-order 80
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Type of a custom in-memory image reader returning a pixelarray.
+ * @description This extension point is intended for encoded image data already present in memory.
+ * @param buf The memory buffer containing the encoded picture.
+ * @param length The size of buf in bytes.
+ * @return-success A loaded t_bunny_pixelarray.
+ * @return-failure NULL when the custom reader cannot read the buffer.
+ * @see gl_bunny_my_read_pixelarray, bunny_read_pixelarray_id
+ *
+ * @doc-lang fr
+ * @brief Type d’un lecteur personnalisé d’image en mémoire renvoyant un pixelarray.
+ * @description Ce point d’extension est destiné aux données d’image encodées déjà présentes en mémoire.
+ * @param buf Le buffer mémoire contenant l’image encodée.
+ * @param length La taille de buf en octets.
+ * @return-success Un t_bunny_pixelarray chargé.
+ * @return-failure NULL lorsque le lecteur personnalisé ne peut pas lire le buffer.
+ * @see gl_bunny_my_read_pixelarray, bunny_read_pixelarray_id
+ */
 typedef t_bunny_pixelarray	*(*t_bunny_my_read_pixelarray)(const void	*buf,
 							       size_t		length);
 
@@ -211,16 +412,54 @@ typedef t_bunny_pixelarray	*(*t_bunny_my_read_pixelarray)(const void	*buf,
 ** The gl_bunny_my_load_pixelarray is supposed to be the function pointer to set
 ** in order to expand bunny_load_pixelarray functionnalities to manage new types
 ** of picture and having your function evaluate by bunny_self_test, but it is
-** currently unused.p
+** currently unused.
 */
+/**
+ * @doc-symbol gl_bunny_my_load_pixelarray
+ * @doc-module graphics
+ * @doc-kind global
+ * @doc-order 90
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Custom pixelarray loader hook.
+ * @description Assign a t_bunny_my_load_pixelarray function here to extend picture loading with additional file formats.
+ * @see t_bunny_my_load_pixelarray, bunny_load_pixelarray
+ *
+ * @doc-lang fr
+ * @brief Point d’accroche pour chargeur personnalisé de pixelarray.
+ * @description Assignez ici une fonction t_bunny_my_load_pixelarray pour étendre le chargement d’images à des formats supplémentaires.
+ * @see t_bunny_my_load_pixelarray, bunny_load_pixelarray
+ */
 extern t_bunny_my_load_pixelarray gl_bunny_my_load_pixelarray;
 
 /*!
 ** The gl_bunny_my_read_pixelarray is supposed to be the function pointer to set
 ** in order to expand bunny_read_pixelarray functionnalities to manage new types
 ** of picture and having your function evaluate by bunny_self_test, but it is
-** currently unused.p
+** currently unused.
 */
+/**
+ * @doc-symbol gl_bunny_my_read_pixelarray
+ * @doc-module graphics
+ * @doc-kind global
+ * @doc-order 100
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Custom in-memory pixelarray reader hook.
+ * @description Assign a t_bunny_my_read_pixelarray function here to extend image decoding from memory.
+ * @see t_bunny_my_read_pixelarray, bunny_read_pixelarray_id
+ *
+ * @doc-lang fr
+ * @brief Point d’accroche pour lecteur personnalisé de pixelarray en mémoire.
+ * @description Assignez ici une fonction t_bunny_my_read_pixelarray pour étendre le décodage d’image depuis la mémoire.
+ * @see t_bunny_my_read_pixelarray, bunny_read_pixelarray_id
+ */
 extern t_bunny_my_read_pixelarray gl_bunny_my_read_pixelarray;
 
 /*!
@@ -241,6 +480,27 @@ bool				bunny_save_pixelarray(const t_bunny_pixelarray	*buf,
 **
 ** Note that every t_bunny_clipable attributes are fully working with t_bunny_picture.
 */
+/**
+ * @doc-symbol t_bunny_picture
+ * @doc-module graphics
+ * @doc-kind type
+ * @doc-order 120
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Represents a graphic resource stored on the graphic backend.
+ * @description Pictures are faster than pixelarrays for blits and complex drawing operations. They do not provide fast direct pixel access.
+ * @description All t_bunny_clipable attributes are meaningful on pictures.
+ * @see t_bunny_clipable, bunny_new_picture, bunny_load_picture, bunny_delete_clipable
+ *
+ * @doc-lang fr
+ * @brief Représente une ressource graphique stockée côté moteur graphique.
+ * @description Les pictures sont plus rapides que les pixelarrays pour les blits et les opérations de dessin complexes. Elles ne fournissent pas d’accès direct rapide aux pixels.
+ * @description Tous les attributs de t_bunny_clipable sont significatifs sur les pictures.
+ * @see t_bunny_clipable, bunny_new_picture, bunny_load_picture, bunny_delete_clipable
+ */
 typedef t_bunny_clipable	t_bunny_picture;
 
 /*!
@@ -296,6 +556,33 @@ t_bunny_picture			*bunny_read_picture_id(const void		*pic,
 ** to store the ressource inside the bunny ressource manager.
 ** \return Return a t_bunny_picture filled with the picture or NULL on error.
 */
+/**
+ * @doc-symbol bunny_read_picture
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 160
+ * @doc-since 5
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Reads an image file already loaded in memory and returns it as a picture.
+ * @description This is a convenience macro calling bunny_read_picture_id with a NULL resource identifier.
+ * @param buffer The memory buffer containing the complete encoded picture file.
+ * @param len The size of buffer in bytes.
+ * @return-success A newly allocated t_bunny_picture.
+ * @return-failure NULL on failure.
+ * @see bunny_read_picture_id, bunny_load_picture, bunny_new_picture
+ *
+ * @doc-lang fr
+ * @brief Lit un fichier image déjà chargé en mémoire et le renvoie sous forme de picture.
+ * @description C’est une macro de confort appelant bunny_read_picture_id avec un identifiant de ressource NULL.
+ * @param buffer Le buffer mémoire contenant le fichier image encodé complet.
+ * @param len La taille de buffer en octets.
+ * @return-success Un t_bunny_picture nouvellement alloué.
+ * @return-failure NULL en cas d’échec.
+ * @see bunny_read_picture_id, bunny_load_picture, bunny_new_picture
+ */
 #define				bunny_read_picture(buffer, len)			\
   bunny_read_picture_id(buffer, len, NULL)
 
@@ -303,6 +590,25 @@ t_bunny_picture			*bunny_read_picture_id(const void		*pic,
 **
 **
 */
+/**
+ * @doc-symbol t_bunny_clipable_type
+ * @doc-module graphics
+ * @doc-kind type
+ * @doc-order 165
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Identifies the concrete kind of clipable configured by bunny_set_clipable_attribute.
+ * @description The value tells the configuration loader whether it must create or configure a pixelarray, picture, sprite, font, tilemap, parallax or cinematic object.
+ * @see bunny_set_clipable_attribute
+ *
+ * @doc-lang fr
+ * @brief Identifie le type concret de clipable configuré par bunny_set_clipable_attribute.
+ * @description La valeur indique au chargeur de configuration s’il doit créer ou configurer un pixelarray, une picture, un sprite, une police, une tilemap, un parallax ou une cinématique.
+ * @see bunny_set_clipable_attribute
+ */
 typedef enum			t_bunny_clipable_type
   {
     BCT_PIXELARRAY,
@@ -400,6 +706,31 @@ void				bunny_blit(t_bunny_buffer			*buf,
 ** the bunny library with your blitting function. Set your function to the gl_bunny_my_blit
 ** pointer to add it to the library.
 */
+/**
+ * @doc-symbol t_bunny_my_blit
+ * @doc-module graphics
+ * @doc-kind callback
+ * @doc-order 190
+ * @doc-since 1
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Type of a user blitter used when blitting pixelarrays together.
+ * @description Set gl_bunny_my_blit to a function of this type to make bunny_blit work from one t_bunny_pixelarray to another.
+ * @param pix The destination pixelarray.
+ * @param in The source pixelarray.
+ * @param pos The destination position, or NULL for the source position.
+ * @see gl_bunny_my_blit, bunny_blit
+ *
+ * @doc-lang fr
+ * @brief Type d’un blitter utilisateur utilisé pour blitter des pixelarrays entre eux.
+ * @description Assignez une fonction de ce type à gl_bunny_my_blit pour permettre à bunny_blit de fonctionner d’un t_bunny_pixelarray vers un autre.
+ * @param pix Le pixelarray de destination.
+ * @param in Le pixelarray source.
+ * @param pos La position de destination, ou NULL pour utiliser la position de la source.
+ * @see gl_bunny_my_blit, bunny_blit
+ */
 typedef void			(*t_bunny_my_blit)(t_bunny_pixelarray		*pix,
 						   const t_bunny_pixelarray	*in,
 						   const t_bunny_position	*pos);
@@ -409,6 +740,25 @@ typedef void			(*t_bunny_my_blit)(t_bunny_pixelarray		*pix,
 ** 's value is NULL and so does not work. By setting your function to it, you can
 ** make bunny_blit works for two pixelarrays.
 */
+/**
+ * @doc-symbol gl_bunny_my_blit
+ * @doc-module graphics
+ * @doc-kind global
+ * @doc-order 200
+ * @doc-since 1
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Pixelarray blitter hook used by bunny_blit.
+ * @description The default value is NULL. When it is NULL, bunny_blit cannot draw into a t_bunny_pixelarray.
+ * @see t_bunny_my_blit, bunny_blit
+ *
+ * @doc-lang fr
+ * @brief Point d’accroche de blit pixelarray utilisé par bunny_blit.
+ * @description La valeur par défaut est NULL. Lorsqu’elle vaut NULL, bunny_blit ne peut pas dessiner dans un t_bunny_pixelarray.
+ * @see t_bunny_my_blit, bunny_blit
+ */
 extern t_bunny_my_blit		gl_bunny_my_blit;
 
 /*!
@@ -441,6 +791,29 @@ void				bunny_set_pixel(t_bunny_buffer			*buf,
 ** the bunny library with your own pixel drawing function. Set your function to the
 ** gl_bunny_my_set_pixel function pointer to add it to the library.
 */
+/**
+ * @doc-symbol t_bunny_my_set_pixel
+ * @doc-module graphics
+ * @doc-kind callback
+ * @doc-order 230
+ * @doc-since 1
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Type of a user function that draws one pixel into a pixelarray.
+ * @param pix The destination pixelarray.
+ * @param pos The pixel position.
+ * @param color The color to draw.
+ * @see gl_bunny_my_set_pixel, bunny_set_pixel
+ *
+ * @doc-lang fr
+ * @brief Type d’une fonction utilisateur dessinant un pixel dans un pixelarray.
+ * @param pix Le pixelarray de destination.
+ * @param pos La position du pixel.
+ * @param color La couleur à dessiner.
+ * @see gl_bunny_my_set_pixel, bunny_set_pixel
+ */
 typedef void			(*t_bunny_my_set_pixel)(t_bunny_pixelarray	*pix,
 							t_bunny_position	pos,
 							unsigned int		color);
@@ -450,13 +823,32 @@ typedef void			(*t_bunny_my_set_pixel)(t_bunny_pixelarray	*pix,
 ** not work. By setting your function to it, you can make bunny_set_pixel works for
 ** pixelarrays.
 */
+/**
+ * @doc-symbol gl_bunny_my_set_pixel
+ * @doc-module graphics
+ * @doc-kind global
+ * @doc-order 240
+ * @doc-since 1
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Pixelarray pixel-drawing hook used by bunny_set_pixel.
+ * @description The default value is NULL. Assign a matching callback to enable this operation on t_bunny_pixelarray targets.
+ * @see t_bunny_my_set_pixel, bunny_set_pixel
+ *
+ * @doc-lang fr
+ * @brief Point d’accroche de dessin de pixel dans un pixelarray utilisé par bunny_set_pixel.
+ * @description La valeur par défaut est NULL. Assignez un callback correspondant pour activer cette opération sur les cibles t_bunny_pixelarray.
+ * @see t_bunny_my_set_pixel, bunny_set_pixel
+ */
 extern t_bunny_my_set_pixel	gl_bunny_my_set_pixel;
 
 /*!
 ** The bunny_set_circle function draw a circle (1 pixel thick) on the sent t_bunny_buffer.
 **
 ** This funtion will not work on t_bunny_pixelarray if you did not have set a
-** correct function to its associated gl_bunny_my_set_circle function pointer.
+** correct function to its associated gl_bunny_my_set_disk function pointer.
 ** You can test your function with the bunny_self_test function.
 ** /!\ It will also test the alpha management and gradiants
 **
@@ -465,6 +857,33 @@ extern t_bunny_my_set_pixel	gl_bunny_my_set_pixel;
 ** \param rad The radius of the circle
 ** \param col The color of the pixel to draw
 */
+/**
+ * @doc-symbol bunny_set_circle
+ * @doc-module graphics
+ * @doc-kind function
+ * @doc-order 250
+ * @doc-since 8
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Draws the outline of a circle on a buffer.
+ * @description This is a convenience macro calling bunny_set_disk with a transparent inside color and a thickness of 1.
+ * @param buf The target buffer.
+ * @param pos The center of the circle.
+ * @param rad The radius of the circle.
+ * @param col The color of the circle outline.
+ * @see bunny_set_disk, t_bunny_my_set_disk, gl_bunny_my_set_disk
+ *
+ * @doc-lang fr
+ * @brief Dessine le contour d’un cercle dans un buffer.
+ * @description C’est une macro de confort appelant bunny_set_disk avec une couleur intérieure transparente et une épaisseur de 1.
+ * @param buf Le buffer cible.
+ * @param pos Le centre du cercle.
+ * @param rad Le rayon du cercle.
+ * @param col La couleur du contour du cercle.
+ * @see bunny_set_disk, t_bunny_my_set_disk, gl_bunny_my_set_disk
+ */
 # define			bunny_set_circle(buf, pos, rad, col)		\
   bunny_set_disk(buf, pos, rad, TRANSPARENT, col, 1)
 
@@ -472,7 +891,7 @@ extern t_bunny_my_set_pixel	gl_bunny_my_set_pixel;
 ** The bunny_set_disk function draw a disk on the sent t_bunny_buffer.
 
 ** This funtion will not work on t_bunny_pixelarray if you did not have set a
-** correct function to its associated gl_bunny_my_set_circle function pointer.
+** correct function to its associated gl_bunny_my_set_disk function pointer.
 ** You can test your function with the bunny_self_test function.
 ** /!\ It will also test the alpha management and gradiants
 **
@@ -493,6 +912,35 @@ void				bunny_set_disk(t_bunny_buffer			*buf,
 ** the bunny library with your own disk drawing function. Set your function to the
 ** gl_bunny_my_set_disk function pointer to add it to the library.
 */
+/**
+ * @doc-symbol t_bunny_my_set_disk
+ * @doc-module graphics
+ * @doc-kind callback
+ * @doc-order 260
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Type of a user function that draws a disk or circle into a pixelarray.
+ * @param pix The destination pixelarray.
+ * @param pos The center of the disk.
+ * @param rad The disk radius on X and Y.
+ * @param icol The inside color.
+ * @param ocol The outline color.
+ * @param thik The outline thickness.
+ * @see gl_bunny_my_set_disk, bunny_set_disk, bunny_set_circle
+ *
+ * @doc-lang fr
+ * @brief Type d’une fonction utilisateur dessinant un disque ou un cercle dans un pixelarray.
+ * @param pix Le pixelarray de destination.
+ * @param pos Le centre du disque.
+ * @param rad Le rayon du disque en X et en Y.
+ * @param icol La couleur intérieure.
+ * @param ocol La couleur du contour.
+ * @param thik L’épaisseur du contour.
+ * @see gl_bunny_my_set_disk, bunny_set_disk, bunny_set_circle
+ */
 typedef void			(*t_bunny_my_set_disk)(t_bunny_pixelarray	*pix,
 						       t_bunny_position		pos,
 						       t_bunny_position		rad,
@@ -506,6 +954,25 @@ typedef void			(*t_bunny_my_set_disk)(t_bunny_pixelarray	*pix,
 ** not work. By setting your function to it, you can make bunny_set_disk works for
 ** pixelarrays.
 */
+/**
+ * @doc-symbol gl_bunny_my_set_disk
+ * @doc-module graphics
+ * @doc-kind global
+ * @doc-order 270
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Pixelarray disk-drawing hook used by bunny_set_disk and bunny_set_circle.
+ * @description The default value is NULL. Assign a matching callback to enable this operation on t_bunny_pixelarray targets.
+ * @see t_bunny_my_set_disk, bunny_set_disk, bunny_set_circle
+ *
+ * @doc-lang fr
+ * @brief Point d’accroche de dessin de disque dans un pixelarray utilisé par bunny_set_disk et bunny_set_circle.
+ * @description La valeur par défaut est NULL. Assignez un callback correspondant pour activer cette opération sur les cibles t_bunny_pixelarray.
+ * @see t_bunny_my_set_disk, bunny_set_disk, bunny_set_circle
+ */
 extern t_bunny_my_set_disk	gl_bunny_my_set_disk;
 
 /*!
@@ -529,6 +996,29 @@ void				bunny_set_line(t_bunny_buffer			*buf,
 ** the bunny library with your own line drawing function. Set your function to the
 ** gl_bunny_my_set_line function pointer to add it to the library.
 */
+/**
+ * @doc-symbol t_bunny_my_set_line
+ * @doc-module graphics
+ * @doc-kind callback
+ * @doc-order 290
+ * @doc-since 1
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Type of a user function that draws a line into a pixelarray.
+ * @param pix The destination pixelarray.
+ * @param pos The two line endpoints.
+ * @param col The endpoint colors used for the gradient.
+ * @see gl_bunny_my_set_line, bunny_set_line
+ *
+ * @doc-lang fr
+ * @brief Type d’une fonction utilisateur dessinant une ligne dans un pixelarray.
+ * @param pix Le pixelarray de destination.
+ * @param pos Les deux extrémités de la ligne.
+ * @param col Les couleurs des extrémités utilisées pour le dégradé.
+ * @see gl_bunny_my_set_line, bunny_set_line
+ */
 typedef void			(*t_bunny_my_set_line)(t_bunny_pixelarray	*pix,
 						       const t_bunny_position	*pos,
 						       const unsigned int	*col);
@@ -538,6 +1028,25 @@ typedef void			(*t_bunny_my_set_line)(t_bunny_pixelarray	*pix,
 ** not work. By setting your function to it, you can make bunny_set_line works for
 ** pixelarrays.
 */
+/**
+ * @doc-symbol gl_bunny_my_set_line
+ * @doc-module graphics
+ * @doc-kind global
+ * @doc-order 300
+ * @doc-since 1
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Pixelarray line-drawing hook used by bunny_set_line.
+ * @description The default value is NULL. Assign a matching callback to enable this operation on t_bunny_pixelarray targets.
+ * @see t_bunny_my_set_line, bunny_set_line
+ *
+ * @doc-lang fr
+ * @brief Point d’accroche de dessin de ligne dans un pixelarray utilisé par bunny_set_line.
+ * @description La valeur par défaut est NULL. Assignez un callback correspondant pour activer cette opération sur les cibles t_bunny_pixelarray.
+ * @see t_bunny_my_set_line, bunny_set_line
+ */
 extern t_bunny_my_set_line	gl_bunny_my_set_line;
 
 /*!
@@ -561,6 +1070,29 @@ void				bunny_set_polygon(t_bunny_buffer		*buf,
 ** the bunny library with your own polygon drawing function. Set your function to the
 ** gl_bunny_my_set_polygon function pointer to add it to the library.
 */
+/**
+ * @doc-symbol t_bunny_my_set_polygon
+ * @doc-module graphics
+ * @doc-kind callback
+ * @doc-order 320
+ * @doc-since 1
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Type of a user function that draws a filled triangle into a pixelarray.
+ * @param pix The destination pixelarray.
+ * @param pos The three triangle points.
+ * @param color The three point colors used for the gradient.
+ * @see gl_bunny_my_set_polygon, bunny_set_polygon
+ *
+ * @doc-lang fr
+ * @brief Type d’une fonction utilisateur dessinant un triangle plein dans un pixelarray.
+ * @param pix Le pixelarray de destination.
+ * @param pos Les trois points du triangle.
+ * @param color Les trois couleurs des points utilisées pour le dégradé.
+ * @see gl_bunny_my_set_polygon, bunny_set_polygon
+ */
 typedef void			(*t_bunny_my_set_polygon)(t_bunny_pixelarray	*pix,
 							  const t_bunny_position*pos,
 							  const unsigned int	*color);
@@ -571,14 +1103,75 @@ typedef void			(*t_bunny_my_set_polygon)(t_bunny_pixelarray	*pix,
 ** not work. By setting your function to it, you can make bunny_set_polygon works for
 ** pixelarrays.
 */
+/**
+ * @doc-symbol gl_bunny_my_set_polygon
+ * @doc-module graphics
+ * @doc-kind global
+ * @doc-order 330
+ * @doc-since 1
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Pixelarray polygon-drawing hook used by bunny_set_polygon.
+ * @description The default value is NULL. Assign a matching callback to enable this operation on t_bunny_pixelarray targets.
+ * @see t_bunny_my_set_polygon, bunny_set_polygon
+ *
+ * @doc-lang fr
+ * @brief Point d’accroche de dessin de polygone dans un pixelarray utilisé par bunny_set_polygon.
+ * @description La valeur par défaut est NULL. Assignez un callback correspondant pour activer cette opération sur les cibles t_bunny_pixelarray.
+ * @see t_bunny_my_set_polygon, bunny_set_polygon
+ */
 extern t_bunny_my_set_polygon	gl_bunny_my_set_polygon;
 
 void				bunny_set_zpolygon(t_bunny_buffer		*buf,
 						   const t_bunny_accurate_zposition *pos,
 						   const unsigned int		*col);
+/**
+ * @doc-symbol t_bunny_my_set_zpolygon
+ * @doc-module graphics
+ * @doc-kind callback
+ * @doc-order 333
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Type of a user function that draws a Z-aware triangle into a pixelarray.
+ * @param pix The destination pixelarray.
+ * @param pos The three triangle points with depth information.
+ * @param col The three point colors used for the gradient.
+ * @see gl_bunny_my_set_zpolygon, bunny_set_zpolygon
+ *
+ * @doc-lang fr
+ * @brief Type d’une fonction utilisateur dessinant un triangle tenant compte du Z dans un pixelarray.
+ * @param pix Le pixelarray de destination.
+ * @param pos Les trois points du triangle avec information de profondeur.
+ * @param col Les trois couleurs des points utilisées pour le dégradé.
+ * @see gl_bunny_my_set_zpolygon, bunny_set_zpolygon
+ */
 typedef void			(*t_bunny_my_set_zpolygon)(t_bunny_pixelarray	*pix,
 							   const t_bunny_accurate_zposition *pos,
 							   const unsigned int	*col);
+/**
+ * @doc-symbol gl_bunny_my_set_zpolygon
+ * @doc-module graphics
+ * @doc-kind global
+ * @doc-order 335
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Pixelarray Z-polygon drawing hook used by bunny_set_zpolygon.
+ * @description The default value is NULL. Assign a matching callback to enable this operation on t_bunny_pixelarray targets.
+ * @see t_bunny_my_set_zpolygon, bunny_set_zpolygon
+ *
+ * @doc-lang fr
+ * @brief Point d’accroche de dessin de polygone avec Z dans un pixelarray utilisé par bunny_set_zpolygon.
+ * @description La valeur par défaut est NULL. Assignez un callback correspondant pour activer cette opération sur les cibles t_bunny_pixelarray.
+ * @see t_bunny_my_set_zpolygon, bunny_set_zpolygon
+ */
 extern t_bunny_my_set_zpolygon	gl_bunny_my_set_zpolygon;
 
 /*!
@@ -601,6 +1194,27 @@ void				bunny_fill(t_bunny_buffer			*buffer,
 ** the bunny library with your own color filling function. Set your function to the
 ** gl_bunny_my_fill function pointer to add it to the library.
 */
+/**
+ * @doc-symbol t_bunny_my_fill
+ * @doc-module graphics
+ * @doc-kind callback
+ * @doc-order 350
+ * @doc-since 1
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Type of a user function that alpha-fills a pixelarray.
+ * @param pix The destination pixelarray.
+ * @param color The color to apply.
+ * @see gl_bunny_my_fill, bunny_fill
+ *
+ * @doc-lang fr
+ * @brief Type d’une fonction utilisateur remplissant un pixelarray avec alpha.
+ * @param pix Le pixelarray de destination.
+ * @param color La couleur à appliquer.
+ * @see gl_bunny_my_fill, bunny_fill
+ */
 typedef void			(*t_bunny_my_fill)(t_bunny_pixelarray		*pix,
 						   unsigned int			color);
 
@@ -610,6 +1224,25 @@ typedef void			(*t_bunny_my_fill)(t_bunny_pixelarray		*pix,
 ** not work. By setting your function to it, you can make bunny_fill works for
 ** pixelarrays.
 */
+/**
+ * @doc-symbol gl_bunny_my_fill
+ * @doc-module graphics
+ * @doc-kind global
+ * @doc-order 360
+ * @doc-since 1
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Pixelarray fill hook used by bunny_fill.
+ * @description The default value is NULL. Assign a matching callback to enable this operation on t_bunny_pixelarray targets.
+ * @see t_bunny_my_fill, bunny_fill
+ *
+ * @doc-lang fr
+ * @brief Point d’accroche de remplissage d’un pixelarray utilisé par bunny_fill.
+ * @description La valeur par défaut est NULL. Assignez un callback correspondant pour activer cette opération sur les cibles t_bunny_pixelarray.
+ * @see t_bunny_my_fill, bunny_fill
+ */
 extern t_bunny_my_fill		gl_bunny_my_fill;
 
 /*!
@@ -632,6 +1265,27 @@ void				bunny_clear(t_bunny_buffer			*buffer,
 ** the bunny library with your own color filling function. Set your function to the
 ** gl_bunny_my_clear function pointer to add it to the library.
 */
+/**
+ * @doc-symbol t_bunny_my_clear
+ * @doc-module graphics
+ * @doc-kind callback
+ * @doc-order 380
+ * @doc-since 1
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Type of a user function that clears a pixelarray by setting pixels directly.
+ * @param pix The destination pixelarray.
+ * @param color The color to set.
+ * @see gl_bunny_my_clear, bunny_clear
+ *
+ * @doc-lang fr
+ * @brief Type d’une fonction utilisateur effaçant un pixelarray en fixant directement les pixels.
+ * @param pix Le pixelarray de destination.
+ * @param color La couleur à écrire.
+ * @see gl_bunny_my_clear, bunny_clear
+ */
 typedef void			(*t_bunny_my_clear)(t_bunny_pixelarray		*pix,
 						    unsigned int		color);
 
@@ -641,6 +1295,25 @@ typedef void			(*t_bunny_my_clear)(t_bunny_pixelarray		*pix,
 ** not work. By setting your function to it, you can make bunny_clear works for
 ** pixelarrays.
 */
+/**
+ * @doc-symbol gl_bunny_my_clear
+ * @doc-module graphics
+ * @doc-kind global
+ * @doc-order 390
+ * @doc-since 1
+ * @doc-until latest
+ * @doc-level intermediate
+ *
+ * @doc-lang en
+ * @brief Pixelarray clear hook used by bunny_clear.
+ * @description The default value is NULL. Assign a matching callback to enable this operation on t_bunny_pixelarray targets.
+ * @see t_bunny_my_clear, bunny_clear
+ *
+ * @doc-lang fr
+ * @brief Point d’accroche d’effacement d’un pixelarray utilisé par bunny_clear.
+ * @description La valeur par défaut est NULL. Assignez un callback correspondant pour activer cette opération sur les cibles t_bunny_pixelarray.
+ * @see t_bunny_my_clear, bunny_clear
+ */
 extern t_bunny_my_clear		gl_bunny_my_clear;
 
 /*!
@@ -648,6 +1321,25 @@ extern t_bunny_my_clear		gl_bunny_my_clear;
 ** function about the content of the t_bunny_vertex_array structure.
 ** Each value make bunny_set_geometry interpret coordinates differently.
 */
+/**
+ * @doc-symbol t_bunny_geometry
+ * @doc-module graphics
+ * @doc-kind type
+ * @doc-order 400
+ * @doc-since 7
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Enumerates primitive modes for bunny_set_geometry.
+ * @description Each value changes how the vertices stored in t_bunny_vertex_array are grouped before being drawn.
+ * @see bunny_set_geometry, t_bunny_vertex_array
+ *
+ * @doc-lang fr
+ * @brief Énumère les modes de primitives de bunny_set_geometry.
+ * @description Chaque valeur change la manière dont les sommets stockés dans t_bunny_vertex_array sont regroupés avant le dessin.
+ * @see bunny_set_geometry, t_bunny_vertex_array
+ */
 typedef enum			e_bunny_geometry
   {
     BGY_PIXELS,
@@ -667,6 +1359,31 @@ typedef enum			e_bunny_geometry
 ** - The matching texture position (if there is a texture)
 ** - The color of the position (if there is no texture)
 */
+/**
+ * @doc-symbol t_bunny_vertex
+ * @doc-module graphics
+ * @doc-kind type
+ * @doc-order 410
+ * @doc-since 7
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Stores one vertex for geometry drawing.
+ * @description A vertex contains a 2D position, a texture coordinate and a color. The texture coordinate is used when a clipable texture is supplied.
+ * @param pos The position in the destination space.
+ * @param tex The texture coordinate.
+ * @param color The vertex color.
+ * @see t_bunny_vertex_array, bunny_set_geometry
+ *
+ * @doc-lang fr
+ * @brief Stocke un sommet pour le dessin géométrique.
+ * @description Un sommet contient une position 2D, une coordonnée de texture et une couleur. La coordonnée de texture est utilisée lorsqu’une texture clipable est fournie.
+ * @param pos La position dans l’espace de destination.
+ * @param tex La coordonnée de texture.
+ * @param color La couleur du sommet.
+ * @see t_bunny_vertex_array, bunny_set_geometry
+ */
 typedef struct			s_bunny_vertex
 {
   t_bunny_accurate_position	pos;
@@ -687,6 +1404,29 @@ typedef struct			s_bunny_vertex
 ** fill(&array->vertex[1]);
 */
 #pragma GCC diagnostic ignored "-Warray-bounds"
+/**
+ * @doc-symbol t_bunny_vertex_array
+ * @doc-module graphics
+ * @doc-kind type
+ * @doc-order 420
+ * @doc-since 7
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Stores a variable-length array of vertices.
+ * @description Reserve enough memory for the header plus the required number of t_bunny_vertex entries before filling length and vertex.
+ * @param length The number of vertices stored in vertex.
+ * @param vertex The first element of the variable-length vertex storage.
+ * @see t_bunny_vertex, bunny_set_geometry
+ *
+ * @doc-lang fr
+ * @brief Stocke un tableau de sommets de taille variable.
+ * @description Réservez assez de mémoire pour l’en-tête et pour le nombre voulu de t_bunny_vertex avant de remplir length et vertex.
+ * @param length Le nombre de sommets stockés dans vertex.
+ * @param vertex Le premier élément du stockage de sommets de taille variable.
+ * @see t_bunny_vertex, bunny_set_geometry
+ */
 typedef struct			s_bunny_vertex_array
 {
   size_t			length;
@@ -716,6 +1456,31 @@ void				bunny_set_geometry(t_bunny_buffer		*buffer,
 ** gl_bunny_my_geometry function pointer to add it to the library.
 ** The bunny_self_test does not currently evaluate the gl_bunny_my_geometry.
 */
+/**
+ * @doc-symbol t_bunny_my_geometry
+ * @doc-module graphics
+ * @doc-kind callback
+ * @doc-order 440
+ * @doc-since 7
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Type of a user function that draws vertex geometry into a pixelarray.
+ * @param pix The destination pixelarray.
+ * @param geometry The primitive interpretation mode.
+ * @param array The vertices to draw.
+ * @param picture The optional pixelarray texture.
+ * @see gl_bunny_my_geometry, bunny_set_geometry
+ *
+ * @doc-lang fr
+ * @brief Type d’une fonction utilisateur dessinant de la géométrie de sommets dans un pixelarray.
+ * @param pix Le pixelarray de destination.
+ * @param geometry Le mode d’interprétation des primitives.
+ * @param array Les sommets à dessiner.
+ * @param picture La texture pixelarray optionnelle.
+ * @see gl_bunny_my_geometry, bunny_set_geometry
+ */
 typedef void			(*t_bunny_my_geometry)(t_bunny_pixelarray	*pix,
 						       t_bunny_geometry		geometry,
 						       t_bunny_vertex_array	*array,
@@ -728,6 +1493,25 @@ typedef void			(*t_bunny_my_geometry)(t_bunny_pixelarray	*pix,
 ** pixelarrays.
 ** The bunny_self_test does not currently evaluate the gl_bunny_my_geometry.
 */
+/**
+ * @doc-symbol gl_bunny_my_geometry
+ * @doc-module graphics
+ * @doc-kind global
+ * @doc-order 450
+ * @doc-since 7
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Pixelarray geometry hook used by bunny_set_geometry.
+ * @description The default value is NULL. Assign a matching callback to enable this operation on t_bunny_pixelarray targets.
+ * @see t_bunny_my_geometry, bunny_set_geometry
+ *
+ * @doc-lang fr
+ * @brief Point d’accroche de dessin géométrique dans un pixelarray utilisé par bunny_set_geometry.
+ * @description La valeur par défaut est NULL. Assignez un callback correspondant pour activer cette opération sur les cibles t_bunny_pixelarray.
+ * @see t_bunny_my_geometry, bunny_set_geometry
+ */
 extern t_bunny_my_geometry	gl_bunny_my_geometry;
 
 /*
@@ -735,6 +1519,25 @@ extern t_bunny_my_geometry	gl_bunny_my_geometry;
 **
 */
 
+/**
+ * @doc-symbol t_bunny_scale_type
+ * @doc-module graphics
+ * @doc-kind type
+ * @doc-order 452
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Selects how bunny_scale_clipable fits a clipable into a target buffer.
+ * @description BST_STRETCH distorts to fill the target, BST_CONTAIN keeps the whole source visible, and BST_COVER fills the target while preserving proportions.
+ * @see bunny_scale_clipable
+ *
+ * @doc-lang fr
+ * @brief Sélectionne la manière dont bunny_scale_clipable ajuste un clipable dans un buffer cible.
+ * @description BST_STRETCH déforme pour remplir la cible, BST_CONTAIN garde toute la source visible et BST_COVER remplit la cible en conservant les proportions.
+ * @see bunny_scale_clipable
+ */
 typedef enum			e_bunny_scale_type
   {
     BST_STRETCH,
@@ -756,6 +1559,10 @@ void				bunny_enable_full_blit(bool			enable);
 void				bunny_set_alpha_blit(bool			enable);
 void				bunny_set_additional_blit(bool			enable);
 void				bunny_set_multiply_blit(bool			blend);
+
+void				bunny_enable_normal_map(bool			enable);
+void				bunny_display_normal_map(bool			enable);
+bool				bunny_swap_color_and_normal_map(t_bunny_clipable *s);
 
 /*!
 ** All picture loading function in the bunny library use a ressource manager to avoid

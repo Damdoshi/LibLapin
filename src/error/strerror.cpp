@@ -22,6 +22,29 @@ static const char	*bunny_errors[LAST_ERROR - BE_CANT_GENERATE_RESSOURCE] =
     "You tried to write a message on the server !"
   };
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_strerror
+ * @doc-kind function
+ * @doc-module error
+ * @doc-order 140
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Returns a human-readable description of an error code.
+ * @param errorcode Error code, usually bunny_errno.
+ * @return-success Returns a static string describing errorcode.
+ * @see bunny_errno, bunny_perror
+ *
+ * @doc-lang fr
+ * @brief Renvoie une description lisible d’un code d’erreur.
+ * @param errorcode Code d’erreur, généralement bunny_errno.
+ * @return-success Renvoie une chaîne statique décrivant errorcode.
+ * @see bunny_errno, bunny_perror
+ */
 const char		*bunny_strerror(int		errorid)
 {
   if (errorid <= BE_CANT_GENERATE_RESSOURCE)

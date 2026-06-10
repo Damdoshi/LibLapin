@@ -47,6 +47,32 @@ static bool		_bunny_read_box(t_bunny_box_system	*bs,
   return (true);
 }
 
+/**
+ * @doc
+ * @doc-symbol bunny_read_box
+ * @doc-kind function
+ * @doc-module context
+ * @doc-order 510
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Builds a GUI box system from an already loaded configuration tree.
+ * @param bs Box system to fill.
+ * @param cnf Configuration tree describing boxes.
+ * @return-success Returns $Ctrue@ on success.
+ * @return-failure Returns $Cfalse@ on error.
+ * @see t_bunny_box_system
+ *
+ * @doc-lang fr
+ * @brief Construit un système de boîtes GUI depuis un arbre de configuration déjà chargé.
+ * @param bs Box system to fill.
+ * @param cnf Configuration tree describing boxes.
+ * @return-success Renvoie $Ctrue@ en cas de succès.
+ * @return-failure Renvoie $Cfalse@ en cas d’erreur.
+ * @see t_bunny_box_system
+ */
 bool			bunny_read_box(t_bunny_box_system	*bs,
 				       t_bunny_configuration	*cnf)
 {

@@ -1,6 +1,11 @@
 
 => Gestion du globbing dans les @directive
 
+=> DANS Dabsic, permettre de donner un nom au type de retour. Par exemple:
+   bool:is_dead get_hit(t_unit *me, double hitpower);
+   et du coup, a la fois return et is_dead = peuvent donner une valeur au type de retour
+   sauf que return break aussi
+
 => Inventer un format de fichier impliquant normal map et image, le tout ensemble.
    Avec un logiciel utilisant la LibLapin, il sera possible de l'afficher et d'animer les lumières :p
    Cela peut etre fait très simplement avec une boite en tete + deux fichiers PNGs qui se suivent.
@@ -20,7 +25,7 @@
     alors regarder si elle a un clip défini (comme clipable) si oui, considerer X=0 et Y=
     le nombre dans la position * la hauteur du clip défini.
 
-=> Les fonctions de configuration de structure devraient elle aussi prendre des paramètres variadiques.
+=> Les fonctions de configuration de structure devraient elle aussi prendre des paramètres variadiques. (position et couleur)
 
 => Faire un module pour gérer les joysticks connus et attribuer des touches automatiquement.
 (Voir la manette de PS4, XBOX, le Steam Controler, la manette de supernes, le controleur Atari et ma manette pas cher,

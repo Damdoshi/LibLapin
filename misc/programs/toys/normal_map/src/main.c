@@ -82,10 +82,10 @@ t_bunny_response	loop(void				*dat)
 
 int			main(void)
 {
-  assert(picture = bunny_load_picture("color.png"));
-  assert(normal_map.normal_map = bunny_load_picture("normal.png"));
-  assert(normal_map.specular_map = bunny_load_picture("specular.png"));
-  assert(win = bunny_start(picture->clip_width, picture->clip_height, false, "NormalMap"));
+  assert((picture = bunny_load_picture("color.png")));
+  assert((normal_map.normal_map = bunny_load_picture("normal.png")));
+  assert((normal_map.specular_map = bunny_load_picture("specular.png")));
+  assert((win = bunny_start(picture->clip_width, picture->clip_height, false, "NormalMap")));
 
   rot = 0;
   normal_map.window_size.x = picture->clip_width;

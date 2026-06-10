@@ -170,6 +170,35 @@ static double		ternary(const char			*operation,
   return (first);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_evaluate
+ * @doc-kind function
+ * @doc-module misc
+ * @doc-order 180
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Evaluates a small arithmetic expression.
+ * @description The expression can use numeric literals, configuration variables, parentheses and common arithmetic/comparison operators. Configuration paths can be traversed with dots.
+ * @param operation Expression to evaluate.
+ * @param env Configuration environment used to resolve variables.
+ * @return-success Returns the computed value.
+ * @return-failure Returns nan("") on syntax or resolution error.
+ * @log "misc"
+ *
+ * @doc-lang fr
+ * @brief Évalue une petite expression arithmétique.
+ * @description L'expression peut utiliser des littéraux numériques, des variables de configuration, des parenthèses et les opérateurs arithmétiques/de comparaison courants. Les chemins de configuration peuvent être parcourus avec des points.
+ * @param operation Expression à évaluer.
+ * @param env Environnement de configuration utilisé pour résoudre les variables.
+ * @return-success Renvoie la valeur calculée.
+ * @return-failure Renvoie nan("") en cas d'erreur de syntaxe ou de résolution.
+ * @log "misc"
+ */
 double			bunny_evaluate(const char		*operation,
 				       t_bunny_configuration	*env)
 {

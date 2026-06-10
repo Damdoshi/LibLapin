@@ -12,6 +12,14 @@ bool		network::Peer::Dump(t_bunny_configuration	*cnf) const
   
   ok = ok && bunny_configuration_setf_int(cnf, doomed, "Doomed");
   ok = ok && bunny_configuration_setf_double(cnf, last_message, "LastMessage");
+  if (protocol.protocol == BP_UDP_RELIABLE)
+    {
+      ok = ok && bunny_configuration_setf_double(cnf, rudp_usual_delay, "RUDP.UsualDelay");
+      ok = ok && bunny_configuration_setf_double(cnf, rudp_last_heartbeat, "RUDP.LastHeartbeat");
+      ok = ok && bunny_configuration_setf_double(cnf, rudp_last_heartbeat_response, "RUDP.LastHeartbeatResponse");
+      ok = ok && bunny_configuration_setf_int(cnf, (int)rudp_pending.size(), "RUDP.PendingData");
+      ok = ok && bunny_configuration_setf_int(cnf, (int)rudp_pending_heartbeats.size(), "RUDP.PendingHeartbeats");
+    }
   i = 0;
   for (auto it = descriptors.begin(); it != descriptors.end(); ++it)
     ok = ok && bunny_configuration_setf_int(cnf, (*it)->position, "Descriptors[%d]", i++);

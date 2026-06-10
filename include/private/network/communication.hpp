@@ -8,18 +8,38 @@
 #ifndef			__LAPIN_NETWORK_COMMUNICATION_HPP__
 # define		__LAPIN_NETWORK_COMMUNICATION_HPP__
 # include		<vector>
+# include		<stdexcept>
 # include		"info.hpp"
+
+# define		istcp(a)					\
+  ((a) != BP_UDP_IMMEDIATE && (a) != BP_UDP_RELIABLE)
+# define		isudp(a) (!istcp(a))
+# define		isimmediate(a)					\
+  ((a) == BP_UDP_IMMEDIATE || (a) == BP_TCP_IMMEDIATE || (a) == BP_UDP_RELIABLE)
 
 namespace		network
 {
+  using Protocol = t_bunny_protocol;
+
   struct		WriteRequest
   {
     std::vector<char>	data;
     t_bunny_written	wt = NULL;
     void		*wtdata = NULL;
 
+    WriteRequest(const char *start, size_t len, t_bunny_written w, void *wtd)
+      : wt(w), wtdata(wtd)
+    {
+      if (len)
+	{
+	  if (start == NULL)
+	    throw std::invalid_argument("WriteRequest with NULL data and non-zero length");
+	  data.assign(start, start + len);
+	}
+    }
+
     WriteRequest(const char *start, const char *end, t_bunny_written w, void *wtd)
-      : data(start, end), wt(w), wtdata(wtd)
+      : WriteRequest(start, start != NULL && end != NULL ? (size_t)(end - start) : 0, w, wtd)
     {}
   };
   class			IOException : public std::runtime_error
@@ -32,7 +52,7 @@ namespace		network
   template <typename	T>
   struct		Pair
   {
-    Info const		&info;
+    Info		info;
     T const		&data;
   };
 
@@ -45,18 +65,30 @@ namespace		network
     size_t		size = 0;
     int			errno_code = 0;
 
+    bool		free_data = true;
     t_bunny_written	wt = NULL;
     void		*wtdata = NULL;
 
-    // Shallow copy
-    Communication	&operator=(Communication	&com)
+    void		DoNotFreeData(void)
     {
+      free_data = false;
+    }
+
+    Communication	&operator=(Communication	&&com)
+    {
+      if (this == &com)
+	return (*this);
+      if (free_data && data != NULL)
+	bunny_free(data);
       type = com.type;
       info = com.info;
       time = com.time;
       data = com.data;
       size = com.size;
       errno_code = com.errno_code;
+      free_data = com.free_data;
+      com.free_data = false;
+      com.data = NULL;
       wt = com.wt;
       wtdata = com.wtdata;
       return (*this);
@@ -99,14 +131,19 @@ namespace		network
 	wt(w),
 	wtdata(wtd)
     {
-      if (!(data = (char*)bunny_malloc(len)))
-	throw std::bad_alloc();
-      memcpy(data, dat, len);
+      if (len)
+	{
+	  if (!(data = (char*)bunny_malloc(len)))
+	    throw std::bad_alloc();
+	  memcpy(data, dat, len);
+	}
       size = len;
     }
     ~Communication(void)
     {
-      // Do NOT free data. The user must do it.
+      // Do NOT free data if it is data for user. The user must do it.
+      if (free_data && data != NULL)
+	bunny_free(data);
     }
   };
 }

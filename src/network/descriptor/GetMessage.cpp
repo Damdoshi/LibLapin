@@ -12,7 +12,7 @@ bool		network::Descriptor::GetMessage(Communication	&com)
 {
   if (inqueue.empty())
     return (false);
-  com = inqueue.front();
+  com = std::move(inqueue.front());
   inqueue.pop_front();
 
   // On réarrange la taille du tableau si :

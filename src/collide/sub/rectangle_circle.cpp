@@ -10,36 +10,38 @@ bool		bunny_collision_rectangle_circle(const t_bunny_collision	*a,
 {
   const t_bunny_rectangular_collision *rectangle = &a->rectangular;
   const t_bunny_circle_collision *circle = &b->circle;
-  t_bunny_dot_collision angle;
-  t_bunny_accurate_position tmp;
-  int		i;
+  t_bunny_accurate_position nearest;
+  double	rad = circle->radius;
+  double	minx = rectangle->coord[0].x;
+  double	maxx = rectangle->coord[0].x + rectangle->coord[1].x;
+  double	miny = rectangle->coord[0].y;
+  double	maxy = rectangle->coord[0].y + rectangle->coord[1].y;
 
-  for (i = 0; _get_point_on_circle(&circle->coord, circle->radius, i, &tmp); ++i)
-    if (bunny_rectangular_collision_dot((t_bunny_accurate_area*)&rectangle->coord[0], &tmp))
-      return (true);
+  if (rad < 0)
+    rad = -rad;
+  if (minx > maxx)
+    {
+      double tmp = minx;
 
-  angle.type = BCT_DOT;
+      minx = maxx;
+      maxx = tmp;
+    }
+  if (miny > maxy)
+    {
+      double tmp = miny;
 
-  angle.coord.x = rectangle->coord[0].x;
-  angle.coord.y = rectangle->coord[0].y;
-  if (bunny_collision_circle_dot(b, (t_bunny_collision*)&angle))
-    return (true);
-
-  angle.coord.x = rectangle->coord[0].x + rectangle->coord[1].x;
-  angle.coord.y = rectangle->coord[0].y;
-  if (bunny_collision_circle_dot(b, (t_bunny_collision*)&angle))
-    return (true);
-
-  angle.coord.x = rectangle->coord[0].x + rectangle->coord[1].x;
-  angle.coord.y = rectangle->coord[0].y + rectangle->coord[1].y;
-  if (bunny_collision_circle_dot(b, (t_bunny_collision*)&angle))
-    return (true);
-
-  angle.coord.x = rectangle->coord[0].x;
-  angle.coord.y = rectangle->coord[0].y + rectangle->coord[1].y;
-  if (bunny_collision_circle_dot(b, (t_bunny_collision*)&angle))
-    return (true);
-
-  return (false);
+      miny = maxy;
+      maxy = tmp;
+    }
+  nearest.x = circle->coord.x;
+  nearest.y = circle->coord.y;
+  if (nearest.x < minx)
+    nearest.x = minx;
+  else if (nearest.x > maxx)
+    nearest.x = maxx;
+  if (nearest.y < miny)
+    nearest.y = miny;
+  else if (nearest.y > maxy)
+    nearest.y = maxy;
+  return (_bunny_collision_distance_square(nearest, circle->coord) <= rad * rad);
 }
-

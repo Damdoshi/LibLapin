@@ -32,6 +32,34 @@ t_bunny_configuration	*_bunny_configuration_go_get_node_va(const t_bunny_configu
 
 #define			PATTERN		"%p conf, %zu params, ... -> %p"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_get_node_va
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 390
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Walks counted address components and reads the selected node.
+ * @param config Configuration tree to browse.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Returns the selected node.
+ * @return-failure Returns $CNULL@ if the path cannot be resolved.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Parcourt des composants d’adresse comptés et lit le/la node sélectionné(e).
+ * @param config Configuration tree to browse.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Renvoie le nœud sélectionné.
+ * @return-failure Renvoie $CNULL@ si le chemin ne peut pas être résolu.
+ * @log "configuration"
+ */
 t_bunny_configuration	*bunny_configuration_go_get_node_va(t_bunny_configuration	*config,
 							    size_t			nbr,
 							    ...)
@@ -51,6 +79,36 @@ t_bunny_configuration	*bunny_configuration_go_get_node_va(t_bunny_configuration	
 #undef			PATTERN
 #define			PATTERN		"%p config, %p target, %zu params, ... -> %s (%d)"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_get_int_va
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 421
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Walks counted address components and reads the selected integer.
+ * @param config Configuration tree to browse.
+ * @param val Output storage.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Returns $Ctrue@ and stores the value.
+ * @return-failure Returns $Cfalse@ if the path or conversion fails.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Parcourt des composants d’adresse comptés et lit le/la integer sélectionné(e).
+ * @param config Configuration tree to browse.
+ * @param val Output storage.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Renvoie $Ctrue@ et stocke la valeur.
+ * @return-failure Renvoie $Cfalse@ si le chemin ou la conversion échoue.
+ * @log "configuration"
+ */
 bool			bunny_configuration_go_get_int_va(const t_bunny_configuration	*config,
 							  int				*val,
 							  size_t			nbr,
@@ -72,6 +130,36 @@ bool			bunny_configuration_go_get_int_va(const t_bunny_configuration	*config,
 #undef			PATTERN
 #define			PATTERN		"%p config, %p target, %zu param, ... -> %s (%f)"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_get_double_va
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 420
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Walks counted address components and reads the selected double.
+ * @param config Configuration tree to browse.
+ * @param val Output storage.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Returns $Ctrue@ and stores the value.
+ * @return-failure Returns $Cfalse@ if the path or conversion fails.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Parcourt des composants d’adresse comptés et lit le/la double sélectionné(e).
+ * @param config Configuration tree to browse.
+ * @param val Output storage.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Renvoie $Ctrue@ et stocke la valeur.
+ * @return-failure Renvoie $Cfalse@ si le chemin ou la conversion échoue.
+ * @log "configuration"
+ */
 bool			bunny_configuration_go_get_double_va(const t_bunny_configuration *config,
 							     double			*val,
 							     size_t			nbr,
@@ -93,6 +181,36 @@ bool			bunny_configuration_go_get_double_va(const t_bunny_configuration *config,
 #undef			PATTERN
 #define			PATTERN		"%p config, %p target, %zu param, ... -> %s (%s)"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_get_string_va
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 410
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Walks counted address components and reads the selected string.
+ * @param config Configuration tree to browse.
+ * @param val Output storage.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Returns $Ctrue@ and stores the value.
+ * @return-failure Returns $Cfalse@ if the path or conversion fails.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Parcourt des composants d’adresse comptés et lit le/la string sélectionné(e).
+ * @param config Configuration tree to browse.
+ * @param val Output storage.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Renvoie $Ctrue@ et stocke la valeur.
+ * @return-failure Renvoie $Cfalse@ si le chemin ou la conversion échoue.
+ * @log "configuration"
+ */
 bool			bunny_configuration_go_get_string_va(const t_bunny_configuration *config,
 							     const char			**val,
 							     size_t			nbr,
@@ -114,6 +232,32 @@ bool			bunny_configuration_go_get_string_va(const t_bunny_configuration *config,
 #undef			PATTERN
 #define			PATTERN		"%p config, %s address -> %p"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_get_node
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 340
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Follows a C-like address and reads the selected node.
+ * @param config Configuration tree to browse.
+ * @param addr C-like address to resolve.
+ * @return-success Returns the selected node.
+ * @return-failure Returns $CNULL@ if the address cannot be resolved.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Suit une adresse de style C et lit le/la node sélectionné(e).
+ * @param config Configuration tree to browse.
+ * @param addr C-like address to resolve.
+ * @return-success Renvoie le nœud sélectionné.
+ * @return-failure Renvoie $CNULL@ si l’adresse ne peut pas être résolue.
+ * @log "configuration"
+ */
 t_bunny_configuration	*bunny_configuration_go_get_node(t_bunny_configuration		*config,
 							 const char			*addr)
 {
@@ -131,6 +275,34 @@ t_bunny_configuration	*bunny_configuration_go_get_node(t_bunny_configuration		*c
 #undef			PATTERN
 #define			PATTERN		"%p config, %p target, %s address -> %s (%s)"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_get_string
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 360
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Follows a C-like address and reads the selected string.
+ * @param config Configuration tree to browse.
+ * @param val Output storage.
+ * @param addr C-like address to resolve.
+ * @return-success Returns $Ctrue@ and stores the value.
+ * @return-failure Returns $Cfalse@ if the address or conversion fails.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Suit une adresse de style C et lit le/la string sélectionné(e).
+ * @param config Configuration tree to browse.
+ * @param val Output storage.
+ * @param addr C-like address to resolve.
+ * @return-success Renvoie $Ctrue@ et stocke la valeur.
+ * @return-failure Renvoie $Cfalse@ si l’adresse ou la conversion échoue.
+ * @log "configuration"
+ */
 bool			bunny_configuration_go_get_string(t_bunny_configuration		*config,
 							  const char			**val,
 							  const char			*addr)
@@ -148,6 +320,34 @@ bool			bunny_configuration_go_get_string(t_bunny_configuration		*config,
 #undef			PATTERN
 #define			PATTERN		"%p config, %p target, %s address -> %s (%f)"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_get_double
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 370
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Follows a C-like address and reads the selected double.
+ * @param config Configuration tree to browse.
+ * @param val Output storage.
+ * @param addr C-like address to resolve.
+ * @return-success Returns $Ctrue@ and stores the value.
+ * @return-failure Returns $Cfalse@ if the address or conversion fails.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Suit une adresse de style C et lit le/la double sélectionné(e).
+ * @param config Configuration tree to browse.
+ * @param val Output storage.
+ * @param addr C-like address to resolve.
+ * @return-success Renvoie $Ctrue@ et stocke la valeur.
+ * @return-failure Renvoie $Cfalse@ si l’adresse ou la conversion échoue.
+ * @log "configuration"
+ */
 bool			bunny_configuration_go_get_double(t_bunny_configuration		*config,
 							  double			*val,
 							  const char			*addr)
@@ -165,6 +365,34 @@ bool			bunny_configuration_go_get_double(t_bunny_configuration		*config,
 #undef			PATTERN
 #define			PATTERN		"%p config, %p target, %s address -> %s (%d)"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_get_int
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 380
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Follows a C-like address and reads the selected integer.
+ * @param config Configuration tree to browse.
+ * @param val Output storage.
+ * @param addr C-like address to resolve.
+ * @return-success Returns $Ctrue@ and stores the value.
+ * @return-failure Returns $Cfalse@ if the address or conversion fails.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Suit une adresse de style C et lit le/la integer sélectionné(e).
+ * @param config Configuration tree to browse.
+ * @param val Output storage.
+ * @param addr C-like address to resolve.
+ * @return-success Renvoie $Ctrue@ et stocke la valeur.
+ * @return-failure Renvoie $Cfalse@ si l’adresse ou la conversion échoue.
+ * @log "configuration"
+ */
 bool			bunny_configuration_go_get_int(t_bunny_configuration		*config,
 						       int				*val,
 						       const char			*addr)

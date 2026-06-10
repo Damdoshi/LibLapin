@@ -24,10 +24,10 @@
 
   NAME		=	lapin
   PRODSO	=	lib$(NAME).so
-  PRODA		=	lib$(NAME).a
+  PRODA		=	/tmp/lib$(NAME).a
   DBGSO		=	lib$(NAME)-dbg.so
-  DBGA		=	lib$(NAME)-dbg.a
-  TSTA		=	lib$(NAME)-test.a
+  DBGA		=	/tmp/lib$(NAME)-dbg.a
+  TSTA		=	/tmp/lib$(NAME)-test.a
 
   TITLE		=	"LIBLAPIN - BUNNY LIBRARY"
   LAPINOPTS	=	-DBUNNY_COMPILATION					\
@@ -49,7 +49,7 @@
 			-Wno-narrowing						\
 			-Wno-cast-function-type
 
-  DEBUGOPTS	=	-O0 -g -g3 -ggdb					\
+  DEBUGOPTS	=	-O0 -Og -g -g3 -ggdb					\
 			-fno-omit-frame-pointer					\
 			-fno-align-functions					\
 			-fno-align-loops
@@ -62,9 +62,14 @@
 			-lopencv_objdetect -lopencv_video			\
 			-lopencv_videoio -lopencv_core				\
 			-lavcall -lusb -ludev -lm -ldl -lpthread
-  INSTALL_BIN_DIR =	/usr/bin/
-  INSTALL_INC_DIR =	/usr/include/
-  INSTALL_LIB_DIR =	/usr/lib/
+  DESTDIR	?=
+  INSTALL_BIN_DIR =	$(DESTDIR)/usr/bin/
+  INSTALL_ETC_DIR =	$(DESTDIR)/etc/lapin/
+  INSTALL_SHR_DIR =	$(DESTDIR)/usr/share/lapin/
+  INSTALL_INC_DIR =	$(DESTDIR)/usr/include/
+  INSTALL_LIB_DIR =	$(DESTDIR)/usr/lib/
+
+  UTILS_DIR 	=	misc/programs/utils/
 
 #################################################################################
 ## Source                                                                      ##
@@ -108,37 +113,37 @@
   TSTFLAGS	=	$(COMMON) $(TESTOPTS)
 
 all:			erase title $(PRODA) $(DBGA) $(TSTA) # $(DBGSO) $(PRODSO)
-prod:			$(PRODSO) $(PRODA)
-debug:			$(DBGSO) $(DBGA)
-tests:			$(TSTA)
+prod:			prepare_logs $(PRODA) # $(PRODSO)
+debug:			prepare_logs $(DBGA) # $(DBGSO)
+tests:			prepare_logs $(TSTA)
 			(cd tests/ && $(MAKE))
-$(PRODSO):		$(PRODOBJ)
+$(PRODSO):		$(PRODOBJ) | prepare_logs
 			@$(SOLINKER) $(PRODSO) $(DEPS) $(PRODOBJ) 2>> $(LOGDIR)/$(PRODSO) && \
 			 $(ECHO) $(TEAL) "[PRD-OK]" $(GREEN) $(PRODSO) $(DEFAULT) ||\
 			 $(ECHO) $(RED)  "[PRD-KO]" $(PRODSO) $(DEFAULT)
 			@find $(LOGDIR)/$(PRODSO) -size 0 -delete || true
-$(PRODA):		$(PRODOBJ)
+$(PRODA):		$(PRODOBJ) | prepare_logs
 			@$(ALINKER) $(PRODA) $(PRODOBJ) 2>> $(LOGDIR)/$(PRODA) && \
 			 $(ECHO) $(TEAL) "[PRD-OK]" $(GREEN) $(PRODA) $(DEFAULT) || \
 			 $(ECHO) $(RED)  "[PRD-KO]" $(PRODA) $(DEFAULT)
 			@find $(LOGDIR)/$(PRODA) -size 0 -delete || true
-$(DBGSO):		$(DBGOBJ)
+$(DBGSO):		$(DBGOBJ) | prepare_logs
 			@$(SOLINKER) $(DBGSO) $(DEPS) $(DBGOBJ) 2>> $(LOGDIR)/$(DBGSO) &&	\
 			 $(ECHO) $(TEAL) "[DBG-OK]" $(GREEN) $(DBGSO) $(DEFAULT) ||\
 			 $(ECHO) $(RED)  "[DBG-KO]" $(DBGSO) $(DEFAULT)
 			@find $(LOGDIR)/$(DBGSO) -size 0 -delete || true
-$(DBGA):		$(DBGOBJ)
+$(DBGA):		$(DBGOBJ) | prepare_logs
 			@$(ALINKER) $(DBGA) $(DBGOBJ) 2>> $(LOGDIR)/$(DBGA) &&	\
 			 $(ECHO) $(TEAL) "[DBG-OK]" $(GREEN) $(DBGA) $(DEFAULT) || \
 			 $(ECHO) $(RED)  "[DBG-KO]" $(DBGA) $(DEFAULT)
 			@find $(LOGDIR)/$(DBGA) -size 0 -delete || true
-$(TSTA):		$(TSTOBJ)
+$(TSTA):		$(TSTOBJ) | prepare_logs
 			@$(ALINKER) $(TSTA) $(TSTOBJ) 2>> $(LOGDIR)/$(TSTA) &&	\
 			 $(ECHO) $(TEAL) "[TST-OK]" $(GREEN) $(TSTA) $(DEFAULT) || \
 			 $(ECHO) $(RED)  "[TST-KO]" $(TSTA) $(DEFAULT)
 			@find $(LOGDIR)/$(TSTA) -size 0 -delete || true
 
-.cpp.o:
+%.o:			%.cpp | prepare_logs
 			@$(eval TRACE="$(addprefix $(LOGDIR), $(subst /,-, $<))")
 			@$(COMPILER) -c $< -o $@ $(PRODFLAGS)			\
 			 $(HEADER) 2>> $(TRACE) &&				\
@@ -164,9 +169,11 @@ $(TSTA):		$(TSTOBJ)
 ## Misc                                                                        ##
 #################################################################################
 
-title:
+prepare_logs:
+			@mkdir -p $(LOGDIR) $(LOGDIR)/tmp
+
+title:			prepare_logs
 			@$(ECHO) $(TEAL) $(TITLE) $(DEFAULT)
-			@mkdir -p $(LOGDIR)
 clean:
 			@find . -name "*.o" -delete
 			@find . -name "*.gcno" -delete
@@ -178,14 +185,61 @@ fclean:			clean erase
 re:			fclean all
 erase:
 			@$(RM) -r $(LOGDIR)/*.*
-local_install:		all
-			cp bcc b++  $(INSTALL_BIN_DIR)
+utils:			build_utils
+build_utils:		$(PRODA)
+			@if [ -d "$(UTILS_DIR)" ]; then				\
+			  for makefile in "$(UTILS_DIR)"*/Makefile; do		\
+				    [ -f "$$makefile" ] || continue;		\
+			    directory="$${makefile%/Makefile}";			\
+			    echo "[UTL] $$directory";				\
+			    PATH="$$(pwd):$$PATH"				\
+			    LD_LIBRARY_PATH="/tmp:$$LD_LIBRARY_PATH"		\
+			    $(MAKE) -C "$$directory" LIBPATH="-L/tmp" ||	\
+			    exit $$?;						\
+			  done;							\
+			fi
+install_tools:		build_utils
+			mkdir -p "$(INSTALL_BIN_DIR)"
+			install -m 755 bcc b++ bcontext "$(INSTALL_BIN_DIR)"
+			@if [ -d "$(UTILS_DIR)" ]; then				\
+			  for makefile in "$(UTILS_DIR)"*/Makefile; do	\
+			    [ -f "$$makefile" ] || continue;			\
+			    directory="$${makefile%/Makefile}";			\
+			    utility="$${directory##*/}";			\
+			    if [ ! -x "$$directory/$$utility" ]; then		\
+			      echo "[UTL-KO] missing built utility: $$directory/$$utility"; \
+			      exit 1;						\
+			    fi;							\
+			    cp "$$directory/$$utility" "$(INSTALL_BIN_DIR)";	\
+			    chmod 755 "$(INSTALL_BIN_DIR)/$$utility";		\
+			  done;							\
+			fi
+			mkdir -p "$(INSTALL_ETC_DIR)"
+			chmod 755 $(INSTALL_BIN_DIR)/bcc 			\
+			 $(INSTALL_BIN_DIR)/b++					\
+			 $(INSTALL_BIN_DIR)/bcontext
+			mkdir -p $(INSTALL_SHR_DIR)context/
+			cp -r misc/ressources/context/* $(INSTALL_SHR_DIR)context/
+
+install_headers:	install_tools
+			mkdir -p $(INSTALL_INC_DIR) $(INSTALL_INC_DIR)lapin/
 			cp include/lapin.h $(INSTALL_INC_DIR)
-			mkdir -p $(INSTALL_INC_DIR)lapin/
 			cp -r include/lapin/* $(INSTALL_INC_DIR)lapin/
+			chmod 644 $(INSTALL_INC_DIR)lapin.h
+			find $(INSTALL_INC_DIR)lapin/ -type d -exec chmod 755 {} + -o -type f -exec chmod 644 {} +
+
+install_debug:		install_headers debug
+			mkdir -p $(INSTALL_LIB_DIR)
+			cp $(DBGA) $(INSTALL_LIB_DIR)
+
+install_main:		all install_debug
+			mkdir -p $(INSTALL_LIB_DIR)
 			cp $(PRODA) $(DBGA) $(INSTALL_LIB_DIR)
+
+install:		install_main install_debug
+
 package:
 			dpkg-buildpackage -us -uc
 .POSIX:
-.PHONY:			tests title erase
+.PHONY:			tests prepare_logs title erase install_tools install_headers install_debug install_main install_package build_utils utils
 

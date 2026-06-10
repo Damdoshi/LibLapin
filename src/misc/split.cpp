@@ -50,6 +50,37 @@ static size_t		test_token(const char				*str,
 
 #define			PATTERN		"%s string, %p tokens, %s agreg -> %p"
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_split
+ * @doc-kind function
+ * @doc-module misc
+ * @doc-order 220
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Splits a string with an ordered list of separators.
+ * @param str String to split.
+ * @param tokens NULL-terminated array of separator strings. Earlier tokens have priority.
+ * @param agreg If true, consecutive separators are aggregated.
+ * @return-success Returns a NULL-terminated array of newly allocated strings.
+ * @return-failure Returns NULL on error.
+ * @description The current implementation is limited to fewer than 4096 resulting parts and fewer than 32 separator tokens.
+ * @see bunny_delete_split, bunny_split_len, bunny_stick, t_bunny_split
+ *
+ * @doc-lang fr
+ * @brief Découpe une chaîne avec une liste ordonnée de séparateurs.
+ * @param str Chaîne à découper.
+ * @param tokens Tableau terminé par NULL de chaînes séparatrices. Les premiers séparateurs sont prioritaires.
+ * @param agreg Si true, les séparateurs consécutifs sont agrégés.
+ * @return-success Renvoie un tableau terminé par NULL de chaînes nouvellement allouées.
+ * @return-failure Renvoie NULL en cas d'erreur.
+ * @description L'implémentation actuelle est limitée à moins de 4096 morceaux résultants et moins de 32 séparateurs.
+ * @see bunny_delete_split, bunny_split_len, bunny_stick, t_bunny_split
+ */
 const char * const	*bunny_split(const char				*str,
 				     const char				**tokens,
 				     bool				agreg)
@@ -105,6 +136,27 @@ const char * const	*bunny_split(const char				*str,
   return (NULL);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_delete_split
+ * @doc-kind function
+ * @doc-module misc
+ * @doc-order 230
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Deletes an array returned by bunny_split.
+ * @param tab Split array to delete. NULL is accepted.
+ * @see bunny_split, bunny_split_len
+ *
+ * @doc-lang fr
+ * @brief Supprime un tableau renvoyé par bunny_split.
+ * @param tab Tableau découpé à supprimer. NULL est accepté.
+ * @see bunny_split, bunny_split_len
+ */
 void			bunny_delete_split(const char * const		*tab)
 {
   size_t		i;
@@ -115,6 +167,29 @@ void			bunny_delete_split(const char * const		*tab)
   scream_log_if("%p", "misc", tab);
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_split_len
+ * @doc-kind function
+ * @doc-module misc
+ * @doc-order 235
+ * @doc-since 12
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Counts the entries in a NULL-terminated split array.
+ * @param tab Array to inspect.
+ * @return-success Returns the number of strings before the NULL terminator.
+ * @see bunny_split, bunny_delete_split
+ *
+ * @doc-lang fr
+ * @brief Compte les entrées d'un tableau découpé terminé par NULL.
+ * @param tab Tableau à inspecter.
+ * @return-success Renvoie le nombre de chaînes avant le terminateur NULL.
+ * @see bunny_split, bunny_delete_split
+ */
 size_t			bunny_split_len(const char * const		*tab)
 {
   size_t		i;

@@ -5,6 +5,36 @@
 
 #include	"lapin_private.h"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_get_case_named
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 655
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level advanced
+ *
+ * @doc-lang en
+ * @brief Searches an indexed array for a case whose name matches a formatted string.
+ * @param cnf Configuration node to inspect.
+ * @param out Output node pointer.
+ * @param pat Printf-like name pattern.
+ * @param ... Values consumed by $Spat@.
+ * @return-success Returns $Ctrue@ and stores the matching case.
+ * @return-failure Returns $Cfalse@ when no case matches.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Recherche dans un tableau indexé une case dont le nom correspond à une chaîne formatée.
+ * @param cnf Configuration node to inspect.
+ * @param out Output node pointer.
+ * @param pat Printf-like name pattern.
+ * @param ... Values consumed by $Spat@.
+ * @return-success Renvoie $Ctrue@ et stocke la case correspondante.
+ * @return-failure Renvoie $Cfalse@ si aucune case ne correspond.
+ * @log "configuration"
+ */
 bool		bunny_configuration_get_case_named(t_bunny_configuration	*cnf,
 						   t_bunny_configuration	**data,
 						   const char			*pat,

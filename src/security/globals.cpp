@@ -19,6 +19,7 @@ const char * const		gl_bunny_ciphering_table[BS_CUSTOM] =
     "shaker",
     "switch",
     "bytbit",
-    "bitshake"
+    "bitshake",
+    "bitrotate"
   };
 

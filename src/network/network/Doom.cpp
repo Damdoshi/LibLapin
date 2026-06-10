@@ -9,11 +9,27 @@
 
 bool			Network::Doom(const Info	&info)
 {
-  return (peers[info].Doom());
+  bool			doomed = false;
+  auto			it = peers.find(info);
+
+  if (it != peers.end())
+    doomed = it->second.Doom() || doomed;
+  for (size_t i = 0; i < nbr; ++i)
+    if (descriptors[i].info == info && descriptors[i].active)
+      {
+	descriptors[i].Doom();
+	doomed = true;
+      }
+  return (doomed);
 }
 
 bool			Network::Doom(int		fd)
 {
-  descriptors[fd].Doom();
-  return (true);
+  for (size_t i = 0; i < nbr; ++i)
+    if ((int)descriptors[i] == fd)
+      {
+	descriptors[i].Doom();
+	return (true);
+      }
+  return (false);
 }

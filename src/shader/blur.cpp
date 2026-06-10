@@ -20,6 +20,31 @@ static void		_clean_shader(void)
     }
 }
 
+
+/**
+ * @doc
+ * @doc-symbol bunny_blur_shader
+ * @doc-kind function
+ * @doc-module shader
+ * @doc-order 145
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level 50
+ *
+ * @doc-lang en
+ * @brief Returns the built-in shader configured for blur.
+ * @param blur Blur configuration, or NULL to release the cached shader.
+ * @return-success Returns the configured shader.
+ * @return-failure Returns NULL on allocation or compilation failure, or when blur is NULL.
+ * @see t_bunny_blur
+ *
+ * @doc-lang fr
+ * @brief Renvoie le shader intégré configuré pour le flou.
+ * @param blur Configuration de flou, ou NULL pour libérer le shader en cache.
+ * @return-success Renvoie le shader configuré.
+ * @return-failure Renvoie NULL en cas d’échec d’allocation ou de compilation, ou lorsque blur vaut NULL.
+ * @see t_bunny_blur
+ */
 t_bunny_shader		*bunny_blur_shader(const t_bunny_blur *b)
 {
   if (b == NULL)

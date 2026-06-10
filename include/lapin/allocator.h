@@ -6,12 +6,28 @@
 ** Bibliotheque Lapin
 */
 
-/*!
-** \file allocator.h
-** The allocator module contains functions to reserve memory with a specific fashion:
-** with a specific limit of memory, with harsh bound checking (to make the software crash)
-** and since the 1.11, to handle wave allocation.
-*/
+/**
+ * @doc
+ * @doc-symbol allocator
+ * @doc-kind module
+ * @doc-module allocator
+ * @doc-order 0
+ * @doc-since 2
+ * @doc-until latest
+ * @doc-level 0
+ *
+ * @doc-lang en
+ * @brief Reserves and controls memory through the LibLapin allocator.
+ * @description The Bunny Allocator module reserves a specific amount of memory and organizes memory allocations requested by its functions inside this reserved space.
+ * @description The Bunny Allocator module helps ensure that a program does not consume too much memory and that the allocated memory remains stable.
+ * @header lapin/allocator.h
+ *
+ * @doc-lang fr
+ * @brief Réserve et contrôle la mémoire à travers l'allocateur de la LibLapin.
+ * @description Le module Bunny Allocator réserve une quantité précise de mémoire et organise dans cet espace les allocations demandées par ses fonctions.
+ * @description Le module Bunny Allocator permet de s'assurer qu'un programme ne consomme pas trop de mémoire et que la mémoire allouée reste stable.
+ * @header lapin/allocator.h
+ */
 
 #ifndef		__LAPIN_ALLOCATOR_H__
 # define	__LAPIN_ALLOCATOR_H__
@@ -19,90 +35,103 @@
 #  error	You cannot include this file directly.
 # endif
 
-/*!
-** Reserve a sent amount of bytes and return a pointer to it. If there is not enough
-** memory available, the function returns NULL.
-** \param siz The amount, in bytes, of data to reserve
-** \return The address of the first byte of the allocated data. NULL if an error happened.
-*/
-void		*bunny_malloc(size_t		siz) _BMALLOC();
+void		*bunny_malloc(size_t		size) _BMALLOC();
 
-/*!
-** Reserve a quantity of chunk of memories and return a pointer to the first of them.
-** All bytes are reset before being returned. If there is not enough memory available,
-** the function returns NULL.
-** \param num The quantity of elements to reserve.
-** \param siz The size of one single element.
-** \return The address of the first byte of the first allocated element. NULL if an error happened.
-*/
-void		*bunny_calloc(size_t		num,
-			      size_t		siz) _BMALLOC();
-/*!
-** Resize the space previously reserved at the sent address. The new size is given.
-** If ptr is NULL, then calling bunny_realloc is the same as calling bunny_malloc with
-** the given size.
-** If ptr is not NULL but size is zero, then it is equivalent to calling bunny_free with
-** the given pointer.
-** There is no guarantee that the address will not change, even if the new  size is smaller
-** than the original one, contrary to the standard realloc.
-** The pointer validity is evaluated during bunny_realloc. If the pointer is invalid,
-** your program will crash.
-** \param ptr The address of the memory space to resize.
-** \param siz The new size
-** \return The new address of the data. NULL if an error happened. The original buffer
-** is left unchanged if this happen.
-*/
+void		*bunny_calloc(size_t		nmemb,
+			      size_t		size) _BMALLOC();
+
 void		*bunny_realloc(void		*ptr,
-			       size_t		siz) _BMALLOC();
-/*!
-** Make the given chunk of memory available again for a future call of bunny_malloc,
-** bunny_calloc or bunny_realloc. Validity of the pointer is checked during this function,
-** so if your pointer is invalid, your program will crash.
-** \param ptr The address of the first byte of the memory space to free.
-*/
-void		bunny_free(void			*ptr);
+			       size_t		size) _BMALLOC();
 
-# define	bunny_release(a)		\
-  do { bunny_free(*a); *a = NULL; } while (0)
+void		bunny_free(void			*data);
 
-/*!
-** This function allow you to ask a memory checkup at the end of your program.
-** The amount of asked bytes, of chunks, how many of them remains, etc.
-** It also makes a memory check that will make your program crash if a buffer overflow
-** occured previously.
-** \param chk Activate or deactivate the memory check.
-*/
-void		bunny_set_memory_check(bool	chk);
+/**
+ * @doc
+ * @doc-symbol bunny_release
+ * @doc-kind macro
+ * @doc-module allocator
+ * @doc-order 130
+ * @doc-since 13
+ * @doc-until latest
+ * @doc-level 20
+ *
+ * @doc-lang en
+ * @brief Frees a pointer stored behind another pointer and clears it.
+ * @description bunny_release is a small helper around bunny_free. It expects the address of a pointer, frees the pointed memory block, then writes NULL into the pointer variable.
+ * @description The macro evaluates its argument more than once. Send the address of a simple pointer variable, not an expression with side effects.
+ * @param pointer The address of the pointer to free and reset.
+ * @see bunny_free
+ *
+ * @doc-lang fr
+ * @brief Libère un pointeur stocké derrière un autre pointeur et l'efface.
+ * @description bunny_release est un petit assistant autour de bunny_free. Il attend l'adresse d'un pointeur, libère le bloc mémoire pointé, puis écrit NULL dans la variable pointeur.
+ * @description La macro évalue son argument plus d'une fois. Envoyez l'adresse d'une variable pointeur simple, pas une expression avec effets de bord.
+ * @param pointer L'adresse du pointeur à libérer et à remettre à NULL.
+ * @see bunny_free
+ */
+# define	bunny_release(pointer)		\
+  do { bunny_free(*pointer); *pointer = NULL; } while (0)
 
-/*!
-** This function takes an amount of byte that will be the maximum amount of memory
-** that the program will be able to use, allocator meta-datas included.
-** This function must be called before any other allocation.
-** \param byt The quantity of bytes the program will be allowed to use.
-*/
-void		bunny_set_maximum_ram(size_t	byt);
+void		bunny_set_memory_check(bool	check);
 
-/*!
-** Erase the allocator space. Make all pointers deprecate.
-** Use with caution.
-*/
+void		bunny_set_maximum_ram(size_t	bytes);
+
 void		bunny_allocator_reset(void);
 
-/*!
-** Make allocation functions fail.
-** Use with caution.
-*/
-void		bunny_malloc_failure(bool	f);
+void		bunny_malloc_failure(bool	fail);
 
+/**
+ * @doc
+ * @doc-symbol BUNNY_ALLOCATOR_OVERLOAD
+ * @doc-kind macro
+ * @doc-module allocator
+ * @doc-order 20
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level 40
+ *
+ * @doc-lang en
+ * @brief Redirects standard allocation calls to the Bunny allocator.
+ * @description Define BUNNY_ALLOCATOR_OVERLOAD in your build, usually with the -D compiler option, to transform calls to malloc, calloc, realloc and free into calls to their bunny equivalents without changing your code.
+ * @description This is a compile-time option, not a function-like macro to call from your source code.
+ * @description This macro is the modern public name. It enables LAPIN_ALLOCATOR_OVERLOAD internally.
+ * @see BUNNY_ALLOCATOR_DEACTIVATED, LAPIN_ALLOCATOR_OVERLOAD
+ *
+ * @doc-lang fr
+ * @brief Redirige les appels d'allocation standard vers l'allocateur Bunny.
+ * @description Définissez BUNNY_ALLOCATOR_OVERLOAD dans votre compilation, généralement avec l'option -D du compilateur, pour transformer les appels à malloc, calloc, realloc et free en appels vers leurs équivalents bunny sans modifier votre code.
+ * @description C'est une option de compilation, pas une macro-fonction à appeler depuis votre code source.
+ * @description Cette macro est le nom public moderne. Elle active LAPIN_ALLOCATOR_OVERLOAD en interne.
+ * @see BUNNY_ALLOCATOR_DEACTIVATED, LAPIN_ALLOCATOR_OVERLOAD
+ */
 # ifdef		BUNNY_ALLOCATOR_OVERLOAD
 #  define	LAPIN_ALLOCATOR_OVERLOAD
 # endif
 
-/*!
-** The BUNNY_ALLOCATOR_OVERLOAD should be defined inside your Makefile with the -D option
-** for GCC. The purpose of this macro is to transform every calls to malloc, calloc, realloc
-** and free into calls to their bunny equivalent without having to change your code.
-*/
+/**
+ * @doc
+ * @doc-symbol LAPIN_ALLOCATOR_OVERLOAD
+ * @doc-kind macro
+ * @doc-module allocator
+ * @doc-order 19
+ * @doc-since 2
+ * @doc-until 10
+ * @doc-level 40
+ *
+ * @doc-lang en
+ * @brief Historical name used to redirect standard allocation calls to the Bunny allocator.
+ * @description Define LAPIN_ALLOCATOR_OVERLOAD in your build, usually with the -D compiler option, to transform calls to malloc, calloc, realloc and free into calls to their bunny equivalents without changing your code.
+ * @description This is a compile-time option, not a function-like macro to call from your source code.
+ * @description This is the historical name of BUNNY_ALLOCATOR_OVERLOAD. New code should use BUNNY_ALLOCATOR_OVERLOAD.
+ * @see LAPIN_ALLOCATOR_DEACTIVATED, BUNNY_ALLOCATOR_OVERLOAD
+ *
+ * @doc-lang fr
+ * @brief Nom historique utilisé pour rediriger les appels d'allocation standard vers l'allocateur Bunny.
+ * @description Définissez LAPIN_ALLOCATOR_OVERLOAD dans votre compilation, généralement avec l'option -D du compilateur, pour transformer les appels à malloc, calloc, realloc et free en appels vers leurs équivalents bunny sans modifier votre code.
+ * @description C'est une option de compilation, pas une macro-fonction à appeler depuis votre code source.
+ * @description Il s'agit du nom historique de BUNNY_ALLOCATOR_OVERLOAD. Le nouveau code devrait utiliser BUNNY_ALLOCATOR_OVERLOAD.
+ * @see LAPIN_ALLOCATOR_DEACTIVATED, BUNNY_ALLOCATOR_OVERLOAD
+ */
 # ifdef		LAPIN_ALLOCATOR_OVERLOAD
 #  define	malloc(a)			bunny_malloc(a)
 #  define	calloc(a, b)			bunny_calloc(a, b)
@@ -110,17 +139,60 @@ void		bunny_malloc_failure(bool	f);
 #  define	free(a)				bunny_free(a)
 # endif
 
+/**
+ * @doc
+ * @doc-symbol BUNNY_ALLOCATOR_DEACTIVATED
+ * @doc-kind macro
+ * @doc-module allocator
+ * @doc-order 40
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level 40
+ *
+ * @doc-lang en
+ * @brief Disables or bypasses the Bunny allocator.
+ * @description This macro can be used in two different ways. At library compile time, it disables internal use of the Bunny allocator and binds the allocator functions to the system allocator. At application compile time, it transforms calls to bunny_malloc, bunny_calloc, bunny_realloc and bunny_free into calls to the regular allocator functions.
+ * @description This is a compile-time option, not a function-like macro to call from your source code.
+ * @description This is useful while debugging with tools such as valgrind, which cannot inspect the Bunny allocator internal heap like it inspects the system allocator.
+ * @description This macro is the modern public name. It enables LAPIN_ALLOCATOR_DEACTIVATED internally.
+ * @see BUNNY_ALLOCATOR_OVERLOAD, LAPIN_ALLOCATOR_DEACTIVATED
+ *
+ * @doc-lang fr
+ * @brief Désactive ou contourne l'allocateur Bunny.
+ * @description Cette macro peut être utilisée de deux manières. À la compilation de la bibliothèque, elle désactive l'utilisation interne de l'allocateur Bunny et relie les fonctions d'allocation à l'allocateur système. À la compilation de l'application, elle transforme les appels à bunny_malloc, bunny_calloc, bunny_realloc et bunny_free en appels aux fonctions d'allocation classiques.
+ * @description C'est une option de compilation, pas une macro-fonction à appeler depuis votre code source.
+ * @description C'est utile pendant le débogage avec des outils comme valgrind, qui ne peuvent pas inspecter le tas interne de l'allocateur Bunny comme ils inspectent l'allocateur système.
+ * @description Cette macro est le nom public moderne. Elle active LAPIN_ALLOCATOR_DEACTIVATED en interne.
+ * @see BUNNY_ALLOCATOR_OVERLOAD, LAPIN_ALLOCATOR_DEACTIVATED
+ */
 # ifdef		BUNNY_ALLOCATOR_DEACTIVATED
 #  define	LAPIN_ALLOCATOR_DEACTIVATED
 # endif
 
-/*!
-** The LAPIN_ALLOCATOR_DEACTIVATED should be defined inside your Makefile with the -D option
-** for GCC. The purpose of this macro is to transform every calls to bunny_malloc, bunny_calloc,
-** bunny_realloc and bunny_free to their standard equivalent without having to change your code.
-** Considering that tools like valgrind cannot help you to debug if you use the bunny allocator,
-** deactivating it may help you during your debugging.
-*/
+/**
+ * @doc
+ * @doc-symbol LAPIN_ALLOCATOR_DEACTIVATED
+ * @doc-kind macro
+ * @doc-module allocator
+ * @doc-order 39
+ * @doc-since 2
+ * @doc-until 10
+ * @doc-level 40
+ *
+ * @doc-lang en
+ * @brief Historical name used to disable or bypass the Bunny allocator.
+ * @description This macro can be used in two different ways. At library compile time, it disables internal use of the Bunny allocator and binds the allocator functions to the system allocator. At application compile time, it transforms calls to bunny_malloc, bunny_calloc, bunny_realloc and bunny_free into calls to the regular allocator functions.
+ * @description This is a compile-time option, not a function-like macro to call from your source code.
+ * @description This is the historical name of BUNNY_ALLOCATOR_DEACTIVATED. New code should use BUNNY_ALLOCATOR_DEACTIVATED.
+ * @see LAPIN_ALLOCATOR_OVERLOAD, BUNNY_ALLOCATOR_DEACTIVATED
+ *
+ * @doc-lang fr
+ * @brief Nom historique utilisé pour désactiver ou contourner l'allocateur Bunny.
+ * @description Cette macro peut être utilisée de deux manières. À la compilation de la bibliothèque, elle désactive l'utilisation interne de l'allocateur Bunny et relie les fonctions d'allocation à l'allocateur système. À la compilation de l'application, elle transforme les appels à bunny_malloc, bunny_calloc, bunny_realloc et bunny_free en appels aux fonctions d'allocation classiques.
+ * @description C'est une option de compilation, pas une macro-fonction à appeler depuis votre code source.
+ * @description Il s'agit du nom historique de BUNNY_ALLOCATOR_DEACTIVATED. Le nouveau code devrait utiliser BUNNY_ALLOCATOR_DEACTIVATED.
+ * @see LAPIN_ALLOCATOR_OVERLOAD, BUNNY_ALLOCATOR_DEACTIVATED
+ */
 # ifdef		LAPIN_ALLOCATOR_DEACTIVATED
 #  define	bunny_malloc(a)			malloc(a)
 #  define	bunny_calloc(a, b)		calloc(a, b)

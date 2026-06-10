@@ -11,6 +11,36 @@ t_bunny_configuration	*_bunny_configuration_go_get_node_va(const t_bunny_configu
 
 #define			PATTERN		"%p config, %d value, %zu params, ... -> %s"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_set_int_va
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 540
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Walks counted address components and stores a integer scalar value.
+ * @param config Configuration tree to modify.
+ * @param val Value to store.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Returns $Ctrue@ when the value is stored.
+ * @return-failure Returns $Cfalse@ if the path cannot be resolved.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Parcourt des composants d’adresse comptés et stocke une valeur scalaire integer.
+ * @param config Configuration tree to modify.
+ * @param val Value to store.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Renvoie $Ctrue@ quand la valeur est stockée.
+ * @return-failure Renvoie $Cfalse@ si le chemin ne peut pas être résolu.
+ * @log "configuration"
+ */
 bool			bunny_configuration_go_set_int_va(t_bunny_configuration		*config,
 							  int				val,
 							  size_t			nbr,
@@ -38,6 +68,36 @@ bool			bunny_configuration_go_set_int_va(t_bunny_configuration		*config,
 #undef			PATTERN
 #define			PATTERN		"%p config, %f value, %zu params, ... -> %s"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_set_double_va
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 530
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Walks counted address components and stores a double scalar value.
+ * @param config Configuration tree to modify.
+ * @param val Value to store.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Returns $Ctrue@ when the value is stored.
+ * @return-failure Returns $Cfalse@ if the path cannot be resolved.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Parcourt des composants d’adresse comptés et stocke une valeur scalaire double.
+ * @param config Configuration tree to modify.
+ * @param val Value to store.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Renvoie $Ctrue@ quand la valeur est stockée.
+ * @return-failure Renvoie $Cfalse@ si le chemin ne peut pas être résolu.
+ * @log "configuration"
+ */
 bool			bunny_configuration_go_set_double_va(t_bunny_configuration	*config,
 							     double			val,
 							     size_t			nbr,
@@ -65,6 +125,36 @@ bool			bunny_configuration_go_set_double_va(t_bunny_configuration	*config,
 #undef			PATTERN
 #define			PATTERN		"%p config, %s value, %zu params, ... -> %s"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_set_string_va
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 520
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Walks counted address components and stores a string scalar value.
+ * @param config Configuration tree to modify.
+ * @param val Value to store.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Returns $Ctrue@ when the value is stored.
+ * @return-failure Returns $Cfalse@ if the path cannot be resolved.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Parcourt des composants d’adresse comptés et stocke une valeur scalaire string.
+ * @param config Configuration tree to modify.
+ * @param val Value to store.
+ * @param nbr Number of address components.
+ * @param ... Address components, either strings or indexes.
+ * @return-success Renvoie $Ctrue@ quand la valeur est stockée.
+ * @return-failure Renvoie $Cfalse@ si le chemin ne peut pas être résolu.
+ * @log "configuration"
+ */
 bool			bunny_configuration_go_set_string_va(t_bunny_configuration	*config,
 							     const char			*val,
 							     size_t			nbr,
@@ -96,6 +186,34 @@ t_bunny_configuration	*_bunny_configuration_go_get_node(const t_bunny_configurat
 #undef			PATTERN
 #define			PATTERN		"%p config, %s value, %s address -> %s"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_set_string
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 480
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Follows a C-like address and stores a string scalar value.
+ * @param config Configuration tree to modify.
+ * @param val Value to store.
+ * @param addr C-like address to resolve.
+ * @return-success Returns $Ctrue@ when the value is stored.
+ * @return-failure Returns $Cfalse@ if the address cannot be resolved.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Suit une adresse de style C et stocke une valeur scalaire string.
+ * @param config Configuration tree to modify.
+ * @param val Value to store.
+ * @param addr C-like address to resolve.
+ * @return-success Renvoie $Ctrue@ quand la valeur est stockée.
+ * @return-failure Renvoie $Cfalse@ si l’adresse ne peut pas être résolue.
+ * @log "configuration"
+ */
 bool			bunny_configuration_go_set_string(t_bunny_configuration		*config,
 							  const char			*val,
 							  const char			*addr)
@@ -119,6 +237,34 @@ bool			bunny_configuration_go_set_string(t_bunny_configuration		*config,
 #undef			PATTERN
 #define			PATTERN		"%p config, %f value, %s address -> %s"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_set_double
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 490
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Follows a C-like address and stores a double scalar value.
+ * @param config Configuration tree to modify.
+ * @param val Value to store.
+ * @param addr C-like address to resolve.
+ * @return-success Returns $Ctrue@ when the value is stored.
+ * @return-failure Returns $Cfalse@ if the address cannot be resolved.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Suit une adresse de style C et stocke une valeur scalaire double.
+ * @param config Configuration tree to modify.
+ * @param val Value to store.
+ * @param addr C-like address to resolve.
+ * @return-success Renvoie $Ctrue@ quand la valeur est stockée.
+ * @return-failure Renvoie $Cfalse@ si l’adresse ne peut pas être résolue.
+ * @log "configuration"
+ */
 bool			bunny_configuration_go_set_double(t_bunny_configuration		*config,
 							  double			val,
 							  const char			*addr)
@@ -142,6 +288,34 @@ bool			bunny_configuration_go_set_double(t_bunny_configuration		*config,
 #undef			PATTERN
 #define			PATTERN		"%p config, %d value, %s address -> %s"
 
+/**
+ * @doc
+ * @doc-symbol bunny_configuration_go_set_int
+ * @doc-kind function
+ * @doc-module configuration
+ * @doc-order 500
+ * @doc-since 0
+ * @doc-until latest
+ * @doc-level beginner
+ *
+ * @doc-lang en
+ * @brief Follows a C-like address and stores a integer scalar value.
+ * @param config Configuration tree to modify.
+ * @param val Value to store.
+ * @param addr C-like address to resolve.
+ * @return-success Returns $Ctrue@ when the value is stored.
+ * @return-failure Returns $Cfalse@ if the address cannot be resolved.
+ * @log "configuration"
+ *
+ * @doc-lang fr
+ * @brief Suit une adresse de style C et stocke une valeur scalaire integer.
+ * @param config Configuration tree to modify.
+ * @param val Value to store.
+ * @param addr C-like address to resolve.
+ * @return-success Renvoie $Ctrue@ quand la valeur est stockée.
+ * @return-failure Renvoie $Cfalse@ si l’adresse ne peut pas être résolue.
+ * @log "configuration"
+ */
 bool			bunny_configuration_go_set_int(t_bunny_configuration		*config,
 						       int				val,
 						       const char			*addr)
