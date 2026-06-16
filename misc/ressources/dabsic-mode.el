@@ -109,6 +109,122 @@
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
+(defun dabsic--skip-string (limit)
+  "Move point after the current double-quoted string, without going past LIMIT."
+  (forward-char 1)
+  (while (and (< (point) limit)
+              (not (eq (char-after) ?\")))
+    (if (eq (char-after) ?\\)
+        (forward-char 2)
+      (forward-char 1)))
+  (when (< (point) limit)
+    (forward-char 1)))
+
+(defun dabsic--skip-disabled-block (open close limit)
+  "Move point after a Dabsic disabled block, [! ... ] or {! ... }.
+OPEN and CLOSE are the delimiters to balance.  LIMIT is the search bound."
+  (let ((depth 1))
+    (while (and (> depth 0) (< (point) limit))
+      (cond
+       ((eq (char-after) ?\")
+        (dabsic--skip-string limit))
+       ((eq (char-after) ?')
+        (forward-line 1))
+       ((looking-at "\\[\\*")
+        (if (search-forward "*]" limit t)
+            nil
+          (goto-char limit)))
+       ((eq (char-after) open)
+        (setq depth (1+ depth))
+        (forward-char 1))
+       ((eq (char-after) close)
+        (setq depth (1- depth))
+        (forward-char 1))
+       (t
+        (forward-char 1))))
+    (= depth 0)))
+
+(defun dabsic--in-disabled-block-p (&optional pos)
+  "Return non-nil when POS is inside a Dabsic [! ... ] or {! ... } block."
+  (let ((target (or pos (point)))
+        (inside nil))
+    (save-excursion
+      (goto-char (point-min))
+      (while (and (not inside) (< (point) target))
+        (cond
+         ((eq (char-after) ?\")
+          (dabsic--skip-string target))
+         ((eq (char-after) ?')
+          (forward-line 1))
+         ((looking-at "\\[\\*")
+          (if (search-forward "*]" target t)
+              nil
+            (goto-char target)))
+         ((or (looking-at "\\[!") (looking-at "{!"))
+          (let* ((open (char-after))
+                 (close (if (eq open ?[) ?] ?})))
+            (forward-char 2)
+            (dabsic--skip-disabled-block open close (point-max))
+            (when (> (point) target)
+              (setq inside t))))
+         (t
+          (forward-char 1))))
+      inside)))
+
+(defun dabsic--line-code ()
+  "Return current line without its inline Dabsic comment part."
+  (save-excursion
+    (let ((beg (line-beginning-position))
+          (end (line-end-position))
+          comment-start)
+      (goto-char beg)
+      (while (and (not comment-start) (< (point) end))
+        (cond
+         ((eq (char-after) ?\")
+          (dabsic--skip-string end))
+         ((eq (char-after) ?')
+          (setq comment-start (point)))
+         (t
+          (forward-char 1))))
+      (buffer-substring-no-properties beg (or comment-start end)))))
+
+(defun dabsic--comment-line-p ()
+  "Return non-nil if the current line should not affect indentation."
+  (or (nth 4 (syntax-ppss (line-beginning-position)))
+      (dabsic--in-disabled-block-p (line-beginning-position))
+      (string-match-p "^[ \t]*\\(?:\\[!\\|{!\\)" (dabsic--line-code))))
+
+(defun dabsic--looking-at-code (regexp)
+  "Like `looking-at', but ignore Dabsic comments for indentation."
+  (and (not (dabsic--comment-line-p))
+       (string-match-p regexp (dabsic--line-code))))
+
+(defun dabsic-match-disabled-block (limit)
+  "Font-lock matcher for disabled Dabsic scopes: [! ... ] and {! ... }."
+  (let ((found nil))
+    (while (and (not found) (< (point) limit))
+      (cond
+       ((eq (char-after) ?\")
+        (dabsic--skip-string limit))
+       ((eq (char-after) ?')
+        (forward-line 1))
+       ((looking-at "\\[\\*")
+        (if (search-forward "*]" limit t)
+            nil
+          (goto-char limit)))
+       ((or (looking-at "\\[!") (looking-at "{!"))
+        (let* ((beg (point))
+               (open (char-after))
+               (close (if (eq open ?[) ?] ?})))
+          (forward-char 2)
+          (dabsic--skip-disabled-block open close limit)
+          (set-match-data (list beg (point)))
+          (setq found t)))
+       (t
+        (forward-char 1))))
+    found))
+
 (defconst dabsic-indent-width 2)
 (defun dabsic-indent-line ()
   "Indent current line as Dabsic code."
@@ -117,12 +233,12 @@
   (if (bobp)
       (indent-line-to 0)   ; First line is always non-indented
     (let ((not-indented t) cur-indent)
-      (if (looking-at dabsic/nodepth-regexp) ; If multiple openings
+      (if (dabsic--looking-at-code dabsic/nodepth-regexp) ; If multiple openings
 	  (progn
 	    (setq cur-indent (current-indentation))
 	    (setq not-indented nil))
 
-	(if (looking-at dabsic/outdepth-endline-regexp) ; If the line we are looking at is the end of a block, then decrease the indentation
+	(if (dabsic--looking-at-code dabsic/outdepth-endline-regexp) ; If the line we are looking at is the end of a block, then decrease the indentation
 	    (progn
 	      (save-excursion
 		(forward-line -1)
@@ -132,11 +248,11 @@
 	  (save-excursion
 	    (while not-indented ; Iterate backwards until we find an indentation hint
 	      (forward-line -1)
-	      (if (looking-at dabsic/outdepth-regexp) ; This hint indicates that we need to indent at the level of the END_ token
+	      (if (dabsic--looking-at-code dabsic/outdepth-regexp) ; This hint indicates that we need to indent at the level of the END_ token
 		  (progn
 		    (setq cur-indent (current-indentation))
 		    (setq not-indented nil))
-		(if (looking-at dabsic/indepth-regexp) ; This hint indicates that we need to indent an extra level
+		(if (dabsic--looking-at-code dabsic/indepth-regexp) ; This hint indicates that we need to indent an extra level
 		    (progn
 		      (setq cur-indent (+ (current-indentation) dabsic-indent-width)) ; Do the actual indenting
 		      (setq not-indented nil))
@@ -171,6 +287,11 @@
   (interactive)
   (set-syntax-table dabsic-mode-syntax-table)
 
+  (when (fboundp 'dabsic-match-disabled-block)
+    (let ((disabled-block-rule (cons #'dabsic-match-disabled-block font-lock-comment-face)))
+      (unless (member disabled-block-rule dabsic/font-lock-definitions)
+        (setq dabsic/font-lock-definitions
+              (cons disabled-block-rule dabsic/font-lock-definitions)))))
   (set (make-local-variable 'font-lock-defaults) '(dabsic/font-lock-definitions nil t))
   (font-lock-mode 1)
 
