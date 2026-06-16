@@ -21,10 +21,10 @@ WrittenCSV = [CSV
 
   Field=100
   [Scope = 10
-     Field = 200
-   ]
-   @include "to_include.dab"
-   @insert "to_insert.dab"
+    Field = 200
+  ]
+  @include "to_include.dab"
+  @insert "to_insert.dab"
 ]
 
 {Array
@@ -42,8 +42,10 @@ Program = [Sequence
 Fibo(int a) = [Function
   If a <= 0 Then
     Return 0
-  If a < 2 Then
+  If a < 2
+    "echo", 2
     Return 1
+  Endif
   Return Fibo(a - 1) + Fibo(a - 2)
 ]
 
