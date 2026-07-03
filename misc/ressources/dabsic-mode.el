@@ -8,7 +8,7 @@
 ;; scopes, arrays, functions, sequences, CSV blocks, XML-like markup and
 ;; disabled blocks introduced with [!, {! or <!.
 
-(defconst dabsic-mode-version-number "1.1.1" "Dabsic mode version number.")
+(defconst dabsic-mode-version-number "1.1.0" "Dabsic mode version number.")
 
 (defgroup dabsic nil "Major mode for editing Dabsic scripts"
   :group 'languages)
@@ -32,7 +32,7 @@
   "Regular expression matching all Dabsic directives.")
 
 (defconst dabsic/scopes-regexp
-  "\\[\\(Function\\|Array\\|Data\\|Sequence\\|CSV\\|Scope\\|Node\\)"
+  "\\[\\(Function\\|Array\\|Data\\|Sequence\\|CSV\\|Scope\\|Node\\|Text\\)"
   "Regular expression matching all Dabsic explicit scope declarations.")
 
 (defconst dabsic/nodes-regexp
@@ -132,6 +132,14 @@
   "Return top element of STACK."
   (car stack))
 
+(defun dabsic--stack-entry-kind (entry)
+  "Return the symbolic kind of an indentation stack ENTRY."
+  (if (consp entry) (car entry) entry))
+
+(defun dabsic--stack-top-kind (stack)
+  "Return the symbolic kind of the top element of STACK."
+  (dabsic--stack-entry-kind (car stack)))
+
 (defun dabsic--push (kind stack)
   "Push KIND on STACK."
   (cons kind stack))
@@ -143,7 +151,7 @@
 (defun dabsic--pop-function-block (stack)
   "Pop one function-local indentation block from STACK."
   (cond
-   ((memq (dabsic--stack-top stack) '(func-block func-single))
+   ((memq (dabsic--stack-top-kind stack) '(func-block func-single))
     (cdr stack))
    (t stack)))
 
@@ -152,8 +160,9 @@
   (let ((s stack)
         found)
     (while (and s (not found))
-      (if (memq (car s) '(function sequence csv xml scope array disabled-square disabled-curly disabled-angle))
-          (setq found (car s))
+      (if (memq (dabsic--stack-entry-kind (car s))
+                '(function sequence csv text xml scope array disabled-square disabled-curly disabled-angle))
+          (setq found (dabsic--stack-entry-kind (car s)))
         (setq s (cdr s))))
     found))
 
@@ -168,6 +177,10 @@
 (defun dabsic--inside-csv-p (stack)
   "Return non-nil if STACK is currently inside a CSV block."
   (eq (dabsic--context-kind stack) 'csv))
+
+(defun dabsic--inside-text-p (stack)
+  "Return non-nil if STACK is currently inside a Text block."
+  (eq (dabsic--context-kind stack) 'text))
 
 (defun dabsic--disabled-close-regexp (kind)
   "Return the closing regexp for disabled block KIND."
@@ -184,6 +197,71 @@
    ((string-match-p "^{!" s) 'disabled-curly)
    ((string-match-p "^<!" s) 'disabled-angle)
    (t nil)))
+
+(defun dabsic--unquote-token (s)
+  "Return S without surrounding single or double quotes when present."
+  (let ((len (length s)))
+    (if (and (>= len 2)
+             (or (and (= (aref s 0) ?\") (= (aref s (1- len)) ?\"))
+                 (and (= (aref s 0) ?') (= (aref s (1- len)) ?'))))
+        (substring s 1 (1- len))
+      s)))
+
+(defun dabsic--split-text-arguments (s)
+  "Split a Text argument list S on top-level commas."
+  (let ((i 0)
+        (len (length s))
+        (start 0)
+        (paren-depth 0)
+        (bracket-depth 0)
+        (brace-depth 0)
+        (in-string nil)
+        (escaped nil)
+        (parts nil))
+    (while (< i len)
+      (let ((ch (aref s i)))
+        (cond
+         (escaped
+          (setq escaped nil))
+         ((and in-string (= ch ?\\))
+          (setq escaped t))
+         ((= ch ?\")
+          (setq in-string (not in-string)))
+         ((not in-string)
+          (cond
+           ((= ch ?\() (setq paren-depth (1+ paren-depth)))
+           ((= ch ?\)) (setq paren-depth (max 0 (1- paren-depth))))
+           ((= ch ?[) (setq bracket-depth (1+ bracket-depth)))
+           ((= ch ?]) (setq bracket-depth (max 0 (1- bracket-depth))))
+           ((= ch ?{) (setq brace-depth (1+ brace-depth)))
+           ((= ch ?}) (setq brace-depth (max 0 (1- brace-depth))))
+           ((and (= ch ?,)
+                 (= paren-depth 0)
+                 (= bracket-depth 0)
+                 (= brace-depth 0))
+            (setq parts (cons (substring s start i) parts))
+            (setq start (1+ i)))))))
+      (setq i (1+ i)))
+    (nreverse (cons (substring s start) parts))))
+
+(defun dabsic--line-opens-text (s)
+  "Return a Text stack entry opened by S, or nil.
+
+Text blocks are closed by the marker passed as the last Text argument,
+followed by a closing bracket. For example [Text($,Footer) closes on Footer]."
+  (when (string-match "\\[Text[ \t]*(\\(.*\\))[ \t]*$" s)
+    (let* ((args (dabsic--split-text-arguments (match-string 1 s)))
+           (last-arg (and args (car (last args))))
+           (marker (and last-arg
+                        (dabsic--unquote-token (dabsic--trim last-arg)))))
+      (when (and marker (not (string= marker "")))
+        (cons 'text marker)))))
+
+(defun dabsic--line-closes-text-p (s entry)
+  "Return non-nil when S closes the Text block represented by ENTRY."
+  (and (consp entry)
+       (eq (car entry) 'text)
+       (string-match-p (concat "^" (regexp-quote (cdr entry)) "\\][ \t]*$") s)))
 
 (defun dabsic--line-closes-disabled-p (s kind)
   "Return non-nil when S closes disabled block KIND."
@@ -216,39 +294,15 @@
   (and (string-match-p "^If\\_>" s)
        (string-match-p "\\_<Then[ \t]*$" s)))
 
-(defconst dabsic/xml-tag-name-regexp
-  "\\(?:@\\|[A-Za-z_]\\)[A-Za-z0-9_:-]*"
-  "Regular expression matching one XML-ish tag name accepted by Dabsic inserts.")
-
-(defun dabsic--xml-tag-line-p (s)
-  "Return non-nil if S begins with an XML-like tag."
-  (string-match-p
-   (concat "^</?" dabsic/xml-tag-name-regexp "\\(?:[ \t][^>]*\\)?>")
-   s))
-
-(defun dabsic--xml-self-closing-line-p (s)
-  "Return non-nil if S is an XML-like self-closing tag."
-  (string-match-p "/[ \t]*>[ \t]*$" s))
-
-(defun dabsic--xml-one-line-element-p (s)
-  "Return non-nil if S contains a complete XML-like element on one line."
-  (string-match-p
-   "^<\\([^ \t>/]+\\)\\(?:[ \t][^>]*\\)?>.*</\\1>[ \t]*$"
-   s))
-
 (defun dabsic--xml-opening-line-p (s)
   "Return non-nil if S opens an XML-like element."
-  (and (dabsic--xml-tag-line-p s)
+  (and (string-match-p "^<[@a-zA-Z_][a-zA-Z0-9_:-]*\\(?:[ \t][^>]*\\)?>" s)
        (not (string-match-p "^</" s))
-       (not (string-match-p "^<!" s))
-       (not (dabsic--xml-self-closing-line-p s))
-       (not (dabsic--xml-one-line-element-p s))))
+       (not (string-match-p "/>[ \t]*$" s))))
 
 (defun dabsic--xml-closing-line-p (s)
   "Return non-nil if S begins with an XML-like closing element."
-  (string-match-p
-   (concat "^</" dabsic/xml-tag-name-regexp "[ \t]*>")
-   s))
+  (string-match-p "^</" s))
 
 (defun dabsic--opens-container-kind (s)
   "Return the Dabsic container kind opened by S, or nil."
@@ -279,6 +333,8 @@
          ((and (string-match-p "^\\[\\(Scope\\|Node\\)\\_>" tail)
                (not (string-match-p "\\][ \t]*$" tail)))
           'scope)
+         ((string-match-p "^\\[Text[ \t]*(" tail)
+          nil)
          ((and (string-match-p "^\\[[a-zA-Z_]" tail)
                (not (string-match-p "\\][ \t]*$" tail)))
           'scope)
@@ -289,12 +345,16 @@
 
 (defun dabsic--update-stack-with-line (stack s)
   "Return STACK updated after reading already-indented code line S."
-  (let ((active-single (eq (dabsic--stack-top stack) 'func-single)))
+  (let ((active-single (eq (dabsic--stack-top-kind stack) 'func-single)))
     (cond
      ((dabsic--blank-or-comment-p s)
       stack)
-     ((memq (dabsic--stack-top stack) '(disabled-square disabled-curly disabled-angle))
-      (if (dabsic--line-closes-disabled-p s (dabsic--stack-top stack))
+     ((memq (dabsic--stack-top-kind stack) '(disabled-square disabled-curly disabled-angle))
+      (if (dabsic--line-closes-disabled-p s (dabsic--stack-top-kind stack))
+          (cdr stack)
+        stack))
+     ((eq (dabsic--stack-top-kind stack) 'text)
+      (if (dabsic--line-closes-text-p s (dabsic--stack-top stack))
           (cdr stack)
         stack))
      ((dabsic--inside-csv-p stack)
@@ -332,6 +392,7 @@
 
         ;; Generic format/container openings.
         (setq kind (or (dabsic--line-opens-disabled s)
+                       (dabsic--line-opens-text s)
                        (dabsic--opens-container-kind s)
                        (and (dabsic--xml-opening-line-p s) 'xml)))
         (when kind
@@ -379,9 +440,14 @@
     (cond
      ((dabsic--blank-or-comment-p s)
       nil)
-     ((and (memq (dabsic--stack-top stack) '(disabled-square disabled-curly disabled-angle))
-           (dabsic--line-closes-disabled-p s (dabsic--stack-top stack)))
+     ((and (memq (dabsic--stack-top-kind stack) '(disabled-square disabled-curly disabled-angle))
+           (dabsic--line-closes-disabled-p s (dabsic--stack-top-kind stack)))
       (* (max 0 (1- depth)) dabsic-indent-width))
+     ((and (eq (dabsic--stack-top-kind stack) 'text)
+           (dabsic--line-closes-text-p s (dabsic--stack-top stack)))
+      (* (max 0 (1- depth)) dabsic-indent-width))
+     ((eq (dabsic--stack-top-kind stack) 'text)
+      (* depth dabsic-indent-width))
      ((and (dabsic--inside-csv-p stack)
            (string-match-p "^\\]" s))
       (* (max 0 (1- depth)) dabsic-indent-width))
