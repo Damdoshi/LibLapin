@@ -80,6 +80,8 @@ void		bunny_allocator_reset(void);
 
 void		bunny_malloc_failure(bool	fail);
 
+void		bunny_malloc_fail_after(int	cnt);
+
 /**
  * @doc
  * @doc-symbol BUNNY_ALLOCATOR_OVERLOAD

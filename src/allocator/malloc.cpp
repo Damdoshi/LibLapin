@@ -237,7 +237,36 @@ void			check_memory_state(void)
     }
 }
 
-static bool		malloc_failure = false;
+static int		malloc_failure = -1;
+
+/**
+ * @doc
+ * @doc-symbol bunny_malloc_fail_after
+ * @doc-kind function
+ * @doc-module allocator
+ * @doc-order 220
+ * @doc-since 11
+ * @doc-until latest
+ * @doc-level 50
+ *
+ * @doc-lang en
+ * @brief Forces Bunny allocation functions to fail after cnt calls to bunny_malloc
+ * @description Give the quantity of calls to alloc functions that'll work before bunny_malloc starts returning NULL.
+ * @description This function is mainly useful for tests that need to exercise allocation failure paths. Use with caution.
+ * @param cnt The quantity of calls before it breaks. -1 makes it work again. 0 makes it break right now.
+ * @see bunny_malloc, bunny_calloc, bunny_realloc
+ *
+ * @doc-lang fr
+ * @brief Force l'échec des fonctions d'allocation Bunny après cnt appels.
+ * @description Lorsque ce mode est activé, tout appel à bunny_malloc, bunny_calloc ou bunny_realloc échoue et renvoie NULL après le nombre d'appel indiqué.
+ * @description Cette fonction est surtout utile pour tester les chemins d'échec d'allocation. Utilisez-la avec prudence.
+ * @param cnt Le nombre d'appel avant la panne des fonctions d'allocation. -1 répare l'allocation. 0 provoque la panne immédiatement.
+ * @see bunny_malloc, bunny_calloc, bunny_realloc
+ */
+void			bunny_malloc_failure(int	cnt)
+{
+  malloc_failure = cnt;
+}
 
 /**
  * @doc
@@ -265,7 +294,7 @@ static bool		malloc_failure = false;
  */
 void			bunny_malloc_failure(bool	f)
 {
-  malloc_failure = f;
+  bunny_malloc_fail_after(f ? 0 : -1);
 }
 
 /**
@@ -306,8 +335,10 @@ void			bunny_malloc_failure(bool	f)
  */
 void			*bunny_malloc(size_t		data)
 {
-  if (malloc_failure)
+  if (malloc_failure == 0)
     return (NULL);
+  if (malloc_failure > 0)
+    malloc_failure -= 1;
   // To ensure a precise behaviour everywhere
   if (data == 0)
     return (NULL);

@@ -661,7 +661,7 @@ bool			bunny_configuration_executef_bool(t_bunny_configuration		*config,
 							  const char			*pattern,
 							  ...) _BFMT(4, 5);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /**
  * @doc
  * @doc-symbol bunny_configuration_executef
