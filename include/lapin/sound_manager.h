@@ -152,6 +152,7 @@ bool			_bunny_sound_manager_add(t_bunny_sound_manager		*sm,
 						 t_bunny_sound			*snd,
 						 t_bunny_sound_type		typ);
 
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /**
  * @doc-symbol bunny_sound_manager_add
  * @doc-module sound_manager
@@ -181,17 +182,6 @@ bool			_bunny_sound_manager_add(t_bunny_sound_manager		*sm,
  * @return-failure false si la catégorie est invalide ou si le son est déjà dans une autre catégorie.
  * @see bunny_sound_manager_remove, bunny_managed_sound_volume, bunny_managed_sound_pitch
  */
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
-/*!
-** Add a sound inside the sound manager associated to a category.
-** Its volume and pitch will be modified accordingly to general and category
-** volume and pitch, associated to its proper one.
-** \param sm The sound manager.
-** \param snd The sound to insert
-** \param typ The category in which the sound will be added, it cannot be general.
-** \return True if the sound was inserted or was already inserted in the
-** matching category. False on error.
-*/
 #  define		bunny_sound_manager_add(sm, snd, typ)			\
   _bunny_sound_manager_add							\
   (sm, _Generic((snd),								\
@@ -208,6 +198,7 @@ bool			_bunny_sound_manager_add(t_bunny_sound_manager		*sm,
 void			_bunny_sound_manager_remove(t_bunny_sound_manager	*sm,
 						    t_bunny_sound		*snd);
 
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /**
  * @doc-symbol bunny_sound_manager_remove
  * @doc-module sound_manager
@@ -229,7 +220,6 @@ void			_bunny_sound_manager_remove(t_bunny_sound_manager	*sm,
  * @param snd Son, musique, sound sprite ou effet à retirer.
  * @see bunny_sound_manager_add, bunny_delete_sound
  */
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 #  define		bunny_sound_manager_remove(sm, snd)			\
   _bunny_sound_manager_remove							\
   (sm, _Generic((snd),								\
@@ -314,6 +304,7 @@ bool			_bunny_managed_sound_volume(t_bunny_sound_manager	*sm,
 						    t_bunny_sound		*snd,
 						    double			vol);
 
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /**
  * @doc-symbol bunny_managed_sound_volume
  * @doc-module sound_manager
@@ -343,7 +334,6 @@ bool			_bunny_managed_sound_volume(t_bunny_sound_manager	*sm,
  * @return-failure false si le son n'est pas géré par sm.
  * @see bunny_managed_sound_pitch, bunny_sound_manager_volume
  */
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 #  define		bunny_managed_sound_volume(sm, snd, vol)		\
   _bunny_managed_sound_volume							\
   (sm, _Generic((snd),								\
@@ -361,6 +351,7 @@ bool			_bunny_managed_sound_pitch(t_bunny_sound_manager	*sm,
 						   t_bunny_sound		*snd,
 						   double			pit);
 
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /**
  * @doc-symbol bunny_managed_sound_pitch
  * @doc-module sound_manager
@@ -390,7 +381,6 @@ bool			_bunny_managed_sound_pitch(t_bunny_sound_manager	*sm,
  * @return-failure false si le son n'est pas géré par sm.
  * @see bunny_managed_sound_volume, bunny_sound_manager_pitch
  */
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
 #  define		bunny_managed_sound_pitch(sm, snd, pit)			\
   _bunny_managed_sound_pitch							\
   (sm, _Generic((snd),								\

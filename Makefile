@@ -62,13 +62,20 @@
 			-lopencv_objdetect -lopencv_video			\
 			-lopencv_videoio -lopencv_core				\
 			-lavcall -lusb -ludev -lm -ldl -lpthread
-  INSTALL_BIN_DIR =	/usr/bin/
-  INSTALL_ETC_DIR =	/etc/lapin/
-  INSTALL_SHR_DIR =	/usr/share/lapin/
-  INSTALL_INC_DIR =	/usr/include/
-  INSTALL_LIB_DIR =	/usr/lib/
+  DESTDIR	?=
+  INSTALL_BIN_DIR =	$(DESTDIR)/usr/bin/
+  INSTALL_ETC_DIR =	$(DESTDIR)/etc/lapin/
+  INSTALL_SHR_DIR =	$(DESTDIR)/usr/share/lapin/
+  INSTALL_INC_DIR =	$(DESTDIR)/usr/include/
+  INSTALL_LIB_DIR =	$(DESTDIR)/usr/lib/
 
-  UTILS_DIR 	=	misc/program/utils
+  UTILS_DIR 	=	misc/programs/utils/
+  UTILS_INCLUDE =	-I$(CURDIR)/include					\
+			-I$(CURDIR)/include/lapin/				\
+			-I$(CURDIR)/include/lapin/deps/				\
+			-I$(CURDIR)/external/include/				\
+			-I/opt/local/include/					\
+			-I/usr/include/opencv4/
 
 #################################################################################
 ## Source                                                                      ##
@@ -112,37 +119,37 @@
   TSTFLAGS	=	$(COMMON) $(TESTOPTS)
 
 all:			erase title $(PRODA) $(DBGA) $(TSTA) # $(DBGSO) $(PRODSO)
-prod:			$(PRODA) # $(PRODSO)
-debug:			$(DBGA) # $(DBGSO)
-tests:			$(TSTA)
+prod:			prepare_logs $(PRODA) # $(PRODSO)
+debug:			prepare_logs $(DBGA) # $(DBGSO)
+tests:			prepare_logs $(TSTA)
 			(cd tests/ && $(MAKE))
-$(PRODSO):		$(PRODOBJ)
+$(PRODSO):		$(PRODOBJ) | prepare_logs
 			@$(SOLINKER) $(PRODSO) $(DEPS) $(PRODOBJ) 2>> $(LOGDIR)/$(PRODSO) && \
 			 $(ECHO) $(TEAL) "[PRD-OK]" $(GREEN) $(PRODSO) $(DEFAULT) ||\
 			 $(ECHO) $(RED)  "[PRD-KO]" $(PRODSO) $(DEFAULT)
 			@find $(LOGDIR)/$(PRODSO) -size 0 -delete || true
-$(PRODA):		$(PRODOBJ)
+$(PRODA):		$(PRODOBJ) | prepare_logs
 			@$(ALINKER) $(PRODA) $(PRODOBJ) 2>> $(LOGDIR)/$(PRODA) && \
 			 $(ECHO) $(TEAL) "[PRD-OK]" $(GREEN) $(PRODA) $(DEFAULT) || \
 			 $(ECHO) $(RED)  "[PRD-KO]" $(PRODA) $(DEFAULT)
 			@find $(LOGDIR)/$(PRODA) -size 0 -delete || true
-$(DBGSO):		$(DBGOBJ)
+$(DBGSO):		$(DBGOBJ) | prepare_logs
 			@$(SOLINKER) $(DBGSO) $(DEPS) $(DBGOBJ) 2>> $(LOGDIR)/$(DBGSO) &&	\
 			 $(ECHO) $(TEAL) "[DBG-OK]" $(GREEN) $(DBGSO) $(DEFAULT) ||\
 			 $(ECHO) $(RED)  "[DBG-KO]" $(DBGSO) $(DEFAULT)
 			@find $(LOGDIR)/$(DBGSO) -size 0 -delete || true
-$(DBGA):		$(DBGOBJ)
+$(DBGA):		$(DBGOBJ) | prepare_logs
 			@$(ALINKER) $(DBGA) $(DBGOBJ) 2>> $(LOGDIR)/$(DBGA) &&	\
 			 $(ECHO) $(TEAL) "[DBG-OK]" $(GREEN) $(DBGA) $(DEFAULT) || \
 			 $(ECHO) $(RED)  "[DBG-KO]" $(DBGA) $(DEFAULT)
 			@find $(LOGDIR)/$(DBGA) -size 0 -delete || true
-$(TSTA):		$(TSTOBJ)
+$(TSTA):		$(TSTOBJ) | prepare_logs
 			@$(ALINKER) $(TSTA) $(TSTOBJ) 2>> $(LOGDIR)/$(TSTA) &&	\
 			 $(ECHO) $(TEAL) "[TST-OK]" $(GREEN) $(TSTA) $(DEFAULT) || \
 			 $(ECHO) $(RED)  "[TST-KO]" $(TSTA) $(DEFAULT)
 			@find $(LOGDIR)/$(TSTA) -size 0 -delete || true
 
-.cpp.o:
+%.o:			%.cpp | prepare_logs
 			@$(eval TRACE="$(addprefix $(LOGDIR), $(subst /,-, $<))")
 			@$(COMPILER) -c $< -o $@ $(PRODFLAGS)			\
 			 $(HEADER) 2>> $(TRACE) &&				\
@@ -168,9 +175,11 @@ $(TSTA):		$(TSTOBJ)
 ## Misc                                                                        ##
 #################################################################################
 
-title:
+prepare_logs:
+			@mkdir -p $(LOGDIR) $(LOGDIR)/tmp
+
+title:			prepare_logs
 			@$(ECHO) $(TEAL) $(TITLE) $(DEFAULT)
-			@mkdir -p $(LOGDIR)
 clean:
 			@find . -name "*.o" -delete
 			@find . -name "*.gcno" -delete
@@ -191,15 +200,16 @@ build_utils:		$(PRODA)
 			    echo "[UTL] $$directory";				\
 			    PATH="$$(pwd):$$PATH"				\
 			    LD_LIBRARY_PATH="/tmp:$$LD_LIBRARY_PATH"		\
-			    $(MAKE) -C "$$directory" LIBPATH="-L/tmp" ||	\
+			    $(MAKE) -C "$$directory" LIBPATH="-L/tmp" 		\
+			    INCLUDE="$(UTILS_INCLUDE)" ||			\
 			    exit $$?;						\
 			  done;							\
 			fi
 install_tools:		build_utils
 			mkdir -p "$(INSTALL_BIN_DIR)"
-			cp bcc b++ bcontext $(INSTALL_BIN_DIR)
+			install -m 755 bcc b++ bcontext "$(INSTALL_BIN_DIR)"
 			@if [ -d "$(UTILS_DIR)" ]; then				\
-			  for makefile in "$(INSTALL_UTILS_DIR)"*/Makefile; do	\
+			  for makefile in "$(UTILS_DIR)"*/Makefile; do	\
 			    [ -f "$$makefile" ] || continue;			\
 			    directory="$${makefile%/Makefile}";			\
 			    utility="$${directory##*/}";			\
@@ -211,7 +221,7 @@ install_tools:		build_utils
 			    chmod 755 "$(INSTALL_BIN_DIR)/$$utility";		\
 			  done;							\
 			fi
-			mkdir -p /etc/lapin/
+			mkdir -p "$(INSTALL_ETC_DIR)"
 			chmod 755 $(INSTALL_BIN_DIR)/bcc 			\
 			 $(INSTALL_BIN_DIR)/b++					\
 			 $(INSTALL_BIN_DIR)/bcontext
@@ -219,16 +229,18 @@ install_tools:		build_utils
 			cp -r misc/ressources/context/* $(INSTALL_SHR_DIR)context/
 
 install_headers:	install_tools
+			mkdir -p $(INSTALL_INC_DIR) $(INSTALL_INC_DIR)lapin/
 			cp include/lapin.h $(INSTALL_INC_DIR)
-			mkdir -p $(INSTALL_INC_DIR)lapin/
 			cp -r include/lapin/* $(INSTALL_INC_DIR)lapin/
 			chmod 644 $(INSTALL_INC_DIR)lapin.h
 			find $(INSTALL_INC_DIR)lapin/ -type d -exec chmod 755 {} + -o -type f -exec chmod 644 {} +
 
 install_debug:		install_headers debug
+			mkdir -p $(INSTALL_LIB_DIR)
 			cp $(DBGA) $(INSTALL_LIB_DIR)
 
 install_main:		all install_debug
+			mkdir -p $(INSTALL_LIB_DIR)
 			cp $(PRODA) $(DBGA) $(INSTALL_LIB_DIR)
 
 install:		install_main install_debug
@@ -236,5 +248,5 @@ install:		install_main install_debug
 package:
 			dpkg-buildpackage -us -uc
 .POSIX:
-.PHONY:			tests title erase install_tools install_headers install_debug install_main install_package build_utils utils
+.PHONY:			tests prepare_logs title erase install_tools install_headers install_debug install_main install_package build_utils utils
 

@@ -74,7 +74,7 @@ bool			_bunny_add_monitored_value(const char		*name,
 						   t_bunny_monitored_type type,
 						   const void		*ptr);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /**
  * @doc
  * @doc-symbol bunny_add_monitored_value
@@ -115,6 +115,7 @@ bool			_bunny_add_monitored_value(const char		*name,
  * @see bunny_display_monitored_value
  * @see bunny_print_monitored_value
  */
+
 #  define		bunny_add_monitored_value(name, ptr)		\
   _Generic								\
   ((ptr),								\

@@ -31,7 +31,8 @@ void				bunny_update_joysticks(void)
     if ((gl_joystick[i].connected = sf::Joystick::isConnected(i)))
       {
 	id = sf::Joystick::getIdentification(i);
-	gl_joystick[i].name = bunny_strdup(id.name.toAnsiString().c_str());
+	std::string nam = id.name;
+	gl_joystick[i].name = bunny_strdup(nam.c_str());
 	gl_joystick[i].vendor = id.vendorId;
 	gl_joystick[i].product = id.productId;
 	gl_joystick[i].nb_button = sf::Joystick::getButtonCount(i);

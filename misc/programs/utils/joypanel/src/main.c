@@ -62,9 +62,9 @@ int				main(void)
   bunny_stop(program.window);
 
   // Delete fonts
-  bunny_delete_clipable(program.title);
-  bunny_delete_clipable(program.text);
-  bunny_delete_clipable(program.label);
+  bunny_delete_clipable(&program.title->clipable);
+  bunny_delete_clipable(&program.text->clipable);
+  bunny_delete_clipable(&program.label->clipable);
   bunny_free(program.joystick);
 
   return (response == EXIT_ON_ERROR ? EXIT_FAILURE : EXIT_SUCCESS);

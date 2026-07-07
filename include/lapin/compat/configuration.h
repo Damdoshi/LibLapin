@@ -11,7 +11,7 @@
 #  error		You cannot include this file directly.
 # endif
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /*!
 ** Cover bunny_configuration_get_child and bunny_configuration_get_case with the same
 ** symbol.
@@ -81,7 +81,7 @@ t_bunny_configuration	*bunny_configuration_get_child(t_bunny_configuration		*con
 t_bunny_configuration	*bunny_configuration_get_case(t_bunny_configuration		*config,
 						      ssize_t				i);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /*!
 ** Get a value inside the configuration. Its type will match of the type of val.
 ** \param cnf The configuration to browse
@@ -167,7 +167,7 @@ t_bunny_configuration	*bunny_configuration_go_get_node_va(t_bunny_configuration	
 							    size_t			nbr,
 							    ...);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /*!
 ** Get a value inside the configuration. Its type will match of the type of val.
 ** \param cnf The configuration to browse
@@ -266,7 +266,7 @@ bool			bunny_configuration_go_get_int_va(const t_bunny_configuration	*config,
 t_bunny_configuration	*bunny_configuration_go_get_node(t_bunny_configuration		*config,
 							 const char			*addr);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /*!
 ** Get a value inside the configuration. Its type will match of the type of val.
 ** \param cnf The configuration to browse
@@ -346,7 +346,7 @@ bool			bunny_configuration_go_get_int(t_bunny_configuration		*config,
 						       int				*val,
 						       const char			*addr);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /*!
 ** Set a value inside the configuration. Its type will match of the type of val.
 ** \param cnf The configuration to editr
@@ -415,7 +415,7 @@ void			bunny_configuration_set_double(t_bunny_configuration		*config,
 void			bunny_configuration_set_int(t_bunny_configuration		*config,
 						    int					val);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /*!
 ** Go to the describded node and set its value.
 ** \param config The configuration to browse
@@ -509,7 +509,7 @@ bool			bunny_configuration_go_set_int_va(const t_bunny_configuration	*config,
 							  size_t			nbr,
 							  ...);
 
-# if			defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
+# if			defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /*!
 ** Go to the describded node and set its value.
 ** \param config The configuration to browse

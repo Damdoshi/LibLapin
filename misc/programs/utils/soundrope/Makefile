@@ -1,42 +1,39 @@
-## Jason Brillante Damdoshi ---------    ---  -- --- -    ---  --    - -- -   -
-## Hanged Bunny Studio 2014-2018 ----- -- - -- -  -  -- -- - -- --  -- -- -- --
+## Hanged Bunny Studio Library ------    ---  -- --- -    ---  --    - -- -   -
+## Hanged Bunny Studio 2014-2026 ----- -- - -- -  -  -- -- - -- --  -- -- -- --
 ## ----------------------------------- -- -    - - - -- -- - -- ---- -    -- --
 ## ----------------------------------    -- -- - --- -    ---  --   -- -- -   -
 ## ----------------------------------------------------------------------------
-
 ## ----------------------------------------------------------------------------
 ## Configuration --------------------------------------------------------------
 
-  MOD		=	`pwd | rev | cut -d "/" -f3 | rev`
+BIN     = $(shell basename $(shell pwd))
+FLAG    = -W -Wall -g -g3 -ggdb -std=gnu23
+override INCLUDE += -I./include/
+SRC     = $(wildcard src/*.c)
+OBJ     = $(SRC:.c=.o)
+LIBPATH ?= -L$(HOME)/.froot/lib/
 
-  BIN		=	`pwd | rev | cut -d "/" -f1 | rev`
-  FLAG		=	-W -Wall -Werror -g -g3 -ggdb -Og -std=gnu17
+all: title bin
 
-  INCLUDE	=	-I./include/
-  SRC		=	$(wildcard src/*.c)
-  OBJ		=	$(SRC:.c=.o)
-  LIBPATH	=	-L${HOME}/.froot/lib/
-  LIB		=	-llapin -lsfml-graphics -lsfml-audio -lsfml-window	\
-			-lsfml-system -lstdc++ -lm -ldl -lpthread
+title:
+	@echo $(BIN)
 
-  ## Rules ------------------------------------------------------------------
-  all:		bin
-  bin:		$(OBJ)
-		@gcc $(OBJ) -o $(BIN) $(LIBPATH) $(LIB)
-		@echo "[OUT] " $(BIN)
-		@echo $(BIN) | tr '[:lower:]' '[:upper:]'
-  .c.o:
-		@gcc $(INCLUDE) $(FLAG) -c $< -o $@
-		@echo "[GCC]" $<
-  clean:
-		@rm -f $(OBJ)
-  fclean:	clean
-		@rm -f $(BIN)
-  re:		fclean all
+bin: $(OBJ)
+	@bcc $(LIBPATH) $(OBJ) -o $(BIN) $(LIB)
+	@echo "[OUT] " $(BIN)
+	@echo $(BIN) | tr '[:lower:]' '[:upper:]'
 
-## ----------------------------------------------------------------------------
-## MISC -----------------------------------------------------------------------
+.c.o:
+	bcc $(INCLUDE) $(FLAG) -c $< -o $@
+	echo "[GCC]" $<
 
-  .PHONY: all clean fclean re
+clean:
+	@rm -f $(OBJ)
 
-  .SUFFIXES: .cpp .o
+fclean: clean
+	@rm -f $(BIN)
+
+re: fclean all
+
+.PHONY: all clean fclean re title
+.SUFFIXES: .c .o

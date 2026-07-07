@@ -527,8 +527,7 @@ void				bunny_set_ressource_management(bool	enabled);
  */
 extern char			bunny_big_buffer[16 * 1024 * 1024];
 
-# if				defined(__STDC_VERSION__) && __STDC_VERSION__ == 201112L
-
+# if				defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /**
  * @doc
  * @doc-symbol bunny_typename
@@ -551,6 +550,7 @@ extern char			bunny_big_buffer[16 * 1024 * 1024];
  * @return-success Produit un littéral chaîne nommant le type reconnu, ou $L"other"@.
  * @see bunny_typef
  */
+
 #  define			bunny_typename(x)			\
   _Generic((x),								\
 	   _Bool: "bool",						\

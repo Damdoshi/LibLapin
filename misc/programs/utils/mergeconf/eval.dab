@@ -27,7 +27,7 @@ DisplayOnce(string s) = [Function
         "int " # [#Eval].FunctionName # "(int nbr);",
         "int " # [#Eval].TestFunctionName # "(void);"
       }
-      
+
       [TestMechanismDescription
         FR = [Text($, END)
           En plus d'écrire la fonction **$([#Eval].FunctionName)**, voila.
@@ -37,28 +37,28 @@ DisplayOnce(string s) = [Function
       [Description
         FR = [Text($, FR)
           Ecrivez la fonction **$([#Eval].FunctionName)** qui renvoit la valeur.
-          
+
           $(DisplayOnce([#Document].TestMechanismDescription.FR))
-          
+
           Les prototypes des fonctions **$([#Eval].FunctionName)** et
           **$([#Eval].TestFunctionName)** sont les suivants:
-          
+
           @@CODE[
             $([#Document].Prototype[0])
             $([#Document].Prototype[1])
           @@CODE]
-          
+
           $(DisplayOnce([#Document].TestMechanismMain.FR))
-          
+
           @@CODE[$([#Document].TestFunctionCode)@@CODE]
-        
+
         FR]
       ]
-      
+
       [TestMechanismMain
         FR = [Text($, END)
           Evidemment, vous devriez utiliser cette fonction **$([#Eval].TestFunctionName)**
-          pour tester votre propre fonction **$([#Eval].FunctionName)** avant.    
+          pour tester votre propre fonction **$([#Eval].FunctionName)** avant.
         END]
       ]
     ]

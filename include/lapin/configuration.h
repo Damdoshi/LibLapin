@@ -696,7 +696,7 @@ bool			bunny_configuration_executef_bool(t_bunny_configuration		*config,
  * @return-failure Produit $Cfalse@ ou une valeur d’échec équivalente quand l’aide enveloppée échoue.
  * @see bunny_configuration_execute
  */
-#  define		bunny_configuration_executef(cnf, data, rec, params, fmt, ...)	\
+#  define		bunny_configuration_executef(cnf, data, params, fmt, ...)	\
   _Generic((data),									\
 	   void*: bunny_configuration_executef_node,					\
 	   const t_bunny_configuration**: bunny_configuration_executef_node,		\
@@ -704,7 +704,7 @@ bool			bunny_configuration_executef_bool(t_bunny_configuration		*config,
 	   const char**: bunny_configuration_executef_string,				\
 	   double*: bunny_configuration_executef_double,				\
     	   bool*: bunny_configuration_executef_bool,					\
-	   int*: bunny_configuration_executef_int)(cnf, data, rec, params, fmt, ##__VA_ARGS__)
+	   int*: bunny_configuration_executef_int)(cnf, data, params, fmt, ##__VA_ARGS__)
 # endif
 
 bool			bunny_configuration_target(t_bunny_configuration		*from,

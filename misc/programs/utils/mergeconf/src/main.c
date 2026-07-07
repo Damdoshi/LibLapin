@@ -276,7 +276,7 @@ int			main(int					argc,
       bunny_configuration_setf(params, argc - call_main, "[0]");
       for (i = call_main; i < argc; ++i)
 	bunny_configuration_setf(params, argv[i], "[1][%d]", i - call_main);
-      if (!bunny_configuration_executef(cnf, &ret, false, params, "Main"))
+      if (!bunny_configuration_executef(cnf, &ret, params, "Main"))
 	return (EXIT_FAILURE);
       if (!keepsave)
 	return (ret);
