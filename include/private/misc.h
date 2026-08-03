@@ -37,6 +37,8 @@ extern bool			gl_set_alpha_blit;
 extern bool			gl_set_additional_blit;
 extern bool			gl_set_multiply_blit;
 extern size_t			gl_bunny_frequency;
+extern double			gl_bunny_loop_sleep_budget;
+extern double			gl_bunny_loop_sleep_time;
 extern bool			gl_complete_log;
 extern t_bunny_list		*gl_backtasks_queue;
 extern void			*gl_loop_data;

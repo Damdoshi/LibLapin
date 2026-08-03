@@ -5,6 +5,9 @@
 
 #include		"lapin_private.h"
 
+double			gl_bunny_loop_sleep_budget = 0;
+double			gl_bunny_loop_sleep_time = 0;
+
 /**
  * @doc-symbol bunny_get_delay
  * @doc-module events
@@ -27,5 +30,15 @@
 double			bunny_get_delay(void)
 {
   return (1.0 / gl_bunny_frequency);
+}
+
+double			bunny_get_loop_sleep_budget(void)
+{
+  return (gl_bunny_loop_sleep_budget);
+}
+
+double			bunny_get_loop_sleep_time(void)
+{
+  return (gl_bunny_loop_sleep_time);
 }
 

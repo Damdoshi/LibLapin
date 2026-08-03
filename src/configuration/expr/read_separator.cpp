@@ -43,3 +43,16 @@ void			expr_read_separator(const char		*code,
 	}
     }
 }
+
+void			expr_read_continuation(const char	*code,
+				       ssize_t		&i)
+{
+  expr_read_separator(code, i);
+  while (code[i] == '\n' || code[i] == '\r')
+    {
+      if (code[i] == '\r' && code[i + 1] == '\n')
+	++i;
+      ++i;
+      expr_read_separator(code, i);
+    }
+}

@@ -7,11 +7,11 @@
 #include		<string.h>
 #include		"lapin_private.h"
 
-static int		get_operator_priority(const char	*code,
-					      ssize_t		&index,
-					      int		&optor,
-					      bool		check,
-					      int		exp)
+int			expr_get_operator_priority(const char	*code,
+				   ssize_t		&index,
+				   int			&optor,
+				   bool			check,
+				   int			exp)
 {
   int			family;
   size_t		longest;
@@ -69,16 +69,16 @@ Expression		*expr_read_operator(const char	*code,
 
   expr_read_separator(code, i);
 
-  if (get_operator_priority(code, i, optor, true, ope) != (int)ope)
+  if (expr_get_operator_priority(code, i, optor, true, ope) != (int)ope)
     return (son);
 
   current = new Expression;
   current->line = whichline(code, i);
   current->optor_family = ope;
   current->operand.push_back(son);
-  while (get_operator_priority(code, i, optor, false, ope) == (int)ope)
+  while (expr_get_operator_priority(code, i, optor, false, ope) == (int)ope)
     {
-      expr_read_separator(code, i);
+      expr_read_continuation(code, i);
       if ((son = expr_read_operator(code, i, ope + 1)) == NULL)
 	{
 	  delete current;

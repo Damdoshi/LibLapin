@@ -943,6 +943,8 @@ t_bunny_response		bunny_loop_mw(t_bunny_window			**win,
 */
 int				bunny_get_frequency(void);
 double				bunny_get_delay(void);
+double				bunny_get_loop_sleep_budget(void);
+double				bunny_get_loop_sleep_time(void);
 
 /*
 ** Network event

@@ -54,6 +54,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window		**window,
 				      void			*data)
 {
   sf::Clock		clock;
+  double			sleep_budget;
   unsigned int		delay;
   t_bunny_response	rep;
   unsigned int		prev;
@@ -70,6 +71,8 @@ t_bunny_response	bunny_loop_mw(t_bunny_window		**window,
   /// How many microseconds
   delay = 1000000.0 / freq;
   gl_bunny_frequency = freq;
+  gl_bunny_loop_sleep_budget = 0;
+  gl_bunny_loop_sleep_time = 0;
   if (gl_callback.entering_context != NULL)
     {
       scream_log_if(PATTERN "enter_context)", "event", window, nwin, freq, data);
@@ -410,7 +413,12 @@ t_bunny_response	bunny_loop_mw(t_bunny_window		**window,
 	}
 
       // delay, now and prev are un µs, we transform them into miliseconds.
-      if ((rep = network_event((delay - (now - prev)) / 1000.0, data)) < GO_ON)
+      now = clock.getElapsedTime().asMicroseconds();
+      sleep_budget = ((double)delay - ((double)now - (double)prev)) / 1000000.0;
+      if (sleep_budget < 0)
+        sleep_budget = 0;
+      gl_bunny_loop_sleep_budget = sleep_budget;
+      if ((rep = network_event(sleep_budget * 1000.0, data)) < GO_ON)
 	goto end;
     }
  end:

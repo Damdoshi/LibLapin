@@ -6,16 +6,49 @@
 #include		<string.h>
 #include		"lapin_private.h"
 
+static bool		expr_operator_follows(const char	*code,
+				      ssize_t		i,
+				      int		ope)
+{
+  int			optor;
+  int			family;
+
+  // Cas dominants des fichiers de donnees: la valeur est immediatement
+  // terminee par la ligne, une virgule, un delimiteur fermant ou la fin.
+  if (code[i] == '\0' || code[i] == '\n' || code[i] == '\r'
+      || code[i] == ',' || code[i] == ')' || code[i] == ']'
+      || code[i] == '}')
+    return (false);
+
+  family = expr_get_operator_priority(code, i, optor, true, ope);
+  return (family >= ope && family < Expression::LAST_OPERATOR_FAMILY);
+}
+
 Decision		expr_read_expression(const char		*code,
 					     ssize_t		&i,
 					     SmallConf		&conf,
 					     int		ope)
 {
+  ssize_t		start;
+
   delete conf.expression;
   conf.expression = NULL;
 
-  if ((conf.expression = expr_read_operator(code, i, ope)) == NULL)
+  // Une expression commence toujours par une operande. La lire d'abord permet
+  // d'eviter toute la cascade de priorites lorsque cette operande est deja
+  // suivie d'un terminateur. Si un operateur suit, on revient au parseur
+  // complet sans changer sa semantique.
+  start = i;
+  if ((conf.expression = expr_read_operand(code, i)) == NULL)
     return (BD_ERROR);
+  if (expr_operator_follows(code, i, ope))
+    {
+      delete conf.expression;
+      conf.expression = NULL;
+      i = start;
+      if ((conf.expression = expr_read_operator(code, i, ope)) == NULL)
+	return (BD_ERROR);
+    }
   if (expr_precompute(conf) == false)
     {
       delete conf.expression;

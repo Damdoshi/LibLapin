@@ -9,10 +9,13 @@ t_bunny_response		network_event(double			v,
 					      void			*data)
 {
   network::Communication	com;
+  sf::Clock			poll_clock;
 
   if (v < 0)
     v = 1;
+  poll_clock.restart();
   (void)bunny_network_poll(v);
+  gl_bunny_loop_sleep_time = poll_clock.getElapsedTime().asSeconds();
   while (bunny_network_inbox() && gl_network.GetMessage(com))
     {
       if ((com.type == ::BCT_NETCONNECTED

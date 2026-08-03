@@ -208,6 +208,11 @@ bool				expr_read_function_call(const char	*code,
 Expression			*expr_read_operator(const char		*code,
 						    ssize_t		&i,
 						    size_t		ope);
+int				expr_get_operator_priority(const char	*code,
+					   ssize_t		&index,
+					   int			&optor,
+					   bool			check,
+					   int			exp);
 Expression			*expr_read_operand(const char		*code,
 						   ssize_t		&i);
 
@@ -221,6 +226,8 @@ void				restore_expression(std::ostream		&ss,
 						   bool			jsonhex = false);
 void				expr_read_separator(const char		*code,
 						    ssize_t		&i);
+void				expr_read_continuation(const char	*code,
+					       ssize_t		&i);
 
 
 bool				expr_compute(SmallConf			&expr,
