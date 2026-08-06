@@ -16,15 +16,34 @@ struct			cstring
 
 static int		get_unicode_len(const char	*str)
 {
-  if (!(*str & 0x80)) // Unicode character
+  unsigned char	c;
+
+  c = (unsigned char)*str;
+  if (!(c & 0x80)) // ASCII character
     return (1);
-  if ((*str & 0xE0) == 0xC0) // 110x xxxx
+  if ((c & 0xE0) == 0xC0) // 110x xxxx
     return (2);
-  if ((*str & 0xF0) == 0xE0) // 1110 xxxx
+  if ((c & 0xF0) == 0xE0) // 1110 xxxx
     return (3);
-  if ((*str & 0xF8) == 0xF0) // 1111 0xxx
+  if ((c & 0xF8) == 0xF0) // 1111 0xxx
     return (4);
   return (1);
+}
+
+static sf::String	make_sf_string_from_utf8(const char	*str,
+					 size_t		 i,
+					 int		 len)
+{
+  sf::String		out;
+
+  out = sf::String::fromUtf8(&str[i], &str[i + len]);
+  if (out.getSize() == 0)
+    {
+      static const char fallback[] = "?";
+
+      out = sf::String::fromUtf8(fallback, fallback + 1);
+    }
+  return (out);
 }
 
 static size_t		get_char_width(t_bunny_font	*font,
@@ -34,14 +53,14 @@ static size_t		get_char_width(t_bunny_font	*font,
   struct bunny_ttf_font	*ttf;
   struct bunny_gfx_font	*gfx;
   int			len = get_unicode_len(&str[i]);
-  std::string		x(str, i, len);
-  std::string		conv;
-
-  sf::Utf8::toUtf32(x.begin(), x.end(), std::back_inserter(conv));
+  sf::String		conv;
 
   if ((ttf = (struct bunny_ttf_font*)font)->type == TTF_TEXT)
-    return (ttf->font->getGlyph
-	    (conv[0], font->glyph_size.y, false, 1).advance + font->interglyph_space.x);
+    {
+      conv = make_sf_string_from_utf8(str, i, len);
+      return (ttf->font->getGlyph
+	      (conv[0], font->glyph_size.y, false, 1).advance + font->interglyph_space.x);
+    }
   gfx = (struct bunny_gfx_font*)font;
   return (gfx->glyph_size.x + font->interglyph_space.x);
 }
@@ -179,12 +198,11 @@ static int		put_letter(t_bunny_font		*font,
   if (*s == TTF_TEXT)
     {
       struct bunny_ttf_font *fnt = (struct bunny_ttf_font*)font;
-      std::string					conv;
-      std::string					x(str, i, len);
+      sf::String					conv;
 
-      sf::Utf8::toUtf32(x.begin(), x.end(), std::back_inserter(conv));
+      conv = make_sf_string_from_utf8(str, i, len);
       fnt->text->setPosition(sf::Vector2f(pos.x, pos.y));
-      fnt->text->setString(sf::String(conv));
+      fnt->text->setString(conv);
       fnt->texture->draw(*fnt->text);
     }
   else
