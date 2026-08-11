@@ -31,7 +31,7 @@ static void			draw_joystick(t_program		*prog,
 					      int		id,
 					      t_bunny_position	pos)
 {
-  char				buffer[4];
+  char				buffer[32];
   static const char		*axis_name[LAST_BUNNY_AXIS / 2] =
     {"X/Y", "Z/R", "U/V", "POV"};
   static const t_bunny_position	disk_size = {40, 40};
@@ -89,7 +89,7 @@ static void			draw_joystick(t_program		*prog,
 
       if (prog->label)
 	{
-	  snprintf(&buffer[0], sizeof(buffer), "B%0zu", i);
+	  snprintf(&buffer[0], sizeof(buffer), "B%zu", i);
 	  prog->label->string = &buffer[0];
 	  bunny_clear(&prog->label->clipable.buffer, 0);
 	  bunny_draw(&prog->label->clipable);
@@ -107,7 +107,7 @@ static void			draw_joystick(t_program		*prog,
 
       if (prog->label)
 	{
-	  snprintf(&buffer[0], sizeof(buffer), "B%0zu", i);
+	  snprintf(&buffer[0], sizeof(buffer), "B%zu", i);
 	  prog->label->string = &buffer[0];
 	  bunny_clear(&prog->label->clipable.buffer, 0);
 	  bunny_draw(&prog->label->clipable);

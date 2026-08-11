@@ -42,7 +42,7 @@ int			main(int	argc,
 	      );
       return (EXIT_FAILURE);
     }
-  assert(rope.output_sound_file = bunny_strdup(rope.output_configuration_file));
+  assert((rope.output_sound_file = bunny_strdup(rope.output_configuration_file)));
   if ((ptr = strrchr(rope.output_sound_file, '.')) != NULL)
     strcpy(ptr, ".ogg");
 
@@ -59,10 +59,10 @@ int			main(int	argc,
   // Load target data
   if (argc != 2)
     {
-      assert(ifiles = bunny_new_list());
+      assert((ifiles = bunny_new_list()));
       for (i = 1; i < argc - 1; ++i)
 	assert(bunny_list_push_back(ifiles, argv[i]));
-      assert(rope.input_files = bunny_list_tie(ifiles, char*));
+      assert((rope.input_files = bunny_list_tie(ifiles, char*)));
       bunny_delete_list(ifiles);
 
       if (sound_rope_mux_load(&rope) == false)
@@ -79,7 +79,7 @@ int			main(int	argc,
   // Edit mode
   if (rope.cli_mode == false)
     {
-      assert(rope.win = bunny_start(1024, 240, false, "SoundRope"));
+      assert((rope.win = bunny_start(1024, 240, false, "SoundRope")));
 
       bunny_set_click_response(soundrope_click);
       bunny_set_move_response(soundrope_move);

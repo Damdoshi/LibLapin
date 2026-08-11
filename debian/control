@@ -6,6 +6,7 @@ Build-Depends:
   make (>= 4.0),
   g++ (>= 9.0),
   libsfml-dev (>= 3),
+  libglfw3-dev,
   libusb-dev (>= 2),
   libopencv-dev (>= 4.2),
   libffcall-dev (>= 2.4),
@@ -21,6 +22,7 @@ Architecture: any
 Depends:
   ${shlibs:Depends},
   ${misc:Depends},
+  libglfw3-dev,
   g++
 Description: Multimedia/game development library with C bindings (static)
  LibLapin is a multimedia/game development library built on top of SFML,
