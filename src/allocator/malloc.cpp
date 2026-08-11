@@ -263,7 +263,7 @@ static int		malloc_failure = -1;
  * @param cnt Le nombre d'appel avant la panne des fonctions d'allocation. -1 répare l'allocation. 0 provoque la panne immédiatement.
  * @see bunny_malloc, bunny_calloc, bunny_realloc
  */
-void			bunny_malloc_failure(int	cnt)
+void			bunny_malloc_fail_after(int	cnt)
 {
   malloc_failure = cnt;
 }
