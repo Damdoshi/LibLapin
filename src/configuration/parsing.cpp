@@ -352,38 +352,39 @@ bool			readstring(const char			*code,
   ssize_t		j = i;
   ssize_t		p;
 
+  if (len <= 0)
+    return (false);
   if (readtext(code, j, "\"") == false)
     return (false);
   p = 0;
   while (code[j] && !checkchar(code, j, "\""))
     {
+      ssize_t		copylen = 1;
+
       if (code[j] & 0x80) // Unicode character
 	{
 	  if ((code[j] & 0xE0) == 0xC0) // 110x xxxx
-	    {
-	      strncpy(&d[p], &code[j], 2);
-	      j += 2;
-	      p += 2;
-	    }
+	    copylen = 2;
 	  else if ((code[j] & 0xF0) == 0xE0) // 1110 xxxx
-	    {
-	      strncpy(&d[p], &code[j], 3);
-	      j += 3;
-	      p += 3;
-	    }
+	    copylen = 3;
 	  else if ((code[j] & 0xF8) == 0xF0) // 1111 0xxx
-	    {
-	      strncpy(&d[p], &code[j], 4);
-	      j += 4;
-	      p += 4;
-	    }
-	  else
-	    strncpy(&d[p++], &code[j++], 1);
+	    copylen = 4;
+	  if (p + copylen >= len)
+	    goto TooLong;
+	  strncpy(&d[p], &code[j], copylen);
+	  j += copylen;
+	  p += copylen;
 	}
       else if (code[j] != '\\')
-	strncpy(&d[p++], &code[j++], 1);
+	{
+	  if (p + 1 >= len)
+	    goto TooLong;
+	  d[p++] = code[j++];
+	}
       else
 	{
+	  if (p + 1 >= len)
+	    goto TooLong;
 	  switch (code[++j])
 	    {
 	    case 'a': d[p++] = '\a'; break;
@@ -421,18 +422,17 @@ bool			readstring(const char			*code,
 	    }
 	  j += 1;
 	}
-      if (p >= len - 5)
-	{
-	  fprintf(stderr, "The litteral string is too long. Max is %zu. (Line %d)\n",
-		  len - 5, whichline(code, j));
-	  return (false);
-	}
     }
   if (readtext(code, j, "\"") == false)
     return (false);
   d[p] = '\0';
   i = j;
   return (true);
+
+ TooLong:
+  fprintf(stderr, "The litteral string is too long. Max is %zu. (Line %d)\n",
+	  (size_t)len - 1, whichline(code, j));
+  return (false);
 }
 
 bool			readpath(const char			*code,
