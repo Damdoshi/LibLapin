@@ -46,11 +46,11 @@ t_bunny_max7219		*bunny_new_max7219(size_t			w,
 {
   t_bunny_max7219	*max;
 
-  if ((max = (t_bunny_max7219*)bunny_calloc(sizeof(*max), 1)) == NULL)
+  if ((max = (t_bunny_max7219*)bunny_calloc(1, sizeof(*max))) == NULL)
     return (NULL);
-  if (((*(bool**)&max->pixels) = (bool*)bunny_calloc(sizeof(*max->pixels), w * h * 8 * 8)) == NULL)
+  if (((*(bool**)&max->pixels) = (bool*)bunny_calloc(w * h * 8 * 8, sizeof(*max->pixels))) == NULL)
     goto DeleteMax;
-  if (((*(char**)max->luminosity) = (char*)bunny_calloc(sizeof(*max->luminosity), w * h)) == NULL)
+  if (((*(char**)max->luminosity) = (char*)bunny_calloc(w * h, sizeof(*max->luminosity))) == NULL)
     goto DeletePixels;
   if ((max->clock_pin = bunny_new_bitstream(clockpin, w * h * 8 * 8 * 2)) == NULL)
     goto DeleteLuminosity;
@@ -71,7 +71,7 @@ t_bunny_max7219		*bunny_new_max7219(size_t			w,
  DeleteLuminosity:
   bunny_free(max->luminosity);
  DeletePixels:
-  bunny_free(max->luminosity);
+  bunny_free(max->pixels);
  DeleteMax:
   bunny_free(max);
   return (NULL);

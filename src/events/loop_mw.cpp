@@ -220,7 +220,7 @@ t_bunny_response	bunny_loop_mw(t_bunny_window		**window,
 				{
 				  id = sf::Joystick::getIdentification(joyid);
 				  gl_joystick[joyid].connected = true;
-				  std::string nam = id.name;
+				  std::string nam = id.name.toAnsiString();
 				  gl_joystick[joyid].name = bunny_strdup(nam.c_str());
 				  gl_joystick[joyid].vendor = id.vendorId;
 				  gl_joystick[joyid].product = id.productId;

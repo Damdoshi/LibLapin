@@ -97,11 +97,13 @@ bool				network::Peer::ReliableUdpTick(double now)
     }
 
   if (max_lifetime > 0)
-    for (auto it = rudp_pending_heartbeats.begin(); it != rudp_pending_heartbeats.end();)
-      if (now - it->second >= max_lifetime)
-	it = rudp_pending_heartbeats.erase(it);
-      else
-	++it;
+    {
+      for (auto it = rudp_pending_heartbeats.begin(); it != rudp_pending_heartbeats.end();)
+	if (now - it->second >= max_lifetime)
+	  it = rudp_pending_heartbeats.erase(it);
+	else
+	  ++it;
+    }
 
   Descriptor			*desc = pick_descriptor(descriptors);
   if (desc != NULL)
