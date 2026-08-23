@@ -88,6 +88,7 @@ assert_flag -l:libsfml-system-s.a
 assert_flag -L/fake-sfml
 assert_flag -lfake-sfml-dependency
 reject_flag -lsfml-graphics
+reject_flag -lglfw
 
 run_wrapper "$BCC" .a
 assert_flag -DSFML_STATIC

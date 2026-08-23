@@ -206,7 +206,7 @@ fi
 exec "$COMPILER" "-std=$STANDARD" "${SFML_COMPILE_OPTIONS[@]}" "$@" \
   "-llapin${DEBUG}" -lao \
   "${SFML_PKG_PREFIX[@]}" "${SFML_LIBRARIES[@]}" "${SFML_DEPENDENCIES[@]}" \
-  -lGL -lGLU -lglfw -lX11 -lXrandr -lXcursor -lXi -lXext \
+  -lGL -lGLU -lX11 -lXrandr -lXcursor -lXi -lXext \
   -lopencv_imgproc -lopencv_objdetect -lopencv_highgui -lopencv_video \
   -lopencv_core -lopencv_videoio -lavcall -lusb -ludev \
   -lstdc++ -lm -ldl -lpthread
