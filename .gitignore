@@ -16,3 +16,4 @@ debian/.debhelper
 debian/liblapin-*
 misc/docs/website/fr/manual/*/*
 misc/docs/website/en/manual/*/*
+sfml/

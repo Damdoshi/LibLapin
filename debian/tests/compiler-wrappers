@@ -1,0 +1,126 @@
+#!/usr/bin/bash
+
+set -eu
+
+BCC=${BCC:-/usr/bin/bcc}
+BXX=${BXX:-/usr/bin/b++}
+TEST_DIRECTORY=$(mktemp -d)
+trap 'rm -rf "$TEST_DIRECTORY"' EXIT
+
+FAKE_COMPILER="$TEST_DIRECTORY/compiler"
+FAKE_PKG_CONFIG="$TEST_DIRECTORY/pkg-config"
+COMPILER_LOG="$TEST_DIRECTORY/compiler.log"
+
+cat > "$FAKE_COMPILER" <<'EOF'
+#!/usr/bin/bash
+
+is_probe=0
+for argument in "$@"
+do
+  if [[ "$argument" == "-Wl,--no-as-needed" ]]
+  then
+    is_probe=1
+  fi
+done
+
+if ((is_probe))
+then
+  cat >/dev/null
+  expected=${FAKE_SFML_EXTENSION:?}
+  modules=(graphics audio window system)
+
+  for module in "${modules[@]}"
+  do
+    found=0
+    for argument in "$@"
+    do
+      if [[ "$argument" == "-l:libsfml-${module}${expected}" ]]
+      then
+        found=1
+      fi
+    done
+    ((found)) || exit 1
+  done
+  exit 0
+fi
+
+printf '%s\n' "$@" > "${FAKE_COMPILER_LOG:?}"
+EOF
+
+cat > "$FAKE_PKG_CONFIG" <<'EOF'
+#!/usr/bin/bash
+
+printf '%s\n' '-L/fake-sfml -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system -lfake-sfml-dependency'
+EOF
+
+chmod 755 "$FAKE_COMPILER" "$FAKE_PKG_CONFIG"
+
+assert_flag()
+{
+  grep -Fqx -- "$1" "$COMPILER_LOG"
+}
+
+reject_flag()
+{
+  ! grep -Fqx -- "$1" "$COMPILER_LOG"
+}
+
+run_wrapper()
+{
+  local wrapper=$1
+  local extension=$2
+
+  FAKE_SFML_EXTENSION="$extension" \
+  FAKE_COMPILER_LOG="$COMPILER_LOG" \
+  BUNNY_CC="$FAKE_COMPILER" \
+  BUNNY_CXX="$FAKE_COMPILER" \
+  PKG_CONFIG="$FAKE_PKG_CONFIG" \
+    "$wrapper" source.c -o program
+}
+
+run_wrapper "$BCC" -s.a
+assert_flag -std=gnu2x
+assert_flag -DSFML_STATIC
+assert_flag -l:libsfml-graphics-s.a
+assert_flag -l:libsfml-audio-s.a
+assert_flag -l:libsfml-window-s.a
+assert_flag -l:libsfml-system-s.a
+assert_flag -L/fake-sfml
+assert_flag -lfake-sfml-dependency
+reject_flag -lsfml-graphics
+
+run_wrapper "$BCC" .a
+assert_flag -DSFML_STATIC
+assert_flag -l:libsfml-graphics.a
+reject_flag -l:libsfml-graphics-s.a
+
+run_wrapper "$BXX" .so
+assert_flag -std=gnu++23
+assert_flag -l:libsfml-graphics.so
+reject_flag -DSFML_STATIC
+
+FAKE_SFML_EXTENSION=.so \
+FAKE_COMPILER_LOG="$COMPILER_LOG" \
+BUNNY_CC="$FAKE_COMPILER" \
+PKG_CONFIG="$FAKE_PKG_CONFIG" \
+  "$BCC" -g3 source.c -o program
+assert_flag -llapin-dbg
+
+FAKE_SFML_EXTENSION=missing \
+FAKE_COMPILER_LOG="$COMPILER_LOG" \
+BUNNY_CC="$FAKE_COMPILER" \
+PKG_CONFIG="$FAKE_PKG_CONFIG" \
+  "$BCC" -c source.c -o source.o
+assert_flag -std=gnu2x
+reject_flag -llapin
+
+if FAKE_SFML_EXTENSION=.so \
+   FAKE_COMPILER_LOG="$COMPILER_LOG" \
+   BUNNY_CC="$FAKE_COMPILER" \
+   PKG_CONFIG="$FAKE_PKG_CONFIG" \
+   BUNNY_SFML_LINKAGE=static \
+     "$BCC" source.c -o program 2>/dev/null
+then
+  echo "bcc accepted shared SFML while static linking was required" >&2
+  exit 1
+fi

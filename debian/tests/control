@@ -1,0 +1,2 @@
+Tests: compiler-wrappers
+Depends: @, bash

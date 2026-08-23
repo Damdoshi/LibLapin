@@ -5,6 +5,8 @@ liblapin (1.14+XXX) unstable; urgency=low
   * Add too many things to list them here, considering how many stuff were modified since years.
   * Notice that a lot of things does not work or are not proven enough to be used - especially programming in Dabsic and provided contexts.
   * Start unit test development to increase LibLapin reliability beyond its basics.
+  * Make bcc and b++ detect upstream-suffixed static, unsuffixed static, and
+    shared SFML libraries, and package their runtime dependencies and tests.
 
  -- Jason Brillante 'Damdoshi' <jason.brillante@efrits.fr>  Wed, 28 Jul 2025 00:00:00 +0100
 
@@ -461,4 +463,3 @@ liblapin (1.0) stable; urgency=low
   * Pedagogic: beginners must be able to progress in graphics, but also in C programming
 
  -- Jason Brillante <damdoshi@hotmail.com>  Sun, 01 Mar 2015 00:00:00 +0100
-

@@ -5,11 +5,21 @@ Build-Depends:
   debhelper-compat (= 13),
   make (>= 4.0),
   g++ (>= 9.0),
-  libsfml-dev (>= 3),
-  libusb-dev (>= 2),
-  libopencv-dev (>= 4.2),
+  pkg-config,
+  libao-dev,
   libffcall-dev (>= 2.4),
-  libudev-dev (>= 245)
+  libgl-dev,
+  libglu1-mesa-dev,
+  libglfw3-dev,
+  libopencv-dev (>= 4.2),
+  libsfml-dev (>= 3),
+  libudev-dev (>= 245),
+  libusb-dev (>= 2),
+  libx11-dev,
+  libxcursor-dev,
+  libxext-dev,
+  libxi-dev,
+  libxrandr-dev
 Standards-Version: 4.6.2
 Homepage: https://liblapin.org
 Rules-Requires-Root: no
@@ -21,7 +31,23 @@ Architecture: any
 Depends:
   ${shlibs:Depends},
   ${misc:Depends},
-  g++
+  gcc,
+  g++ (>= 9.0),
+  pkg-config,
+  libao-dev,
+  libffcall-dev (>= 2.4),
+  libgl-dev,
+  libglu1-mesa-dev,
+  libglfw3-dev,
+  libopencv-dev (>= 4.2),
+  libsfml-dev (>= 3),
+  libudev-dev (>= 245),
+  libusb-dev (>= 2),
+  libx11-dev,
+  libxcursor-dev,
+  libxext-dev,
+  libxi-dev,
+  libxrandr-dev
 Description: Multimedia/game development library with C bindings (static)
  LibLapin is a multimedia/game development library built on top of SFML,
  providing C bindings, additional game-specific tools, and a configuration
@@ -31,4 +57,6 @@ Description: Multimedia/game development library with C bindings (static)
  .
  This package contains the static release and debug libraries, the public
  headers, the bcc, b++ and bcontext helper programs, and the standalone
- utility programs built from misc/programs/utils, such as mergeconf.
+ utility programs built from misc/programs/utils, such as mergeconf. The
+ compiler helpers automatically select upstream suffixed static, unsuffixed
+ static, or shared SFML libraries installed on the system.

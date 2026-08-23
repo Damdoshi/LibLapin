@@ -1,10 +1,212 @@
 #!/usr/bin/bash
 
-DEBUG=""
-if [[ " $* " == *" -g "* ]]
+# bcc and b++ share this compiler driver.  The tiny b++ front-end selects C++
+# through BUNNY_COMPILER_FRONTEND before executing this file.
+
+set -o pipefail
+
+PROGRAM=${BUNNY_COMPILER_FRONTEND:-${0##*/}}
+
+case "$PROGRAM" in
+  b++)
+    COMPILER=${BUNNY_CXX:-g++}
+    STANDARD=gnu++23
+    PROBE_LANGUAGE=c++
+    ;;
+  *)
+    COMPILER=${BUNNY_CC:-gcc}
+    # GCC 9 through 13 expose C23 under its former gnu2x name.  Newer GCC
+    # versions keep this spelling as an alias, which matches our >= 9 package
+    # requirement and Ubuntu 22.04's compiler.
+    STANDARD=gnu2x
+    PROBE_LANGUAGE=c
+    ;;
+esac
+
+if ! command -v "$COMPILER" >/dev/null 2>&1
 then
-    DEBUG="-dbg"
+  echo "$PROGRAM: compiler not found: $COMPILER" >&2
+  exit 127
 fi
 
-gcc   -std=gnu23 "$@" -llapin$DEBUG -lao -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system -lharfbuzz -lSheenBidi -lfreetype -lvorbis -lvorbisfile -logg -lvorbisenc -lGL -lGLU  -lglfw -lX11 -lXrandr -lXcursor -lXi -lXext -lFLAC -lstdc++ -lm -ldl -lpthread -lopencv_imgproc -lopencv_objdetect -lopencv_highgui -lopencv_video -lopencv_core -lavcall -lusb -lopencv_videoio -ludev -lfreetype -lstdc++
+DEBUG=""
+LINK=1
+PROBE_OPTIONS=()
+EXPECT_PROBE_OPTION_ARGUMENT=0
 
+# Keep the options which change the linker's search space or target so that
+# the probe sees exactly the same SFML installation as the final invocation.
+for argument in "$@"
+do
+  if ((EXPECT_PROBE_OPTION_ARGUMENT))
+  then
+    PROBE_OPTIONS+=("$argument")
+    EXPECT_PROBE_OPTION_ARGUMENT=0
+    continue
+  fi
+
+  case "$argument" in
+    -g|-g[0-9]|-ggdb|-ggdb[0-9])
+      DEBUG="-dbg"
+      ;;
+    -c|-E|-S|-M|-MM|-fsyntax-only)
+      LINK=0
+      ;;
+    -L|-B|--sysroot)
+      PROBE_OPTIONS+=("$argument")
+      EXPECT_PROBE_OPTION_ARGUMENT=1
+      ;;
+    -L*|-B*|--sysroot=*|-m32|-m64|-fuse-ld=*)
+      PROBE_OPTIONS+=("$argument")
+      ;;
+  esac
+done
+
+# Compilation and preprocessing do not need any link dependency.  Avoiding the
+# probe here also keeps one-bcc-call-per-object Makefiles fast.
+if ((!LINK))
+then
+  exec "$COMPILER" "-std=$STANDARD" "$@"
+fi
+
+SFML_MODULES=(graphics audio window system)
+
+probe_sfml()
+{
+  local extension=$1
+  local libraries=()
+  local module
+
+  for module in "${SFML_MODULES[@]}"
+  do
+    libraries+=("-l:libsfml-${module}${extension}")
+  done
+
+  # An empty program is enough: the exact-name form of -l makes the linker
+  # verify every requested file without pulling objects from static archives.
+  printf 'int main(void) { return 0; }\n' |
+    "$COMPILER" "${PROBE_OPTIONS[@]}" -x "$PROBE_LANGUAGE" - \
+      -o /dev/null -Wl,--no-as-needed "${libraries[@]}" \
+      >/dev/null 2>&1
+}
+
+SFML_EXTENSION=""
+SFML_LINKAGE=""
+
+case "${BUNNY_SFML_LINKAGE:-auto}" in
+  auto)
+    if probe_sfml "-s.a"
+    then
+      SFML_EXTENSION="-s.a"
+      SFML_LINKAGE="upstream static"
+    elif probe_sfml ".a"
+    then
+      SFML_EXTENSION=".a"
+      SFML_LINKAGE="unsuffixed static"
+    elif probe_sfml ".so"
+    then
+      SFML_EXTENSION=".so"
+      SFML_LINKAGE="shared"
+    fi
+    ;;
+  static)
+    if probe_sfml "-s.a"
+    then
+      SFML_EXTENSION="-s.a"
+      SFML_LINKAGE="upstream static"
+    elif probe_sfml ".a"
+    then
+      SFML_EXTENSION=".a"
+      SFML_LINKAGE="unsuffixed static"
+    fi
+    ;;
+  shared)
+    if probe_sfml ".so"
+    then
+      SFML_EXTENSION=".so"
+      SFML_LINKAGE="shared"
+    fi
+    ;;
+  *)
+    echo "$PROGRAM: BUNNY_SFML_LINKAGE must be auto, static or shared" >&2
+    exit 2
+    ;;
+esac
+
+if [[ -z "$SFML_EXTENSION" ]]
+then
+  echo "$PROGRAM: unable to find a complete SFML installation" >&2
+  echo "$PROGRAM: looked for libsfml-{graphics,audio,window,system}{-s.a,.a,.so}" >&2
+  echo "$PROGRAM: use -L to add a library directory or set BUNNY_SFML_LINKAGE" >&2
+  exit 1
+fi
+
+SFML_LIBRARIES=()
+SFML_COMPILE_OPTIONS=()
+
+for module in "${SFML_MODULES[@]}"
+do
+  SFML_LIBRARIES+=("-l:libsfml-${module}${SFML_EXTENSION}")
+done
+
+if [[ "$SFML_EXTENSION" == *.a ]]
+then
+  SFML_COMPILE_OPTIONS+=(-DSFML_STATIC)
+fi
+
+if [[ -n "${BUNNY_VERBOSE:-}" ]]
+then
+  echo "$PROGRAM: using $SFML_LINKAGE SFML libraries" >&2
+fi
+
+# SFML's upstream pkg-config files always name the SFML modules without their
+# static -s suffix.  Keep their private dependency information, but replace the
+# SFML module flags themselves with the exact files selected above.
+SFML_PKG_PREFIX=()
+SFML_DEPENDENCIES=()
+PKG_CONFIG_TOOL=${PKG_CONFIG:-pkg-config}
+PKG_CONFIG_OUTPUT=""
+PKG_CONFIG_ARGUMENTS=(--libs sfml-graphics sfml-audio sfml-window sfml-system)
+
+if [[ "$SFML_EXTENSION" == *.a ]]
+then
+  PKG_CONFIG_ARGUMENTS=(--static "${PKG_CONFIG_ARGUMENTS[@]}")
+fi
+
+if command -v "$PKG_CONFIG_TOOL" >/dev/null 2>&1 &&
+   PKG_CONFIG_OUTPUT=$("$PKG_CONFIG_TOOL" "${PKG_CONFIG_ARGUMENTS[@]}" 2>/dev/null)
+then
+  PKG_CONFIG_FLAGS=()
+  read -a PKG_CONFIG_FLAGS <<< "$PKG_CONFIG_OUTPUT"
+
+  for argument in "${PKG_CONFIG_FLAGS[@]}"
+  do
+    case "$argument" in
+      -lsfml-graphics*|-lsfml-audio*|-lsfml-window*|-lsfml-system*|\
+      -l:libsfml-graphics*|-l:libsfml-audio*|-l:libsfml-window*|-l:libsfml-system*)
+        ;;
+      -L*|-Wl,-rpath*|-Wl,-rpath-link*)
+        SFML_PKG_PREFIX+=("$argument")
+        ;;
+      *)
+        SFML_DEPENDENCIES+=("$argument")
+        ;;
+    esac
+  done
+elif [[ "$SFML_EXTENSION" == *.a ]]
+then
+  # Compatibility fallback for source installations made without pkg-config
+  # files.  This is the dependency set used by current SFML graphics/audio.
+  SFML_DEPENDENCIES=(
+    -lharfbuzz -lSheenBidi -lfreetype
+    -lvorbis -lvorbisfile -logg -lvorbisenc -lFLAC
+  )
+fi
+
+exec "$COMPILER" "-std=$STANDARD" "${SFML_COMPILE_OPTIONS[@]}" "$@" \
+  "-llapin${DEBUG}" -lao \
+  "${SFML_PKG_PREFIX[@]}" "${SFML_LIBRARIES[@]}" "${SFML_DEPENDENCIES[@]}" \
+  -lGL -lGLU -lglfw -lX11 -lXrandr -lXcursor -lXi -lXext \
+  -lopencv_imgproc -lopencv_objdetect -lopencv_highgui -lopencv_video \
+  -lopencv_core -lopencv_videoio -lavcall -lusb -ludev \
+  -lstdc++ -lm -ldl -lpthread
