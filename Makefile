@@ -38,6 +38,10 @@
 ## Building details                                                            ##
 #################################################################################
 
+  # Present recursive builds as a single build instead of exposing make's
+  # internal directory stack.
+  MAKEFLAGS	+=	--no-print-directory
+
   ALINKER	?=	ar rcs
   SOLINKER	?=	g++ -shared -o
   COMPILER	?=	g++ -std=gnu++23
@@ -68,6 +72,9 @@
   INSTALL_SHR_DIR =	$(DESTDIR)/usr/share/lapin/
   INSTALL_INC_DIR =	$(DESTDIR)/usr/include/
   INSTALL_LIB_DIR =	$(DESTDIR)/usr/lib/
+
+  BUILD_TOOLS	=	bcc b++ bcontext
+  BUILD_TOOLS_PATH ?=	$(CURDIR)
 
   UTILS_DIR 	=	misc/programs/utils/
   UTILS_INCLUDE =	-I$(CURDIR)/include					\
@@ -192,61 +199,87 @@ re:			fclean all
 erase:
 			@$(RM) -r $(LOGDIR)/*.*
 utils:			build_utils
-build_utils:		$(PRODA)
+build_utils:		$(PRODA) | prepare_logs
 			@if [ -d "$(UTILS_DIR)" ]; then				\
+			  $(ECHO) $(TEAL) "[UTILS]" $(GREEN) "Bundled programs" $(DEFAULT); \
 			  for makefile in "$(UTILS_DIR)"*/Makefile; do		\
-				    [ -f "$$makefile" ] || continue;		\
+			    [ -f "$$makefile" ] || continue;			\
 			    directory="$${makefile%/Makefile}";			\
-			    echo "[UTL] $$directory";				\
-			    PATH="$$(pwd):$$PATH"				\
-			    LD_LIBRARY_PATH="/tmp:$$LD_LIBRARY_PATH"		\
-			    $(MAKE) -C "$$directory" LIBPATH="-L/tmp" 		\
-			    INCLUDE="$(UTILS_INCLUDE)" ||			\
-			    exit $$?;						\
+			    utility="$${directory##*/}";			\
+			    trace="$(LOGDIR)utils-$$utility.log";		\
+			    $(RM) "$$trace";					\
+			    if PATH="$(BUILD_TOOLS_PATH):$$PATH"			\
+			       LD_LIBRARY_PATH="/tmp:$$LD_LIBRARY_PATH"		\
+			       $(MAKE) --silent -C "$$directory"			\
+			       LIBPATH="-L/tmp" INCLUDE="$(UTILS_INCLUDE)"		\
+			       >/dev/null 2>"$$trace"; then			\
+			      if [ -s "$$trace" ]; then				\
+			        $(ECHO) $(PINK) "[UTL-WARN]" $(GREEN) "$$utility" \
+			          $(DEFAULT) "(details: $$trace)";			\
+			      else						\
+			        $(RM) "$$trace";					\
+			        $(ECHO) $(TEAL) "[UTL-OK]" $(GREEN) "$$utility" $(DEFAULT); \
+			      fi;						\
+			    else							\
+			      status=$$?;					\
+			      $(ECHO) $(RED) "[UTL-KO]" "$$utility" $(DEFAULT) \
+			        "(details: $$trace)";				\
+			      [ ! -s "$$trace" ] || sed 's/^/    /' "$$trace";	\
+			      exit $$status;					\
+			    fi;							\
 			  done;							\
 			fi
-install_tools:		build_utils
-			mkdir -p "$(INSTALL_BIN_DIR)"
-			install -m 755 bcc b++ bcontext "$(INSTALL_BIN_DIR)"
-			@if [ -d "$(UTILS_DIR)" ]; then				\
+install_build_tools:
+			@mkdir -p "$(INSTALL_BIN_DIR)"
+			@install -m 755 $(BUILD_TOOLS) "$(INSTALL_BIN_DIR)"
+			@$(ECHO) $(TEAL) "[TOOLS-OK]" $(GREEN) $(BUILD_TOOLS) $(DEFAULT)
+
+install_utils:		install_build_tools $(PRODA)
+			+@$(MAKE) build_utils					\
+			 BUILD_TOOLS_PATH="$(abspath $(INSTALL_BIN_DIR)):$(CURDIR)"
+			@set -e; if [ -d "$(UTILS_DIR)" ]; then			\
 			  for makefile in "$(UTILS_DIR)"*/Makefile; do	\
 			    [ -f "$$makefile" ] || continue;			\
 			    directory="$${makefile%/Makefile}";			\
 			    utility="$${directory##*/}";			\
 			    if [ ! -x "$$directory/$$utility" ]; then		\
-			      echo "[UTL-KO] missing built utility: $$directory/$$utility"; \
+			      $(ECHO) $(RED) "[UTL-KO]" $(DEFAULT)		\
+			        "missing built utility: $$directory/$$utility";	\
 			      exit 1;						\
 			    fi;							\
-			    cp "$$directory/$$utility" "$(INSTALL_BIN_DIR)";	\
-			    chmod 755 "$(INSTALL_BIN_DIR)/$$utility";		\
+			    install -m 755 "$$directory/$$utility" "$(INSTALL_BIN_DIR)"; \
 			  done;							\
 			fi
-			mkdir -p "$(INSTALL_ETC_DIR)"
-			chmod 755 $(INSTALL_BIN_DIR)/bcc 			\
-			 $(INSTALL_BIN_DIR)/b++					\
-			 $(INSTALL_BIN_DIR)/bcontext
-			mkdir -p $(INSTALL_SHR_DIR)context/
-			cp -r misc/ressources/context/* $(INSTALL_SHR_DIR)context/
+
+install_tools:		install_utils
+			@mkdir -p "$(INSTALL_ETC_DIR)"
+			@mkdir -p "$(INSTALL_SHR_DIR)context/"
+			@cp -r misc/ressources/context/* "$(INSTALL_SHR_DIR)context/"
+			@$(ECHO) $(TEAL) "[RES-OK]" $(GREEN) "context resources" $(DEFAULT)
 
 install_headers:	install_tools
-			mkdir -p $(INSTALL_INC_DIR) $(INSTALL_INC_DIR)lapin/
-			cp include/lapin.h $(INSTALL_INC_DIR)
-			cp -r include/lapin/* $(INSTALL_INC_DIR)lapin/
-			chmod 644 $(INSTALL_INC_DIR)lapin.h
-			find $(INSTALL_INC_DIR)lapin/ -type d -exec chmod 755 {} + -o -type f -exec chmod 644 {} +
+			@mkdir -p "$(INSTALL_INC_DIR)" "$(INSTALL_INC_DIR)lapin/"
+			@cp include/lapin.h "$(INSTALL_INC_DIR)"
+			@cp -r include/lapin/* "$(INSTALL_INC_DIR)lapin/"
+			@chmod 644 "$(INSTALL_INC_DIR)lapin.h"
+			@find "$(INSTALL_INC_DIR)lapin/" -type d -exec chmod 755 {} + \
+			 -o -type f -exec chmod 644 {} +
+			@$(ECHO) $(TEAL) "[HDR-OK]" $(GREEN) "LibLapin headers" $(DEFAULT)
 
 install_debug:		install_headers debug
-			mkdir -p $(INSTALL_LIB_DIR)
-			cp $(DBGA) $(INSTALL_LIB_DIR)
+			@mkdir -p "$(INSTALL_LIB_DIR)"
+			@install -m 644 "$(DBGA)" "$(INSTALL_LIB_DIR)"
+			@$(ECHO) $(TEAL) "[DBG-OK]" $(GREEN) "$(notdir $(DBGA))" $(DEFAULT)
 
 install_main:		all install_debug
-			mkdir -p $(INSTALL_LIB_DIR)
-			cp $(PRODA) $(DBGA) $(INSTALL_LIB_DIR)
+			@mkdir -p "$(INSTALL_LIB_DIR)"
+			@install -m 644 "$(PRODA)" "$(INSTALL_LIB_DIR)"
+			@$(ECHO) $(TEAL) "[PRD-OK]" $(GREEN) "$(notdir $(PRODA))" $(DEFAULT)
 
-install:		install_main install_debug
+install:		install_main
+			@$(ECHO) $(TEAL) "[INSTALL-OK]" $(GREEN) "LibLapin" $(DEFAULT)
 
 package:
 			dpkg-buildpackage -us -uc
 .POSIX:
-.PHONY:			tests prepare_logs title erase install_tools install_headers install_debug install_main install_package build_utils utils
-
+.PHONY:			tests prepare_logs title erase install install_build_tools install_utils install_tools install_headers install_debug install_main install_package build_utils utils

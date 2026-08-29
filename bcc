@@ -198,9 +198,55 @@ then
   # Compatibility fallback for source installations made without pkg-config
   # files.  This is the dependency set used by current SFML graphics/audio.
   SFML_DEPENDENCIES=(
-    -lharfbuzz -lSheenBidi -lfreetype
+    -lharfbuzz -lfreetype
     -lvorbis -lvorbisfile -logg -lvorbisenc -lFLAC
   )
+fi
+
+has_harfbuzz_dependency()
+{
+  local argument
+
+  for argument in "${SFML_DEPENDENCIES[@]}"
+  do
+    case "$argument" in
+      -lharfbuzz|-l:libharfbuzz.*)
+        return 0
+        ;;
+    esac
+  done
+
+  return 1
+}
+
+# Some SFML pkg-config files omit HarfBuzz even though the static graphics
+# archive uses it.  A successful SFML query is therefore not enough: complete
+# its result explicitly, while keeping HarfBuzz after the SFML archives.
+if [[ "$SFML_EXTENSION" == *.a ]] && ! has_harfbuzz_dependency
+then
+  HARFBUZZ_PKG_CONFIG_OUTPUT=""
+
+  if command -v "$PKG_CONFIG_TOOL" >/dev/null 2>&1 &&
+     HARFBUZZ_PKG_CONFIG_OUTPUT=$("$PKG_CONFIG_TOOL" --static --libs harfbuzz 2>/dev/null)
+  then
+    HARFBUZZ_PKG_CONFIG_FLAGS=()
+    read -a HARFBUZZ_PKG_CONFIG_FLAGS <<< "$HARFBUZZ_PKG_CONFIG_OUTPUT"
+
+    for argument in "${HARFBUZZ_PKG_CONFIG_FLAGS[@]}"
+    do
+      case "$argument" in
+        -L*|-Wl,-rpath*|-Wl,-rpath-link*)
+          SFML_PKG_PREFIX+=("$argument")
+          ;;
+        *)
+          SFML_DEPENDENCIES+=("$argument")
+          ;;
+      esac
+    done
+  fi
+
+  # Keep source installations usable even without a HarfBuzz .pc file.
+  has_harfbuzz_dependency || SFML_DEPENDENCIES+=(-lharfbuzz)
 fi
 
 exec "$COMPILER" "-std=$STANDARD" "${SFML_COMPILE_OPTIONS[@]}" "$@" \

@@ -50,6 +50,22 @@ EOF
 cat > "$FAKE_PKG_CONFIG" <<'EOF'
 #!/usr/bin/bash
 
+static=0
+for argument in "$@"
+do
+  [[ "$argument" != --static ]] || static=1
+
+  if [[ "$argument" == harfbuzz ]]
+  then
+    ((static)) || exit 2
+    [[ -z "${FAKE_HARFBUZZ_PKG_CONFIG_MISSING:-}" ]] || exit 1
+    printf '%s\n' '-L/fake-harfbuzz -lharfbuzz'
+    exit 0
+  fi
+done
+
+# Deliberately reproduce SFML 3.1's incomplete static metadata: this query
+# succeeds, but does not report the HarfBuzz dependency of sfml-graphics.
 printf '%s\n' '-L/fake-sfml -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system -lfake-sfml-dependency'
 EOF
 
@@ -65,6 +81,15 @@ reject_flag()
   ! grep -Fqx -- "$1" "$COMPILER_LOG"
 }
 
+assert_after()
+{
+  local first second
+
+  first=$(grep -Fnx -- "$1" "$COMPILER_LOG" | head -n 1 | cut -d: -f1)
+  second=$(grep -Fnx -- "$2" "$COMPILER_LOG" | head -n 1 | cut -d: -f1)
+  ((second > first))
+}
+
 run_wrapper()
 {
   local wrapper=$1
@@ -75,6 +100,7 @@ run_wrapper()
   BUNNY_CC="$FAKE_COMPILER" \
   BUNNY_CXX="$FAKE_COMPILER" \
   PKG_CONFIG="$FAKE_PKG_CONFIG" \
+  FAKE_HARFBUZZ_PKG_CONFIG_MISSING="${FAKE_HARFBUZZ_PKG_CONFIG_MISSING:-}" \
     "$wrapper" source.c -o program
 }
 
@@ -87,8 +113,19 @@ assert_flag -l:libsfml-window-s.a
 assert_flag -l:libsfml-system-s.a
 assert_flag -L/fake-sfml
 assert_flag -lfake-sfml-dependency
+assert_flag -L/fake-harfbuzz
+assert_flag -lharfbuzz
+assert_after -l:libsfml-graphics-s.a -lharfbuzz
 reject_flag -lsfml-graphics
 reject_flag -lglfw
+reject_flag -lSheenBidi
+
+# The direct -l fallback must also cover systems whose HarfBuzz package has no
+# pkg-config metadata.
+FAKE_HARFBUZZ_PKG_CONFIG_MISSING=1 run_wrapper "$BCC" -s.a
+assert_flag -lharfbuzz
+reject_flag -L/fake-harfbuzz
+reject_flag -lSheenBidi
 
 run_wrapper "$BCC" .a
 assert_flag -DSFML_STATIC

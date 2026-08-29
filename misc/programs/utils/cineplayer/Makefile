@@ -7,7 +7,7 @@
 ## Configuration --------------------------------------------------------------
 
 BIN     = $(shell basename $(shell pwd))
-FLAG    = -W -Wall -g -g3 -ggdb -std=gnu23
+FLAG    = -W -Wall -g -g3 -ggdb
 override INCLUDE += -I./include/
 SRC     = $(wildcard src/*.c)
 OBJ     = $(SRC:.c=.o)

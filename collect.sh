@@ -23,5 +23,7 @@
   \) -print0
 
   find misc/docs/website/ -type f -print0
+
+  echo bcc b++ bcontext
 } | tar --null -czf lapin_sources.tar.gz --files-from=-
 
