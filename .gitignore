@@ -17,3 +17,8 @@ debian/liblapin-*
 misc/docs/website/fr/manual/*/*
 misc/docs/website/en/manual/*/*
 sfml/
+misc/programs/utils/cineplayer/cineplayer
+misc/programs/utils/fetchconf/fetchconf
+misc/programs/utils/joypanel/joypanel
+misc/programs/utils/mergeconf/mergeconf
+misc/programs/utils/soundrope/soundrope

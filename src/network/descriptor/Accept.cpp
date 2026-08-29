@@ -12,7 +12,7 @@
 network::Info		network::Descriptor::Accept(size_t			&cursize,
 						    size_t			maxsize)
 {
-  struct sockaddr_in	_sockaddr = {0};
+  struct sockaddr_in	_sockaddr = {};
   socklen_t		_socklen;
   int			nfd;
 

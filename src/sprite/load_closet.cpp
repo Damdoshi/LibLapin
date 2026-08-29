@@ -173,7 +173,7 @@ t_bunny_closet		*bunny_read_closet(t_bunny_configuration *config,
       // It is a single picture file
       else
 	{
-	  if ((c = (t_bunny_clothe*)bunny_calloc(sizeof(*c), 1)) == NULL)
+	  if ((c = (t_bunny_clothe*)bunny_calloc(1, sizeof(*c))) == NULL)
 	    goto DeleteClothes;
 	  if ((c->name = bunny_strdup(name)) == NULL)
 	    {

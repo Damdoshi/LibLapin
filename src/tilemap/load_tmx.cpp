@@ -68,7 +68,7 @@ static bool		load_animation(t_bunny_configuration			*cnf,
 
 	for (size_t k = 0; bunny_configuration_getf_node(anim, &frame, "[%zu]", k); ++k)
 	  {
-	    char	next[16];
+	    char	next[32];
 	    int		x, y, delay, tileid;
 
 	    if (!bunny_configuration_getf_int(frame, &tileid, "tileid"))

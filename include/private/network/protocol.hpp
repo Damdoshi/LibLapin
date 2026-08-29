@@ -21,12 +21,7 @@ namespace		network
     int			timeout = 3000;
     bool		resend = true;
 
-    ProtoSpec		&operator=(const ProtoSpec	&proto)
-    {
-      if (this != &proto)
-	memcpy(this, &proto, sizeof(*this));
-      return (*this);
-    }
+    ProtoSpec		&operator=(const ProtoSpec	&proto) = default;
 
     bool		operator==(Protocol		proto) const
     {

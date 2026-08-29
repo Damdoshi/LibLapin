@@ -16,7 +16,7 @@ bool			sound_rope_mux_load(t_sound_rope		*rope)
   size_t		i;
 
   full_duration = 0;
-  assert(ieff = bunny_new_list());
+  assert((ieff = bunny_new_list()));
   for (i = 0; i < rope->input_files->nmemb; ++i)
     if ((eff = bunny_load_effect(bunny_vector_data(rope->input_files, i, char*))) == NULL)
       {
@@ -29,7 +29,7 @@ bool			sound_rope_mux_load(t_sound_rope		*rope)
 	full_duration += eff->duration + rope->silence_separator;
 	assert(bunny_list_push_back(ieff, eff));
       }
-  assert(rope->input_effects = bunny_list_tie(ieff, char*));
+  assert((rope->input_effects = bunny_list_tie(ieff, char*)));
 
   bunny_delete_list(ieff);
   full_duration += rope->silence_separator;

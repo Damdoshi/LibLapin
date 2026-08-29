@@ -13,6 +13,8 @@ class			_Launcher
   : public hbs::WorkSpec::Work3<_Launcher, t_bunny_function, void*, void*>
 {
 public:
+  using hbs::WorkSpec::Work3<_Launcher, t_bunny_function, void*, void*>::operator();
+
   hbs::IdMessage	operator()(hbs::IdTask				task,
 				   t_bunny_function			func,
 				   void					*data,
