@@ -126,6 +126,45 @@ bool				bunny_vm110n_read(t_bunny_vm110n		*hrd);
 */
 bool				bunny_vm110n_write(const t_bunny_vm110n		*hdr);
 
+
+/*
+** Arduino UNO R3 with Bunny-UNO firmware v3.
+** D0/D1 are reserved for USB serial communication.
+** Indices correspond to Arduino digital pin numbers (2..13).
+** Analog inputs are ADC values normalized to 0.0..1.0.
+*/
+typedef enum                  e_bunny_arduino_mode
+{
+  BUNNY_ARDUINO_INPUT		= 0,
+  BUNNY_ARDUINO_OUTPUT		= 1,
+  BUNNY_ARDUINO_INPUT_PULLUP	= 2
+}                             t_bunny_arduino_mode;
+
+typedef struct                s_bunny_arduino
+{
+  void                        *_private;
+  bool                        digital_inputs[14];
+  double                      analog_inputs[6];
+  bool                        digital_outputs[14];
+  double                      pwm_outputs[14];
+}                             t_bunny_arduino;
+
+t_bunny_arduino                *bunny_new_arduino(const char *device);
+void                          bunny_delete_arduino(t_bunny_arduino *board);
+bool                          bunny_arduino_pin_mode(t_bunny_arduino *board,
+                                                     size_t pin,
+                                                     t_bunny_arduino_mode mode);
+/* Enables PWM on pins D3, D5, D6, D9, D10 or D11. */
+bool                          bunny_arduino_pwm(t_bunny_arduino *board,
+                                                size_t pin);
+bool                          bunny_arduino_read(t_bunny_arduino *board);
+/* write queues one GPIO state; EAGAIN means it was not accepted. */
+/* Use wait_ack to confirm execution of all earlier writes. */
+bool                          bunny_arduino_wait_ack(t_bunny_arduino *board);
+bool                          bunny_arduino_write(const t_bunny_arduino *board);
+/* Applies outputs, then captures inputs; synchronous. */
+bool                          bunny_arduino_sync(t_bunny_arduino *board);
+
 /*
 ** Le type permettant de manipuler la broche du RPI.
 ** Pour l'instant, rien n'est fait...
