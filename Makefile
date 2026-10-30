@@ -276,10 +276,13 @@ install_main:		all install_debug
 			@install -m 644 "$(PRODA)" "$(INSTALL_LIB_DIR)"
 			@$(ECHO) $(TEAL) "[PRD-OK]" $(GREEN) "$(notdir $(PRODA))" $(DEFAULT)
 
-install:		install_main
+install_arduino_tools:
+			@sh misc/arduino/install.sh "$(DESTDIR)"
+
+install:		install_main install_arduino_tools
 			@$(ECHO) $(TEAL) "[INSTALL-OK]" $(GREEN) "LibLapin" $(DEFAULT)
 
 package:
 			dpkg-buildpackage -us -uc
 .POSIX:
-.PHONY:			tests prepare_logs title erase install install_build_tools install_utils install_tools install_headers install_debug install_main install_package build_utils utils
+.PHONY:			tests prepare_logs title erase install install_build_tools install_utils install_tools install_headers install_debug install_main install_package build_utils utils install_arduino_tools

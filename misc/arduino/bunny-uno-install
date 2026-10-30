@@ -1,0 +1,19 @@
+#!/bin/sh
+# Compile and flash the shared Bunny UNO firmware (Arduino UNO R3).
+set -eu
+firmware=/usr/share/arduino/bitbang.c
+compiler=/usr/bin/avr-uno
+if [ ! -r "$firmware" ]; then
+  echo "bunny-uno-install: missing firmware: $firmware" >&2
+  exit 1
+fi
+if [ ! -x "$compiler" ]; then
+  echo "bunny-uno-install: missing executable: $compiler" >&2
+  exit 1
+fi
+work=$(mktemp -d "${TMPDIR:-/tmp}/bunny-uno.XXXXXXXX")
+trap 'rm -rf "$work"' EXIT HUP INT TERM
+cd "$work"
+# Forward -p/--port (and other supported avr-uno switches).
+"$compiler" -o bunny-uno "$firmware" "$@"
+echo 'Bunny UNO firmware installed successfully.'

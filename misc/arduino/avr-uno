@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+set -euo pipefail
+usage() {
+ cat <<'HELP'
+Usage: avr-uno [options] sources.c ... [-Ipath] [-Lpath] [-lname] [lib.a]
+  -p, --port PATH     Arduino serial port (default: automatic if unique)
+  -b, --baud RATE     Upload speed (default 115200)
+  -o, --output NAME   Name for intermediate ELF/HEX (default firmware)
+  -I PATH/-Ipath     Header search directory
+  -L PATH/-Lpath     Library search directory
+  -l NAME/-lname    Link libNAME.a (linker order follows all objects)
+  -DNAME[=VALUE]     Preprocessor definition
+  -O0/-O1/-O2/-O3/-Os  Optimization (default -Os)
+  --no-upload        Only build ELF and HEX
+  --help             This help
+Examples:
+  avr-uno -p /dev/ttyACM0 firmware/*.c
+  avr-uno -Iinclude -Llib firmware/main.c lib/util.a -lm
+HELP
+}
+port=''; baud=115200; output=firmware; upload=1; opt=-Os
+src=(); includes=(); defines=(); libs=(); extra=()
+while (($#)); do
+ case "$1" in
+ --help|-h) usage; exit 0;;
+ -p|--port) (($#>=2)) || { echo 'Missing port' >&2; exit 2; }; port=$2; shift 2;;
+ --port=*) port=${1#*=}; shift;;
+ -b|--baud) (($#>=2)) || exit 2; baud=$2; shift 2;;
+ --baud=*) baud=${1#*=}; shift;;
+ -o|--output) (($#>=2)) || exit 2; output=$2; shift 2;;
+ --output=*) output=${1#*=}; shift;;
+ --no-upload) upload=0; shift;;
+ -I|-L|-l|-D) (($#>=2)) || exit 2; case "$1" in -I|-D) includes+=("$1$2");; *) libs+=("$1$2");; esac; shift 2;;
+ -I*|-D*) includes+=("$1"); shift;;
+ -L*|-l*) libs+=("$1"); shift;;
+ -O0|-O1|-O2|-O3|-Os|-Og) opt=$1; shift;;
+ *.c) src+=("$1"); shift;;
+ *.a|*.o) libs+=("$1"); shift;;
+ *) echo "Unsupported argument: $1" >&2; usage >&2; exit 2;;
+ esac
+done
+((${#src[@]})) || { usage >&2; exit 2; }
+for tool in avr-gcc avr-objcopy avr-size; do command -v "$tool" >/dev/null || { echo "Missing $tool (install gcc-avr binutils-avr avr-libc)" >&2; exit 1; }; done
+if ((upload)); then command -v avrdude >/dev/null || { echo 'Missing avrdude' >&2; exit 1; }; fi
+build=$(mktemp -d); trap 'rm -rf -- "$build"' EXIT
+objects=(); n=0
+for file in "${src[@]}"; do
+ obj="$build/$((n+=1)).o"
+ avr-gcc -mmcu=atmega328p -DF_CPU=16000000UL -std=gnu11 "$opt" -Wall -Wextra -ffunction-sections -fdata-sections "${includes[@]}" -c "$file" -o "$obj"
+ objects+=("$obj")
+done
+# Objects precede archives: GNU ld searches each archive from left to right.
+avr-gcc -mmcu=atmega328p "$opt" -Wl,--gc-sections "${objects[@]}" "${libs[@]}" -o "$build/firmware.elf"
+avr-size -C --mcu=atmega328p "$build/firmware.elf"
+avr-objcopy -O ihex -R .eeprom "$build/firmware.elf" "$build/firmware.hex"
+cp "$build/firmware.elf" "${output}.elf"
+cp "$build/firmware.hex" "${output}.hex"
+if ((!upload)); then echo "Built ${output}.elf and ${output}.hex"; exit 0; fi
+if [[ -z "$port" ]]; then
+  shopt -s nullglob
+  ports=(/dev/serial/by-id/*)
+  if ((${#ports[@]} == 1)); then port=${ports[0]};
+  else
+    ports=(/dev/ttyACM* /dev/ttyUSB*)
+    if ((${#ports[@]} == 1)); then port=${ports[0]};
+    else echo 'Specify --port /dev/ttyACM0 (ambiguous or absent device)' >&2; exit 2; fi
+  fi
+fi
+[[ -e "$port" ]] || { echo "Port missing: $port" >&2; exit 1; }
+echo "Flashing ${output}.hex on $port (baud $baud)"
+avrdude -p atmega328p -c arduino -P "$port" -b "$baud" -D -U "flash:w:${output}.hex:i"
