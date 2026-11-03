@@ -16,6 +16,8 @@ bool		network::Peer::AttachDescriptor(Descriptor	&desc,
     return (false);
   if (_info)
     info = *_info;
+  doomed = false;
+  disconnect_reported = false;
   descriptors.insert(&desc);
   protocol = proto;
   return (desc.AttachPeer(*this));

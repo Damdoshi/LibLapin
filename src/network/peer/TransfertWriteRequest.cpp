@@ -70,11 +70,25 @@ bool				network::Peer::ReliableUdpTick(double now)
   if (protocol.protocol != BP_UDP_RELIABLE)
     return (false);
 
+  auto report_disconnect = [this](Descriptor *desc)
+    {
+      if (disconnect_reported || desc == NULL)
+	return;
+      try
+	{
+	  desc->inqueue.emplace_back(info, false);
+	  disconnect_reported = true;
+	}
+      catch (...)
+	{}
+    };
+
   double			max_lifetime = protocol.timeout > 0 ? protocol.timeout / 1000.0 : 0;
   bool				queued = false;
 
   if (max_lifetime > 0 && last_message != 0 && now - last_message >= max_lifetime)
     {
+      report_disconnect(pick_descriptor(descriptors));
       rudp_pending.clear();
       rudp_pending_heartbeats.clear();
       outqueue.clear();
@@ -89,6 +103,7 @@ bool				network::Peer::ReliableUdpTick(double now)
       if ((max_lifetime > 0 && now - pending.first_send >= max_lifetime) ||
 	  pending.attempts >= RUDP_MAX_ATTEMPTS)
 	{
+	  report_disconnect(pick_descriptor(descriptors));
 	  it = rudp_pending.erase(it);
 	  doomed = true;
 	  continue;

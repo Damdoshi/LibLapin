@@ -1,0 +1,34 @@
+## Hanged Bunny Studio Library ------    ---  -- --- -    ---  --    - -- -   -
+## Hanged Bunny Studio 2014-2026 ----- -- - -- -  -  -- -- - -- --  -- -- -- --
+## ----------------------------------------------------------------------------
+
+BIN     = $(shell basename $(shell pwd))
+FLAG    = -W -Wall -g -g3 -ggdb -std=gnu23
+override INCLUDE += -I./include/
+SRC     = $(wildcard src/*.c)
+OBJ     = $(SRC:.c=.o)
+
+all: title bin
+
+title:
+	@echo $(BIN)
+
+bin: $(OBJ)
+	@bcc $(LIBPATH) $(OBJ) -o $(BIN) $(LIB)
+	@echo "[OUT] " $(BIN)
+	@echo $(BIN) | tr '[:lower:]' '[:upper:]'
+
+.c.o:
+	bcc $(INCLUDE) $(FLAG) -c $< -o $@
+	@echo "[GCC]" $<
+
+clean:
+	@rm -f $(OBJ)
+
+fclean: clean
+	@rm -f $(BIN)
+
+re: fclean all
+
+.PHONY: all clean fclean re title
+.SUFFIXES: .c .o

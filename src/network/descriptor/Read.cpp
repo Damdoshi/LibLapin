@@ -180,6 +180,8 @@ bool		network::Descriptor::Read(void)
 
       // Purement indicatif - non exploité actuellement
       peer.last_message = bunny_get_time() / 1e9;
+      peer.doomed = false;
+      peer.disconnect_reported = false;
     }
   else
     len = 0;

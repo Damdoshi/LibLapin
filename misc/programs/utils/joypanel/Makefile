@@ -19,7 +19,7 @@ title:
 	@echo $(BIN)
 
 bin: $(OBJ)
-	@bcc $(LIBPATH) $(OBJ) -o $(BIN) $(LIB)
+	@bcc $(LIBPATH) $(OBJ) -o $(BIN) $(LIB) $(FLAG)
 	@echo "[OUT] " $(BIN)
 	@echo $(BIN) | tr '[:lower:]' '[:upper:]'
 

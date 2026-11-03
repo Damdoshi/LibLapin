@@ -258,6 +258,10 @@ t_bunny_network_info		bunny_network_open(t_bunny_protocol	pcol,
 						   bool			resend,
 						   uint16_t		port,
 						   const char		*ip);
+double				bunny_network_poll(double		timeout);
+int				bunny_network_inbox(void);
+int				bunny_network_outbox(void);
+t_bunny_communication		bunny_network_read(void);
 bool				bunny_network_doom(t_bunny_network_info	a);
 bool				bunny_network_close(t_bunny_network_info a);
 
@@ -325,6 +329,151 @@ bool				bunny_network_writec(t_bunny_network_info a,
  */
 # define			bunny_network_write(a, d, l)	\
   bunny_network_writec(a, d, l, NULL, NULL)
+
+
+/*
+** Neutral reliable game relay
+**
+** A game server is deliberately unaware of game semantics. Clients register
+** an opaque player identifier, join one or more opaque room identifiers and
+** send payloads which are retransmitted to the members of the room.
+**
+** Several RUDP listening sockets may feed the same t_bunny_game_server. They
+** all share the same player and room registry through the global aggregated
+** t_bunny_network implementation.
+*/
+
+# define			BUNNY_GAME_SERVER_MAGIC		0x42475352u /* BGSR */
+# define			BUNNY_GAME_SERVER_VERSION	1
+
+typedef uint64_t		t_bunny_game_player_id;
+typedef uint64_t		t_bunny_game_room_id;
+
+typedef enum			e_bunny_game_server_packet_type
+  {
+    BGSP_REGISTER		= 1,
+    BGSP_JOIN_ROOM		= 2,
+    BGSP_LEAVE_ROOM		= 3,
+    BGSP_MULTICAST		= 4,
+    BGSP_QUIT			= 5,
+
+    BGSP_REGISTERED		= 64,
+    BGSP_PLAYER_JOINED		= 65,
+    BGSP_PLAYER_LEFT		= 66,
+    BGSP_MESSAGE			= 67,
+    BGSP_ERROR			= 68
+  }				t_bunny_game_server_packet_type;
+
+typedef enum			e_bunny_game_server_error
+  {
+    BGSE_NONE			= 0,
+    BGSE_BAD_PACKET		= 1,
+    BGSE_BAD_VERSION		= 2,
+    BGSE_WRONG_SERVICE		= 3,
+    BGSE_NOT_REGISTERED		= 4,
+    BGSE_ALREADY_REGISTERED	= 5,
+    BGSE_PLAYER_ID_IN_USE	= 6,
+    BGSE_INVALID_PLAYER		= 7,
+    BGSE_INVALID_ROOM		= 8,
+    BGSE_ROOM_NOT_JOINED		= 9,
+    BGSE_PLAYER_LIMIT		= 10,
+    BGSE_ROOM_LIMIT		= 11,
+    BGSE_ROOM_PLAYER_LIMIT	= 12,
+    BGSE_PAYLOAD_TOO_LARGE	= 13,
+    BGSE_NETWORK_ERROR		= 14
+  }				t_bunny_game_server_error;
+
+# pragma pack(push, 1)
+typedef struct			s_bunny_game_server_wire_packet
+{
+  uint32_t			magic;
+  uint8_t			version;
+  uint8_t			type;
+  uint16_t			header_size;
+  uint64_t			service;
+  uint64_t			player;
+  uint64_t			room;
+  uint32_t			payload_size;
+  uint32_t			code;
+  char				payload[0];
+} __attribute__((packed))	t_bunny_game_server_wire_packet;
+# pragma pack(pop)
+
+typedef struct			s_bunny_game_server_message
+{
+  t_bunny_game_server_packet_type type;
+  uint64_t			service;
+  t_bunny_game_player_id	player;
+  t_bunny_game_room_id		room;
+  uint32_t			code;
+  const void			*data;
+  size_t			size;
+} 				t_bunny_game_server_message;
+
+typedef struct			s_bunny_game_server_limits
+{
+  size_t			max_players;
+  size_t			max_rooms;
+  size_t			max_players_per_room;
+  size_t			max_payload_size;
+  bool				echo_sender;
+  bool				notify_members;
+} 				t_bunny_game_server_limits;
+
+typedef void			t_bunny_game_server;
+
+bool				bunny_game_server_pack
+  (void				*buffer,
+   size_t			buffer_size,
+   const t_bunny_game_server_message *message,
+   size_t			*written_size);
+bool				bunny_game_server_unpack
+  (const void			*buffer,
+   size_t			buffer_size,
+   t_bunny_game_server_message	*message);
+
+t_bunny_game_server		*bunny_new_game_server
+  (uint64_t			service,
+   const t_bunny_game_server_limits *limits);
+void				bunny_delete_game_server
+  (t_bunny_game_server		*server);
+
+t_bunny_network_info		bunny_game_server_open
+  (t_bunny_game_server		*server,
+   uint16_t			port,
+   int				timeout,
+   bool				resend);
+bool				bunny_game_server_close
+  (t_bunny_game_server		*server,
+   t_bunny_network_info		listener);
+
+bool				bunny_game_server_handle
+  (t_bunny_game_server		*server,
+   const t_bunny_communication	*communication);
+bool				bunny_game_server_multicast
+  (t_bunny_game_server		*server,
+   t_bunny_game_room_id		room,
+   t_bunny_game_player_id	sender,
+   const void			*data,
+   size_t			size);
+bool				bunny_game_server_remove_player
+  (t_bunny_game_server		*server,
+   t_bunny_game_player_id	player);
+
+size_t				bunny_game_server_player_count
+  (const t_bunny_game_server	*server);
+size_t				bunny_game_server_room_count
+  (const t_bunny_game_server	*server);
+size_t				bunny_game_server_room_player_count
+  (const t_bunny_game_server	*server,
+   t_bunny_game_room_id		room);
+bool				bunny_game_server_has_player
+  (const t_bunny_game_server	*server,
+   t_bunny_game_player_id	player);
+bool				bunny_game_server_player_is_in_room
+  (const t_bunny_game_server	*server,
+   t_bunny_game_player_id	player,
+   t_bunny_game_room_id		room);
 
 
 /**

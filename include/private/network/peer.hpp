@@ -47,6 +47,7 @@ namespace                       network
     std::set<Descriptor*>       descriptors;
     std::list<network::WriteRequest> outqueue;
     bool                        doomed = false;
+    bool                        disconnect_reported = false;
     double                      last_message = 0;
 
     uint32_t                    rudp_next_sequence = 0;
